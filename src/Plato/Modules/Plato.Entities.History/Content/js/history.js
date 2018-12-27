@@ -19,7 +19,7 @@ $(function (win, doc, $) {
 
     'use strict';
     
-    // notifications
+    // history list
     var history = function () {
         
         var dataKey = "history",
@@ -77,7 +77,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body"><span class="float-right badge badge-secondary">{version}</span>{text} - {id}</span></a>',
+                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body"><span class="float-right badge badge-secondary">{version}</span>{text}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         if (result.id) {
@@ -266,15 +266,53 @@ $(function (win, doc, $) {
 
     }();
 
+    var historyDropdown = function () {
+
+        var dataKey = "historyDropdown",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {};
+
+        var methods = {
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                $caller.find(".dropdown-toggle").click(function() {
+                    $caller.find('[data-provide="history"]').history();
+                });
+            }
+        }
+
+        return {
+            init: function () {
+                var options = {};
+                // $(selector).historyDropdown
+                return this.each(function () {
+                    if (!$(this).data(dataIdKey)) {
+                        var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                        $(this).data(dataIdKey, id);
+                        $(this).data(dataKey, $.extend({}, defaults, options));
+                    } else {
+                        $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                    }
+                    methods.init($(this));
+                });
+            }
+
+        }
+
+    }();
     
     $.fn.extend({
-        history: history.init
+        history: history.init,
+        historyDropdown: historyDropdown.init
     });
 
     $(doc).ready(function () {
-
-        $('[data-provide="history"]').history();
         
+        $('[data-provide="historyDropdown"]').historyDropdown();
+
     });
 
 }(window, document, jQuery));

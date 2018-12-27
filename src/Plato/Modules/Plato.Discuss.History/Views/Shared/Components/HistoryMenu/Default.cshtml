@@ -4,9 +4,9 @@
 @if (Model.Reply != null) {
     @if (Model.Reply.ModifiedDate != null)
      {
-         <div class="dropdown history-dropdown">
+         <div class="dropdown history-dropdown" data-provide="historyDropdown">
              <a class="nav-link text-muted dropdown-toggle" href="#" id="historyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 @T["reply edited"] <date utc="@Model.Reply.ModifiedDate"></date>
+                 @T["edited"] <date utc="@Model.Reply.ModifiedDate"></date>
              </a>
              <div class="dropdown-arrow"></div>
              <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="historyDropdown">
@@ -29,7 +29,7 @@ else
 {
     @if (Model.Topic?.ModifiedDate != null)
      {
-         <div class="dropdown history-dropdown">
+         <div class="dropdown history-dropdown" data-provide="historyDropdown">
              <a class="nav-link text-muted dropdown-toggle" href="#" id="historyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                  @T["edited"] <date utc=" @Model.Topic?.ModifiedDate"></date>
              </a>

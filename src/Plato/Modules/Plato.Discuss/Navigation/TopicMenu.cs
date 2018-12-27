@@ -53,7 +53,28 @@ namespace Plato.Discuss.Navigation
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav()
                 , new string[] {"edit", "text-muted", "text-hidden" });
-
+            
+            // Topic options
+            builder
+                .Add(T["Topic Options"], int.MaxValue , options => options
+                        .IconCss("fa fa-ellipsis-h")
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-provide", "tooltip"},
+                            {"title", T["Options"]}
+                        })
+                        .Add(T["Share"], share => share
+                            .Action("Index", "Home", "Plato.Discuss")
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav()
+                        )
+                        .Add(T["Report"], report => report
+                            .Action("Popular", "Home", "Plato.Discuss")
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav()
+                        ), new List<string>() { "options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
+                );
+            
         }
 
     }

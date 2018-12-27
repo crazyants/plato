@@ -30,6 +30,9 @@ namespace Plato.Internal.Layout.TagHelpers
         [HtmlAttributeName("collaspsable")]
         public bool Collaspsable { get; set; }
 
+        [HtmlAttributeName("arrow-css")]
+        public string ArrowCss { get; set; }
+        
         [HtmlAttributeName("collapse-css")]
         public string CollapseCss { get; set; } = "collapse";
 
@@ -184,7 +187,14 @@ namespace Plato.Internal.Layout.TagHelpers
                 if (_level > 0)
                 {
                     ulClass = this.ChildUlCssClass;
+                    if (!String.IsNullOrEmpty(ArrowCss))
+                    {
+                        sb.Append("<div class=\"")
+                            .Append(ArrowCss)
+                            .Append("\"></div>");
+                    }
                 }
+                
                 sb.Append("<ul class=\"")
                     .Append(ulClass)
                     .Append("\">")
