@@ -73,12 +73,16 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Actions"
-        
+
+        // -----------------
+        // Topics
+        // -----------------
+
         public async Task<IActionResult> Index(
             TopicIndexOptions opts,
             PagerOptions pager)
         {
-            
+
             // default options
             if (opts == null)
             {
@@ -90,7 +94,7 @@ namespace Plato.Discuss.Controllers
             {
                 pager = new PagerOptions();
             }
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -98,9 +102,8 @@ namespace Plato.Discuss.Controllers
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
                 ).Add(S["Discuss"]);
-              
             });
-            
+
             //await CreateSampleData();
 
             // Get default options
@@ -120,23 +123,29 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
+
             // Build infinate scroll options
             opts.InfiniteScrollOptions = GetIndexInfiniteScrollOptions();
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            // Build view model
+            var viewModel = new TopicIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Build view
-            var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+
+            // Return simple paged results for ajax callback
+            if (pager.Page > 1)
+            {
+                return View("GetTopics", viewModel);
+            }
 
             // Return view
-            return View(result);
-            
+            return View(await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
+
         }
 
         public Task<IActionResult> Popular(
@@ -161,59 +170,9 @@ namespace Plato.Discuss.Controllers
 
             return Index(opts, pager);
         }
-        
-        public Task<IActionResult> GetTopics(
-          TopicIndexOptions opts,
-          PagerOptions pager)
-        {
 
-            // default options
-            if (opts == null)
-            {
-                opts = new TopicIndexOptions();
-            }
-
-            // default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-            // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
-            var defaultPagerOptions = new PagerOptions();
-
-            // Add non default route data for pagination purposes
-            if (opts.Search != defaultViewOptions.Search)
-                this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort)
-                this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order)
-                this.RouteData.Values.Add("opts.order", opts.Order);
-            if (opts.Filter != defaultViewOptions.Filter)
-                this.RouteData.Values.Add("opts.filter", opts.Filter);
-            if (pager.Page != defaultPagerOptions.Page)
-                this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
-            // Build view model
-            var viewModel = new TopicIndexViewModel()
-            {
-                Options = opts,
-                Pager = pager
-            };
-            
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
-            
-            // Return view
-            return Task.FromResult((IActionResult) View(viewModel));
-
-        }
-        
         // -----------------
-        // add new topic
+        // New topic
         // -----------------
 
         public async Task<IActionResult> Create(int channel)
@@ -370,25 +329,31 @@ namespace Plato.Discuss.Controllers
 
 
             opts.Params.EntityId = topic.Id;
+
             // Build infinate scroll options
             opts.InfiniteScrollOptions = GetTopicInfiniteScrollOptions(topic);
 
-
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicViewModel)] = new TopicViewModel()
+            // Build view model
+            var viewModel = new TopicViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Build view
-            var result = await _topicViewProvider.ProvideDisplayAsync(topic, this);
+            // Add models to context for use within view adaptors
+            this.HttpContext.Items[typeof(TopicViewModel)] = viewModel;
+            this.HttpContext.Items[typeof(Topic)] = topic;
 
+            // Return paged results for ajax callback
+            if (pager.Page > 1)
+            {
+                return View("GetTopicReplies", viewModel);
+            }
+       
             // Return view
-            return View(result);
+            return View(await _topicViewProvider.ProvideDisplayAsync(topic, this));
             
         }
-
         
         // -----------------
         // post new reply
@@ -472,56 +437,6 @@ namespace Plato.Discuss.Controllers
             
         }
 
-        public async Task<IActionResult> GetTopicReplies(
-             int id,
-             TopicOptions opts,
-             PagerOptions pager)
-        {
-
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            // default options
-            if (opts == null)
-            {
-                opts = new TopicOptions();
-            }
-
-            // default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-            // Maintain previous route data when generating page links
-            // Get default options
-            var defaultViewOptions = new TopicViewModel();
-            var defaultPagerOptions = new PagerOptions();
-
-            if (pager.Page != defaultPagerOptions.Page)
-                this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            opts.Params.EntityId = topic.Id;
-
-            var viewModel = new TopicViewModel()
-            {
-                Options = opts,
-                Pager = pager
-            };
-
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(Topic)] = topic;
-            this.HttpContext.Items[typeof(TopicViewModel)] = viewModel;
-
-            // Return view
-            return View(viewModel);
-
-        }
         
         // edit topic
 
@@ -696,7 +611,7 @@ namespace Plato.Discuss.Controllers
         {
             
             // Swaps current action for "Get" action and removes current page 
-            var routeValues = new RouteValueDictionary(this.RouteData.Values) { ["action"] = nameof(GetTopics) };
+            var routeValues = new RouteValueDictionary(this.RouteData.Values);
             routeValues.Remove("pager.page");
 
             return new InfiniteScrollOptions()
@@ -715,12 +630,7 @@ namespace Plato.Discuss.Controllers
             }
 
             // Swaps current action for "Get" action and removes current page 
-            var routeValues = new RouteValueDictionary(this.RouteData.Values)
-            {
-                ["action"] = nameof(GetTopicReplies),
-                ["id"] = topic.Id.ToString()
-            };
-
+            var routeValues = new RouteValueDictionary(this.RouteData.Values);
             routeValues.Remove("pager.page");
      
             return new InfiniteScrollOptions()

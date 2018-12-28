@@ -36,11 +36,17 @@
                         </span>
                     }
                 </div>
-                #@Model.Index
-                <navigation name="topicreply"
-                            model="Model.Reply"
-                            class="nav navbar p-0 float-right"
-                            child-ul-css-class="dropdown-menu" />
+                <div class=" float-right">
+                    <navigation name="topicreply"
+                                model="Model.Reply"
+                                class="nav navbar p-0 float-left"
+                                child-ul-css-class="dropdown-menu" />
+                    <ul class="nav navbar float-left">
+                        <li class="nav-item text-muted">
+                            #@Model.Index
+                        </li>
+                    </ul>
+                </div>
             </card-title>
             <card-body class="card-body-flush">
                 <div class="markdown-body m-3" data-provide="markdownBody">

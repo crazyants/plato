@@ -2,7 +2,7 @@
 
 @if (Model.Replies != null)
 {
-    var index = 0;
+    var index = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
     <div data-provide="infiniteScroll"
          data-infinite-scroll-url="@Model.Options.InfiniteScrollOptions.CallbackUrl"
          data-infinite-scroll-page="@Model.Pager.Page"

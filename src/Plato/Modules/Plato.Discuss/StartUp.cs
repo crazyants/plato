@@ -105,14 +105,6 @@ namespace Plato.Discuss
                 template: "discuss",
                 defaults: new { controller = "Home", action = "Index" }
             );
-
-            // get topics
-            routes.MapAreaRoute(
-                name: "DiscussGetTopics",
-                areaName: "Plato.Discuss",
-                template: "discuss/get",
-                defaults: new { controller = "Home", action = "GetTopics" }
-            );
             
             // discuss popular
             routes.MapAreaRoute(
@@ -126,26 +118,10 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "DiscussTopic",
                 areaName: "Plato.Discuss",
-                template: "discuss/t/{id}/{alias}",
+                template: "discuss/t/{id}/{alias}/{replyIndex?}",
                 defaults: new { controller = "Home", action = "Topic", replyIndex = 0 }
             );
-
-            // discuss topic reply
-            routes.MapAreaRoute(
-                name: "DiscussTopicReply",
-                areaName: "Plato.Discuss",
-                template: "discuss/t/{id}/{alias}/{replyIndex}",
-                defaults: new { controller = "Home", action = "Topic", replyIndex = 0 }
-            );
-            
-            // get topic replies
-            routes.MapAreaRoute(
-                name: "DiscussGetTopicReplies",
-                areaName: "Plato.Discuss",
-                template: "discuss/t/get/{id}/{alias?}",
-                defaults: new { controller = "Home", action = "GetTopicReplies" }
-            );
-
+                     
             // discuss new topic
             routes.MapAreaRoute(
                 name: "DiscussNewTopic",

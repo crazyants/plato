@@ -37,7 +37,7 @@ namespace Plato.Discuss.Share.Controllers
 
         // Share dialog
 
-        public async Task<IActionResult> Index(int id, int replyId = 0)
+        public async Task<IActionResult> Share(int id, int replyId = 0)
         {
 
             // We always need an entity Id

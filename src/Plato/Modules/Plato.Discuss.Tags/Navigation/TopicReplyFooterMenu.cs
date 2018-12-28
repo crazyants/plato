@@ -31,8 +31,14 @@ namespace Plato.Discuss.Tags.Navigation
 
             // Get model from navigation builder
             var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (topic == null)
+            {
+                return;
+            }
+
+            // Replies are optional
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
-            
+
             // Add reaction list to topic reply footer navigation
             builder
                 .Add(T["Tags"], react => react

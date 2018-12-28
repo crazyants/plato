@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
@@ -24,7 +25,14 @@ namespace Plato.Discuss.Tags.ViewComponents
             Topic topic,
             Reply reply)
         {
-   
+
+            // We always need a topic to display tags
+            if (topic == null)
+            {
+                throw new ArgumentNullException(nameof(topic));
+            }
+
+            // Get tags and return view
             var tags = await _tagStore.GetByEntityId(topic.Id);
             return View(new TagListViewModel()
             {

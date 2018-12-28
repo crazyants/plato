@@ -31,6 +31,14 @@ namespace Plato.Discuss.Tags.Navigation
 
             // Get model from navigation builder
             var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+
+            // We always need a topic
+            if (topic == null)
+            {
+                return;
+            }
+
+            // Replies are options
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             
             builder
