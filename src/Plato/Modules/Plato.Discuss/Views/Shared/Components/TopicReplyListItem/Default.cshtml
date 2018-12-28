@@ -41,9 +41,9 @@
                                 model="Model.Reply"
                                 class="nav navbar p-0 float-left"
                                 child-ul-css-class="dropdown-menu" />
-                    <ul class="nav navbar float-left">
+                    <ul data-infinite-scroll-offset="@Model.Offset" class="nav navbar float-left">
                         <li class="nav-item text-muted">
-                            #@Model.Index
+                            #@Model.Offset
                         </li>
                     </ul>
                 </div>

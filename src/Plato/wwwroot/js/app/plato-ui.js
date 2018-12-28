@@ -1972,13 +1972,17 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            threshold: 0.95,
+            threshold: 0.95, // when scrolling enters this window threshold onEnterThreshold event will be triggered
+            interval: 500, // the interval to wait in milliseconds before triggering onScrollEnd
+            onScrollStart: function () { },
+            onScrollEnd: function () { },
             onScroll: function () { },
-            onEnter: function () { }
+            onEnterThreshold: function () { }
         };
 
         var methods = {
-            timer: null,
+            _timer: null,
+            _scrolling: false,
             init: function ($caller, methodName) {
 
                 if (methodName) {
@@ -1996,7 +2000,16 @@ $(function (win, doc, $) {
             bind: function ($caller) {
 
                 $caller.bind("scroll", function (e) {
-                    
+
+                    methods.startEndDetectTimer($caller, e);
+
+                    if (methods._scrolling === false) {
+                        methods._scrolling = true;
+                        if ($caller.data(dataKey).onScrollStart) {
+                            $caller.data(dataKey).onScrollStart(e);
+                        }
+                    } 
+
                     if ($caller.data(dataKey).onScroll) {
                         $caller.data(dataKey).onScroll(e);
                     }
@@ -2007,8 +2020,8 @@ $(function (win, doc, $) {
                         threshold = $caller.data(dataKey).threshold;
 
                     if ((wintop / (docheight - winheight)) > threshold) {
-                        if ($caller.data(dataKey).onEnter) {
-                            $caller.data(dataKey).onEnter(e);
+                        if ($caller.data(dataKey).onEnterThreshold) {
+                            $caller.data(dataKey).onEnterThreshold(e);
                         }
                     }
 
@@ -2017,6 +2030,19 @@ $(function (win, doc, $) {
             },
             unbind: function ($caller) {
                 $caller.unbind("scroll");
+            },
+            startEndDetectTimer: function ($caller, e) {
+                methods.stopEndDetectTimer();
+                methods._timer = setTimeout(function () {
+                    methods._scrolling = false;
+                    if ($caller.data(dataKey).onScrollEnd) {
+                        $caller.data(dataKey).onScrollEnd(e);
+                    }
+                }, $caller.data(dataKey).interval);
+            },
+            stopEndDetectTimer: function () {
+                win.clearTimeout(methods._timer);
+                methods._timer = null;
             }
 
         }
@@ -2092,6 +2118,7 @@ $(function (win, doc, $) {
             _totalPages: 1,
             _readyList: [],
             ready: function ($caller, fn) {
+                // Accepts functions that will be executed upon each load
                 methods._readyList.push(fn);
                 return this;
             },
@@ -2128,7 +2155,14 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                 
                 $().scrollSpy({
-                    onEnter: function (e) {
+                    onScrollStart: function () {
+                        console.log("onScrollStart");
+                    },
+                    onScrollEnd: function() {
+                        console.log("onScrollEnd");
+                    },
+                    onEnterThreshold: function (e) {
+                        // Ensure we have more results and we are not already loading
                         if (!methods._loading && (methods._page < methods._totalPages)) {
                             methods.load($caller);
                         }

@@ -2,7 +2,7 @@
 
 @if (Model.Replies != null)
 {
-    var index = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
+    var offset = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
     @foreach (var reply in Model.Replies.Data)
      {
          @await DisplayAsync(new View("TopicReplyListItem", new
@@ -10,7 +10,7 @@
              model = new TopicReplyListItemViewModel()
              {
                  Reply = reply,
-                 Index = index++
+                 Offset = offset++
              }
          }))
      }
