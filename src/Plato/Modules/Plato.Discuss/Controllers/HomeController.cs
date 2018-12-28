@@ -315,10 +315,13 @@ namespace Plato.Discuss.Controllers
             
         }
 
+        // -----------------
         // display topic
+        // -----------------
 
         public async Task<IActionResult> Topic(
             int id,
+            int replyIndex,
             TopicOptions opts,
             PagerOptions pager)
         {
@@ -385,8 +388,11 @@ namespace Plato.Discuss.Controllers
             return View(result);
             
         }
+
         
+        // -----------------
         // post new reply
+        // -----------------
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -462,7 +468,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Topic(topic.Id, null, null);
+            return await Topic(topic.Id, 0, null, null);
             
         }
 

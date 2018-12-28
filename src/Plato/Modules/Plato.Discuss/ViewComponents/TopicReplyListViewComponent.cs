@@ -42,10 +42,8 @@ namespace Plato.Discuss.ViewComponents
             {
                 pager = new PagerOptions();
             }
-
-            var model = await GetViewModel(options, pager);
-
-            return View(model);
+            
+            return View(await GetViewModel(options, pager));
 
         }
 

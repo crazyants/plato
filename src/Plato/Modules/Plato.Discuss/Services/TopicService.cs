@@ -11,13 +11,7 @@ using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Discuss.Services
 {
-
-    public interface ITopicService
-    {
-        Task<IPagedResults<Topic>> GetTopicsAsync(TopicIndexOptions options, PagerOptions pager);
-
-    }
-
+    
     public class TopicService : ITopicService
     {
 

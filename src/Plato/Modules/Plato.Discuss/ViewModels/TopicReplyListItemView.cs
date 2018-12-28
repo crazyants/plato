@@ -1,4 +1,6 @@
-﻿using Plato.Discuss.Models;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Plato.Discuss.Models;
+using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewModels
 {
@@ -6,6 +8,8 @@ namespace Plato.Discuss.ViewModels
     {
 
         public Reply Reply { get; set;  }
+
+        public int Index { get; set; }
 
     }
 }

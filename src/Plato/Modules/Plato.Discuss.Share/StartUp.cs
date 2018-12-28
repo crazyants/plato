@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Abstractions.SetUp;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
@@ -39,8 +37,15 @@ namespace Plato.Discuss.Share
             routes.MapAreaRoute(
                 name: "DiscussTopicShare",
                 areaName: "Plato.Discuss.Share",
-                template: "discuss/topic/share/{entityId}/{alias}/{entityReplyId?}",
-                defaults: new { controller = "Home", action = "Index", entityReplyId  = "0"}
+                template: "discuss/t/share/{id}/{alias}/{replyId?}",
+                defaults: new { controller = "Home", action = "Index", replyId = "0"}
+            );
+
+            routes.MapAreaRoute(
+                name: "DiscussTopicShareGet",
+                areaName: "Plato.Discuss.Share",
+                template: "discuss/t/get/{id}/{alias}/{replyId?}",
+                defaults: new { controller = "Home", action = "Get", replyId = "0" }
             );
 
 

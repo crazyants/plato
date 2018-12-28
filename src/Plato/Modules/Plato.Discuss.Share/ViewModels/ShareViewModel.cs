@@ -5,5 +5,7 @@
 
         public string EntityUrl { get; set; }
 
+        public string EntityReplyUrl { get; set; }
+
     }
 }

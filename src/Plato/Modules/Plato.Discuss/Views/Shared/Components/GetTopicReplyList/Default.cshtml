@@ -2,14 +2,16 @@
 
 @if (Model.Replies != null)
 {
+    var index = 0;
     @foreach (var reply in Model.Replies.Data)
-    {
-        @await DisplayAsync(new View("TopicReplyListItem", new
-        {
-            model = new TopicReplyListItemViewModel()
-            {
-                Reply = reply
-            }
-        }))
-    }
+     {
+         @await DisplayAsync(new View("TopicReplyListItem", new
+         {
+             model = new TopicReplyListItemViewModel()
+             {
+                 Reply = reply,
+                 Index = index++
+             }
+         }))
+     }
 }

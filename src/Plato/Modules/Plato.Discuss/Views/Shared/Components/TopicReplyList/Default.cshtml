@@ -2,6 +2,7 @@
 
 @if (Model.Replies != null)
 {
+    var index = 0;
     <div data-provide="infiniteScroll"
          data-infinite-scroll-url="@Model.Options.InfiniteScrollOptions.CallbackUrl"
          data-infinite-scroll-page="@Model.Pager.Page"
@@ -13,7 +14,8 @@
             {
                 model = new TopicReplyListItemViewModel()
                 {
-                    Reply = reply
+                    Reply = reply,
+                    Index = index++
                 }
             }))
         }

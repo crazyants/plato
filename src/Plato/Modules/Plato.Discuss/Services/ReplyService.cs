@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
@@ -10,12 +7,6 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Services
 {
-
-    public interface IReplyService
-    {
-        Task<IPagedResults<Reply>> GetRepliesAsync(TopicOptions options, PagerOptions pager);
-
-    }
     
     public class ReplyService : IReplyService
     {
