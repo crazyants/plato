@@ -1,4 +1,4 @@
-﻿@model TopicIndexViewModel
+﻿@model ShareViewModel
 @{
     Layout = null;
 }
@@ -14,5 +14,17 @@
     </button>
 </div>
 <div class="modal-body" style="max-height: 550px; overflow: auto;">
-    wewer wer wer wwer wer erwerwerwerwer wer wer wr  rwr wer wer werwer wer wer wer wr wer 
+    <input id="shareUrl" value="@Model.EntityUrl" type="text" class="form-control col-12"/>
 </div>
+
+<script>
+
+    $(function(win, doc, $) {
+
+        $(doc).ready(function() {
+            $("#shareUrl").select();
+        });
+
+    }(window, document, jQuery));
+
+</script>

@@ -64,15 +64,6 @@ namespace Plato.Discuss.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Share"], share => share
-                            .Action("Share", "Home", "Plato.Discuss")
-                            .Attributes(new Dictionary<string, object>()
-                            {
-                                {"data-toggle", "dialog"}
-                            })
-                            //.Permission(Permissions.ManageRoles)
-                            .LocalNav()
-                        )
                         .Add(T["Report"], report => report
                             .Action("Report", "Home", "Plato.Discuss")
                             .Attributes(new Dictionary<string, object>()

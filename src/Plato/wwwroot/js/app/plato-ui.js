@@ -255,12 +255,26 @@ $(function (win, doc, $) {
                                 url: $(this).attr("href")
                             },
                             css: {
-                                modal: "modal fade",
-                                dialog: "modal-dialog modal-lg"
-                            }
+                                modal: methods.getModalCss($(this)),
+                                dialog: methods.getDialogCss($(this))
+                    }
                         }, "show");
                     });
 
+            },
+            getModalCss: function ($caller) {
+                var css = $caller.data("dialogModalCss");
+                if (css) {
+                    return css;
+                }
+                return "modal fade";
+            },
+            getDialogCss: function($caller) {
+                var css = $caller.data("dialogCss");
+                if (css) {
+                    return css;
+                }
+                return "modal-dialog modal-lg";
             }
         }
 

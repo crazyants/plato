@@ -6,16 +6,16 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss.Navigation
+namespace Plato.Discuss.Share.Navigation
 {
-    public class TopicReplyMenu : INavigationProvider
+    public class TopicMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyMenu(
+        public TopicMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor)
         {
@@ -26,36 +26,19 @@ namespace Plato.Discuss.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
-        
+            
             // Get model from navigation builder
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
-            if (reply == null)
+            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (topic == null)
             {
                 return;
             }
-
-            // Edit reply
-            builder.Add(T["Edit"], int.MinValue + 1, edit => edit
-                    .IconCss("fal fa-pencil")
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-provide", "tooltip"},
-                        {"title", T["Edit"]}
-                    })
-                    .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
-                    {
-                        ["id"] = reply?.Id ?? 0
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                , new string[] {"edit-reply", "text-muted", "text-hidden"});
-
-
-            // Options
+            
+            // Share 
             builder
                 .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
@@ -64,11 +47,22 @@ namespace Plato.Discuss.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Report"], report => report
-                            .Action("Popular", "Home", "Plato.Discuss")
+                        .Add(T["Share"], share => share
+                            .Action("Index", "Home", "Plato.Discuss.Share", new RouteValueDictionary()
+                            {
+                                ["entityId"] = topic.Id.ToString(),
+                                ["alias"] = topic.Alias,
+                                ["entityReplyId"] = "0"
+                            })
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-toggle", "dialog"},
+                                {"data-dialog-modal-css", "modal"},
+                                {"data-dialog-css", "modal-dialog"}
+                            })
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
-                        ), new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
+                        ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
         }
