@@ -280,7 +280,7 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Topic(
             int id,
-            int replyIndex,
+            int offset,
             TopicOptions opts,
             PagerOptions pager)
         {
@@ -613,6 +613,7 @@ namespace Plato.Discuss.Controllers
             // Swaps current action for "Get" action and removes current page 
             var routeValues = new RouteValueDictionary(this.RouteData.Values);
             routeValues.Remove("pager.page");
+            routeValues.Remove("offset");
 
             return new InfiniteScrollOptions()
             {
@@ -628,11 +629,11 @@ namespace Plato.Discuss.Controllers
             {
                 throw new ArgumentNullException(nameof(topic));
             }
-
-            // Swaps current action for "Get" action and removes current page 
+            
             var routeValues = new RouteValueDictionary(this.RouteData.Values);
             routeValues.Remove("pager.page");
-     
+            routeValues.Remove("offset");
+
             return new InfiniteScrollOptions()
             {
                 CallbackUrl = _contextFacade.GetRouteUrl(routeValues)

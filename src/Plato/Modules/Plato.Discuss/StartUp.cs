@@ -118,8 +118,8 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "DiscussTopic",
                 areaName: "Plato.Discuss",
-                template: "discuss/t/{id}/{alias}/{replyIndex?}",
-                defaults: new { controller = "Home", action = "Topic", replyIndex = 0 }
+                template: "discuss/t/{id}/{alias}/{offset?}",
+                defaults: new { controller = "Home", action = "Topic", offset = 0 }
             );
                      
             // discuss new topic
