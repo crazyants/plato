@@ -119,7 +119,7 @@ namespace Plato.Discuss
                 name: "DiscussTopic",
                 areaName: "Plato.Discuss",
                 template: "discuss/t/{id}/{alias}/{offset?}",
-                defaults: new { controller = "Home", action = "Topic", offset = 0 }
+                defaults: new { controller = "Home", action = "Topic" }
             );
                      
             // discuss new topic

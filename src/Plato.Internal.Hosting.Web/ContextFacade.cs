@@ -24,7 +24,7 @@ namespace Plato.Internal.Hosting.Web
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly ICapturedRouter _capturedRouter;
+
 
         private IUrlHelper _urlHelper;
 
@@ -33,15 +33,13 @@ namespace Plato.Internal.Hosting.Web
             IPlatoUserStore<User> platoUserStore,
             IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
-            IUrlHelperFactory urlHelperFactory,
-            ICapturedRouter capturedRouter)
+            IUrlHelperFactory urlHelperFactory)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
-            _capturedRouter = capturedRouter;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()

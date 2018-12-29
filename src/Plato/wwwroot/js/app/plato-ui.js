@@ -1996,23 +1996,15 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-
+                
                 $caller.bind("scroll",
                     function(e) {
 
+                       
                         // Start timer to detect end of scroll
-                        methods.startEndDetectTimer($caller, e);
+                        methods.start($caller, e);
 
-                        // Raise onScrollstart event
-                        // _scrolling is set to false when the scroll ends
-                        if (methods._scrolling === false) {
-                            methods._scrolling = true;
-                            if ($caller.data(dataKey).onScrollStart) {
-                                $caller.data(dataKey).onScrollStart(e);
-                            }
-                        }
-
-                        // Raise onScroll passing in a normalized threadhold
+                        // Raise onScroll passing in a normalized scroll threadhold
                         var wintop = $(win).scrollTop(),
                             docheight = $(doc).height(),
                             winheight = $(win).height(),
@@ -2020,6 +2012,18 @@ $(function (win, doc, $) {
                         if ($caller.data(dataKey).onScroll) {
                             $caller.data(dataKey).onScroll(threshold, e);
                         }
+
+                
+
+                        // Raise onScrollstart event
+                        // _scrolling is set to false when the scroll ends
+                        if (methods._scrolling === false) {
+                            if ($caller.data(dataKey).onScrollStart) {
+                                $caller.data(dataKey).onScrollStart(e);
+                            }
+                        }
+
+                     
                         
                     });
 
@@ -2027,16 +2031,17 @@ $(function (win, doc, $) {
             unbind: function ($caller) {
                 $caller.unbind("scroll");
             },
-            startEndDetectTimer: function ($caller, e) {
-                methods.stopEndDetectTimer();
-                methods._timer = setTimeout(function () {
+            start: function ($caller, e) {
+                methods.stop($caller);
+                console.log("start timer " + $caller.data(dataKey).interval);
+                methods._timer = win.setTimeout(function () {
                     methods._scrolling = false;
                     if ($caller.data(dataKey).onScrollEnd) {
                         $caller.data(dataKey).onScrollEnd(e);
                     }
                 }, $caller.data(dataKey).interval);
             },
-            stopEndDetectTimer: function () {
+            stop: function ($caller) {
                 win.clearTimeout(methods._timer);
                 methods._timer = null;
             }
@@ -2080,8 +2085,8 @@ $(function (win, doc, $) {
                     });
                 } else {
                     // $().scrollSpy()
-                    var $caller = $(window);
-                    if (!$(this).data(dataIdKey)) {
+                    var $caller = $(win);
+                    if (!$caller.data(dataIdKey)) {
                         var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                         $caller.data(dataIdKey, id);
                         $caller.data(dataKey, $.extend({}, defaults, options));
@@ -2115,7 +2120,6 @@ $(function (win, doc, $) {
             _page: 1,
             _totalPages: 1,
             _readyList: [],
-            _cachedUrl: "",
             ready: function($caller, fn) {
                 // Accepts functions that will be executed upon each load
                 methods._readyList.push(fn);
@@ -2154,17 +2158,15 @@ $(function (win, doc, $) {
             bind: function($caller) {
 
                 $().scrollSpy({
-                    onScrollStart: function() {
-                        console.log("onScrollStart");
+                    onScrollStart: function () {
+                        return;
                     },
                     onScrollEnd: function() {
-
-                        // Iterate each offset marker and detect the first
-                        // visibie marker within the current view port
-                        var $marker = null,
-                            $markers = $caller.find("[data-infinite-scroll-offset]");
-                        $markers.each(function (index) {
-                          
+                        
+                        // onScrollEnd iterate each offset marker and detect the first
+                        // visibie marker within the client viewport
+                        var $marker = null;
+                        $caller.find("[data-infinite-scroll-offset]").each(function () {
                             if (methods.isElementInviewPort($(this))) {
                                 $marker = $(this);
                                 return false;
@@ -2173,45 +2175,28 @@ $(function (win, doc, $) {
                      
                         // Ensure we found a marker
                         if ($marker) {
-
+                            // Update url with offset if valid
                             var offset = parseInt($marker.data("infiniteScrollOffset"));
                             if (!isNaN(offset)) {
-
-                                console.log("first offset: " + offset);
-
-                                var url = methods.getUrl($caller),
-                                    parts = url.split("/"),
-                                    existingOffset = parseInt(parts[parts.length - 1]);
-
-                                if (state) {
-                                    state.title = doc.title;
-                                    state.url = url + "/" + offset;
-                                }
-
-                                if (isNaN(existingOffset)) {
-                                    history.pushState(state, state.title, state.url);
-                                } else {
-                                    history.replaceState(state, state.title, state.url);
-                                }
-
-                         
-                              
+                                // Use replaceState to ensure the address bar is updated
+                                // but we don't actually add new history state
+                                history.replaceState(state, doc.title, methods.getUrl($caller) + "/" + offset);
                             }
                         }
                      
                     },
                     onScroll: function (threshold, e) {
 
-                        // At the top of the view port remove history point
-                        if (threshold < 0.10 && !methods._loading) {
-
+                        // At the top of the viewport remove offset from url
+                        if (threshold <= 0.05 && !methods._loading) {
+                            // Stop scrollspy to prevent the OnScrollEnd event from executing
+                            // The timer will start again when the client starts scrolling
+                            $().scrollSpy("stop");
+                            // Clear offset
                             var url = methods.getUrl($caller);
                             if (state) {
-                                state.title = doc.title;
-                                state.url = url;
-                                history.replaceState(state, state.title, state.url);
+                                history.replaceState(state, doc.title, url);
                             }
-
                         }
 
                         // At the bottom of the viewport
@@ -2289,9 +2274,6 @@ $(function (win, doc, $) {
                     }
 
                 });
-
-            },
-            updateUrl: function($caller) {
 
             },
             isElementInviewPort: function (el) {

@@ -24,7 +24,7 @@ namespace Plato.Discuss.Controllers
     {
 
         #region "Constructor"
-        
+
         private readonly IViewProviderManager<Topic> _topicViewProvider;
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
@@ -36,11 +36,11 @@ namespace Plato.Discuss.Controllers
         private readonly IContextFacade _contextFacade;
 
         private readonly IPlatoUserStore<User> _ploatUserStore;
-   
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-        
+
         public HomeController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
@@ -209,7 +209,7 @@ namespace Plato.Discuss.Controllers
         [ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditTopicViewModel model)
         {
-            
+
             // Validate model state within all view providers
             if (await _topicViewProvider.IsModelStateValid(new Topic()
             {
@@ -230,7 +230,7 @@ namespace Plato.Discuss.Controllers
                 // so we have a nuique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
                 var newTopic = await _topicManager.CreateAsync(topic);
-                
+
                 // Ensure the insert was successful
                 if (newTopic.Succeeded)
                 {
@@ -247,7 +247,7 @@ namespace Plato.Discuss.Controllers
 
                     // Redirect to topic
                     return RedirectToAction(nameof(Topic), new {Id = newTopic.Response.Id});
-                    
+
                 }
                 else
                 {
@@ -259,7 +259,7 @@ namespace Plato.Discuss.Controllers
                 }
 
             }
-            
+
             // if we reach this point some view model validation
             // failed within a view provider, display model state errors
             foreach (var modelState in ViewData.ModelState.Values)
@@ -271,7 +271,7 @@ namespace Plato.Discuss.Controllers
             }
 
             return await Create(0);
-            
+
         }
 
         // -----------------
@@ -290,7 +290,7 @@ namespace Plato.Discuss.Controllers
             {
                 return NotFound();
             }
-            
+
             // default options
             if (opts == null)
             {
@@ -321,13 +321,14 @@ namespace Plato.Discuss.Controllers
             // Get default options
             var defaultViewOptions = new TopicViewModel();
             var defaultPagerOptions = new PagerOptions();
-            
-            if (pager.Page != defaultPagerOptions.Page)
+
+            if (offset > 0 && !this.RouteData.Values.ContainsKey("offset"))
+                this.RouteData.Values.Add("offset", offset);
+            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
+            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-
+            
             opts.Params.EntityId = topic.Id;
 
             // Build infinate scroll options
@@ -349,12 +350,12 @@ namespace Plato.Discuss.Controllers
             {
                 return View("GetTopicReplies", viewModel);
             }
-       
+
             // Return view
             return View(await _topicViewProvider.ProvideDisplayAsync(topic, this));
-            
+
         }
-        
+
         // -----------------
         // post new reply
         // -----------------
@@ -420,7 +421,7 @@ namespace Plato.Discuss.Controllers
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-                
+
             }
 
             // if we reach this point some view model validation
@@ -434,10 +435,10 @@ namespace Plato.Discuss.Controllers
             }
 
             return await Topic(topic.Id, 0, null, null);
-            
+
         }
 
-        
+
         // edit topic
 
         public async Task<IActionResult> Edit(int id)
@@ -558,7 +559,7 @@ namespace Plato.Discuss.Controllers
             reply.Message = model.Message;
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            
+
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
@@ -575,7 +576,7 @@ namespace Plato.Discuss.Controllers
                     Id = topic.Id,
                     Alias = topic.Alias
                 });
-                
+
             }
 
             // if we reach this point some view model validation
@@ -591,7 +592,7 @@ namespace Plato.Discuss.Controllers
             return await Create(0);
 
         }
-        
+
         public Task<IActionResult> Report(
             int entityId,
             int entityReplyId = 0)
@@ -599,7 +600,7 @@ namespace Plato.Discuss.Controllers
 
 
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
 
@@ -609,7 +610,7 @@ namespace Plato.Discuss.Controllers
 
         InfiniteScrollOptions GetIndexInfiniteScrollOptions()
         {
-            
+
             // Swaps current action for "Get" action and removes current page 
             var routeValues = new RouteValueDictionary(this.RouteData.Values);
             routeValues.Remove("pager.page");
@@ -630,13 +631,13 @@ namespace Plato.Discuss.Controllers
                 throw new ArgumentNullException(nameof(topic));
             }
             
-            var routeValues = new RouteValueDictionary(this.RouteData.Values);
-            routeValues.Remove("pager.page");
-            routeValues.Remove("offset");
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
 
+            var url = _contextFacade.GetRouteUrl(RouteData.Values);
             return new InfiniteScrollOptions()
             {
-                CallbackUrl = _contextFacade.GetRouteUrl(routeValues)
+                CallbackUrl = url
             };
 
         }
@@ -657,14 +658,11 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
         }
 
         async Task CreateSampleData()
-        { 
+        {
 
-            var users =   await _ploatUserStore.QueryAsync()
+            var users = await _ploatUserStore.QueryAsync()
                 .Take(1, 1000)
-                .Select<UserQueryParams>(q =>
-                {
-              
-                })
+                .Select<UserQueryParams>(q => { })
                 .OrderBy("LastLoginDate", OrderBy.Desc)
                 .ToList();
 
@@ -676,12 +674,12 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
                 CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id,
                 CreatedDate = DateTimeOffset.UtcNow
             };
-            
+
             // create topic
             var data = await _topicManager.CreateAsync(topic);
             if (data.Succeeded)
             {
-                
+
                 for (var i = 0; i < 100; i++)
                 {
                     rnd = new Random();
@@ -694,9 +692,9 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
                     };
                     var newReply = await _replyManager.CreateAsync(reply);
                 }
-               
-            
-                
+
+
+
             }
 
         }
@@ -704,5 +702,5 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
         #endregion
 
     }
-    
+
 }
