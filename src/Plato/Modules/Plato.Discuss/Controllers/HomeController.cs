@@ -9,6 +9,7 @@ using Plato.Discuss.Services;
 using Plato.Internal.Navigation;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -125,7 +126,7 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinate scroll options
-            opts.InfiniteScrollOptions = GetIndexInfiniteScrollOptions();
+            opts.Scroller = GetIndexInfiniteScrollOptions();
 
             // Build view model
             var viewModel = new TopicIndexViewModel()
@@ -136,9 +137,9 @@ namespace Plato.Discuss.Controllers
 
             // Add view options to context for use within view adaptors
             this.HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
-
-            // Return simple paged results for ajax callback
-            if (pager.Page > 1)
+            
+            // Return paged results for ajax callback
+            if (opts.Action.Equals("get", StringComparison.OrdinalIgnoreCase))
             {
                 return View("GetTopics", viewModel);
             }
@@ -303,6 +304,11 @@ namespace Plato.Discuss.Controllers
                 pager = new PagerOptions();
             }
 
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+            }
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -332,7 +338,11 @@ namespace Plato.Discuss.Controllers
             opts.Params.EntityId = topic.Id;
 
             // Build infinate scroll options
-            opts.InfiniteScrollOptions = GetTopicInfiniteScrollOptions(topic);
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetTopicInfiniteScrollCallbackUrl(topic),
+                SelectedOffset = offset
+            };
 
             // Build view model
             var viewModel = new TopicViewModel()
@@ -346,7 +356,7 @@ namespace Plato.Discuss.Controllers
             this.HttpContext.Items[typeof(Topic)] = topic;
 
             // Return paged results for ajax callback
-            if (pager.Page > 1)
+            if (opts.Action.Equals("get", StringComparison.OrdinalIgnoreCase))
             {
                 return View("GetTopicReplies", viewModel);
             }
@@ -437,8 +447,7 @@ namespace Plato.Discuss.Controllers
             return await Topic(topic.Id, 0, null, null);
 
         }
-
-
+        
         // edit topic
 
         public async Task<IActionResult> Edit(int id)
@@ -608,7 +617,7 @@ namespace Plato.Discuss.Controllers
 
         #region "Private Methods"
 
-        InfiniteScrollOptions GetIndexInfiniteScrollOptions()
+        ScrollerOptions GetIndexInfiniteScrollOptions()
         {
 
             // Swaps current action for "Get" action and removes current page 
@@ -616,29 +625,26 @@ namespace Plato.Discuss.Controllers
             routeValues.Remove("pager.page");
             routeValues.Remove("offset");
 
-            return new InfiniteScrollOptions()
+            return new ScrollerOptions()
             {
-                CallbackUrl = _contextFacade.GetRouteUrl(routeValues)
+                Url = _contextFacade.GetRouteUrl(routeValues)
             };
 
         }
 
-        InfiniteScrollOptions GetTopicInfiniteScrollOptions(Topic topic)
+        string GetTopicInfiniteScrollCallbackUrl(Topic topic)
         {
 
             if (topic == null)
             {
                 throw new ArgumentNullException(nameof(topic));
             }
-            
+
+            //var routeValues = new RouteValueDictionary(this.RouteData.Values);
             RouteData.Values.Remove("pager.page");
             RouteData.Values.Remove("offset");
-
-            var url = _contextFacade.GetRouteUrl(RouteData.Values);
-            return new InfiniteScrollOptions()
-            {
-                CallbackUrl = url
-            };
+       
+            return _contextFacade.GetRouteUrl(RouteData.Values);
 
         }
 

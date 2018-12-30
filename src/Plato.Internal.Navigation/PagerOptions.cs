@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Routing;
 namespace Plato.Internal.Navigation
 {
 
-    public class InfiniteScrollOptions
+    public class ScrollerOptions
     {
         public bool Enabled { get; set; } = true;
 
-        public string CallbackUrl { get; set; }
+        public int SelectedOffset { get; set; }
+
+        public string Url { get; set; }
 
     }
 

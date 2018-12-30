@@ -1,13 +1,17 @@
 ﻿@model TopicReplyListItemViewModel
-
-<div class="topic-reply">
+@{
+    var css = Model.Offset == Model.SelectedOffset
+        ? "topic-reply infinate-scroll-offset-active"
+        : "topic-reply";
+}
+<div class="@css" data-infinite-scroll-offset="@Model.Offset">
     <div class="topic-reply-left">
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
             <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
         </a>
     </div>
     <div class="topic-reply-body">
-        <card>
+        <card class="card  card-body-flush">
             <card-title>
                 <div class="card-title float-left">
                     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
@@ -41,14 +45,14 @@
                                 model="Model.Reply"
                                 class="nav navbar p-0 float-left"
                                 child-ul-css-class="dropdown-menu" />
-                    <ul data-infinite-scroll-offset="@Model.Offset" class="nav navbar float-left">
+                    <ul class="nav navbar float-left">
                         <li class="nav-item text-muted">
                             #@Model.Offset
                         </li>
                     </ul>
                 </div>
             </card-title>
-            <card-body class="card-body-flush">
+            <card-body class="card-body">
                 <div class="markdown-body m-3" data-provide="markdownBody">
                     @Html.Raw(@Model.Reply.Html)
                 </div>

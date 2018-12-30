@@ -9,7 +9,7 @@ namespace Plato.Discuss.ViewModels
     {
         
         public PagerOptions Pager { get; set; }
-
+        
         public Topic Topic { get; set; }
 
         public IPagedResults<Reply> Replies { get; set; }
@@ -22,18 +22,20 @@ namespace Plato.Discuss.ViewModels
     public class TopicOptions
     {
 
+        public string Action { get; set; }
+
         public string Sort { get; set; } = "CreatedDate";
 
         public OrderBy Order { get; set; } = OrderBy.Asc;
 
+        public ScrollerOptions Scroller { get; set; }
+
         public TopicParams Params { get; set; }
-
-        public InfiniteScrollOptions InfiniteScrollOptions { get; set; }
-
+        
         public TopicOptions()
         {
             Params = new TopicParams();
-            InfiniteScrollOptions = new InfiniteScrollOptions();
+            Scroller = new ScrollerOptions();
         }
     }
 

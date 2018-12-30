@@ -85,11 +85,13 @@
         @if (Model.Results != null)
         {
             <ul data-provide="infiniteScroll"
-                data-infinite-scroll-url="@Model.Options.InfiniteScrollOptions.CallbackUrl"
+                data-infinite-scroll-url="@Model.Options.Scroller.Url"
+                data-infinite-scroll-offset="@Model.Options.Scroller.SelectedOffset"
                 data-infinite-scroll-page="@Model.Pager.Page"
                 data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
-                data-infinate-scroll-loading-selector="#topicListLoader"
+                data-infinate-scroll-loading-selector=".infinate-scroll-loader"
                 class="list-group list-group-flush list-group-hover">
+                <li class="infinate-scroll-loader" data-type="previous"></li>
                 @foreach (var topic in Model.Results.Data)
                 {
                     <li class="list-group-item list-group-item-action pt-4">
@@ -102,11 +104,7 @@
                         }))
                     </li>
                 }
-                <li id="topicListLoader" class="list-group-item" style="display: none;">
-                    <p class="text-center">
-                        <i class="fal fa-2x fa-spinner fa-spin py-4"></i>
-                    </p>
-                </li>
+                <li class="infinate-scroll-loader" data-type="next"></li>
             </ul>
            
         }
@@ -121,7 +119,7 @@
     </card-body>
 </card>
 
-@if (Model.Pager.Enabled && !Model.Options.InfiniteScrollOptions.Enabled)
+@if (Model.Pager.Enabled && !Model.Options.Scroller.Enabled)
 {
     <div class="mt-4 mb-4">
         <pager model="@Model.Pager"></pager>

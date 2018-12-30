@@ -1120,3 +1120,24 @@
 .medallion-bronze .medallion-icon { color: white; }
 
 .medallion .badge { z-index: 2; position: absolute; right: 0;  }
+
+/* ------------ */
+/* InfinateScroll */
+/* ------------ */
+
+.infinate-scroll-loader { display: none; }
+
+/* Used by InfinateScroll to highlighted current offset on first load */
+
+.infinate-scroll-offset-active .card .card-body {
+    background: rgba(150,222,255,0.5);
+
+}
+
+.infinate-scroll-offset-inactive .card .card-body {
+    background: rgba(150,222,255,0);
+    -webkit-transition: background 10s ease-out;
+    -moz-transition: background 10s ease-out;
+    -o-transition: background 10s ease-out;
+    transition: background 10s ease-out;
+}

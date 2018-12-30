@@ -32,6 +32,9 @@ namespace Plato.Discuss.ViewModels
     public class TopicIndexOptions
     {
 
+        [DataMember(Name = "action")]
+        public string Action { get; set; }
+
         [DataMember(Name = "search")]
         public string Search { get; set; }
         
@@ -48,12 +51,12 @@ namespace Plato.Discuss.ViewModels
 
         public TopicIndexParams Params { get; set; }
         
-        public InfiniteScrollOptions InfiniteScrollOptions { get; set; }
+        public ScrollerOptions Scroller { get; set; }
 
         public TopicIndexOptions()
         {
             Params = new TopicIndexParams();
-            InfiniteScrollOptions = new InfiniteScrollOptions();
+            Scroller = new ScrollerOptions();
         }
         
     }

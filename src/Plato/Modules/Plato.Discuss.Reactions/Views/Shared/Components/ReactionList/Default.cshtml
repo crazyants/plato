@@ -10,7 +10,7 @@
     }
 }
 
-<ul class="list-group list-group-flush list-group-hover card-footer @css" id="@id" data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-reactions-target="#@id" data-provide="reactions">
+<ul class="list-group list-group-flush list-group-hover card-footer float-left col-12 bg-light @css" id="@id" data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-reactions-target="#@id" data-provide="reactions">
     @foreach (var reaction in Model.Reactions)
     {
         <li>

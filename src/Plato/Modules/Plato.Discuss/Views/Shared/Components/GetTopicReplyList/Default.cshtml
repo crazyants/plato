@@ -10,7 +10,8 @@
              model = new TopicReplyListItemViewModel()
              {
                  Reply = reply,
-                 Offset = offset++
+                 Offset = offset++,
+                 SelectedOffset = Model.Options.Scroller.SelectedOffset
              }
          }))
      }
