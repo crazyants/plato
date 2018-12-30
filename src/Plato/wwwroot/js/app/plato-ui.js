@@ -2202,9 +2202,6 @@ $(function (win, doc, $) {
                             // visibie marker within the client viewport
                             var $marker = null,
                                 $markers = $caller.find("[data-infinite-scroll-offset]");
-
-                            console.log("markers found: " + $markers.length);
-
                             if ($markers.length > 0) {
                                 $markers.each(function () {
                                     if (methods.isElementInviewPort($(this))) {
@@ -2216,10 +2213,8 @@ $(function (win, doc, $) {
                           
                             // Ensure we found a marker
                             if ($marker) {
-                                console.log("marker found");
                                 // Update url with offset if valid
                                 var offset = parseInt($marker.data("infiniteScrollOffset"));
-                                console.log("marker offset: " + offset);
                                 if (!isNaN(offset)) {
                                     // Use replaceState to ensure the address bar is updated
                                     // but we don't actually add new history state
@@ -2301,8 +2296,8 @@ $(function (win, doc, $) {
             },
             loadPrevious: function ($caller) {
 
-                // Decrement and check bounds
-                var page = methods._page - 1;
+                // Get page and check bounds
+                var page = methods.getPreviousPage($caller);
                 if (page <= 0) {
                     return; 
                 }
@@ -2325,8 +2320,8 @@ $(function (win, doc, $) {
             },
             loadNext: function ($caller) {
 
-                // Increment and check bounds
-                var page = methods._page + 1;
+                // Get page and check bounds
+                var page = methods.getNextPage($caller);
                 if (page > methods._totalPages) {
                     return;
                 }
@@ -2422,6 +2417,28 @@ $(function (win, doc, $) {
                     }
                 }
                 return false;
+            },
+            getPages: function($caller) {
+                function compareNumbers(a, b) {
+                    return a - b;
+                }
+                return methods._loadedPages.sort(compareNumbers);
+            },
+            getPreviousPage: function ($caller) {
+                // Get a sorted array of pages, get first element and decrement by 1
+                var pages = methods.getPages($caller);
+                if (pages) {
+                    return pages[0] - 1;
+                }
+                return methods._page - 1;
+            },
+            getNextPage: function ($caller) {
+                // Get a sorted array of pages, get last element and increment by 1
+                var pages = methods.getPages($caller);
+                if (pages) {
+                    return pages[pages.length - 1] + 1;
+                }
+                return methods._page + 1;
             },
             getUrl: function($caller) {
                 if ($caller.data("infiniteScrollUrl")) {
