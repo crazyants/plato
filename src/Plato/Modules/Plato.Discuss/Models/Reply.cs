@@ -7,5 +7,7 @@ namespace Plato.Discuss.Models
 
         public bool IsNewReply { get; set; }
 
+        public int Offset { get; set; }
+
     }
 }

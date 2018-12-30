@@ -55,11 +55,11 @@ namespace Plato.Discuss.Share.Navigation
                             {"title", T["Options"]}
                         })
                         .Add(T["Share"], share => share
-                            .Action("Index", "Home", "Plato.Discuss.Share", new RouteValueDictionary()
+                            .Action("Share", "Home", "Plato.Discuss.Share", new RouteValueDictionary()
                             {
-                                ["entityId"] = reply.EntityId.ToString(),
+                                ["id"] = reply.EntityId.ToString(),
                                 ["alias"] = topic.Alias,
-                                ["entityReplyId"] = reply.Id.ToString()
+                                ["offset"] = reply.Offset.ToString()
                             })
                             .Attributes(new Dictionary<string, object>()
                             {

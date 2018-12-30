@@ -5,12 +5,12 @@
     var offset = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
     @foreach (var reply in Model.Replies.Data)
      {
+         reply.Offset = offset++;
          @await DisplayAsync(new View("TopicReplyListItem", new
          {
              model = new TopicReplyListItemViewModel()
              {
                  Reply = reply,
-                 Offset = offset++,
                  SelectedOffset = Model.Options.Scroller.SelectedOffset
              }
          }))

@@ -2016,6 +2016,7 @@ $(function (win, doc, $) {
                         // Raise onScrollstart event
                         // _scrolling is set to false when the scroll ends
                         if (methods._scrolling === false) {
+                            methods._scrolling = true;
                             if ($caller.data(dataKey).onScrollStart) {
                                 $caller.data(dataKey).onScrollStart(e);
                             }
@@ -2043,7 +2044,6 @@ $(function (win, doc, $) {
             },
             start: function ($caller, e) {
                 methods.stop($caller);
-                console.log("start timer " + $caller.data(dataKey).interval);
                 methods._timer = win.setTimeout(function () {
                     methods._scrolling = false;
                     if ($caller.data(dataKey).onScrollEnd) {
@@ -2173,10 +2173,16 @@ $(function (win, doc, $) {
                     }
                 }
 
+                // Default page already rendered server side
+                methods._loadedPages.push(methods._page);
+
+                // Bind events
                 this.bind($caller);
 
             },
             bind: function($caller) {
+
+                var url = methods.getUrl($caller);
 
                 // Wrap our scrollSpy initialization so we can defer
                 var bindScrollEvents = function() {
@@ -2184,57 +2190,68 @@ $(function (win, doc, $) {
                     // Bind scroll events
                     $().scrollSpy({
                         onScrollStart: function () {
+                            console.log("onScrollStart");
                             return;
+                       
                         },
                         onScrollEnd: function () {
 
+                            console.log("onScrollEnd");
+
                             // onScrollEnd iterate each offset marker and detect the first
                             // visibie marker within the client viewport
-                            var $marker = null;
-                            $caller.find("[data-infinite-scroll-offset]").each(function () {
-                                if (methods.isElementInviewPort($(this))) {
-                                    $marker = $(this);
-                                    return false;
-                                }
-                            });
+                            var $marker = null,
+                                $markers = $caller.find("[data-infinite-scroll-offset]");
 
+                            console.log("markers found: " + $markers.length);
+
+                            if ($markers.length > 0) {
+                                $markers.each(function () {
+                                    if (methods.isElementInviewPort($(this))) {
+                                        $marker = $(this);
+                                        return false;
+                                    }
+                                });
+                            }
+                          
                             // Ensure we found a marker
                             if ($marker) {
+                                console.log("marker found");
                                 // Update url with offset if valid
                                 var offset = parseInt($marker.data("infiniteScrollOffset"));
+                                console.log("marker offset: " + offset);
                                 if (!isNaN(offset)) {
                                     // Use replaceState to ensure the address bar is updated
                                     // but we don't actually add new history state
-                                    history.replaceState(state, doc.title, methods.getUrl($caller) + "/" + offset);
+                                    history.replaceState(state, doc.title, url + "/" + offset);
                                 }
                             }
 
                         },
                         onScroll: function (args, e) {
 
+                            // Ensure we are not already loading a page
                             if (methods._loading) {
                                 return;
                             }
-
-                            // At the top of the viewport remove offset from url
-                            if (args.threshold <= 0.15) {
-
-                                if (methods._page === 1) {
-                                    // Stop scrollspy to prevent the OnScrollEnd event from executing
-                                    // The timer will start again when the client starts scrolling
-                                    $().scrollSpy("stop");
-                                    // Clear offset
-                                    var url = methods.getUrl($caller);
-                                    if (state) {
-                                        history.replaceState(state, doc.title, url);
-                                    }
-                                } else {
+                            
+                            // At the veru top of the viewport remove offset from url
+                            if (args.scrollTop === 0) {
+                                // Stop scrollspy to prevent the OnScrollEnd event from executing
+                                // The timer will start again when the client starts scrolling
+                                $().scrollSpy("stop");
+                                // Clear offset
+                                if (state) {
+                                    history.replaceState(state, doc.title, url);
+                                }
+                            } else {
+                                if (args.threshold <= 0.05) {
+                                    // At the top of the threshold attempt to load previous page
                                     methods.loadPrevious($caller);
                                 }
-
                             }
 
-                            // At the bottom of the viewport attempt to load next page
+                            // At the bottom of threshold attempt to load next page
                             if (args.threshold > 0.95) {
                                 methods.loadNext($caller);
                             }
@@ -2244,29 +2261,30 @@ $(function (win, doc, $) {
 
                 }
 
-                // Focus offset if available, wait until we focus
-                // before starting to bind scrollSpy events
+                // Scroll to offset if available, wait until we complete
+                // scrolling before starting to bind own scrollSpy events
                 if (methods._offset > 0) {
-
                     var $marker = $caller.find('[data-infinite-scroll-offset="' + methods._offset + '"]');
                     if ($marker.length > 0) {
                         $marker.scrollTo({
                                 onComplete: function() {
+                                    // Apply css to deactivate selected offset css (set server side)
+                                    // Css can be applied directly to marker or a child of the marker
+                                    if ($(this).hasClass("infinate-scroll-offset-active")) {
+                                        $(this).addClass("infinate-scroll-offset-inactive");
+                                    } else {
+                                        $caller.find(".infinate-scroll-offset-active")
+                                            .addClass("infinate-scroll-offset-inactive");
+                                    }
                                     bindScrollEvents();
                                 }
                             },
-                            "go");
-                    }
-
-                    // Apply css to deactivate selected offset css
-                    if ($marker.hasClass("infinate-scroll-offset-active")) {
-                        $marker.addClass("infinate-scroll-offset-inactive");
+                            "go"); // initialze scrollTo
                     } else {
-                        $caller.find(".infinate-scroll-offset-active")
-                            .addClass("infinate-scroll-offset-inactive");
+                        // If we didn't find a marker ensure we still bind scrollSpy
+                        bindScrollEvents();
                     }
                     
-
                 } else {
 
                     // Bind scroll events right away
@@ -2300,7 +2318,9 @@ $(function (win, doc, $) {
                     if ($loader) {
                         $loader.hide();
                     }
-                    $($caller).prepend(data);
+                    if (data !== "") {
+                        $loader.after(data);
+                    }
                 });
             },
             loadNext: function ($caller) {
@@ -2316,13 +2336,15 @@ $(function (win, doc, $) {
                 if ($loader) {
                     $loader.show();
                 }
-                
+
                 // Load data
                 methods.load($caller, page, function (data) {
                     if ($loader) {
                         $loader.hide();
                     }
-                    $($caller).append(data);
+                    if (data !== "") {
+                        $loader.before(data);
+                    }
                 });
 
             },
@@ -2331,22 +2353,18 @@ $(function (win, doc, $) {
                 // Ensure we have a callback url
                 var url = methods.getUrl($caller),
                     pageLoaded = methods.isPageLoaded($caller, page);
-                
-                console.log("page: " + page + " - pageLoaded: " + pageLoaded);
-
                 if (url === "" || pageLoaded) {
                     return;
-                }
-                
-
-                // onLoad event
-                if ($caller.data(dataKey).onLoad) {
-                    $caller.data(dataKey).onLoad($caller);
                 }
 
                 // Indicate load
                 methods._loading = true;
 
+                // onLoad event
+                if ($caller.data(dataKey).onLoad) {
+                    $caller.data(dataKey).onLoad($caller);
+                }
+                
                 // Append our page index to the callback url
                 url += url.indexOf("?") >= 0 ? "&" : "?";
                 url += defaults.pagerKey + "=" + page;
@@ -2360,24 +2378,24 @@ $(function (win, doc, $) {
                     method: "GET"
                 }).done(function(data) {
 
-                    // Track page load
-                    methods._loadedPages.push(page);
-                    methods._page = page;
-
-                    // Populate with response
-                    if (data !== "") {
-                        func(data);
-                    }
-
-                    // Mark done
+                    // Mark done loading 
                     methods._loading = false;
+
+                    // Register page as loaded
+                    methods._loadedPages.push(page);
+
+                    // Set current page
+                    methods._page = page;
+                    
+                    // Callback
+                    func(data);
 
                     // onLoaded event
                     if ($caller.data(dataKey).onLoaded) {
                         $caller.data(dataKey).onLoaded($caller);
                     }
 
-                    // Execute any registered ready functions
+                    // Execute any externally registered ready functions
                     for (var i = 0; i < methods._readyList.length; i++) {
                         if (typeof methods._readyList[i] === "function") {
                             methods._readyList[i]($caller);
@@ -2421,14 +2439,19 @@ $(function (win, doc, $) {
                             return false;
                         }
                     });
+                    if ($loader) {
+                        $loader
+                            .empty()
+                            .append($($caller.data(dataKey).loaderTemplate));
+                    }
                 }
-                $loader.empty().append($($caller.data(dataKey).loaderTemplate));
+                
                 return $loader;
             },
             getLoaders: function($caller) {
                 var loaderSelector = $caller.data("infinateScrollLoadingSelector");
                 if (loaderSelector) {
-                    return $(loaderSelector);
+                    return $caller.find(loaderSelector);
                 }
                 return null;
             }
@@ -2474,7 +2497,7 @@ $(function (win, doc, $) {
                 } else {
                     // $().infiniteScroll()
                     var $caller = $(win);
-                    if (!$(this).data(dataIdKey)) {
+                    if (!$caller.data(dataIdKey)) {
                         var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                         $caller.data(dataIdKey, id);
                         $caller.data(dataKey, $.extend({}, defaults, options));
@@ -4421,8 +4444,7 @@ $(function (win, doc, $) {
     // ----------------------------
 
     $.fn.platoUI = function (opts) {
-
-
+        
         /* dialog */
         //this.find('[data-provide="dialog"]').dialog();
 
@@ -4486,9 +4508,23 @@ $(function (win, doc, $) {
         
     }
 
-    $(doc).ready(function() {
+    $(doc).ready(function () {
+
         $("body").platoUI();
+
+        // Actuvate plug-ins used within infinateScroller load
+        $().infiniteScroll(function ($ele) {
+
+            /* dialogSpy */
+            $ele.find('[data-toggle="dialog"]').dialogSpy();
+
+            //$ele.platoUI();
+        }, "ready");
+
     });
+
+
+
 
 
 }(window, document, jQuery));

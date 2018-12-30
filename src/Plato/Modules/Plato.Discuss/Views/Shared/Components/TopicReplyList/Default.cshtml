@@ -3,27 +3,27 @@
 @if (Model.Replies != null)
 {
     var offset = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
-<div data-provide="infiniteScroll"
-     data-infinite-scroll-url="@Model.Options.Scroller.Url"
-     data-infinite-scroll-offset="@Model.Options.Scroller.SelectedOffset"
-     data-infinite-scroll-page="@Model.Pager.Page"
-     data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
-     data-infinate-scroll-loading-selector=".infinate-scroll-loader">
-    <div class="infinate-scroll-loader" data-type="previous"></div>
-    @foreach (var reply in Model.Replies.Data)
-    {
-        @await DisplayAsync(new View("TopicReplyListItem", new
+    <div data-provide="infiniteScroll"
+         data-infinite-scroll-url="@Model.Options.Scroller.Url"
+         data-infinite-scroll-offset="@Model.Options.Scroller.SelectedOffset"
+         data-infinite-scroll-page="@Model.Pager.Page"
+         data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
+         data-infinate-scroll-loading-selector=".infinate-scroll-loader">
+        <div class="infinate-scroll-loader" data-type="previous"></div>
+        @foreach (var reply in Model.Replies.Data)
         {
-            model = new TopicReplyListItemViewModel()
+            reply.Offset = offset++;
+            @await DisplayAsync(new View("TopicReplyListItem", new
             {
-                Reply = reply,
-                Offset = offset++,
-                SelectedOffset = Model.Options.Scroller.SelectedOffset
-            }
-        }))
-    }
-    <div class="infinate-scroll-loader" data-type="next"></div>
-</div>
+                model = new TopicReplyListItemViewModel()
+                {
+                    Reply = reply,
+                    SelectedOffset = Model.Options.Scroller.SelectedOffset
+                }
+            }))
+        }
+        <div class="infinate-scroll-loader" data-type="next"></div>
+    </div>
 
 }
 else

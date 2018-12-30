@@ -1125,10 +1125,10 @@
 /* InfinateScroll */
 /* ------------ */
 
+/* loaders are hidden by default */
 .infinate-scroll-loader { display: none; }
 
-/* Used by InfinateScroll to highlighted current offset on first load */
-
+/* Highlight current infinate scroll offset  */
 .infinate-scroll-offset-active {
     background: rgba(150,222,255,0.5);
 }
