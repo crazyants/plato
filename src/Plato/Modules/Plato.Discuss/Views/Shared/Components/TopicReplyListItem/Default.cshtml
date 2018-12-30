@@ -1,10 +1,10 @@
 ﻿@model TopicReplyListItemViewModel
 @{
     var css = Model.Offset == Model.SelectedOffset
-        ? "topic-reply infinate-scroll-offset-active"
-        : "topic-reply";
+        ? "card-body infinate-scroll-offset-active"
+        : "card-body";
 }
-<div class="@css" data-infinite-scroll-offset="@Model.Offset">
+<div data-infinite-scroll-offset="@Model.Offset">
     <div class="topic-reply-left">
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
             <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
@@ -52,7 +52,7 @@
                     </ul>
                 </div>
             </card-title>
-            <card-body class="card-body">
+            <card-body class="@css">
                 <div class="markdown-body m-3" data-provide="markdownBody">
                     @Html.Raw(@Model.Reply.Html)
                 </div>

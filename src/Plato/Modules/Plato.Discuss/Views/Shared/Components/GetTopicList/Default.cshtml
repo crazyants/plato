@@ -2,18 +2,22 @@
 
 @if (Model.Results != null)
 {
+    var offset = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
     @foreach (var topic in Model.Results.Data)
-     {
-         <li class="list-group-item  list-group-item-action pt-4">
-             @await DisplayAsync(new View("TopicListItem", new
-             {
-                 model = new TopicListItemViewModel()
-                 {
-                     Topic = topic
-                 }
-             }))
-         </li>
-     }
+    {
+        <li class="list-group-item  list-group-item-action p-0">
+            @await DisplayAsync(new View("TopicListItem", new
+            {
+                model = new TopicListItemViewModel()
+                {
+                    Topic = topic,
+                    Offset = offset++,
+                    SelectedOffset = Model.Options.Scroller.SelectedOffset
+                }
+            }))
+        </li>
+        
+    }
 }
 
 

@@ -80,6 +80,7 @@ namespace Plato.Discuss.Controllers
         // -----------------
 
         public async Task<IActionResult> Index(
+            int offset,
             TopicIndexOptions opts,
             PagerOptions pager)
         {
@@ -95,7 +96,12 @@ namespace Plato.Discuss.Controllers
             {
                 pager = new PagerOptions();
             }
-
+            
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -126,7 +132,11 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinate scroll options
-            opts.Scroller = GetIndexInfiniteScrollOptions();
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl(),
+                SelectedOffset = offset
+            };
 
             // Build view model
             var viewModel = new TopicIndexViewModel()
@@ -169,7 +179,7 @@ namespace Plato.Discuss.Controllers
             opts.Sort = SortBy.Replies;
             opts.Order = OrderBy.Desc;
 
-            return Index(opts, pager);
+            return Index(0, opts, pager);
         }
 
         // -----------------
@@ -340,7 +350,7 @@ namespace Plato.Discuss.Controllers
             // Build infinate scroll options
             opts.Scroller = new ScrollerOptions
             {
-                Url = GetTopicInfiniteScrollCallbackUrl(topic),
+                Url = GetInfiniteScrollCallbackUrl(),
                 SelectedOffset = offset
             };
 
@@ -616,39 +626,18 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Private Methods"
+        
 
-        ScrollerOptions GetIndexInfiniteScrollOptions()
+        string GetInfiniteScrollCallbackUrl()
         {
 
-            // Swaps current action for "Get" action and removes current page 
-            var routeValues = new RouteValueDictionary(this.RouteData.Values);
-            routeValues.Remove("pager.page");
-            routeValues.Remove("offset");
-
-            return new ScrollerOptions()
-            {
-                Url = _contextFacade.GetRouteUrl(routeValues)
-            };
-
-        }
-
-        string GetTopicInfiniteScrollCallbackUrl(Topic topic)
-        {
-
-            if (topic == null)
-            {
-                throw new ArgumentNullException(nameof(topic));
-            }
-
-            //var routeValues = new RouteValueDictionary(this.RouteData.Values);
             RouteData.Values.Remove("pager.page");
             RouteData.Values.Remove("offset");
        
             return _contextFacade.GetRouteUrl(RouteData.Values);
 
         }
-
-
+        
         string GetSampleMarkDown(int number)
         {
             return @"Hi There, 

@@ -2219,25 +2219,18 @@ $(function (win, doc, $) {
                             // At the top of the viewport remove offset from url
                             if (args.threshold <= 0.15) {
 
-                                //if (methods._page === 1) {
-
-                                //    // Stop scrollspy to prevent the OnScrollEnd event from executing
-                                //    // The timer will start again when the client starts scrolling
-                                //    $().scrollSpy("stop");
-                                //    // Clear offset
-                                //    var url = methods.getUrl($caller);
-                                //    if (state) {
-                                //        history.replaceState(state, doc.title, url);
-                                //    }
-
-                                //} else {
-
-                              
+                                if (methods._page === 1) {
+                                    // Stop scrollspy to prevent the OnScrollEnd event from executing
+                                    // The timer will start again when the client starts scrolling
+                                    $().scrollSpy("stop");
+                                    // Clear offset
+                                    var url = methods.getUrl($caller);
+                                    if (state) {
+                                        history.replaceState(state, doc.title, url);
+                                    }
+                                } else {
                                     methods.loadPrevious($caller);
-                                    
-                                    
-                                //}
-
+                                }
 
                             }
 
@@ -2266,7 +2259,13 @@ $(function (win, doc, $) {
                     }
 
                     // Apply css to deactivate selected offset css
-                    $marker.addClass("infinate-scroll-offset-inactive");
+                    if ($marker.hasClass("infinate-scroll-offset-active")) {
+                        $marker.addClass("infinate-scroll-offset-inactive");
+                    } else {
+                        $caller.find(".infinate-scroll-offset-active")
+                            .addClass("infinate-scroll-offset-inactive");
+                    }
+                    
 
                 } else {
 

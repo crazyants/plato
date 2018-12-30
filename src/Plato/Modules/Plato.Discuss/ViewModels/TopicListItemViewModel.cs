@@ -7,8 +7,12 @@ namespace Plato.Discuss.ViewModels
     public class TopicListItemViewModel
     {
 
-        public Topic Topic { get; set; }
+        public int Offset { get; set; }
 
+        public int SelectedOffset { get; set; }
+
+        public Topic Topic { get; set; }
+        
         public ILabelBase Channel { get; set; }
 
         public IEnumerable<ILabelBase> Labels { get; set; }
