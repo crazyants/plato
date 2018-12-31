@@ -339,7 +339,9 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
+            interval: 250,
             event: "click",
+            position: "top",
             onBeforeComplete: function () { },
             onComplete: function () { }
         };
@@ -384,14 +386,17 @@ $(function (win, doc, $) {
                     });
 
                 var $target = null,
-                    href = $caller.attr("href");
+                    href = $caller.attr("href"),
+                    interval = $caller.data(dataKey).interval,
+                    position = $caller.data(dataKey).position;
+
                 if (href) {
                     $target = $(href);
                     if ($target.length > 0) {
                         $('html, body').stop().animate({
-                                scrollTop: $target.offset().top - 10
+                            scrollTop: position === "top" ? $target.offset().top : $target.offset().bottom
                             },
-                            250,
+                            interval,
                             'easeInOutExpo',
                             function() {
                                 $caller.data(dataKey).onComplete($caller, $target);
@@ -401,9 +406,9 @@ $(function (win, doc, $) {
                 } else {
                     $target = $caller;
                     $('html, body').stop().animate({
-                            scrollTop: $target.offset().top - 10
+                        scrollTop: position === "top" ? $target.offset().top : $target.offset().bottom
                         },
-                        250,
+                        interval,
                         'easeInOutExpo',
                         function () {
                             $caller.data(dataKey).onComplete($caller, $target);
@@ -1982,7 +1987,7 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            interval: 750, // the duration to wait in milliseconds before invoking the onScrollEnd event
+            interval: 350, // the duration to wait in milliseconds before invoking the onScrollEnd event
             onScrollStart: null,
             onScrollEnd: null,
             onScroll: null
@@ -2006,7 +2011,6 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-                
                 $caller.bind("scroll",
                     function(e) {
 
@@ -2037,7 +2041,6 @@ $(function (win, doc, $) {
                         }
 
                     });
-
             },
             unbind: function ($caller) {
                 $caller.unbind("scroll");
@@ -2113,11 +2116,11 @@ $(function (win, doc, $) {
     }();
 
     /* InfiniteScroll */
-    var infiniteScroll = function () {
+    var infiniteScroll = function() {
 
         var dataKey = "infiniteScroll",
             dataIdKey = dataKey + "Id";
-        
+
         var defaults = {
             pagerKey: "pager.page",
             loaderTemplate: '<p class="text-center"><i class="fal fa-2x fa-spinner fa-spin py-4"></i></p>',
@@ -2148,7 +2151,7 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-                
+
                 // Allow setting of default page via data attribute
                 if ($caller.data("infiniteScrollPage")) {
                     var page = parseInt($caller.data("infiniteScrollPage"));
@@ -2164,7 +2167,7 @@ $(function (win, doc, $) {
                         methods._offset = offset;
                     }
                 }
-                
+
                 // Allow setting of default page via data attribute
                 if ($caller.data("infiniteScrollTotalPages")) {
                     var totalPages = parseInt($caller.data("infiniteScrollTotalPages"));
@@ -2182,82 +2185,57 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                var url = methods.getUrl($caller);
+                var url = methods.getUrl($caller),
+                    bindScrollEvents = function() {
 
-                // Wrap our scrollSpy initialization so we can defer
-                var bindScrollEvents = function() {
-                    
-                    // Bind scroll events
-                    $().scrollSpy({
-                        onScrollStart: function () {
-                            console.log("onScrollStart");
-                            return;
-                       
-                        },
-                        onScrollEnd: function () {
+                        var delta = 0.05;
 
-                            console.log("onScrollEnd");
+                        // Bind scroll events
+                        $().scrollSpy({
+                            onScrollEnd: function() {
+                                methods.updateOffsetState($caller);
+                            },
+                            onScroll: function(args, e) {
 
-                            // onScrollEnd iterate each offset marker and detect the first
-                            // visibie marker within the client viewport
-                            var $marker = null,
-                                $markers = $caller.find("[data-infinite-scroll-offset]");
-                            if ($markers.length > 0) {
-                                $markers.each(function () {
-                                    if (methods.isElementInviewPort($(this))) {
-                                        $marker = $(this);
-                                        return false;
+                                // Ensure we are not already loading a page
+                                if (methods._loading) {
+                                    $().scrollSpy("stop");
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return;
+                                }
+
+                                // At the veru top of the viewport remove offset from url
+                                if (args.scrollTop === 0) {
+                                    // Stop scrollspy to prevent the OnScrollEnd event from executing
+                                    $().scrollSpy("stop");
+                                    // Clear offset
+                                    if (state) {
+                                        history.replaceState(state, doc.title, url);
                                     }
-                                });
-                            }
-                          
-                            // Ensure we found a marker
-                            if ($marker) {
-                                // Update url with offset if valid
-                                var offset = parseInt($marker.data("infiniteScrollOffset"));
-                                if (!isNaN(offset)) {
-                                    // Use replaceState to ensure the address bar is updated
-                                    // but we don't actually add new history state
-                                    history.replaceState(state, doc.title, url + "/" + offset);
+                                } else {
+                                
+                                    if (args.scrollTop <= $caller.offset().top) {
+                                        methods.loadPrevious($caller);
+                                    }
+                                    if (args.threshold < delta) {
+                                        // At the top of the threshold attempt to load previous page
+                                      
+                                    }
                                 }
-                            }
 
-                        },
-                        onScroll: function (args, e) {
-
-                            // Ensure we are not already loading a page
-                            if (methods._loading) {
-                                return;
-                            }
-                            
-                            // At the veru top of the viewport remove offset from url
-                            if (args.scrollTop === 0) {
-                                // Stop scrollspy to prevent the OnScrollEnd event from executing
-                                // The timer will start again when the client starts scrolling
-                                $().scrollSpy("stop");
-                                // Clear offset
-                                if (state) {
-                                    history.replaceState(state, doc.title, url);
+                                // At the bottom of threshold attempt to load next page
+                                if (args.threshold > delta) {
+                                    methods.loadNext($caller);
                                 }
-                            } else {
-                                if (args.threshold <= 0.05) {
-                                    // At the top of the threshold attempt to load previous page
-                                    methods.loadPrevious($caller);
-                                }
+
                             }
+                        });
 
-                            // At the bottom of threshold attempt to load next page
-                            if (args.threshold > 0.95) {
-                                methods.loadNext($caller);
-                            }
-
-                        }
-                    });
-
-                }
+                    }
 
                 // Scroll to offset if available, wait until we complete
-                // scrolling before starting to bind own scrollSpy events
+                // scrolling before starting to bind our scrollSpy events
                 if (methods._offset > 0) {
                     var $marker = $caller.find('[data-infinite-scroll-offset="' + methods._offset + '"]');
                     if ($marker.length > 0) {
@@ -2265,11 +2243,11 @@ $(function (win, doc, $) {
                                 onComplete: function() {
                                     // Apply css to deactivate selected offset css (set server side)
                                     // Css can be applied directly to marker or a child of the marker
-                                    if ($(this).hasClass("infinate-scroll-offset-active")) {
-                                        $(this).addClass("infinate-scroll-offset-inactive");
+                                    if ($(this).hasClass("infinate-scroll-offset")) {
+                                        $(this).addClass("inactive");
                                     } else {
-                                        $caller.find(".infinate-scroll-offset-active")
-                                            .addClass("infinate-scroll-offset-inactive");
+                                        $caller.find(".infinate-scroll-offset")
+                                            .addClass("inactive");
                                     }
                                     bindScrollEvents();
                                 }
@@ -2279,12 +2257,10 @@ $(function (win, doc, $) {
                         // If we didn't find a marker ensure we still bind scrollSpy
                         bindScrollEvents();
                     }
-                    
-                } else {
 
+                } else {
                     // Bind scroll events right away
                     bindScrollEvents();
-
                 }
 
             },
@@ -2294,12 +2270,12 @@ $(function (win, doc, $) {
                 methods._page = 1;
                 methods._loading = false;
             },
-            loadPrevious: function ($caller) {
+            loadPrevious: function($caller) {
 
                 // Get page and check bounds
                 var page = methods.getPreviousPage($caller);
                 if (page <= 0) {
-                    return; 
+                    return;
                 }
 
                 // Show loader
@@ -2309,16 +2285,20 @@ $(function (win, doc, $) {
                 }
 
                 // Load data
-                methods.load($caller, page, function (data) {
-                    if ($loader) {
-                        $loader.hide();
-                    }
-                    if (data !== "") {
-                        $loader.after(data);
-                    }
-                });
+                methods.load($caller,
+                    page,
+                    function(data) {
+                        if ($loader) {
+                            $loader.hide();
+                        }
+                        if (data !== "") {
+                            $loader.after(data);
+                        }
+                        // Scroll to start of next page
+                        methods.scrollToPage($caller, methods._page + 1);
+                    });
             },
-            loadNext: function ($caller) {
+            loadNext: function($caller) {
 
                 // Get page and check bounds
                 var page = methods.getNextPage($caller);
@@ -2333,17 +2313,19 @@ $(function (win, doc, $) {
                 }
 
                 // Load data
-                methods.load($caller, page, function (data) {
-                    if ($loader) {
-                        $loader.hide();
-                    }
-                    if (data !== "") {
-                        $loader.before(data);
-                    }
-                });
+                methods.load($caller,
+                    page,
+                    function(data) {
+                        if ($loader) {
+                            $loader.hide();
+                        }
+                        if (data !== "") {
+                            $loader.before(data);
+                        }
+                    });
 
             },
-            load: function ($caller, page, func) {
+            load: function($caller, page, func) {
 
                 // Ensure we have a callback url
                 var url = methods.getUrl($caller),
@@ -2359,7 +2341,7 @@ $(function (win, doc, $) {
                 if ($caller.data(dataKey).onLoad) {
                     $caller.data(dataKey).onLoad($caller);
                 }
-                
+
                 // Append our page index to the callback url
                 url += url.indexOf("?") >= 0 ? "&" : "?";
                 url += defaults.pagerKey + "=" + page;
@@ -2375,13 +2357,13 @@ $(function (win, doc, $) {
 
                     // Mark done loading 
                     methods._loading = false;
-                    
+
                     // If a page was returned register page as loaded
                     if (data !== "") {
                         methods._loadedPages.push(page);
                         methods._page = page;
                     }
-                    
+
                     // Callback
                     func(data);
 
@@ -2400,7 +2382,7 @@ $(function (win, doc, $) {
                 });
 
             },
-            isElementInviewPort: function (el) {
+            isElementInviewPort: function(el) {
                 var rect = el[0].getBoundingClientRect();
                 return (
                     rect.top >= 0 &&
@@ -2409,6 +2391,60 @@ $(function (win, doc, $) {
                         rect.right <= (window.innerWidth || $(window).width())
                 );
 
+            },
+            updateOffsetState: function($caller) {
+
+                // onScrollEnd iterate each offset marker and detect the first
+                // visibie marker within the client viewport
+                var url = methods.getUrl($caller),
+                    $marker = null,
+                    $markers = $caller.find("[data-infinite-scroll-offset]");
+                if ($markers.length > 0) {
+                    $markers.each(function() {
+                        if (methods.isElementInviewPort($(this))) {
+                            $marker = $(this);
+                            return false;
+                        }
+                    });
+                }
+
+                // Ensure we found a marker
+                if ($marker) {
+                    // Update url with offset if valid
+                    var offset = parseInt($marker.data("infiniteScrollOffset"));
+                    if (!isNaN(offset)) {
+                        // Use replaceState to ensure the address bar is updated
+                        // but we don't actually add new history state
+                        history.replaceState(state, doc.title, url + "/" + offset);
+                    }
+                }
+
+            },
+            scrollToPage: function($caller, page) {
+                var $page = methods.getPageMarker($caller, page);
+                if ($page) {
+                    $().scrollSpy("unbind");
+                    $page.scrollTo({
+                            interval: 250,
+                            onComplete: function() {
+                                $().scrollSpy("bind");
+                            }
+                        },
+                        "go");
+                }
+            },
+            getPageMarker: function($caller, page) {
+                var $page = null,
+                    $pages = $caller.find("[data-infinite-scroll-page]");
+                if ($pages.length > 0) {
+                    $pages.each(function() {
+                        if ($(this).data("infiniteScrollPage") === page) {
+                            $page = $(this);
+                            return false;
+                        }
+                    });
+                }
+                return $page;
             },
             isPageLoaded: function($caller, page) {
                 for (var i = 0; i < methods._loadedPages.length; i++) {
@@ -2423,7 +2459,7 @@ $(function (win, doc, $) {
                     return a - b;
                 });
             },
-            getPreviousPage: function ($caller) {
+            getPreviousPage: function($caller) {
                 // Get a sorted array of pages, get first element and decrement by 1
                 var pages = methods.getPages($caller);
                 if (pages) {
@@ -2431,7 +2467,7 @@ $(function (win, doc, $) {
                 }
                 return methods._page - 1;
             },
-            getNextPage: function ($caller) {
+            getNextPage: function($caller) {
                 // Get a sorted array of pages, get last element and increment by 1
                 var pages = methods.getPages($caller);
                 if (pages) {
@@ -2445,11 +2481,11 @@ $(function (win, doc, $) {
                 }
                 return "";
             },
-            getLoader: function ($caller, type) {
+            getLoader: function($caller, type) {
                 var $loader = null,
                     $loaders = methods.getLoaders($caller);
                 if ($loaders) {
-                    $loaders.each(function () {
+                    $loaders.each(function() {
                         if ($(this).data("type") === type) {
                             $loader = $(this);
                             return false;
@@ -2461,7 +2497,7 @@ $(function (win, doc, $) {
                             .append($($caller.data(dataKey).loaderTemplate));
                     }
                 }
-                
+
                 return $loader;
             },
             getLoaders: function($caller) {
@@ -2474,7 +2510,7 @@ $(function (win, doc, $) {
         }
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
@@ -2482,25 +2518,25 @@ $(function (win, doc, $) {
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
                     switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            func = a;
-                            break;
+                    case Object:
+                        $.extend(options, a);
+                        break;
+                    case String:
+                        methodName = a;
+                        break;
+                    case Boolean:
+                        break;
+                    case Number:
+                        break;
+                    case Function:
+                        func = a;
+                        break;
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).infiniteScroll()
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);

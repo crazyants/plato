@@ -6,14 +6,16 @@
     @foreach (var reply in Model.Replies.Data)
      {
          reply.Offset = offset++;
-         @await DisplayAsync(new View("TopicReplyListItem", new
-         {
-             model = new TopicReplyListItemViewModel()
+         <div data-infinite-scroll-page="@Model.Pager.Page">
+             @await DisplayAsync(new View("TopicReplyListItem", new
              {
-                 Topic = Model.Topic,
-                 Reply = reply,
-                 SelectedOffset = Model.Options.Scroller.SelectedOffset
-             }
-         }))
+                 model = new TopicReplyListItemViewModel()
+                 {
+                     Topic = Model.Topic,
+                     Reply = reply,
+                     SelectedOffset = Model.Options.Scroller.SelectedOffset
+                 }
+             }))
+         </div>
      }
 }

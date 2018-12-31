@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.Routing
-@using Microsoft.AspNetCore.Routing
+﻿@using Microsoft.AspNetCore.Routing
 @using Plato.Internal.Data.Abstractions
 @model TopicIndexViewModel
 
@@ -95,7 +94,7 @@
                 <li class="infinate-scroll-loader" data-type="previous"></li>
                 @foreach (var topic in Model.Results.Data)
                 {
-                    <li class="list-group-item list-group-item-action p-0">
+                    <li data-infinite-scroll-page="@Model.Pager.Page" class="list-group-item list-group-item-action p-0">
                         @await DisplayAsync(new View("TopicListItem", new
                         {
                             model = new TopicListItemViewModel()
