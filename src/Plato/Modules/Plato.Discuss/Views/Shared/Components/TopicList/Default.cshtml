@@ -83,12 +83,12 @@
         
         @if (Model.Results != null)
         {
-            var offset = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
+            var offset = Model.Pager.Offset;
             <ul data-provide="infiniteScroll"
                 data-infinite-scroll-url="@Model.Options.Scroller.Url"
-                data-infinite-scroll-offset="@offset"
                 data-infinite-scroll-selected-offset="@Model.Options.Scroller.SelectedOffset"
                 data-infinite-scroll-page="@Model.Pager.Page"
+                data-infinite-scroll-offset="@Model.Pager.Offset"
                 data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
                 class="list-group list-group-flush list-group-hover">
                 <li class="infinite-scroll-loader" data-type="previous"></li>

@@ -22,7 +22,9 @@ namespace Plato.Internal.Navigation
         public int Page { get; set; } = 1;
 
         public int PageSize { get; set; } = 20;
-        
+
+        public int Offset => PageSize * Page - PageSize + 1;
+
         public int Total => _total;
 
         public bool Enabled { get; set; } = true;

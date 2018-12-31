@@ -2025,21 +2025,25 @@ $(function (win, doc, $) {
                                 $caller.data(dataKey).onScrollStart(e);
                             }
                         }
-                     
-                        // Raise onScroll passing in a normalized scroll threadhold
-                        var scrollTop = $(win).scrollTop(),
-                            docHeight = $(doc).height(),
-                            winHeight = $(win).height(),
-                            args = {
-                                scrollTop: scrollTop,
-                                scrollBottom: scrollTop + winHeight,
-                                docHeight: docHeight,
-                                winHeight: winHeight,
-                                threshold: scrollTop / (docHeight - winHeight)
-                            };
-                        if ($caller.data(dataKey).onScroll) {
-                            $caller.data(dataKey).onScroll(args, e);
+
+                        var onScroll = function() {
+                            // Raise onScroll passing in a normalized scroll threadhold
+                            var scrollTop = $(win).scrollTop(),
+                                docHeight = $(doc).height(),
+                                winHeight = $(win).height(),
+                                args = {
+                                    scrollTop: scrollTop,
+                                    scrollBottom: scrollTop + winHeight,
+                                    docHeight: docHeight,
+                                    winHeight: winHeight,
+                                    threshold: scrollTop / (docHeight - winHeight)
+                                };
+                            if ($caller.data(dataKey).onScroll) {
+                                $caller.data(dataKey).onScroll(args, e);
+                            }
                         }
+                
+                        methods.debounce(onScroll(), 500);
 
                     });
             },
@@ -2058,8 +2062,21 @@ $(function (win, doc, $) {
             stop: function ($caller) {
                 win.clearTimeout(methods._timer);
                 methods._timer = null;
+            },
+            debounce: function(func, wait, immediate) {
+                var timeout;
+                return function () {
+                    var context = this, args = arguments;
+                    var later = function () {
+                        timeout = null;
+                        if (!immediate) func.apply(context, args);
+                    };
+                    var callNow = immediate && !timeout;
+                    win.clearTimeout(timeout);
+                    timeout = win.setTimeout(later, wait);
+                    if (callNow) func.apply(context, args);
+                };
             }
-
         }
 
         return {
@@ -2463,7 +2480,7 @@ $(function (win, doc, $) {
                         $().scrollSpy("unbind");
                         // Scroll to offset marker for page
                         $marker.scrollTo({
-                                interval: 250,
+                                interval: 0,
                                 onComplete: function() {
                                     $().scrollSpy("bind");
                                 }
