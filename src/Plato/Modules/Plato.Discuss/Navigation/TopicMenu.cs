@@ -44,8 +44,7 @@ namespace Plato.Discuss.Navigation
                     .Attributes(new Dictionary<string, object>()
                     {
                         {"data-provide", "tooltip"},
-                        {"title", T["Edit"]},
-                        {"data-entity-id", topic.Id.ToString() }
+                        {"title", T["Edit"]}
                     })
                     .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                     {

@@ -51,7 +51,13 @@ namespace Plato.Discuss.ViewComponents
             TopicOptions options,
             PagerOptions pager)
         {
-            
+
+            var topic = await _entityStore.GetByIdAsync(options.Params.EntityId);
+            if (topic == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             var results = await _replyService.GetRepliesAsync(options, pager);
             
             // Set total on pager
@@ -62,6 +68,7 @@ namespace Plato.Discuss.ViewComponents
             {
                 Options = options,
                 Pager = pager,
+                Topic = topic,
                 Replies = results
         };
 

@@ -2375,12 +2375,12 @@ $(function (win, doc, $) {
 
                     // Mark done loading 
                     methods._loading = false;
-
-                    // Register page as loaded
-                    methods._loadedPages.push(page);
-
-                    // Set current page
-                    methods._page = page;
+                    
+                    // If a page was returned register page as loaded
+                    if (data !== "") {
+                        methods._loadedPages.push(page);
+                        methods._page = page;
+                    }
                     
                     // Callback
                     func(data);
@@ -2419,10 +2419,9 @@ $(function (win, doc, $) {
                 return false;
             },
             getPages: function($caller) {
-                function compareNumbers(a, b) {
+                return methods._loadedPages.sort(function(a, b) {
                     return a - b;
-                }
-                return methods._loadedPages.sort(compareNumbers);
+                });
             },
             getPreviousPage: function ($caller) {
                 // Get a sorted array of pages, get first element and decrement by 1
