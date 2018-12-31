@@ -1122,18 +1122,23 @@
 .medallion .badge { z-index: 2; position: absolute; right: 0;  }
 
 /* ------------ */
-/* InfinateScroll */
+/* infiniteScroll */
 /* ------------ */
 
 /* loaders are hidden by default */
-.infinate-scroll-loader { display: none; }
+.infinite-scroll-loader {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: none;
+}
 
 /* Highlight current infinate scroll offset  */
-.infinate-scroll-offset {
+.infinite-scroll-offset {
     background: rgba(150,222,255,0.5);
 }
 
-.infinate-scroll-offset.inactive {
+.infinite-scroll-offset.inactive {
     background: rgba(150,222,255,0) !important;
     -webkit-transition: background 5s ease-out;
     -moz-transition: background 5s ease-out;
@@ -1142,11 +1147,11 @@
 }
 
 /* Highlight newly loaded pages */
-.infinate-scroll-new {
+.infinite-scroll-new {
     background: rgba(255,254,179,0.6);
 }
 
-.infinate-scroll-new.inactive {
+.infinite-scroll-new.inactive {
     background: rgba(255,254,179,4);
     -webkit-transition: background 5s ease-out;
     -moz-transition: background 5s ease-out;

@@ -86,12 +86,12 @@
             var offset = Model.Pager.PageSize * Model.Pager.Page - Model.Pager.PageSize + 1;
             <ul data-provide="infiniteScroll"
                 data-infinite-scroll-url="@Model.Options.Scroller.Url"
-                data-infinite-scroll-offset="@Model.Options.Scroller.SelectedOffset"
+                data-infinite-scroll-offset="@offset"
+                data-infinite-scroll-selected-offset="@Model.Options.Scroller.SelectedOffset"
                 data-infinite-scroll-page="@Model.Pager.Page"
                 data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
-                data-infinate-scroll-loading-selector=".infinate-scroll-loader"
                 class="list-group list-group-flush list-group-hover">
-                <li class="infinate-scroll-loader" data-type="previous"></li>
+                <li class="infinite-scroll-loader" data-type="previous"></li>
                 @foreach (var topic in Model.Results.Data)
                 {
                     <li data-infinite-scroll-page="@Model.Pager.Page" class="list-group-item list-group-item-action p-0">
@@ -106,7 +106,7 @@
                         }))
                     </li>
                 }
-                <li class="infinate-scroll-loader" data-type="next"></li>
+                <li class="infinite-scroll-loader" data-type="next"></li>
             </ul>
         }
         else

@@ -2032,6 +2032,7 @@ $(function (win, doc, $) {
                             winHeight = $(win).height(),
                             args = {
                                 scrollTop: scrollTop,
+                                scrollBottom: scrollTop + winHeight,
                                 docHeight: docHeight,
                                 winHeight: winHeight,
                                 threshold: scrollTop / (docHeight - winHeight)
@@ -2123,6 +2124,7 @@ $(function (win, doc, $) {
 
         var defaults = {
             pagerKey: "pager.page",
+            loaderSelector: ".infinite-scroll-loader",
             loaderTemplate: '<p class="text-center"><i class="fal fa-2x fa-spinner fa-spin py-4"></i></p>',
             onPageLoaded: function($caller) {}
         };
@@ -2132,7 +2134,8 @@ $(function (win, doc, $) {
         var methods = {
             _loading: false,
             _page: 1, // current page
-            _offset: 0, // optional current offset
+            _offset: 0, // current page offset
+            _selectedOffset: 0, // optional selected offset
             _totalPages: 1, // total pages
             _loadedPages: [], // keep track of which pages have been loaded
             _readyList: [],
@@ -2151,16 +2154,14 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-
-                // Allow setting of default page via data attribute
+                
                 if ($caller.data("infiniteScrollPage")) {
                     var page = parseInt($caller.data("infiniteScrollPage"));
                     if (!isNaN(page)) {
                         methods._page = page;
                     }
                 }
-
-                // Allow setting of default offset via data attribute
+                
                 if (typeof $caller.data("infiniteScrollOffset") !== "undefined") {
                     var offset = parseInt($caller.data("infiniteScrollOffset"));
                     if (!isNaN(offset)) {
@@ -2168,7 +2169,13 @@ $(function (win, doc, $) {
                     }
                 }
 
-                // Allow setting of default page via data attribute
+                if (typeof $caller.data("infiniteScrollSelectedOffset") !== "undefined") {
+                    var selectedOffset = parseInt($caller.data("infiniteScrollSelectedOffset"));
+                    if (!isNaN(selectedOffset)) {
+                        methods._selectedOffset = selectedOffset;
+                    }
+                }
+                
                 if ($caller.data("infiniteScrollTotalPages")) {
                     var totalPages = parseInt($caller.data("infiniteScrollTotalPages"));
                     if (!isNaN(totalPages)) {
@@ -2177,7 +2184,10 @@ $(function (win, doc, $) {
                 }
 
                 // Default page already rendered server side
-                methods._loadedPages.push(methods._page);
+                methods._loadedPages.push({
+                    page: methods._page,
+                    offset: methods._offset
+                });
 
                 // Bind events
                 this.bind($caller);
@@ -2187,9 +2197,7 @@ $(function (win, doc, $) {
 
                 var url = methods.getUrl($caller),
                     bindScrollEvents = function() {
-
-                        var delta = 0.05;
-
+                        
                         // Bind scroll events
                         $().scrollSpy({
                             onScrollEnd: function() {
@@ -2205,6 +2213,9 @@ $(function (win, doc, $) {
                                     return;
                                 }
 
+                                var top = $caller.offset().top - 60,
+                                    bottom = top + $caller.outerHeight();
+
                                 // At the veru top of the viewport remove offset from url
                                 if (args.scrollTop === 0) {
                                     // Stop scrollspy to prevent the OnScrollEnd event from executing
@@ -2214,18 +2225,14 @@ $(function (win, doc, $) {
                                         history.replaceState(state, doc.title, url);
                                     }
                                 } else {
-                                
-                                    if (args.scrollTop <= $caller.offset().top) {
+                                    
+                                    // When we reach the top of our container load previous page
+                                    if (args.scrollTop < top) {
                                         methods.loadPrevious($caller);
                                     }
-                                    if (args.threshold < delta) {
-                                        // At the top of the threshold attempt to load previous page
-                                      
-                                    }
                                 }
-
-                                // At the bottom of threshold attempt to load next page
-                                if (args.threshold > delta) {
+                                
+                                if (args.scrollBottom > bottom) {
                                     methods.loadNext($caller);
                                 }
 
@@ -2236,17 +2243,17 @@ $(function (win, doc, $) {
 
                 // Scroll to offset if available, wait until we complete
                 // scrolling before starting to bind our scrollSpy events
-                if (methods._offset > 0) {
-                    var $marker = $caller.find('[data-infinite-scroll-offset="' + methods._offset + '"]');
+                if (methods._selectedOffset > 0) {
+                    var $marker = methods.getOffsetMarker($caller, methods._selectedOffset); // $caller.find('[data-infinite-scroll-offset="' + methods._offset + '"]');
                     if ($marker.length > 0) {
                         $marker.scrollTo({
                                 onComplete: function() {
                                     // Apply css to deactivate selected offset css (set server side)
                                     // Css can be applied directly to marker or a child of the marker
-                                    if ($(this).hasClass("infinate-scroll-offset")) {
+                                    if ($(this).hasClass("infinite-scroll-offset")) {
                                         $(this).addClass("inactive");
                                     } else {
-                                        $caller.find(".infinate-scroll-offset")
+                                        $caller.find(".infinite-scroll-offset")
                                             .addClass("inactive");
                                     }
                                     bindScrollEvents();
@@ -2322,6 +2329,7 @@ $(function (win, doc, $) {
                         if (data !== "") {
                             $loader.before(data);
                         }
+                
                     });
 
             },
@@ -2349,6 +2357,7 @@ $(function (win, doc, $) {
 
                 console.log(url);
 
+                //return;
                 // Request
                 win.$.Plato.Http({
                     url: url,
@@ -2358,10 +2367,36 @@ $(function (win, doc, $) {
                     // Mark done loading 
                     methods._loading = false;
 
+                    
                     // If a page was returned register page as loaded
                     if (data !== "") {
-                        methods._loadedPages.push(page);
+                        
+                        // Get first offset marker within response
+                        var $marker = null,
+                            $markers = methods.getOffsetMarkers($(data));
+                        if ($markers.length > 0) {
+                            $markers.each(function() {
+                                $marker = $(this);
+                                return false;
+                            });
+                        }
+
+                        var offset = 0;
+                        // Ensure we found a marker
+                        if ($marker) {
+                            offset = parseInt($marker.data("infiniteScrollOffset"));
+                        }
+
+                        methods._loadedPages.push({
+                            page: page,
+                            offset: offset
+                        });
+
                         methods._page = page;
+                        
+                        console.log(JSON.stringify(methods._loadedPages));
+
+
                     }
 
                     // Callback
@@ -2398,7 +2433,7 @@ $(function (win, doc, $) {
                 // visibie marker within the client viewport
                 var url = methods.getUrl($caller),
                     $marker = null,
-                    $markers = $caller.find("[data-infinite-scroll-offset]");
+                    $markers = methods.getOffsetMarkers($caller);
                 if ($markers.length > 0) {
                     $markers.each(function() {
                         if (methods.isElementInviewPort($(this))) {
@@ -2420,58 +2455,72 @@ $(function (win, doc, $) {
                 }
 
             },
-            scrollToPage: function($caller, page) {
-                var $page = methods.getPageMarker($caller, page);
-                if ($page) {
-                    $().scrollSpy("unbind");
-                    $page.scrollTo({
-                            interval: 250,
-                            onComplete: function() {
-                                $().scrollSpy("bind");
-                            }
-                        },
-                        "go");
-                }
-            },
-            getPageMarker: function($caller, page) {
-                var $page = null,
-                    $pages = $caller.find("[data-infinite-scroll-page]");
-                if ($pages.length > 0) {
-                    $pages.each(function() {
-                        if ($(this).data("infiniteScrollPage") === page) {
-                            $page = $(this);
-                            return false;
-                        }
-                    });
-                }
-                return $page;
-            },
-            isPageLoaded: function($caller, page) {
-                for (var i = 0; i < methods._loadedPages.length; i++) {
-                    if (methods._loadedPages[i] === page) {
-                        return true;
+            scrollToPage: function ($caller, pageNumber) {
+
+                var page = methods.getLoadedPage(pageNumber);
+               
+                if (page) {
+                    var $marker = methods.getOffsetMarker($caller, page.offset);
+                    if ($marker) {
+                        $().scrollSpy("unbind");
+                        $marker.scrollTo({
+                                interval: 250,
+                                onComplete: function() {
+                                    $().scrollSpy("bind");
+                                }
+                            },
+                            "go");
                     }
                 }
-                return false;
             },
-            getPages: function($caller) {
-                return methods._loadedPages.sort(function(a, b) {
+            getSortedPageNumbers: function () {
+                var pages = [];
+                for (var i = 0; i < methods._loadedPages.length; i++) {
+                    pages.push(methods._loadedPages[i].page);
+                }
+                return pages.sort(function(a, b) {
                     return a - b;
                 });
             },
+            getLoadedPage: function(page) {
+                for (var i = 0; i < methods._loadedPages.length; i++) {
+                    if (methods._loadedPages[i].page === page) {
+                        return methods._loadedPages[i];
+                    }
+                }
+                return null;
+            },
+            isPageLoaded: function ($caller, pageNumber) {
+                var page = methods.getLoadedPage(pageNumber);
+                return page !== null ? true : false;
+            },
+            getOffsetMarkers: function ($container) {
+                var $markers = $container.find("[data-infinite-scroll-offset]");
+                if ($markers.length > 0) {
+                    return $markers;
+                }
+                return null;
+            },
+            getOffsetMarker: function($caller, offset) {
+                var $marker = $caller.find('[data-infinite-scroll-offset="' + offset + '"]');
+                if ($marker.length > 0) {
+                    return $marker;
+                }
+                return null;
+            },
             getPreviousPage: function($caller) {
                 // Get a sorted array of pages, get first element and decrement by 1
-                var pages = methods.getPages($caller);
-                if (pages) {
-                    return pages[0] - 1;
+                var numbers = methods.getSortedPageNumbers($caller);
+                if (numbers) {
+                    return numbers[0] - 1;
                 }
                 return methods._page - 1;
             },
             getNextPage: function($caller) {
                 // Get a sorted array of pages, get last element and increment by 1
-                var pages = methods.getPages($caller);
-                if (pages) {
-                    return pages[pages.length - 1] + 1;
+                var numbers = methods.getSortedPageNumbers($caller);
+                if (numbers) {
+                    return numbers[numbers.length - 1] + 1;
                 }
                 return methods._page + 1;
             },
@@ -2501,9 +2550,13 @@ $(function (win, doc, $) {
                 return $loader;
             },
             getLoaders: function($caller) {
-                var loaderSelector = $caller.data("infinateScrollLoadingSelector");
-                if (loaderSelector) {
-                    return $caller.find(loaderSelector);
+                var selector = $caller.data("infiniteScrollLoadingSelector") ||
+                    $caller.data(dataKey).loaderSelector;
+                if (selector) {
+                    var $loaders = $caller.find(selector);;
+                    if ($loaders.length > 0) {
+                        return $loaders;
+                    }
                 }
                 return null;
             }
@@ -4564,7 +4617,7 @@ $(function (win, doc, $) {
 
         $("body").platoUI();
 
-        // Actuvate plug-ins used within infinateScroller load
+        // Actuvate plug-ins used within infiniteScroller load
         $().infiniteScroll(function ($ele) {
 
             /* dialogSpy */
