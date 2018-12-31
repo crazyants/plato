@@ -13,7 +13,7 @@
         @foreach (var reply in Model.Replies.Data)
         {
             reply.Offset = offset++;
-            <div data-infinite-scroll-page="@Model.Pager.Page">
+         
                 @await DisplayAsync(new View("TopicReplyListItem", new
                 {
                     model = new TopicReplyListItemViewModel()
@@ -23,7 +23,7 @@
                         SelectedOffset = Model.Options.Scroller.SelectedOffset
                     }
                 }))
-            </div>
+        
         }
         <div class="infinite-scroll-loader" data-type="next"></div>
     </div>
