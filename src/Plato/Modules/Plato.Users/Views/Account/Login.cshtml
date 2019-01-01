@@ -13,12 +13,12 @@
             <div class="form-group">
                 <label class="col-form-label font-weight-bold">@T["Username"]</label>
                 <span asp-validation-for="UserName" class="text-danger"></span>
-                <input asp-for="UserName" value="@Model.UserName" placeholder="@T["Username"]" class="form-control" autofocus />
+                <input asp-for="UserName" autocomplete="off" value="@Model.UserName" placeholder="@T["Username"]" class="form-control" autofocus />
             </div>
             <div class="form-group">
                 <label class="col-form-label font-weight-bold">@T["Password"]</label>
                 <span asp-validation-for="Password" class="text-danger"></span>
-                <input asp-for="Password" class="form-control" placeholder="@T["Password"]" />
+                <input asp-for="Password" autocomplete="off" class="form-control" placeholder="@T["Password"]" />
             </div>
             <div class="form-group form-check">
                 <label asp-for="RememberMe">

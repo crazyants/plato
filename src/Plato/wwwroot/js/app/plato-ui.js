@@ -1,11 +1,6 @@
 ﻿// <reference path="~/js/vendors/jquery.js" />
 // <reference path="~/js/vendors/bootstrap.js" />
 
-/*======================================================================*/
-// Plato UI
-// © InstantASP Ltd.
-/*======================================================================*/
-
 if (typeof jQuery === "undefined") {
     throw new Error("Plato UI requires jQuery 3.3.1");
 }
@@ -339,6 +334,7 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
+            offset: 0,
             interval: 250,
             event: "click",
             position: "top",
@@ -386,35 +382,30 @@ $(function (win, doc, $) {
                     });
 
                 var $target = null,
-                    href = $caller.attr("href"),
-                    interval = $caller.data(dataKey).interval,
-                    position = $caller.data(dataKey).position;
+                    href = $caller.attr("href");
 
                 if (href) {
                     $target = $(href);
-                    if ($target.length > 0) {
-                        $('html, body').stop().animate({
-                            scrollTop: position === "top" ? $target.offset().top : $target.offset().bottom
-                            },
-                            interval,
-                            'easeInOutExpo',
-                            function() {
-                                $caller.data(dataKey).onComplete($caller, $target);
-                            });
-                        $caller.data(dataKey).onBeforeComplete($caller, $target);
-                    }
                 } else {
                     $target = $caller;
-                    $('html, body').stop().animate({
-                        scrollTop: position === "top" ? $target.offset().top : $target.offset().bottom
-                        },
-                        interval,
-                        'easeInOutExpo',
-                        function () {
-                            $caller.data(dataKey).onComplete($caller, $target);
-                        });
-                    $caller.data(dataKey).onBeforeComplete($caller, $target);
                 }
+                
+                var interval = $caller.data(dataKey).interval,
+                    position = $caller.data(dataKey).position,
+                    offset = $caller.data(dataKey).offset,
+                    top = position === "top" ? $target.offset().top : $target.offset().bottom;
+
+                $('html, body').stop().animate({
+                    scrollTop: top + offset
+                    },
+                    interval,
+                    'easeInOutExpo',
+                    function () {
+                        $caller.data(dataKey).onComplete($caller, $target);
+                    });
+                $caller.data(dataKey).onBeforeComplete($caller, $target);
+
+
 
             }
         };
@@ -2042,8 +2033,8 @@ $(function (win, doc, $) {
                                 $caller.data(dataKey).onScroll(args, e);
                             }
                         }
-                
-                        methods.debounce(onScroll(), 500);
+
+                        onScroll();
 
                     });
             },
@@ -2146,7 +2137,8 @@ $(function (win, doc, $) {
             onPageLoaded: function($caller) {}
         };
 
-        var state = win.history.state || {};
+        var state = win.history.state || {},
+            scrollToPageOffset = 150;
 
         var methods = {
             _loading: false,
@@ -2156,8 +2148,7 @@ $(function (win, doc, $) {
             _totalPages: 1, // total pages
             _loadedPages: [], // keep track of which pages have been loaded
             _readyList: [],
-            ready: function($caller, fn) {
-                // Accepts functions that will be executed upon each load
+            ready: function ($caller, fn) { // Accepts functions that will be executed upon each load
                 methods._readyList.push(fn);
                 return this;
             },
@@ -2231,7 +2222,7 @@ $(function (win, doc, $) {
                                 }
 
                                 // Get container bounds
-                                var top = $caller.offset().top - 60,
+                                var top = $caller.offset().top - scrollToPageOffset,
                                     bottom = top + $caller.outerHeight();
 
                                 // At the veru top of the window remove offset from url
@@ -2391,7 +2382,7 @@ $(function (win, doc, $) {
                         // Get first offset marker within response
                         var $marker = null,
                             $markers = methods.getOffsetMarkers($(data));
-                        if ($markers.length > 0) {
+                        if ($markers) {
                             $markers.each(function() {
                                 $marker = $(this);
                                 return false;
@@ -2451,7 +2442,7 @@ $(function (win, doc, $) {
                 var url = methods.getUrl($caller),
                     $marker = null,
                     $markers = methods.getOffsetMarkers($caller);
-                if ($markers.length > 0) {
+                if ($markers) {
                     $markers.each(function() {
                         if (methods.isElementInviewPort($(this))) {
                             $marker = $(this);
@@ -2480,6 +2471,7 @@ $(function (win, doc, $) {
                         $().scrollSpy("unbind");
                         // Scroll to offset marker for page
                         $marker.scrollTo({
+                                offset: -scrollToPageOffset,
                                 interval: 0,
                                 onComplete: function() {
                                     $().scrollSpy("bind");
