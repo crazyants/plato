@@ -1,8 +1,8 @@
 ﻿@model TopicReplyListItemViewModel
 @{
     var css = Model.Reply.Offset == Model.SelectedOffset
-        ? "card-body infinite-scroll-offset"
-        : "card-body";
+        ? "markdown-body p-3 infinite-scroll-item infinite-scroll-item-active"
+        : "markdown-body p-3 infinite-scroll-item";
 }
 
 <div class="topic-reply-left">
@@ -11,7 +11,7 @@
     </a>
 </div>
 <div class="topic-reply-body">
-    <card class="card  card-body-flush">
+    <card class="card card-body-flush">
         <card-title>
             <div data-infinite-scroll-offset="@Model.Reply.Offset" class="float-left col-12">
                 <div class="card-title float-left">
@@ -57,13 +57,14 @@
                 </div>
             </div>
         </card-title>
-        <card-body class="@css">
-            <div class="markdown-body m-3" data-provide="markdownBody">
+        <card-body>
+            <div class="@css" data-infinite-scroll-highlight="@Model.Reply.Offset" data-provide="markdownBody">
                 @Html.Raw(@Model.Reply.Html)
             </div>
             <navigation name="topicreply-footer"
                         model="Model.Reply"
                         enable-list="false" />
+           
         </card-body>
     </card>
 </div>

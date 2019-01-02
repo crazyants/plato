@@ -1,80 +1,75 @@
 ﻿@model TopicListItemViewModel
 @{
     var details = Model.Topic.GetOrCreate<PostDetails>();
-    var css = Model.Offset == Model.SelectedOffset
-        ? "topic-list-item p-3 infinite-scroll-offset"
-        : "topic-list-item p-3";
 }
 
-<div class="@css" data-infinite-scroll-offset="@Model.Offset">
-    <div class="list-left">
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">
-            <avatar data-toggle="tooltip" title="@Model.Topic.CreatedBy.DisplayName" class="avatar" url="@Model.Topic.CreatedBy.Avatar.Url" />
+<div class="list-left">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">
+        <avatar data-toggle="tooltip" title="@Model.Topic.CreatedBy.DisplayName" class="avatar" url="@Model.Topic.CreatedBy.Avatar.Url" />
+    </a>
+</div>
+<div class="list-body">
+
+    <div class="float-right text-right">
+        <ol class="list-inline text-muted">
+            <li class="list-inline-item">
+                <span title="@T["Replies"]" data-toggle="tooltip">
+                    @Model.Topic.TotalReplies <i class="fal fa-comment-alt-lines"></i>
+                </span>
+            </li>
+            <li class="list-inline-item">
+                <span title="@T["Views"]" data-toggle="tooltip">
+                    @Model.Topic.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
+                </span>
+            </li>
+        </ol>
+        <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
+            <date utc="@Model.Topic.LastReplyDate"></date>
         </a>
     </div>
-    <div class="list-body">
-
-        <div class="float-right text-right">
-            <ol class="list-inline text-muted">
-                <li class="list-inline-item">
-                    <span title="@T["Replies"]" data-toggle="tooltip">
-                        @Model.Topic.TotalReplies <i class="fal fa-comment-alt-lines"></i>
-                    </span>
-                </li>
-                <li class="list-inline-item">
-                    <span title="@T["Views"]" data-toggle="tooltip">
-                        @Model.Topic.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
-                    </span>
-                </li>
-            </ol>
-            <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-                <date utc="@Model.Topic.LastReplyDate"></date>
-            </a>
-        </div>
-        <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">
-            @Model.Topic.Title
-            @Model.Offset
-        </a>
-        @if (Model.Labels != null)
-        {
-            <span class="pl-2">
-                @foreach (var label in Model.Labels)
-                {
-                    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
-                        @label.Name
-                    </a>
-                }
-            </span>
-        }
-        <div class="text-muted">
-            @Model.Topic.Abstract
-        </div>
-        <div>
-            @if (details?.LatestUsers != null)
+    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">
+        @Model.Topic.Title
+        @Model.Topic.Offset
+    </a>
+    @if (Model.Labels != null)
+    {
+        <span class="pl-2">
+            @foreach (var label in Model.Labels)
             {
-                <div class="avatar-group float-right">
-                    @foreach (var user in details.LatestUsers)
-                    {
-                        var replies = user.TotalReplies == 1
-                            ? "reply"
-                            : "replies";
-                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias">
-                            <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" />
-                        </a>
-                    }
-                </div>
-            }
-            @T["By"]
-            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">@Model.Topic.CreatedBy.DisplayName</a>,
-            <date utc="@Model.Topic.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-            @if (@Model.Channel != null)
-            {
-                <span>@T["in"]</span>
-                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias">
-                    @Model.Channel.Name
+                <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                    @label.Name
                 </a>
             }
-        </div>
-
+        </span>
+    }
+    <div class="text-muted">
+        @Model.Topic.Abstract
     </div>
+    <div>
+        @if (details?.LatestUsers != null)
+        {
+            <div class="avatar-group float-right">
+                @foreach (var user in details.LatestUsers)
+                {
+                    var replies = user.TotalReplies == 1
+                        ? "reply"
+                        : "replies";
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias">
+                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" />
+                    </a>
+                }
+            </div>
+        }
+        @T["By"]
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">@Model.Topic.CreatedBy.DisplayName</a>,
+        <date utc="@Model.Topic.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        @if (@Model.Channel != null)
+        {
+            <span>@T["in"]</span>
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias">
+                @Model.Channel.Name
+            </a>
+        }
+    </div>
+
 </div>

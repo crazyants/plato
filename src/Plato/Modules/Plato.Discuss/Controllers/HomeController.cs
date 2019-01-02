@@ -146,12 +146,13 @@ namespace Plato.Discuss.Controllers
             };
 
             // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
-            
-            // Return paged results for ajax callback
-            if (opts.Action.Equals("get", StringComparison.OrdinalIgnoreCase))
+            HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
-                return View("GetTopics", viewModel);
+                if (page > 0)
+                    return View("GetTopics", viewModel);
             }
 
             // Return view
@@ -362,15 +363,16 @@ namespace Plato.Discuss.Controllers
             };
 
             // Add models to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicViewModel)] = viewModel;
-            this.HttpContext.Items[typeof(Topic)] = topic;
-
-            // Return paged results for ajax callback
-            if (opts.Action.Equals("get", StringComparison.OrdinalIgnoreCase))
+            HttpContext.Items[typeof(TopicViewModel)] = viewModel;
+            HttpContext.Items[typeof(Topic)] = topic;
+            
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
-                return View("GetTopicReplies", viewModel);
+                if (page > 0)
+                    return View("GetTopicReplies", viewModel);
             }
-
+            
             // Return view
             return View(await _topicViewProvider.ProvideDisplayAsync(topic, this));
 

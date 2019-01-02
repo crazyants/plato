@@ -6,9 +6,7 @@ namespace Plato.Discuss.ViewModels
 {
     public class TopicListItemViewModel
     {
-
-        public int Offset { get; set; }
-
+        
         public int SelectedOffset { get; set; }
 
         public Topic Topic { get; set; }

@@ -12,7 +12,7 @@
         <div class="infinite-scroll-loader" data-type="previous"></div>
         @foreach (var reply in Model.Replies.Data)
         {
-            reply.Offset = offset++;
+            reply.Offset = offset;
             @await DisplayAsync(new View("TopicReplyListItem", new
             {
                 model = new TopicReplyListItemViewModel()
@@ -22,7 +22,9 @@
                     SelectedOffset = Model.Options.Scroller.SelectedOffset
                 }
             }))
-        
+            {
+                offset++;
+            }
         }
         <div class="infinite-scroll-loader" data-type="next"></div>
     </div>
