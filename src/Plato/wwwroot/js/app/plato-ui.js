@@ -2134,6 +2134,7 @@ $(function (win, doc, $) {
             state = win.history.state || {};
 
         var defaults = {
+            offsetSuffix: "/",
             pagerKey: "pager.page",
             loaderSelector: ".infinite-scroll-loader",
             loaderTemplate: '<p class="text-center"><i class="fal fa-2x fa-spinner fa-spin py-4"></i></p>',
@@ -2146,13 +2147,14 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            _loading: false,
+            _loading: false, // track loading state
+            _initialPage: 1, // starting page
             _page: 1, // current page
-            _offset: 0, // current page offset
+            _initialOffset: 0, // starting row offset
             _selectedOffset: 0, // optional selected offset
             _totalPages: 1, // total pages
             _loadedPages: [], // keep track of which pages have been loaded
-            _readyList: [],
+            _readyList: [], // funcstions to execute when dom is updated
             ready: function ($caller, fn) { // Accepts functions that will be executed upon each load
                 methods._readyList.push(fn);
                 return this;
@@ -2168,17 +2170,18 @@ $(function (win, doc, $) {
                     return;
                 }
                 
-                if ($caller.data("infiniteScrollPage")) {
-                    var page = parseInt($caller.data("infiniteScrollPage"));
+                if ($caller.data("infiniteScrollInitialPage")) {
+                    var page = parseInt($caller.data("infiniteScrollInitialPage"));
                     if (!isNaN(page)) {
+                        methods._initialPage = page;
                         methods._page = page;
                     }
                 }
                 
-                if (typeof $caller.data("infiniteScrollOffset") !== "undefined") {
-                    var offset = parseInt($caller.data("infiniteScrollOffset"));
+                if (typeof $caller.data("infiniteScrollInitialOffset") !== "undefined") {
+                    var offset = parseInt($caller.data("infiniteScrollInitialOffset"));
                     if (!isNaN(offset)) {
-                        methods._offset = offset;
+                        methods._initialOffset = offset;
                     }
                 }
 
@@ -2198,8 +2201,8 @@ $(function (win, doc, $) {
 
                 // Default page already rendered server side
                 methods._loadedPages.push({
-                    page: methods._page,
-                    offset: methods._offset
+                    page: methods._initialPage,
+                    offset: methods._initialOffset
                 });
 
                 // Bind events
@@ -2209,6 +2212,7 @@ $(function (win, doc, $) {
             bind: function($caller) {
 
                 var url = methods.getUrl($caller),
+                    suffix = methods.getUrlSuffix($caller),
                     bindScrollEvents = function() {
                         
                         // Bind scroll events
@@ -2258,7 +2262,7 @@ $(function (win, doc, $) {
                                         if (!isNaN(offset)) {
                                             // Use replaceState to ensure the address bar is updated
                                             // but we don't actually add new history state
-                                            history.replaceState(state, doc.title, url + "/" + offset);
+                                            history.replaceState(state, doc.title, url + suffix + offset);
                                         }
                                     }
 
@@ -2311,6 +2315,7 @@ $(function (win, doc, $) {
             unbind: function($caller) {
                 $().scrollSpy("unbind");
                 methods._readyList = [];
+                methods._initialPage = 1;
                 methods._page = 1;
                 methods._loading = false;
             },
@@ -2478,7 +2483,8 @@ $(function (win, doc, $) {
                 // visibie marker within the client viewport
                 var url = methods.getUrl($caller),
                     $marker = null,
-                    $markers = methods.getOffsetMarkers($caller);
+                    $markers = methods.getOffsetMarkers($caller),
+                    suffix = methods.getUrlSuffix($caller);
                 if ($markers) {
                     $markers.each(function() {
                         if (methods.isElementInviewPort(this)) {
@@ -2493,9 +2499,10 @@ $(function (win, doc, $) {
                     // Update url with offset if valid
                     var offset = parseInt($marker.data("infiniteScrollOffset"));
                     if (!isNaN(offset)) {
+                        
                         // Use replaceState to ensure the address bar is updated
                         // but we don't actually add new history state
-                        history.replaceState(state, doc.title, url + "/" + offset);
+                        history.replaceState(state, doc.title, url + suffix + offset);
                     }
                 }
 
@@ -2571,7 +2578,7 @@ $(function (win, doc, $) {
             getOffsetMarker: function($caller, offset) {
                 var $marker = $caller.find('[data-infinite-scroll-offset="' + offset + '"]');
                 if ($marker.length > 0) {
-                    return $marker;
+                        return $marker;                    
                 }
                 return null;
             },
@@ -2640,6 +2647,12 @@ $(function (win, doc, $) {
                     }
                 }
                 return null;
+            },
+            getUrlSuffix: function($caller) {
+                if ($caller.data("infiniteScrollUrlSuffix")) {
+                    return $caller.data("infiniteScrollUrlSuffix");
+                }
+                return "/";
             },
             getUrl: function ($caller) {
                 if ($caller.data("infiniteScrollUrl")) {

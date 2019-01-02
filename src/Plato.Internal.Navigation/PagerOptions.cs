@@ -7,9 +7,7 @@ namespace Plato.Internal.Navigation
     public class ScrollerOptions
     {
         public bool Enabled { get; set; } = true;
-
-        public int SelectedOffset { get; set; }
-
+        
         public string Url { get; set; }
 
     }
@@ -23,7 +21,9 @@ namespace Plato.Internal.Navigation
 
         public int PageSize { get; set; } = 20;
 
-        public int Offset => PageSize * Page - PageSize + 1;
+        public int InitialOffset => PageSize * Page - PageSize + 1;
+
+        public int SelectedOffset { get; set; }
 
         public int Total => _total;
 

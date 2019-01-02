@@ -9,5 +9,7 @@ namespace Plato.Discuss.Models
 
         public int Offset { get; set; }
 
+        public int SelectedOffset { get; set; }
+
     }
 }

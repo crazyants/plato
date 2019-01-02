@@ -31,10 +31,7 @@ namespace Plato.Discuss.ViewModels
     [DataContract]
     public class TopicIndexOptions
     {
-
-        [DataMember(Name = "action")]
-        public string Action { get; set; }
-
+  
         [DataMember(Name = "search")]
         public string Search { get; set; }
         

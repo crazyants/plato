@@ -102,10 +102,18 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "Discuss",
                 areaName: "Plato.Discuss",
-                template: "discuss/{offset?}",
+                template: "discuss/",
+                defaults: new { controller = "Home", action = "Index", offset = @"\d+" }
+            );
+
+            // discuss goto page
+            routes.MapAreaRoute(
+                name: "DiscussGo",
+                areaName: "Plato.Discuss",
+                template: "discuss/page/{offset}",
                 defaults: new { controller = "Home", action = "Index" }
             );
-            
+
             // discuss popular
             routes.MapAreaRoute(
                 name: "DiscussPopular",

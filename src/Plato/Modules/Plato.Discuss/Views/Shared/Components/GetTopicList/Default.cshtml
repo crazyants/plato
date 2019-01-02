@@ -2,21 +2,22 @@
 
 @if (Model.Results != null)
 {
-    var offset = Model.Pager.Offset;
+    var offset = Model.Pager.InitialOffset;
+    var selectedOffset = Model.Pager.SelectedOffset;
     @foreach (var topic in Model.Results.Data)
      {
-         var css = offset == Model.Options.Scroller.SelectedOffset
+         var css = offset == selectedOffset
              ? "p-3 infinite-scroll-item infinite-scroll-item-active"
              : "p-3 infinite-scroll-item";
          topic.Offset = offset;
+         topic.SelectedOffset = selectedOffset;
          <li class="list-group-item list-group-item-action p-0">
              <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
                  @await DisplayAsync(new View("TopicListItem", new
                  {
                      model = new TopicListItemViewModel()
                      {
-                         Topic = topic,
-                         SelectedOffset = Model.Options.Scroller.SelectedOffset
+                         Topic = topic
                      }
                  }))
                  @{

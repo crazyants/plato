@@ -1,6 +1,6 @@
 ﻿@model TopicReplyListItemViewModel
 @{
-    var css = Model.Reply.Offset == Model.SelectedOffset
+    var css = Model.Reply.Offset == Model.Reply.SelectedOffset
         ? "markdown-body p-3 infinite-scroll-item infinite-scroll-item-active"
         : "markdown-body p-3 infinite-scroll-item";
 }

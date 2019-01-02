@@ -9,7 +9,6 @@ namespace Plato.Discuss.ViewModels
 
         public Reply Reply { get; set;  }
         
-        public int SelectedOffset { get; set; }
-
     }
+
 }

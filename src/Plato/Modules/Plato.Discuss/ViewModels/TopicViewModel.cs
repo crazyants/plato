@@ -21,9 +21,7 @@ namespace Plato.Discuss.ViewModels
     [DataContract]
     public class TopicOptions
     {
-
-        public string Action { get; set; }
-
+        
         public string Sort { get; set; } = "CreatedDate";
 
         public OrderBy Order { get; set; } = OrderBy.Asc;

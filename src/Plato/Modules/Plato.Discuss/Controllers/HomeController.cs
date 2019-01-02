@@ -100,6 +100,7 @@ namespace Plato.Discuss.Controllers
             if (offset > 0)
             {
                 pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
             }
             
             // Build breadcrumb
@@ -134,8 +135,7 @@ namespace Plato.Discuss.Controllers
             // Build infinate scroll options
             opts.Scroller = new ScrollerOptions
             {
-                Url = GetInfiniteScrollCallbackUrl(),
-                SelectedOffset = offset
+                Url = GetInfiniteScrollCallbackUrl()
             };
 
             // Build view model
@@ -318,6 +318,7 @@ namespace Plato.Discuss.Controllers
             if (offset > 0)
             {
                 pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
             }
 
             // Build breadcrumb
@@ -351,8 +352,7 @@ namespace Plato.Discuss.Controllers
             // Build infinate scroll options
             opts.Scroller = new ScrollerOptions
             {
-                Url = GetInfiniteScrollCallbackUrl(),
-                SelectedOffset = offset
+                Url = GetInfiniteScrollCallbackUrl()
             };
 
             // Build view model
