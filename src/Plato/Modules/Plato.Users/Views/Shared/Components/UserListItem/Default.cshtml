@@ -4,7 +4,7 @@
 
 @if (Model.EnableEdit)
 {
-    <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0 text-center">
+    <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="d-inline-block col-12">
         <div class="p-3">
             <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar avatar-md" url="@Model.User.Avatar.Url" />
             <h6 class="d-block mt-2">@Model.User.DisplayName</h6>
@@ -30,28 +30,26 @@
 }
 else
 {
-    <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0 text-center">
-        <div class="p-3">
-            <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar avatar-md" url="@Model.User.Avatar.Url" />
-            <h6 class="d-block mt-2">@Model.User.DisplayName</h6>
-            <span class="d-block text-muted">
-                <span class="mx-1" title="@T["Rank"]" data-toggle="tooltip">
-                    <i class="fal fa-hashtag"></i>
-                    @Model.User.Rank
-                </span>
-                <span class="mx-1" title="@T["Reputation"]" data-toggle="tooltip">
-                    <i class="fal fa-gem"></i>
-                    @Model.User.Reputation.ToPrettyInt()
-                </span>
-                <span class="mx-1" title="@T["visits"]" data-toggle="tooltip">
-                    <i class="fal fa-heart"></i>
-                    @Model.User.Visits.ToPrettyInt()
-                </span>
-                <br />
-                @T["Last active "] <date utc="@Model.User.LastLoginDate"></date>
-
+    <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="list-group-item-action d-block p-3 text-center">
+        <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar avatar-md" url="@Model.User.Avatar.Url" />
+        <h6 class="d-block mt-2">@Model.User.DisplayName</h6>
+        <span class="d-block text-muted">
+            <span class="mx-1" title="@T["Rank"]" data-toggle="tooltip">
+                <i class="fal fa-hashtag"></i>
+                @Model.User.Rank
             </span>
-        </div>
+            <span class="mx-1" title="@T["Reputation"]" data-toggle="tooltip">
+                <i class="fal fa-gem"></i>
+                @Model.User.Reputation.ToPrettyInt()
+            </span>
+            <span class="mx-1" title="@T["visits"]" data-toggle="tooltip">
+                <i class="fal fa-heart"></i>
+                @Model.User.Visits.ToPrettyInt()
+            </span>
+            <br />
+            @T["Last active "] <date utc="@Model.User.LastLoginDate"></date>
+
+        </span>
     </a>
 }
 

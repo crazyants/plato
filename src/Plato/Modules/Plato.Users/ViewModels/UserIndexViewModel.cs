@@ -28,6 +28,8 @@ namespace Plato.Users.ViewModels
     public class UserIndexOptions
     {
 
+        public ScrollerOptions Scroller { get; set; }
+
         [DataMember(Name = "search")]
         public string Search { get; set; }
 
@@ -39,8 +41,7 @@ namespace Plato.Users.ViewModels
 
         [DataMember(Name = "filter")]
         public FilterBy Filter { get; set; } = FilterBy.All;
-
-
+        
         public bool EnableEdit { get; set; }
 
 

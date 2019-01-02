@@ -83,20 +83,53 @@
     <card-body>
         @if (Model.Results?.Data != null)
         {
-            <div class="list-group list-group-flush list-group-hover">
+            var colIndex = 1;
+            var offset = Model.Pager.InitialOffset;
+            var selectedOffset = Model.Pager.SelectedOffset;
+            <div data-provide="infiniteScroll"
+                 data-infinite-scroll-url="@Model.Options.Scroller.Url"
+                 data-infinite-scroll-initial-offset="@offset"
+                 data-infinite-scroll-selected-offset="@selectedOffset"
+                 data-infinite-scroll-initial-page="@Model.Pager.Page"
+                 data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
+                 class="list-group list-group-flush list-group-hover">
                 <div class="row no-gutters">
+                    <div class="infinite-scroll-loader" data-type="previous"></div>
                     @foreach (var user in Model.Results.Data)
                     {
-                        @await DisplayAsync(new View("UserListItem", new
+                        var css = offset == selectedOffset
+                            ? "infinite-scroll-item infinite-scroll-item-active"
+                            : "infinite-scroll-item";
+                        <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12 p-0">
+                            <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
+                                
+                                @colIndex
+                                @if (colIndex == 1)
+                                {
+                                }
+
+                                @await DisplayAsync(new View("UserListItem", new
+                                {
+                                    model = new UserListItemViewModel()
+                                    {
+                                        User = user,
+                                        EnableEdit = Model.Options.EnableEdit
+                                    }
+                                }))
+                            </div>
+                        </div>
                         {
-                            model = new UserListItemViewModel()
+                            offset++;
+                            colIndex++;
+                            if (colIndex % 3 == 1)
                             {
-                                User = user,
-                                EnableEdit = Model.Options.EnableEdit
+                                colIndex = 1;
                             }
-                        }))
+                        }
                     }
+                    <div class="infinite-scroll-loader" data-type="next"></div>
                 </div>
+
             </div>
         }
         else
@@ -110,7 +143,9 @@
     </card-body>
 </card>
 
-<div class="mt-4 mb-4">
-    <pager model="@Model.Pager"></pager>
-</div>
-
+@if (Model.Pager.Enabled && !Model.Options.Scroller.Enabled)
+{
+    <div class="mt-4 mb-4">
+        <pager model="@Model.Pager"></pager>
+    </div>
+}

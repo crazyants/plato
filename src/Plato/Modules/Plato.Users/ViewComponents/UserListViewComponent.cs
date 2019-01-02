@@ -7,6 +7,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
+using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewComponents
@@ -51,8 +52,7 @@ namespace Plato.Users.ViewComponents
                 Value = FilterBy.PossibleSpam
             }
         };
-
-
+        
         private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
             new SortColumn()
@@ -105,17 +105,19 @@ namespace Plato.Users.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-
-
+        
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly IUserService _userService;
 
         public UserListViewComponent(
             IContextFacade contextFacade,
-            IPlatoUserStore<User> ploatUserStore)
+            IPlatoUserStore<User> ploatUserStore,
+            IUserService userService)
         {
             _contextFacade = contextFacade;
             _ploatUserStore = ploatUserStore;
+            _userService = userService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -142,40 +144,8 @@ namespace Plato.Users.ViewComponents
             PagerOptions pager)
         {
 
-            var results = await _ploatUserStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
-                .Select<UserQueryParams>(q =>
-                {
+            var results = await _userService.GetUsersAsunc(options, pager);
 
-                    switch (options.Filter)
-                    {
-                        case FilterBy.Confirmed:
-                            q.ShowConfirmed.True();
-                            break;
-                        case FilterBy.Banned:
-                            q.ShowBanned.True();
-                            break;
-                        case FilterBy.Locked:
-                            q.ShowLocked.True();
-                            break;
-                        case FilterBy.Spam:
-                            q.ShowSpam.True();
-                            break;
-                        case FilterBy.PossibleSpam:
-                            q.HideConfirmed.True();
-                            break;
-                        default:
-                            break;
-                    }
-
-                    if (!string.IsNullOrEmpty(options.Search))
-                    {
-                        q.Keywords.Like(options.Search);
-                    }
-                })
-                .OrderBy(options.Sort.ToString(), options.Order)
-                .ToList();
-            
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
             

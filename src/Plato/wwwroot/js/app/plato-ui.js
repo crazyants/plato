@@ -2578,7 +2578,7 @@ $(function (win, doc, $) {
             getOffsetMarker: function($caller, offset) {
                 var $marker = $caller.find('[data-infinite-scroll-offset="' + offset + '"]');
                 if ($marker.length > 0) {
-                        return $marker;                    
+                        return $($marker[0]);                    
                 }
                 return null;
             },

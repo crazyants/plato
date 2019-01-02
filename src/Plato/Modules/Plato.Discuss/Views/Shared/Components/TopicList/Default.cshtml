@@ -81,13 +81,12 @@
     </card-title>
     <card-body>
         
-        @if (Model.Results != null)
+        @if (Model.Results?.Data != null)
         {
             var offset = Model.Pager.InitialOffset;
             var selectedOffset = Model.Pager.SelectedOffset;
             <ul data-provide="infiniteScroll"
                 data-infinite-scroll-url="@Model.Options.Scroller.Url"
-                data-infinite-scroll-url-suffix="/page/"
                 data-infinite-scroll-initial-offset="@offset"
                 data-infinite-scroll-selected-offset="@selectedOffset"
                 data-infinite-scroll-initial-page="@Model.Pager.Page"
@@ -110,11 +109,11 @@
                                     Topic = topic
                                 }
                             }))
-                            @{
-                                offset++;
-                            }
                         </div>
                     </li>
+                    {
+                         offset++;
+                     }
                 }
                 <li class="infinite-scroll-loader" data-type="next"></li>
             </ul>

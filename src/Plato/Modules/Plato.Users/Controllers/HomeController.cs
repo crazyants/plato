@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -67,6 +68,7 @@ namespace Plato.Users.Controllers
         // --------------------------
 
         public async Task<IActionResult> Index(
+            int offset,
             UserIndexOptions opts,
             PagerOptions pager)
         {
@@ -75,16 +77,7 @@ namespace Plato.Users.Controllers
             //{
             //    return Unauthorized();
             //}
-
-            //// Set breadcrumb
-            //_breadCrumbManager.Configure(builder =>
-            //{
-            //    builder.Add(S["Home"], home => home
-            //        .Action("Index", "Admin", "Plato.Admin")
-            //        .LocalNav()
-            //    ).Add(S["Users"]);
-            //});
-
+        
             // default options
             if (opts == null)
             {
@@ -95,6 +88,12 @@ namespace Plato.Users.Controllers
             if (pager == null)
             {
                 pager = new PagerOptions();
+            }
+
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
             }
 
             // Breadcrumb
@@ -122,18 +121,31 @@ namespace Plato.Users.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(UserIndexViewModel)] = new UserIndexViewModel()
+            // Build infinate scroll options
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
+            // Build view model
+            var viewModel = new UserIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
-            
-            // Build view
-            var result = await _viewProvider.ProvideIndexAsync(new UserProfile(), this);
 
+            // Add view options to context for use within view adaptors
+            HttpContext.Items[typeof(UserIndexViewModel)] = viewModel;
+            
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetUsers", viewModel);
+            }
+            
             // Return view
-            return View(result);
+            return View(await _viewProvider.ProvideIndexAsync(new UserProfile(), this));
 
         }
 
@@ -380,8 +392,18 @@ namespace Plato.Users.Controllers
         }
 
         #endregion
-        
+
         #region "Private Methods"
+
+        string GetInfiniteScrollCallbackUrl()
+        {
+
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
+
+            return _contextFacade.GetRouteUrl(RouteData.Values);
+
+        }
 
         async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
         {

@@ -136,6 +136,10 @@ namespace Plato.Users
             // Register reputation providers
             services.AddScoped<IReputationsProvider<Reputation>, Reputations>();
 
+            // Register user service
+            services.AddScoped<IUserService, UserService>();
+
+
         }
 
         public override void Configure(
@@ -224,6 +228,12 @@ namespace Plato.Users
                 defaults: new { controller = "Account", action = "ResetPasswordConfirmation" }
             );
 
+            routes.MapAreaRoute(
+                name: "AdminUsersOffset",
+                areaName: "Plato.Users",
+                template: "admin/users/{offset:int?}",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
 
             routes.MapAreaRoute(
                 name: "Admin-Users",
@@ -235,37 +245,35 @@ namespace Plato.Users
             routes.MapAreaRoute(
                 name: "Home-Users",
                 areaName: "Plato.Users",
-                template: "users",
+                template: "users/{offset:int?}",
                 defaults: new { controller = "Home", action = "Index"}
             );
 
-            routes.MapAreaRoute(
-                name: "ServeUserPhotoFolder",
-                areaName: "Plato.Users",
-                template: "users/photo",
-                defaults: new { controller = "Photo", action = "Serve", id = "0"}
-            );
-
-
+            //routes.MapAreaRoute(
+            //    name: "ServeUserPhotoFolder",
+            //    areaName: "Plato.Users",
+            //    template: "users/photo",
+            //    defaults: new { controller = "Photo", action = "Serve", id = "0"}
+            //);
+            
             routes.MapAreaRoute(
                 name: "ServeUserLetterFolder",
                 areaName: "Plato.Users",
                 template: "users/letter/{letter}/{color}",
                 defaults: new { controller = "Letter", action = "Get" }
             );
-
-
-            routes.MapAreaRoute(
-                name: "ServeUserPhoto",
-                areaName: "Plato.Users",
-                template: "users/photo/{id}",
-                defaults: new { controller = "Photo", action = "Serve" }
-            );
+            
+            //routes.MapAreaRoute(
+            //    name: "ServeUserPhoto",
+            //    areaName: "Plato.Users",
+            //    template: "users/photo/{id}",
+            //    defaults: new { controller = "Photo", action = "Serve" }
+            //);
 
             routes.MapAreaRoute(
                 name: "DisplayUserProfile",
                 areaName: "Plato.Users",
-                template: "users/{id}/{alias?}",
+                template: "users/{id:int}/{alias}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 
