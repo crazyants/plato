@@ -2137,7 +2137,7 @@ $(function (win, doc, $) {
             offsetSuffix: "/",
             pagerKey: "pager.page",
             loaderSelector: ".infinite-scroll-loader",
-            loaderTemplate: '<p class="text-center"><i class="fal fa-2x fa-spinner fa-spin py-4"></i></p>',
+            loaderTemplate: '<p class="text-center"><i class="fal fa-2x fa-spinner fa-spin py-5"></i></p>',
             onPageLoaded: null,
             css: {
                 item: "infinite-scroll-item",
@@ -2407,9 +2407,7 @@ $(function (win, doc, $) {
                 // Append our page index to the callback url
                 url += url.indexOf("?") >= 0 ? "&" : "?";
                 url += defaults.pagerKey + "=" + page;
-                url += "&opts.action=get";
-                
-                //return;
+
                 // Request
                 win.$.Plato.Http({
                     url: url,

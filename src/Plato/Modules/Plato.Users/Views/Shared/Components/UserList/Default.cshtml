@@ -94,7 +94,7 @@
                  data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
                  class="list-group list-group-flush list-group-hover">
                 <div class="row no-gutters">
-                    <div class="infinite-scroll-loader" data-type="previous"></div>
+                    <div class="infinite-scroll-loader col-12" data-type="previous"></div>
                     @foreach (var user in Model.Results.Data)
                     {
                         var css = offset == selectedOffset
@@ -102,12 +102,6 @@
                             : "infinite-scroll-item";
                         <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12 p-0">
                             <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
-                                
-                                @colIndex
-                                @if (colIndex == 1)
-                                {
-                                }
-
                                 @await DisplayAsync(new View("UserListItem", new
                                 {
                                     model = new UserListItemViewModel()
@@ -120,14 +114,9 @@
                         </div>
                         {
                             offset++;
-                            colIndex++;
-                            if (colIndex % 3 == 1)
-                            {
-                                colIndex = 1;
-                            }
                         }
                     }
-                    <div class="infinite-scroll-loader" data-type="next"></div>
+                    <div class="infinite-scroll-loader col-12" data-type="next"></div>
                 </div>
 
             </div>

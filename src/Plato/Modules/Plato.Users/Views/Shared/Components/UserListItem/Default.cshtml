@@ -4,7 +4,7 @@
 
 @if (Model.EnableEdit)
 {
-    <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="d-inline-block col-12">
+    <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="list-group-item-action d-block p-3 text-center">
         <div class="p-3">
             <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar avatar-md" url="@Model.User.Avatar.Url" />
             <h6 class="d-block mt-2">@Model.User.DisplayName</h6>
