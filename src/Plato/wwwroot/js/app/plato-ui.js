@@ -2029,6 +2029,7 @@ $(function (win, doc, $) {
                                     scrollBottom: Math.ceil(scrollTop + winHeight),
                                     docHeight: docHeight,
                                     winHeight: winHeight,
+                                    heightMinusTop: docHeight - scrollTop,
                                     threshold: scrollTop / (docHeight - winHeight)
                                 };
                             if ($caller.data(dataKey).onScroll) {
@@ -2211,18 +2212,15 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                var url = methods.getUrl($caller),
-                    suffix = methods.getUrlSuffix($caller),
-                    bindScrollEvents = function() {
+                var bindScrollEvents = function() {
                         
                         // Bind scroll events
                         $().scrollSpy({
                             onScrollEnd: function() {
                                 methods.updateState($caller);
                             },
-                            onScroll: function(args, e) {
-
-                               
+                            onScroll: function (spy, e) {
+                                
                                 // Ensure we are not already loading 
                                 if (methods._loading) {
                                     $().scrollSpy("stop");
@@ -2236,40 +2234,22 @@ $(function (win, doc, $) {
                                     bottom = top + $caller.outerHeight();
 
                                 // At the veru top of the window remove offset from url
-                                if (args.scrollTop === 0) {
-                                    // Stop scrollspy to prevent the OnScrollEnd event from executing
-                                    $().scrollSpy("stop");
-                                    // Clear offset
-                                    if (state) {
-                                        history.replaceState(state, doc.title, url);
-                                    }
+                                if (spy.scrollTop === 0) {
+                                    methods.resetState($caller);
                                 } else {
                                     // When we reach the top of our container load previous page
-                                    if (args.scrollTop < top) {
-                                        methods.loadPrevious($caller, args);
+                                    if (spy.scrollTop < top) {
+                                        methods.loadPrevious($caller, spy);
                                     }
                                 }
 
                                 // At the very bottom of the page
-                                if (args.scrollBottom === args.docHeight) {
-                                    // Stop scrollspy to prevent the OnScrollEnd event from executing
-                                    $().scrollSpy("stop");
-                                    // Default to last marker
-                                    var $lastMarker = methods.getLastOffsetMarker($caller);
-                                    if ($lastMarker) {
-                                        // Update url with offset if valid
-                                        var offset = parseInt($lastMarker.data("infiniteScrollOffset"));
-                                        if (!isNaN(offset)) {
-                                            // Use replaceState to ensure the address bar is updated
-                                            // but we don't actually add new history state
-                                            history.replaceState(state, doc.title, url + suffix + offset);
-                                        }
-                                    }
-
+                                if (spy.scrollBottom === spy.docHeight) {
+                                    methods.resetState($caller);
                                 } else {
                                     // When we reach the bottom of our container load next page
-                                    if (args.scrollBottom > bottom) {
-                                        methods.loadNext($caller);
+                                    if (spy.scrollBottom > bottom) {
+                                        methods.loadNext($caller, spy);
                                     }
                                 }
                             }
@@ -2319,7 +2299,7 @@ $(function (win, doc, $) {
                 methods._page = 1;
                 methods._loading = false;
             },
-            loadPrevious: function($caller) {
+            loadPrevious: function ($caller, spy) {
 
                 // Get page and check bounds
                 var pageNumber = methods.getPreviousPageNumber($caller);
@@ -2336,6 +2316,7 @@ $(function (win, doc, $) {
                 // Load data
                 methods.load($caller,
                     pageNumber,
+                    spy,
                     function(data) {
                         if ($loader) {
                             $loader.hide();
@@ -2344,9 +2325,32 @@ $(function (win, doc, $) {
 
                             // Append response 
                             $loader.after(data);
-                            
+
+                            var page = methods.getLoadedPage(methods._page);
+                            if (page) {
+
+                                console.log(JSON.stringify(page));
+
+                                $('html, body').stop().animate({
+                                    scrollTop: $(doc).height() - page.spy.heightMinusTop
+                            },
+                                    0);
+
+                                //$().scrollSpy("unbind");
+                                // Scroll to offset marker for page
+                                //$("body").scrollTo({
+                                //    offset: (page.contentHeight + page.callerOffset.top) + page.spy.scrollTop,
+                                //        interval: 0,
+                                //        onComplete: function () {
+                                //            $().scrollSpy("bind");
+                                //        }
+                                //    },
+                                //    "go");
+
+                            }
+                        
                             // Scroll to bottom of newly loaded page
-                            methods.scrollToPage($caller, methods._page + 1);
+                            //methods.scrollToPage($caller, methods._page + 1);
 
                             // Highlight first marker in newly loaded page
                             methods.highlightFirstMarkerOnPage($caller, methods._page + 1);
@@ -2354,7 +2358,7 @@ $(function (win, doc, $) {
 
                     });
             },
-            loadNext: function($caller) {
+            loadNext: function ($caller, spy) {
 
                 // Get page and check bounds
                 var pageNumber = methods.getNextPageNumber($caller);
@@ -2371,6 +2375,7 @@ $(function (win, doc, $) {
                 // Load data
                 methods.load($caller,
                     pageNumber,
+                    spy,
                     function(data) {
                         if ($loader) {
                             $loader.hide();
@@ -2387,7 +2392,7 @@ $(function (win, doc, $) {
                     });
 
             },
-            load: function ($caller, page, func) {
+            load: function ($caller, page, spy, func) {
 
                 // Ensure we have a callback url
                 var url = methods.getUrl($caller),
@@ -2419,6 +2424,12 @@ $(function (win, doc, $) {
                     
                     // If a page was returned register page as loaded
                     if (data !== "") {
+
+                        // Get height
+                        var $temp = $('<div>').append(data);
+                        $("body").append($temp);
+                        var contentHeight = $temp.height();
+                        $temp.empty().hide();
                         
                         var offset = 0,
                             marker = null,
@@ -2435,10 +2446,13 @@ $(function (win, doc, $) {
                         if (marker) {
                             offset = parseInt(marker.getAttribute("data-infinite-scroll-offset"));
                         }
-
+                        
                         // Add loaded page with offset
                         methods._loadedPages.push({
+                            spy: spy,
                             page: page,
+                            contentHeight: contentHeight,
+                            callerOffset: $($caller).offset(),
                             offset: !isNaN(offset) ? offset : 0
                         });
 
@@ -2446,7 +2460,7 @@ $(function (win, doc, $) {
                         methods._page = page;
 
                     }
-
+                    
                     // Callback
                     func(data);
 
@@ -2480,9 +2494,9 @@ $(function (win, doc, $) {
                 // Iterate each offset marker and detect the first
                 // visibie marker within the client viewport
                 var url = methods.getUrl($caller),
+                    suffix = methods.getUrlSuffix($caller),
                     $marker = null,
-                    $markers = methods.getOffsetMarkers($caller),
-                    suffix = methods.getUrlSuffix($caller);
+                    $markers = methods.getOffsetMarkers($caller);
                 if ($markers) {
                     $markers.each(function() {
                         if (methods.isElementInviewPort(this)) {
@@ -2504,6 +2518,14 @@ $(function (win, doc, $) {
                     }
                 }
 
+            },
+            resetState: function($caller) {
+                // Stop scrollspy to prevent the OnScrollEnd event from executing
+                $().scrollSpy("stop");
+                // Clear offset
+                if (state) {
+                    history.replaceState(state, doc.title, methods.getUrl($caller));
+                }
             },
             scrollToPage: function ($caller, pageNumber) {
                 var page = methods.getLoadedPage(pageNumber);
@@ -2646,18 +2668,18 @@ $(function (win, doc, $) {
                 }
                 return null;
             },
-            getUrlSuffix: function($caller) {
-                if ($caller.data("infiniteScrollUrlSuffix")) {
-                    return $caller.data("infiniteScrollUrlSuffix");
-                }
-                return "/";
-            },
             getUrl: function ($caller) {
                 if ($caller.data("infiniteScrollUrl")) {
                     return $caller.data("infiniteScrollUrl");
                 }
                 return "";
             },
+            getUrlSuffix: function ($caller) {
+                if ($caller.data("infiniteScrollUrlSuffix")) {
+                    return $caller.data("infiniteScrollUrlSuffix");
+                }
+                return "/";
+            }
         }
 
         return {

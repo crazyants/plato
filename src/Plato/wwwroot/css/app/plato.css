@@ -1139,7 +1139,7 @@
 
 /* Highlight infinate scroll offset marker */
 .infinite-scroll-item-active {
-    background: rgba(150,222,255,0.4);
+    background: rgba(150,222,255,0.3);
     transition: none;
 }
 
