@@ -245,35 +245,21 @@ namespace Plato.Users
             routes.MapAreaRoute(
                 name: "Home-Users",
                 areaName: "Plato.Users",
-                template: "users/{offset:int?}",
+                template: "u/{offset:int?}",
                 defaults: new { controller = "Home", action = "Index"}
             );
-
-            //routes.MapAreaRoute(
-            //    name: "ServeUserPhotoFolder",
-            //    areaName: "Plato.Users",
-            //    template: "users/photo",
-            //    defaults: new { controller = "Photo", action = "Serve", id = "0"}
-            //);
             
             routes.MapAreaRoute(
                 name: "ServeUserLetterFolder",
                 areaName: "Plato.Users",
-                template: "users/letter/{letter}/{color}",
+                template: "u/l/{letter}/{color}",
                 defaults: new { controller = "Letter", action = "Get" }
             );
             
-            //routes.MapAreaRoute(
-            //    name: "ServeUserPhoto",
-            //    areaName: "Plato.Users",
-            //    template: "users/photo/{id}",
-            //    defaults: new { controller = "Photo", action = "Serve" }
-            //);
-
             routes.MapAreaRoute(
                 name: "DisplayUserProfile",
                 areaName: "Plato.Users",
-                template: "users/{id:int}/{alias}",
+                template: "u/{id:int}/{alias}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 
@@ -297,9 +283,7 @@ namespace Plato.Users
                 template: "settings/edit",
                 defaults: new { controller = "Home", action = "EditSettings" }
             );
-
-
-
+            
         }
 
     }

@@ -8,14 +8,7 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.Services
 {
-
-    public interface IUserService
-    {
-        Task<IPagedResults<User>> GetUsersAsunc(UserIndexOptions options, PagerOptions pager);
-
-    }
-
-
+    
     public class UserService : IUserService
     {
 
@@ -60,6 +53,7 @@ namespace Plato.Users.Services
                     {
                         q.Keywords.Like(options.Search);
                     }
+
                 })
                 .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();

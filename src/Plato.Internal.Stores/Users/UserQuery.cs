@@ -67,6 +67,7 @@ namespace Plato.Internal.Stores.Users
         private WhereBool _hideConfirmed;
         private WhereBool _showLocked;
         private WhereBool _hideLocked;
+        private WhereEnum<UserType> _userType;
         
         public WhereInt Id
         {
@@ -140,6 +141,12 @@ namespace Plato.Internal.Stores.Users
             get => _showLocked ?? (_showLocked = new WhereBool());
             set => _showLocked = value;
         }
+
+        public WhereEnum<UserType> UserType
+        {
+            get => _userType ?? (_userType = new WhereEnum<UserType>());
+            set => _userType = value;
+        }
     }
 
     #endregion
@@ -203,6 +210,7 @@ namespace Plato.Internal.Stores.Users
 
         string BuildWhereClause()
         {
+
             var sb = new StringBuilder();
 
             if (_query.Params.Id.Value > -1)
@@ -228,6 +236,17 @@ namespace Plato.Internal.Stores.Users
                     .Append(_query.Params.Keywords.ToSqlString("LastName", "Keywords"));
             }
 
+            // -----------------
+            // UserType 
+            // -----------------
+
+            if (_query.Params.UserType.Value != UserType.None)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.UserType.Operator);
+                sb.Append(_query.Params.UserType.ToSqlString("UserType"));
+
+            }
 
             // -----------------
             // RoleName 

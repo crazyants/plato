@@ -19,5 +19,7 @@ namespace Plato.Internal.Stores.Abstractions.Users
         
         Task<T> GetByApiKeyAsync(string apiKey);
 
+        Task<T> GetPlatoBotAsync();
+
     }
 }

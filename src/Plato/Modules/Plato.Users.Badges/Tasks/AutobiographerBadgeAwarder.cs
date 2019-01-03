@@ -84,13 +84,7 @@ namespace Plato.Users.Badges.Tasks
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
-
-            //var cacheManager = args.ServiceProvider.GetRequiredService<ICacheManager>();
-            //var dbHelper = args.ServiceProvider.GetRequiredService<IDbHelper>();
-            //var userStore = args.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
-            //var notificationManager = args.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
-            //var userReputationAwarder = args.ServiceProvider.GetRequiredService<IUserReputationAwarder>();
-
+            
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
@@ -126,6 +120,7 @@ namespace Plato.Users.Badges.Tasks
                 // Send notificaitons
                 if (users != null)
                 {
+                    var bot = await _userStore.GetPlatoBotAsync();
                     foreach (var user in users.Data)
                     {
 
@@ -142,13 +137,16 @@ namespace Plato.Users.Badges.Tasks
                         // ---------------
                         // Trigger notifications
                         // ---------------
+
                         
+
                         // Email notification
                         if (user.NotificationEnabled(EmailNotifications.NewBadge))
                         {
                             await _notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
                             {
                                 To = user,
+                                From = bot
                             }, (Badge)Badge);
                         }
 
@@ -158,6 +156,7 @@ namespace Plato.Users.Badges.Tasks
                             await _notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
                             {
                                 To = user,
+                                From = bot
                             }, (Badge) Badge);
                         }
 

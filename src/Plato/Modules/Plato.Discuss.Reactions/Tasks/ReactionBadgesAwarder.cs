@@ -96,8 +96,8 @@ namespace Plato.Discuss.Reactions.Tasks
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
-            
-         
+
+            var bot = await _userStore.GetPlatoBotAsync();
             foreach (var badge in this.Badges)
             {
 
@@ -158,6 +158,7 @@ namespace Plato.Discuss.Reactions.Tasks
                                 await _notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
                                 {
                                     To = user,
+                                    From = bot
                                 }, (Badge)badge);
                             }
 
@@ -167,6 +168,7 @@ namespace Plato.Discuss.Reactions.Tasks
                                 await _notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
                                 {
                                     To = user,
+                                    From = bot
                                 }, (Badge)badge);
                             }
 

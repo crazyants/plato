@@ -12,7 +12,6 @@ using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Repositories.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Text.Abstractions;
-using Remotion.Linq;
 
 namespace Plato.Internal.Stores.Users
 {
@@ -28,6 +27,7 @@ namespace Plato.Internal.Stores.Users
         private const string ByResetToken = "ByResetToken";
         private const string ByConfirmationToken = "ByConfirmationToken";
         private const string ByApiKey = "ByApiKey";
+        private const string PlatoBot = "PlatoBot";
 
         private readonly IUserDataItemStore<UserData> _userDataItemStore;
         private readonly IUserDataStore<UserData> _userDataStore;
@@ -260,6 +260,18 @@ namespace Plato.Internal.Stores.Users
                     results.Data = await MergeUserData(results.Data);
                 }
                 return results;
+            });
+        }
+
+        public async Task<User> GetPlatoBotAsync()
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), PlatoBot);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+                var results = await QueryAsync().Take(1)
+                    .Select<UserQueryParams>(q => q.UserType.Equals(UserType.Bot))
+                    .ToList();
+                return results?.Data?[0];
             });
         }
 

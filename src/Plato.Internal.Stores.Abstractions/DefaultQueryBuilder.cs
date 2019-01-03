@@ -342,8 +342,7 @@ namespace Plato.Internal.Stores.Abstractions
             _builder.Append("{0} <= @{0}");
             return this;
         }
-
-
+        
         public WhereDate NotEqual(DateTime value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
@@ -363,9 +362,71 @@ namespace Plato.Internal.Stores.Abstractions
             return dateTime.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern);
         }
     }
+
+    #endregion
+
+    #region "WhereEnum"
+
+    public class WhereEnum<T> where T : struct
+    {
+
+        private readonly StringBuilder _builder;
+        private QueryOperator _operator = QueryOperator.And;
+
+        public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
+
+        public T Value { get; private set; }
+        
+        public WhereEnum()
+        {
+            _builder = new StringBuilder();
+        }
+        
+        public WhereEnum<T> Or()
+        {
+            _operator = QueryOperator.Or;
+            return this;
+        }
+
+        public WhereEnum<T> And()
+        {
+            _operator = QueryOperator.And;
+            return this;
+        }
+
+        public WhereEnum<T> Equals(T value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" OR ");
+            Value = value;
+            if (Enum.TryParse<T>(value.ToString(), true, out var result))
+            {
+                _builder.Append("{0} = ").Append(result.ToString());
+            }
+            return this;
+        }
+
+        public WhereEnum<T> NotEqual(T value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" OR ");
+            Value = value;
+            if (Enum.TryParse<T>(value.ToString(), true, out var result))
+            {
+                _builder.Append("{0} <> ").Append(result.ToString());
+            }
+            return this;
+        }
+
+        public string ToSqlString(string parameterName)
+        {
+            return _builder.ToString().Replace("{0}", parameterName);
+        }
+
+    }
     
     #endregion
-    
+
     #region "QueryOperator"
 
     public enum QueryOperator

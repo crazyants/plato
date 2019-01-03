@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Plato.Internal.Abstractions.Extensions
 {
-
     public static class EnumerableExtensions
     {
 
@@ -15,6 +12,5 @@ namespace Plato.Internal.Abstractions.Extensions
         }
 
     }
-
-
+    
 }

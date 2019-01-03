@@ -26,11 +26,11 @@ namespace Plato.Internal.Models.Users
             }
 
             var letter = user.DisplayName != null 
-                ? user.DisplayName.ToUpper().Substring(0, 1) 
+                ? user.DisplayName.ToLower().Substring(0, 1) 
                 : "-";
 
             // Else fallback to our letter service
-            Url = $"/users/letter/{letter}/{user.PhotoColor}";
+            Url = $"/u/l/{letter}/{user.PhotoColor}";
 
         }
 

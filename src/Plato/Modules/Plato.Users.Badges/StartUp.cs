@@ -89,14 +89,14 @@ namespace Plato.Users.Badges
             routes.MapAreaRoute(
                 name: "BadgesIndex",
                 areaName: "Plato.Users.Badges",
-                template: "badges",
+                template: "b/{offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
             routes.MapAreaRoute(
                 name: "DisplayUserBadges",
                 areaName: "Plato.Users.Badges",
-                template: "users/{id}/{alias?}/badges",
+                template: "u/{id:int}/{alias?}/b",
                 defaults: new { controller = "Profile", action = "Index" }
             );
 

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Text.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Handlers

@@ -501,7 +501,7 @@ namespace Plato.Internal.Repositories.Users
                     lastName.ToEmptyIfNull().TrimToSize(255),
                     alias.ToEmptyIfNull().TrimToSize(255),
                     photoUrl.ToEmptyIfNull().TrimToSize(255),
-                    photoColor.ToEmptyIfNull().TrimToSize(6),
+                    photoColor.ToEmptyIfNull().TrimToSize(6).ToLower(),
                     samAccountName.ToEmptyIfNull().TrimToSize(255),
                     passwordHash.ToEmptyIfNull().TrimToSize(255),
                     passwordExpiryDate,

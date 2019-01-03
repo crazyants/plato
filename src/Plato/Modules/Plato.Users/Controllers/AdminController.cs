@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -23,6 +25,7 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IAlerter _alerter;
+        private readonly IContextFacade _contextFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -35,13 +38,15 @@ namespace Plato.Users.Controllers
             IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager,
             IAlerter alerter,
-            IPlatoUserManager<User> platoUserManager)
+            IPlatoUserManager<User> platoUserManager,
+            IContextFacade contextFacade)
         {
             _viewProvider = viewProvider;
             _userManager = userManager;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
             _platoUserManager = platoUserManager;
+            _contextFacade = contextFacade;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -51,6 +56,7 @@ namespace Plato.Users.Controllers
         #region "Action Methods"
 
         public async Task<IActionResult> Index(
+            int offset,
             UserIndexOptions opts,
             PagerOptions pager)
         {
@@ -81,6 +87,11 @@ namespace Plato.Users.Controllers
                 pager = new PagerOptions();
             }
 
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
+            }
 
             // Get default options
             var defaultViewOptions = new UserIndexOptions();
@@ -98,16 +109,32 @@ namespace Plato.Users.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
+
+            // Build infinate scroll options
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
             // Enable edit options for admin view
             opts.EnableEdit = true;
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(UserIndexViewModel)] = new UserIndexViewModel()
+            var viewModel = new UserIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
-            
+
+            // Add view options to context for use within view adaptors
+            HttpContext.Items[typeof(UserIndexViewModel)] = viewModel;
+
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetUsers", viewModel);
+            }
+
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new User(), this);
 
@@ -342,6 +369,20 @@ namespace Plato.Users.Controllers
             {
                 ["id"] = id
             });
+        }
+
+        #endregion
+
+        #region "Private Methods"
+
+        string GetInfiniteScrollCallbackUrl()
+        {
+
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
+
+            return _contextFacade.GetRouteUrl(RouteData.Values);
+
         }
 
         #endregion

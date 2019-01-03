@@ -2430,7 +2430,7 @@ $(function (win, doc, $) {
                             }
                         }
 
-                        // Ensure we have a valid offset 
+                        // Get offset from first marker
                         if (marker) {
                             offset = parseInt(marker.getAttribute("data-infinite-scroll-offset"));
                         }
@@ -2455,7 +2455,7 @@ $(function (win, doc, $) {
                         $caller.data(dataKey).onLoaded($caller);
                     }
 
-                    // Execute any externally registered ready functions
+                    // Execute any externally registered functions
                     for (var i = 0; i < methods._readyList.length; i++) {
                         if (typeof methods._readyList[i] === "function") {
                             methods._readyList[i]($caller);

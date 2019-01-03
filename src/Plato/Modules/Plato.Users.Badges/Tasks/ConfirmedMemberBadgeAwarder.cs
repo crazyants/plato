@@ -126,6 +126,7 @@ namespace Plato.Users.Badges.Tasks
                 // Send notificaitons
                 if (users != null)
                 {
+                    var bot = await _userStore.GetPlatoBotAsync();
                     foreach (var user in users.Data)
                     {
 
@@ -149,6 +150,7 @@ namespace Plato.Users.Badges.Tasks
                             await _notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
                             {
                                 To = user,
+                                From = bot
                             }, (Badge)Badge);
                         }
 
@@ -158,6 +160,7 @@ namespace Plato.Users.Badges.Tasks
                             await _notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
                             {
                                 To = user,
+                                From = bot
                             }, (Badge) Badge);
                         }
 

@@ -27,7 +27,7 @@ namespace Plato.Users.Controllers
             {
                 var fileBytes = renderer.GetLetter(new LetterOptions()
                 {
-                    Letter = letter.ToString(),
+                    Letter = letter.ToString().ToUpper(),
                     BackColor = color
                 }).StreamToByteArray();
 
