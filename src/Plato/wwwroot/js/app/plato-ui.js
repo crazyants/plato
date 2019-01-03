@@ -2027,9 +2027,8 @@ $(function (win, doc, $) {
                                 args = {
                                     scrollTop: Math.ceil(scrollTop),
                                     scrollBottom: Math.ceil(scrollTop + winHeight),
-                                    docHeight: docHeight,
-                                    winHeight: winHeight,
-                                    heightMinusTop: docHeight - scrollTop,
+                                    documentHeight: docHeight,
+                                    windowHeight: winHeight,
                                     threshold: scrollTop / (docHeight - winHeight)
                                 };
                             if ($caller.data(dataKey).onScroll) {
@@ -2326,32 +2325,26 @@ $(function (win, doc, $) {
                             // Append response 
                             $loader.after(data);
 
+                            // Get loaded page
                             var page = methods.getLoadedPage(methods._page);
                             if (page) {
 
-                                console.log(JSON.stringify(page));
+                                // Scroll position before content was loaded
+                                var previousPosition = page.spy.documentHeight - page.spy.scrollTop;
 
-                                $('html, body').stop().animate({
-                                    scrollTop: $(doc).height() - page.spy.heightMinusTop
-                            },
-                                    0);
-
-                                //$().scrollSpy("unbind");
-                                // Scroll to offset marker for page
-                                //$("body").scrollTo({
-                                //    offset: (page.contentHeight + page.callerOffset.top) + page.spy.scrollTop,
-                                //        interval: 0,
-                                //        onComplete: function () {
-                                //            $().scrollSpy("bind");
-                                //        }
-                                //    },
-                                //    "go");
+                                // Persist scroll position after content load
+                                $().scrollSpy("unbind");
+                                $("body").scrollTo({
+                                    offset: $(doc).height() - previousPosition,
+                                        interval: 0,
+                                        onComplete: function () {
+                                            $().scrollSpy("bind");
+                                        }
+                                    },
+                                    "go");
 
                             }
                         
-                            // Scroll to bottom of newly loaded page
-                            //methods.scrollToPage($caller, methods._page + 1);
-
                             // Highlight first marker in newly loaded page
                             methods.highlightFirstMarkerOnPage($caller, methods._page + 1);
                         }
@@ -2424,12 +2417,6 @@ $(function (win, doc, $) {
                     
                     // If a page was returned register page as loaded
                     if (data !== "") {
-
-                        // Get height
-                        var $temp = $('<div>').append(data);
-                        $("body").append($temp);
-                        var contentHeight = $temp.height();
-                        $temp.empty().hide();
                         
                         var offset = 0,
                             marker = null,
@@ -2442,17 +2429,16 @@ $(function (win, doc, $) {
                                 break;
                             }
                         }
-                        
+
+                        // Ensure we have a valid offset 
                         if (marker) {
                             offset = parseInt(marker.getAttribute("data-infinite-scroll-offset"));
                         }
                         
-                        // Add loaded page with offset
+                        // Add loaded page with offset and scrollSpy position
                         methods._loadedPages.push({
                             spy: spy,
                             page: page,
-                            contentHeight: contentHeight,
-                            callerOffset: $($caller).offset(),
                             offset: !isNaN(offset) ? offset : 0
                         });
 
