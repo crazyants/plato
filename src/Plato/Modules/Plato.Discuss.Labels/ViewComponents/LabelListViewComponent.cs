@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Discuss.Labels.Models;
+using Plato.Discuss.Labels.Services;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation;
-using Plato.Labels.Stores;
 
 namespace Plato.Discuss.Labels.ViewComponents
 {
@@ -63,15 +60,12 @@ namespace Plato.Discuss.Labels.ViewComponents
             },
         };
         
-        private readonly ILabelStore<Label> _labelStore;
-        private readonly IFeatureFacade _featureFacade;
+        private readonly ILabelService _labelService;
 
         public LabelListViewComponent(
-            ILabelStore<Label> labelStore, 
-            IFeatureFacade featureFacade)
+            ILabelService labelService)
         {
-            _labelStore = labelStore;
-            _featureFacade = featureFacade;
+            _labelService = labelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -88,10 +82,8 @@ namespace Plato.Discuss.Labels.ViewComponents
             {
                 pager = new PagerOptions();
             }
-
-            var model = await GetViewModel(options, pager);
-
-            return View(model);
+            
+            return View(await GetViewModel(options, pager));
 
         }
 
@@ -100,25 +92,8 @@ namespace Plato.Discuss.Labels.ViewComponents
             PagerOptions pager)
         {
 
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
+            var results = await _labelService.GetLabelsAsunc(options, pager);
 
-            var results = await _labelStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
-                .Select<LabelQueryParams>(q =>
-                {
-                    if (feature != null)
-                    {
-                        q.FeatureId.Equals(feature.Id);
-                    }
-
-                    if (!String.IsNullOrEmpty(options.Search))
-                    {
-                        q.Keywords.Like(options.Search);
-                    }
-                })
-                .OrderBy(options.Sort.ToString(), options.Order)
-                .ToList();
-            
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
 

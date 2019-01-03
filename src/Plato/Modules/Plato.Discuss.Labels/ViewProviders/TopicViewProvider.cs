@@ -14,6 +14,7 @@ using Plato.Labels.Models;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Labels.Services;
@@ -29,23 +30,23 @@ namespace Plato.Discuss.Labels.ViewProviders
         private readonly IEntityLabelManager<EntityLabel> _entityLabelManager;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IStringLocalizer T;
         private readonly IFeatureFacade _featureFacade;
+        private readonly ICacheManager _cacheManager;
 
         private readonly HttpRequest _request;
 
         public TopicViewProvider(
-            IContextFacade contextFacade,
             ILabelStore<Label> labelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityLabelStore<EntityLabel> entityLabelStore,
             IStringLocalizer<TopicViewProvider> stringLocalize,
             IFeatureFacade featureFacade, 
-            IEntityLabelManager<EntityLabel> entityLabelManager)
+            IEntityLabelManager<EntityLabel> entityLabelManager,
+            ICacheManager cacheManager)
         {
-            _contextFacade = contextFacade;
+           
             _labelStore = labelStore;
             _entityStore = entityStore;
             _entityLabelStore = entityLabelStore;
@@ -53,6 +54,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             T = stringLocalize;
             _featureFacade = featureFacade;
             _entityLabelManager = entityLabelManager;
+            _cacheManager = cacheManager;
         }
 
         #region "Implementation"
@@ -206,6 +208,10 @@ namespace Plato.Discuss.Labels.ViewProviders
                             context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                         }
                     }
+
+                    // Ensure we clear our labels cache to return new associationss
+                    _cacheManager.CancelTokens(typeof(LabelStore<Label>));
+
                 }
 
             }
@@ -263,8 +269,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         }
 
         #endregion
-
-
-
+        
     }
+
 }

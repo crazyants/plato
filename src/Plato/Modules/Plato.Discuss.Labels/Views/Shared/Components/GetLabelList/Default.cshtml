@@ -1,21 +1,23 @@
-﻿@model UserIndexViewModel
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Internal.Data.Abstractions
+@model LabelIndexViewModel
 
 @if (Model.Results?.Data != null)
 {
     var offset = Model.Pager.InitialOffset;
     var selectedOffset = Model.Pager.SelectedOffset;
-    @foreach (var user in Model.Results.Data)
+    @foreach (var label in Model.Results.Data)
      {
          var css = offset == selectedOffset
              ? "infinite-scroll-item infinite-scroll-item-active"
              : "infinite-scroll-item";
          <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12 p-0">
              <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
-                 @await DisplayAsync(new View("UserListItem", new
+                 @await DisplayAsync(new View("LabelListItem", new
                  {
-                     model = new UserListItemViewModel()
+                     model = new LabelListItemViewModel()
                      {
-                         User = user,
+                         Label = label,
                          EnableEdit = Model.Options.EnableEdit
                      }
                  }))
@@ -24,6 +26,6 @@
          {
              offset++;
          }
-    }
+     }
 
 }

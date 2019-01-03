@@ -12,6 +12,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Labels.Controllers
@@ -26,13 +27,12 @@ namespace Plato.Discuss.Labels.Controllers
         private readonly ILabelStore<Label> _labelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
-
-
+        private readonly IContextFacade _contextFacade;
+        
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-
-
+        
         public HomeController(
             IViewProviderManager<Label> labelViewProvider,
             IHtmlLocalizer htmlLocalizer,
@@ -41,13 +41,15 @@ namespace Plato.Discuss.Labels.Controllers
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IAlerter alerter,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IContextFacade contextFacade1)
         {
             _settingsStore = settingsStore;
             _labelStore = labelStore;
             _labelViewProvider = labelViewProvider;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
+            _contextFacade = contextFacade1;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -59,6 +61,7 @@ namespace Plato.Discuss.Labels.Controllers
         #region "Actions"
 
         public async Task<IActionResult> Index(
+            int offset,
             LabelIndexOptions opts,
             PagerOptions pager)
         {
@@ -73,6 +76,12 @@ namespace Plato.Discuss.Labels.Controllers
                 pager = new PagerOptions();
             }
 
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
+            }
+            
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -84,8 +93,7 @@ namespace Plato.Discuss.Labels.Controllers
                         .LocalNav()
                     ).Add(S["Labels"]);
             });
-
-
+            
             // Get default options
             var defaultViewOptions = new LabelIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -102,18 +110,31 @@ namespace Plato.Discuss.Labels.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(LabelIndexViewModel)] = new LabelIndexViewModel()
+            // Build infinate scroll options
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
+            // Build view model
+            var viewModel = new LabelIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Build view
-            var result = await _labelViewProvider.ProvideIndexAsync(new Label(), this);
-
+            // Add view options to context for use within view adaptors
+            HttpContext.Items[typeof(LabelIndexViewModel)] = viewModel;
+            
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetLabels", viewModel);
+            }
+            
             // Return view
-            return View(result);
+            return View(await _labelViewProvider.ProvideIndexAsync(new Label(), this));
 
         }
 
@@ -181,6 +202,20 @@ namespace Plato.Discuss.Labels.Controllers
 
         }
 
+
+        #endregion
+
+        #region "Private Methods"
+        
+        string GetInfiniteScrollCallbackUrl()
+        {
+
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
+
+            return _contextFacade.GetRouteUrl(RouteData.Values);
+
+        }
 
         #endregion
 

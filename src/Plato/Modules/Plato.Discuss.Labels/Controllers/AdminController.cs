@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Labels.Models;
 using Plato.Labels.Services;
 using Plato.Labels.Stores;
@@ -56,6 +56,7 @@ namespace Plato.Discuss.Labels.Controllers
         }
 
         public async Task<IActionResult> Index(
+            int offset,
             LabelIndexOptions opts,
             PagerOptions pager)
         {
@@ -74,7 +75,13 @@ namespace Plato.Discuss.Labels.Controllers
             {
                 pager = new PagerOptions();
             }
-            
+
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
+            }
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -100,18 +107,35 @@ namespace Plato.Discuss.Labels.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
+
+            // Build infinate scroll options
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
             // Indicate administrator view
             opts.EnableEdit = true;
-
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(LabelIndexViewModel)] = new LabelIndexViewModel()
+            
+            // Build view model
+            var viewModel = new LabelIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
+
+            // Add view options to context for use within view adaptors
+            HttpContext.Items[typeof(LabelIndexViewModel)] = viewModel;
             
-            var model = await _viewProvider.ProvideIndexAsync(new LabelBase(), this);
-            return View(model);
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetLabels", viewModel);
+            }
+
+            // Return view
+            return View(await _viewProvider.ProvideIndexAsync(new LabelBase(), this));
 
         }
         
@@ -266,6 +290,16 @@ namespace Plato.Discuss.Labels.Controllers
             }
 
             throw new Exception($"Could not find required feture registration for Plato.Discuss.Labels");
+        }
+        
+        string GetInfiniteScrollCallbackUrl()
+        {
+
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
+
+            return _contextFacade.GetRouteUrl(RouteData.Values);
+
         }
 
     }

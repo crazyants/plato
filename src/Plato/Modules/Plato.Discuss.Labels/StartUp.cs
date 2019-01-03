@@ -13,6 +13,7 @@ using Plato.Labels.Stores;
 using Plato.Discuss.Models;
 using Plato.Discuss.Labels.Navigation;
 using Plato.Discuss.Labels.Models;
+using Plato.Discuss.Labels.Services;
 using Plato.Discuss.Labels.ViewAdaptors;
 using Plato.Discuss.Labels.ViewProviders;
 using Plato.Internal.Layout.ViewAdaptors;
@@ -54,7 +55,10 @@ namespace Plato.Discuss.Labels
             // Labels view providers
             services.AddScoped<IViewProviderManager<Label>, ViewProviderManager<Label>>();
             services.AddScoped<IViewProvider<Label>, LabelViewProvider>();
-            
+
+            // Label service
+            services.AddScoped<ILabelService, LabelService>();
+
         }
 
         public override void Configure(
@@ -66,14 +70,14 @@ namespace Plato.Discuss.Labels
             routes.MapAreaRoute(
                 name: "DiscussLabelIndex",
                 areaName: "Plato.Discuss.Labels",
-                template: "discuss/labels",
+                template: "discuss/labels/{offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
             routes.MapAreaRoute(
                 name: "DiscussLabelDisplay",
                 areaName: "Plato.Discuss.Labels",
-                template: "discuss/label/{id}/{alias?}",
+                template: "discuss/label/{id:int}/{alias?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 

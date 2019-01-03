@@ -401,7 +401,7 @@ namespace Plato.Internal.Stores.Abstractions
             Value = value;
             if (Enum.TryParse<T>(value.ToString(), true, out var result))
             {
-                _builder.Append("{0} = ").Append(result.ToString());
+                _builder.Append("{0} = ").Append(Convert.ToInt32(result));
             }
             return this;
         }
@@ -413,7 +413,7 @@ namespace Plato.Internal.Stores.Abstractions
             Value = value;
             if (Enum.TryParse<T>(value.ToString(), true, out var result))
             {
-                _builder.Append("{0} <> ").Append(result.ToString());
+                _builder.Append("{0} <> ").Append(Convert.ToInt32(result));
             }
             return this;
         }
