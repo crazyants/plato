@@ -24,6 +24,8 @@ namespace Plato.Discuss.Tags.ViewModels
     {
         public string Search { get; set; }
 
+        public ScrollerOptions Scroller { get; set; }
+
         public SortBy Sort { get; set; } = SortBy.Entities;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;

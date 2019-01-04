@@ -9,8 +9,6 @@
          var css = offset == selectedOffset
              ? "p-3 infinite-scroll-item infinite-scroll-item-active"
              : "p-3 infinite-scroll-item";
-         topic.Offset = offset;
-         topic.SelectedOffset = selectedOffset;
          <li class="list-group-item list-group-item-action p-0">
              <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
                  @await DisplayAsync(new View("TopicListItem", new

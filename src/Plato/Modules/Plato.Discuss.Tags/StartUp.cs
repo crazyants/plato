@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Models;
 using Plato.Discuss.Tags.Badges;
 using Plato.Discuss.Tags.Navigation;
+using Plato.Discuss.Tags.Services;
 using Plato.Discuss.Tags.Tasks;
 using Plato.Discuss.Tags.ViewProviders;
 using Plato.Internal.Badges.Abstractions;
@@ -33,6 +34,9 @@ namespace Plato.Discuss.Tags
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Tag service
+            services.AddScoped<ITagService, TagService>();
+
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicFooterMenu>();
             services.AddScoped<INavigationProvider, TopicReplyFooterMenu>();
@@ -57,6 +61,8 @@ namespace Plato.Discuss.Tags
             // Notification manager
             services.AddScoped<INotificationManager<Badge>, NotificationManager<Badge>>();
 
+          
+
         }
 
         public override void Configure(
@@ -68,14 +74,14 @@ namespace Plato.Discuss.Tags
             routes.MapAreaRoute(
                 name: "DiscussTagIndex",
                 areaName: "Plato.Discuss.Tags",
-                template: "discuss/tags",
+                template: "discuss/tags/{offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
             routes.MapAreaRoute(
                 name: "DiscussTagDisplay",
                 areaName: "Plato.Discuss.Tags",
-                template: "discuss/tag/{id}/{alias?}",
+                template: "discuss/tag/{id:int}/{alias?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 

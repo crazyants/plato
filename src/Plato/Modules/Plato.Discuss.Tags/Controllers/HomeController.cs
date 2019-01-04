@@ -11,19 +11,20 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Stores;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Discuss.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Discuss.Tags.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {
 
-        #region "Constructor"
-        
+       
         private readonly IViewProviderManager<Tag> _tagViewProvider;
         private readonly ITagStore<Tag> _tagStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
-        
+        private readonly IContextFacade _contextFacade;
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -35,23 +36,25 @@ namespace Plato.Discuss.Tags.Controllers
             ITagStore<Tag> tagStore,
             IContextFacade contextFacade,
             IAlerter alerter,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager, 
+            IContextFacade contextFacade1)
         {
             _tagStore = tagStore;
             _tagViewProvider = tagViewProvider;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
+            _contextFacade = contextFacade1;
 
             T = htmlLocalizer;
             S = stringLocalizer;
 
         }
 
-        #endregion
-
+   
         #region "Actions"
 
         public async Task<IActionResult> Index(
+            int offset,
             TagIndexOptions opts,
             PagerOptions pager)
         {
@@ -64,6 +67,12 @@ namespace Plato.Discuss.Tags.Controllers
             if (pager == null)
             {
                 pager = new PagerOptions();
+            }
+
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
             }
 
             // Breadcrumb
@@ -94,18 +103,33 @@ namespace Plato.Discuss.Tags.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TagIndexViewModel)] = new TagIndexViewModel()
+            // Build infinate scroll options
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
+
+            // Build view model
+            var viewModel = new TagIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Build view
-            var result = await _tagViewProvider.ProvideIndexAsync(new Tag(), this);
-
+            // Add view options to context for use within view adaptors
+            HttpContext.Items[typeof(TagIndexViewModel)] = viewModel;
+            
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetTags", viewModel);
+            }
+            
+         
             // Return view
-            return View(result);
+            return View(await _tagViewProvider.ProvideIndexAsync(new Tag(), this));
 
         }
         
@@ -172,6 +196,21 @@ namespace Plato.Discuss.Tags.Controllers
 
         }
 
+
+        #endregion
+
+
+        #region "Private Methods"
+
+        string GetInfiniteScrollCallbackUrl()
+        {
+
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
+
+            return _contextFacade.GetRouteUrl(RouteData.Values);
+
+        }
 
         #endregion
 

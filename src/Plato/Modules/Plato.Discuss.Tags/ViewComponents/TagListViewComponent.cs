@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Discuss.Tags.Services;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation;
-using Plato.Tags.Models;
-using Plato.Tags.Stores;
 
 namespace Plato.Discuss.Tags.ViewComponents
 {
@@ -64,15 +61,12 @@ namespace Plato.Discuss.Tags.ViewComponents
         };
 
 
-        private readonly ITagStore<Tag> _tagStore;
-        private readonly IFeatureFacade _featureFacade;
-
+        private readonly ITagService _tagService;
+        
         public TagListViewComponent(
-            ITagStore<Tag> tagStore, 
-            IFeatureFacade featureFacade)
+            ITagService tagService)
         {
-            _tagStore = tagStore;
-            _featureFacade = featureFacade;
+            _tagService = tagService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -89,10 +83,8 @@ namespace Plato.Discuss.Tags.ViewComponents
             {
                 pager = new PagerOptions();
             }
-
-            var model = await GetViewModel(options, pager);
-
-            return View(model);
+            
+            return View(await GetViewModel(options, pager));
 
         }
 
@@ -101,25 +93,9 @@ namespace Plato.Discuss.Tags.ViewComponents
             PagerOptions pager)
         {
 
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            // Get tags
+            var results = await _tagService.GetTagsAsunc(options, pager);
 
-            var results = await _tagStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
-                .Select<TagQueryParams>(q =>
-                {
-                    if (feature != null)
-                    {
-                        q.FeatureId.Equals(feature.Id);
-                    }
-
-                    if (!String.IsNullOrEmpty(options.Search))
-                    {
-                        q.Keywords.Like(options.Search);
-                    }
-                })
-                .OrderBy(options.Sort.ToString(), options.Order)
-                .ToList();
-      
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
 
@@ -132,8 +108,7 @@ namespace Plato.Discuss.Tags.ViewComponents
                 Options = options,
                 Pager = pager
             };
-
-
+            
         }
 
     }

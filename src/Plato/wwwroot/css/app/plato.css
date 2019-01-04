@@ -1077,6 +1077,7 @@
 
 /* default labels */
 .label { background-color: #E4ECF5; color: #007bff; }
+a.label:hover,
 .label.active { background: #007bff; color: #fff; }
 
 .label-outline { border: 1px solid #CBDCFF; }

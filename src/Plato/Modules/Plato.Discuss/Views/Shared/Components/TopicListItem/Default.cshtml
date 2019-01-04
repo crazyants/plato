@@ -27,9 +27,8 @@
             <date utc="@Model.Topic.LastReplyDate"></date>
         </a>
     </div>
-    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">
+    <a asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">
         @Model.Topic.Title
-        @Model.Topic.Offset
     </a>
     @if (Model.Labels != null)
     {

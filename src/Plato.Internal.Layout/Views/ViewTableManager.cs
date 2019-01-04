@@ -29,8 +29,7 @@ namespace Plato.Internal.Layout.Views
             return Task.FromResult(descriptor);
 
         }
-
-
+        
     }
 
 }

@@ -2,15 +2,13 @@
 
 @if (Model.Tags != null && Model.Tags.Any())
 {
-    <div class="m-3">
+    <div class="bg-light p-3">
         @foreach (var tag in Model.Tags)
         {
         var tooltip = $"{T["Show all topics tagged"].Value} '{tag.Name}...'";
-        <div title="@tooltip" class="btn-group my-2">
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm label font-weight-bold">
-                @tag.Name
-            </a>
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm label dropdown-toggle-split">
+        <div title="@tooltip" class="btn-group">
+            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm label">
+                <span class=" font-weight-bold">@tag.Name</span>
                 <span>x</span>@tag.TotalEntities.ToPrettyInt()
             </a>
         </div>

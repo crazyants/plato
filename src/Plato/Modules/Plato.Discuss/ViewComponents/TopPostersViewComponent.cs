@@ -5,7 +5,6 @@ using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewComponents
 {
@@ -44,7 +43,7 @@ namespace Plato.Discuss.ViewComponents
             
             // Get top 20 participants
             var users = await _entityUsersStore.QueryAsync()
-                .Take(1, 20)
+                .Take(1, 10)
                 .Select<EntityUserQueryParams>(q =>
                 {
                     q.EntityId.Equals(id);
