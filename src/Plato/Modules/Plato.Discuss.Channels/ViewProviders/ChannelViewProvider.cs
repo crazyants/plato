@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
@@ -9,10 +8,7 @@ using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -38,8 +34,6 @@ namespace Plato.Discuss.Channels.ViewProviders
             _featureFacade = featureFacade;
             _actionContextAccessor = actionContextAccessor;
         }
-
-        #region "Implementation"
 
         public override async Task<IViewProviderResult> BuildIndexAsync(Channel channel, IViewProviderContext updater)
         {
@@ -103,8 +97,6 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-
-        #endregion
         
     }
 }

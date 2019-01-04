@@ -122,6 +122,15 @@ namespace Plato.Categories.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var category = await _categoryRepository.SelectByIdAsync(id);
+                if (category != null)
+                {
+                    var categories = await GetByFeatureIdAsync(category.FeatureId);
+                    if (categories != null)
+                    {
+                        category.Children = RecurseChildren(categories.ToList(), category.Id);
+                    }
+                    
+                }
                 return await MergeCategoryData(category);
             });
 

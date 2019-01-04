@@ -64,6 +64,9 @@ namespace Plato.Discuss.ViewModels
         [DataMember(Name = "channel")]
         public int ChannelId { get; set; }
 
+        public int[] ChannelIds { get; set; }
+
+
         public int CreatedByUserId { get; set; }
 
         public int LabelId { get; set; }

@@ -8,8 +8,6 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Notifications.Models;
-using Plato.Notifications.Services;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Badges.NotificationTypes;
 
@@ -88,7 +86,9 @@ namespace Plato.Users.Badges.Notifications
                 UserId = context.Notification.To.Id,
                 Title = S["New Badge"].Value,
                 Message = $"{S["You've earned the"].Value} '{context.Model.Name}' {S[" badge"].Value}",
-                Url = url
+                Url = url,
+                CreatedUserId = context.Notification.From?.Id ?? 0,
+                CreatedDate = DateTimeOffset.UtcNow
             };
 
             // Create notification

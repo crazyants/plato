@@ -9,7 +9,7 @@ namespace Plato.Discuss.Follow
     {
 
         public static readonly Reputation NewFollow =
-            new Reputation("Tag Follow", "Reputation awarded for following a topic.", 1);
+            new Reputation("Topic Follow", "Reputation awarded for following a topic.", 1);
         
         public IEnumerable<Reputation> GetReputations()
         {

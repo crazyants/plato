@@ -106,6 +106,11 @@ namespace Plato.Discuss.Services
                             q.CategoryId.Equals(options.Params.ChannelId);
                         }
 
+                        if (options.Params.ChannelIds != null)
+                        {
+                            q.CategoryId.IsIn(options.Params.ChannelIds);
+                        }
+                        
                         if (options.Params.LabelId > 0)
                         {
                             q.LabelId.Equals(options.Params.LabelId);

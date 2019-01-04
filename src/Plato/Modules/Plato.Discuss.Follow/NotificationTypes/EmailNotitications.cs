@@ -2,24 +2,20 @@
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Discuss.NotificationTypes
+namespace Plato.Discuss.Follow.NotificationTypes
 {
 
     public class EmailNotifications : INotificationTypeProvider
     {
-
-        public static readonly EmailNotification NewTopics =
-            new EmailNotification("NewTopicsEmail", "New Topics", "Send me a email notification for each new topic.");
-
-        public static readonly EmailNotification NewReplies =
-            new EmailNotification("NewRepliesEmail", "New Replies", "Send me an email notification for each new reply.");
+        
+        public static readonly EmailNotification NewReply =
+            new EmailNotification("NewRepliesEmail", "New Replies", "Send me an email notification for new replies within topics i'm following.");
 
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
             return new[]
             {
-                NewTopics,
-                NewReplies,
+                NewReply,
             };
         }
 
@@ -27,7 +23,7 @@ namespace Plato.Discuss.NotificationTypes
         {
             return new[]
             {
-                NewTopics
+                NewReply,
             };
         }
     }

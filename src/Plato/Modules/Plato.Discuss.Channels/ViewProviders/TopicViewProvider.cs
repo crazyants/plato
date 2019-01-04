@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,6 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Channel> _channelStore;
-        private readonly IPostManager<Topic> _topicManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
         private readonly IFeatureFacade _featureFacade;
@@ -45,8 +45,6 @@ namespace Plato.Discuss.Channels.ViewProviders
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
-            IStringLocalizer<TopicViewProvider> stringLocalize,
-            IPostManager<Topic> topicManager,
             IBreadCrumbManager breadCrumbManager,
             IFeatureFacade featureFacade)
         {
@@ -55,11 +53,10 @@ namespace Plato.Discuss.Channels.ViewProviders
             _entityStore = entityStore;
             _entityCategoryStore = entityCategoryStore;
             _request = httpContextAccessor.HttpContext.Request;
-            _topicManager = topicManager;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
 
-            T = stringLocalize;
+            T = stringLocalizer;
             S = stringLocalizer;
         }
 
@@ -156,7 +153,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
         {
-
+            
             // Override breadcrumb configuration within base discuss controller 
             IEnumerable<Channel> parents = null;
             if (topic.CategoryId > 0)
@@ -198,7 +195,20 @@ namespace Plato.Discuss.Channels.ViewProviders
                     }
                 }
 
-                builder.Add(S["Post New Topic"]);
+                // Ensure we have a topic title
+                if (!String.IsNullOrEmpty(topic.Title))
+                {
+                    builder.Add(S[topic.Title], t => t
+                        .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary
+                        {
+                            ["id"] = topic.Id,
+                            ["alias"] = topic.Alias,
+                        })
+                        .LocalNav()
+                    );
+                }
+           
+                builder.Add(S[topic.Id > 0 ? "Edit Post" : "New Post"]);
 
             });
             
@@ -306,7 +316,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                         if (channelId > 0)
                         {
                             topic.CategoryId = channelId;
-                            await _topicManager.UpdateAsync(topic);
+                            await _entityStore.UpdateAsync(topic);
                             break;
                         }
 

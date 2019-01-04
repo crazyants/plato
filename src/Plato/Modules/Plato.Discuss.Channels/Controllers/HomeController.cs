@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -48,8 +49,6 @@ namespace Plato.Discuss.Channels.Controllers
             T = localizer;
             S = stringLocalizer;
         }
-
-        #region "Actions"
         
         public async Task<IActionResult> Index(
             int id,
@@ -142,26 +141,34 @@ namespace Plato.Discuss.Channels.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
+            
+       
+            if (category.Children.Any())
+            {
 
-            // We don't need to add to pagination 
-            opts.Params.ChannelId = category?.Id ?? 0;
+                opts.Params.ChannelIds = category.Children.Select(c => c.Id).ToArray();
+            }
+            else
+            {
+                opts.Params.ChannelId = category?.Id ?? 0;
+            }
+    
+     
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            // Build view model
+            var viewModel = new TopicIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Build view
-            var result = await _channelViewProvider.ProvideIndexAsync(category, this);
-
+            // Add view options to context for use within view adaptors
+            HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+            
             // Return view
-            return View(result);
+            return View(await _channelViewProvider.ProvideIndexAsync(category, this));
             
         }
-        
-        #endregion
         
     }
     
