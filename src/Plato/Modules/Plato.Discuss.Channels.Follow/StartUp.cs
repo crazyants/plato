@@ -2,14 +2,19 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Discuss.Channels.Follow.Notifications;
+using Plato.Discuss.Channels.Follow.NotificationTypes;
 using Plato.Discuss.Channels.Follow.Subscribers;
 using Plato.Discuss.Channels.Follow.ViewProviders;
 using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Models;
 using Plato.Follows.Services;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Notifications;
+using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Discuss.Channels.Follow
 {
@@ -34,6 +39,17 @@ namespace Plato.Discuss.Channels.Follow
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
+
+            // Notification providers
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
+
+            // Notification managers
+            services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+
+            // Notification Providers
+            services.AddScoped<INotificationProvider<Topic>, NewTopicEmail>();
+            services.AddScoped<INotificationProvider<Topic>, NewTopicWeb>();
 
         }
 

@@ -992,10 +992,9 @@
 /* ------------------------- */
 
 .tree > ul { margin: 0; padding: 0;  list-style: none; }
-.tree li.list-group-item {  padding: 0 !important; border: 0;  }
+.tree li.list-group-item { padding: 0 !important; border: 0;  }
 
-.tree li.list-group-item,
-.tree li.list-group-item > ul { border-top: 1px solid rgba(0, 0, 0, 0.125); }
+
 
 /* animate expand / collapse */
 .tree li > div > a.toggler { color: inherit; width: 22px; padding: 0; margin-right: 0.25rem; transform: rotate(0); text-align: center; vertical-align: middle; transition: transform .15s ease-in; }

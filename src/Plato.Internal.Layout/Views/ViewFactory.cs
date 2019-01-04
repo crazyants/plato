@@ -18,9 +18,9 @@ namespace Plato.Internal.Layout.Views
             _viewInvoker = viewInvoker;
         }
 
-        public async Task<ViewDescriptor> CreateAsync(IView view)
+        public ViewDescriptor Create(IView view)
         {
-            return await _viewTableManager.TryAdd(view);
+            return _viewTableManager.TryAdd(view);
         }
 
         public async Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext)

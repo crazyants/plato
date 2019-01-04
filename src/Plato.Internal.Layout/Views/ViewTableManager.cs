@@ -6,7 +6,7 @@ namespace Plato.Internal.Layout.Views
 
     public interface IViewTableManager
     {
-        Task<ViewDescriptor> TryAdd(IView view);
+        ViewDescriptor TryAdd(IView view);
     }
 
     public class ViewTableManager : IViewTableManager
@@ -15,7 +15,7 @@ namespace Plato.Internal.Layout.Views
         private static readonly ConcurrentDictionary<string, ViewDescriptor> _views =
             new ConcurrentDictionary<string, ViewDescriptor>();
 
-        public Task<ViewDescriptor> TryAdd(IView view)
+        public ViewDescriptor TryAdd(IView view)
         {
             
             var descriptor = new ViewDescriptor()
@@ -26,7 +26,7 @@ namespace Plato.Internal.Layout.Views
 
             _views.TryAdd(view.ViewName, descriptor);
 
-            return Task.FromResult(descriptor);
+            return descriptor;
 
         }
         

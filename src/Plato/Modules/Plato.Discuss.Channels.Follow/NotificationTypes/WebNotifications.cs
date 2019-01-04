@@ -2,20 +2,20 @@
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Discuss.Follow.NotificationTypes
+namespace Plato.Discuss.Channels.Follow.NotificationTypes
 {
 
-    public class EmailNotifications : INotificationTypeProvider
+    public class WebNotifications : INotificationTypeProvider
     {
-        
-        public static readonly EmailNotification NewReply =
-            new EmailNotification("NewReplyEmail", "New Replies", "Send me an email notification for each new reply within topics i'm following.");
+
+        public static readonly WebNotification NewTopic =
+            new WebNotification("NewTopicWeb", "New Topics", "Show me a web notification for each new topic within channels i'm following.");
 
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
             return new[]
             {
-                NewReply,
+                NewTopic
             };
         }
 
@@ -23,9 +23,10 @@ namespace Plato.Discuss.Follow.NotificationTypes
         {
             return new[]
             {
-                NewReply,
+                NewTopic
             };
         }
+
     }
 
 }

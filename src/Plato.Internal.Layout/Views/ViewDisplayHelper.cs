@@ -40,7 +40,7 @@ namespace Plato.Internal.Layout.Views
             }
             
             // Build view descriptor
-            var viewDescriptor = await _viewFactory.CreateAsync(view);
+            var viewDescriptor = _viewFactory.Create(view);
 
             // Get registered view adaptor providers for the view
             var viewAdaptorManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdaptorManager>();
