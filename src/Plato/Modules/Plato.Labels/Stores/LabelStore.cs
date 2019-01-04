@@ -17,6 +17,9 @@ namespace Plato.Labels.Stores
     public class LabelStore<TLabel> : ILabelStore<TLabel> where TLabel : class, ILabel
     {
 
+        private const string ById = "ById";
+        private const string ByFeatureId = "ByFeatureId";
+
         private readonly ILabelRepository<TLabel> _labelRepository;
         private readonly ILabelDataStore<LabelData> _labelDataStore;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -108,7 +111,7 @@ namespace Plato.Labels.Stores
 
         public async Task<TLabel> GetByIdAsync(int id)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var label = await _labelRepository.SelectByIdAsync(id);
@@ -147,7 +150,7 @@ namespace Plato.Labels.Stores
 
         public async Task<IEnumerable<TLabel>> GetByFeatureIdAsync(int featureId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), featureId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByFeatureId, featureId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 

@@ -25,7 +25,7 @@ namespace Plato.Discuss.Channels.Controllers
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
-        
+        private readonly IContextFacade _contextFacade;
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -38,20 +38,23 @@ namespace Plato.Discuss.Channels.Controllers
             ICategoryStore<Channel> channelStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
-            IAlerter alerter)
+            IAlerter alerter,
+            IContextFacade contextFacade1)
         {
             _settingsStore = settingsStore;
             _channelStore = channelStore;
             _channelViewProvider = channelViewProvider;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
-          
+            _contextFacade = contextFacade1;
+
             T = localizer;
             S = stringLocalizer;
         }
         
         public async Task<IActionResult> Index(
             int id,
+            int offset,
             TopicIndexOptions opts,
             PagerOptions pager)
         {
@@ -65,7 +68,18 @@ namespace Plato.Discuss.Channels.Controllers
                     return NotFound();
                 }
             }
-         
+
+            if (opts == null)
+            {
+                opts = new TopicIndexOptions();
+            }
+
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+
+
             // Check permissions
 
             // Build breadcrumb
@@ -141,8 +155,14 @@ namespace Plato.Discuss.Channels.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
-       
+
+            // Build infinate scroll options
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
+            // Include child channels
             if (category.Children.Any())
             {
 
@@ -153,8 +173,6 @@ namespace Plato.Discuss.Channels.Controllers
                 opts.Params.ChannelId = category?.Id ?? 0;
             }
     
-     
-
             // Build view model
             var viewModel = new TopicIndexViewModel()
             {
@@ -165,11 +183,32 @@ namespace Plato.Discuss.Channels.Controllers
             // Add view options to context for use within view adaptors
             HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
             
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetTopics", viewModel);
+            }
+            
             // Return view
             return View(await _channelViewProvider.ProvideIndexAsync(category, this));
             
         }
-        
+
+        string GetInfiniteScrollCallbackUrl()
+        {
+
+            //RouteData.Values["Area"] = "Plato.Discuss";
+            //RouteData.Values["Action"] = "Topic";
+            //RouteData.Values["Controller"] = "Home";
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
+
+            return _contextFacade.GetRouteUrl(RouteData.Values);
+
+        }
+
+
     }
-    
+
 }
