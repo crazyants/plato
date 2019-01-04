@@ -190,7 +190,6 @@ $(function (win, doc, $) {
 
             this.logInfo("initDropDowns()");
 
-            // Enable
             // Enable nested dropdown support
             $("ul.dropdown-menu [data-toggle='dropdown']").on("click",
                 function(event) {
@@ -200,7 +199,9 @@ $(function (win, doc, $) {
                     // Avoid having the menu to close when clicking
                     event.stopPropagation();
                     // If a menu is already open we close it
-                    $("ul.dropdown-menu [data-toggle='dropdown']").parent().removeClass('show');
+                    $("ul.dropdown-menu [data-toggle='dropdown']")
+                        .parent()
+                        .removeClass('show');
                     // opening the one you clicked on
                     $(this).parent().addClass('show');
 

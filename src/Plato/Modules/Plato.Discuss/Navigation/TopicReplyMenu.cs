@@ -38,23 +38,22 @@ namespace Plato.Discuss.Navigation
                 return;
             }
 
-            // Edit reply
-            builder.Add(T["Edit"], int.MinValue + 1, edit => edit
-                    .IconCss("fal fa-pencil")
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-provide", "tooltip"},
-                        {"title", T["Edit"]}
-                    })
-                    .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
-                    {
-                        ["id"] = reply?.Id ?? 0
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                , new string[] {"edit-reply", "text-muted", "text-hidden"});
-
-
+            //// Edit reply
+            //builder.Add(T["Edit"], int.MinValue + 1, edit => edit
+            //        .IconCss("fal fa-pencil")
+            //        .Attributes(new Dictionary<string, object>()
+            //        {
+            //            {"data-provide", "tooltip"},
+            //            {"title", T["Edit"]}
+            //        })
+            //        .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
+            //        {
+            //            ["id"] = reply?.Id ?? 0
+            //        })
+            //        //.Permission(Permissions.ManageRoles)
+            //        .LocalNav()
+            //    , new string[] {"edit-reply", "text-muted", "text-hidden"});
+            
             // Options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
@@ -64,11 +63,19 @@ namespace Plato.Discuss.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
+
+                        .Add(T["Edit"], int.MinValue + 1, edit => edit
+                            .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["id"] = reply?.Id ?? 0
+                            })
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav())
                         .Add(T["Report"], report => report
                             .Action("Popular", "Home", "Plato.Discuss")
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
-                        ), new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
+                        ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
         }

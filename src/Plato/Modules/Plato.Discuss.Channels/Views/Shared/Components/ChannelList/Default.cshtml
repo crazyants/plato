@@ -8,7 +8,6 @@
          {
              <card class="card card-body-flush">
                  <card-title>
-
                      @if (Model.ChannelIndexOpts.EnableEdit)
                      {
                          <ul class="nav navbar p-0 float-right">
@@ -16,8 +15,7 @@
                                  <a class="btn btn-secondary float-right dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                      @T["Edit"]
                                  </a>
-                                 <div class="dropdown-arrow"></div>
-                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                 <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="navbarDropdown">
                                      <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="dropdown-item">
                                          @T["Edit Channel"]
                                      </a>

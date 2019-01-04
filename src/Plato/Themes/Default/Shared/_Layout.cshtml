@@ -40,8 +40,7 @@
                                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                                 <avatar class="avatar mr-2" url="@this.CurrentUser.Avatar.Url"/> @this.CurrentUser.DisplayName
                                             </a>
-                                            <div class="dropdown-arrow"></div>
-                                            <div class="dropdown-menu dropdown-menu-right">
+                                            <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
@@ -71,7 +70,7 @@
                         
                         <navigation name="site"
                                     class="nav nav-pills float-right site-nav"
-                                    child-ul-css-class="dropdown-menu" />
+                                    child-ul-css-class="dropdown-menu anim anim-2x anim-scale-in" />
 
                     </div>
                 </div>

@@ -13,9 +13,12 @@
 
 /* diff css */
 
-.inserted-line { background-color:rgba(156,204,79,.5); }
+.inserted-line,
+.inserted-character { background-color:rgba(156,204,79,.5); }
+.deleted-line,
+.deleted-character{ background-color: rgba(255,150,150,.5); color: #8F0D0D; text-decoration: line-through; }
+
 .modified-line { background-color:rgba(110,167,255,.3);}
-.deleted-line { background-color: rgba(255,150,150,.5); }
 .imaginary-line { background-color: rgba(160,160,160,.3); }
-.inserted-character { display: inline-block; background-color:rgba(0,255,0,.8); }
-.deleted-character { display: inline-block; background-color:rgba(255,0,0,.8); }
+.inserted-character { display: inline-block; }
+.deleted-character { display: inline-block; }

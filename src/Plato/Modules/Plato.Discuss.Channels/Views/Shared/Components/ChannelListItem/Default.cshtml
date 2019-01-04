@@ -24,7 +24,7 @@
         </div>
     }
 
-    <div class="col-7">
+    <div class="col-7 pl-0">
 
         @if (Model.ChannelIndexOpts.EnableEdit)
         {
@@ -83,7 +83,7 @@
         {
             <div class="float-right ml-2">
                 <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-alias="@details.LastTopic.CreatedBy.Alias" asp-route-id="@details.LastTopic.CreatedBy.Id">
-                    <avatar data-toggle="tooltip" title="@details.LastTopic.CreatedBy.DisplayName" class="avatar" user-id="@details.LastTopic.CreatedBy.Id" />
+                    <avatar data-toggle="tooltip" title="@details.LastTopic.CreatedBy.DisplayName" class="avatar" url="@details.LastTopic.CreatedBy.Avatar.Url" />
                 </a>
             </div>
             <div class="float-right">

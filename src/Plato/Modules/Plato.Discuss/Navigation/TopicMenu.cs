@@ -38,32 +38,40 @@ namespace Plato.Discuss.Navigation
                 return;
             }
             
-            // Edit topic
-            builder.Add(T["Edit"], int.MinValue + 1, edit => edit
-                    .IconCss("fal fa-pencil")
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-provide", "tooltip"},
-                        {"title", T["Edit"]}
-                    })
-                    .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                    {
-                        ["id"] = topic.Id
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                , new string[] {"edit", "text-muted", "text-hidden" });
+            //// Edit topic
+            //builder.Add(T["Edit"], int.MinValue + 1, edit => edit
+            //        .IconCss("fal fa-pencil")
+            //        .Attributes(new Dictionary<string, object>()
+            //        {
+            //            {"data-provide", "tooltip"},
+            //            {"title", T["Edit"]}
+            //        })
+            //        .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+            //        {
+            //            ["id"] = topic.Id
+            //        })
+            //        //.Permission(Permissions.ManageRoles)
+            //        .LocalNav()
+            //    , new string[] {"edit", "text-muted", "text-hidden" });
             
             // Options
             builder
-                .Add(T["Options"], int.MaxValue , options => options
+                .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Report"], report => report
+                        .Add(T["Edit"], int.MinValue, edit => edit
+                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["id"] = topic.Id,
+                                ["alias"] = topic.Alias
+                            })
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav())
+                        .Add(T["Report"], int.MaxValue, report => report
                             .Action("Report", "Home", "Plato.Discuss")
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -71,9 +79,9 @@ namespace Plato.Discuss.Navigation
                             })
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
-                        ), new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
+                        ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-            
+
         }
 
     }

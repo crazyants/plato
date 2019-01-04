@@ -8,17 +8,15 @@
 {
     <div class="modal-header">
         <h6 class="modal-title">
-        
             @if (Model.History.CreatedBy != null)
             {
-                <avatar title="@Model.History.CreatedBy.DisplayName" class="avatar avatar-sm" url="@Model.History.CreatedBy.Avatar.Url"></avatar>
+                <avatar title="@Model.History.CreatedBy.DisplayName" class="avatar avatar-sm mr-1" url="@Model.History.CreatedBy.Avatar.Url"></avatar>
                 @Model.History.CreatedBy.DisplayName
             }
             @T["edited"]
             <span data-toggle="tooltip" title="@Model.History.CreatedDate">
                 <date utc="@Model.History.CreatedDate"></date>
             </span>
-
         </h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">

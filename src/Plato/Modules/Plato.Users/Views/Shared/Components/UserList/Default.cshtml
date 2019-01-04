@@ -10,8 +10,7 @@
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="filterDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @T["Filter"]
                 </a>
-                <div class="dropdown-arrow"></div>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropDown">
+                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="filterDropDown">
                     @foreach (var option in Model.Filters)
                     {
                         var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
@@ -40,8 +39,7 @@
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="sortByDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @T["Sort By"]
                 </a>
-                <div class="dropdown-arrow"></div>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortByDropdown">
+                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="sortByDropdown">
                     @foreach (var option in Model.SortColumns)
                     {
                         var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
