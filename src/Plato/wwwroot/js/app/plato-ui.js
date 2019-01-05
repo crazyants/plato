@@ -338,7 +338,7 @@ $(function (win, doc, $) {
             interval: 250,
             event: "click",
             position: "top",
-            container: $('html, body'),
+            target: null,
             onBeforeComplete: null,
             onComplete: null
         };
@@ -382,22 +382,26 @@ $(function (win, doc, $) {
                         }
                     });
 
+                
                 var $target = null,
-                    href = $caller.attr("href");
+                    href = $caller.prop("tagName") === "A" && $caller.attr("href");
                 if (href) {
                     $target = $(href);
                 } else {
-                    $target = $caller;
+                    $target = $caller.data(dataKey).target;
                 }
 
-                var $container = $caller.data(dataKey).container,
-                    interval = $caller.data(dataKey).interval,
+                var interval = $caller.data(dataKey).interval,
                     position = $caller.data(dataKey).position,
-                    offset = $caller.data(dataKey).offset,
+                    offset = $caller.data(dataKey).offset;
+
+                var top = 0;
+                if ($target) {
                     top = position === "top" ? $target.offset().top : $target.offset().bottom;
-                
+                }
+                    
                 // animate scroll
-                $container.stop().animate({
+                $caller.stop().animate({
                         scrollTop: top + offset
                     },
                     interval,
@@ -615,13 +619,33 @@ $(function (win, doc, $) {
                 });
             },
             scrollToSelected: function ($caller) {
+
+                // Ensure selected are expanded
                 methods.expandSelected($caller);
-                $caller
-                    .find(".active")
-                    .scrollTo({
-                        container: $caller
-                        },
-                        "go");
+             
+                function getOffset($el, $parent) {  
+
+                    var x = 0,
+                        y = 0,
+                        el = $el[0],
+                        parent = $parent[0];
+
+                    while (el && el !== parent && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+                        x += el.offsetLeft - el.scrollLeft + el.clientLeft;
+                        y += el.offsetTop - el.scrollTop + el.clientTop;
+                        el = el.offsetParent;
+                    }
+                    return { top: y, left: x };
+                }
+                
+                var offset = getOffset($caller.find(".active"), $caller),
+                    top = (offset.top - $caller.height());
+                $caller.scrollTo({
+                        offset: top - 20,
+                        interval: 0
+                    },
+                    "go");
+
             },
             collapseAll: function ($caller) {
                 $caller.find(".list-group-item").each(function () {
@@ -2275,7 +2299,8 @@ $(function (win, doc, $) {
                         $highlight = methods.getHighlightMarker($caller, methods._selectedOffset);
 
                     if ($marker && $highlight) {
-                        $marker.scrollTo({
+                        $("html").scrollTo({
+                                target: $marker,
                                 onComplete: function() {
                                     // Apply css to deactivate selected offset css (set server side)
                                     // Css can be applied directly to marker or a child of the marker
@@ -2346,10 +2371,10 @@ $(function (win, doc, $) {
 
                                 // Persist scroll position after content load
                                 $().scrollSpy("unbind");
-                                $("body").scrollTo({
-                                    offset: $(doc).height() - previousPosition,
+                                $("html").scrollTo({
+                                        offset: $(doc).height() - previousPosition,
                                         interval: 0,
-                                        onComplete: function () {
+                                        onComplete: function() {
                                             $().scrollSpy("bind");
                                         }
                                     },
@@ -2550,9 +2575,10 @@ $(function (win, doc, $) {
                     if ($marker) {
                         $().scrollSpy("unbind");
                         // Scroll to offset marker for page
-                        $marker.scrollTo({
+                        $("html").scrollTo({
                                 offset: -75,
                                 interval: 0,
+                                target: $marker,
                                 onComplete: function() {
                                     $().scrollSpy("bind");
                                 }
