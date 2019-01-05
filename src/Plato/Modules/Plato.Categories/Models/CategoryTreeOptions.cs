@@ -13,6 +13,8 @@ namespace Plato.Categories.Models
 
         public string EditMenuViewName { get; set; }
 
+        public string CssClass { get; set; }
+
     }
 
 }

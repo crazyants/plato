@@ -14,6 +14,8 @@ namespace Plato.Categories.ViewModels
 
         public string EditMenuViewName { get; set; }
 
+        public string CssClass { get; set; }
+
     }
 
     public class Selection<T>

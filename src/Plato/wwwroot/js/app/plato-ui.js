@@ -338,6 +338,7 @@ $(function (win, doc, $) {
             interval: 250,
             event: "click",
             position: "top",
+            container: $('html, body'),
             onBeforeComplete: null,
             onComplete: null
         };
@@ -389,18 +390,19 @@ $(function (win, doc, $) {
                     $target = $caller;
                 }
 
-                var interval = $caller.data(dataKey).interval,
+                var $container = $caller.data(dataKey).container,
+                    interval = $caller.data(dataKey).interval,
                     position = $caller.data(dataKey).position,
                     offset = $caller.data(dataKey).offset,
                     top = position === "top" ? $target.offset().top : $target.offset().bottom;
-
+                
                 // animate scroll
-                $('html, body').stop().animate({
+                $container.stop().animate({
                         scrollTop: top + offset
                     },
                     interval,
                     'easeInOutExpo',
-                    function() {
+                    function () {
                         if ($caller.data(dataKey).onComplete) {
                             $caller.data(dataKey).onComplete($caller, $target);
                         }
@@ -614,8 +616,12 @@ $(function (win, doc, $) {
             },
             scrollToSelected: function ($caller) {
                 methods.expandSelected($caller);
-        
-                $caller.find(".active").scrollTo("go");
+                $caller
+                    .find(".active")
+                    .scrollTo({
+                        container: $caller
+                        },
+                        "go");
             },
             collapseAll: function ($caller) {
                 $caller.find(".list-group-item").each(function () {
@@ -2731,15 +2737,18 @@ $(function (win, doc, $) {
                     });
                 } else {
                     // $().infiniteScroll()
-                    var $caller = $(win);
-                    if (!$caller.data(dataIdKey)) {
-                        var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                        $caller.data(dataIdKey, id);
-                        $caller.data(dataKey, $.extend({}, defaults, options));
-                    } else {
-                        $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
+                    var $caller = $('[data-provide="infiniteScroll"]');
+                    if ($caller.length > 0) {
+                        if (!$caller.data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $caller.data(dataIdKey, id);
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
+                        }
+                        methods.init($caller, methodName, func);
                     }
-                    methods.init($caller, methodName, func);
+          
                 }
 
             }

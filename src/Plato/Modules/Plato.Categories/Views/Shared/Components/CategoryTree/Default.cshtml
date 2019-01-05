@@ -153,6 +153,12 @@
 
 }
 
-<div class="tree" data-provide="tree">
+@{
+    var css = string.IsNullOrEmpty(Model.CssClass)
+        ? "tree"
+        : "tree " + Model.CssClass;
+
+}
+<div class="@css" data-provide="tree">
     @Html.Raw(await BuildChannels(Model))
 </div>

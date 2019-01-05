@@ -24,16 +24,16 @@
             </div>
             @if (Model.SelectedChannels != null)
             {
-                <div class="dropdown-scrollable">
-                    @await DisplayAsync(new View("CategoryTree", new
+                @await DisplayAsync(new View("CategoryTree", new
+                {
+                    options = new CategoryTreeOptions()
                     {
-                        options = new CategoryTreeOptions()
-                        {
-                            SelectedCategories = Model.SelectedChannelIds,
-                            HtmlName = Model.HtmlName,
-                            EnableCheckBoxes = true
-                        }}))
-                </div>
+                        SelectedCategories = Model.SelectedChannelIds,
+                        HtmlName = Model.HtmlName,
+                        EnableCheckBoxes = true,
+                        CssClass = "dropdown-scrollable"
+                    }
+                }))
             }
             else
             {

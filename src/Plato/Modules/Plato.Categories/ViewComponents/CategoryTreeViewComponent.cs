@@ -46,7 +46,8 @@ namespace Plato.Categories.ViewComponents
                 HtmlName = options.HtmlName,
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 EditMenuViewName = options.EditMenuViewName,
-                SelectedCategories = await BuildSelectionsAsync(options.SelectedCategories)
+                SelectedCategories = await BuildSelectionsAsync(options.SelectedCategories),
+                CssClass = options.CssClass
             });
 
         }
