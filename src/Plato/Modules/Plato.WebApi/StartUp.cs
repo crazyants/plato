@@ -49,7 +49,7 @@ namespace Plato.WebApi
 
             // Services
             services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
-            services.AddScoped<IWebApiSettingsFactory, WebApiSettingsFactory>();
+            services.AddScoped<IWebApiOptionsFactory, WebApiOptionsFactory>();
             
         }
 

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Scripting.Abstractions;
 using Plato.WebApi.Services;
 
@@ -43,19 +42,13 @@ namespace Plato.WebApi.Middleware
         async Task<ScriptBlock> BuildScriptBlock(HttpContext context)
         {
 
-            var webApiOptionsFactory = context.RequestServices.GetRequiredService<IWebApiSettingsFactory>();
+            var webApiOptionsFactory = context.RequestServices.GetRequiredService<IWebApiOptionsFactory>();
             if (webApiOptionsFactory == null)
             {
                 return null;
             }
 
             var settings = await webApiOptionsFactory.GetSettingsAsync();
-
-            //var webApiOptions = context.RequestServices.GetRequiredService<IOptions<WebApiOptions>>();
-            //if (webApiOptions == null)
-            //{
-            //    return null;
-            //}
 
             // Register client options for $.Plato.Http by extending $.Plato.Options
             // i.e. $.extend($.Plato.Options, newOptions);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -24,8 +23,7 @@ namespace Plato.Internal.Hosting.Web
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-
-
+        
         private IUrlHelper _urlHelper;
 
         public ContextFacade(

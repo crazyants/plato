@@ -7,7 +7,6 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Layout.Localizers
 {

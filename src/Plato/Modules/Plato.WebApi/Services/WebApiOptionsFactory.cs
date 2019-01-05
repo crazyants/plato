@@ -1,33 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.WebApi.Models;
 
 namespace Plato.WebApi.Services
 {
-
-    public class WebApisettings
-    {
-        public string Url { get; set; }
-
-        public string ApiKey { get; set; }
-
-    }
-
-    public interface IWebApiSettingsFactory
-    {
-        Task<WebApisettings> GetSettingsAsync();
-    }
-
-    public class WebApiSettingsFactory : IWebApiSettingsFactory
+    
+    public class WebApiOptionsFactory : IWebApiOptionsFactory
     {
 
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _siteSettingsStore;
 
-        public WebApiSettingsFactory(
+        public WebApiOptionsFactory(
             IContextFacade contextFacade,
             ISiteSettingsStore siteSettingsStore)
         {
@@ -35,9 +21,9 @@ namespace Plato.WebApi.Services
             _siteSettingsStore = siteSettingsStore;
         }
 
-        public async Task<WebApisettings> GetSettingsAsync()
+        public async Task<WebApiOptions> GetSettingsAsync()
         {
-            return new WebApisettings()
+            return new WebApiOptions()
             {
                 Url = await GetUrl(),
                 ApiKey = await GetApiKey()
