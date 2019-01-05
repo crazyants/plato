@@ -161,12 +161,16 @@ $(function (win, doc, $) {
     /* Plato UI */
     win.$.Plato.UI = {
         context: win.$.Plato.Context,
-        init: function() {
+        init: function($ele) {
+
+            if (!$ele) {
+                $ele = $("body");
+            }
 
             // init
-            this.initToolTips();
-            this.initDropDowns();
-            this.initAvatar();
+            this.initToolTips($ele);
+            this.initDropDowns($ele);
+            this.initAvatar($ele);
 
         },
         logInfo: function(message) {
@@ -175,23 +179,33 @@ $(function (win, doc, $) {
         logError: function(message) {
             this.context.logger.logError(message);
         },
-        initToolTips: function() {
+        initToolTips: function ($el) {
+
+            if (!$el) {
+                $el = $("body");
+            }
 
             this.logInfo("initToolTips()");
 
             // Enable bootstratp tooltips
             if (this.context.options().BSToolTipEnabled) {
-                $(this.context.options().BSToolTipSelector).tooltip({ trigger: "hover" });
-                $(this.context.options().BSToolTipAlternativeSelector).tooltip({ trigger: "hover" });
+                if ($el) {
+                    $el.find(this.context.options().BSToolTipSelector).tooltip({ trigger: "hover" });
+                    $el.find(this.context.options().BSToolTipAlternativeSelector).tooltip({ trigger: "hover" });
+                }
                 this.logInfo("Bootstratp tooltipss initialized.");
             }
         },
-        initDropDowns: function() {
+        initDropDowns: function ($el) {
 
+            if (!$el) {
+                $el = $("body");
+            }
+            
             this.logInfo("initDropDowns()");
 
             // Enable nested dropdown support
-            $("ul.dropdown-menu [data-toggle='dropdown']").on("click",
+            $el.find("ul.dropdown-menu [data-toggle='dropdown']").on("click",
                 function(event) {
 
                     // Avoid following the href location when clicking
@@ -209,12 +223,16 @@ $(function (win, doc, $) {
 
 
         },
-        initAvatar: function() {
+        initAvatar: function ($el) {
+
+            if (!$el) {
+                $el = $("body");
+            }
 
             this.logInfo("initAvatar()");
 
             // Avatar upload selector with preview
-            $(this.context.options().AvatarUploadSelector).change(function() {
+            $el.find(this.context.options().AvatarUploadSelector).change(function() {
                 function readUrl(input) {
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();

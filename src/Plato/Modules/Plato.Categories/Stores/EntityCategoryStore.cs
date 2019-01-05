@@ -14,7 +14,10 @@ namespace Plato.Categories.Stores
     
     public class EntityCategoryStore : IEntityCategoryStore<EntityCategory>
     {
-        
+
+        private const string ById = "ById";
+        private const string ByEntityId = "ByEntityId";
+
         private readonly IEntityCategoryRepository<EntityCategory> _entityCategoryRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<CategoryRoleStore> _logger;
@@ -117,7 +120,7 @@ namespace Plato.Categories.Stores
         public async Task<EntityCategory> GetByIdAsync(int id)
         {
 
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _entityCategoryRepository.SelectByIdAsync(id));
 
@@ -148,7 +151,7 @@ namespace Plato.Categories.Stores
 
         public async Task<IEnumerable<EntityCategory>> GetByEntityId(int entityId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityId, entityId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 

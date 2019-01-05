@@ -612,6 +612,11 @@ $(function (win, doc, $) {
                     methods._expandParents($caller, $(this).attr("id"));
                 });
             },
+            scrollToSelected: function ($caller) {
+                methods.expandSelected($caller);
+        
+                $caller.find(".active").scrollTo("go");
+            },
             collapseAll: function ($caller) {
                 $caller.find(".list-group-item").each(function () {
                     methods._collapse($caller, $(this).attr("id"));
@@ -2026,14 +2031,14 @@ $(function (win, doc, $) {
                             var scrollTop = $caller.scrollTop(),
                                 docHeight = $(doc).height(),
                                 winHeight = $caller.height(),
-                                args = {
+                                viewState = {
                                     scrollTop: Math.ceil(scrollTop),
                                     scrollBottom: Math.ceil(scrollTop + winHeight),
                                     documentHeight: docHeight,
                                     windowHeight: winHeight
                                 };
                             if ($caller.data(dataKey).onScroll) {
-                                $caller.data(dataKey).onScroll(args, e);
+                                $caller.data(dataKey).onScroll(viewState, e);
                             }
                         }
 
@@ -3827,7 +3832,6 @@ $(function (win, doc, $) {
                 }
             },
             getPreview: function ($caller) {
-
                 var $preview = $caller.find(".select-dropdown-preview");
                 if ($preview.length === 0) {
                     $preview = $caller.next();
@@ -4164,7 +4168,7 @@ $(function (win, doc, $) {
                             // Expand tree view selection on dropdown shown
 
                             if ($tree.length > 0) {
-                                $tree.treeView("expandSelected");
+                                $tree.treeView("scrollToSelected");
                             }
 
                         },
@@ -4227,7 +4231,7 @@ $(function (win, doc, $) {
                         },
                         defaults,
                         options),
-                    "expandSelected");
+                    "expandAll");
 
 
             },
@@ -4737,6 +4741,10 @@ $(function (win, doc, $) {
         
     }
 
+    // --------------
+    // doc ready
+    // --------------
+
     $(doc).ready(function () {
 
         $("body").platoUI();
@@ -4744,16 +4752,14 @@ $(function (win, doc, $) {
         // Actuvate plug-ins used within infiniteScroller load
         $().infiniteScroll(function ($ele) {
 
-            /* dialogSpy */
+            /* Initialize bootstrap tooltips upon load */
+            win.$.Plato.UI.initToolTips($ele);
+            
+            /* Initialize dialogSpy upon load */
             $ele.find('[data-toggle="dialog"]').dialogSpy();
-
-            //$ele.platoUI();
+            
         }, "ready");
 
     });
-
-
-
-
-
+    
 }(window, document, jQuery));

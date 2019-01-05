@@ -160,7 +160,7 @@
     width: 100%;
 }
 
-.emoji-dropdown { padding: 0 0.50rem; }
+.emoji-dropdown { padding: 0 0.50rem; max-height: 250px; overflow-y: auto; }
 .emoji-dropdown .dropdown-item { cursor: pointer; width: auto; clear: none; width: 32px; transition: all 0.15s ease-out; }
 .emoji-dropdown .dropdown-item:hover { transform: scale(1.5); }
 

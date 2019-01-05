@@ -19,12 +19,12 @@
                        data-filter-list-empty=".no-channel-results"
                        placeholder="@T["Search..."]" />
             </div>
-            <div class="dropdown-header hidden no-channel-results">
+            <div class="dropdown-header hidden">
                 @T["No channel found"]
             </div>
             @if (Model.SelectedChannels != null)
             {
-                <div style="max-height: 350px; overflow: auto">
+                <div class="dropdown-scrollable">
                     @await DisplayAsync(new View("CategoryTree", new
                     {
                         options = new CategoryTreeOptions()

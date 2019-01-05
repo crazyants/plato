@@ -390,8 +390,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
         #endregion
-
-
-
+        
     }
+
 }

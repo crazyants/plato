@@ -214,6 +214,8 @@
     text-decoration: none;
 }
 
+.dropdown-scrollable { max-height: 350px; overflow: auto; }
+
 /* ------------------------- */
 /* avatar */
 /* ------------------------- */
@@ -545,7 +547,6 @@
 /* --------------------------- */
 /* animations */
 /* --------------------------- */
-
 
 .anim { animation-delay: 0; animation-duration: 0.10s; }
 .anim-2x { animation-duration: 0.15s; }

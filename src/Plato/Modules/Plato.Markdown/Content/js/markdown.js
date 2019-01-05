@@ -135,6 +135,7 @@
                     if (dropdown) {
                         $button.addClass("dropdown-toggle");
                         $button.attr('data-toggle', 'dropdown');
+                        $button.attr('data-display', 'static');
                         $button.attr("data-dropdown-target", dropdownId);
                     }
 
@@ -160,7 +161,7 @@
 
                         var $ul = $('<ul>',
                             {
-                                "class": "dropdown-menu"
+                                "class": "dropdown-menu anim anim-2x anim-scale-in"
 
                             });
                         if (dropdown.css) {
@@ -216,10 +217,8 @@
                             $ul.append($li);
 
                         }
-
-
+                        
                         $dropdown.append($button);
-                        $dropdown.append('<div class="dropdown-arrow"></div>');
                         $dropdown.append($ul);
 
                         $group.append($dropdown);
@@ -282,7 +281,7 @@
             callbackHandler = callback[callbackIndex];
 
         // Trigger the focusin
-        $(e.currentTarget).focus();
+        //$(e.currentTarget).focus();
 
         callbackHandler(this, target);
 
@@ -294,8 +293,9 @@
         if (handlerName.indexOf('cmdSave') < 0) {
             this.$textarea.focus();
         }
-
+        
         e.preventDefault();
+        
     },
     __localize: function(string) {
       var messages = $.fn.markdown.messages,
@@ -1388,7 +1388,6 @@
 
       return this;
     }
-
   };
 
   /* MARKDOWN PLUGIN DEFINITION
@@ -1863,11 +1862,10 @@
                         dropdown: {
                             title: "Add Emoji",
                             width: "418px",
-                            height: "225px",
                             css: "dropdown",
                             items: null,
                             html:
-                                '<div class="emoji-dropdown"></div>'
+                                '<div class="emoji-dropdown"><p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p></div>'
                         },
                         icon: {
                             glyph: 'glyphicon glyphicon-search',
@@ -1893,6 +1891,7 @@
 
                                             // Build emoji dropdown
                                             var $div = $dropdown.find(".emoji-dropdown");
+                                            $div.empty();
                                             for (var i = 0; i < response.result.length - 1; i++) {
                                                 $div.append($("<button>",
                                                     {
@@ -1971,7 +1970,9 @@
                                 $input = $menu.find("input"),
                                 $btn = $menu.find("button");
 
-                            $input.attr("placeholder", placeholderText);
+                            $input
+                                .attr("placeholder", placeholderText)
+                                .focus();
                             $btn.text(buttonText);
 
                             $btn.unbind("click").bind("click",
