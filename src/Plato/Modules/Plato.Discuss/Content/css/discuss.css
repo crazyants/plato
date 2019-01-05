@@ -36,8 +36,10 @@
 
 /* channels */
 
-.channel-icon { vertical-align: middle; text-align: center; display: inline-block; border-radius: .15rem; }
+.channel-icon { vertical-align: middle; text-align: center; display: inline-block; border-radius: 50%; }
 .channel-icon-sm { width: 24px; height: 24px; line-height: 22px; }
 .channel-icon-sm i { font-size: 10pt; }
 .channel-icon-md { width: 40px; height: 40px; line-height: 40px; }
-.channel-icon-lg { width: 32px; height: 32px; line-height: 32px; }
+.channel-icon-md i { font-size: 12pt; }
+.channel-icon-lg { width: 62px; height: 62px; line-height: 32px; }
+.channel-icon-lg i { font-size: 16pt; }

@@ -2019,6 +2019,8 @@ $(function (win, doc, $) {
                             }
                         }
 
+                        // threshold: scrollTop / (docHeight - winHeight)
+
                         var onScroll = function() {
                             // Raise onScroll passing in a normalized scroll threadhold
                             var scrollTop = $caller.scrollTop(),
@@ -2028,8 +2030,7 @@ $(function (win, doc, $) {
                                     scrollTop: Math.ceil(scrollTop),
                                     scrollBottom: Math.ceil(scrollTop + winHeight),
                                     documentHeight: docHeight,
-                                    windowHeight: winHeight,
-                                    threshold: scrollTop / (docHeight - winHeight)
+                                    windowHeight: winHeight
                                 };
                             if ($caller.data(dataKey).onScroll) {
                                 $caller.data(dataKey).onScroll(args, e);
@@ -2479,9 +2480,7 @@ $(function (win, doc, $) {
 
                 // Iterate each offset marker and detect the first
                 // visibie marker within the client viewport
-                var url = methods.getUrl($caller),
-                    suffix = methods.getUrlSuffix($caller),
-                    $marker = null,
+                var $marker = null,
                     $markers = methods.getOffsetMarkers($caller);
                 if ($markers) {
                     $markers.each(function() {
@@ -2500,10 +2499,30 @@ $(function (win, doc, $) {
                         
                         // Use replaceState to ensure the address bar is updated
                         // but we don't actually add new history state
-                        history.replaceState(state, doc.title, url + suffix + offset);
+                        history.replaceState(state, doc.title, methods.getStateUrl($caller, offset));
                     }
                 }
 
+            },
+            getStateUrl: function ($caller, offset) {
+
+                var url = methods.getUrl($caller),
+                    suffix = methods.getUrlSuffix($caller),
+                    parts = url.split("?");
+
+                if (parts.length === 1) {
+                    return url + suffix + offset;
+                } else {
+                    // Ensure parameteres are shifted to the end
+                    var base = parts[0],
+                        params = parts[parts.length - 1];
+                    if (params !== "") {
+                        params = "?" + params;
+                    }
+                    return base + suffix + offset + params;
+                }
+
+                return url;
             },
             resetState: function($caller) {
                 // Stop scrollspy to prevent the OnScrollEnd event from executing

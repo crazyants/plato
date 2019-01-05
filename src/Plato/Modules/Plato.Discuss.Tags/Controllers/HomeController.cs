@@ -108,8 +108,7 @@ namespace Plato.Discuss.Tags.Controllers
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };
-
-
+            
             // Build view model
             var viewModel = new TagIndexViewModel()
             {
@@ -127,7 +126,6 @@ namespace Plato.Discuss.Tags.Controllers
                     return View("GetTags", viewModel);
             }
             
-         
             // Return view
             return View(await _tagViewProvider.ProvideIndexAsync(new Tag(), this));
 
@@ -135,6 +133,7 @@ namespace Plato.Discuss.Tags.Controllers
         
         public async Task<IActionResult> Display(
             int id,
+            int offset,
             TopicIndexOptions opts,
             PagerOptions pager)
         {
@@ -145,6 +144,23 @@ namespace Plato.Discuss.Tags.Controllers
                 return NotFound();
             }
 
+
+            if (opts == null)
+            {
+                opts = new TopicIndexOptions();
+            }
+
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+            
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
+            }
+            
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -178,38 +194,46 @@ namespace Plato.Discuss.Tags.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
+            // Build infinate scroll options
+            opts.Scroller = new ScrollerOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+            
             // We don't need to add to pagination 
             opts.Params.TagId = tag?.Id ?? 0;
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            // Build view model
+            var viewModel = new TopicIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Build view
-            var result = await _tagViewProvider.ProvideDisplayAsync(tag, this);
+            // Add view options to context for use within view adaptors
+            HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
 
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetTopics", viewModel);
+            }
+            
             // Return view
-            return View(result);
+            return View(await _tagViewProvider.ProvideDisplayAsync(tag, this));
 
         }
-
-
+        
         #endregion
-
-
+        
         #region "Private Methods"
 
         string GetInfiniteScrollCallbackUrl()
         {
-
             RouteData.Values.Remove("pager.page");
             RouteData.Values.Remove("offset");
-
             return _contextFacade.GetRouteUrl(RouteData.Values);
-
         }
 
         #endregion

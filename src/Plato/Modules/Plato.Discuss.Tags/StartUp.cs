@@ -81,7 +81,7 @@ namespace Plato.Discuss.Tags
             routes.MapAreaRoute(
                 name: "DiscussTagDisplay",
                 areaName: "Plato.Discuss.Tags",
-                template: "discuss/tag/{id:int}/{alias?}",
+                template: "discuss/tag/{id:int}/{alias}/{offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 
