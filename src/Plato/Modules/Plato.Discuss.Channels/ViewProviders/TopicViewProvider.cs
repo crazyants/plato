@@ -10,7 +10,6 @@ using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -36,8 +35,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         public IStringLocalizer T;
 
         public IStringLocalizer S { get; }
-
-
+        
         public TopicViewProvider(
             IStringLocalizer<TopicViewProvider> stringLocalizer,
             IContextFacade contextFacade,

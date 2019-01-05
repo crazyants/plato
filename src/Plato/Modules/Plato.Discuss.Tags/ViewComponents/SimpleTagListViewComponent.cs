@@ -38,7 +38,9 @@ namespace Plato.Discuss.Tags.ViewComponents
             {
                 Topic = topic,
                 Reply = reply,
-                Tags = tags?.Where(t => t.EntityReplyId == (reply?.Id ?? 0))
+                Tags = tags?
+                    .Where(t => t.EntityReplyId == (reply?.Id ?? 0))
+                    .OrderByDescending(t => t.TotalEntities)
             });
 
         }

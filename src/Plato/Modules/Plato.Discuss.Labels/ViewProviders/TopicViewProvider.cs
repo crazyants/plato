@@ -7,7 +7,6 @@ using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Plato.Discuss.Labels.Models;
 using Plato.Entities.Stores;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Labels.Models;
@@ -121,11 +120,23 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
         {
 
-            var entityLabels = await GetEntityLabelsByEntityIdAsync(topic.Id);
+            List<int> selectedLabels;
+            // Persist state on postback
+            if (_request.Method == "POST")
+            {
+                selectedLabels = await GetLabelsToAddAsync();
+            }
+            else
+            {
+                // Get entity labels
+                var labels = await GetEntityLabelsByEntityIdAsync(topic.Id);
+                selectedLabels = labels?.Select(l => l.LabelId).ToList();
+            }
+            
             var viewModel = new EditTopicLabelsViewModel()
             {
                 HtmlName = LabelHtmlName,
-                SelectedLabels = entityLabels.Select(l => l.LabelId).ToArray()
+                SelectedLabels = selectedLabels?.ToArray()
             };
             
             return Views(
