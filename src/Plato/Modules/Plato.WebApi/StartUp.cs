@@ -3,15 +3,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Text.Abstractions;
-using Plato.WebApi.Configuration;
 using Plato.WebApi.Middleware;
 using Plato.WebApi.Models;
 using Plato.WebApi.Navigation;
@@ -34,8 +31,10 @@ namespace Plato.WebApi
         {
 
             // Rewrite web api configuration
-            services.TryAddEnumerable(ServiceDescriptor
-                .Transient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>());
+            // Removed as we require asynchronous calls and wanted to avoid GetAwaiter()
+            // Using IWebApiSettingsFactory instead
+            //services.TryAddEnumerable(ServiceDescriptor
+            //    .Transient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>());
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
@@ -50,6 +49,7 @@ namespace Plato.WebApi
 
             // Services
             services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
+            services.AddScoped<IWebApiSettingsFactory, WebApiSettingsFactory>();
             
         }
 

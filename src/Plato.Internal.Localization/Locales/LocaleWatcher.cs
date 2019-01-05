@@ -46,10 +46,10 @@ namespace Plato.Internal.Localization.Locales
                             Path = @locale.Descriptor.DirectoryInfo.FullName
                         };
 
-                        watcher.Changed += (sender, args) =>
+                        watcher.Changed += async (sender, args) =>
                         {
                             _localeProvider.Dispose();
-                            _localeStore.Dispose();
+                            await _localeStore.DisposeAsync();
                         };
                       
                         watcher.EnableRaisingEvents = true;

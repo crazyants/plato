@@ -15,7 +15,7 @@ namespace Plato.Internal.Localization.Abstractions
 
         Task<IEnumerable<LocalizedString>> GetAllStringsAsync(string cultureCode);
 
-        void Dispose();
+        Task DisposeAsync();
         
     }
 

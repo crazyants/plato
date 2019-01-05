@@ -165,12 +165,16 @@ namespace Plato.Discuss.Channels.Controllers
             // Include child channels
             if (category.Children.Any())
             {
-
-                opts.Params.ChannelIds = category.Children.Select(c => c.Id).ToArray();
+                // Convert child ids to list and add current id
+                var ids = category
+                    .Children
+                    .Select(c => c.Id).ToList();
+                ids.Add(category.Id);
+                opts.Params.ChannelIds = ids.ToArray();
             }
             else
             {
-                opts.Params.ChannelId = category?.Id ?? 0;
+                opts.Params.ChannelId = category.Id;
             }
     
             // Build view model
@@ -198,9 +202,6 @@ namespace Plato.Discuss.Channels.Controllers
         string GetInfiniteScrollCallbackUrl()
         {
 
-            //RouteData.Values["Area"] = "Plato.Discuss";
-            //RouteData.Values["Action"] = "Topic";
-            //RouteData.Values["Controller"] = "Home";
             RouteData.Values.Remove("pager.page");
             RouteData.Values.Remove("offset");
 

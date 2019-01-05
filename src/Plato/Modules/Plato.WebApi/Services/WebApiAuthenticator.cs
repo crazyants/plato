@@ -20,7 +20,8 @@ namespace Plato.WebApi.Services
 
         public WebApiAuthenticator(
             IHttpContextAccessor httpContextAccessor,
-            IPlatoUserStore<User> platoUserStore, ISiteSettingsStore siteSettingsStore)
+            IPlatoUserStore<User> platoUserStore, 
+            ISiteSettingsStore siteSettingsStore)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;

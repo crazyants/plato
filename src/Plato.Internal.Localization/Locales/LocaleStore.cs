@@ -121,13 +121,10 @@ namespace Plato.Internal.Localization.Locales
         /// Froms all locale resources from in-memory cache.
         /// </summary>
         /// <returns></returns>
-        public void Dispose()
+        public async Task DisposeAsync()
         {
 
-            var locales = _localeProvider.GetLocalesAsync()
-                .GetAwaiter()
-                .GetResult();
-
+            var locales = await _localeProvider.GetLocalesAsync();
             if (locales == null)
             {
                 return;
