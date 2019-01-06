@@ -399,7 +399,9 @@ $(function (win, doc, $) {
                 if ($target) {
                     top = position === "top" ? $target.offset().top : $target.offset().bottom;
                 }
-                    
+
+                console.log("scrollTo: " + top + offset);
+
                 // animate scroll
                 $caller.stop().animate({
                         scrollTop: top + offset
@@ -457,7 +459,7 @@ $(function (win, doc, $) {
                     // $().markdownEditor 
                     if (methodName) {
                         if (methods[methodName]) {
-                            var $caller = $("body");
+                            var $caller = $("html");
                             $caller.data(dataKey, $.extend({}, defaults, options));
                             methods[methodName].apply(this, [$caller]);
                         } else {
@@ -622,27 +624,13 @@ $(function (win, doc, $) {
 
                 // Ensure selected are expanded
                 methods.expandSelected($caller);
-             
-                function getOffset($el, $parent) {  
 
-                    var x = 0,
-                        y = 0,
-                        el = $el[0],
-                        parent = $parent[0];
-
-                    while (el && el !== parent && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-                        x += el.offsetLeft - el.scrollLeft + el.clientLeft;
-                        y += el.offsetTop - el.scrollTop + el.clientTop;
-                        el = el.offsetParent;
-                    }
-                    return { top: y, left: x };
-                }
-                
-                var offset = getOffset($caller.find(".active"), $caller),
+                // Focus active item
+                var offset = methods._getSelectedOffset($caller),
                     top = (offset.top - $caller.height());
                 $caller.scrollTo({
                         offset: top - 20,
-                        interval: 0
+                        interval: 500
                     },
                     "go");
 
@@ -651,6 +639,25 @@ $(function (win, doc, $) {
                 $caller.find(".list-group-item").each(function () {
                     methods._collapse($caller, $(this).attr("id"));
                 });
+            },
+            _getSelectedOffset: function($caller) {
+                
+                function getOffset($el, $parent) {
+
+                    var x = 0,
+                        y = 0,
+                        el = $el[0],
+                        parent = $parent[0];
+                    while (el && el !== parent && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+                        x += el.offsetLeft - el.scrollLeft + el.clientLeft;
+                        y += el.offsetTop - el.scrollTop + el.clientTop;
+                        el = el.offsetParent;
+                    }
+                    return { top: y, left: x };
+                }
+
+                return getOffset($caller.find(".active"), $caller);
+
             },
             _toggleNode: function ($caller, nodeId, e) {
                 var $item = methods.getNodeListItem($caller, nodeId);
@@ -2039,6 +2046,7 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
+
                 $caller.bind("scroll",
                     function(e) {
 
@@ -2053,26 +2061,21 @@ $(function (win, doc, $) {
                                 $caller.data(dataKey).onScrollStart(e);
                             }
                         }
-
-                        // threshold: scrollTop / (docHeight - winHeight)
-
-                        var onScroll = function() {
-                            // Raise onScroll passing in a normalized scroll threadhold
+                        
+                        // Raise onScroll passing in a normalized scroll threadhold
+                        if ($caller.data(dataKey).onScroll) {
                             var scrollTop = $caller.scrollTop(),
                                 docHeight = $(doc).height(),
-                                winHeight = $caller.height(),
-                                viewState = {
+                                winHeight = $caller.height();
+                            $caller.data(dataKey).onScroll({
                                     scrollTop: Math.ceil(scrollTop),
                                     scrollBottom: Math.ceil(scrollTop + winHeight),
                                     documentHeight: docHeight,
                                     windowHeight: winHeight
-                                };
-                            if ($caller.data(dataKey).onScroll) {
-                                $caller.data(dataKey).onScroll(viewState, e);
-                            }
+                                },
+                                e);
                         }
 
-                        onScroll();
 
                     });
             },
@@ -2091,20 +2094,6 @@ $(function (win, doc, $) {
             stop: function ($caller) {
                 win.clearTimeout(methods._timer);
                 methods._timer = null;
-            },
-            debounce: function(func, wait, immediate) {
-                var timeout;
-                return function () {
-                    var context = this, args = arguments;
-                    var later = function () {
-                        timeout = null;
-                        if (!immediate) func.apply(context, args);
-                    };
-                    var callNow = immediate && !timeout;
-                    win.clearTimeout(timeout);
-                    timeout = win.setTimeout(later, wait);
-                    if (callNow) func.apply(context, args);
-                };
             }
         }
 
@@ -2146,14 +2135,20 @@ $(function (win, doc, $) {
                 } else {
                     // $().scrollSpy()
                     var $caller = $(win);
-                    if (!$caller.data(dataIdKey)) {
-                        var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                        $caller.data(dataIdKey, id);
-                        $caller.data(dataKey, $.extend({}, defaults, options));
-                    } else {
-                        $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
+                    if ($caller.length > 0) {
+                        if (!$caller.data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $caller.data(dataIdKey, id);
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
+                        }
+
+                        console.log("offset: " + $caller.data(dataKey).offset);
+
+                        methods.init($caller, methodName);
                     }
-                    methods.init($caller, methodName);
+              
                 }
 
             }
@@ -2274,6 +2269,7 @@ $(function (win, doc, $) {
                                 } else {
                                     // When we reach the top of our container load previous page
                                     if (spy.scrollTop < top) {
+                                        console.log("loadPrevious")
                                         methods.loadPrevious($caller, spy);
                                     }
                                 }
@@ -2299,7 +2295,7 @@ $(function (win, doc, $) {
                         $highlight = methods.getHighlightMarker($caller, methods._selectedOffset);
 
                     if ($marker && $highlight) {
-                        $("html").scrollTo({
+                        $().scrollTo({
                                 target: $marker,
                                 onComplete: function() {
                                     // Apply css to deactivate selected offset css (set server side)
@@ -2369,12 +2365,17 @@ $(function (win, doc, $) {
                                 // Scroll position before content was loaded
                                 var previousPosition = page.spy.documentHeight - page.spy.scrollTop;
 
+                                console.log($(doc).height());
+                                console.log(previousPosition);
+
                                 // Persist scroll position after content load
                                 $().scrollSpy("unbind");
-                                $("html").scrollTo({
+                                $().scrollTo({
                                         offset: $(doc).height() - previousPosition,
                                         interval: 0,
-                                        onComplete: function() {
+                                    onComplete: function () {
+                                        console.log("scroll complete");
+
                                             $().scrollSpy("bind");
                                         }
                                     },
@@ -2575,7 +2576,7 @@ $(function (win, doc, $) {
                     if ($marker) {
                         $().scrollSpy("unbind");
                         // Scroll to offset marker for page
-                        $("html").scrollTo({
+                        $().scrollTo({
                                 offset: -75,
                                 interval: 0,
                                 target: $marker,
