@@ -105,7 +105,7 @@ namespace Plato.Internal.Theming.Locator
                     
                     localList.Add(descriptor);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw;
                 }

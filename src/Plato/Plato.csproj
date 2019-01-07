@@ -13,13 +13,17 @@
 
   <ItemGroup>
     <Compile Remove="Assets\**" />
-    <Compile Remove="modules\**\*;node_modules\**\*" />
+    <Compile Remove="Modules\**" />
+    <Compile Remove="node_modules\**\*" />
     <Compile Remove="Themes\Default\Content\**" />
     <Content Remove="Assets\**" />
+    <Content Remove="Modules\**" />
     <Content Remove="Themes\Default\Content\**" />
     <EmbeddedResource Remove="Assets\**" />
+    <EmbeddedResource Remove="Modules\**" />
     <EmbeddedResource Remove="Themes\Default\Content\**" />
     <None Remove="Assets\**" />
+    <None Remove="Modules\**" />
     <None Remove="Themes\Default\Content\**" />
     <Content Include="Themes\Default\theme.css" />
     <None Update="wwwroot\**\*">
