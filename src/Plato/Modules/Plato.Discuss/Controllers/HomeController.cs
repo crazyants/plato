@@ -203,15 +203,13 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Discuss"], discuss => discuss
                     .Action("Index", "Home", "Plato.Discuss")
                     .LocalNav()
-                ).Add(S["Post Topic"], post => post
+                ).Add(S["New Post"], post => post
                     .LocalNav()
                 );
             });
 
-            var result = await _topicViewProvider.ProvideEditAsync(topic, this);
-
             // Return view
-            return View(result);
+            return View(await _topicViewProvider.ProvideEditAsync(topic, this));
 
         }
 
@@ -470,10 +468,23 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
-            var result = await _topicViewProvider.ProvideEditAsync(topic, this);
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                ).Add(S["Edit Post"], post => post
+                    .LocalNav()
+                );
+            });
 
             // Return view
-            return View(result);
+            return View(await _topicViewProvider.ProvideEditAsync(topic, this));
 
         }
 

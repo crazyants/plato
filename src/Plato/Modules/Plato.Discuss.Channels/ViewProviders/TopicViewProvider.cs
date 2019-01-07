@@ -142,7 +142,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             return Views(
                 View<ChannelListViewModel>("Topic.Channels.Display.Sidebar", model =>
                 {
-                    model.Channels = categories.Where(c => c.Id == topic.CategoryId);
+                    model.Channels = categories?.Where(c => c.Id == topic.CategoryId);
                     return model;
                 }).Zone("sidebar").Order(2)
             );
