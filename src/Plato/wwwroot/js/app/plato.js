@@ -190,7 +190,7 @@ $(function (win, doc, $) {
             // Enable Bootstrap tooltips
             if (this.context.options().bsToolTipEnabled) {
                 if ($el) {
-                    $el.find(this.context.options().bsToolTipSelector).tooltip({ trigger: "hover"  });
+                    $el.find(this.context.options().bsToolTipSelector).tooltip({ trigger: "hover" });
                     $el.find(this.context.options().bsToolTipAlternativeSelector).tooltip({ trigger: "hover" });
                     
                 }

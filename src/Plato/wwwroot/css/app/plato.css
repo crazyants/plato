@@ -1119,20 +1119,22 @@ a.label:hover,
 .resizable {
     z-index: 10000;
     position: fixed;
-  
     width: 100%;
     left: 0;
     background: white;
 }
 
 .resizable-top { top: 0; }
-.resizable-bottom { bottom: 0; }
+.resizable-bottom { bottom: 0;  }
 
 .resizable-bar {
     width: 100%;
-    background-color: #eee;
-    border-top: 1px solid #ddd;
+    height: 12px;
+    border-top: 1px solid #ddd; 
     border-bottom: 1px solid #ddd;
+    background-color: #eee;
+    margin: 0;
+    padding: 0;
     -moz-user-select: none; 
     -ms-user-select: none;
     -webkit-user-select: none;
@@ -1141,13 +1143,9 @@ a.label:hover,
     text-align: center;
 }
 
-.resizable-bar i {
-     font-size: 8pt;
-    display: block;
-    margin: 3px 0;
+.resizable-bar:hover {
+      background-color: #007bff;
 }
-
-.resizable-bar:hover {  background-color: #dddddd; }
 
 .resizable-header {
     border-bottom: 1px solid #dddddd;

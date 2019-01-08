@@ -241,7 +241,7 @@
         }
 
 
-        container.find("button").tooltip();
+        container.find("button").tooltip({ trigger: "hover" });
 
         return container;
 
