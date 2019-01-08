@@ -99,7 +99,7 @@ namespace Plato.Discuss.History.Subscribers
                 previousHistory = previousHistories.Data[0];
             }
 
-            // Ensure we have changes
+            // Ensure we actually have changes
             if (previousHistory != null)
             {
                 // Don't save a history point if the Html has not changed
