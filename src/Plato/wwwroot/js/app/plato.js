@@ -28,11 +28,11 @@ $(function (win, doc, $) {
         csrfHeaderName: "X-Csrf-Token",
         csrfCookieName: "",
         // UI tooltips
-        BSToolTipEnabled: true,
-        BSToolTipAlternativeSelector: "[data-provide='tooltip']",
-        BSToolTipSelector: "[data-toggle='tooltip']",
-        MagnificSelector: "[data-toggle='dialog']",
-        AvatarUploadSelector: "[data-upload='avatar']",
+        bsToolTipEnabled: true,
+        bsToolTipAlternativeSelector: "[data-provide='tooltip']",
+        bsToolTipSelector: "[data-toggle='tooltip']",
+        magnificSelector: "[data-toggle='dialog']",
+        avatarUploadSelector: "[data-upload='avatar']",
         getCsrfCookieToken: function () {
             if (this.csrfCookieName !== "") {
                 var storage = win.$.Plato.Storage;
@@ -187,13 +187,14 @@ $(function (win, doc, $) {
 
             this.logInfo("initToolTips()");
 
-            // Enable bootstratp tooltips
-            if (this.context.options().BSToolTipEnabled) {
+            // Enable Bootstrap tooltips
+            if (this.context.options().bsToolTipEnabled) {
                 if ($el) {
-                    $el.find(this.context.options().BSToolTipSelector).tooltip({ trigger: "hover" });
-                    $el.find(this.context.options().BSToolTipAlternativeSelector).tooltip({ trigger: "hover" });
+                    $el.find(this.context.options().bsToolTipSelector).tooltip({ trigger: "hover"  });
+                    $el.find(this.context.options().bsToolTipAlternativeSelector).tooltip({ trigger: "hover" });
+                    
                 }
-                this.logInfo("Bootstratp tooltipss initialized.");
+                this.logInfo("Bootstrap tooltips initialized.");
             }
         },
         initDropDowns: function ($el) {
@@ -232,7 +233,7 @@ $(function (win, doc, $) {
             this.logInfo("initAvatar()");
 
             // Avatar upload selector with preview
-            $el.find(this.context.options().AvatarUploadSelector).change(function() {
+            $el.find(this.context.options().avatarUploadSelector).change(function() {
                 function readUrl(input) {
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();

@@ -1,19 +1,60 @@
 ﻿@model EditReplyViewModel
 
-<div class="slide slide-bottom">
-    <div class="slide-bar"></div>
-    <div class="slide-body">
+<div class="resizable resizable-bottom">
+    <div class="resizable-bar">
+        <i class="fal fa-chevron-double-up"></i>
+    </div>
+    <div class="resizable-header">
+        <h6>Post Reply</h6>
+    </div>
+    <div class="resizable-body">
 
-        <h1>Test Title</h1>
-        ewr werw rwr wrwr wer wr wr wrwr wr wr wrwrwr wr wr wer
-        ewr werw rwr wrwr wer wr wr wrwr wr wr wrwrwr wr wr wer
-        ewr werw rwr wrwr wer wr wr wrwr wr wr wrwrwr wr wr wer
-        
-        <h1>Test Title</h1>
-        ewr werw rwr wrwr wer wr wr wrwr wr wr wrwrwr wr wr wer
-        ewr werw rwr wrwr wer wr wr wrwr wr wr wrwrwr wr wr wer
-        ewr werw rwr wrwr wer wr wr wrwr wr wr wrwrwr wr wr wer
+        <div id="postReply">
+ 
+            <div class="topic-reply-left">
+                @if (this.CurrentUser != null)
+                {
+                    <a href="#" class="avatar-link">
+                        <avatar data-toggle="tooltip" title="@this.CurrentUser.DisplayName" class="avatar" url="@this.CurrentUser.Avatar.Url" />
+                    </a>
+                }
+            </div>
+            <div class="topic-reply-body">
 
+                <form asp-controller="Home" asp-action="Topic" method="post" enctype="multipart/form-data">
+
+                    <card>
+                        <card-body>
+                    
+                            <input type="hidden" asp-for="EntityId"/>
+
+                            @await DisplayAsync(new View("Editor", new
+                            {
+                                value = string.Empty,
+                                placeHolderText = T["Post a reply..."],
+                                htmlName = @Model.EditorHtmlName,
+                                autoFocus = false
+                            }))
+                    
+                        </card-body>
+                    </card>
+
+                    <card>
+                        <card-body>
+
+                            <div class="float-right">
+                                <a class="btn btn-lg btn-secondary" asp-route-action="Index">@T["Cancel"]</a>
+                                <button type="submit" class="btn btn-primary">
+                                    @T["Post Reply"]
+                                </button>
+                            </div>
+                        </card-body>
+                    </card>
+
+                </form>
+
+            </div>
+        </div>
 
 
     </div>
