@@ -22,7 +22,6 @@
 
 .nav li > a.text-hidden .nav-text { display: none;  }
 .nav .account .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
-
 .site-nav li > a .nav-text { margin-left: 0.50rem; }
 
 /* ------------------------- */
@@ -381,6 +380,7 @@
     .navbar-expand-lg .navbar-collapse {
         display: flex !important;
         flex-basis: auto;
+      
     }
  
     .nav-asides > .navbar {
