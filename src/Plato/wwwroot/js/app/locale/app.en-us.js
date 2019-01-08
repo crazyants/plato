@@ -6,4 +6,4 @@
         'Could not authenticate your request!': "Could not authenticate your request!"
     };
 
-}(window))
+}(window));

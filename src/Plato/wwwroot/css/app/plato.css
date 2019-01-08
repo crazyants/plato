@@ -1,4 +1,6 @@
-﻿/* ------------------------- */
+﻿/* ReSharper disable once UnknownCssVendorExtension */
+/* ReSharper disable once UnknownCssVendorExtension */
+/* ------------------------- */
 /* Helpers */
 /* ------------------------- */
 
@@ -9,7 +11,10 @@
 
 .hidden { display: none !important; }
 
-.bg-highlight { background-color: rgba(255, 240, 0, 0.5); font-weight: bold; }
+.bg-highlight {
+    background-color: #fff000;
+    background-color: rgba(255, 240, 0, 0.5); font-weight: bold;
+}
 
 /* ------------------------- */
 /* Navigation */
@@ -443,7 +448,6 @@
     z-index: 1;
 }
 
-
 /* ------------------------- */
 /* Modal sizes */
 /* ------------------------- */
@@ -459,7 +463,11 @@
 
 .modal .modal-right {
     -webkit-transform: translate3d(100%,0,0) !important;
+    -ms-transform: translate3d(100%,0,0) !important;
     transform: translate3d(100%,0,0) !important;
+    -ms-transition: transform .4s cubic-bezier(.25,.8,.25,1) !important;
+    -o-transition: transform .4s cubic-bezier(.25,.8,.25,1) !important;
+    -webkit-transition: transform .4s cubic-bezier(.25,.8,.25,1) !important;
     transition: transform .4s cubic-bezier(.25,.8,.25,1) !important;
 }
 
@@ -473,9 +481,9 @@
     min-width: 25%;
 }
 
-.modal > .modal-2x {  min-width: 50%; }
-.modal > .modal-3x {  min-width: 75%; }
-.modal > .modal-4x {  min-width: 100%; }
+.modal > .modal-2x { min-width: 50%; }
+.modal > .modal-3x { min-width: 75%; }
+.modal > .modal-4x { min-width: 100%; }
 
 .modal .modal-left,
 .modal .modal-right {
@@ -489,6 +497,7 @@
 .modal.show .modal-right, 
 .modal.show .modal-top {
     -webkit-transform: translate3d(0,0,0) !important;
+    -ms-transform: translate3d(0,0,0) !important;
     transform: translate3d(0,0,0) !important;
 }
 
@@ -599,224 +608,224 @@
 /* bounce */
 
 .anim-bounce {
-  animation-name: bounce;
-  transform-origin: center bottom;
+    animation-name: bounce;
+    transform-origin: center bottom;
 }
 
 @keyframes bounce {
-  from, 20%, 53%, 80%, to {
-    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-    transform: translate3d(0,0,0);
-  }
-  40%, 43% {
-    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-    transform: translate3d(0, -30px, 0);
-  }
-  70% {
-    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-    transform: translate3d(0, -15px, 0);
-  }
-  90% {
-    transform: translate3d(0,-4px,0);
-  }
+    from, 20%, 53%, 80%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        transform: translate3d(0,0,0);
+    }
+    40%, 43% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -30px, 0);
+    }
+    70% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -15px, 0);
+    }
+    90% {
+        transform: translate3d(0,-4px,0);
+    }
 }
 
 /* slide in */
 
 .anim-slide-in-down {
-  animation-name: slideInDown;
+    animation-name: slideInDown;
 }
 
 @keyframes slideInDown {
-  from { transform: translate3d(0, -100%, 0); visibility: visible; opacity: 0;}
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(0, -100%, 0); visibility: visible; opacity: 0;}
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 .anim-slide-in-up {
-  animation-name: slideInUp;
+    animation-name: slideInUp;
 }
 
 @keyframes slideInUp {
-  from { transform: translate3d(0, 100%, 0); visibility: visible; opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(0, 100%, 0); visibility: visible; opacity: 0; }
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 .anim-slide-in-left {
-  animation-name: slideInLeft;
-  transform-origin: top left;
+    animation-name: slideInLeft;
+    transform-origin: top left;
 }
 
 @keyframes slideInLeft {
-  from { transform: translate3d(-100%, 0, 0); visibility: visible; opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(-100%, 0, 0); visibility: visible; opacity: 0; }
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 .anim-slide-in-right {
-  animation-name: slideInRight;
+    animation-name: slideInRight;
 }
 
 @keyframes slideInRight {
-  from { transform: translate3d(100%, 0, 0); visibility: visible; opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(100%, 0, 0); visibility: visible; opacity: 0; }
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 /* slide out */
 
 .anim-slide-out-down {
-  animation-name: slideOutDown;
+    animation-name: slideOutDown;
 }
 
 @keyframes slideOutDown {
-  from { transform: translate3d(0, 0, 0); visibility: visible; }
-  to { transform: translate3d(0, 100%, 0);opacity: 0; }
+    from { transform: translate3d(0, 0, 0); visibility: visible; }
+    to { transform: translate3d(0, 100%, 0);opacity: 0; }
 }
 
 .anim-slide-out-up {
-  animation-name: slideOutUp;
+    animation-name: slideOutUp;
 }
 
 @keyframes slideOutUp {
-  from { transform: translate3d(0, 0, 0); visibility: visible; }
-  to { transform: translate3d(0, -100%, 0);opacity: 0; }
+    from { transform: translate3d(0, 0, 0); visibility: visible; }
+    to { transform: translate3d(0, -100%, 0);opacity: 0; }
 }
 
 .anim-slide-out-left {
-  animation-name: slideOutLeft;
+    animation-name: slideOutLeft;
 }
 
 @keyframes slideOutLeft {
-  from { transform: translate3d(0, 0, 0); visibility: visible; }
-  to { transform: translate3d(-100%, 0, 0);opacity: 0; }
+    from { transform: translate3d(0, 0, 0); visibility: visible; }
+    to { transform: translate3d(-100%, 0, 0);opacity: 0; }
 }
 
 .anim-slide-out-right {
-  animation-name: slideOutRight;
+    animation-name: slideOutRight;
 }
 
 @keyframes slideOutRight {
-  from { transform: translate3d(0, 0, 0);opacity: 0; visibility: visible; }
-  to { transform: translate3d(100%, 0, 0);opacity: 0; visibility: hidden; }
+    from { transform: translate3d(0, 0, 0);opacity: 0; visibility: visible; }
+    to { transform: translate3d(100%, 0, 0);opacity: 0; visibility: hidden; }
 }
 
 /* slide in XS */
 
 .anim-slide-in-down-xs {
-  animation-name: slideInDownXs;
+    animation-name: slideInDownXs;
 }
 
 @keyframes slideInDownXs {
-  from { transform: translate3d(0, -50px, 0); opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(0, -50px, 0); opacity: 0; }
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 .anim-slide-in-up-xs {
-  animation-name: slideInUpXs;
+    animation-name: slideInUpXs;
 }
 
 @keyframes slideInUpXs {
-  from { transform: translate3d(0, 50px, 0); opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(0, 50px, 0); opacity: 0; }
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 .anim-slide-in-left-xs {
-  animation-name: slideInLeftXs;
-  transform-origin: top left;
+    animation-name: slideInLeftXs;
+    transform-origin: top left;
 }
 
 @keyframes slideInLeftXs {
-  from { transform: translate3d(-50px, 0, 0); opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(-50px, 0, 0); opacity: 0; }
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 .anim-slide-in-right-xs {
-  animation-name: slideInRightXs;
+    animation-name: slideInRightXs;
 }
 
 @keyframes slideInRightXs {
-  from { transform: translate3d(50px, 0, 0); opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
+    from { transform: translate3d(50px, 0, 0); opacity: 0; }
+    to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 /* slide out XS */
 
 .anim-slide-out-down-xs {
-  animation-name: transitionOutDown;
+    animation-name: transitionOutDown;
 }
 
 @keyframes transitionOutDownXs {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, 50px, 0); opacity: 0; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, 50px, 0); opacity: 0; }
 }
 
 .anim-slide-out-up-xs {
-  animation-name: transitionOutUpXs;
+    animation-name: transitionOutUpXs;
 }
 
 @keyframes transitionOutUpXs {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, -50px, 0); opacity: 0; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, -50px, 0); opacity: 0; }
 }
 
 .anim-slide-out-left-xs {
-  animation-name: transitionOutLeftXs;
+    animation-name: transitionOutLeftXs;
 }
 
 @keyframes transitionOutLeftXs {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50px, 0, 0); opacity: 0; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50px, 0, 0); opacity: 0; }
 }
 
 .anim-slide-out-right-xs {
-  animation-name: transitionOutRightXs;
+    animation-name: transitionOutRightXs;
 }
 
 @keyframes transitionOutRightXs {
-  from { transform: translate3d(0, 0, 0);opacity: 0; }
-  to { transform: translate3d(50px, 0, 0); opacity: 0; }
+    from { transform: translate3d(0, 0, 0);opacity: 0; }
+    to { transform: translate3d(50px, 0, 0); opacity: 0; }
 }
 
 /* shake */
 
 .anim-shake {
-  animation-name: shake;
+    animation-name: shake;
 }
 
 @keyframes shake {
-  from, to { transform: translate3d(0, 0, 0); }
-  10%, 30%, 50%, 70%, 90% { transform: translate3d(-10px, 0, 0); }
-  20%, 40%, 60%, 80% { transform: translate3d(10px, 0, 0); }
+    from, to { transform: translate3d(0, 0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate3d(-10px, 0, 0); }
+    20%, 40%, 60%, 80% { transform: translate3d(10px, 0, 0); }
 }
 
 /* fade */
 
 .anim-fade-out {
-  animation-name: fadeOut;
+    animation-name: fadeOut;
 }
 
 @keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 .anim-fade-in {
-  animation-name: fadeIn;
+    animation-name: fadeIn;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* pulse out */
 
 .anim-pulse-out {
-  animation-name: pulseOut;
+    animation-name: pulseOut;
 }
 
 @keyframes pulseOut {
-     0% { transform: scale(1.0); } 
-     50% { transform: scale(1.2); } 
-     100% { transform: scale(1.0); } 
+    0% { transform: scale(1.0); } 
+    50% { transform: scale(1.2); } 
+    100% { transform: scale(1.0); } 
 }
 
 /* pulse out large */
@@ -838,9 +847,9 @@
 }
 
 @keyframes pulseIn {
-     0% { transform: scale(1.0); } 
-     50% { transform: scale(0.8); } 
-     100% { transform: scale(1.0); } 
+    0% { transform: scale(1.0); } 
+    50% { transform: scale(0.8); } 
+    100% { transform: scale(1.0); } 
 }
 
 /* pulse in */
@@ -864,8 +873,8 @@
 }
 
 @keyframes spinIn {
-     0% { transform: rotate(0); } 
-     100% { transform: rotate(360deg); } 
+    0% { transform: rotate(0); } 
+    100% { transform: rotate(360deg); } 
 }
 
 /* spin out */
@@ -876,8 +885,8 @@
 }
 
 @keyframes spinOut {
-     0% { transform: rotate(0); } 
-     100% { transform: rotate(-360deg); } 
+    0% { transform: rotate(0); } 
+    100% { transform: rotate(-360deg); } 
 }
 
 /* flip in */
@@ -923,9 +932,16 @@
 }
 
 .anim-perspective {
+    -ms-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    -webkit-transition: all .3s ease-out;
     transition: all .3s ease-out;
+    -ms-transform-origin: 50vw 50vh;
+    -o-transform-origin: 50vw 50vh;
+    -webkit-transform-origin: 50vw 50vh;
     transform-origin: 50vw 50vh; 
     -webkit-transform: perspective(1000px) translate3d(0,50vh,0) rotateX(30deg);
+    -ms-transform: perspective(1000px) translate3d(0,50vh,0) rotateX(30deg);
     transform: perspective(1000px) translate3d(0,50vh,0) rotateX(30deg);
     pointer-events: none;
     overflow: hidden;
@@ -968,6 +984,8 @@
     bottom: 1px;
     background-color: white;
     -webkit-transition: transform .2s;
+    -ms-transition: transform .2s;
+    -o-transition: transform .2s;
     transition: transform .2s;
 }
 
@@ -986,7 +1004,10 @@
 }
 
 .switch-disabled,
-.switch-disabled .switch-slider{ opacity: 0.7; cursor:no-drop !important; }
+.switch-disabled .switch-slider {
+    -ms-opacity: 0.7;
+    opacity: 0.7; cursor:no-drop !important;
+}
 
 /* ------------------------- */
 /* tree view */
@@ -1066,12 +1087,15 @@ a.label:hover,
 
 .infinite-scroll-item {
     flex: 1 1 auto;
-
 }
 
 /* Highlight infinate scroll offset marker */
 .infinite-scroll-item-active {
+    background: #96deff;
     background: rgba(150,222,255,0.3);
+    -ms-transition: none;
+    -o-transition: none;
+    -webkit-transition: none;
     transition: none;
 }
 

@@ -4,23 +4,28 @@ using Plato.Entities.History.Models;
 using Plato.Entities.History.Services;
 using Plato.Entities.History.Stores;
 using Plato.Entities.Models;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using YamlDotNet.Core;
 
 namespace Plato.Discuss.History.Subscribers
 {
 
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-        
+
+        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
         private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
         private readonly IBroker _broker;
       
         public EntitySubscriber(
             IBroker broker,
-            IEntityHistoryManager<EntityHistory> entityHistoryManager)
+            IEntityHistoryManager<EntityHistory> entityHistoryManager, 
+            IEntityHistoryStore<EntityHistory> entityHistoryStore)
         {
             _broker = broker;
             _entityHistoryManager = entityHistoryManager;
+            _entityHistoryStore = entityHistoryStore;
         }
 
         #region "Implementation"
@@ -60,7 +65,7 @@ namespace Plato.Discuss.History.Subscribers
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-
+            
             // Create entity history point
             await _entityHistoryManager.CreateAsync(new EntityHistory()
             {
@@ -77,6 +82,32 @@ namespace Plato.Discuss.History.Subscribers
 
         async Task<TEntity> EntityUpdated(TEntity entity)
         {
+
+            // Get previous history points
+            var previousHistories = await _entityHistoryStore.QueryAsync()
+                .Take(1)
+                .Select<EntityHistoryQueryParams>(q =>
+                {
+                    q.EntityId.Equals(entity.Id);
+                })
+                .OrderBy("CreatedDate", OrderBy.Desc)
+                .ToList();
+
+            EntityHistory previousHistory = null;
+            if (previousHistories?.Data != null)
+            {
+                previousHistory = previousHistories.Data[0];
+            }
+
+            // Ensure we have changes
+            if (previousHistory != null)
+            {
+                // Don't save a history point if the Html has not changed
+                if (entity.Html == previousHistory.Html)
+                {
+                    return entity;
+                }
+            }
 
             // Create entity history point
             await _entityHistoryManager.CreateAsync(new EntityHistory()

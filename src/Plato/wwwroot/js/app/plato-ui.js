@@ -53,7 +53,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
@@ -63,11 +63,11 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-                
+
                 methods.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 var $dialog = methods.getOrCreate($caller);
                 $dialog.modal();
@@ -77,16 +77,16 @@ $(function (win, doc, $) {
 
                 var $dialog = methods.getOrCreate($caller);
                 $dialog.modal("show");
-                
+
                 methods.load($caller);
 
                 // onShow event
                 if ($caller.data(dataKey).onShow) {
                     $caller.data(dataKey).onShow($caller);
                 }
-                
+
             },
-            hide: function ($caller) {
+            hide: function($caller) {
 
                 var $dialog = methods.getOrCreate($caller);
                 $dialog.modal("hide");
@@ -101,9 +101,13 @@ $(function (win, doc, $) {
             load: function($caller) {
 
                 var url = $caller.data(dataKey).body.url;
-                if (url == null) { return; }
-                if (url === "") { return; }
-                
+                if (url === null) {
+                    return;
+                }
+                if (url === "") {
+                    return;
+                }
+
                 win.$.Plato.Http({
                     method: "GET",
                     url: url
@@ -145,7 +149,7 @@ $(function (win, doc, $) {
                             {
                                 "class": "modal-content"
                             }).append($('<p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p>'));
-                    
+
                     $model.append($content);
                     $dialog.append($model);
                     $("body").append($dialog);
@@ -156,7 +160,7 @@ $(function (win, doc, $) {
                 return $dialog;
 
             }
-        }
+        };
 
         return {
             init: function () {
@@ -222,7 +226,7 @@ $(function (win, doc, $) {
         var defaults = {};
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
@@ -236,28 +240,29 @@ $(function (win, doc, $) {
                 methods.bind($caller);
 
             },
-            bind: function ($caller) {
-                
+            bind: function($caller) {
+
                 $caller.bind("click",
-                    function (e) {
+                    function(e) {
 
                         e.preventDefault();
                         e.stopPropagation();
 
                         $().dialog({
-                            id: "shareDialog",
-                            body: {
-                                url: $(this).attr("href")
+                                id: "shareDialog",
+                                body: {
+                                    url: $(this).attr("href")
+                                },
+                                css: {
+                                    modal: methods.getModalCss($(this)),
+                                    dialog: methods.getDialogCss($(this))
+                                }
                             },
-                            css: {
-                                modal: methods.getModalCss($(this)),
-                                dialog: methods.getDialogCss($(this))
-                    }
-                        }, "show");
+                            "show");
                     });
 
             },
-            getModalCss: function ($caller) {
+            getModalCss: function($caller) {
                 var css = $caller.data("dialogModalCss");
                 if (css) {
                     return css;
@@ -271,7 +276,7 @@ $(function (win, doc, $) {
                 }
                 return "modal-dialog modal-lg";
             }
-        }
+        };
 
         return {
             init: function () {
@@ -627,7 +632,7 @@ $(function (win, doc, $) {
 
                 // Focus active item
                 var offset = methods._getSelectedOffset($caller),
-                    top = (offset.top - $caller.height());
+                    top = offset.top - $caller.height();
                 $caller.scrollTo({
                         offset: top - 20,
                         interval: 500
@@ -987,22 +992,22 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-                
+
                 // bind events
                 this.bind($caller);
 
             },
             bind: function($caller) {
-                
+
                 // Add loader
                 var loaderTemplate = $caller.data(dataKey).loaderTemplate;
                 if (loaderTemplate) {
                     $caller.empty().append(loaderTemplate);
                 }
-                
+
                 // Begin populate
                 var config = this.getConfig($caller);
-                win.$.Plato.Http(config).done(function (response) {
+                win.$.Plato.Http(config).done(function(response) {
                     if (response.statusCode !== 200) {
                         return;
                     }
@@ -1012,13 +1017,13 @@ $(function (win, doc, $) {
                 });
 
             },
-            getConfig: function ($caller) {
-                
+            getConfig: function($caller) {
+
                 var config = $.extend({}, $caller.data(dataKey).config),
                     url = $caller.data("pagedListUrl") || config.url,
                     pageIndex = this.getPageIndex($caller) || 1,
                     pageSize = this.getPageSize($caller) || 10;
-                
+
                 // set content type for post data
                 if (config.method) {
                     if (config.method.toUpperCase() === "POST") {
@@ -1032,7 +1037,7 @@ $(function (win, doc, $) {
                 if (typeof config.data !== "string") {
                     config.data = JSON.stringify(config.data);
                 }
-                
+
                 if (url) {
 
                     if (url.indexOf("{page}") >= 0) {
@@ -1041,14 +1046,14 @@ $(function (win, doc, $) {
                     if (url.indexOf("{pageSize}") >= 0) {
                         url = url.replace(/\{pageSize}/g, pageSize);
                     }
-                    
+
                     config.url = url;
                 }
 
                 return config;
 
             },
-            getItemIndex: function ($caller) {
+            getItemIndex: function($caller) {
                 var index = -1,
                     selector = null,
                     selection = $caller.data(dataKey).itemSelection,
@@ -1070,7 +1075,7 @@ $(function (win, doc, $) {
             setItemIndex: function($caller) {
                 var selection = $caller.data(dataKey).itemSelection,
                     itemCss = $caller.data(dataKey).itemCss;
-            
+
                 if (selection) {
                     if (selection.enable === false) {
                         return;
@@ -1082,33 +1087,33 @@ $(function (win, doc, $) {
                         $el = $caller.find(selector + ":eq(" + index + ")");
 
                     if (index < 0) {
-                        $caller.find(selector).each(function () {
+                        $caller.find(selector).each(function() {
                             $(this).removeClass(css);
                         });
                     } else {
-                        $caller.find(selector).each(function () {
+                        $caller.find(selector).each(function() {
                             $(this).removeClass(css);
                         });
                         if ($el.length > 0) {
                             $el.addClass(css);
                         }
                     }
-                  
+
                 }
             },
-            setPageIndex: function ($caller, pageIndex) {
+            setPageIndex: function($caller, pageIndex) {
                 $caller.data(dataKey).page = pageIndex;
             },
-            getPageIndex: function ($caller) {
+            getPageIndex: function($caller) {
                 return $caller.data("pagedListPageIndex") || $caller.data(dataKey).page;
             },
-            setPageSize: function ($caller, pageSize) {
+            setPageSize: function($caller, pageSize) {
                 $caller.data(dataKey).pageSize = pageSize;
             },
-            getPageSize: function ($caller) {
+            getPageSize: function($caller) {
                 return $caller.data("pagedListPageSize") || $caller.data(dataKey).pageSize;
             }
-        }
+        };
 
         return {
             init: function () {
@@ -1181,7 +1186,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
@@ -1191,34 +1196,36 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-                
+
                 // disable browser autocomplete if not already disabled
                 var attr = $caller.attr("autocomplete");
                 if (typeof attr === typeof undefined || attr === false) {
                     $caller.attr("autocomplete", "off");
                 }
-                
+
                 // bind events
                 methods.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
-                $caller.bind("focus", function () {
-                    if ($(this).val().length === 0) {
-                        methods.hide($(this));
-                    } else {
-                        // Show
-                        methods.show($(this), function() {
-                            // Update if not already visible
-                            methods.update($caller);
-                        });
-                  
-                    }
-                });
-                
+                $caller.bind("focus",
+                    function() {
+                        if ($(this).val().length === 0) {
+                            methods.hide($(this));
+                        } else {
+                            // Show
+                            methods.show($(this),
+                                function() {
+                                    // Update if not already visible
+                                    methods.update($caller);
+                                });
+
+                        }
+                    });
+
                 $caller.bind("keydown.",
-                    function (e) {
+                    function(e) {
                         var $target = methods.getTarget($(this));
                         if ($target) {
                             if ($target.is(":visible")) {
@@ -1230,32 +1237,32 @@ $(function (win, doc, $) {
 
                                 if (itemSelection.enable) {
                                     switch (e.which) {
-                                        case 13: // carriage return
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            // find active and click
-                                            $target.find("." + itemCss).each(function () {
-                                                if ($(this).hasClass(itemSelection.css)) {
-                                                    $(this).click();
-                                                }
-                                            });
-                                            break;
-                                        case 38: // up
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            newIndex = itemSelection.index - 1;
-                                            if (newIndex < 0) {
-                                                newIndex = 0;
+                                    case 13: // carriage return
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        // find active and click
+                                        $target.find("." + itemCss).each(function() {
+                                            if ($(this).hasClass(itemSelection.css)) {
+                                                $(this).click();
                                             }
-                                            break;
-                                        case 40: // down
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            newIndex = itemSelection.index + 1;
-                                            if (newIndex > (pageSize - 1)) {
-                                                newIndex = (pageSize - 1);
-                                            }
-                                            break;
+                                        });
+                                        break;
+                                    case 38: // up
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        newIndex = itemSelection.index - 1;
+                                        if (newIndex < 0) {
+                                            newIndex = 0;
+                                        }
+                                        break;
+                                    case 40: // down
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        newIndex = itemSelection.index + 1;
+                                        if (newIndex > pageSize - 1) {
+                                            newIndex = pageSize - 1;
+                                        }
+                                        break;
                                     }
 
                                     $target.pagedList({
@@ -1268,26 +1275,26 @@ $(function (win, doc, $) {
 
 
                                 }
-                                
+
                             }
                         }
-                        
+
                         if ($caller.data(dataKey).onKeyDown) {
                             $caller.data(dataKey).onKeyDown($caller, e);
                         }
-                      
+
                     });
-                
+
                 // spy on our input
                 $caller.typeSpy({
-                    onKeyUp: function ($el, e) {
+                    onKeyUp: function($el, e) {
                         if (e.keyCode === 27) {
                             // escape
                             methods.hide($el);
                         }
                     },
-                    onChange: function ($el, e) {
-                      
+                    onChange: function($el, e) {
+
                         // !escape && !tab
                         if (e.keyCode !== 27 && e.keyCode !== 9) {
                             if ($el.val().length === 0) {
@@ -1303,25 +1310,33 @@ $(function (win, doc, $) {
                 });
 
                 // hide menu
-                $(doc).click(function (e) {
+                $(doc).click(function(e) {
                     var target = e.target;
                     if (target) {
-                        if (target.tagName.toUpperCase() === "INPUT") { return; }
-                        if (target.tagName.toUpperCase() === "A") { return; }
-                        if (target.tagName.toUpperCase() === "UL") { return; }
-                        if (target.tagName.toUpperCase() === "I") { return; }
+                        if (target.tagName.toUpperCase() === "INPUT") {
+                            return;
+                        }
+                        if (target.tagName.toUpperCase() === "A") {
+                            return;
+                        }
+                        if (target.tagName.toUpperCase() === "UL") {
+                            return;
+                        }
+                        if (target.tagName.toUpperCase() === "I") {
+                            return;
+                        }
                     }
                     methods.hide($caller);
                 });
 
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
                 $caller
                     .unbind("focus")
                     .unbind("keydown");
                 $caller.typeSpy("unbind");
             },
-            show: function ($caller, onShow) {
+            show: function($caller, onShow) {
                 var $target = this.getTarget($caller);
                 if ($target.length > 0) {
                     // Allows for initially hidden state
@@ -1337,7 +1352,7 @@ $(function (win, doc, $) {
                     }
                 }
             },
-            hide: function ($caller, onHide) {
+            hide: function($caller, onHide) {
                 var $target = this.getTarget($caller);
                 if ($target.length > 0) {
 
@@ -1355,14 +1370,14 @@ $(function (win, doc, $) {
                     }
                 }
             },
-            update: function ($caller) {
+            update: function($caller) {
 
                 // no dropdown target found
                 var $target = methods.getTarget($caller);
                 if ($target.length === 0) {
                     return;
                 }
-                
+
                 // Clone config & get keywords field name
                 var config = $.extend({}, $caller.data(dataKey).config),
                     valueField = $caller.data(dataKey).valueField;
@@ -1380,20 +1395,21 @@ $(function (win, doc, $) {
                     }
 
                 }
-             
+
                 // Init pagedList
-                $target.pagedList($.extend({}, $caller.data(dataKey),
-                        {
-                            page: 1,
-                            config: config
-                        }));
-                
+                $target.pagedList($.extend({},
+                    $caller.data(dataKey),
+                    {
+                        page: 1,
+                        config: config
+                    }));
+
             },
-            getTarget: function ($caller) {
+            getTarget: function($caller) {
 
                 // do we have an explicit target
                 var target = $caller.data("autocompleteTarget") ||
-                    $caller.data(dataKey).target,
+                        $caller.data(dataKey).target,
                     dynamicId = $caller.data(dataIdKey) + "_target";
 
                 if (target) {
@@ -1437,7 +1453,7 @@ $(function (win, doc, $) {
                 return null;
 
             }
-        }
+        };
         
         return {
             init: function () {
@@ -1511,8 +1527,9 @@ $(function (win, doc, $) {
                     order: "Desc"
                 }
             },
-            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
-            parseItemTemplate: function (html, result) {
+            itemTemplate:
+                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
+            parseItemTemplate: function(html, result) {
 
                 if (result.id) {
                     html = html.replace(/\{id}/g, result.id);
@@ -1530,7 +1547,7 @@ $(function (win, doc, $) {
                 } else {
                     html = html.replace(/\{userName}/g, "(no username)");
                 }
-           
+
                 if (result.email) {
                     html = html.replace(/\{email}/g, result.email);
                 } else {
@@ -1544,18 +1561,18 @@ $(function (win, doc, $) {
                 return html;
 
             },
-            onKeyDown: function ($caller, e) {
+            onKeyDown: function($caller, e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
                 }
             },
-            onItemClick: function ($caller, result, e) {
+            onItemClick: function($caller, result, e) {
                 e.preventDefault();
             }
-        }
+        };
 
         var methods = {
-            init: function ($caller, methodName, func) {
+            init: function($caller, methodName, func) {
 
                 if (func) {
                     return func(this);
@@ -1576,7 +1593,7 @@ $(function (win, doc, $) {
             show: function($caller) {
                 $caller.autoComplete("show");
             }
-        }
+        };
 
         return {
             init: function () {
@@ -1651,8 +1668,9 @@ $(function (win, doc, $) {
                 }
             },
             itemCss: "dropdown-item",
-            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></a>',
-            parseItemTemplate: function (html, result) {
+            itemTemplate:
+                '<a class="{itemCss}" href="{url}"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></a>',
+            parseItemTemplate: function(html, result) {
 
                 if (result.id) {
                     html = html.replace(/\{id}/g, result.id);
@@ -1693,27 +1711,27 @@ $(function (win, doc, $) {
                 return html;
 
             },
-            onKeyDown: function ($caller, e) {
+            onKeyDown: function($caller, e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
                 }
             },
-            onItemClick: function ($caller, result, e) {
+            onItemClick: function($caller, result, e) {
                 e.preventDefault();
             }
-        }
+        };
 
         var methods = {
-            init: function ($caller, methodName, func) {
+            init: function($caller, methodName, func) {
 
                 if (func) {
                     return func(this);
-                }               
+                }
                 // init autoComplete
                 $caller.autoComplete($caller.data(dataKey), methodName);
 
             }
-        }
+        };
 
         return {
             init: function () {
@@ -1786,67 +1804,69 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 var event = $caller.data(dataKey).event;
                 if (event === null) {
                     return;
                 }
 
-                $caller.bind(event, function (e) {
+                $caller.bind(event,
+                    function(e) {
 
-                    if (e.which) {
+                        if (e.which) {
 
-                        switch (e.which) {
+                            switch (e.which) {
                             case 13: // carriage return
                                 e.preventDefault();
                                 methods.stopTimer();
                                 if ($caller.data(dataKey).onComplete) {
                                     $caller.data(dataKey).onComplete($(this), e);
                                 }
-                            return;
-                        case 38: // up
-                            return;
-                        case 40: // down
-                            return;
+                                return;
+                            case 38: // up
+                                return;
+                            case 40: // down
+                                return;
+                            }
                         }
-                    }
-               
-                    if ($(this).val() !== "") {
-                        methods.startTimer($(this), e);
-                    } else {
-                        if ($caller.data(dataKey).onChange) {
-                            $caller.data(dataKey).onChange($(this), e);
+
+                        if ($(this).val() !== "") {
+                            methods.startTimer($(this), e);
+                        } else {
+                            if ($caller.data(dataKey).onChange) {
+                                $caller.data(dataKey).onChange($(this), e);
+                            }
+                            methods.stopTimer();
                         }
-                        methods.stopTimer();
-                    }
 
-                    if ($caller.data(dataKey).onKeyUp) {
-                        $caller.data(dataKey).onKeyUp($(this), e);
-                    }
+                        if ($caller.data(dataKey).onKeyUp) {
+                            $caller.data(dataKey).onKeyUp($(this), e);
+                        }
 
-                });
+                    });
 
             },
             unbind: function($caller) {
                 $caller.unbind('keyup');
             },
-            startTimer: function ($caller, e) {
+            startTimer: function($caller, e) {
                 this.stopTimer();
-                this.timer = setTimeout(function () {
-                    if ($caller.data(dataKey).onChange) {
-                        $caller.data(dataKey).onChange($caller, e);
-                    }
-                }, $caller.data(dataKey).interval);
+                this.timer = setTimeout(function() {
+                        if ($caller.data(dataKey).onChange) {
+                            $caller.data(dataKey).onChange($caller, e);
+                        }
+                    },
+                    $caller.data(dataKey).interval);
             },
-            stopTimer: function () {
+            stopTimer: function() {
                 win.clearTimeout(this.timer);
                 this.timer = null;
             }
-        }
+        };
 
         return {
             init: function () {
@@ -1916,10 +1936,10 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 var id = $caller.data(dataKey).id,
                     focusEvent = "focus",
@@ -1936,28 +1956,29 @@ $(function (win, doc, $) {
                     });
 
                 $caller.on(blurEvent,
-                    function (e) {
+                    function(e) {
                         methods.startTimer($(this), e);
                     });
 
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
                 $caller.unbind('blur');
                 $caller.unbind('focus');
             },
-            startTimer: function ($caller, e) {
+            startTimer: function($caller, e) {
                 this.stopTimer();
-                this.timer = setTimeout(function () {
-                    if ($caller.data(dataKey).onBlur) {
-                        $caller.data(dataKey).onBlur($caller, e);
-                    }
-                }, $caller.data(dataKey).interval);
+                this.timer = setTimeout(function() {
+                        if ($caller.data(dataKey).onBlur) {
+                            $caller.data(dataKey).onBlur($caller, e);
+                        }
+                    },
+                    $caller.data(dataKey).interval);
             },
-            stopTimer: function () {
+            stopTimer: function() {
                 win.clearTimeout(this.timer);
                 this.timer = null;
             }
-        }
+        };
 
         return {
             init: function () {
@@ -2031,7 +2052,7 @@ $(function (win, doc, $) {
         var methods = {
             _timer: null,
             _scrolling: false,
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
@@ -2045,7 +2066,7 @@ $(function (win, doc, $) {
                 this.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 $caller.bind("scroll",
                     function(e) {
@@ -2061,7 +2082,7 @@ $(function (win, doc, $) {
                                 $caller.data(dataKey).onScrollStart(e);
                             }
                         }
-                        
+
                         // Raise onScroll passing in a normalized scroll threadhold
                         if ($caller.data(dataKey).onScroll) {
                             var scrollTop = $caller.scrollTop(),
@@ -2079,23 +2100,24 @@ $(function (win, doc, $) {
 
                     });
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
                 $caller.unbind("scroll");
             },
-            start: function ($caller, e) {
+            start: function($caller, e) {
                 methods.stop($caller);
-                methods._timer = win.setTimeout(function () {
-                    methods._scrolling = false;
-                    if ($caller.data(dataKey).onScrollEnd) {
-                        $caller.data(dataKey).onScrollEnd(e);
-                    }
-                }, $caller.data(dataKey).interval);
+                methods._timer = win.setTimeout(function() {
+                        methods._scrolling = false;
+                        if ($caller.data(dataKey).onScrollEnd) {
+                            $caller.data(dataKey).onScrollEnd(e);
+                        }
+                    },
+                    $caller.data(dataKey).interval);
             },
-            stop: function ($caller) {
+            stop: function($caller) {
                 win.clearTimeout(methods._timer);
                 methods._timer = null;
             }
-        }
+        };
 
         return {
             init: function () {
@@ -2185,8 +2207,8 @@ $(function (win, doc, $) {
             _selectedOffset: 0, // optional selected offset
             _totalPages: 1, // total pages
             _loadedPages: [], // keep track of which pages have been loaded
-            _readyList: [], // funcstions to execute when dom is updated
-            ready: function ($caller, fn) { // Accepts functions that will be executed upon each load
+            _readyList: [], // functions to execute when dom is updated
+            ready: function($caller, fn) { // Accepts functions that will be executed upon each load
                 methods._readyList.push(fn);
                 return this;
             },
@@ -2200,7 +2222,7 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-                
+
                 if ($caller.data("infiniteScrollInitialPage")) {
                     var page = parseInt($caller.data("infiniteScrollInitialPage"));
                     if (!isNaN(page)) {
@@ -2208,7 +2230,7 @@ $(function (win, doc, $) {
                         methods._page = page;
                     }
                 }
-                
+
                 if (typeof $caller.data("infiniteScrollInitialOffset") !== "undefined") {
                     var offset = parseInt($caller.data("infiniteScrollInitialOffset"));
                     if (!isNaN(offset)) {
@@ -2222,7 +2244,7 @@ $(function (win, doc, $) {
                         methods._selectedOffset = selectedOffset;
                     }
                 }
-                
+
                 if ($caller.data("infiniteScrollTotalPages")) {
                     var totalPages = parseInt($caller.data("infiniteScrollTotalPages"));
                     if (!isNaN(totalPages)) {
@@ -2243,50 +2265,49 @@ $(function (win, doc, $) {
             bind: function($caller) {
 
                 var bindScrollEvents = function() {
-                        
-                        // Bind scroll events
-                        $().scrollSpy({
-                            onScrollEnd: function() {
-                                methods.updateState($caller);
-                            },
-                            onScroll: function (spy, e) {
-                                
-                                // Ensure we are not already loading 
-                                if (methods._loading) {
-                                    $().scrollSpy("stop");
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    return;
-                                }
 
-                                // Get container bounds
-                                var top = $caller.offset().top,
-                                    bottom = top + $caller.outerHeight();
+                    // Bind scroll events
+                    $().scrollSpy({
+                        onScrollEnd: function() {
+                            methods.updateState($caller);
+                        },
+                        onScroll: function(spy, e) {
 
-                                // At the veru top of the window remove offset from url
-                                if (spy.scrollTop === 0) {
-                                    methods.resetState($caller);
-                                } else {
-                                    // When we reach the top of our container load previous page
-                                    if (spy.scrollTop < top) {
-                                        console.log("loadPrevious")
-                                        methods.loadPrevious($caller, spy);
-                                    }
-                                }
+                            // Ensure we are not already loading 
+                            if (methods._loading) {
+                                $().scrollSpy("stop");
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return;
+                            }
 
-                                // At the very bottom of the page
-                                if (spy.scrollBottom === spy.docHeight) {
-                                    methods.resetState($caller);
-                                } else {
-                                    // When we reach the bottom of our container load next page
-                                    if (spy.scrollBottom > bottom) {
-                                        methods.loadNext($caller, spy);
-                                    }
+                            // Get container bounds
+                            var top = $caller.offset().top,
+                                bottom = top + $caller.outerHeight();
+
+                            // At the veru top of the window remove offset from url
+                            if (spy.scrollTop === 0) {
+                                methods.resetState($caller);
+                            } else {
+                                // When we reach the top of our container load previous page
+                                if (spy.scrollTop < top) {
+                                    methods.loadPrevious($caller, spy);
                                 }
                             }
-                        });
 
-                    }
+                            // At the very bottom of the page
+                            if (spy.scrollBottom === spy.docHeight) {
+                                methods.resetState($caller);
+                            } else {
+                                // When we reach the bottom of our container load next page
+                                if (spy.scrollBottom > bottom) {
+                                    methods.loadNext($caller, spy);
+                                }
+                            }
+                        }
+                    });
+
+                };
 
                 // Scroll to any selected offset, wait until we complete
                 // scrolling before binding our scrollSpy events
@@ -2312,7 +2333,7 @@ $(function (win, doc, $) {
                                     bindScrollEvents();
                                 }
                             },
-                            "go"); // initialze scrollTo
+                            "go"); // initialize scrollTo
                     } else {
                         // If we didn't find a marker ensure we still bind scrollSpy
                         bindScrollEvents();
@@ -2331,7 +2352,7 @@ $(function (win, doc, $) {
                 methods._page = 1;
                 methods._loading = false;
             },
-            loadPrevious: function ($caller, spy) {
+            loadPrevious: function($caller, spy) {
 
                 // Get page and check bounds
                 var pageNumber = methods.getPreviousPageNumber($caller);
@@ -2344,7 +2365,7 @@ $(function (win, doc, $) {
                 if ($loader) {
                     $loader.show();
                 }
-                
+
                 // Load data
                 methods.load($caller,
                     pageNumber,
@@ -2365,31 +2386,26 @@ $(function (win, doc, $) {
                                 // Scroll position before content was loaded
                                 var previousPosition = page.spy.documentHeight - page.spy.scrollTop;
 
-                                console.log($(doc).height());
-                                console.log(previousPosition);
-
                                 // Persist scroll position after content load
                                 $().scrollSpy("unbind");
                                 $().scrollTo({
                                         offset: $(doc).height() - previousPosition,
                                         interval: 0,
-                                    onComplete: function () {
-                                        console.log("scroll complete");
-
+                                        onComplete: function() {
                                             $().scrollSpy("bind");
                                         }
                                     },
                                     "go");
 
                             }
-                        
+
                             // Highlight first marker in newly loaded page
                             methods.highlightFirstMarkerOnPage($caller, methods._page + 1);
                         }
 
                     });
             },
-            loadNext: function ($caller, spy) {
+            loadNext: function($caller, spy) {
 
                 // Get page and check bounds
                 var pageNumber = methods.getNextPageNumber($caller);
@@ -2419,11 +2435,11 @@ $(function (win, doc, $) {
                             // Highlight first marker in newly loaded page
                             methods.highlightFirstMarkerOnPage($caller, methods._page);
                         }
-                      
+
                     });
 
             },
-            load: function ($caller, page, spy, func) {
+            load: function($caller, page, spy, func) {
 
                 // Ensure we have a callback url
                 var url = methods.getUrl($caller),
@@ -2452,10 +2468,10 @@ $(function (win, doc, $) {
 
                     // Mark done loading 
                     methods._loading = false;
-                    
+
                     // If a page was returned register page as loaded
                     if (data !== "") {
-                        
+
                         var offset = 0,
                             marker = null,
                             $markers = methods.getOffsetMarkers($(data));
@@ -2472,7 +2488,7 @@ $(function (win, doc, $) {
                         if (marker) {
                             offset = parseInt(marker.getAttribute("data-infinite-scroll-offset"));
                         }
-                        
+
                         // Add loaded page with offset and scrollSpy position
                         methods._loadedPages.push({
                             spy: spy,
@@ -2484,7 +2500,7 @@ $(function (win, doc, $) {
                         methods._page = page;
 
                     }
-                    
+
                     // Callback
                     func(data);
 
@@ -2533,7 +2549,7 @@ $(function (win, doc, $) {
                     // Update url with offset if valid
                     var offset = parseInt($marker.data("infiniteScrollOffset"));
                     if (!isNaN(offset)) {
-                        
+
                         // Use replaceState to ensure the address bar is updated
                         // but we don't actually add new history state
                         history.replaceState(state, doc.title, methods.getStateUrl($caller, offset));
@@ -2541,7 +2557,7 @@ $(function (win, doc, $) {
                 }
 
             },
-            getStateUrl: function ($caller, offset) {
+            getStateUrl: function($caller, offset) {
 
                 var url = methods.getUrl($caller),
                     suffix = methods.getUrlSuffix($caller),
@@ -2550,7 +2566,7 @@ $(function (win, doc, $) {
                 if (parts.length === 1) {
                     return url + suffix + offset;
                 } else {
-                    // Ensure parameteres are shifted to the end
+                    // Ensure parameters are shifted to the end
                     var base = parts[0],
                         params = parts[parts.length - 1];
                     if (params !== "") {
@@ -2559,7 +2575,6 @@ $(function (win, doc, $) {
                     return base + suffix + offset + params;
                 }
 
-                return url;
             },
             resetState: function($caller) {
                 // Stop scrollspy to prevent the OnScrollEnd event from executing
@@ -2569,7 +2584,7 @@ $(function (win, doc, $) {
                     history.replaceState(state, doc.title, methods.getUrl($caller));
                 }
             },
-            scrollToPage: function ($caller, pageNumber) {
+            scrollToPage: function($caller, pageNumber) {
                 var page = methods.getLoadedPage(pageNumber);
                 if (page) {
                     var $marker = methods.getOffsetMarker($caller, page.offset);
@@ -2610,7 +2625,7 @@ $(function (win, doc, $) {
                     }
                 }
             },
-            getSortedPageNumbers: function () {
+            getSortedPageNumbers: function() {
                 var pages = [];
                 for (var i = 0; i < methods._loadedPages.length; i++) {
                     pages.push(methods._loadedPages[i].page);
@@ -2627,11 +2642,11 @@ $(function (win, doc, $) {
                 }
                 return null;
             },
-            isPageLoaded: function ($caller, pageNumber) {
+            isPageLoaded: function($caller, pageNumber) {
                 var page = methods.getLoadedPage(pageNumber);
                 return page !== null ? true : false;
             },
-            getOffsetMarkers: function ($container) {
+            getOffsetMarkers: function($container) {
                 var $markers = $container.find("[data-infinite-scroll-offset]");
                 if ($markers.length > 0) {
                     return $markers;
@@ -2641,11 +2656,11 @@ $(function (win, doc, $) {
             getOffsetMarker: function($caller, offset) {
                 var $marker = $caller.find('[data-infinite-scroll-offset="' + offset + '"]');
                 if ($marker.length > 0) {
-                        return $($marker[0]);                    
+                    return $($marker[0]);
                 }
                 return null;
             },
-            getHighlightMarker: function ($caller, offset) {
+            getHighlightMarker: function($caller, offset) {
                 var $marker = $caller.find('[data-infinite-scroll-highlight="' + offset + '"]');
                 if ($marker.length > 0) {
                     return $marker;
@@ -2704,26 +2719,26 @@ $(function (win, doc, $) {
                 var selector = $caller.data("infiniteScrollLoadingSelector") ||
                     $caller.data(dataKey).loaderSelector;
                 if (selector) {
-                    var $loaders = $caller.find(selector);;
+                    var $loaders = $caller.find(selector);
                     if ($loaders.length > 0) {
                         return $loaders;
                     }
                 }
                 return null;
             },
-            getUrl: function ($caller) {
+            getUrl: function($caller) {
                 if ($caller.data("infiniteScrollUrl")) {
                     return $caller.data("infiniteScrollUrl");
                 }
                 return "";
             },
-            getUrlSuffix: function ($caller) {
+            getUrlSuffix: function($caller) {
                 if ($caller.data("infiniteScrollUrlSuffix")) {
                     return $caller.data("infiniteScrollUrlSuffix");
                 }
                 return "/";
             }
-        }
+        };
 
         return {
             init: function() {
@@ -2797,21 +2812,22 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
                 $caller.bind('keydown',
-                    function (e) {
-                        if ((e.keyCode && e.keyCode === 13)) {
+                    function(e) {
+                        if (e.keyCode && e.keyCode === 13) {
                             e.preventDefault();
                         }
                     });
-                $caller.bind('keyup', function (e) {
-                    methods.filter($(this));
-                });
+                $caller.bind('keyup',
+                    function(e) {
+                        methods.filter($(this));
+                    });
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
                 $caller.unbind('keydown');
                 $caller.unbind('keyup');
             },
@@ -2823,9 +2839,9 @@ $(function (win, doc, $) {
                     word = $caller.val().trim().toLowerCase(),
                     length = $items.length,
                     hidden = 0;
-                
+
                 $target.treeView("expandAll");
-                
+
                 // First hide all items
                 for (var i = 0; i < length; i++) {
                     var $label = $($items[i]);
@@ -2837,7 +2853,7 @@ $(function (win, doc, $) {
                         }
                     }
                 }
-                
+
                 //If all items are hidden, show the empty element
                 if (hidden === length) {
                     $empty.show();
@@ -2846,7 +2862,7 @@ $(function (win, doc, $) {
                 }
 
             },
-            find: function ($root, word) {
+            find: function($root, word) {
 
                 // Search in supplied list item
                 var value = $root.data("filterListValue");
@@ -2869,14 +2885,14 @@ $(function (win, doc, $) {
                             this.find($label, word);
                         }
                     }
-                 
+
                 }
                 return false;
 
             },
-            getTarget: function ($caller) {
+            getTarget: function($caller) {
                 var target = $caller.data("filterListTarget") || $caller.data(dataKey).target;
-                if (typeof target == "string") {
+                if (typeof target === "string") {
                     return $(target);
                 }
                 return target;
@@ -2885,14 +2901,14 @@ $(function (win, doc, $) {
                 var $list = this.getTarget($caller);
                 return $list.find(".list-group-item");
             },
-            getEmpty: function ($caller) {
+            getEmpty: function($caller) {
                 var target = $caller.data("filterListEmpty") || $caller.data(dataKey).empty;
-                if (typeof target == "string") {
+                if (typeof target === "string") {
                     return $(target);
                 }
                 return target;
             }
-        }
+        };
 
         return {
             init: function () {
@@ -3072,7 +3088,7 @@ $(function (win, doc, $) {
                     }
                     var $input = this.getInput($caller),
                         maxAllowed = this.getMaxItems($caller);
-                    if ((maxAllowed > 0) && (items.length >= maxAllowed)) {
+                    if (maxAllowed > 0 && items.length >= maxAllowed) {
                         if ($input) {
                             $input.hide();
                         }
@@ -3125,7 +3141,7 @@ $(function (win, doc, $) {
                 var $input = this.getInput($caller),
                     items = this.getItems($caller),
                     maxAllowed = this.getMaxItems($caller);
-                if ((maxAllowed > 0) && (items.length < maxAllowed)) {
+                if (maxAllowed > 0 && items.length < maxAllowed) {
                     if ($input && $input.is(":visible")) {
                         $input.focus();
                     }
@@ -3252,7 +3268,7 @@ $(function (win, doc, $) {
                 return $caller.data("tagitItems") || $caller.data(dataKey).items;
             },
             setItems: function($caller, value) {
-                $caller.data("tagitItems", value)
+                $caller.data("tagitItems", value);
                 $caller.data(dataKey).items = value;
             },
             getStore: function($caller) {
@@ -3268,7 +3284,7 @@ $(function (win, doc, $) {
             },
             setStore: function($caller, value) {
                 var $store = this.getStore($caller);
-                if ($store != null) {
+                if ($store) {
                     $store.val(value);
                 }
             },
@@ -3276,7 +3292,7 @@ $(function (win, doc, $) {
                 var $store = this.getStore($caller);
                 if ($store) {
                     var items = this.getItems($caller);
-                    if (items != null) {
+                    if (items !== null) {
                         if (items.length > 0) {
                             $store.val(JSON.stringify(items));
                         } else {
@@ -3348,7 +3364,7 @@ $(function (win, doc, $) {
         var dataKey = "userTagIt",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {}
+        var defaults = {};
 
         var methods = {
             init: function($caller, methodName, func) {
@@ -3364,12 +3380,12 @@ $(function (win, doc, $) {
                     }
                     return null;
                 }
-                
+
                 this.bind($caller);
-                
+
             },
             bind: function($caller) {
-                
+
                 // init tagIt
                 $caller.tagIt($.extend({
                         itemTemplate:
@@ -3388,7 +3404,6 @@ $(function (win, doc, $) {
                             }
                             return html;
 
-                            return html;
                         },
                         onAddItem: function($input, result, e) {
                             $input.val("");
@@ -3396,7 +3411,7 @@ $(function (win, doc, $) {
                     },
                     defaults,
                     options));
-                
+
                 // user auto complete
                 methods.getInput($caller).userAutoComplete($.extend({
                         onItemClick: function($input, result, e) {
@@ -3427,10 +3442,10 @@ $(function (win, doc, $) {
 
 
             },
-            getInput: function ($caller) {
+            getInput: function($caller) {
                 return $caller.find(".tagit-list-item-input").find("input");
             },
-            getIndex: function ($caller, item) {
+            getIndex: function($caller, item) {
                 var ensureUnique = $caller.data("tagIt").ensureUnique,
                     tagit = $caller.data("tagIt"),
                     items = tagit.items,
@@ -3446,7 +3461,7 @@ $(function (win, doc, $) {
                 return index;
             }
 
-        }
+        };
 
         return {
             init: function () {
@@ -3507,10 +3522,10 @@ $(function (win, doc, $) {
         var dataKey = "labelTagIt",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {}
+        var defaults = {};
 
         var methods = {
-            init: function ($caller, methodName, func) {
+            init: function($caller, methodName, func) {
 
                 if (func) {
                     return func(this);
@@ -3529,7 +3544,7 @@ $(function (win, doc, $) {
                 return null;
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 // init tagIt
                 $caller.tagIt($.extend({
@@ -3563,7 +3578,6 @@ $(function (win, doc, $) {
 
                             return html;
 
-                            return html;
                         },
                         onAddItem: function($input, result, e) {
                             $input.val("");
@@ -3603,10 +3617,10 @@ $(function (win, doc, $) {
 
 
             },
-            getInput: function ($caller) {
+            getInput: function($caller) {
                 return $caller.find(".tagit-list-item-input").find("input");
             },
-            getIndex: function ($caller, item) {
+            getIndex: function($caller, item) {
                 var ensureUnique = $caller.data("tagIt").ensureUnique,
                     tagit = $caller.data("tagIt"),
                     items = tagit.items,
@@ -3622,7 +3636,7 @@ $(function (win, doc, $) {
                 return index;
             }
 
-        }
+        };
 
         return {
             init: function () {
@@ -3849,7 +3863,7 @@ $(function (win, doc, $) {
             },
             setStore: function ($caller, value) {
                 var $store = this.getStore($caller);
-                if ($store != null) {
+                if ($store) {
                     $store.val(value);
                 }
             },
@@ -3857,7 +3871,7 @@ $(function (win, doc, $) {
                 var $store = this.getStore($caller);
                 if ($store) {
                     var items = this.getItems($caller);
-                    if (items != null) {
+                    if (items) {
                         if (items.length > 0) {
                             $store.val(JSON.stringify(items));
                         } else {
@@ -3941,10 +3955,10 @@ $(function (win, doc, $) {
         var dataKey = "labelSelectDropdown",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {}
+        var defaults = {};
 
         var methods = {
-            init: function ($caller, methodName, func) {
+            init: function($caller, methodName, func) {
 
                 if (func) {
                     return func(this);
@@ -3963,11 +3977,12 @@ $(function (win, doc, $) {
                 return null;
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 // init selectDropdown
                 $caller.selectDropdown($.extend({
-                        itemTemplate: '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
+                        itemTemplate:
+                            '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
                         parseItemTemplate: function(html, result) {
 
                             if (result.id) {
@@ -3996,7 +4011,6 @@ $(function (win, doc, $) {
 
                             return html;
 
-                            return html;
                         },
                         onShow: function($sender, $dropdown) {
                             // Focus search & set-up autoComplete on dropdown show
@@ -4007,7 +4021,7 @@ $(function (win, doc, $) {
                                     .labelAutoComplete("update");
                             }
                         },
-                    onUpdated: function ($sender) {
+                        onUpdated: function($sender) {
 
                             // Set active items within dropdown when preview is updated
                             var $dropdown = $sender.find(".dropdown-menu"),
@@ -4043,7 +4057,8 @@ $(function (win, doc, $) {
 
                 // init auto complete
                 methods.getInput($caller).labelAutoComplete($.extend({
-                        itemTemplate: '<input type="checkbox" value="{id}" id="label-{id}"/><label for="label-{id}" class="{itemCss}"><i class="fal mr-2 check-icon"></i><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></label>',
+                        itemTemplate:
+                            '<input type="checkbox" value="{id}" id="label-{id}"/><label for="label-{id}" class="{itemCss}"><i class="fal mr-2 check-icon"></i><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></label>',
                         onItemClick: function($input, result, e) {
 
                             e.preventDefault();
@@ -4066,10 +4081,10 @@ $(function (win, doc, $) {
                     options));
 
             },
-            getInput: function ($caller) {
+            getInput: function($caller) {
                 return $caller.find('[type="search"]');
             },
-            getIndex: function ($caller, item) {
+            getIndex: function($caller, item) {
 
                 var ensureUnique = $caller.data("selectDropdown").ensureUnique,
                     selectDropdown = $caller.data("selectDropdown"),
@@ -4086,7 +4101,7 @@ $(function (win, doc, $) {
                 return index;
             }
 
-        }
+        };
 
         return {
             init: function () {
@@ -4149,10 +4164,10 @@ $(function (win, doc, $) {
         var dataKey = "categorySelectDropdown",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {}
+        var defaults = {};
 
         var methods = {
-            init: function ($caller, methodName, func) {
+            init: function($caller, methodName, func) {
 
                 if (func) {
                     return func(this);
@@ -4171,10 +4186,10 @@ $(function (win, doc, $) {
                 return null;
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 //var $dropdown = $caller.find(".dropdown-menu");
-               
+
                 // init selectDropdown
                 $caller.selectDropdown($.extend({
                         itemTemplate:
@@ -4271,7 +4286,7 @@ $(function (win, doc, $) {
 
 
             },
-            getIndex: function ($caller, $label) {
+            getIndex: function($caller, $label) {
 
                 // Has the item been added to our items array
                 var ensureUnique = $caller.data("selectDropdown").ensureUnique,
@@ -4289,7 +4304,7 @@ $(function (win, doc, $) {
                 return index;
             }
 
-        }
+        };
 
         return {
             init: function () {
@@ -4356,18 +4371,18 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
                 var selector = $caller.data(dataKey).selector;
-                $caller.find(selector).each(function () {
+                $caller.find(selector).each(function() {
                     if ($(this).attr("href")) {
                         $(this).attr("target", "_blank");
                     }
                 });
             }
-        }
+        };
 
         return {
             init: function () {
@@ -4435,10 +4450,10 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 // Iterate images to auto link
                 var selector = $caller.data(dataKey).selector;
@@ -4463,7 +4478,7 @@ $(function (win, doc, $) {
 
                 });
             }
-        }
+        };
 
         return {
             init: function () {
@@ -4531,16 +4546,16 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 $caller
                     .autoTargetBlank()
                     .autoLinkImages();
             }
-        }
+        };
 
         return {
             init: function () {
@@ -4609,21 +4624,22 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
                 var event = $caller.data(dataKey).event,
-                    message = $caller.data("confirmMessage") || $caller.data(dataKey).message;;
-                $caller.on(event, function (e) {
-                    return win.confirm(message);
+                    message = $caller.data("confirmMessage") || $caller.data(dataKey).message;
+                $caller.on(event,
+                    function(e) {
+                        return win.confirm(message);
                     });
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
                 var event = $caller.data(dataKey).event;
                 $caller.unbind(event);
             }
-        }
+        };
 
         return {
             init: function () {
@@ -4712,21 +4728,20 @@ $(function (win, doc, $) {
     // Initialize plug-ins
     // ----------------------------
 
-    $.fn.platoUI = function (opts) {
-        
+    $.fn.platoUI = function(opts) {
+
         /* dialog */
         //this.find('[data-provide="dialog"]').dialog();
 
         /* dialogSpy */
         this.find('[data-toggle="dialog"]').dialogSpy();
-        
-        /* Scolls to a specific element. Typical usage...
-         * <a href="#somelement" data-provide="scroll"> */
+
+        /* Scoll to a specific element. 
         this.find('[data-provide="scroll"]').scrollTo();
 
         /* pagedList */
         this.find('[data-provide="paged-list"]').pagedList();
-        
+
         /* select dropdown */
         this.find('[data-provide="select-dropdown"]').selectDropdown();
 
@@ -4741,7 +4756,7 @@ $(function (win, doc, $) {
 
         /* filterList */
         this.find('[data-provide="filter-list"]').filterList();
-        
+
         /* autoComplete */
         this.find('[data-provide="autoComplete"]').autoComplete();
 
@@ -4750,10 +4765,10 @@ $(function (win, doc, $) {
 
         /* labelAutoComplete */
         this.find('[data-provide="labelAutoComplete"]').labelAutoComplete();
-        
+
         /* tagIt */
         this.find('[data-provide="tagIt"]').tagIt();
-        
+
         /* userTagIt */
         this.find('[data-provide="userTagIt"]').userTagIt();
 
@@ -4768,14 +4783,14 @@ $(function (win, doc, $) {
 
         /* autoLinkImages */
         this.find('[data-provide="autoLinkImages"]').autoLinkImages();
-        
+
         /* markdownBody */
         this.find('[data-provide="markdownBody"]').markdownBody();
 
         /* infiniteScroll */
         this.find('[data-provide="infiniteScroll"]').infiniteScroll();
-        
-    }
+
+    };
 
     // --------------
     // doc ready
@@ -4785,7 +4800,7 @@ $(function (win, doc, $) {
 
         $("body").platoUI();
 
-        // Actuvate plug-ins used within infiniteScroller load
+        // Activate plug-ins used within infiniteScroll load
         $().infiniteScroll(function ($ele) {
 
             /* Initialize bootstrap tooltips upon load */

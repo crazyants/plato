@@ -119,7 +119,7 @@
         }
 
         //if duplicate messages are not allowed, then only continue if this new message is not a duplicate of one that it already showing
-        if (this.settings.allow_duplicates || (!this.settings.allow_duplicates && !isDuplicateNotification(this))) {
+        if (this.settings.allow_duplicates || !this.settings.allow_duplicates && !isDuplicateNotification(this)) {
             this.init();
         }
     }
@@ -169,7 +169,7 @@
                                 self.settings.content.icon = commands[command];
                                 break;
                             case "progress":
-                                var newDelay = self.settings.delay - (self.settings.delay * (commands[cmd] / 100));
+                                var newDelay = self.settings.delay - self.settings.delay * (commands[cmd] / 100);
                                 this.$ele.data('notify-delay', newDelay);
                                 this.$ele.find('[data-notify="progressbar"] > div').attr('aria-valuenow', commands[cmd]).css('width', commands[cmd] + '%');
                                 break;
@@ -199,7 +199,7 @@
             if (!this.settings.allow_dismiss) {
                 this.$ele.find('[data-notify="dismiss"]').css('display', 'none');
             }
-            if ((this.settings.delay <= 0 && !this.settings.showProgressbar) || !this.settings.showProgressbar) {
+            if (this.settings.delay <= 0 && !this.settings.showProgressbar || !this.settings.showProgressbar) {
                 this.$ele.find('[data-notify="progressbar"]').remove();
             }
         },
@@ -239,7 +239,7 @@
                 css = {
                     display: 'inline-block',
                     margin: '0px auto',
-                    position: this.settings.position ? this.settings.position : (this.settings.element === 'body' ? 'fixed' : 'absolute'),
+                    position: this.settings.position ? this.settings.position : this.settings.element === 'body' ? 'fixed' : 'absolute',
                     transition: 'all .5s ease-in-out',
                     zIndex: this.settings.z_index
                 },
@@ -272,7 +272,7 @@
             $(this.settings.element).append(this.$ele);
 
             if (this.settings.newest_on_top === true) {
-                offsetAmt = (parseInt(offsetAmt) + parseInt(this.settings.spacing)) + this.$ele.outerHeight();
+                offsetAmt = parseInt(offsetAmt) + parseInt(this.settings.spacing) + this.$ele.outerHeight();
                 this.reposition(offsetAmt);
             }
 
@@ -323,12 +323,12 @@
                 self.$ele.data('notify-delay', self.settings.delay);
                 var timer = setInterval(function () {
                     var delay = parseInt(self.$ele.data('notify-delay')) - self.settings.timer;
-                    if ((self.$ele.data('data-hover') === 'false' && self.settings.mouse_over === "pause") || self.settings.mouse_over !== "pause") {
-                        var percent = ((self.settings.delay - delay) / self.settings.delay) * 100;
+                    if (self.$ele.data('data-hover') === 'false' && self.settings.mouse_over === "pause" || self.settings.mouse_over !== "pause") {
+                        var percent = (self.settings.delay - delay) / self.settings.delay * 100;
                         self.$ele.data('notify-delay', delay);
                         self.$ele.find('[data-notify="progressbar"] > div').attr('aria-valuenow', percent).css('width', percent + '%');
                     }
-                    if (delay <= -(self.settings.timer)) {
+                    if (delay <= -self.settings.timer) {
                         clearInterval(timer);
                         self.close();
                     }
@@ -374,7 +374,7 @@
             }
             $elements.each(function () {
                 $(this).css(self.settings.placement.from, posX);
-                posX = (parseInt(posX) + parseInt(self.settings.spacing)) + $(this).outerHeight();
+                posX = parseInt(posX) + parseInt(self.settings.spacing) + $(this).outerHeight();
             });
         }
     });

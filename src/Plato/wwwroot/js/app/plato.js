@@ -139,9 +139,9 @@ $(function (win, doc, $) {
                 context.logger.logInfo("Adding locale (" + url + ") to the head element.");
             }
 
-            script.onLoad = function () {
+            script.onLoad = function() {
                 context.logger.logInfo("Added locale (" + url + ") to the head element.");
-            }
+            };
         }
     };
 

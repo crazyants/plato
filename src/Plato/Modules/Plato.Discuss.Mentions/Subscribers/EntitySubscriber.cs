@@ -36,7 +36,6 @@ namespace Plato.Discuss.Mentions.Subscribers
             ILogger<EntitySubscriber<TEntity>> logger,
             IBroker broker)
         {
-       
             _entityMentionsManager = entityMentionsManager;
             _entityMentionsStore = entityMentionsStore;
             _mentionParser = mentionParser;
@@ -129,7 +128,7 @@ namespace Plato.Discuss.Mentions.Subscribers
                 }
             }
 
-            // Send mention notificaitons
+            // Send mention notifications
             await SendNotifications(usersToNotify, entity);
 
             return entity;

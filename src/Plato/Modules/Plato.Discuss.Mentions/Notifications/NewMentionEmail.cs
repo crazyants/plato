@@ -47,9 +47,9 @@ namespace Plato.Discuss.Mentions.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            var templateid = "NewMention";
+            var templateId = "NewMention";
             var culture = await _contextFacade.GetCurrentCultureAsync();
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateid);
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
             {
 
@@ -85,7 +85,7 @@ namespace Plato.Discuss.Mentions.Notifications
 
             }
 
-            return result.Failed($"No email template with the Id '{templateid}' exists within the 'locales/{culture}/emails.json' file!");
+            return result.Failed($"No email template with the Id '{templateId}' exists within the 'locales/{culture}/emails.json' file!");
 
         }
 
