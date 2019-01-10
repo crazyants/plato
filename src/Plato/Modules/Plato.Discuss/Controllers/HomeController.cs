@@ -407,8 +407,8 @@ namespace Plato.Discuss.Controllers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
 
-                // We need to first add the reply so we have a nuique Id
-                // for all ProvideUpdateAsync methods within any involved view provider
+                // We need to first add the reply so we have a unique Id
+                // for all ProvideUpdateAsync methods within any involved view providers
                 var result = await _replyManager.CreateAsync(reply);
 
                 // Ensure the insert was successful
@@ -596,10 +596,10 @@ namespace Plato.Discuss.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Only update edited information if the message changes
-            if (model.Message != topic.Message)
+            if (model.Message != reply.Message)
             {
-                topic.EditedUserId = user?.Id ?? 0;
-                topic.EditedDate = DateTimeOffset.UtcNow;
+                reply.EditedUserId = user?.Id ?? 0;
+                reply.EditedDate = DateTimeOffset.UtcNow;
             }
 
             // Always update modified date
@@ -608,8 +608,7 @@ namespace Plato.Discuss.Controllers
             
             // Update the message
             reply.Message = model.Message;
-
-          
+            
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {

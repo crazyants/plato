@@ -100,7 +100,7 @@ $(function (win, doc, $) {
 
                         if (result.version) {
                             if (result.version === "1.0") {
-                                html = html.replace(/\{original}/g, '<span class="float-right">(original)</span>');
+                                html = html.replace(/\{original}/g, '<span class="float-right">Original</span>');
                             } else {
                                 html = html.replace(/\{original}/g, "");
                             }

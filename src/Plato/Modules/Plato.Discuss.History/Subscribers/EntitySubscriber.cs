@@ -73,7 +73,7 @@ namespace Plato.Discuss.History.Subscribers
                 Message = entity.Message,
                 Html = entity.Html,
                 CreatedUserId = entity.CreatedUserId,
-                CreatedDate = DateTimeOffset.UtcNow
+                CreatedDate = entity.CreatedDate ?? DateTimeOffset.UtcNow
             });
             
             return entity;
@@ -115,8 +115,8 @@ namespace Plato.Discuss.History.Subscribers
                 EntityId = entity.Id,
                 Message = entity.Message,
                 Html = entity.Html,
-                CreatedUserId = entity.ModifiedUserId,
-                CreatedDate = DateTimeOffset.UtcNow
+                CreatedUserId = entity.EditedUserId > 0 ? entity.EditedUserId : entity.ModifiedUserId,
+                CreatedDate = entity.EditedDate ?? DateTimeOffset.UtcNow
             });
 
             return entity;
