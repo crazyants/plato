@@ -508,14 +508,23 @@ namespace Plato.Discuss.Controllers
             }, this))
             {
 
+                // Get current user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+                // Only update edited information if the message changes
+                if (model.Message != topic.Message)
+                {
+                    topic.EditedUserId = user?.Id ?? 0;
+                    topic.EditedDate = DateTimeOffset.UtcNow;
+                }
+
+                // Always update modified information
+                topic.ModifiedUserId = user?.Id ?? 0;
+                topic.ModifiedDate = DateTimeOffset.UtcNow;
+                
                 // Update title & message
                 topic.Title = model.Title;
                 topic.Message = model.Message;
-
-                // Populated created by
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
-                topic.ModifiedUserId = user?.Id ?? 0;
-                topic.ModifiedDate = DateTimeOffset.UtcNow;
 
                 // Execute view providers ProvideUpdateAsync method
                 await _topicViewProvider.ProvideUpdateAsync(topic, this);
@@ -586,11 +595,21 @@ namespace Plato.Discuss.Controllers
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Update the message
-            reply.Message = model.Message;
+            // Only update edited information if the message changes
+            if (model.Message != topic.Message)
+            {
+                topic.EditedUserId = user?.Id ?? 0;
+                topic.EditedDate = DateTimeOffset.UtcNow;
+            }
+
+            // Always update modified date
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
+            
+            // Update the message
+            reply.Message = model.Message;
 
+          
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {

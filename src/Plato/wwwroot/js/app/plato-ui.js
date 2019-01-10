@@ -4703,15 +4703,11 @@ $(function (win, doc, $) {
         var dataKey = "resizeable",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {
-            id: "blurSpy", // unique namespace
-            interval: 100, // interval in milliseconds to wait before fireing onBlur event
-            onBlur: null // triggers after interval if element does not reeive focus again
-        };
+        var defaults = {};
 
         var methods = {
             timer: null,
-            init: function($caller) {
+            init: function($caller, methodName) {
                 this.bind($caller);
             },
             bind: function($caller) {

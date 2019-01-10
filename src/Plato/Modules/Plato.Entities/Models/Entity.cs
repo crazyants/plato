@@ -69,6 +69,10 @@ namespace Plato.Entities.Models
 
         public DateTimeOffset? CreatedDate { get; set; }
 
+        public int EditedUserId { get; set; }
+
+        public DateTimeOffset? EditedDate { get; set; }
+
         public int ModifiedUserId { get; set; }
 
         public DateTimeOffset? ModifiedDate { get; set; }
@@ -228,6 +232,12 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = (DateTimeOffset)dr["CreatedDate"];
+            
+            if (dr.ColumnIsNotNull("EditedUserId"))
+                EditedUserId = Convert.ToInt32(dr["EditedUserId"]);
+            
+            if (dr.ColumnIsNotNull("EditedDate"))
+                EditedDate = (DateTimeOffset)dr["EditedDate"];
 
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
@@ -280,8 +290,7 @@ namespace Plato.Entities.Models
 
             Relevance = Rank.ToPercentageOf(MaxRank);
         }
-
-
+        
     }
     
 }

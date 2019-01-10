@@ -68,7 +68,8 @@ namespace Plato.Internal.Layout.TagHelpers
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("title", formattedDateTime);
-          
+            output.Attributes.Add("data-toggle", "tooltip");
+
             output.Content.SetHtmlContent(this.Pretty
                 ? builder.AppendHtml(utcDateTime.DateTime.ToPrettyDate())
                 : builder.AppendHtml(formattedDateTime));

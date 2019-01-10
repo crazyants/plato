@@ -59,6 +59,8 @@ namespace Plato.Entities.Repositories
                 reply.TotalImages,
                 reply.CreatedUserId,
                 reply.CreatedDate,
+                reply.EditedUserId,
+                reply.EditedDate,
                 reply.ModifiedUserId,
                 reply.ModifiedDate,
                 null);
@@ -174,6 +176,8 @@ namespace Plato.Entities.Repositories
           int totalImages,
           int createdUserId,
           DateTimeOffset? createdDate,
+          int editedUserId,
+          DateTimeOffset? editedDate,
           int modifiedUserId,
           DateTimeOffset? modifiedDate,
           IEnumerable<EntityData> data)
@@ -215,6 +219,8 @@ namespace Plato.Entities.Repositories
                     totalImages,
                     createdUserId,
                     createdDate.ToDateIfNull(),
+                    editedUserId,
+                    editedDate,
                     modifiedUserId,
                     modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));

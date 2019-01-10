@@ -31,7 +31,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName]) {
@@ -45,7 +45,7 @@ $(function (win, doc, $) {
                 this.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 var entityId = this.getEntityId($caller),
                     entityReplyId = this.getEntityReplyId($caller),
@@ -53,7 +53,7 @@ $(function (win, doc, $) {
 
                 params = params.replace(/\{entityId}/g, entityId);
                 params = params.replace(/\{entityReplyId}/g, entityReplyId);
-                
+
                 // Invoke suggester
                 $caller.pagedList({
                     page: 1,
@@ -77,7 +77,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body"><span class="float-right badge badge-secondary">{version}</span>{text}</span></a>',
+                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body">{original}{text}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         if (result.id) {
@@ -96,6 +96,16 @@ $(function (win, doc, $) {
                             html = html.replace(/\{version}/g, result.version);
                         } else {
                             html = html.replace(/\{version}/g, "");
+                        }
+
+                        if (result.version) {
+                            if (result.version === "1.0") {
+                                html = html.replace(/\{original}/g, '<span class="float-right">(original)</span>');
+                            } else {
+                                html = html.replace(/\{original}/g, "");
+                            }
+                        } else {
+                            html = html.replace(/\{original}/g, "");
                         }
 
                         // createdBy
@@ -123,7 +133,7 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{createdBy.avatar.url}/g, "");
                         }
-                        
+
                         // date
 
                         if (result.date.value) {
@@ -140,13 +150,13 @@ $(function (win, doc, $) {
                         return html;
 
                     },
-                    onItemClick: function ($caller, result, e) {
+                    onItemClick: function($caller, result, e) {
                         e.preventDefault();
                         e.stopPropagation();
                     },
                     onLoaded: function($pagedList, results) {
-                        
-                        $pagedList.find(".dropdown-item").click(function (e) {
+
+                        $pagedList.find(".dropdown-item").click(function(e) {
 
                             e.preventDefault();
                             e.stopPropagation();
@@ -159,22 +169,23 @@ $(function (win, doc, $) {
 
                             // Load the diff
                             $().dialog({
-                                id: "historyDialog",
-                                body: {
-                                    url: "/discuss/history/home/" + historyId
+                                    id: "historyDialog",
+                                    body: {
+                                        url: "/discuss/history/home/" + historyId
+                                    },
+                                    css: {
+                                        modal: "modal fade",
+                                        dialog: "modal-dialog modal-lg"
+                                    }
                                 },
-                                css: {
-                                    modal: "modal fade",
-                                    dialog: "modal-dialog modal-lg"
-                                }
-                            }, "show");
-                            
+                                "show");
+
                         });
 
                         // Activate tooltips
                         $caller.find('[data-toggle="tooltip"]')
                             .tooltip({ trigger: "hover" });
-                        
+
                     }
                 });
 
@@ -195,8 +206,9 @@ $(function (win, doc, $) {
                 }
                 return 0;
             },
-            getEntityReplyId: function ($caller) {
-                var output = typeof $caller.data("entityReplyId") !== "undefined" && $caller.data("entityReplyId") !== null
+            getEntityReplyId: function($caller) {
+                var output = typeof $caller.data("entityReplyId") !== "undefined" &&
+                    $caller.data("entityReplyId") !== null
                     ? $caller.data("entityReplyId")
                     : $caller.data(dataKey).entityReplyId;
                 if (output !== null) {
@@ -208,10 +220,10 @@ $(function (win, doc, $) {
                 }
                 return 0;
             }
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
@@ -219,25 +231,25 @@ $(function (win, doc, $) {
                     var a = arguments[i];
                     if (a) {
                         switch (a.constructor) {
-                            case Object:
-                                $.extend(options, a);
-                                break;
-                            case String:
-                                methodName = a;
-                                break;
-                            case Boolean:
-                                break;
-                            case Number:
-                                break;
-                            case Function:
-                                break;
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
                         }
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).notifications
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -262,7 +274,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
 
@@ -275,21 +287,21 @@ $(function (win, doc, $) {
         var defaults = {};
 
         var methods = {
-            init: function ($caller) {
+            init: function($caller) {
                 this.bind($caller);
             },
-            bind: function ($caller) {
+            bind: function($caller) {
                 $caller.find(".dropdown-toggle").click(function() {
                     $caller.find('[data-provide="history"]').history();
                 });
             }
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
                 var options = {};
                 // $(selector).historyDropdown
-                return this.each(function () {
+                return this.each(function() {
                     if (!$(this).data(dataIdKey)) {
                         var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                         $(this).data(dataIdKey, id);
@@ -301,7 +313,7 @@ $(function (win, doc, $) {
                 });
             }
 
-        }
+        };
 
     }();
     

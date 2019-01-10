@@ -13,10 +13,8 @@
                 <avatar title="@Model.History.CreatedBy.DisplayName" class="avatar avatar-sm mr-1" url="@Model.History.CreatedBy.Avatar.Url"></avatar>
                 @Model.History.CreatedBy.DisplayName
             }
-            @T["edited"]
-            <span data-toggle="tooltip" title="@Model.History.CreatedDate">
-                <date utc="@Model.History.CreatedDate"></date>
-            </span>
+            @T["edited"] <date utc="@Model.History.CreatedDate"></date>
+            
         </h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">

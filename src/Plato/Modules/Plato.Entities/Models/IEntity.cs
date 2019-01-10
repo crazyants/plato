@@ -70,7 +70,10 @@ namespace Plato.Entities.Models
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }
+        int EditedUserId { get; set; }
 
+        DateTimeOffset? EditedDate { get; set; }
+        
         int ModifiedUserId { get; set; }
 
         DateTimeOffset? ModifiedDate { get; set; }

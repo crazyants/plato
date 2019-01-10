@@ -11,7 +11,7 @@ namespace Plato.Internal.Data.Migrations
               
         private readonly IDbContext _dbContext;
 
-        private List<Exception> _errors;
+        private readonly List<Exception> _errors;
         
         #endregion
 
@@ -21,7 +21,8 @@ namespace Plato.Internal.Data.Migrations
         public DataMigrationManager(
             IDbContext dbContext)
         {
-            _dbContext = dbContext;                  
+            _dbContext = dbContext;
+            _errors = new List<Exception>();
         }
 
         #endregion

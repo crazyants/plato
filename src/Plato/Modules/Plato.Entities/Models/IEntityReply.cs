@@ -48,6 +48,10 @@ namespace Plato.Entities.Models
 
         DateTimeOffset? CreatedDate { get; set; }
 
+        int EditedUserId { get; set; }
+
+        DateTimeOffset? EditedDate { get; set; }
+        
         int ModifiedUserId { get; set; }
 
         DateTimeOffset? ModifiedDate { get; set; }

@@ -168,6 +168,17 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "EditedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EditedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "ModifiedUserId",
                         DbType = DbType.Int32
                     },
@@ -352,6 +363,17 @@ namespace Plato.Entities.Handlers
                     {
                         Name = "CreatedDate",
                         DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EditedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EditedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     },
                     new SchemaColumn()
                     {
