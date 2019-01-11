@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Internal.Stores.Users;
 
 namespace Plato.Internal.Stores.Users
 {
 
     public interface IUserDataMerger
     {
-        Task<IEnumerable<User>> Merge(IList<User> users);
+        Task<IList<User>> Merge(IList<User> users);
+
+        Task<User> Merge(User user);
+
     }
 
-    public class UserDataMerger
+    public class UserDataMerger : IUserDataMerger
     {
 
         private readonly IUserDataStore<UserData> _userDataStore;
@@ -31,7 +32,7 @@ namespace Plato.Internal.Stores.Users
             _typedModuleProvider = typedModuleProvider;
         }
 
-        public  async Task<IEnumerable<User>> Merge(IList<User> users)
+        public  async Task<IList<User>> Merge(IList<User> users)
         {
             if (users == null)
             {
@@ -54,27 +55,8 @@ namespace Plato.Internal.Stores.Users
             // Merge data into users
             return await MergeUserData(users, results.Data);
         }
-
-
-        async Task<IList<User>> MergeUserData(IList<User> users, IList<UserData> data)
-        {
-
-            if (users == null || data == null)
-            {
-                return users;
-            }
-
-            for (var i = 0; i < users.Count; i++)
-            {
-                users[i].Data = data.Where(d => d.UserId == users[i].Id).ToList();
-                users[i] = await MergeUserData(users[i]);
-            }
-
-            return users;
-
-        }
-
-        async Task<User> MergeUserData(User user)
+        
+        public async Task<User> Merge(User user)
         {
 
             if (user == null)
@@ -100,10 +82,32 @@ namespace Plato.Internal.Stores.Users
             return user;
 
         }
+        
+        // ------------------
+
+        async Task<IList<User>> MergeUserData(IList<User> users, IList<UserData> data)
+        {
+
+            if (users == null || data == null)
+            {
+                return users;
+            }
+
+            for (var i = 0; i < users.Count; i++)
+            {
+                users[i].Data = data.Where(d => d.UserId == users[i].Id).ToList();
+                users[i] = await Merge(users[i]);
+            }
+
+            return users;
+
+        }
 
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
+
     }
+
 }
