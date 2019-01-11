@@ -15,8 +15,9 @@ using Plato.Internal.Notifications.Abstractions;
 namespace Plato.Discuss.Follow.Notifications
 {
 
-    public class NewReplyWeb : INotificationProvider<Topic>
+    public class NewReplyWeb : INotificationProvider<Reply>
     {
+
 
         private readonly IContextFacade _contextFacade;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -39,7 +40,7 @@ namespace Plato.Discuss.Follow.Notifications
 
         }
 
-        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
+        public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
         {
             
             // Ensure correct notification provider
@@ -49,14 +50,14 @@ namespace Plato.Discuss.Follow.Notifications
             }
 
             // Create result
-            var result = new CommandResult<Topic>();
+            var result = new CommandResult<Reply>();
             
             // Build user notification
             var userNotification = new UserNotification()
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = context.Model.Title.TrimToAround(75),
+                Title = "New Reply",
                 Message = S["A reply has been posted."],
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -64,8 +65,7 @@ namespace Plato.Discuss.Follow.Notifications
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
                     ["Action"] = "Topic",
-                    ["Id"] = context.Model.Id,
-                    ["Alias"] = context.Model.Alias
+                    ["Id"] = context.Model.Id
                 })
             };
 

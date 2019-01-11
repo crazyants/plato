@@ -58,9 +58,9 @@ namespace Plato.Entities.Models
 
         public DateTimeOffset? ModifiedDate { get; set; }
 
-        public SimpleUser CreatedBy { get; set; } = new SimpleUser();
+        public ISimpleUser CreatedBy { get; set; } = new SimpleUser();
 
-        public SimpleUser ModifiedBy { get; set; } = new SimpleUser();
+        public ISimpleUser ModifiedBy { get; set; } = new SimpleUser();
 
         public async Task<EntityUris> GetEntityUrlsAsync()
         {

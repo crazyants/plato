@@ -270,7 +270,7 @@ namespace Plato.Follows.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Keywords",
+                        Name = "[Name]",
                         DbType = DbType.String,
                         Length = "255"
                     }

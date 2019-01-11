@@ -6,7 +6,6 @@ using Plato.Entities.History.Stores;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using YamlDotNet.Core;
 
 namespace Plato.Discuss.History.Subscribers
 {

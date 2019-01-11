@@ -217,7 +217,7 @@ namespace Plato.Discuss.Mentions.Subscribers
 
         async Task<TEntity> SendNotifications(IEnumerable<User> users, TEntity entity)
         {
-            // Send mention ntifications
+            // Send mention notifications
             foreach (var user in users)
             {
 

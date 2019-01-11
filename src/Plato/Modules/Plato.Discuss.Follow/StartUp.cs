@@ -34,6 +34,7 @@ namespace Plato.Discuss.Follow
 
             // Follow subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
 
             // Notification providers
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();
@@ -43,8 +44,8 @@ namespace Plato.Discuss.Follow
             services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
 
             // Notification Providers
-            services.AddScoped<INotificationProvider<Topic>, NewReplyEmail>();
-            services.AddScoped<INotificationProvider<Topic>, NewReplyWeb>();
+            services.AddScoped<INotificationProvider<Reply>, NewReplyEmail>();
+            services.AddScoped<INotificationProvider<Reply>, NewReplyWeb>();
 
         }
 

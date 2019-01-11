@@ -42,7 +42,7 @@ namespace Plato.Follows.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.Keywords.Value
+                Params.Name.Value
             );
 
             return data;
@@ -60,8 +60,9 @@ namespace Plato.Follows.Stores
 
 
         private WhereInt _id;
-        private WhereString _keywords;
-
+        private WhereInt _thingId;
+        private WhereString _name;
+      
 
         public WhereInt Id
         {
@@ -69,10 +70,17 @@ namespace Plato.Follows.Stores
             set => _id = value;
         }
 
-        public WhereString Keywords
+        public WhereInt ThingId
         {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
+            get => _thingId ?? (_thingId = new WhereInt());
+            set => _thingId = value;
+        }
+
+
+        public WhereString Name
+        {
+            get => _name ?? (_name = new WhereString());
+            set => _name = value;
         }
 
 
@@ -106,9 +114,8 @@ namespace Plato.Follows.Stores
         public string BuildSqlPopulate()
         {
 
-            var whereClause = BuildWhereClauseForStartId();
+            var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
-
             var sb = new StringBuilder();
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
@@ -149,14 +156,12 @@ namespace Plato.Follows.Stores
 
         string BuildTables()
         {
-
             var sb = new StringBuilder();
             sb.Append(_entityFollowsTableName)
                 .Append(" f WITH (nolock) LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" u ON f.CreatedUserId = u.Id");
             return sb.ToString();
-
         }
 
         #endregion
@@ -170,28 +175,6 @@ namespace Plato.Follows.Stores
                 : tableName;
         }
 
-        private string BuildWhereClauseForStartId()
-        {
-            var sb = new StringBuilder();
-            // default to ascending
-            if (_query.SortColumns.Count == 0)
-                sb.Append("f.Id >= @start_id_in");
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "f.Id <= @start_id_in"
-                    : "f.Id >= @start_id_in");
-                break;
-            }
-
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
-
-            return sb.ToString();
-
-        }
 
         private string BuildWhereClause()
         {
@@ -205,11 +188,11 @@ namespace Plato.Follows.Stores
                 sb.Append(_query.Params.Id.ToSqlString("f.Id"));
             }
 
-            if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
+            if (!String.IsNullOrEmpty(_query.Params.Name.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"));
+                    sb.Append(_query.Params.Name.Operator);
+                sb.Append(_query.Params.Name.ToSqlString("[Name]", "[Name]"));
             }
             return sb.ToString();
 

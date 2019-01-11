@@ -21,7 +21,7 @@ namespace Plato.Follows.Models
 
         public DateTimeOffset CreatedDate { get; set; }
 
-        public SimpleUser User { get; set; } = new SimpleUser();
+        public IUser CreatedBy { get; set; } = new User();
 
         public void PopulateModel(IDataReader dr)
         {
@@ -43,13 +43,13 @@ namespace Plato.Follows.Models
 
             if (CreatedUserId > 0)
             {
-                User.Id = CreatedUserId;
+                CreatedBy.Id = CreatedUserId;
                 if (dr.ColumnIsNotNull("UserName"))
-                    User.UserName = Convert.ToString(dr["UserName"]);
-
+                    CreatedBy.UserName = Convert.ToString(dr["UserName"]);
+                if (dr.ColumnIsNotNull("Email"))
+                    CreatedBy.Email = Convert.ToString(dr["Email"]);
                 if (dr.ColumnIsNotNull("DisplayName"))
-                    User.DisplayName = Convert.ToString(dr["DisplayName"]);
-
+                    CreatedBy.DisplayName = Convert.ToString(dr["DisplayName"]);
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
