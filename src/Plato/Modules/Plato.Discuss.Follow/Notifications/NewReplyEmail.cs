@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Discuss.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -24,15 +25,18 @@ namespace Plato.Discuss.Follow.Notifications
         private readonly IContextFacade _contextFacade;
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
+        private readonly IEntityStore<Topic> _topicStore;
 
         public NewReplyEmail(
             IContextFacade contextFacade,
             ILocaleStore localeStore,
-            IEmailManager emailManager)
+            IEmailManager emailManager,
+            IEntityStore<Topic> topicStore)
         {
             _contextFacade = contextFacade;
             _localeStore = localeStore;
             _emailManager = emailManager;
+            _topicStore = topicStore;
         }
 
         public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
@@ -43,10 +47,17 @@ namespace Plato.Discuss.Follow.Notifications
             {
                 return null;
             }
-            
+
             // Create result
             var result = new CommandResult<Reply>();
-
+            
+            // Get the topic for the reply
+            var topic = await _topicStore.GetByIdAsync(context.Model.EntityId);
+            if (topic == null)
+            {
+                return result.Failed($"No topic could be found with the Id of {context.Model.EntityId}. Follow notifications not sent.");
+            }
+            
             // Get email template
             var templateId = "NewReply";
             var culture = await _contextFacade.GetCurrentCultureAsync();
@@ -61,7 +72,8 @@ namespace Plato.Discuss.Follow.Notifications
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
                     ["Action"] = "Topic",
-                    ["Id"] = context.Model.Id
+                    ["Id"] = topic.Id,
+                    ["Alias"] = topic.Alias
                 });
                 
                 // Build message from template
@@ -69,6 +81,7 @@ namespace Plato.Discuss.Follow.Notifications
                 message.Body = string.Format(
                     email.Message,
                     context.Notification.To.DisplayName,
+                    topic.Title,
                     baseUri + url);
                 message.IsBodyHtml = true;
                 message.To.Add(new MailAddress(context.Notification.To.Email));

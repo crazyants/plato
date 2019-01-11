@@ -445,7 +445,7 @@ namespace Plato.Users.Controllers
                         if (validPassword)
                         {
                             // Valid credentials entered
-                            ModelState.AddModelError(string.Empty, T["Before you can login you must first confirm your email address. Use the link below to confirm your email address."].Value);
+                            ModelState.AddModelError(string.Empty, T["Before you can login you must first confirm your email address. Use the \"Confirm your email address\" link below to resend your account confirmation email."].Value);
                             return View(model);
                         }
                     }

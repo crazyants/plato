@@ -29,7 +29,7 @@
     ];
     $.each(opts, function(_, opt) {
       if (typeof $(element).data(opt) !== 'undefined') {
-        options = typeof options == 'object' ? options : {};
+        options = typeof options === 'object' ? options : {};
         options[opt] = $(element).data(opt);
       }
     });
@@ -63,7 +63,7 @@
     constructor: Markdown,
     __alterButtons: function(name, alter) {
       var handler = this.$handler,
-        isAll = (name === 'all'),
+        isAll = name === 'all',
         that = this;
 
       $.each(handler, function(k, v) {
@@ -181,7 +181,7 @@
 
                         var $li = null;
 
-                        if (dropdown.items != null) {
+                        if (dropdown.items !== null) {
 
                             for (var x = 0; x < dropdown.items.length; x++) {
 
@@ -310,9 +310,9 @@
       return string;
     },
     __getIcon: function(src) {
-      if(typeof src == 'object'){
+      if(typeof src === 'object'){
         var customIcon = this.$options.customIcons[src.name];
-        return typeof customIcon == 'undefined' ? (src.icon ? src.icon[this.$options.iconlibrary] : null) : customIcon;
+        return typeof customIcon === 'undefined' ? src.icon ? src.icon[this.$options.iconlibrary] : null : customIcon;
       } else {
         return src;
       }
@@ -594,7 +594,7 @@
 
             } else {
 
-                var rawContent = (typeof toMarkdown == 'function') ? toMarkdown(container.html()) : container.html(),
+                var rawContent = (typeof toMarkdown === 'function') ? toMarkdown(container.html()) : container.html(),
                     currentContent = $.trim(rawContent);
 
                 // This is some arbitrary content that could be edited
@@ -928,10 +928,10 @@
 
         if (this.$options.parser) {
             content = this.$options.parser(val);
-        } else if (typeof markdown == 'object') {
+        } else if (typeof markdown === 'object') {
             content = markdown.toHTML(val);
-        } else if (typeof marked == 'function') {
-            content = marked(val);
+        } else if (typeof markdown === 'function') {
+            content = markdown(val);
         } else {
             content = val;
         }
@@ -1031,7 +1031,7 @@
 
     },
     isDirty: function() {
-      return this.$oldContent != this.getContent();
+      return this.$oldContent !== this.getContent();
     },
     getContent: function() {
       return this.$textarea.val();
@@ -1131,9 +1131,9 @@
       } else {
         var nextTab, tab = this.$nextTab.shift();
 
-        if (typeof tab == 'function') {
+        if (typeof tab === 'function') {
           nextTab = tab();
-        } else if (typeof tab == 'object' && tab.length > 0) {
+        } else if (typeof tab === 'object' && tab.length > 0) {
           nextTab = tab;
         }
 
@@ -1142,12 +1142,12 @@
     },
     setNextTab: function(start, end) {
       // Push new selection into nextTab collections
-      if (typeof start == 'string') {
+      if (typeof start === 'string') {
         var that = this;
         this.$nextTab.push(function() {
           return that.findSelection(start);
         });
-      } else if (typeof start == 'number' && typeof end == 'number') {
+      } else if (typeof start === 'number' && typeof end === 'number') {
         var oldSelection = this.getSelection();
 
         this.setSelection(start, end);
@@ -1159,7 +1159,7 @@
       return;
     },
     __parseButtonNameParam: function(names) {
-      return typeof names == 'string' ?
+      return typeof names === 'string' ?
         names.split(' ') :
         names;
 
@@ -1241,7 +1241,7 @@
             // check the cursor position to determine tab action
             var cursor = this.getSelection();
 
-            if (cursor.start == cursor.end && cursor.end == this.getContent().length) {
+            if (cursor.start === cursor.end && cursor.end === this.getContent().length) {
               // The cursor has reached the end of the content
               blocked = false;
             } else {
@@ -1399,7 +1399,7 @@
     return this.each(function() {
       var $this = $(this),
         data = $this.data('markdown'),
-        options = typeof option == 'object' && option;
+        options = typeof option === 'object' && option;
       if (!data)
         $this.data('markdown', (data = new Markdown(this, options)));
     });
@@ -1409,9 +1409,8 @@
     
     /* Custom Handlers (Added by InstantASP)
  * ==================== */
-    
-    $.fn.markdown.handlers = {
 
+    $.fn.markdown.handlers = {
         insertContent: function(e, value) {
 
             // ensure we have focus
@@ -1423,7 +1422,7 @@
 
             e.replaceSelection(value + chunk);
             e.setSelection(cursor, cursor + chunk.length);
-            
+
         },
         insertContentLink: function(e, $target) {
 
@@ -1438,16 +1437,17 @@
 
             e.replaceSelection(value + chunk);
             e.setSelection(cursor, cursor + chunk.length);
-            
+
 
         },
         insertQuote: function(e, $target) {
 
-            var chunk, cursor, 
+            var chunk,
+                cursor,
                 selected = e.getSelection(),
                 content = e.getContent(),
                 value = $target.attr("data-value") || "> ";
-                
+
             if (selected.length === 0) {
 
                 chunk = e.__localize('quote here');
@@ -1464,16 +1464,17 @@
                     var list = [];
                     list = selected.text.split('\n');
                     chunk = list[0];
-                    $.each(list, function (k, v) {
-                        list[k] = value + v;
-                    });
+                    $.each(list,
+                        function(k, v) {
+                            list[k] = value + v;
+                        });
                     e.replaceSelection(list.join('\n'));
                     cursor = selected.start + value.length;
                 }
             }
 
             e.setSelection(cursor, cursor + chunk.length);
-            
+
         },
 
         // inserts markdown header syntax (H1 = #, H2 = ##, H3 = ### etc)
@@ -1487,7 +1488,7 @@
                 pointer,
                 prevChar,
                 value = $target.attr("data-value") || "#";
-                        
+
             if (selected.length === 0) {
                 // Give extra word
                 chunk = e.__localize('heading text');
@@ -1499,13 +1500,13 @@
             if ((pointer = value.length + 1,
                     content.substr(selected.start - pointer, pointer) === value + ' ') ||
                 (pointer = value.length, content.substr(selected.start - pointer, pointer) === value)) {
-          
+
                 e.setSelection(selected.start - pointer, selected.end);
                 e.replaceSelection(chunk);
                 cursor = selected.start - pointer;
             } else if (selected.start > 0 &&
                 (prevChar = content.substr(selected.start - 1, 1), !!prevChar && prevChar !== '\n')) {
-                
+
                 e.replaceSelection(value + ' ' + chunk);
                 cursor = selected.start + value.length + 1;
             } else {
@@ -1519,7 +1520,7 @@
 
         }
 
-    }
+    };
 
     $.fn.markdown.defaults = {
     /* Editor Properties */
@@ -1987,7 +1988,7 @@
                                     if (link.toLowerCase().indexOf("vimeo.com") > 0) { chunk = "Video2"; }
 
                                     // Url not supported
-                                    if (link !== "" && chunk == null) {
+                                    if (link !== "" && chunk === null) {
                                         ev.stopPropagation();
                                         alert(notSupported);
                                         $input.focus();
