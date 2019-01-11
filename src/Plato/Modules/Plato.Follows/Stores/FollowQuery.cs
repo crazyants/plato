@@ -47,8 +47,7 @@ namespace Plato.Follows.Stores
 
             return data;
         }
-
-
+        
     }
 
     #endregion
@@ -57,13 +56,11 @@ namespace Plato.Follows.Stores
 
     public class FollowQueryParams
     {
-
-
+        
         private WhereInt _id;
         private WhereInt _thingId;
         private WhereString _name;
       
-
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -75,15 +72,13 @@ namespace Plato.Follows.Stores
             get => _thingId ?? (_thingId = new WhereInt());
             set => _thingId = value;
         }
-
-
+        
         public WhereString Name
         {
             get => _name ?? (_name = new WhereString());
             set => _name = value;
         }
-
-
+        
     }
 
     #endregion
@@ -94,7 +89,7 @@ namespace Plato.Follows.Stores
     {
         #region "Constructor"
 
-        private readonly string _entityFollowsTableName;
+        private readonly string _followsTableName;
         private readonly string _usersTableName;
 
         private readonly FollowQuery _query;
@@ -102,7 +97,7 @@ namespace Plato.Follows.Stores
         public FollowQueryBuilder(FollowQuery query)
         {
             _query = query;
-            _entityFollowsTableName = GetTableNameWithPrefix("EntityFollows");
+            _followsTableName = GetTableNameWithPrefix("Follows");
             _usersTableName = GetTableNameWithPrefix("Users");
 
         }
@@ -157,7 +152,7 @@ namespace Plato.Follows.Stores
         string BuildTables()
         {
             var sb = new StringBuilder();
-            sb.Append(_entityFollowsTableName)
+            sb.Append(_followsTableName)
                 .Append(" f WITH (nolock) LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" u ON f.CreatedUserId = u.Id");
@@ -192,7 +187,7 @@ namespace Plato.Follows.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Name.Operator);
-                sb.Append(_query.Params.Name.ToSqlString("[Name]", "[Name]"));
+                sb.Append(_query.Params.Name.ToSqlString("[Name]", "Name"));
             }
             return sb.ToString();
 

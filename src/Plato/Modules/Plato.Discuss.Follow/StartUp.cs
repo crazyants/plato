@@ -41,7 +41,7 @@ namespace Plato.Discuss.Follow
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Notification managers
-            services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+            services.AddScoped<INotificationManager<Reply>, NotificationManager<Reply>>();
 
             // Notification Providers
             services.AddScoped<INotificationProvider<Reply>, NewReplyEmail>();
