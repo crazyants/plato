@@ -7,6 +7,7 @@ using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
@@ -26,17 +27,20 @@ namespace Plato.Discuss.Follow.Notifications
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
         private readonly IEntityStore<Topic> _topicStore;
+        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
         public NewReplyEmail(
             IContextFacade contextFacade,
             ILocaleStore localeStore,
             IEmailManager emailManager,
-            IEntityStore<Topic> topicStore)
+            IEntityStore<Topic> topicStore,
+            ICapturedRouterUrlHelper capturedRouterUrlHelper)
         {
             _contextFacade = contextFacade;
             _localeStore = localeStore;
             _emailManager = emailManager;
             _topicStore = topicStore;
+            _capturedRouterUrlHelper = capturedRouterUrlHelper;
         }
 
         public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
@@ -66,8 +70,8 @@ namespace Plato.Discuss.Follow.Notifications
             {
 
                 // Build topic url
-                var baseUri = await _contextFacade.GetBaseUrlAsync();
-                var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
+                var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
