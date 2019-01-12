@@ -234,6 +234,32 @@ namespace Plato.Notifications.Handlers
                 }));
 
 
+            builder.CreateProcedure(
+           new SchemaProcedure(
+                $"UpdateUserNotificationsReadDate",
+                @"UPDATE {prefix}_UserNotifications
+                    SET ReadDate = @ReadDate
+                    WHERE (
+                        UserId = @UserId
+                    ); SELECT 1")
+               .ForTable(_userNotifications)
+               .WithParameters(new List<SchemaColumn>()
+               {
+                   new SchemaColumn()
+                   {
+                       Name = "UserId",
+                       DbType = DbType.Int32
+                   },
+                   new SchemaColumn()
+                   {
+                       Name = "ReadDate",
+                       DbType = DbType.DateTimeOffset,
+                       Nullable = true
+                   }
+               }));
+
+
+
         }
 
         #endregion
