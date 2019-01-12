@@ -52,8 +52,6 @@ namespace Plato.Internal.Stores.Users
             IKeyGenerator keyGenerator,
             IUserDataMerger userDataMerger)
         {
-            //_typedModuleProvider = typedModuleProvider;
-            //_userDataItemStore = userDataItemStore;
             _userRepository = userRepository;
             _cacheManager = cacheManager;
             _userDataStore = userDataStore;
@@ -161,7 +159,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByIdAsync(id);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
 
@@ -171,7 +169,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByUserNameNormalizedAsync(userNameNormalized);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
 
@@ -181,7 +179,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByUserNameAsync(userName);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
 
@@ -191,7 +189,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByEmailAsync(email);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
 
@@ -201,7 +199,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByEmailNormalizedAsync(emailNormalized);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
 
@@ -211,7 +209,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByResetTokenAsync(resetToken);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
 
@@ -221,7 +219,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByConfirmationTokenAsync(confirmationToken);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
 
@@ -231,7 +229,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByApiKeyAsync(apiKey);
-                return await _userDataMerger.Merge(user);
+                return await _userDataMerger.MergeAsync(user);
             });
         }
         
@@ -256,7 +254,7 @@ namespace Plato.Internal.Stores.Users
                 var results = await _userRepository.SelectAsync(args);
                 if (results != null)
                 {
-                    results.Data = await _userDataMerger.Merge(results.Data);
+                    results.Data = await _userDataMerger.MergeAsync(results.Data);
                 }
                 return results;
             });
@@ -342,4 +340,5 @@ namespace Plato.Internal.Stores.Users
         #endregion
 
     }
+
 }

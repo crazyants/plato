@@ -24,7 +24,7 @@ $(function (win, doc, $) {
         var defaults = {};
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName]) {
@@ -38,8 +38,8 @@ $(function (win, doc, $) {
                 this.bind($caller);
 
             },
-            bind: function ($caller) {
-                
+            bind: function($caller) {
+
                 // Invoke suggester
                 $caller.pagedList({
                     page: 1,
@@ -62,8 +62,9 @@ $(function (win, doc, $) {
                         }
                     },
                     itemCss: "dropdown-item p-2",
-                    itemTemplate: '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right notification-dismiss" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6>{title}</h6>{message}</span></a>',
-                    parseItemTemplate: function (html, result) {
+                    itemTemplate:
+                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right notification-dismiss" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6>{title}</h6>{message}</span></a>',
+                    parseItemTemplate: function(html, result) {
 
                         if (result.id) {
                             html = html.replace(/\{id}/g, result.id);
@@ -102,7 +103,7 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{to.avatar.url}/g, "");
                         }
-                        
+
                         // from
 
                         if (result.from.id) {
@@ -170,7 +171,7 @@ $(function (win, doc, $) {
                         return html;
 
                     },
-                    onLoaded: function ($caller, results) {
+                    onLoaded: function($caller, results) {
 
                         var $badge = $('[data-provide="notifications-badge"]'),
                             $dismiss = $(".notification-dismiss");
@@ -185,35 +186,40 @@ $(function (win, doc, $) {
                             .tooltip({ trigger: "hover" });
 
                         // Bind dismiss click event
-                        $dismiss.each(function () {
-                            $(this).click(function (e) {
+                        $dismiss.each(function() {
+                            $(this).click(function(e) {
 
                                 e.preventDefault();
                                 e.stopPropagation();
 
                                 var id = $(this).attr("data-notification-id"),
                                     $target = $caller.find("#notification" + id);
-                                
+
                                 $badge.notificationsBadge("pulseIn");
-                                $target.slideUp("fast", function () {
+                                $target.slideUp("fast",
+                                    function() {
 
-                                    if (id === null) { return; }
-                                    if (id <= 0) { return; }
-
-                                    win.$.Plato.Http({
-                                        method: "DELETE",
-                                        url: 'api/notifications/user/delete?id=' + id
-                                    }).done(function(response) {
-                                        if (response.statusCode === 200) {
-                                            methods.update($caller);
+                                        if (id === null) {
+                                            return;
                                         }
-                                    });
+                                        if (id <= 0) {
+                                            return;
+                                        }
 
-                                });
+                                        win.$.Plato.Http({
+                                            method: "DELETE",
+                                            url: 'api/notifications/user/delete?id=' + id
+                                        }).done(function(response) {
+                                            if (response.statusCode === 200) {
+                                                methods.update($caller);
+                                            }
+                                        });
+
+                                    });
 
                             });
                         });
-                        
+
                     }
                 });
 
@@ -222,10 +228,10 @@ $(function (win, doc, $) {
                 $caller.pagedList("bind");
             }
 
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
@@ -233,25 +239,25 @@ $(function (win, doc, $) {
                     var a = arguments[i];
                     if (a) {
                         switch (a.constructor) {
-                            case Object:
-                                $.extend(options, a);
-                                break;
-                            case String:
-                                methodName = a;
-                                break;
-                            case Boolean:
-                                break;
-                            case Number:
-                                break;
-                            case Function:
-                                break;
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
                         }
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).notifications
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -276,7 +282,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
 
@@ -291,7 +297,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName]) {
@@ -305,7 +311,7 @@ $(function (win, doc, $) {
                 this.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 // Set count
                 var count = parseInt($caller.data(dataKey).count);
@@ -318,24 +324,24 @@ $(function (win, doc, $) {
                 } else {
                     this.hide($caller);
                 }
-        
+
 
             },
-            show: function ($caller) {
+            show: function($caller) {
 
                 if ($caller.hasClass("hidden")) {
                     $caller.removeClass("hidden");
                 }
 
                 if (!$caller.hasClass("show")) {
-                    $caller.addClass("show");;
+                    $caller.addClass("show");
                 }
 
             },
-            hide: function ($caller) {
-                
+            hide: function($caller) {
+
                 if ($caller.hasClass("show")) {
-                    $caller.removeClass("show");;
+                    $caller.removeClass("show");
                 }
 
                 if (!$caller.hasClass("hidden")) {
@@ -343,8 +349,8 @@ $(function (win, doc, $) {
                 }
 
             },
-            pulseIn: function ($caller) {
-                
+            pulseIn: function($caller) {
+
                 if ($caller.hasClass("anim-2x")) {
                     $caller.removeClass("anim-2x");
                 }
@@ -360,10 +366,10 @@ $(function (win, doc, $) {
                 $caller
                     .addClass("anim-2x")
                     .addClass("anim-pulse-in");
-                    
+
 
             },
-            pulseOut: function ($caller) {
+            pulseOut: function($caller) {
 
                 if ($caller.hasClass("anim-2x")) {
                     $caller.removeClass("anim-2x");
@@ -380,13 +386,13 @@ $(function (win, doc, $) {
                 $caller
                     .addClass("anim-2x")
                     .addClass("anim-pulse-out");
-       
+
 
             }
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
@@ -394,25 +400,25 @@ $(function (win, doc, $) {
                     var a = arguments[i];
                     if (a) {
                         switch (a.constructor) {
-                            case Object:
-                                $.extend(options, a);
-                                break;
-                            case String:
-                                methodName = a;
-                                break;
-                            case Boolean:
-                                break;
-                            case Number:
-                                break;
-                            case Function:
-                                break;
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
                         }
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).notificationsBadge
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -437,7 +443,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
     

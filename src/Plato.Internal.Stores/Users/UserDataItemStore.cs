@@ -6,6 +6,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Stores.Users
 {
@@ -61,7 +62,7 @@ namespace Plato.Internal.Stores.Users
                            Key = key
                        };
 
-            // Serilize value
+            // Serialize value
             data.Value = await value.SerializeAsync();
 
             var updatedData = await _userDataRepository.InsertUpdateAsync(data);
@@ -75,6 +76,7 @@ namespace Plato.Internal.Stores.Users
 
         public Task<bool> DeleteAsync(int userId, string key)
         {
+            // TODO
             throw new NotImplementedException();
         }
 

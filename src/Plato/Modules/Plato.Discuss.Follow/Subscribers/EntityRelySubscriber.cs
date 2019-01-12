@@ -9,6 +9,8 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Notifications.Extensions;
 
 namespace Plato.Discuss.Follow.Subscribers
@@ -24,15 +26,18 @@ namespace Plato.Discuss.Follow.Subscribers
         private readonly IBroker _broker;
         private readonly INotificationManager<TEntityReply> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
+        private readonly IUserDataMerger _userDataMerger;
 
         public EntityReplySubscriber(
             IBroker broker,
             INotificationManager<TEntityReply> notificationManager,
-            IFollowStore<Follows.Models.Follow> followStore)
+            IFollowStore<Follows.Models.Follow> followStore,
+            IUserDataMerger userDataMerger)
         {
             _broker = broker;
             _notificationManager = notificationManager;
             _followStore = followStore;
+            _userDataMerger = userDataMerger;
         }
         
         #region "Implementation"
@@ -131,9 +136,13 @@ namespace Plato.Discuss.Follow.Subscribers
                     users.Add((User)follow.CreatedBy);
                 }
             }
+
+            // Merge user data so we know the opt-in status for notifications
+            // This is critical otherwise NotificationEnabled will always return false
+            var mergedUsers = await _userDataMerger.MergeAsync(users);
             
             // Send notifications
-            await SendNotifications(users, reply);
+            await SendNotifications(mergedUsers, reply);
             
             return reply;
 

@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Discuss.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
@@ -21,6 +23,7 @@ namespace Plato.Discuss.Follow.Notifications
 
         private readonly IContextFacade _contextFacade;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
+        private readonly IEntityStore<Topic> _topicStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -30,11 +33,13 @@ namespace Plato.Discuss.Follow.Notifications
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
-            IUserNotificationsManager<UserNotification> userNotificationManager)
+            IUserNotificationsManager<UserNotification> userNotificationManager,
+            IEntityStore<Topic> topicStore)
         {
             _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
-            
+            _topicStore = topicStore;
+
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -51,21 +56,29 @@ namespace Plato.Discuss.Follow.Notifications
 
             // Create result
             var result = new CommandResult<Reply>();
-            
+
+            // Get the topic for the reply
+            var topic = await _topicStore.GetByIdAsync(context.Model.EntityId);
+            if (topic == null)
+            {
+                return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the topic follow notification '{WebNotifications.NewReply.Name}'.");
+            }
+
             // Build user notification
             var userNotification = new UserNotification()
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = "New Reply",
-                Message = S["A reply has been posted."],
+                Title = topic.Title.TrimToAround(75),
+                Message = S["A reply has been posted within a topic your following..."],
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
                     ["Action"] = "Topic",
-                    ["Id"] = context.Model.Id
+                    ["Id"] = topic.Id,
+                    ["Alias"] = topic.Alias
                 })
             };
 

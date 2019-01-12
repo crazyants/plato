@@ -6,18 +6,11 @@ using Newtonsoft.Json;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Stores.Users
 {
-
-    public interface IUserDataMerger
-    {
-        Task<IList<User>> Merge(IList<User> users);
-
-        Task<User> Merge(User user);
-
-    }
-
+    
     public class UserDataMerger : IUserDataMerger
     {
 
@@ -32,7 +25,7 @@ namespace Plato.Internal.Stores.Users
             _typedModuleProvider = typedModuleProvider;
         }
 
-        public  async Task<IList<User>> Merge(IList<User> users)
+        public  async Task<IList<User>> MergeAsync(IList<User> users)
         {
             if (users == null)
             {
@@ -56,7 +49,7 @@ namespace Plato.Internal.Stores.Users
             return await MergeUserData(users, results.Data);
         }
         
-        public async Task<User> Merge(User user)
+        public async Task<User> MergeAsync(User user)
         {
 
             if (user == null)
@@ -96,7 +89,7 @@ namespace Plato.Internal.Stores.Users
             for (var i = 0; i < users.Count; i++)
             {
                 users[i].Data = data.Where(d => d.UserId == users[i].Id).ToList();
-                users[i] = await Merge(users[i]);
+                users[i] = await MergeAsync(users[i]);
             }
 
             return users;

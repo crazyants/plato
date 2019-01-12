@@ -55,7 +55,7 @@ namespace Plato.Discuss.Follow.Notifications
             var topic = await _topicStore.GetByIdAsync(context.Model.EntityId);
             if (topic == null)
             {
-                return result.Failed($"No topic could be found with the Id of {context.Model.EntityId}. Follow notifications not sent.");
+                return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the topic follow notification '{EmailNotifications.NewReply.Name}'.");
             }
             
             // Get email template
