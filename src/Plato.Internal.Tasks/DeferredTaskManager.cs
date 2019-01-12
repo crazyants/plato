@@ -24,7 +24,7 @@ namespace Plato.Internal.Tasks
             _logger = logger;
         }
 
-        public Task ExecuteAsync(Func<DeferredTaskContext, Task> task)
+        public void ExecuteAsync(Func<DeferredTaskContext, Task> task)
         {
 
             if (_context == null)
@@ -43,7 +43,7 @@ namespace Plato.Internal.Tasks
                     if (_logger.IsEnabled(LogLevel.Critical))
                     {
                         _logger.LogError(
-                            $"An error occurred whilst execuring a deferred task. Error: {e.Message}");
+                            $"An error occurred whilst executing a deferred task. Error: {e.Message}");
                     }
                 }
             }, new SafeTimerOptions()
@@ -52,7 +52,6 @@ namespace Plato.Internal.Tasks
                 RunOnce = true
             });
 
-            return Task.CompletedTask;
 
         }
 

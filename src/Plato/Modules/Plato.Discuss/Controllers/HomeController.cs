@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
@@ -17,6 +19,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
+using YamlDotNet.Serialization;
 
 namespace Plato.Discuss.Controllers
 {
@@ -327,7 +330,7 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Discuss"], discuss => discuss
                     .Action("Index", "Home", "Plato.Discuss")
                     .LocalNav()
-                ).Add(S[topic.Title], post => post
+                ).Add(S[topic.Title.TrimToAround(75)], post => post
                     .LocalNav()
                 );
             });
@@ -473,14 +476,22 @@ namespace Plato.Discuss.Controllers
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Discuss"], discuss => discuss
-                    .Action("Index", "Home", "Plato.Discuss")
-                    .LocalNav()
-                ).Add(S["Edit Post"], post => post
-                    .LocalNav()
-                );
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav()
+                    ).Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Home", "Plato.Discuss")
+                        .LocalNav()
+                    ).Add(S[topic.Title.TrimToAround(75)], post => post
+                        .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary()
+                        {
+                            ["Id"] = topic.Id,
+                            ["Alias"] = topic.Alias
+                        })
+                        .LocalNav()
+                    )
+                    .Add(S["Edit Post"], post => post
+                        .LocalNav()
+                    );
             });
 
             // Return view
@@ -566,6 +577,33 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
+            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav()
+                    ).Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Home", "Plato.Discuss")
+                        .LocalNav()
+                    ).Add(S[topic.Title.TrimToAround(75)], post => post
+                        .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary()
+                        {
+                            ["Id"] = topic.Id,
+                            ["Alias"] = topic.Alias
+                        })
+                        .LocalNav()
+                    )
+                    .Add(S["Edit Reply"], post => post
+                        .LocalNav()
+                    );
+            });
+            
             var result = await _replyViewProvider.ProvideEditAsync(reply, this);
 
             // Return view

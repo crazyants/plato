@@ -12,7 +12,9 @@
 </div>
 <div class="list-body">
     <h4>
-        @Model.Title
+        <span title=" @Model.Title">
+            @Model.Title.TrimToAround(75)
+        </span>
         @if (Model.IsPinned)
         {
             <span title="@T["Pinned"]" data-toggle="tooltip" class="d-inline-block">

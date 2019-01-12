@@ -69,8 +69,8 @@ namespace Plato.Discuss.Follow.Notifications
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = topic.Title.TrimToAround(75),
-                Message = S["A reply has been posted within a topic your following..."],
+                Title = topic.Title,
+                Message = S["A reply has been posted within a topic your following"],
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {

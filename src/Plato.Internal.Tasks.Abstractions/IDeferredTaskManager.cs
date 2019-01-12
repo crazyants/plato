@@ -6,7 +6,7 @@ namespace Plato.Internal.Tasks.Abstractions
 
     public interface IDeferredTaskManager
     {
-        Task ExecuteAsync(Func<DeferredTaskContext, Task> task);
+        void ExecuteAsync(Func<DeferredTaskContext, Task> task);
     }
 
     public class DeferredTaskContext

@@ -13,7 +13,7 @@ namespace Plato.Internal.Tasks
     {
        
         Timer _timer;
-        int _inTimerCallback;
+        private int _inTimerCallback;
 
         public SafeTimerOptions Options { get; set; } = new SafeTimerOptions();
 
@@ -47,7 +47,7 @@ namespace Plato.Internal.Tasks
                 // prevent the timer from restarting. Specify zero (0)
                 // to restart the timer immediately.
                 var dueTime = Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000;
-                dueTime = Options.RunOnce ? Timeout.Infinite : dueTime;
+                //dueTime = Options.RunOnce ? Timeout.Infinite : dueTime;
 
                 _timer.Change(dueTime, Timeout.Infinite);
 
@@ -95,7 +95,6 @@ namespace Plato.Internal.Tasks
 
         void TimerCallBack(object state)
         {
-
             
             if (Interlocked.Exchange(ref _inTimerCallback, 1) != 0)
             {
@@ -126,12 +125,12 @@ namespace Plato.Internal.Tasks
                     }
 
                     // Ensure we await for the task to complete
-                    Task.Factory.StartNew(() =>
+                    Task.Run(() =>
                     {
                         Elapsed(this, state != null
                             ? new SafeTimerEventArgs(state as HttpContext)
                             : new SafeTimerEventArgs());
-                    }).Wait();
+                    });
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
@@ -157,7 +156,10 @@ namespace Plato.Internal.Tasks
                     base.PerformingTasks = false;
                     if (base.IsRunning)
                     {
-                        _timer.Change(Options.IntervalInSeconds * 1000, Timeout.Infinite);
+                        _timer.Change(Options.RunOnce
+                                ? Timeout.Infinite
+                                : Options.IntervalInSeconds * 1000,
+                            Timeout.Infinite);
                         Monitor.Pulse(_timer);
                         Interlocked.Exchange(ref _inTimerCallback, 0);
                     }
