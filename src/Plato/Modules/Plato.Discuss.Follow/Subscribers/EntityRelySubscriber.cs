@@ -176,8 +176,7 @@ namespace Plato.Discuss.Follow.Subscribers
                     }
 
                 }
-
-
+                
             });
             
             return Task.FromResult(reply);

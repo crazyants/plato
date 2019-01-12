@@ -137,33 +137,41 @@ namespace Plato.Discuss.Follow.ViewProviders
                 }
             }
 
+            // We need to be authenticated to follow
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return await BuildEditAsync(topic, updater);
             }
 
+            // The follow type
             var followType = FollowTypes.Topic;
-
+      
+            // Get any existing follow
+            var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                followType.Name,
+                entity.Id,
+                user.Id);
+            
             // Add the follow
             if (follow)
             {
-                // Add follow
-                await _followManager.CreateAsync(new Follows.Models.Follow()
+                // If we didn't find an existing follow create a new one
+                if (existingFollow == null)
                 {
-                    Name = followType.Name,
-                    ThingId = entity.Id,
-                    CreatedUserId = user.Id,
-                    CreatedDate = DateTime.UtcNow
-                });
+                    // Add follow
+                    await _followManager.CreateAsync(new Follows.Models.Follow()
+                    {
+                        Name = followType.Name,
+                        ThingId = entity.Id,
+                        CreatedUserId = user.Id,
+                        CreatedDate = DateTime.UtcNow
+                    });
+                }
+      
             }
             else
             {
-                // Delete the follow
-                var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
-                    followType.Name,
-                    entity.Id,
-                    user.Id);
                 if (existingFollow != null)
                 {
                     await _followManager.DeleteAsync(existingFollow);
