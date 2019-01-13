@@ -173,13 +173,7 @@ $(function (win, doc, $) {
                     },
                     onLoaded: function($caller, results) {
 
-                        var $badge = $('[data-provide="notifications-badge"]'),
-                            $dismiss = $(".notification-dismiss");
-
-                        // Update notification badge
-                        $badge.notificationsBadge({
-                            count: results ? results.total : 0
-                        });
+                        var $dismiss = $(".notification-dismiss");
 
                         // Activate tooltips
                         $caller.find('[data-toggle="tooltip"]')
@@ -195,7 +189,7 @@ $(function (win, doc, $) {
                                 var id = $(this).attr("data-notification-id"),
                                     $target = $caller.find("#notification" + id);
 
-                                $badge.notificationsBadge("pulseIn");
+                                //$badge.notificationsBadge("pulseIn");
                                 $target.slideUp("fast",
                                     function() {
 
@@ -313,18 +307,24 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                // Set count
-                var count = parseInt($caller.data(dataKey).count);
-                $caller.text(count);
+                win.$.Plato.Http({
+                    url: "api/notifications/user/unread",
+                    method: "GET"
+                }).done(function (data) {
+                    if (data.statusCode === 200) {
+                        if (data.result !== "0") {
 
-                // Show & pulse
-                if (count > 0) {
-                    this.show($caller);
-                    this.pulseOut($caller);
-                } else {
-                    this.hide($caller);
-                }
+                            // Update count
+                            $caller.text(data.result);
 
+                            // Ensure badge is visible
+                            if ($caller.hasClass("hidden")) {
+                                $caller.removeClass("hidden");
+                            }
+                        } 
+                    }
+                });
+           
 
             },
             show: function($caller) {
@@ -388,6 +388,9 @@ $(function (win, doc, $) {
                     .addClass("anim-pulse-out");
 
 
+            },
+            get: function($caller) {
+
             }
         };
 
@@ -446,14 +449,99 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    // notificationsDropdown
+    var notificationsDropdown = function () {
+
+        var dataKey = "notificationsDropdown",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {};
+
+        var methods = {
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                $caller.find(".dropdown-toggle").click(function (e) {
+
+                    e.preventDefault();
+
+                    var $badge = $caller.find('[data-provide="notificationsBadge"]');
+                    $badge.notificationsBadge("hide");
+                    
+
+                    $caller.find('[data-provide="notifications"]').notifications();
+                });
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).notificationsDropdown
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().notificationsDropdown
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
+
     $.fn.extend({
         notifications: notifications.init,
-        notificationsBadge: notificationsBadge.init
+        notificationsBadge: notificationsBadge.init,
+        notificationsDropdown: notificationsDropdown.init
     });
 
     $(doc).ready(function () {
-        $('[data-provide="notifications"]').notifications();
+        $('[data-provide="notificationsDropdown"]').notificationsDropdown();
+        $('[data-provide="notificationsBadge"]').notificationsBadge();
     });
 
 }(window, document, jQuery));

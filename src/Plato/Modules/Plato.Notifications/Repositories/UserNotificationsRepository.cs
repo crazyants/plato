@@ -121,6 +121,26 @@ namespace Plato.Notifications.Repositories
 
         }
         
+        public async Task<bool> UpdateReadDateAsync(int userId, DateTimeOffset? readDate)
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Updating all UserNotification.ReadDate values to {readDate.ToString()} for userId {userId}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "UpdateUserNotificationsReadDate", 
+                    userId,
+                    readDate);
+            }
+
+            return success > 0 ? true : false;
+        }
+
         #endregion
 
         #region "Private Methods"

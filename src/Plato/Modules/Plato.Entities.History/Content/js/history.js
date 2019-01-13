@@ -327,7 +327,7 @@ $(function (win, doc, $) {
         $('[data-provide="historyDropdown"]').historyDropdown();
     });
 
-    // infinateScroller load
+    // infiniteScroll load
     $().infiniteScroll(function ($ele) {
         $ele.find('[data-provide="historyDropdown"]').historyDropdown();
     }, "ready");

@@ -129,7 +129,22 @@ namespace Plato.Notifications.Stores
 
             });
         }
-        
+
+        public async Task<bool> UpdateReadDateAsync(int userId, DateTimeOffset? readDate)
+        {
+            var success = await _entityMentionsRepository.UpdateReadDateAsync(userId, readDate);
+            if (success)
+            {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Updating ReadDate userId '{0}' to {1}",
+                        userId, readDate.ToString());
+                }
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return success;
+        }
     }
 
 }

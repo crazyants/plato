@@ -2,18 +2,15 @@
 
 @if (Model != null)
 {
-    <div class="dropdown notifications-dropdown">
-        <a class="nav-link" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="@T["Notifications"]" data-provide="tooltip" aria-haspopup="true" aria-expanded="false">
+    <div class="dropdown notifications-dropdown" data-provide="notificationsDropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="@T["Notifications"]" data-provide="tooltip" aria-haspopup="true" aria-expanded="false">
             <i class="fal fa-bell"></i>
-            <span class="badge badge-danger hidden" data-provide="notifications-badge"></span>
+            <span class="badge badge-danger hidden" data-provide="notificationsBadge"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in p-0" aria-labelledby="notificationDropdown">
             <div class="dropdown-header px-3 py-2 border-bottom border-bottom">
                 <div class="py-1">
                     <div class="float-right">
-                        <a href="#">
-                            Mark all as read
-                        </a>|
                         <a asp-route-area="Plato.Users.Notifications" asp-route-controller="Home" asp-route-action="EditProfile">
                             Settings
                         </a>
@@ -21,7 +18,9 @@
                     <span class="d-inline-block">@T["Notifications"]</span>
                 </div>
             </div>
-            <div data-provide="notifications"></div>
+            <div data-provide="notifications">
+                <p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p>
+            </div>
         </div>
     </div>
 }

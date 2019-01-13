@@ -241,7 +241,7 @@ namespace Plato.Notifications.Handlers
                     SET ReadDate = @ReadDate
                     WHERE (
                         UserId = @UserId
-                    ); SELECT 1")
+                    ); SELECT 1;")
                .ForTable(_userNotifications)
                .WithParameters(new List<SchemaColumn>()
                {

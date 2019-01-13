@@ -21,16 +21,14 @@ namespace Plato.Notifications.Controllers
     {
 
         private readonly IUserNotificationsStore<UserNotification> _userNotificationStore;
-        private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IContextFacade _contextFacade;
 
         public UserController(
-            IPlatoUserStore<User> platoUserStore,
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
             IUserNotificationsStore<UserNotification> userNotificationStore)
         {
-            _ploatUserStore = platoUserStore;
+        
             _contextFacade = contextFacade;
             _userNotificationStore = userNotificationStore;
         }
@@ -53,7 +51,7 @@ namespace Plato.Notifications.Controllers
                 return base.UnauthorizedException();
             }
 
-            // Get notificaitons
+            // Get notifications
             var userNotifications = await GetUserNotifications(
                 page,
                 size,
@@ -155,12 +153,35 @@ namespace Plato.Notifications.Controllers
 
         }
 
+        [HttpGet]
+        [ResponseCache(NoStore = true)]
+        public async Task<IActionResult> Unread()
+        {
 
+            // Ensure we are authenticated
+            var user = await base.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return base.UnauthorizedException();
+            }
+
+            // Get unread message count
+            var unread = await _userNotificationStore.QueryAsync()
+                .Take(1)
+                .Select<UserNotificationsQueryParams>(q => { q.UserId.Equals(user.Id); })
+                .ToList();
+
+            return unread != null
+                ? base.Result(unread.Total.ToPrettyInt())
+                : base.Result(0);
+
+        }
+        
         [HttpDelete]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Delete(int id)
         {
-            // Ensure notificaiton exists
+            // Ensure notification exists
             var userNotification = await _userNotificationStore.GetByIdAsync(id);
             if (userNotification == null)
             {
