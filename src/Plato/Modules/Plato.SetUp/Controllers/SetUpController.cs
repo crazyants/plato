@@ -37,12 +37,14 @@ namespace Plato.SetUp.Controllers
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
+            {
                 _logger.LogInformation($"Index action on SetUp controller invoked!");
-
+            }
+                
             var setUpViewModel = new SetUpViewModel()
             {
                 SiteName = "Plato",
-                ConnectionString = "server=localhost;trusted_connection=true;database=PlatoTest13",
+                ConnectionString = "server=localhost;trusted_connection=true;database=plato1",
                 TablePrefix = "plato",
                 UserName = "admin",
                 Email = "admin@admin.com",
@@ -96,8 +98,10 @@ namespace Plato.SetUp.Controllers
             }
 
             if (_logger.IsEnabled(LogLevel.Information))
+            {
                 _logger.LogInformation($"Beginning call to SetUpAsync");
-
+            }
+                
             var executionId = await _setUpService.SetUpAsync(setupContext);
 
             // Check if a component in the Setup failed
@@ -105,8 +109,10 @@ namespace Plato.SetUp.Controllers
             {
 
                 if (_logger.IsEnabled(LogLevel.Error))
-                    _logger.LogInformation($"Set-up of tennet '{setupContext.SiteName}' failed with the following errors...");
-
+                {
+                    _logger.LogInformation($"Set-up of tenant '{setupContext.SiteName}' failed with the following errors...");
+                }
+                    
                 foreach (var error in setupContext.Errors)
                 {
                     if (_logger.IsEnabled(LogLevel.Error))
@@ -117,9 +123,12 @@ namespace Plato.SetUp.Controllers
             }
 
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Tennet with site name '{setupContext.SiteName}' created successfully");
-            
+            {
+                _logger.LogInformation($"Tenant with site name '{setupContext.SiteName}' created successfully");
+            }
+                
             return Redirect("~/");
+
         }
 
     }
