@@ -9,7 +9,7 @@ namespace Plato.Discuss.Follow.NotificationTypes
     {
         
         public static readonly WebNotification NewReply =
-            new WebNotification("NewReplyWeb", "New Replies", "Show me a web notification for each new reply within topics i'm following.");
+            new WebNotification("NewReplyWeb", "New Replies", "Show me a web notification for each new reply within topics I'm following.");
 
         public IEnumerable<INotificationType> GetNotificationTypes()
         {

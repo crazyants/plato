@@ -36,6 +36,7 @@ namespace Plato.Discuss.Channels.Follow
 
             // Follow subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();

@@ -195,7 +195,6 @@ $(function (win, doc, $) {
                                 var id = $(this).attr("data-notification-id"),
                                     $target = $caller.find("#notification" + id);
 
-                                //$badge.notificationsBadge("pulseIn");
                                 $target.slideUp("fast",
                                     function() {
 
@@ -293,7 +292,11 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            count: 0
+            onShow: null,
+            onHide: null,
+            count: 0,
+            onPollComplete: null,
+            pollInterval: 10 // the seconds to wait between polls for new notifications
         };
 
         var methods = {
@@ -312,15 +315,16 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-
+                
                 // Poll for unread count immediately
                 methods.poll($caller);
 
                 // Periodically check for new notifications
-                window.setInterval(function() {
+                var interval = $caller.data(dataKey).pollInterval;
+                window.setInterval(function () {
                         methods.poll($caller);
                     },
-                    60 * 1000);
+                    interval * 1000);
 
             },
             poll: function($caller) {
@@ -330,25 +334,32 @@ $(function (win, doc, $) {
                     url: "api/notifications/user/unread",
                     method: "GET"
                 }).done(function (data) {
+
+                    console.log(JSON.stringify(data));
+
                     if (data.statusCode === 200) {
-                        if (data.result !== 0) {
-                            // Update count
-                            $caller.text(data.result);
-                            // Ensure badge is visible
-                            methods.show($caller);
+                        // Raise poll complete event
+                        if ($caller.data(dataKey).onPollComplete) {
+                            $caller.data(dataKey).onPollComplete($caller, data.result);
                         }
                     }
                 });
 
             },
             show: function($caller) {
-
+                
+                $caller.text($caller.data(dataKey).count);
+                
                 if ($caller.hasClass("hidden")) {
                     $caller.removeClass("hidden");
                 }
 
                 if (!$caller.hasClass("show")) {
                     $caller.addClass("show");
+                }
+
+                if ($caller.data(dataKey).onShow) {
+                    $caller.data(dataKey).onShow($caller);
                 }
 
             },
@@ -360,6 +371,10 @@ $(function (win, doc, $) {
 
                 if (!$caller.hasClass("hidden")) {
                     $caller.addClass("hidden");
+                }
+
+                if ($caller.data(dataKey).onHide) {
+                    $caller.data(dataKey).onHide($caller);
                 }
 
             },
@@ -481,14 +496,17 @@ $(function (win, doc, $) {
                 $caller.find(".dropdown-toggle").click(function (e) {
                     e.preventDefault();
                     // Initialize list of notifications
-                    methods.initDropdown($caller);
+                    methods.initNotifications($caller);
                     // mark all notifications as read
                     methods.markRead($caller);
                 });
 
             },
-            initDropdown: function($caller) {
+            initNotifications: function($caller) {
                 $caller.find('[data-provide="notifications"]').notifications();
+            },
+            updateNotifications: function ($caller) {
+                $caller.find('[data-provide="notifications"]').notifications("update");
             },
             markRead: function($caller) {
                 
@@ -498,12 +516,10 @@ $(function (win, doc, $) {
                 }).done(function(data) {
                     if (data.statusCode === 200) {
                         if (data.result) {
-
                             // All notifications successfully marked read
                             // Hide our notification badge
                             var $badge = $caller.find('[data-provide="notificationsBadge"]');
                             $badge.notificationsBadge("hide");
-
                         }
                     }
                 });
@@ -575,8 +591,43 @@ $(function (win, doc, $) {
     });
 
     $(doc).ready(function () {
-        $('[data-provide="notificationsDropdown"]').notificationsDropdown();
-        $('[data-provide="notificationsBadge"]').notificationsBadge();
+
+        var $dropdown = $('[data-provide="notificationsDropdown"]'),
+            $badge = $('[data-provide="notificationsBadge"]'),
+            previousCount = -1;
+
+        // Init dropdown
+        $dropdown.notificationsDropdown();
+
+        // Init unread count badge
+        $badge.notificationsBadge({
+            onPollComplete: function($caller, count) {
+                
+                // Ensure we only update if we have results
+                if (previousCount !== count && count > 0) {
+
+                    // Update count & ensure badge is visible
+                    $caller.notificationsBadge({
+                            count: count,
+                            onHide: function() {
+                                previousCount = -1;
+                            }
+                        },
+                        "show");
+
+                    alert("Update list");
+
+                    // Update notifications dropdown
+                    $dropdown.notificationsDropdown("updateNotifications");
+
+                    // Ensure our results have changed between polls
+                    previousCount = count;
+
+                }
+
+            }
+        });
+
     });
 
 }(window, document, jQuery));

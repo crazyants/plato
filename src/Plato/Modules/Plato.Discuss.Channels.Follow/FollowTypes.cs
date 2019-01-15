@@ -12,7 +12,7 @@ namespace Plato.Discuss.Channels.Follow
             new FollowType(
                 "Channel",
                 "Follow Channel",
-                "Folow this channel to get notified when new topics are posted.",
+                "Follow this channel to get notified when new topics are posted.",
                 "Unsubscribe",
                 "You are already following this channel. Unsubscribe below...");
         
@@ -20,7 +20,7 @@ namespace Plato.Discuss.Channels.Follow
             new FollowType(
                 "AllChannels",
                 "Follow All Channels",
-                "Folow all channels to get notified when new topics are added to any channel..",
+                "Follow all channels to get notified when new topics are posted to any channel..",
                 "Unsubscribe",
                 "You are already following all channels. Unsubscribe below...");
         

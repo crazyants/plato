@@ -44,13 +44,15 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
             // Created
             _broker.Sub<TEntity>(new MessageOptions()
             {
-                Key = "EntityCreated"
+                Key = "EntityCreated",
+                Order = short.MaxValue
             }, async message => await EntityCreated(message.What));
 
             // Updated
             _broker.Sub<TEntity>(new MessageOptions()
             {
-                Key = "EntityUpdated"
+                Key = "EntityUpdated",
+                Order = short.MaxValue
             }, async message => await EntityUpdated(message.What));
 
         }
@@ -60,13 +62,15 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
             // Created
             _broker.Unsub<TEntity>(new MessageOptions()
             {
-                Key = "EntityCreated"
+                Key = "EntityCreated",
+                Order = short.MaxValue
             }, async message => await EntityCreated(message.What));
 
             // Updated
             _broker.Unsub<TEntity>(new MessageOptions()
             {
-                Key = "EntityUpdated"
+                Key = "EntityUpdated",
+                Order = short.MaxValue
             }, async message => await EntityUpdated(message.What));
 
         }
@@ -75,32 +79,46 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
 
         #region "Private Methods"
 
-        Task<TEntity> EntityCreated(TEntity entity)
+        async Task<TEntity> EntityCreated(TEntity entity)
         {
+            entity = await SendNotificationsForChannel(entity);
+            return await SendNotificationsForAllChannels(entity);
+        }
+
+        Task<TEntity> EntityUpdated(TEntity entity)
+        {
+            // Category notifications are not triggered for entity updates
+            // This could possibly be implemented at a later stage
+            return Task.FromResult(entity);
+        }
+
+        Task<TEntity> SendNotificationsForChannel(TEntity entity)
+        {
+
 
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            // Not posted within a channel or category 
+            // The entity is NOT posted within a specific category so no need to send notifications
             if (entity.CategoryId == 0)
             {
                 return Task.FromResult(entity);
             }
 
-            // No need to send notifications for private replies
+            // No need to send notifications for entities flagged as private
             if (entity.IsPrivate)
             {
                 return Task.FromResult(entity);
             }
 
-            // No need to send notifications for replies flagged as spam
+            // No need to send notifications for entities flagged as spam
             if (entity.IsSpam)
             {
                 return Task.FromResult(entity);
             }
-            
+
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.ExecuteAsync(async context =>
             {
@@ -109,7 +127,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
-                        q.ThingId.Equals(entity.Id);
+                        q.ThingId.Equals(entity.CategoryId);
                         q.Name.Equals(FollowTypes.Channel.Name);
                     })
                     .ToList();
@@ -172,17 +190,105 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
 
             });
 
-
-
             return Task.FromResult(entity);
 
         }
 
-        Task<TEntity> EntityUpdated(TEntity entity)
+        Task<TEntity> SendNotificationsForAllChannels(TEntity entity)
         {
+            
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            
+            // No need to send notifications for entities flagged as private
+            if (entity.IsPrivate)
+            {
+                return Task.FromResult(entity);
+            }
+
+            // No need to send notifications for entities flagged as spam
+            if (entity.IsSpam)
+            {
+                return Task.FromResult(entity);
+            }
+
+            // Defer notifications to first available thread pool thread
+            _deferredTaskManager.ExecuteAsync(async context =>
+            {
+
+                // Get all follows for channel
+                var follows = await _followStore.QueryAsync()
+                    .Select<FollowQueryParams>(q =>
+                    {
+                        q.Name.Equals(FollowTypes.AllChannels.Name);
+                    })
+                    .ToList();
+
+                // No follows simply return
+                if (follows?.Data == null)
+                {
+                    return;
+                }
+
+                // Build a collection of all users to notify
+                // Exclude the entity author so they are not
+                // notified of there own posts
+                var users = new List<User>(follows.Data.Count);
+                foreach (var follow in follows.Data)
+                {
+                    var isMotAuthor = follow.CreatedUserId != entity.CreatedUserId;
+                    if (isMotAuthor)
+                    {
+                        users.Add((User)follow.CreatedBy);
+                    }
+                }
+
+                // Merge user data so we know the opt-in status for notifications
+                // This is critical otherwise NotificationEnabled will always return false
+                var mergedUsers = await _userDataMerger.MergeAsync(users);
+
+                // Send mention notifications
+                foreach (var user in mergedUsers)
+                {
+
+                    // Email notifications
+                    if (user.NotificationEnabled(EmailNotifications.NewTopic))
+                    {
+                        await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
+                        {
+                            To = user,
+                        }, entity);
+                    }
+
+                    // Web notifications
+                    if (user.NotificationEnabled(WebNotifications.NewTopic))
+                    {
+                        await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
+                        {
+                            To = user,
+                            From = new User
+                            {
+                                Id = entity.CreatedBy.Id,
+                                UserName = entity.CreatedBy.UserName,
+                                DisplayName = entity.CreatedBy.DisplayName,
+                                Alias = entity.CreatedBy.Alias,
+                                PhotoUrl = entity.CreatedBy.PhotoUrl,
+                                PhotoColor = entity.CreatedBy.PhotoColor
+                            }
+                        }, entity);
+                    }
+
+                }
+
+            });
 
             return Task.FromResult(entity);
+
         }
+
 
         #endregion
 

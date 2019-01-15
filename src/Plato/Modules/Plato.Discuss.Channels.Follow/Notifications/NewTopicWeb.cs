@@ -19,6 +19,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
     {
 
         private readonly IContextFacade _contextFacade;
+        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
 
         public IHtmlLocalizer T { get; }
@@ -29,11 +30,13 @@ namespace Plato.Discuss.Channels.Follow.Notifications
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
-            IUserNotificationsManager<UserNotification> userNotificationManager)
+            IUserNotificationsManager<UserNotification> userNotificationManager,
+            ICapturedRouterUrlHelper capturedRouterUrlHelper)
         {
             _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
-            
+            _capturedRouterUrlHelper = capturedRouterUrlHelper;
+
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -52,14 +55,16 @@ namespace Plato.Discuss.Channels.Follow.Notifications
             var result = new CommandResult<Topic>();
             
             // Build user notification
+            var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
+
             var userNotification = new UserNotification()
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = context.Model.Title.TrimToAround(75),
-                Message = S["A new topic has been posted."],
+                Title = context.Model.Title,
+                Message = S["A topic has been posted within a channel your following"],
                 CreatedUserId = context.Model.CreatedUserId,
-                Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",

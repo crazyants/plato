@@ -9,7 +9,7 @@ namespace Plato.Discuss.Follow.NotificationTypes
     {
         
         public static readonly EmailNotification NewReply =
-            new EmailNotification("NewReplyEmail", "New Replies", "Send me an email notification for each new reply within topics i'm following.");
+            new EmailNotification("NewReplyEmail", "New Replies", "Send me an email notification for each new reply within topics I'm following.");
 
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
