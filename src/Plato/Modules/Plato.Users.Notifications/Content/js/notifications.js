@@ -226,7 +226,6 @@ $(function (win, doc, $) {
             update: function ($caller) {
                 $caller.pagedList("bind");
             }
-
         };
 
         return {
@@ -280,7 +279,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -377,46 +375,6 @@ $(function (win, doc, $) {
                     $caller.data(dataKey).onHide($caller);
                 }
 
-            },
-            pulseIn: function($caller) {
-
-                if ($caller.hasClass("anim-2x")) {
-                    $caller.removeClass("anim-2x");
-                }
-
-                if ($caller.hasClass("anim-pulse-in")) {
-                    $caller.removeClass("anim-pulse-in");
-                }
-
-                if ($caller.hasClass("anim-pulse-out")) {
-                    $caller.removeClass("anim-pulse-out");
-                }
-
-                $caller
-                    .addClass("anim-2x")
-                    .addClass("anim-pulse-in");
-
-
-            },
-            pulseOut: function($caller) {
-
-                if ($caller.hasClass("anim-2x")) {
-                    $caller.removeClass("anim-2x");
-                }
-
-                if ($caller.hasClass("anim-pulse-out")) {
-                    $caller.removeClass("anim-pulse-out");
-                }
-
-                if ($caller.hasClass("anim-pulse-in")) {
-                    $caller.removeClass("anim-pulse-in");
-                }
-
-                $caller
-                    .addClass("anim-2x")
-                    .addClass("anim-pulse-out");
-
-
             }
         };
 
@@ -501,16 +459,18 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
+                // Initialize list of notifications
+                $caller.find('[data-provide="notifications"]').notifications();
+
                 $caller.find(".dropdown-toggle").click(function (e) {
                     e.preventDefault();
-                    // Initialize list of notifications
-                    $caller.find('[data-provide="notifications"]').notifications();
                     // mark all notifications as read
                     methods.markRead($caller);
                 });
 
             },
             update: function ($caller) {
+                // Update notification list, for example if returned unread count changes
                 $caller.find('[data-provide="notifications"]').notifications("update");
             },
             markRead: function($caller) {
@@ -587,8 +547,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     $.fn.extend({
         notifications: notifications.init,
         notificationsBadge: notificationsBadge.init,
@@ -607,23 +566,21 @@ $(function (win, doc, $) {
         // Init unread count badge
         $badge.notificationsBadge({
             onPollComplete: function($caller, count) {
-                
-                // Ensure we only update if we have results
+
+                // Ensure we only update if we have unread notifications 
+                // and they've changed since the previous poll
                 if (previousCount !== count && count > 0) {
 
                     // Update count & ensure badge is visible
                     $caller.notificationsBadge({
-                            count: count,
-                            onHide: function() {
-                                //previousCount = -1;
-                            }
+                            count: count
                         },
                         "show");
                     
-                    // Update notifications dropdown
+                    // Update notifications list within dropdown
                     $dropdown.notificationsDropdown("update");
 
-                    // Ensure our results have changed between polls
+                    // Track changes between polls
                     previousCount = count;
 
                 }
