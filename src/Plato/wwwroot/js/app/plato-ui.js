@@ -904,7 +904,7 @@ $(function (win, doc, $) {
                 var noResultsText = $caller.data(dataKey).noResultsText,
                     noResultsIcon = $caller.data(dataKey).noResultsIcon;
 
-                // Apply localizaer
+                // Apply Localizer
                 if (context.localizer) {
                     noResultsText = context.localizer.get(noResultsText);
                 }

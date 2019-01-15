@@ -24,7 +24,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
                 if (methodName) {
                     if (this[methodName]) {
                         this[methodName].apply(this, [$caller]);
@@ -35,8 +35,8 @@ $(function (win, doc, $) {
                 }
 
             },
-            enable: function ($caller) {
-           
+            enable: function($caller) {
+
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
                     offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
 
@@ -52,7 +52,7 @@ $(function (win, doc, $) {
                 $caller.find("span").text($caller.attr("data-unsubscribe-text"));
 
             },
-            disable: function ($caller) {
+            disable: function($caller) {
 
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
                     offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
@@ -69,34 +69,34 @@ $(function (win, doc, $) {
                 $caller.find("span").text($caller.attr("data-subscribe-text"));
 
             }
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
                     switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                    case Object:
+                        $.extend(options, a);
+                        break;
+                    case String:
+                        methodName = a;
+                        break;
+                    case Boolean:
+                        break;
+                    case Number:
+                        break;
+                    case Function:
+                        break;
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).markdownEditor
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -121,7 +121,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
 
@@ -136,8 +136,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
                 if (methodName) {
                     if (this[methodName]) {
                         this[methodName].apply(this, [$caller]);
@@ -146,34 +145,34 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-                
+
                 methods.bind($caller);
-                
+
             },
-            bind: function ($caller) {
-                
+            bind: function($caller) {
+
                 var event = $caller.data(dataKey).event;
                 if (event) {
                     $caller.on(event,
-                        function (e) {
+                        function(e) {
                             e.preventDefault();
                             methods.handleEvent($caller);
                         });
                 }
 
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
                 var event = $caller.data(dataKey).event;
                 if (event) {
                     $caller.unbind(event);
                 }
             },
-            handleEvent: function ($caller) {
+            handleEvent: function($caller) {
 
                 var action = this.getAction($caller);
                 switch (action) {
-                    case "subscribe":
-                        this.subscribe($caller);
+                case "subscribe":
+                    this.subscribe($caller);
                     break;
 
                 case "unsubscribe":
@@ -196,16 +195,16 @@ $(function (win, doc, $) {
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function(data) {
-                    
+
                     if (data.statusCode === 200) {
                         $caller.followToggler("enable");
                     }
-                 
+
                 });
 
-            }, 
+            },
             unsubscribe: function($caller) {
-                
+
                 var params = {
                     Name: this.getFollowType($caller),
                     ThingId: this.getThingId($caller)
@@ -215,7 +214,7 @@ $(function (win, doc, $) {
                     url: "api/follows/follow/delete",
                     method: "DELETE",
                     data: JSON.stringify(params)
-                }).done(function (data) {
+                }).done(function(data) {
                     if (data.statusCode === 200) {
                         $caller.followToggler("disable");
                     }
@@ -229,7 +228,7 @@ $(function (win, doc, $) {
                 }
                 return action;
             },
-            getFollowType: function ($caller) {
+            getFollowType: function($caller) {
                 var followType = "";
                 if ($caller.attr("data-follow-type")) {
                     followType = $caller.attr("data-follow-type");
@@ -239,7 +238,7 @@ $(function (win, doc, $) {
                 }
                 return followType;
             },
-            getThingId: function ($caller) {
+            getThingId: function($caller) {
                 var thingId = 0;
                 if ($caller.attr("data-thing-id")) {
                     thingId = parseInt($caller.attr("data-thing-id"));
@@ -249,35 +248,35 @@ $(function (win, doc, $) {
                 }
                 return thingId;
             }
-        
-        }
+
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
                     switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                    case Object:
+                        $.extend(options, a);
+                        break;
+                    case String:
+                        methodName = a;
+                        break;
+                    case Boolean:
+                        break;
+                    case Number:
+                        break;
+                    case Function:
+                        break;
                     }
                 }
-                
+
                 if (this.length > 0) {
                     // $(selector).markdownEditor
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -302,7 +301,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
 
@@ -317,7 +316,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
                 if (methodName) {
                     if (this[methodName]) {
                         this[methodName].apply(this, [$caller]);
@@ -330,57 +329,57 @@ $(function (win, doc, $) {
                 methods.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 var event = $caller.data(dataKey).event;
                 if (event) {
                     $caller.on(event,
-                        function (e) {
+                        function(e) {
                             e.preventDefault();
                             if ($(this).is(":checked")) {
                                 $caller.parent().followToggler("enable");
                             } else {
                                 $caller.parent().followToggler("disable");
                             }
-                            
+
                         });
                 }
 
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
                 var event = $caller.data(dataKey).event;
                 if (event) {
                     $caller.unbind(event);
                 }
             }
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
                     switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                    case Object:
+                        $.extend(options, a);
+                        break;
+                    case String:
+                        methodName = a;
+                        break;
+                    case Boolean:
+                        break;
+                    case Number:
+                        break;
+                    case Function:
+                        break;
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).markdownEditor
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -405,7 +404,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
     

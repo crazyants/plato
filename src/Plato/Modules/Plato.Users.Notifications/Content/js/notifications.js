@@ -40,12 +40,14 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
+                var context = win.$.Plato.Context,
+                    deleteText = context.localizer.get("Delete");
+
                 // Invoke suggester
                 $caller.pagedList({
                     page: 1,
                     pageSize: 5,
                     enablePaging: false,
-                    loaderTemplate: null,
                     itemSelection: {
                         enable: false,
                         index: 0,
@@ -63,9 +65,11 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right notification-dismiss" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
+                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right p-2 notification-dismiss" data-toggle="tooltip" title="{Delete}" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
                     parseItemTemplate: function(html, result) {
 
+                        html = html.replace(/\{Delete}/g, deleteText);
+                       
                         if (result.id) {
                             html = html.replace(/\{id}/g, result.id);
                         } else {
@@ -185,6 +189,8 @@ $(function (win, doc, $) {
 
                                 e.preventDefault();
                                 e.stopPropagation();
+
+                                $(this).tooltip("hide");
 
                                 var id = $(this).attr("data-notification-id"),
                                     $target = $caller.find("#notification" + id);
@@ -306,7 +312,20 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-                
+
+                // Poll for unread count immediately
+                methods.poll($caller);
+
+                // Periodically check for new notifications
+                window.setInterval(function() {
+                        methods.poll($caller);
+                    },
+                    60 * 1000);
+
+            },
+            poll: function($caller) {
+
+                // Get the number of unread notifications and display badge if needed
                 win.$.Plato.Http({
                     url: "api/notifications/user/unread",
                     method: "GET"
@@ -316,13 +335,10 @@ $(function (win, doc, $) {
                             // Update count
                             $caller.text(data.result);
                             // Ensure badge is visible
-                            if ($caller.hasClass("hidden")) {
-                                $caller.removeClass("hidden");
-                            }
-                        } 
+                            methods.show($caller);
+                        }
                     }
                 });
-           
 
             },
             show: function($caller) {

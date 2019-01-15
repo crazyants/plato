@@ -28,7 +28,6 @@
 
 .notifications-dropdown .dropdown-item .notification-dismiss {
     display: none;
-    padding: 0 0 1rem 2rem;
 }
 
 .notifications-dropdown .dropdown-item:hover .notification-dismiss {
