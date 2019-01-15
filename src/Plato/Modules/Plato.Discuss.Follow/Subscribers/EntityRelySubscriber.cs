@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Discuss.Follow.NotificationTypes;
-using Plato.Discuss.ViewComponents;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
 using Plato.Internal.Messaging.Abstractions;
@@ -10,7 +9,6 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 
@@ -106,8 +104,7 @@ namespace Plato.Discuss.Follow.Subscribers
             {
                 return Task.FromResult(reply);
             }
-
-
+            
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.ExecuteAsync(async context =>
             {
