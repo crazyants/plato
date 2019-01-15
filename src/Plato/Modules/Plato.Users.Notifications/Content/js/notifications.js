@@ -223,7 +223,7 @@ $(function (win, doc, $) {
                 });
 
             },
-            update: function($caller) {
+            update: function ($caller) {
                 $caller.pagedList("bind");
             }
 
@@ -417,9 +417,6 @@ $(function (win, doc, $) {
                     .addClass("anim-pulse-out");
 
 
-            },
-            get: function($caller) {
-
             }
         };
 
@@ -488,24 +485,32 @@ $(function (win, doc, $) {
         var defaults = {};
 
         var methods = {
-            init: function ($caller) {
+            init: function ($caller, methodName) {
+                
+                if (methodName) {
+                    if (this[methodName]) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+                
                 this.bind($caller);
+
             },
             bind: function ($caller) {
 
                 $caller.find(".dropdown-toggle").click(function (e) {
                     e.preventDefault();
                     // Initialize list of notifications
-                    methods.initNotifications($caller);
+                    $caller.find('[data-provide="notifications"]').notifications();
                     // mark all notifications as read
                     methods.markRead($caller);
                 });
 
             },
-            initNotifications: function($caller) {
-                $caller.find('[data-provide="notifications"]').notifications();
-            },
-            updateNotifications: function ($caller) {
+            update: function ($caller) {
                 $caller.find('[data-provide="notifications"]').notifications("update");
             },
             markRead: function($caller) {
@@ -610,15 +615,13 @@ $(function (win, doc, $) {
                     $caller.notificationsBadge({
                             count: count,
                             onHide: function() {
-                                previousCount = -1;
+                                //previousCount = -1;
                             }
                         },
                         "show");
-
-                    alert("Update list");
-
+                    
                     // Update notifications dropdown
-                    $dropdown.notificationsDropdown("updateNotifications");
+                    $dropdown.notificationsDropdown("update");
 
                     // Ensure our results have changed between polls
                     previousCount = count;

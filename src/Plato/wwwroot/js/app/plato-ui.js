@@ -785,7 +785,7 @@ $(function (win, doc, $) {
             target: null, // optional target selector for auto complete results. if no target a dropdown-menu is used
             enablePaging: true, // indicates if paging should be enabled for results
             onLoad: function ($caller, results) {
-
+                
                 if (results) {
 
                     $caller.empty();
@@ -998,7 +998,7 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-
+                
                 // Add loader
                 var loaderTemplate = $caller.data(dataKey).loaderTemplate;
                 if (loaderTemplate) {
