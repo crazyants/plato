@@ -306,17 +306,15 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-
+                
                 win.$.Plato.Http({
                     url: "api/notifications/user/unread",
                     method: "GET"
                 }).done(function (data) {
                     if (data.statusCode === 200) {
-                        if (data.result !== "0") {
-
+                        if (data.result !== 0) {
                             // Update count
                             $caller.text(data.result);
-
                             // Ensure badge is visible
                             if ($caller.hasClass("hidden")) {
                                 $caller.removeClass("hidden");
@@ -463,16 +461,37 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
+
                 $caller.find(".dropdown-toggle").click(function (e) {
-
                     e.preventDefault();
-
-                    var $badge = $caller.find('[data-provide="notificationsBadge"]');
-                    $badge.notificationsBadge("hide");
-                    
-
-                    $caller.find('[data-provide="notifications"]').notifications();
+                    // Initialize list of notifications
+                    methods.initDropdown($caller);
+                    // mark all notifications as read
+                    methods.markRead($caller);
                 });
+
+            },
+            initDropdown: function($caller) {
+                $caller.find('[data-provide="notifications"]').notifications();
+            },
+            markRead: function($caller) {
+                
+                win.$.Plato.Http({
+                    url: "api/notifications/user/markread",
+                    method: "POSt"
+                }).done(function(data) {
+                    if (data.statusCode === 200) {
+                        if (data.result) {
+
+                            // All notifications successfully marked read
+                            // Hide our notification badge
+                            var $badge = $caller.find('[data-provide="notificationsBadge"]');
+                            $badge.notificationsBadge("hide");
+
+                        }
+                    }
+                });
+
             }
         };
 

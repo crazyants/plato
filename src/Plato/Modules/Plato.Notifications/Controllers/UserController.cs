@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
 using Plato.Notifications.Stores;
+using Plato.WebApi.Attributes;
 using Plato.WebApi.Controllers;
 using Plato.WebApi.Models;
 
@@ -28,13 +27,20 @@ namespace Plato.Notifications.Controllers
             IContextFacade contextFacade,
             IUserNotificationsStore<UserNotification> userNotificationStore)
         {
-        
             _contextFacade = contextFacade;
             _userNotificationStore = userNotificationStore;
         }
 
         #region "Actions"
 
+        /// <summary>
+        /// Get all notifications for the authenticated user.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="sort"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(
@@ -153,6 +159,10 @@ namespace Plato.Notifications.Controllers
 
         }
 
+        /// <summary>
+        /// Get the total number of notifications that have no read date. 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Unread()
@@ -176,7 +186,35 @@ namespace Plato.Notifications.Controllers
                 : base.Result(0);
 
         }
-        
+
+        /// <summary>
+        /// Mark all notifications as read.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, ValidateClientAntiForgeryToken]
+        [ResponseCache(NoStore = true)]
+        public async Task<IActionResult> MarkRead()
+        {
+
+            // Ensure we are authenticated
+            var user = await base.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return base.UnauthorizedException();
+            }
+            
+            return await _userNotificationStore.UpdateReadDateAsync(user.Id, DateTimeOffset.UtcNow)
+                ? base.Result(true)
+                : base.Result(false);
+
+        }
+
+
+        /// <summary>
+        /// Delete a notification that belongs to the currently authenticated user.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Delete(int id)

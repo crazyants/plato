@@ -60,6 +60,8 @@ namespace Plato.Notifications.Stores
 
         private WhereInt _userId;
         private WhereString _notificationName;
+        private WhereBool _showRead;
+        private WhereBool _hideread;
 
         public WhereInt UserId
         {
@@ -71,6 +73,18 @@ namespace Plato.Notifications.Stores
         {
             get => _notificationName ?? (_notificationName = new WhereString());
             set => _notificationName = value;
+        }
+
+        public WhereBool ShowRead
+        {
+            get => _showRead ?? (_showRead = new WhereBool());
+            set => _showRead = value;
+        }
+
+        public WhereBool HideRead
+        {
+            get => _hideread ?? (_hideread = new WhereBool());
+            set => _hideread = value;
         }
 
     }

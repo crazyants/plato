@@ -16,26 +16,26 @@ namespace Plato.WebApi.Attributes
         {
 
             // Get CSRF options
-            var antiforgeryOptions = context.HttpContext.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>();
+            var antiForgeryOptions = context.HttpContext.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>();
             
             // Ensure anti forgery options have been configured
-            if (antiforgeryOptions == null)
+            if (antiForgeryOptions == null)
             {
-                throw new ArgumentNullException(nameof(antiforgeryOptions));
+                throw new ArgumentNullException(nameof(antiForgeryOptions));
             }
 
-            // Ensure we have a antiforgery header
+            // Ensure we have a anti forgery header
             var headers = context.HttpContext.Request.Headers;
-            if (!headers.ContainsKey(antiforgeryOptions.Value.HeaderName))
+            if (!headers.ContainsKey(antiForgeryOptions.Value.HeaderName))
             {
                 context.Result = new ForbidResult();
                 return;
             }
 
             var headerValue = string.Empty;
-            if (headers[antiforgeryOptions.Value.HeaderName].Count > 0)
+            if (headers[antiForgeryOptions.Value.HeaderName].Count > 0)
             {
-                headerValue = headers[antiforgeryOptions.Value.HeaderName][0];
+                headerValue = headers[antiForgeryOptions.Value.HeaderName][0];
             }
 
             if (String.IsNullOrWhiteSpace(headerValue))
@@ -51,7 +51,7 @@ namespace Plato.WebApi.Attributes
                 return;
             }
 
-            // Our "X-Csrf-Token" header does not match current antiforgery cookie
+            // Our "X-Csrf-Token" header does not match current anti forgery cookie
             if (!cookie.Equals(headerValue, StringComparison.Ordinal))
             {
                 context.Result = new ForbidResult();
