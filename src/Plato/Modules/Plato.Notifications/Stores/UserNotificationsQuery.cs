@@ -206,6 +206,26 @@ namespace Plato.Notifications.Stores
                 sb.Append(_query.Params.NotificationName.ToSqlString("un.NotificationName", "Keywords"));
             }
 
+            // -----------------
+            // read / unread 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideRead.Value && !_query.Params.ShowRead.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideRead.Operator);
+                sb.Append("un.ReadDate IS NULL");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowRead.Value && !_query.Params.HideRead.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowRead.Operator);
+                sb.Append("un.ReadDate IS NOT NULL");
+            }
+            
             return sb.ToString();
 
         }

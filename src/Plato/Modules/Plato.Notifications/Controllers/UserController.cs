@@ -178,7 +178,11 @@ namespace Plato.Notifications.Controllers
             // Get unread message count
             var unread = await _userNotificationStore.QueryAsync()
                 .Take(1)
-                .Select<UserNotificationsQueryParams>(q => { q.UserId.Equals(user.Id); })
+                .Select<UserNotificationsQueryParams>(q =>
+                {
+                    q.UserId.Equals(user.Id);
+                    q.HideRead.True();
+                })
                 .ToList();
 
             return unread != null

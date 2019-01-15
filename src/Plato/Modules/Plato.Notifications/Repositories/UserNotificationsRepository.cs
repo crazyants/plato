@@ -125,7 +125,7 @@ namespace Plato.Notifications.Repositories
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Updating all UserNotification.ReadDate values to {readDate.ToString()} for userId {userId}");
+                _logger.LogInformation($"Updating all UserNotifications.ReadDate values to '{readDate.ToString()}' for user with Id: '{userId}'.");
             }
 
             var success = 0;
