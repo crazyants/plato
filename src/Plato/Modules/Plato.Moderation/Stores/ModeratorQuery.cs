@@ -136,9 +136,9 @@ namespace Plato.Moderation.Stores
             sb.Append("m.*, ")
                 .Append("u.UserName,")
                 .Append("u.DisplayName,")
-                .Append("u.FirstName,")
-                .Append("u.LastName,")
-                .Append("u.Alias");
+                .Append("u.Alias,")
+                .Append("u.PhotoUrl,")
+                .Append("u.PhotoColor");
 
             return sb.ToString();
 

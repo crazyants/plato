@@ -1528,7 +1528,7 @@ $(function (win, doc, $) {
                 }
             },
             itemTemplate:
-                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
+                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
             parseItemTemplate: function(html, result) {
 
                 if (result.id) {
@@ -1553,11 +1553,14 @@ $(function (win, doc, $) {
                 } else {
                     html = html.replace(/\{email}/g, "");
                 }
-                if (result.agent_url) {
-                    html = html.replace(/\{url}/g, result.url);
+            
+                if (result.avatar.url) {
+                    html = html.replace(/\{avatar.url}/g, result.avatar.url);
                 } else {
-                    html = html.replace(/\{url}/g, "#");
+                    html = html.replace(/\{avatar.url}/g, "");
                 }
+
+
                 return html;
 
             },
@@ -3389,7 +3392,7 @@ $(function (win, doc, $) {
                 // init tagIt
                 $caller.tagIt($.extend({
                         itemTemplate:
-                            '<li class="tagit-list-item"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
+                            '<li class="tagit-list-item"><span class="avatar avatar-sm mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
                         parseItemTemplate: function(html, result) {
 
                             if (result.id) {
@@ -3402,6 +3405,13 @@ $(function (win, doc, $) {
                             } else {
                                 html = html.replace(/\{displayName}/g, "(no username)");
                             }
+
+                            if (result.avatar.url) {
+                                html = html.replace(/\{avatar.url}/g, result.avatar.url);
+                            } else {
+                                html = html.replace(/\{avatar.url}/g, "");
+                            }
+
                             return html;
 
                         },

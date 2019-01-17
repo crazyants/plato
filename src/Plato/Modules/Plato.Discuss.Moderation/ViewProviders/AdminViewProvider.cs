@@ -84,7 +84,6 @@ namespace Plato.Discuss.Moderation.ViewProviders
         public override Task<IViewProviderResult> BuildDisplayAsync(Moderator oldModerator, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
-
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IViewProviderContext updater)

@@ -9,6 +9,10 @@ namespace Plato.Internal.Models.Users
         [DataMember(Name = "url")]
         public string Url { get; }
 
+        public UserAvatar()
+        {
+        }
+
         public UserAvatar(ISimpleUser user)
         {
 

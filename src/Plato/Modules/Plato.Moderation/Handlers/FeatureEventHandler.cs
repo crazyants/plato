@@ -196,12 +196,12 @@ namespace Plato.Moderation.Handlers
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectModeratorById",
-                        @" SELECT m.*, 
+                        @" SELECT m.*,                                    
                                     u.UserName,                                
-                                    u.DisplayName,
-                                    u.FirstName,
-                                    u.LastName,
-                                    u.Alias                                  
+                                    u.DisplayName,                                 
+                                    u.Alias,
+                                    u.PhotoUrl,
+                                    u.PhotoColor
                                 FROM {prefix}_Moderators m WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users u ON m.UserId = u.Id
                                 WHERE (
