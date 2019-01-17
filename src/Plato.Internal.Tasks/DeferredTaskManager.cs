@@ -32,25 +32,29 @@ namespace Plato.Internal.Tasks
                 _context  = new DeferredTaskContext(_serviceProvider);
             }
 
-            _safeTimerFactory.Start(async (sender, args) =>
+            lock (_safeTimerFactory)
             {
-                try
+                _safeTimerFactory.Start(async (sender, args) =>
                 {
-                    await task.Invoke(_context);
-                }
-                catch (Exception e)
-                {
-                    if (_logger.IsEnabled(LogLevel.Critical))
+                    try
                     {
-                        _logger.LogError(
-                            $"An error occurred whilst executing a deferred task. Error: {e.Message}");
+                        await task.Invoke(_context);
                     }
-                }
-            }, new SafeTimerOptions()
-            {
-                RunOnStart = true,
-                RunOnce = true
-            });
+                    catch (Exception e)
+                    {
+                        if (_logger.IsEnabled(LogLevel.Critical))
+                        {
+                            _logger.LogError(
+                                $"An error occurred whilst executing a deferred task. Error: {e.Message}");
+                        }
+                    }
+                }, new SafeTimerOptions()
+                {
+                    RunOnStart = true,
+                    RunOnce = true
+                });
+            }
+         
 
 
         }

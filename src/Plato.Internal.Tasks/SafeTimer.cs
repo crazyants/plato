@@ -29,7 +29,7 @@ namespace Plato.Internal.Tasks
 
         public override void Start()
         {
-
+            
             if (Options.IntervalInSeconds <= 0 && !Options.RunOnce)
             {
                 throw new Exception("IntervalInSeconds should be set before starting the timer!");
@@ -46,7 +46,7 @@ namespace Plato.Internal.Tasks
                 // constructed, in milliseconds. Specify Infinite to
                 // prevent the timer from restarting. Specify zero (0)
                 // to restart the timer immediately.
-                var dueTime = Options.RunOnStart ? 1000 : Options.IntervalInSeconds * 1000;
+                var dueTime = Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000;
                 //dueTime = Options.RunOnce ? Timeout.Infinite : dueTime;
 
                 _timer.Change(dueTime, Timeout.Infinite);
@@ -63,6 +63,7 @@ namespace Plato.Internal.Tasks
 
         public override void Stop()
         {
+      
             lock (_timer)
             {
                 _timer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -73,6 +74,9 @@ namespace Plato.Internal.Tasks
                 {
                     timer.Dispose();
                 }
+
+                Interlocked.Exchange(ref _inTimerCallback, 0);
+
             }
 
             base.Stop();
@@ -81,6 +85,7 @@ namespace Plato.Internal.Tasks
 
         public void WaitToStop()
         {
+
             lock (_timer)
             {
                 while (base.PerformingTasks)
@@ -89,13 +94,15 @@ namespace Plato.Internal.Tasks
                 }
             }
 
-            base.Stop();
+            this.Stop();
         
         }
 
         void TimerCallBack(object state)
         {
             
+            // Set our reference pointer to 1 and only allow further executing if the value is not already 1
+            // _inTimerCallback is set back to 0 once the task complete
             if (Interlocked.Exchange(ref _inTimerCallback, 1) != 0)
             {
                 return;
@@ -125,12 +132,12 @@ namespace Plato.Internal.Tasks
                     }
 
                     // Ensure we await for the task to complete
-                    Task.Run(() =>
-                    {
+                    //Task.Run(() =>
+                    //{
                         Elapsed(this, state != null
                             ? new SafeTimerEventArgs(state as HttpContext)
                             : new SafeTimerEventArgs());
-                    });
+                    //});
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
@@ -156,12 +163,18 @@ namespace Plato.Internal.Tasks
                     base.PerformingTasks = false;
                     if (base.IsRunning)
                     {
-                        _timer.Change(Options.RunOnce
-                                ? Timeout.Infinite
-                                : Options.IntervalInSeconds * 1000,
-                            Timeout.Infinite);
-                        Monitor.Pulse(_timer);
-                        Interlocked.Exchange(ref _inTimerCallback, 0);
+                        if (Options.RunOnce)
+                        {
+                            this.WaitToStop();
+                        }
+                        else
+                        {
+                            _timer.Change(Options.IntervalInSeconds * 1000,
+                                Timeout.Infinite);
+                            Monitor.Pulse(_timer);
+                            Interlocked.Exchange(ref _inTimerCallback, 0);
+                        }
+                       
                     }
 
                 }

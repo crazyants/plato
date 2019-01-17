@@ -294,7 +294,7 @@ $(function (win, doc, $) {
             onHide: null,
             count: 0,
             onPollComplete: null,
-            pollInterval: 10 // the seconds to wait between polls for new notifications
+            pollInterval: 60 // the seconds to wait between polls for new notifications
         };
 
         var methods = {
@@ -440,7 +440,9 @@ $(function (win, doc, $) {
         var dataKey = "notificationsDropdown",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+
+        };
 
         var methods = {
             init: function ($caller, methodName) {
@@ -484,7 +486,10 @@ $(function (win, doc, $) {
                             // All notifications successfully marked read
                             // Hide our notification badge
                             var $badge = $caller.find('[data-provide="notificationsBadge"]');
-                            $badge.notificationsBadge("hide");
+                            if (!$badge.hasClass("hidden")) {
+                                $badge.notificationsBadge("hide");
+                            }
+                            
                         }
                     }
                 });
@@ -543,7 +548,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -573,17 +577,21 @@ $(function (win, doc, $) {
 
                     // Update count & ensure badge is visible
                     $caller.notificationsBadge({
-                            count: count
+                            count: count,
+                        onHide: function () {
+                            alert("onhide");
+                                previousCount = 0;
+                            }
                         },
                         "show");
                     
                     // Update notifications list within dropdown
                     $dropdown.notificationsDropdown("update");
-
-                    // Track changes between polls
-                    previousCount = count;
-
+                    
                 }
+
+                // Track changes between polls
+                previousCount = count;
 
             }
         });

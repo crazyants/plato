@@ -25,7 +25,7 @@ namespace Plato.Users.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-     
+            
             // Signout the request if the user is not found
             await SignOutRequestIfUserNotFound(context);
 
@@ -39,7 +39,7 @@ namespace Plato.Users.Middleware
             await _next(context);
 
         }
-        
+
         #region "Private Methods"
 
         async Task SignOutRequestIfUserNotFound(HttpContext context)
@@ -95,8 +95,11 @@ namespace Plato.Users.Middleware
                 return;
             }
 
-            // Add user to httpContext for subsequent use
-            context.Features[typeof(User)] = user;
+            lock (user)
+            {
+                // Add user to httpContext for subsequent use
+                context.Features[typeof(User)] = user;
+            }
             
         }
         

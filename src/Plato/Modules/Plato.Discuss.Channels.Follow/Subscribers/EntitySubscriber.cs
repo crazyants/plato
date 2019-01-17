@@ -81,8 +81,8 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-            entity = await SendNotificationsForChannel(entity);
-            return await SendNotificationsForAllChannels(entity);
+            return await SendNotificationsForChannel(entity);
+            //return await SendNotificationsForAllChannels(entity);
         }
 
         Task<TEntity> EntityUpdated(TEntity entity)

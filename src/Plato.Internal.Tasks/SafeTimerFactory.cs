@@ -39,14 +39,17 @@ namespace Plato.Internal.Tasks
             {
                 _timers = new List<ISafeTimer>();
             }
-            
-            //var tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-            //var serviceProvider = tenantServiceCollection.BuildServiceProvider();
-
+          
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogCritical($"Starting new timer. Interval: {options.IntervalInSeconds}, RunOnce: {options.RunOnce}, RunOnStart: {options.RunOnStart}");
             }
+
+            // TODO remove
+            //if (!options.RunOnce)
+            //{
+            //    return;
+            //}
 
             var safeTimer = new SafeTimer(_httpContextAccessor.HttpContext);
             safeTimer.Elapsed += (sender, args) => action(sender, args);
