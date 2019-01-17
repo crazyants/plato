@@ -11,7 +11,7 @@ namespace Plato.Discuss.Labels.Follow
         public static readonly FollowType Label =
             new FollowType("Label",
                 "Follow Label",
-                "Folow this label to get notified when new content is posted with this label.",
+                "Follow this label to get notified when new topics are posted with this label.",
                 "Unsubscribe",
                 "You are already following this label.");
 

@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Tasks.Abstractions\Plato.Internal.Tasks.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Discuss.Labels\Plato.Discuss.Labels.csproj" />
     <ProjectReference Include="..\Plato.Follows\Plato.Follows.csproj" />
   </ItemGroup>

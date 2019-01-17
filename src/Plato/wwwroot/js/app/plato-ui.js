@@ -3435,11 +3435,11 @@ $(function (win, doc, $) {
 
                             e.preventDefault();
 
-                            // ensure we only add unique entries
+                            // Get index if item already exists, else return -1
                             var index = methods.getIndex($caller, result);
-
                             if (index === -1) {
-                                
+
+                                // Add new item if within allowed bounds
                                 var tagIt = $caller.data("tagIt");
                                 if (tagIt.items.length < tagIt.maxItems) {
                                     tagIt.items.push(result);
@@ -3449,12 +3449,13 @@ $(function (win, doc, $) {
                                     $caller.tagIt("show");
                                 } 
 
-                                // We've reached max allowed items hide autoComplete
+                                // We've reached max allowed bounds hide autoComplete
                                 if (tagIt.items.length === tagIt.maxItems) {
                                     $caller.tagIt("hide");
                                 }
                                 
                             } else {
+                                // Highlight duplicates
                                 $caller.tagIt({
                                         highlightIndex: index
                                     },
@@ -3465,7 +3466,6 @@ $(function (win, doc, $) {
                     },
                     defaults,
                     options));
-
 
             },
             getInput: function($caller) {

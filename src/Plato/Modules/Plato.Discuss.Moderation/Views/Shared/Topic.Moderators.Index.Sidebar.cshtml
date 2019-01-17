@@ -9,7 +9,7 @@
             foreach (var moderator in Model.Moderators)
             {
                 <a class="d-inline-block my-2" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@moderator.Id" asp-route-alias="@moderator.Alias">
-                    <avatar data-provide="tooltip" title="@moderator.DisplayName" class="avatar" user-id="@moderator.Id"></avatar>
+                    <avatar data-provide="tooltip" title="@moderator.DisplayName" class="avatar" url="@moderator.Avatar.Url"></avatar>
                 </a>
             }
         }
