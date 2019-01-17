@@ -125,8 +125,7 @@ namespace Plato.Discuss.Follow.Subscribers
                 }
 
                 // Build a collection of all users to notify
-                // Exclude the reply author so they are not
-                // notified of there own replies
+                // Exclude the author so they are not notified of there own posts
                 var users = new List<User>(follows.Data.Count);
                 foreach (var follow in follows.Data)
                 {

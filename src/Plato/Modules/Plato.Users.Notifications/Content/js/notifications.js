@@ -190,8 +190,6 @@ $(function (win, doc, $) {
                                 e.preventDefault();
                                 e.stopPropagation();
 
-                                $(this).tooltip("hide");
-
                                 var id = $(this).attr("data-notification-id"),
                                     $target = $caller.find("#notification" + id);
 
@@ -440,9 +438,7 @@ $(function (win, doc, $) {
         var dataKey = "notificationsDropdown",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {
-
-        };
+        var defaults = {};
 
         var methods = {
             init: function ($caller, methodName) {
@@ -476,7 +472,13 @@ $(function (win, doc, $) {
                 $caller.find('[data-provide="notifications"]').notifications("update");
             },
             markRead: function($caller) {
-                
+
+                // If the badge is already hidden no need to mark notifications as read
+                var $badge = $caller.find('[data-provide="notificationsBadge"]');
+                if ($badge.hasClass("hidden")) {
+                    return;
+                }
+
                 win.$.Plato.Http({
                     url: "api/notifications/user/markread",
                     method: "POSt"
@@ -485,11 +487,7 @@ $(function (win, doc, $) {
                         if (data.result) {
                             // All notifications successfully marked read
                             // Hide our notification badge
-                            var $badge = $caller.find('[data-provide="notificationsBadge"]');
-                            if (!$badge.hasClass("hidden")) {
-                                $badge.notificationsBadge("hide");
-                            }
-                            
+                            $badge.notificationsBadge("hide");
                         }
                     }
                 });

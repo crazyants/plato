@@ -81,8 +81,8 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-            return await SendNotificationsForChannel(entity);
-            //return await SendNotificationsForAllChannels(entity);
+            entity = await SendNotificationsForChannel(entity);
+            return await SendNotificationsForAllChannels(entity);
         }
 
         Task<TEntity> EntityUpdated(TEntity entity)
@@ -139,8 +139,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                 }
 
                 // Build a collection of all users to notify
-                // Exclude the entity author so they are not
-                // notified of there own posts
+                // Exclude the author so they are not notified of there own posts
                 var users = new List<User>(follows.Data.Count);
                 foreach (var follow in follows.Data)
                 {
@@ -234,8 +233,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                 }
 
                 // Build a collection of all users to notify
-                // Exclude the entity author so they are not
-                // notified of there own posts
+                // Exclude the author so they are not notified of there own posts
                 var users = new List<User>(follows.Data.Count);
                 foreach (var follow in follows.Data)
                 {
@@ -288,9 +286,9 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
             return Task.FromResult(entity);
 
         }
-
-
+        
         #endregion
 
     }
+
 }

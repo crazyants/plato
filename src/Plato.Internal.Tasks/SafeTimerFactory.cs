@@ -44,13 +44,7 @@ namespace Plato.Internal.Tasks
             {
                 _logger.LogCritical($"Starting new timer. Interval: {options.IntervalInSeconds}, RunOnce: {options.RunOnce}, RunOnStart: {options.RunOnStart}");
             }
-
-            // TODO remove
-            //if (!options.RunOnce)
-            //{
-            //    return;
-            //}
-
+            
             var safeTimer = new SafeTimer(_httpContextAccessor.HttpContext);
             safeTimer.Elapsed += (sender, args) => action(sender, args);
             safeTimer.Options = options;
