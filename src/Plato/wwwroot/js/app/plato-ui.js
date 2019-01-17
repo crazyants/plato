@@ -3015,6 +3015,14 @@ $(function (win, doc, $) {
                     return null;
                 }
 
+                // Allow setting of maxItems vai data-attribute
+                if ($caller.data("tagitMaxItems")) {
+                    var num = parseInt($caller.data("tagitMaxItems"));
+                    if (!num.isNaN) {
+                        $caller.data(dataKey).maxItems = num;
+                    }
+                }
+
                 // Bind events
                 this.bind($caller);
                 
@@ -3246,7 +3254,7 @@ $(function (win, doc, $) {
                 return null;
             },
             getMaxItems: function($caller) {
-                return $caller.data("tagitMaxItems") || $caller.data(dataKey).maxItems;
+                return $caller.data(dataKey).maxItems;
             },
             getInput: function($caller) {
                 var $li = this.getInputLi($caller);
@@ -3268,11 +3276,10 @@ $(function (win, doc, $) {
                 }
             },
             getItems: function($caller) {
-                return $caller.data("tagitItems") || $caller.data(dataKey).items;
+                return $caller.data(dataKey).items;
             },
-            setItems: function($caller, value) {
-                $caller.data("tagitItems", value);
-                $caller.data(dataKey).items = value;
+            setItems: function ($caller, items) {
+                $caller.data(dataKey).items = items;
             },
             getStore: function($caller) {
                 var selector = $caller.data("tagitStore") ||
@@ -3295,7 +3302,7 @@ $(function (win, doc, $) {
                 var $store = this.getStore($caller);
                 if ($store) {
                     var items = this.getItems($caller);
-                    if (items !== null) {
+                    if (items) {
                         if (items.length > 0) {
                             $store.val(JSON.stringify(items));
                         } else {
@@ -3348,7 +3355,7 @@ $(function (win, doc, $) {
                         if (methods[methodName]) {
                             var $caller = $("body");
                             $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
+                            return methods[methodName].apply(this, [$caller]);
                         } else {
                             alert(methodName + " is not a valid method!");
                         }
@@ -3428,16 +3435,25 @@ $(function (win, doc, $) {
 
                             e.preventDefault();
 
-                            // ensure we only add uunque entries
+                            // ensure we only add unique entries
                             var index = methods.getIndex($caller, result);
 
                             if (index === -1) {
-                                var tagit = $caller.data("tagIt");
-                                tagit.items.push(result);
-                                $caller.tagIt("update");
-                                $caller.tagIt("focus");
-                                $caller.tagIt("select");
-                                $caller.tagIt("show");
+                                
+                                var tagIt = $caller.data("tagIt");
+                                if (tagIt.items.length < tagIt.maxItems) {
+                                    tagIt.items.push(result);
+                                    $caller.tagIt("update");
+                                    $caller.tagIt("focus");
+                                    $caller.tagIt("select");
+                                    $caller.tagIt("show");
+                                } 
+
+                                // We've reached max allowed items hide autoComplete
+                                if (tagIt.items.length === tagIt.maxItems) {
+                                    $caller.tagIt("hide");
+                                }
+                                
                             } else {
                                 $caller.tagIt({
                                         highlightIndex: index
@@ -4628,7 +4644,7 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            event: "click", // uniuqe namespace
+            event: "click", // unique namespace
             message: "Are you sure you wish to delete this item?\n\nClick OK to confirm..."
         };
 

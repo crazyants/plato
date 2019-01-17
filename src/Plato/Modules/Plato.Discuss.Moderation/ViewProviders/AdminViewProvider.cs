@@ -100,6 +100,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
                         Id = moderator.User.Id,
                         DisplayName = moderator.User.DisplayName,
                         UserName = moderator.User.UserName,
+                        Avatar = moderator.User.Avatar
                     }
                 }.Serialize();
             }

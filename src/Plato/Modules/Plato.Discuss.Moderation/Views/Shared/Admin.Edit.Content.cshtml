@@ -17,7 +17,7 @@
         <div class="form-group" asp-validation-class-for="Users">
             <fieldset>
                 
-                <input asp-for="Users" type="text" id="tagItStore"/>
+                <input asp-for="Users" type="hidden" id="tagItStore"/>
 
                 <label asp-for="Users">
                     <strong>@T["Username"]</strong>
@@ -25,7 +25,7 @@
                     <span class="text-muted">@T["Find a user to add as a moderator..."]</span>
                 </label>
                 <div class="dropdown">
-                    <ul class="tagit form-control list-inline" data-provide="userTagIt" data-tagit-store="#tagItStore">
+                    <ul class="tagit form-control list-inline" data-provide="userTagIt" data-tagit-max-items="1" data-tagit-store="#tagItStore">
                         <li class="tagit-list-item-input">
                             <input type="text"
                                    autocomplete="off"
