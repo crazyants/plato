@@ -10,7 +10,7 @@ namespace Plato.Discuss.Channels.Follow
         
         public static readonly FollowType Channel =
             new FollowType(
-                "Channel",
+                "DiscussChannel",
                 "Follow Channel",
                 "Follow this channel to get notified when new topics are posted.",
                 "Unsubscribe",
@@ -18,7 +18,7 @@ namespace Plato.Discuss.Channels.Follow
         
         public static readonly FollowType AllChannels =
             new FollowType(
-                "AllChannels",
+                "DiscussAllChannels",
                 "Follow All Channels",
                 "Follow all channels to get notified when new topics are posted to any channel..",
                 "Unsubscribe",

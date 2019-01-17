@@ -262,7 +262,8 @@ namespace Plato.Labels.Handlers
                 new SchemaColumn()
                 {
                     Name = "ModifiedDate",
-                    DbType = DbType.DateTime
+                    DbType = DbType.DateTime,
+                    Nullable = true
                 }
             }
         };

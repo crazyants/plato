@@ -23,12 +23,12 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
         public void Subscribe()
         {
 
-            _broker.Sub<Plato.Follows.Models.Follow>(new MessageOptions()
+            _broker.Sub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
 
-            _broker.Sub<Plato.Follows.Models.Follow>(new MessageOptions()
+            _broker.Sub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowDeleted"
             }, async message => await FollowDeleted(message.What));
@@ -38,12 +38,12 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
         public void Unsubscribe()
         {
             // Add a reputation for new follows
-            _broker.Unsub<Plato.Follows.Models.Follow>(new MessageOptions()
+            _broker.Unsub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
 
-            _broker.Unsub<Plato.Follows.Models.Follow>(new MessageOptions()
+            _broker.Unsub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowDeleted"
             }, async message => await FollowDeleted(message.What));
@@ -58,13 +58,13 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                 return null;
             }
 
-            // Is this a tag follow?
+            // Is this a channel follow?
             if (!follow.Name.Equals(FollowTypes.Channel.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return follow;
             }
 
-            // Award reputation for following label
+            // Award reputation for following channel
             await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId);
 
             return follow;

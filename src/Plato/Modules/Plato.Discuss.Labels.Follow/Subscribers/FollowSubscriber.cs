@@ -62,7 +62,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
                 return null;
             }
 
-            // Is this a tag follow?
+            // Is this a label follow?
             if (!follow.Name.Equals(FollowTypes.Label.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return follow;
@@ -82,10 +82,8 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             var updatedLabel = await _labelStore.UpdateAsync(label);
             if (updatedLabel != null)
             {
-
                 // Award reputation for following label
                 await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId);
-
             }
 
             return follow;
@@ -126,10 +124,8 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             var updatedLabel = await _labelStore.UpdateAsync(label);
             if (updatedLabel != null)
             {
-
                 // Revoke reputation for following tag
                 await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId);
-
             }
             
             return follow;

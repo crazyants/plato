@@ -49,7 +49,7 @@ namespace Plato.Discuss.Labels.Follow
 
             // Subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntityLabelSubscriber<Topic>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();

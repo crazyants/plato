@@ -13,17 +13,15 @@ namespace Plato.Labels.Services
     {
 
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
-        private readonly IContextFacade _contextFacade;
+
         private readonly IBroker _broker;
 
         public EntityLabelManager(
             IEntityLabelStore<EntityLabel> entityLabelStore,
-            IContextFacade contextFacade,
             IBroker broker)
         {
             _entityLabelStore = entityLabelStore;
             _broker = broker;
-            _contextFacade = contextFacade;
         }
 
         public async Task<ICommandResult<EntityLabel>> CreateAsync(EntityLabel model)
@@ -49,21 +47,19 @@ namespace Plato.Labels.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.LabelId));
             }
-            
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            
-            // Update
-            model.CreatedUserId = user?.Id ?? 0;
-            model.CreatedDate = DateTime.UtcNow;
-            model.ModifiedUserId = user?.Id ?? 0;
-            model.ModifiedDate = DateTime.UtcNow;
 
-            // Invoke EntityLabelCreating subscriptions
-            foreach (var handler in _broker.Pub<EntityLabel>(this, new MessageOptions()
+            if (model.CreatedUserId <= 0)
             {
-                Key = "EntityLabelCreating"
-            }, model))
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
+
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
+            
+            // Invoke EntityLabelCreating subscriptions
+            foreach (var handler in _broker.Pub<EntityLabel>(this, "EntityLabelCreating"))
             {
                 model = await handler.Invoke(new Message<EntityLabel>(model, this));
             }
@@ -77,10 +73,7 @@ namespace Plato.Labels.Services
             {
 
                 // Invoke EntityLabelCreated subscriptions
-                foreach (var handler in _broker.Pub<EntityLabel>(this, new MessageOptions()
-                {
-                    Key = "EntityLabelCreated"
-                }, newEntityLabel))
+                foreach (var handler in _broker.Pub<EntityLabel>(this, "EntityLabelCreated"))
                 {
                     newEntityLabel = await handler.Invoke(new Message<EntityLabel>(newEntityLabel, this));
                 }
@@ -117,19 +110,20 @@ namespace Plato.Labels.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.LabelId));
             }
-            
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-         
-            // Update
-            model.ModifiedUserId = user?.Id ?? 0;
-            model.ModifiedDate = DateTime.UtcNow;
+
+            if (model.ModifiedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
+            }
+
+            if (model.ModifiedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.ModifiedDate));
+            }
+
 
             // Invoke EntityLabelUpdating subscriptions
-            foreach (var handler in _broker.Pub<EntityLabel>(this, new MessageOptions()
-            {
-                Key = "EntityLabelUpdating"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityLabel>(this, "EntityLabelUpdating"))
             {
                 model = await handler.Invoke(new Message<EntityLabel>(model, this));
             }
@@ -143,10 +137,7 @@ namespace Plato.Labels.Services
             {
 
                 // Invoke EntityLabelUpdated subscriptions
-                foreach (var handler in _broker.Pub<EntityLabel>(this, new MessageOptions()
-                {
-                    Key = "EntityLabelUpdated"
-                }, updatedEntityLabel))
+                foreach (var handler in _broker.Pub<EntityLabel>(this, "EntityLabelUpdated"))
                 {
                     updatedEntityLabel = await handler.Invoke(new Message<EntityLabel>(updatedEntityLabel, this));
                 }
@@ -170,10 +161,7 @@ namespace Plato.Labels.Services
             }
 
             // Invoke EntityLabelDeleting subscriptions
-            foreach (var handler in _broker.Pub<EntityLabel>(this, new MessageOptions()
-            {
-                Key = "EntityLabelDeleting"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityLabel>(this, "EntityLabelDeleting"))
             {
                 model = await handler.Invoke(new Message<EntityLabel>(model, this));
             }
@@ -183,10 +171,7 @@ namespace Plato.Labels.Services
             {
              
                 // Invoke EntityLabelDeleted subscriptions
-                foreach (var handler in _broker.Pub<EntityLabel>(this, new MessageOptions()
-                {
-                    Key = "EntityLabelDeleted"
-                }, model))
+                foreach (var handler in _broker.Pub<EntityLabel>(this, "EntityLabelDeleted"))
                 {
                     model = await handler.Invoke(new Message<EntityLabel>(model, this));
                 }

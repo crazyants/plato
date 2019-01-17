@@ -16,6 +16,7 @@ using Plato.Discuss.Models;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Labels.Services;
 
 namespace Plato.Discuss.Labels.ViewProviders
@@ -32,6 +33,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         private readonly IStringLocalizer T;
         private readonly IFeatureFacade _featureFacade;
         private readonly ICacheManager _cacheManager;
+        private readonly IContextFacade _contextFacade;
 
         private readonly HttpRequest _request;
 
@@ -43,7 +45,8 @@ namespace Plato.Discuss.Labels.ViewProviders
             IStringLocalizer<TopicViewProvider> stringLocalize,
             IFeatureFacade featureFacade, 
             IEntityLabelManager<EntityLabel> entityLabelManager,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IContextFacade contextFacade)
         {
            
             _labelStore = labelStore;
@@ -54,6 +57,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             _featureFacade = featureFacade;
             _entityLabelManager = entityLabelManager;
             _cacheManager = cacheManager;
+            _contextFacade = contextFacade;
         }
 
         #region "Implementation"
@@ -61,7 +65,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IViewProviderContext updater)
         {
 
-            // Ensure we explictly set the featureId
+            // Ensure we explicitly set the featureId
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
@@ -85,7 +89,6 @@ namespace Plato.Discuss.Labels.ViewProviders
                 }).Zone("sidebar").Order(2)
             );
             
-
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext updater)
@@ -121,7 +124,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             List<int> selectedLabels;
-            // Persist state on postback
+            // Persist state on post back
             if (_request.Method == "POST")
             {
                 selectedLabels = await GetLabelsToAddAsync();
@@ -145,18 +148,13 @@ namespace Plato.Discuss.Labels.ViewProviders
             );
 
         }
-
-        //public override Task ComposeTypeAsync(Topic model, IUpdateModel updater)
-        //{
-        //    return base.ComposeTypeAsync(model, updater);
-        //}
-
+        
         public override Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
             // ensure labels are optional
             return Task.FromResult(true);
         }
-
+        
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
         {
 
@@ -207,11 +205,20 @@ namespace Plato.Discuss.Labels.ViewProviders
                 // Add new entity labels
                 foreach (var labelId in labelsToAdd)
                 {
+
+
+                    // Get authenticated user
+                    var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+                  
+
                     var result = await _entityLabelManager.CreateAsync(new EntityLabel()
                     {
                         EntityId = topic.Id,
-                        LabelId = labelId
-                    });
+                        LabelId = labelId,
+                        CreatedUserId = user?.Id ?? 0,
+                        CreatedDate = DateTime.UtcNow
+                });
                     if (!result.Succeeded)
                     {
                         foreach (var error in result.Errors)
@@ -220,8 +227,9 @@ namespace Plato.Discuss.Labels.ViewProviders
                         }
                     }
 
-                    // Ensure we clear our labels cache to return new associationss
+                    // Ensure we clear our labels cache to return new associations
                     _cacheManager.CancelTokens(typeof(LabelStore<Label>));
+                    //_cacheManager.CancelTokens(typeof(EntityLabelStore));
 
                 }
 

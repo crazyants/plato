@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Labels.Follow.NotificationTypes;
 using Plato.Entities.Models;
+using Plato.Entities.Stores;
 using Plato.Follows.Stores;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Notifications;
@@ -17,23 +18,25 @@ using Plato.Notifications.Extensions;
 
 namespace Plato.Discuss.Labels.Follow.Subscribers
 {
-    public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
+    public class EntityLabelSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
 
         private readonly IBroker _broker;
+        private readonly IEntityStore<TEntity> _entityStore;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IUserDataMerger _userDataMerger;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
 
-        public EntitySubscriber(
+        public EntityLabelSubscriber(
             IBroker broker,
             IDeferredTaskManager deferredTaskManager,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
             IUserDataMerger userDataMerger,
-            IEntityLabelStore<EntityLabel> entityLabelStore)
+            IEntityLabelStore<EntityLabel> entityLabelStore,
+            IEntityStore<TEntity> entityStore)
         {
             _broker = broker;
             _deferredTaskManager = deferredTaskManager;
@@ -41,6 +44,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             _followStore = followStore;
             _userDataMerger = userDataMerger;
             _entityLabelStore = entityLabelStore;
+            _entityStore = entityStore;
         }
 
         #region "Implementation"
@@ -48,36 +52,36 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
         public void Subscribe()
         {
             // Created
-            _broker.Sub<TEntity>(new MessageOptions()
+            _broker.Sub<EntityLabel>(new MessageOptions()
             {
-                Key = "EntityCreated",
+                Key = "EntityLabelCreated",
                 Order = short.MaxValue
-            }, async message => await EntityCreated(message.What));
+            }, async message => await EntityLabelCreated(message.What));
 
             // Updated
-            _broker.Sub<TEntity>(new MessageOptions()
+            _broker.Sub<EntityLabel>(new MessageOptions()
             {
-                Key = "EntityUpdated",
+                Key = "EntityLabelUpdated",
                 Order = short.MaxValue
-            }, async message => await EntityUpdated(message.What));
+            }, async message => await EntityLabelUpdated(message.What));
 
         }
 
         public void Unsubscribe()
         {
             // Created
-            _broker.Unsub<TEntity>(new MessageOptions()
+            _broker.Unsub<EntityLabel>(new MessageOptions()
             {
-                Key = "EntityCreated",
+                Key = "EntityLabelCreated",
                 Order = short.MaxValue
-            }, async message => await EntityCreated(message.What));
+            }, async message => await EntityLabelCreated(message.What));
 
             // Updated
-            _broker.Unsub<TEntity>(new MessageOptions()
+            _broker.Unsub<EntityLabel>(new MessageOptions()
             {
-                Key = "EntityUpdated",
+                Key = "EntityLabelUpdated",
                 Order = short.MaxValue
-            }, async message => await EntityUpdated(message.What));
+            }, async message => await EntityLabelUpdated(message.What));
 
         }
 
@@ -85,9 +89,15 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
 
         #region "Private Methods"
 
-        Task<TEntity> EntityCreated(TEntity entity)
+        async Task<EntityLabel> EntityLabelCreated(EntityLabel entityLabel)
         {
-            
+
+            if (entityLabel.EntityId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entityLabel.EntityId));
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityLabel.EntityId);
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
@@ -96,22 +106,23 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             // No need to send notifications for entities flagged as private
             if (entity.IsPrivate)
             {
-                return Task.FromResult(entity);
+                return entityLabel;
             }
 
             // No need to send notifications for entities flagged as spam
             if (entity.IsSpam)
             {
-                return Task.FromResult(entity);
+                return entityLabel;
             }
 
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.ExecuteAsync(async context =>
             {
 
+                // Get all labels for entity
                 var entityLabels = await _entityLabelStore.GetByEntityId(entity.Id);
                 
-                // Get all follows for labels associated with entity
+                // Get all follows for found labels
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
@@ -180,16 +191,16 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
 
             });
 
-            return Task.FromResult(entity);
+            return entityLabel;
 
 
         }
 
-        Task<TEntity> EntityUpdated(TEntity entity)
+        Task<EntityLabel> EntityLabelUpdated(EntityLabel entityLabel)
         {
             // Label notifications are not triggered for entity updates
             // This could possibly be implemented at a later stage
-            return Task.FromResult(entity);
+            return Task.FromResult(entityLabel);
         }
         
         #endregion

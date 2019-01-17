@@ -9,7 +9,7 @@ namespace Plato.Discuss.Labels.Follow
     {
         
         public static readonly FollowType Label =
-            new FollowType("Label",
+            new FollowType("DiscussLabel",
                 "Follow Label",
                 "Follow this label to get notified when new topics are posted with this label.",
                 "Unsubscribe",

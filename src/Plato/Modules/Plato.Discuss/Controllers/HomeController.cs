@@ -239,7 +239,7 @@ namespace Plato.Discuss.Controllers
                 topic.CreatedDate = DateTimeOffset.UtcNow;
 
                 // We need to first add the fully composed type
-                // so we have a nuique entity Id for all ProvideUpdateAsync
+                // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
                 var newTopic = await _topicManager.CreateAsync(topic);
 
