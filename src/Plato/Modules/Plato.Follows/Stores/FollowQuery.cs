@@ -183,11 +183,20 @@ namespace Plato.Follows.Stores
                 sb.Append(_query.Params.Id.ToSqlString("f.Id"));
             }
 
+            // ThingId
+            if (_query.Params.ThingId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ThingId.Operator);
+                sb.Append(_query.Params.ThingId.ToSqlString("f.ThingId"));
+            }
+
+            // Name
             if (!String.IsNullOrEmpty(_query.Params.Name.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Name.Operator);
-                sb.Append(_query.Params.Name.ToSqlString("[Name]", "Name"));
+                sb.Append(_query.Params.Name.ToSqlString("f.[Name]", "Name"));
             }
             return sb.ToString();
 

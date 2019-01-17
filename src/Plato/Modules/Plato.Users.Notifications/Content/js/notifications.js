@@ -65,7 +65,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right p-2 notification-dismiss" data-toggle="tooltip" title="{Delete}" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
+                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right p-2 notification-dismiss" title="{Delete}" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         html = html.replace(/\{Delete}/g, deleteText);
@@ -569,21 +569,21 @@ $(function (win, doc, $) {
 
         // Init unread count badge
         $badge.notificationsBadge({
+            onShow: function () { },
+            onHide: function () {
+                // If the badge is hidden the user may have expanded the dropdown which marks
+                // all notifications as read and hides the badge. In this case ensure we reset
+                // the previousCount back to 0 so if new message arrive the polling updates the list
+                previousCount = 0;
+            },
             onPollComplete: function($caller, count) {
 
                 // Ensure we only update if we have unread notifications 
-                // and they've changed since the previous poll
+                // Ensure the unread count has changed since the previous poll
                 if (previousCount !== count && count > 0) {
 
                     // Update count & ensure badge is visible
-                    $caller.notificationsBadge({
-                            count: count,
-                        onHide: function () {
-                            alert("onhide");
-                                previousCount = 0;
-                            }
-                        },
-                        "show");
+                    $caller.notificationsBadge({ count: count }, "show");
                     
                     // Update notifications list within dropdown
                     $dropdown.notificationsDropdown("update");

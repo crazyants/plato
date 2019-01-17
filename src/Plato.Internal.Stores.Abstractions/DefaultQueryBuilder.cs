@@ -210,9 +210,9 @@ namespace Plato.Internal.Stores.Abstractions
 
         }
 
-        public string ToSqlString(string parameterName)
+        public string ToSqlString(string columnName)
         {
-            return _builder.ToString().Replace("{0}", parameterName);
+            return _builder.ToString().Replace("{0}", columnName);
         }
     }
 
