@@ -125,7 +125,7 @@ namespace Plato.Users.Badges.Tasks
                         .OrderBy("LastLoginDate", OrderBy.Desc)
                         .ToList();
 
-                    // Send notificaitons
+                    // Send notifications
                     if (users != null)
                     {
                         foreach (var user in users.Data)

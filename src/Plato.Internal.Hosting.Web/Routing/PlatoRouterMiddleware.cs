@@ -168,7 +168,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
             backgroundTaskManager?.StartTasks();
 
-            // Return new pipline
+            // Return new pipeline
             var pipeline = appBuilder.Build();
             return pipeline;
         }

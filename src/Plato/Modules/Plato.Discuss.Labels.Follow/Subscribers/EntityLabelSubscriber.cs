@@ -116,20 +116,14 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             }
 
             // Defer notifications to first available thread pool thread
-            _deferredTaskManager.ExecuteAsync(async context =>
+            _deferredTaskManager.AddTask(async context =>
             {
 
-                // Get all labels for entity
-                var entityLabels = await _entityLabelStore.GetByEntityId(entity.Id);
-                
                 // Get all follows for found labels
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
-                        if (entityLabels != null)
-                        {
-                            q.ThingId.IsIn(entityLabels.Select(l => l.LabelId).ToArray());
-                        }
+                        q.ThingId.Equals(entityLabel.LabelId);
                         q.Name.Equals(FollowTypes.Label.Name);
                     })
                     .ToList();

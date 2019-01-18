@@ -11,9 +11,13 @@ namespace Plato.Internal.Tasks.Extensions
             this IServiceCollection services)
         {
             
+            // Background tasks
             services.TryAddScoped<IBackgroundTaskManager, BackgroundTaskManager>();
             services.TryAddScoped<ISafeTimerFactory, SafeTimerFactory>();
+
+            // Deferred tasks
             services.TryAddScoped<IDeferredTaskManager, DeferredTaskManager>();
+            services.TryAddScoped<IDeferredTaskState, HttpContextTaskState>();
 
             return services;
 

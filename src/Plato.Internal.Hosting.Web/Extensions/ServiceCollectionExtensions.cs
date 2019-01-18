@@ -316,16 +316,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Allow static files within current theme
             app.UseThemeStaticFiles(env);
 
-            // add custom features
-
+            // Add custom features
             app.AddThemingApplicationParts();
 
-            // create services container for each shell
-
+            // Create services container for each shell
             app.UseMiddleware<PlatoContainerMiddleware>();
 
-            // create uniuqe pipeline for each shell
-
+            // Create unique pipeline for each shell
             app.UseMiddleware<PlatoRouterMiddleware>();
             
             return app;

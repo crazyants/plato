@@ -106,7 +106,7 @@ namespace Plato.Discuss.Follow.Subscribers
             }
             
             // Defer notifications to first available thread pool thread
-            _deferredTaskManager.ExecuteAsync(async context =>
+            _deferredTaskManager.AddTask(async context =>
             {
                 
                 // Get all follows for topic

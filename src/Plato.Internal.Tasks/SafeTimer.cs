@@ -127,22 +127,18 @@ namespace Plato.Internal.Tasks
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogCritical(
-                            $"Executing elapsed func delegate within timer callback for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}");
+                        _logger.LogInformation(
+                            $"Executing delegate within timer for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}");
                     }
-
-                    // Ensure we await for the task to complete
-                    //Task.Run(() =>
-                    //{
-                        Elapsed(this, state != null
-                            ? new SafeTimerEventArgs(state as HttpContext)
-                            : new SafeTimerEventArgs());
-                    //});
-
+                    
+                    Elapsed(this, state != null
+                        ? new SafeTimerEventArgs(state as HttpContext)
+                        : new SafeTimerEventArgs());
+        
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogCritical(
-                            $"Completed executing elapsed func delegate within timer callback for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}.");
+                        _logger.LogInformation(
+                            $"Completed executing delegate within timer for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}.");
                     }
 
                 }
@@ -150,10 +146,7 @@ namespace Plato.Internal.Tasks
             }
             catch (Exception e)
             {
-                if (_logger.IsEnabled(LogLevel.Critical))
-                {
-                    _logger.LogCritical($"An error corrected within a timer callback. Error message: {e.Message}");
-                }
+                _logger.LogError(e, $"An error corrected invoking a timer callback.");
             }
             finally
             {

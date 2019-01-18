@@ -72,26 +72,19 @@ namespace Plato.Users.Badges.Tasks
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
-            INotificationManager<Badge> notificaitonManager,
+            INotificationManager<Badge> notificationManager,
             IUserReputationAwarder userReputationAwarder)
         {
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _userStore = userStore;
-            _notificationManager = notificaitonManager;
+            _notificationManager = notificationManager;
             _userReputationAwarder = userReputationAwarder;
         }
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
             
-            //var cacheManager = args.ServiceProvider.GetRequiredService<ICacheManager>();
-            //var dbHelper = args.ServiceProvider.GetRequiredService<IDbHelper>();
-            //var userStore = args.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
-            //var notificationManager = args.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
-            //var userReputationAwarder = args.ServiceProvider.GetRequiredService<IUserReputationAwarder>();
-
-
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
@@ -123,7 +116,7 @@ namespace Plato.Users.Badges.Tasks
                     .OrderBy("LastLoginDate", OrderBy.Desc)
                     .ToList();
 
-                // Send notificaitons
+                // Send notifications
                 if (users != null)
                 {
                     var bot = await _userStore.GetPlatoBotAsync();

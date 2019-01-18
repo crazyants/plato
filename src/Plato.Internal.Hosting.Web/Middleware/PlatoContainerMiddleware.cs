@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Hosting.Web.Middleware
 {
@@ -29,7 +31,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
         public async Task Invoke(HttpContext httpContext)
         {
 
-            // Ensure all ShellContext are loaded and available.
+            // Ensure all shells are loaded and available.
             _platoHost.Initialize();
 
             // Get ShellSettings for current tennet
@@ -43,6 +45,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
             {
 
                 var shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
+                var hasPendingTasks = false;
                 using (var scope = shellContext.CreateServiceScope())
                 {
                     httpContext.RequestServices = scope.ServiceProvider;
@@ -64,6 +67,26 @@ namespace Plato.Internal.Hosting.Web.Middleware
                     }
 
                     await _next.Invoke(httpContext);
+
+                    var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
+                    hasPendingTasks = deferredTaskEngine?.HasPendingTasks ?? false;
+
+                }
+
+                // Create a new scope only if there are pending tasks
+                if (hasPendingTasks)
+                {
+                    shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
+                   
+                    using (var pendingScope = shellContext.CreateServiceScope())
+                    {
+                        if (pendingScope != null)
+                        {
+                            var deferredTaskEngine = pendingScope.ServiceProvider.GetService<IDeferredTaskManager>();
+                            var context = new DeferredTaskContext(pendingScope.ServiceProvider);
+                            await deferredTaskEngine.ExecuteTaskAsync(context);
+                        }
+                    }
                 }
 
             }

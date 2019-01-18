@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Tasks.Abstractions;
 
@@ -13,8 +12,7 @@ namespace Plato.Internal.Tasks
         private readonly ISafeTimerFactory _safeTimerFactory;
         private readonly IEnumerable<IBackgroundTaskProvider> _providers;
         private readonly ILogger<BackgroundTaskManager> _logger;
-
-
+        
         public BackgroundTaskManager(
             IEnumerable<IBackgroundTaskProvider> providers,
             ISafeTimerFactory safeTimerFactory,
@@ -32,10 +30,9 @@ namespace Plato.Internal.Tasks
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation($"Found background task provider of type '{provider.GetType()}'.");
+                    _logger.LogInformation($"Initializing background task provider of type '{provider.GetType()}'.");
                 }
                 
-
                 _safeTimerFactory.Start(async (sender, args) =>
                 {
                     try
@@ -44,11 +41,7 @@ namespace Plato.Internal.Tasks
                     }
                     catch (Exception e)
                     {
-                        if (_logger.IsEnabled(LogLevel.Critical))
-                        {
-                            _logger.LogCritical(
-                                $"An error occurred whilst executing the timer callback for background task provider of type '{provider.GetType()}'. {e.Message}");
-                        }
+                        _logger.LogError(e, $"An error occurred whilst executing the timer callback for background task provider of type '{provider.GetType()}'");
                     }
                 }, new SafeTimerOptions()
                 {

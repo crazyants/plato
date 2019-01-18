@@ -202,23 +202,19 @@ namespace Plato.Discuss.Labels.ViewProviders
                     }
                 }
 
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
                 // Add new entity labels
                 foreach (var labelId in labelsToAdd)
                 {
-
-
-                    // Get authenticated user
-                    var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-                  
-
                     var result = await _entityLabelManager.CreateAsync(new EntityLabel()
                     {
                         EntityId = topic.Id,
                         LabelId = labelId,
                         CreatedUserId = user?.Id ?? 0,
                         CreatedDate = DateTime.UtcNow
-                });
+                    });
                     if (!result.Succeeded)
                     {
                         foreach (var error in result.Errors)
