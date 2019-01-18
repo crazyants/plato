@@ -19,11 +19,11 @@ namespace Plato.Labels.Models
 
         public string Value { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
@@ -49,28 +49,28 @@ namespace Plato.Labels.Models
         {
 
             if (dr.ColumnIsNotNull("Id"))
-                this.Id = Convert.ToInt32(dr["Id"]);
+                Id = Convert.ToInt32(dr["Id"]);
 
             if (dr.ColumnIsNotNull("LabelId"))
-                this.LabelId = Convert.ToInt32(dr["LabelId"]);
+                LabelId = Convert.ToInt32(dr["LabelId"]);
 
             if (dr.ColumnIsNotNull("Key"))
-                this.Key = Convert.ToString(dr["Key"]);
+                Key = Convert.ToString(dr["Key"]);
 
             if (dr.ColumnIsNotNull("Value"))
-                this.Value = Convert.ToString(dr["Value"]);
+                Value = Convert.ToString(dr["Value"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                this.CreatedDate = Convert.ToDateTime((dr["CreatedDate"]));
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
-                this.CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime((dr["ModifiedDate"]));
+                ModifiedDate = (DateTimeOffset)dr["ModifiedDate"];
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+                ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
 
         }
 

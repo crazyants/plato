@@ -67,16 +67,18 @@ namespace Plato.Labels.Services
             {
                 throw new ArgumentNullException(nameof(model.Name));
             }
-            
+
             // Configure model
 
+            // TODO move to external caller and add validation checks
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (model.CreatedUserId == 0)
             {
                 model.CreatedUserId = user?.Id ?? 0;
             }
-            
             model.CreatedDate = DateTime.UtcNow;
+
+
             model.Alias = await ParseAlias(model.Name);
           
             // Invoke LabelCreating subscriptions
@@ -132,11 +134,14 @@ namespace Plato.Labels.Services
             
             // Configure model
 
+            model.Alias = await ParseAlias(model.Name);
+
+
+            // TODO move to external caller and add validation checks
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             model.ModifiedUserId = user?.Id ?? 0;
             model.ModifiedDate = DateTime.UtcNow;
-            model.Alias = await ParseAlias(model.Name);
-         
+
             // Invoke LabelUpdating subscriptions
             foreach (var handler in _broker.Pub<TLabel>(this, "LabelUpdating"))
             {

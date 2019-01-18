@@ -226,9 +226,9 @@ namespace Plato.Labels.Repositories
             int labelId,
             int roleId,
             int createdUserId,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int modifiedUserId,
-            DateTime? modifiedDate)
+            DateTimeOffset? modifiedDate)
         {
 
             var output = 0;
@@ -243,7 +243,7 @@ namespace Plato.Labels.Repositories
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate.ToDateIfNull(),
+                    modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 

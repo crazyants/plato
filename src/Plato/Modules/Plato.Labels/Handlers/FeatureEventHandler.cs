@@ -120,7 +120,8 @@ namespace Plato.Labels.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     }
                 }
         };
@@ -157,7 +158,7 @@ namespace Plato.Labels.Handlers
                 new SchemaColumn()
                 {
                     Name = "CreatedDate",
-                    DbType = DbType.DateTime2
+                    DbType = DbType.DateTimeOffset
                 },
                 new SchemaColumn()
                 {
@@ -167,7 +168,7 @@ namespace Plato.Labels.Handlers
                 new SchemaColumn()
                 {
                     Name = "ModifiedDate",
-                    DbType = DbType.DateTime2
+                    DbType = DbType.DateTimeOffset
                 },
                 new SchemaColumn()
                 {
@@ -207,7 +208,7 @@ namespace Plato.Labels.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset
                     },
                     new SchemaColumn()
                     {
@@ -217,7 +218,8 @@ namespace Plato.Labels.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     }
                 }
         };
@@ -252,7 +254,7 @@ namespace Plato.Labels.Handlers
                 new SchemaColumn()
                 {
                     Name = "CreatedDate",
-                    DbType = DbType.DateTime
+                    DbType = DbType.DateTimeOffset
                 },
                 new SchemaColumn()
                 {
@@ -262,7 +264,7 @@ namespace Plato.Labels.Handlers
                 new SchemaColumn()
                 {
                     Name = "ModifiedDate",
-                    DbType = DbType.DateTime,
+                    DbType = DbType.DateTimeOffset,
                     Nullable = true
                 }
             }

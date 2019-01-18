@@ -106,10 +106,13 @@ namespace Plato.Labels.Repositories
                 data.Value.ToEmptyIfNull(),
                 data.CreatedDate.ToDateIfNull(),
                 data.CreatedUserId,
-                data.ModifiedDate.ToDateIfNull(),
+                data.ModifiedDate,
                 data.ModifiedUserId);
             if (id > 0)
+            {
                 return await SelectByIdAsync(id);
+            }
+                
             return null;
         }
 
@@ -176,9 +179,9 @@ namespace Plato.Labels.Repositories
             int LabelId,
             string key,
             string value,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId)
         {
 
@@ -202,7 +205,7 @@ namespace Plato.Labels.Repositories
                     value.ToEmptyIfNull(),
                     createdDate.ToDateIfNull(),
                     createdUserId,
-                    modifiedDate.ToDateIfNull(),
+                    modifiedDate,
                     modifiedUserId,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
