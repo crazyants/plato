@@ -269,8 +269,7 @@ namespace Plato.Labels.Handlers
                 }
             }
         };
-
-
+        
         private readonly ISchemaBuilder _schemaBuilder;
 
         public FeatureEventHandler(ISchemaBuilder schemaBuilder)

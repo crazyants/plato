@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "NewTopic",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Topic",
+      "Message": "Hi {0},\n\nA topic has been posted within a channel you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}

@@ -48,9 +48,9 @@ namespace Plato.Discuss.Channels.Follow.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            var templateid = "NewTopic";
+            var templateId = "NewTopic";
             var culture = await _contextFacade.GetCurrentCultureAsync();
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateid);
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
             {
 
@@ -86,7 +86,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
 
             }
 
-            return result.Failed($"No email template with the Id '{templateid}' exists within the 'locales/{culture}/emails.json' file!");
+            return result.Failed($"No email template with the Id '{templateId}' exists within the 'locales/{culture}/emails.json' file!");
 
         }
 
