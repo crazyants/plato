@@ -15,28 +15,28 @@ using Plato.Internal.Notifications.Abstractions;
 namespace Plato.Discuss.Labels.Follow.Notifications
 {
 
-    public class NewTopicWeb : INotificationProvider<Topic>
+    public class NewLabelWeb : INotificationProvider<Topic>
     {
 
 
-        private readonly IContextFacade _contextFacade;
+       
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
-        private readonly IEntityStore<Topic> _topicStore;
+        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
         
-        public NewTopicWeb(
+        public NewLabelWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IContextFacade contextFacade,
             IUserNotificationsManager<UserNotification> userNotificationManager,
-            IEntityStore<Topic> topicStore)
+            IEntityStore<Topic> topicStore,
+            ICapturedRouterUrlHelper capturedRouterUrlHelper)
         {
-            _contextFacade = contextFacade;
+        
             _userNotificationManager = userNotificationManager;
-            _topicStore = topicStore;
+            _capturedRouterUrlHelper = capturedRouterUrlHelper;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -45,16 +45,19 @@ namespace Plato.Discuss.Labels.Follow.Notifications
 
         public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
         {
-            
-            // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(WebNotifications.NewLabel.Name, StringComparison.Ordinal))
-            {
-                return null;
-            }
 
             // Create result
             var result = new CommandResult<Topic>();
-            
+
+            // Ensure correct notification provider
+            if (!context.Notification.Type.Name.Equals(WebNotifications.NewLabel.Name, StringComparison.Ordinal))
+            {
+                return result.Failed($"Skipping notification '{WebNotifications.NewLabel.Name}' as this does not match '{context.Notification.Type.Name}'.");
+            }
+
+            // Build user notification
+            var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
+
             // Build user notification
             var userNotification = new UserNotification()
             {
@@ -63,7 +66,7 @@ namespace Plato.Discuss.Labels.Follow.Notifications
                 Title = context.Model.Title,
                 Message = S["A topic has been posted with a label your following"],
                 CreatedUserId = context.Model.CreatedUserId,
-                Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",

@@ -20,7 +20,7 @@ using Plato.Internal.Notifications.Abstractions;
 namespace Plato.Discuss.Labels.Follow.Notifications
 {
 
-    public class NewTopicEmail : INotificationProvider<Topic>
+    public class NewLabelEmail : INotificationProvider<Topic>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -29,7 +29,7 @@ namespace Plato.Discuss.Labels.Follow.Notifications
         private readonly IEntityStore<Topic> _topicStore;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
-        public NewTopicEmail(
+        public NewLabelEmail(
             IContextFacade contextFacade,
             ILocaleStore localeStore,
             IEmailManager emailManager,

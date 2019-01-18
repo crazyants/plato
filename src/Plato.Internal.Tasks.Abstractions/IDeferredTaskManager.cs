@@ -16,9 +16,7 @@ namespace Plato.Internal.Tasks.Abstractions
         bool HasPendingTasks { get; }
 
         void AddTask(Func<DeferredTaskContext, Task> task);
-
-        void ExecuteAsync(Func<DeferredTaskContext, Task> task);
-
+        
         Task ExecuteTaskAsync(DeferredTaskContext context);
 
     }

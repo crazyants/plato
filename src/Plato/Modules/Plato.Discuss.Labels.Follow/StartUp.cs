@@ -40,8 +40,8 @@ namespace Plato.Discuss.Labels.Follow
             services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
 
             // Notification Providers
-            services.AddScoped<INotificationProvider<Topic>, NewTopicEmail>();
-            services.AddScoped<INotificationProvider<Topic>, NewTopicWeb>();
+            services.AddScoped<INotificationProvider<Topic>, NewLabelEmail>();
+            services.AddScoped<INotificationProvider<Topic>, NewLabelWeb>();
 
             // View providers
             services.AddScoped<IViewProviderManager<Label>, ViewProviderManager<Label>>();

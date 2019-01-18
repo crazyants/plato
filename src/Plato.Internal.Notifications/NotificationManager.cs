@@ -47,11 +47,7 @@ namespace Plato.Internal.Notifications
                 }
                 catch (Exception e)
                 {
-                    if (_logger.IsEnabled(LogLevel.Critical))
-                    {
-                        _logger.LogError(
-                            $"An error occurred whilst invoking the SendAsync method within a notification provider for notification type '{notification.Type.Name}'. Error Message: {e.Message}");
-                    }
+                    _logger.LogError(e, $"An error occurred whilst invoking the SendAsync method within a notification provider for notification type '{notification.Type.Name}'.");
                 }
             }
             

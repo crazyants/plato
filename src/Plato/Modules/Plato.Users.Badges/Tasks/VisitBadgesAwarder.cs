@@ -58,7 +58,7 @@ namespace Plato.Users.Badges.Tasks
                 SELECT UserId FROM @myTable;";
 
 
-        public int IntervalInSeconds => 60;
+        public int IntervalInSeconds => 120;
         
         public IEnumerable<Badge> Badges => new[]
         {
@@ -78,13 +78,13 @@ namespace Plato.Users.Badges.Tasks
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
-            INotificationManager<Badge> notificaitonManager, 
+            INotificationManager<Badge> notificationManager, 
             IUserReputationAwarder userReputationAwarder)
         {
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _userStore = userStore;
-            _notificationManager = notificaitonManager;
+            _notificationManager = notificationManager;
             _userReputationAwarder = userReputationAwarder;
         }
 

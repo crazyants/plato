@@ -25,32 +25,32 @@ namespace Plato.Internal.Tasks
 
         public void StartTasks()
         {
-            foreach (var provider in _providers)
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
+             foreach (var provider in _providers)
                 {
-                    _logger.LogInformation($"Initializing background task provider of type '{provider.GetType()}'.");
+
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation($"Initializing background task provider of type '{provider.GetType()}'.");
+                    }
+                    
+                    _safeTimerFactory.Start(async (sender, args) =>
+                    {
+                        try
+                        {
+                            await provider.ExecuteAsync(sender, args);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, $"An error occurred whilst executing the timer callback for background task provider of type '{provider.GetType()}'");
+                        }
+                    }, new SafeTimerOptions()
+                    {
+                        Owner = provider.GetType(),
+                        IntervalInSeconds = provider.IntervalInSeconds
+                    });
+
+
                 }
-                
-                _safeTimerFactory.Start(async (sender, args) =>
-                {
-                    try
-                    {
-                        await provider.ExecuteAsync(sender, args);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, $"An error occurred whilst executing the timer callback for background task provider of type '{provider.GetType()}'");
-                    }
-                }, new SafeTimerOptions()
-                {
-                    Owner = provider.GetType(),
-                    IntervalInSeconds = provider.IntervalInSeconds
-                });
-
-
-            }
 
         }
 

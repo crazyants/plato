@@ -27,42 +27,7 @@ namespace Plato.Internal.Tasks
         {
             _deferredTaskState.Tasks.Add(task);
         }
-
-        public void ExecuteAsync(Func<DeferredTaskContext, Task> task)
-        {
-
-            return;
-
-            //if (_context == null)
-            //{
-            //    _context  = new DeferredTaskContext(_serviceProvider);
-            //}
-
-            //lock (_safeTimerFactory)
-            //{
-            //    _safeTimerFactory.Start(async (sender, args) =>
-            //    {
-            //        try
-            //        {
-            //            await task.Invoke(_context);
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            if (_logger.IsEnabled(LogLevel.Critical))
-            //            {
-            //                _logger.LogError(
-            //                    $"An error occurred whilst executing a deferred task. Error: {e.Message}");
-            //            }
-            //        }
-            //    }, new SafeTimerOptions()
-            //    {
-            //        RunOnStart = true,
-            //        RunOnce = true
-            //    });
-            //}
-         
-        }
-
+      
         public async Task ExecuteTaskAsync(DeferredTaskContext context)
         {
             foreach (var task in _deferredTaskState.Tasks)
