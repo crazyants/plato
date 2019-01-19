@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Channels.Follow.NotificationTypes;
+using Plato.Discuss.Tags.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
@@ -12,10 +12,10 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Discuss.Channels.Follow.Notifications
+namespace Plato.Discuss.Tags.Follow.Notifications
 {
 
-    public class NewTopicWeb : INotificationProvider<Topic>
+    public class NewTagWeb : INotificationProvider<Topic>
     {
         
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
@@ -25,7 +25,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
 
         public IStringLocalizer S { get; }
         
-        public NewTopicWeb(
+        public NewTagWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IUserNotificationsManager<UserNotification> userNotificationManager,
@@ -43,7 +43,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
         {
             
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(WebNotifications.NewTopic.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(WebNotifications.NewTag.Name, StringComparison.Ordinal))
             {
                 return null;
             }
@@ -59,7 +59,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = context.Model.Title,
-                Message = S["A topic has been posted within a channel your following"],
+                Message = S["A topic has been posted within a tag your following"],
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {

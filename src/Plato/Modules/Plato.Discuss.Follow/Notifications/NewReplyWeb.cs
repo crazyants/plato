@@ -24,6 +24,7 @@ namespace Plato.Discuss.Follow.Notifications
         private readonly IContextFacade _contextFacade;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
         private readonly IEntityStore<Topic> _topicStore;
+        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
         public IHtmlLocalizer T { get; }
 
@@ -34,11 +35,13 @@ namespace Plato.Discuss.Follow.Notifications
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
             IUserNotificationsManager<UserNotification> userNotificationManager,
-            IEntityStore<Topic> topicStore)
+            IEntityStore<Topic> topicStore,
+            ICapturedRouterUrlHelper capturedRouterUrlHelper)
         {
             _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
             _topicStore = topicStore;
+            _capturedRouterUrlHelper = capturedRouterUrlHelper;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -64,6 +67,9 @@ namespace Plato.Discuss.Follow.Notifications
                 return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the topic follow notification '{WebNotifications.NewReply.Name}'.");
             }
 
+            // Get base Uri
+            var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
+
             // Build user notification
             var userNotification = new UserNotification()
             {
@@ -72,7 +78,7 @@ namespace Plato.Discuss.Follow.Notifications
                 Title = topic.Title,
                 Message = S["A reply has been posted within a topic your following"],
                 CreatedUserId = context.Model.CreatedUserId,
-                Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",

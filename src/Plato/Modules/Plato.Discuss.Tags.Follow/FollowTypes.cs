@@ -2,16 +2,16 @@
 using Plato.Follows.Models;
 using Plato.Follows.Services;
 
-namespace Plato.Follow.Tags
+namespace Plato.Discuss.Tags.Follow
 {
 
     public class FollowTypes : IFollowTypeProvider
     {
         
         public static readonly FollowType Tag =
-            new FollowType("Tag",
+            new FollowType("DiscussTag",
                 "Follow Tag",
-                "Folow this tag to get notified when new content is posted with this tag.",
+                "Follow this tag to get notified when new topics are posted with this tag.",
                 "Unsubscribe",
                 "You are already following this tag. Unsubscribe below...");
 

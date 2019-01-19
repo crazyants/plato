@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Follow.Tags</AssemblyName>
-    <PackageId>Plato.Follow.Tags</PackageId>
+    <AssemblyName>Plato.Discuss.Tags.Follow</AssemblyName>
+    <PackageId>Plato.Discuss.Tags.Follow</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -12,12 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
+    <ProjectReference Include="..\Plato.Discuss.Tags\Plato.Discuss.Tags.csproj" />
     <ProjectReference Include="..\Plato.Follows\Plato.Follows.csproj" />
-    <ProjectReference Include="..\Plato.Tags\Plato.Tags.csproj" />
   </ItemGroup>
 
   <ItemGroup>

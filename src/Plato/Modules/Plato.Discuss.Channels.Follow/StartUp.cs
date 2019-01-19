@@ -41,7 +41,7 @@ namespace Plato.Discuss.Channels.Follow
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
 
-            // Notification providers
+            // Notification type providers
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
 

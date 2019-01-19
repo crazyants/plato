@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Plato.Discuss.Channels.Follow.NotificationTypes;
+using Plato.Discuss.Tags.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
@@ -15,10 +15,10 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
 
-namespace Plato.Discuss.Channels.Follow.Notifications
+namespace Plato.Discuss.Tags.Follow.Notifications
 {
 
-    public class NewTopicEmail : INotificationProvider<Topic>
+    public class NewTagEmail : INotificationProvider<Topic>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -26,7 +26,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
         private readonly IEmailManager _emailManager;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
-        public NewTopicEmail(
+        public NewTagEmail(
             IContextFacade contextFacade,
             ILocaleStore localeStore,
             IEmailManager emailManager, 
@@ -42,7 +42,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
         {
             
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewTopic.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewTag.Name, StringComparison.Ordinal))
             {
                 return null;
             }
@@ -51,7 +51,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            var templateId = "NewTopic";
+            var templateId = "NewTag";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)

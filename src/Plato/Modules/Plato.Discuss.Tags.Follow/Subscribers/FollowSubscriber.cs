@@ -4,8 +4,9 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
+using Plato.Discuss.Tags.Follow;
 
-namespace Plato.Follow.Tags.Subscribers
+namespace Plato.Discuss.Tags.Follow.Subscribers
 {
     public class FollowSubscriber : IBrokerSubscriber
     {

@@ -1,4 +1,4 @@
-Name: Plato Follow Tags
+Name: Plato Discuss Tags Follow
 Description: Adds the ability for users to follow tags.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
@@ -12,7 +12,7 @@ Dependencies:
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Tags",
+		Id: "Plato.Discuss.Tags",
 		Version: "1.0.0"
 	}
 ]

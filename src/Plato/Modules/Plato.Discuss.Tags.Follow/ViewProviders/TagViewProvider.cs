@@ -8,7 +8,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
 
-namespace Plato.Follow.Tags.ViewProviders
+namespace Plato.Discuss.Tags.Follow.ViewProviders
 {
     public class TagViewProvider : BaseViewProvider<Tag>
     {

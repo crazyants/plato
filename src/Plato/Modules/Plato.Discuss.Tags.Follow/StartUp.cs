@@ -2,16 +2,21 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Discuss.Models;
+using Plato.Discuss.Tags.Follow.Notifications;
+using Plato.Discuss.Tags.Follow.NotificationTypes;
 using Plato.Follows.Services;
-using Plato.Follow.Tags.Subscribers;
-using Plato.Follow.Tags.ViewProviders;
+using Plato.Discuss.Tags.Follow.Subscribers;
+using Plato.Discuss.Tags.Follow.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Notifications;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.Tags.Models;
 
-namespace Plato.Follow.Tags
+namespace Plato.Discuss.Tags.Follow
 {
     public class Startup : StartupBase
     {
@@ -25,12 +30,24 @@ namespace Plato.Follow.Tags
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // Tag View providers
+            // Notification types
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
+
+            // Notification managers
+            services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+
+            // Notification Providers
+            services.AddScoped<INotificationProvider<Topic>, NewTagEmail>();
+            services.AddScoped<INotificationProvider<Topic>, NewTagWeb>();
+            
+            // View providers
             services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
 
-            // Follow subscribers
+            // Subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
+            services.AddScoped<IBrokerSubscriber, EntityTagSubscriber<Topic>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
