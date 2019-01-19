@@ -115,7 +115,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             _deferredTaskManager.AddTask(async context =>
             {
 
-                // Get all follows for found labels
+                // Get all follows for tag
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
@@ -186,11 +186,11 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
         }
 
-        Task<EntityTag> EntityTagUpdated(EntityTag entityLabel)
+        Task<EntityTag> EntityTagUpdated(EntityTag entityTag)
         {
             // Tag notifications are not triggered for entity updates
             // This could possibly be implemented at a later stage
-            return Task.FromResult(entityLabel);
+            return Task.FromResult(entityTag);
         }
         
         #endregion

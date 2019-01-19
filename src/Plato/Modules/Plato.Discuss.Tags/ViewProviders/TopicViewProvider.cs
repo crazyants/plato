@@ -12,6 +12,7 @@ using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
@@ -28,6 +29,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         private readonly IEntityTagManager<EntityTag> _entityTagManager;
         private readonly ITagManager<Tag> _tagManager;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IContextFacade _contextFacade;
 
         private readonly HttpRequest _request;
         
@@ -38,7 +40,8 @@ namespace Plato.Discuss.Tags.ViewProviders
             IHttpContextAccessor httpContextAccessor, 
             IEntityTagManager<EntityTag> entityTagManager,
             ITagManager<Tag> tagManager, 
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IContextFacade contextFacade)
         {
             _tagStore = tagStore;
             _entityStore = entityStore;
@@ -46,6 +49,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             _entityTagManager = entityTagManager;
             _tagManager = tagManager;
             _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -217,13 +221,20 @@ namespace Plato.Discuss.Tags.ViewProviders
                     }
                 }
 
+
+
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
                 // Add new entity labels
                 foreach (var tag in tagsToAdd)
                 {
                     var result = await _entityTagManager.CreateAsync(new EntityTag()
                     {
                         EntityId = topic.Id,
-                        TagId = tag.Id
+                        TagId = tag.Id,
+                        CreatedUserId = user?.Id ?? 0,
+                        CreatedDate = DateTime.UtcNow
                     });
                     if (!result.Succeeded)
                     {

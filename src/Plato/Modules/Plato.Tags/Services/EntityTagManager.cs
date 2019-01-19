@@ -13,17 +13,15 @@ namespace Plato.Tags.Services
     {
 
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
-        private readonly IContextFacade _contextFacade;
+    
         private readonly IBroker _broker;
 
         public EntityTagManager(
             IEntityTagStore<EntityTag> entityTagStore,
-            IContextFacade contextFacade,
             IBroker broker)
         {
             _entityTagStore = entityTagStore;
             _broker = broker;
-            _contextFacade = contextFacade;
         }
 
         public async Task<ICommandResult<EntityTag>> CreateAsync(EntityTag model)
@@ -49,14 +47,18 @@ namespace Plato.Tags.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.TagId));
             }
-            
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            
-            // Update
-            model.CreatedUserId = user?.Id ?? 0;
-            model.CreatedDate = DateTime.UtcNow;
-        
+
+            if (model.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
+
+
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
+
             // Invoke EntityTagCreating subscriptions
             foreach (var handler in _broker.Pub<EntityTag>(this, "EntityTagCreating"))
             {
@@ -110,9 +112,17 @@ namespace Plato.Tags.Services
                 throw new ArgumentOutOfRangeException(nameof(model.TagId));
             }
             
-            // Get authenticated user
-            //var user = await _contextFacade.GetAuthenticatedUserAsync();
-         
+            if (model.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
+
+
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
+            
             // Invoke EntityTagUpdating subscriptions
             foreach (var handler in _broker.Pub<EntityTag>(this, "EntityTagUpdating"))
             {

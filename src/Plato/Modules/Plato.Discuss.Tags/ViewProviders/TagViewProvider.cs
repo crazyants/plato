@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -11,7 +12,7 @@ using Plato.Tags.Stores;
 
 namespace Plato.Discuss.Tags.ViewProviders
 {
-    public class TagViewProvider : BaseViewProvider<Tag>
+    public class TagViewProvider : BaseViewProvider<DiscussTag>
     {
 
         private readonly ITagStore<Tag> _tagStore;
@@ -33,7 +34,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         
         #region "Imlementation"
         
-        public override Task<IViewProviderResult> BuildIndexAsync(Tag label, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(DiscussTag tag, IViewProviderContext context)
         {
 
             // Get index view model from context
@@ -47,7 +48,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussTag tag, IViewProviderContext context)
         {
 
             // Get topic index view model from context
@@ -59,13 +60,14 @@ namespace Plato.Discuss.Tags.ViewProviders
                 PagerOpts = viewModel?.Pager
             };
 
-            // Ensure we explictly set the featureId
+            // Ensure we explicitly set the featureId
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature == null)
             {
                 return default(IViewProviderResult);
             }
             
+            // Get all tags for feature
             var tags = await _tagStore.QueryAsync()
                 .Take(1, 20)
                 .Select<TagQueryParams>(q =>
@@ -75,6 +77,7 @@ namespace Plato.Discuss.Tags.ViewProviders
                 .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();
 
+            // Build view
             return Views(
                 View<Tag>("Home.Display.Header", model => tag).Zone("header").Order(1),
                 View<Tag>("Home.Display.Tools", model => tag).Zone("tools").Order(1),
@@ -89,12 +92,12 @@ namespace Plato.Discuss.Tags.ViewProviders
             
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Tag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(DiscussTag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Tag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(DiscussTag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

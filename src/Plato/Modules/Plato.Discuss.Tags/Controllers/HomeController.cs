@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Plato.Discuss.Tags.Models;
 using Plato.Tags.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
@@ -19,7 +20,7 @@ namespace Plato.Discuss.Tags.Controllers
     {
 
        
-        private readonly IViewProviderManager<Tag> _tagViewProvider;
+        private readonly IViewProviderManager<DiscussTag> _tagViewProvider;
         private readonly ITagStore<Tag> _tagStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
@@ -30,7 +31,7 @@ namespace Plato.Discuss.Tags.Controllers
         public IStringLocalizer S { get; }
         
         public HomeController(
-            IViewProviderManager<Tag> tagViewProvider,
+            IViewProviderManager<DiscussTag> tagViewProvider,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             ITagStore<Tag> tagStore,
@@ -127,7 +128,7 @@ namespace Plato.Discuss.Tags.Controllers
             }
             
             // Return view
-            return View(await _tagViewProvider.ProvideIndexAsync(new Tag(), this));
+            return View(await _tagViewProvider.ProvideIndexAsync(new DiscussTag(), this));
 
         }
         
@@ -221,7 +222,7 @@ namespace Plato.Discuss.Tags.Controllers
             }
             
             // Return view
-            return View(await _tagViewProvider.ProvideDisplayAsync(tag, this));
+            return View(await _tagViewProvider.ProvideDisplayAsync(new DiscussTag(tag), this));
 
         }
         

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Models;
 using Plato.Discuss.Tags.Badges;
+using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.Navigation;
 using Plato.Discuss.Tags.Services;
 using Plato.Discuss.Tags.Tasks;
@@ -49,8 +50,8 @@ namespace Plato.Discuss.Tags
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
 
             // Tag view providers
-            services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
-            services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
+            services.AddScoped<IViewProviderManager<DiscussTag>, ViewProviderManager<DiscussTag>>();
+            services.AddScoped<IViewProvider<DiscussTag>, TagViewProvider>();
             
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();
