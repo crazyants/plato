@@ -1,16 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Plato.Discuss.Tags.Models;
 using Plato.Follows.Stores;
 using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
 
 namespace Plato.Discuss.Tags.Follow.ViewProviders
 {
-    public class TagViewProvider : BaseViewProvider<Tag>
+    public class TagViewProvider : BaseViewProvider<DiscussTag>
     {
 
         private readonly ITagStore<Tag> _tagStore;
@@ -27,7 +26,7 @@ namespace Plato.Discuss.Tags.Follow.ViewProviders
             _followStore = followStore;
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussTag tag, IViewProviderContext context)
         {
 
             var existingTag = await _tagStore.GetByIdAsync(tag.Id);
@@ -64,17 +63,17 @@ namespace Plato.Discuss.Tags.Follow.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Tag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(DiscussTag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Tag discussUser, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(DiscussTag discussUser, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Tag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(DiscussTag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

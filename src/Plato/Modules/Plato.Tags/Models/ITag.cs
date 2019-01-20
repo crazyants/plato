@@ -26,8 +26,7 @@ namespace Plato.Tags.Models
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }
-
-
+        
     }
     
 }

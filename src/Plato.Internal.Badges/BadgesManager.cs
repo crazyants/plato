@@ -14,11 +14,10 @@ namespace Plato.Internal.Badges
     {
 
         private IEnumerable<TBadge> _badges;
-
-        private readonly IAuthorizationService _authorizationService;
+        
         private readonly IEnumerable<IBadgesProvider<TBadge>> _providers;
-        private readonly ILogger<BadgesManager<TBadge>> _logger;
         private readonly ITypedModuleProvider _typedModuleProvider;
+        private readonly ILogger<BadgesManager<TBadge>> _logger;
 
         public BadgesManager(
             IEnumerable<IBadgesProvider<TBadge>> providers,
@@ -28,7 +27,6 @@ namespace Plato.Internal.Badges
         {
             _providers = providers;
             _typedModuleProvider = typedModuleProvider;
-            _authorizationService = authorizationService;
             _logger = logger;
         }
 

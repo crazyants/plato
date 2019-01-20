@@ -8,6 +8,7 @@ using Plato.Discuss.Tags.Follow.NotificationTypes;
 using Plato.Follows.Services;
 using Plato.Discuss.Tags.Follow.Subscribers;
 using Plato.Discuss.Tags.Follow.ViewProviders;
+using Plato.Discuss.Tags.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -42,8 +43,8 @@ namespace Plato.Discuss.Tags.Follow
             services.AddScoped<INotificationProvider<Topic>, NewTagWeb>();
             
             // View providers
-            services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
-            services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
+            services.AddScoped<IViewProviderManager<DiscussTag>, ViewProviderManager<DiscussTag>>();
+            services.AddScoped<IViewProvider<DiscussTag>, TagViewProvider>();
 
             // Subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Tags.Models;
+﻿using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags.Models
 {

@@ -6,10 +6,6 @@ namespace Plato.Internal.Assets.Abstractions
     public class Asset
     {
 
-        // <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
-        // <script src="~/js/vendors/bootstrap.js"></script>
-        // <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
         public string Url { get; set; }
 
         public string CdnUrl { get; set; }

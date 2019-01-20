@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
@@ -91,9 +92,19 @@ namespace Plato.Mentions.Services
                     var user = userList.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.Ordinal));
                     if (user != null)
                     {
+
+                        var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["Area"] = "Plato.Users",
+                            ["Controller"] = "Home",
+                            ["Action"] = "Display",
+                            ["Id"] = user.Id,
+                            ["Alias"] = user.Alias
+                        });
+
                         // parse template
                         var sb = new StringBuilder(ReplacePattern);
-                        sb.Replace("{url}", $"{baseUrl}/users/{user.Id}/{user.Alias}");
+                        sb.Replace("{url}", baseUrl + url);
                         sb.Replace("{userName}", user.UserName);
 
                         // Replace match with template
