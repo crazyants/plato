@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -17,23 +18,28 @@ namespace Plato.Roles.ViewProviders
         private const string HtmlName = "UserRoles";
 
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IPlatoRoleStore _platoRoleStore;
-
+        private readonly IContextFacade _contextFacade;
+ 
         private readonly IStringLocalizer T;
 
         private readonly HttpRequest _request;
 
         public UserViewProvider(
             UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IPlatoRoleStore platoRoleStore,
             IHttpContextAccessor httpContextAccessor,
-            IStringLocalizer<UserViewProvider> stringLocalize)
+            IStringLocalizer<UserViewProvider> stringLocalize, IContextFacade contextFacade)
         {
             _userManager = userManager;
             _platoRoleStore = platoRoleStore;
             _request = httpContextAccessor.HttpContext.Request;
 
             T = stringLocalize;
+            _contextFacade = contextFacade;
+            _signInManager = signInManager;
         }
 
 
@@ -100,12 +106,13 @@ namespace Plato.Roles.ViewProviders
 
             if (context.Updater.ModelState.IsValid)
             {
-
+                var hasRoleChanges = false;
                 var rolesToRemove = new List<string>();
                 foreach (var role in await _userManager.GetRolesAsync(user))
                 {
                     if (!rolesToAdd.Contains(role))
                     {
+                        hasRoleChanges = true;
                         rolesToRemove.Add(role);
                     }
                 }
@@ -120,17 +127,36 @@ namespace Plato.Roles.ViewProviders
                 {
                     if (!await _userManager.IsInRoleAsync(user, role))
                     {
+                        hasRoleChanges = true;
                         await _userManager.AddToRoleAsync(user, role);
                     }
                 }
 
+                // Update user
                 var result = await _userManager.UpdateAsync(user);
-                
                 foreach (var error in result.Errors)
                 {
                     context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
-                
+
+                // Re-signin current authenticated User to reflect
+                // the claim changes if roles are updated within the identity cookie
+                if (hasRoleChanges)
+                {
+
+                    var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
+                    if (currentUser == null)
+                    {
+                        return await BuildEditAsync(user, context);
+                    }
+
+                    if (currentUser.Id == user.Id)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                    }
+              
+                }
+
             }
            
             return await BuildEditAsync(user, context);

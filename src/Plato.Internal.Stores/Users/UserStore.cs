@@ -42,9 +42,6 @@ namespace Plato.Internal.Stores.Users
             _platoUserRoleStore = platoUserRoleStore;
         }
 
-        #endregion
-        
-        #region "IUserStore"
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
