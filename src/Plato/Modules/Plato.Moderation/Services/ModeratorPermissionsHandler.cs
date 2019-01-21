@@ -72,10 +72,10 @@ namespace Plato.Moderation.Services
                 return;
             }
 
-            // Get autthenticated user
+            // Get authenticated user
             var user = await _userStore.GetByUserNameAsync(claims.Value);
 
-            // We need a user to perform access checksa against
+            // We need a user to perform access checks against
             if (user == null)
             {
                 return;
@@ -85,8 +85,8 @@ namespace Plato.Moderation.Services
             var userEntries = moderators.Data
                 .Where(m => m.UserId == user.Id)
                 .ToList();
-                
-            // Reduce our user entires to only parents of current resource we are checking
+
+            // Reduce our user entries to only parents of current resource we are checking
             
             var moderatorsToExamine = new List<Moderator>();
             foreach (var moderator in userEntries)

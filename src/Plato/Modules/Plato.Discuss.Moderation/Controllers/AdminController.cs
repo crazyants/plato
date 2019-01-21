@@ -12,6 +12,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Moderation.Extensions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 using Plato.WebApi.Models;
@@ -26,6 +27,8 @@ namespace Plato.Discuss.Moderation.Controllers
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
+
+      
 
         public IHtmlLocalizer T { get; }
 
@@ -54,6 +57,28 @@ namespace Plato.Discuss.Moderation.Controllers
 
         public async Task<IActionResult> Index()
         {
+
+
+            var moderators = await _moderatorStore.GetCategorizedModeratorsAsync();
+            
+            var claims = "";
+            foreach (var moderator in moderators)
+            {
+                claims += moderator.Key.DisplayName + "<br>";
+                foreach (var channel in moderator.Value)
+                {
+                    claims += channel.CategoryId + "<br>";
+                    foreach (var claim in channel.Claims)
+                    {
+                        claims += "- " + claim.ClaimType + " - " + claim.ClaimValue + "<br>";
+                    }
+                }
+            }
+
+
+            ViewData["claims"] = claims;
+
+
 
             _breadCrumbManager.Configure(builder =>
             {

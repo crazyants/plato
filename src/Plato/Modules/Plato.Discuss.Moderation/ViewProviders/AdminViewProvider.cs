@@ -197,14 +197,14 @@ namespace Plato.Discuss.Moderation.ViewProviders
         async Task<IEnumerable<string>> GetEnabledModeratorPermissionsAsync(Moderator moderator)
         {
 
-            // We can only obtain enabled permissions for existing roles
-            // Return an empty list for new roles to avoid additional null checks
+            // We can only obtain enabled permissions for existing moderators
+            // Return an empty list for new moderators to avoid additional null checks
             if (moderator.Id == 0)
             {
                 return new List<string>();
             }
 
-            // If the role is anonymous set the authtype to
+            // If the channel is empty set auth type to
             // null to ensure IsAuthenticated is set to false
             var authType = moderator.CategoryId != 0
                 ? "UserAuthType"
