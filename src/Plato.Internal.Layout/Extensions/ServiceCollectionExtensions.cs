@@ -39,19 +39,19 @@ namespace Plato.Internal.Layout.Extensions
             this IServiceCollection services)
         {
 
-            // layout updater
+            // Layout updater
             services.AddSingleton<ILayoutUpdater, LayoutUpdater>();
             
-            // gneric views
+            // Generic views
             services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
             services.AddSingleton<IViewFactory, ViewFactory>();
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
 
-            // add theming convension - configures theme layout based on controller type
+            // Add theming conventions - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
-            // action filters
+            // Action filters
             services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
@@ -61,10 +61,10 @@ namespace Plato.Internal.Layout.Extensions
             // model binding model accessor
             services.AddScoped<IUpdateModelAccessor, LocalModelBinderAccessor>();
 
-            // alerter - scoped to ensure alerter is only alive for each request
+            // Alerter - scoped to ensure alerter is only alive for each request
             services.AddScoped<IAlerter, Alerter>();
 
-            // Localizers
+            // Localization
             services.AddScoped<IStringLocalizer, LocaleStringLocalizer>();
             services.AddScoped<IHtmlLocalizer, LocaleHtmlLocalizer>();
             services.AddScoped<IViewLocalizer, LocaleViewLocalizer>();

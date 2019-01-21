@@ -88,8 +88,10 @@ namespace Plato.Roles.ViewProviders
             }
             
             // Update model
-            var model = new EditUserRolesViewModel();
-            model.SelectedRoles = rolesToAdd;
+            var model = new EditUserRolesViewModel
+            {
+                SelectedRoles = rolesToAdd
+            };
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {
@@ -131,7 +133,6 @@ namespace Plato.Roles.ViewProviders
                 
             }
            
-
             return await BuildEditAsync(user, context);
 
         }

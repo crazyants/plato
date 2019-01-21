@@ -12,7 +12,7 @@ namespace Plato.Internal.Layout.Theming
     {
 
         /// <summary>
-        /// Add theming convensions. Configures theme layout based on controller type.
+        /// Add theming conventions. Configures theme layout based on controller type.
         /// If a controller is prefixed with Admin the _AdminLayout.cshtml layout file will be used
         /// See ThemeViewStart class for implementation.
         /// </summary>

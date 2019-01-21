@@ -1,9 +1,11 @@
 ﻿@model UserIndexViewModel
 
+@Html.Raw(ViewData["claims"])
+
+
 @await DisplayAsync(new View("UserList", new
 {
     options = @Model.Options,
     pager = @Model.Pager
 }))
-
 

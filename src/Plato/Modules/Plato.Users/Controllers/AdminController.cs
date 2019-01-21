@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Extensions;
@@ -13,6 +16,7 @@ using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Users.Services;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users.Controllers
 {
@@ -20,6 +24,7 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
+        private readonly IAuthorizationService _authorizationService;
         private readonly IViewProviderManager<User> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
@@ -39,7 +44,7 @@ namespace Plato.Users.Controllers
             UserManager<User> userManager,
             IAlerter alerter,
             IPlatoUserManager<User> platoUserManager,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade, IAuthorizationService authorizationService)
         {
             _viewProvider = viewProvider;
             _userManager = userManager;
@@ -47,6 +52,7 @@ namespace Plato.Users.Controllers
             _alerter = alerter;
             _platoUserManager = platoUserManager;
             _contextFacade = contextFacade;
+            _authorizationService = authorizationService;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -61,7 +67,18 @@ namespace Plato.Users.Controllers
             PagerOptions pager)
         {
 
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            var claims = "";
+            foreach (var claim in HttpContext.User.Claims)
+            {
+                //if (claim.Type == ClaimTypes.Role)
+                //{
+                    claims += claim.Type + " - " + claim.Value + "<br>";
+                //}
+            }
+
+            ViewData["claims"] = claims;
+
+            //if (!await _authorizationService.AuthorizeAsync<Permission>(HttpContext.User, Permissions.ManageUsers))
             //{
             //    return Unauthorized();
             //}
@@ -125,7 +142,7 @@ namespace Plato.Users.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
+            // Add view options to context for use within view adapters
             HttpContext.Items[typeof(UserIndexViewModel)] = viewModel;
 
             // If we have a pager.page querystring value return paged results

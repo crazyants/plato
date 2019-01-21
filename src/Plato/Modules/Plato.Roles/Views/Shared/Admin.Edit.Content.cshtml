@@ -28,9 +28,9 @@
                                 </th>
                             </tr>
                             <tr>
-                                <td class="col-10 font-weight-bold">@T["Permission"]</td>
-                                <td class="col-1 font-weight-bold text-center">@T["Allow"]</td>
-                                <td class="col-1 font-weight-bold text-center">@T["Effective"]</td>
+                                <td class="col-10 text-muted">@T["Permission"]</td>
+                                <td class="col-1 text-center text-muted">@T["Allow"]</td>
+                                <td class="col-1 text-center text-muted">@T["Effective"]</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,7 +43,7 @@
                                 <td class="col-1 text-center">
                                     <label>
                                         <span class="switch switch-round">
-                                            <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Role?.RoleClaims?.Any(x => x.ClaimValue == permission.Name))"/>
+                                            <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@Model.Role?.RoleClaims?.Any(x => x.ClaimValue == permission.Name)"/>
                                             <span class="switch-slider"></span>
                                         </span>
                                     </label>
@@ -52,7 +52,7 @@
                                     
                                     <label>
                                         <span class="switch switch-round switch-disabled">
-                                            <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))" />
+                                            <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@Model.EnabledPermissions.Contains(permission.Name)" />
                                             <span class="switch-slider"></span>
                                         </span>
                                     </label>

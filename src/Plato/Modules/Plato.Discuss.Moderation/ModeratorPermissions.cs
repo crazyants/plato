@@ -21,6 +21,8 @@ namespace Plato.Discuss.Moderation
         public static readonly ModeratorPermission DeleteReplies =
             new ModeratorPermission("DeleteAnyReply", "Can delete any reply");
 
+        public static readonly ModeratorPermission PinTopics =
+            new ModeratorPermission("PinTopics", "Can pin any topic");
 
         public IEnumerable<ModeratorPermission> GetPermissions()
         {
@@ -29,7 +31,8 @@ namespace Plato.Discuss.Moderation
                 EditTopics,
                 EditReplies,
                 DeleteTopics,
-                DeleteReplies
+                DeleteReplies,
+                PinTopics
             };
         }
 
@@ -45,7 +48,8 @@ namespace Plato.Discuss.Moderation
                         EditTopics,
                         EditReplies,
                         DeleteTopics,
-                        DeleteReplies
+                        DeleteReplies,
+                        PinTopics
                     }
                 }
             };
