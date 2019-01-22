@@ -38,7 +38,12 @@ namespace Plato.Notifications
             
             // Replace user notification manager with real implementation
             services.Replace<IUserNotificationsManager<UserNotification>, UserNotificationsManager>(ServiceLifetime.Scoped);
+
+            // Services
+            services.AddScoped<IUserNotificationTypeDefaults, UserNotificationTypeDefaults>();
+
             
+
         }
 
         public override void Configure(

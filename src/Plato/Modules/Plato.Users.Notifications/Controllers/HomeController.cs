@@ -13,7 +13,9 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Notifications.Extensions;
 using Plato.Notifications.Models;
+using Plato.Notifications.Services;
 using Plato.Users.Notifications.ViewModels;
 
 namespace Plato.Users.Notifications.Controllers
@@ -25,6 +27,7 @@ namespace Plato.Users.Notifications.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IAlerter _alerter;
         private readonly INotificationTypeManager _notificationTypeManager;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,13 +41,15 @@ namespace Plato.Users.Notifications.Controllers
             IViewProviderManager<EditNotificationsViewModel> editProfileViewProvider,
             UserManager<User> userManager,
             IAlerter alerter,
-            INotificationTypeManager notificationTypeManager)
+            INotificationTypeManager notificationTypeManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _contextFacade = contextFacade;
             _editProfileViewProvider = editProfileViewProvider;
             _userManager = userManager;
             _alerter = alerter;
             _notificationTypeManager = notificationTypeManager;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -105,9 +110,9 @@ namespace Plato.Users.Notifications.Controllers
             }
 
             var types = "";
-            foreach (var type in enabledNotificationTypes)
+            foreach (var type in _notificationTypeManager.GetNotificationTypes())
             {
-                types += type.Name + " - " + type.Enabled + " <br>";
+                types += type.Name + " - " + user.NotificationEnabled(_userNotificationTypeDefaults, new WebNotification(type.Name)) + " - " + "<br>";
             }
 
             ViewData["types"] = types;

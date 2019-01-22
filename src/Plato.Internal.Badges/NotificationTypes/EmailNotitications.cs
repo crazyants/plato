@@ -18,12 +18,14 @@ namespace Plato.Internal.Badges.NotificationTypes
             {
                 NewBadge
             };
-
         }
 
         public IEnumerable<INotificationType> GetDefaultNotificationTypes()
         {
-            return null;
+            return new[]
+            {
+                NewBadge
+            };
         }
      
     }

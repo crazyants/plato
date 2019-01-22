@@ -10,6 +10,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
+using Plato.Notifications.Services;
 using Plato.Users.Notifications.ViewModels;
 
 namespace Plato.Users.Notifications.ViewProviders
@@ -22,17 +23,20 @@ namespace Plato.Users.Notifications.ViewProviders
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly INotificationTypeManager _notificationTypeManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public EditProfileViewProvider(
             UserManager<User> userManager, 
             IPlatoUserStore<User> platoUserStore,
             INotificationTypeManager notificationTypeManager, 
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _userManager = userManager;
             _platoUserStore = platoUserStore;
             _notificationTypeManager = notificationTypeManager;
             _httpContextAccessor = httpContextAccessor;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
 
         public override Task<IViewProviderResult> BuildDisplayAsync(EditNotificationsViewModel model,
@@ -58,51 +62,12 @@ namespace Plato.Users.Notifications.ViewProviders
                 return await BuildIndexAsync(viewModel, context);
             }
             
-            // Get all notification types to enable by default
-            var defaultNotificationTypes = _notificationTypeManager.GetDefaultNotificationTypes();
-            var defaultUserNotificationTypes = new List<UserNotificationType>();
-            foreach (var notificationType in defaultNotificationTypes)
-            {
-                defaultUserNotificationTypes.Add(new UserNotificationType(notificationType.Name));
-            }
-
-            // Holds our list of enabled notification types
-            var enabledNotificationTypes = new List<UserNotificationType>();
-
-            // Get saved notification types
-            var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();
-            
-            // We have previously saved settings
-            if (userNotificationSettings.NotificationTypes != null)
-            {
-
-                // Add all user specified notification types
-                enabledNotificationTypes.AddRange(userNotificationSettings.NotificationTypes);
-                
-                // Loop through all default notification types to see if the user has saved
-                // a value (on or off) for that notification type, if no value have been previously saved
-                // ensure the default notification type is added to our list of enabled notification types
-                foreach (var userNotification in defaultUserNotificationTypes)
-                {
-                    var foundNotification = enabledNotificationTypes.FirstOrDefault(n =>
-                        n.Name.Equals(userNotification.Name, StringComparison.OrdinalIgnoreCase));
-                    if (foundNotification == null)
-                    {
-                        enabledNotificationTypes.Add(userNotification);
-                    }
-                }
-            }
-            else
-            {
-                // If we don't have any notification types ensure we enable all by default
-                enabledNotificationTypes.AddRange(defaultUserNotificationTypes);
-            }
             
             var editNotificationsViewModel = new EditNotificationsViewModel()
             {
                 Id = user.Id,
                 CategorizedNotificationTypes = _notificationTypeManager.GetCategorizedNotificationTypes(),
-                EnabledNotificationTypes = enabledNotificationTypes
+                EnabledNotificationTypes = _userNotificationTypeDefaults.GetUserNotificationTypesWithDefaults(user)
             };
             
             return Views(
@@ -137,8 +102,10 @@ namespace Plato.Users.Notifications.ViewProviders
                 }
             }
 
-            // If the notification type does not appear within our post
-            // values ensures it's still added but disabled by default
+            // The notification type won't appear within request.Form.Keys
+            // if the checkbox is not checked. If the notification type does
+            // not exist within our request.Form.Keys collection ensures
+            // it's still added but disabled by default
             foreach (var notificationType in _notificationTypeManager.GetNotificationTypes())
             {
                 var existingType = notificationTypes.FirstOrDefault(n =>
@@ -148,12 +115,7 @@ namespace Plato.Users.Notifications.ViewProviders
                     notificationTypes.Add(new UserNotificationType(notificationType.Name, false));
                 }
             }
-
-
-
-
-
-
+            
             if (context.Updater.ModelState.IsValid)
             {
 
