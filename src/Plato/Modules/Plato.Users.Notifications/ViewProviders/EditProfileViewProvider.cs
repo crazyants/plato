@@ -47,7 +47,8 @@ namespace Plato.Users.Notifications.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(EditNotificationsViewModel viewModel,
+        public override async Task<IViewProviderResult> BuildEditAsync(
+            EditNotificationsViewModel viewModel,
             IViewProviderContext context)
         {
 
@@ -68,22 +69,22 @@ namespace Plato.Users.Notifications.ViewProviders
             // Holds our list of enabled notification types
             var enabledNotificationTypes = new List<UserNotificationType>();
 
-            // Get saved notificaiton types
+            // Get saved notification types
             var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();
-
+            
             // We have previously saved settings
             if (userNotificationSettings.NotificationTypes != null)
             {
 
                 // Add all user specified notification types
                 enabledNotificationTypes.AddRange(userNotificationSettings.NotificationTypes);
-
-                // Loop through all available notification types to see if the user has saved
-                // a value (on or off) for the notification type, if no value is specified
-                // ensure the notification type is added to our list of enabled notification types by default
+                
+                // Loop through all default notification types to see if the user has saved
+                // a value (on or off) for that notification type, if no value have been previously saved
+                // ensure the default notification type is added to our list of enabled notification types
                 foreach (var userNotification in defaultUserNotificationTypes)
                 {
-                    var foundNotification = userNotificationSettings.NotificationTypes.First(n =>
+                    var foundNotification = enabledNotificationTypes.FirstOrDefault(n =>
                         n.Name.Equals(userNotification.Name, StringComparison.OrdinalIgnoreCase));
                     if (foundNotification == null)
                     {
@@ -113,7 +114,8 @@ namespace Plato.Users.Notifications.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(EditNotificationsViewModel viewModel,
+        public override async Task<IViewProviderResult> BuildUpdateAsync(
+            EditNotificationsViewModel viewModel,
             IViewProviderContext context)
         {
 
@@ -128,14 +130,30 @@ namespace Plato.Users.Notifications.ViewProviders
             var notificationTypes = new List<UserNotificationType>();
             foreach (string key in request.Form.Keys)
             {
-                
                 if (key.StartsWith("Checkbox.") && request.Form[key] == "true")
                 {
                     var notificationTypeId = key.Substring("Checkbox.".Length);
                     notificationTypes.Add(new UserNotificationType(notificationTypeId));
                 }
             }
-            
+
+            // If the notification type does not appear within our post
+            // values ensures it's still added but disabled by default
+            foreach (var notificationType in _notificationTypeManager.GetNotificationTypes())
+            {
+                var existingType = notificationTypes.FirstOrDefault(n =>
+                    n.Name.Equals(notificationType.Name, StringComparison.OrdinalIgnoreCase));
+                if (existingType == null)
+                {
+                    notificationTypes.Add(new UserNotificationType(notificationType.Name, false));
+                }
+            }
+
+
+
+
+
+
             if (context.Updater.ModelState.IsValid)
             {
 
@@ -153,9 +171,9 @@ namespace Plato.Users.Notifications.ViewProviders
             }
 
             return await BuildEditAsync(viewModel, context);
-
-
+            
         }
+
     }
 
 }

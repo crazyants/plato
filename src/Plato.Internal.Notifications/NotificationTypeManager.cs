@@ -34,7 +34,11 @@ namespace Plato.Internal.Notifications
                 {
                     try
                     {
-                        notificationTypes.AddRange(provider.GetNotificationTypes());
+                        var types = provider.GetNotificationTypes();
+                        if (types != null)
+                        {
+                            notificationTypes.AddRange(types);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -60,7 +64,11 @@ namespace Plato.Internal.Notifications
                 {
                     try
                     {
-                        notificationTypes.AddRange(provider.GetDefaultNotificationTypes());
+                        var defaultNotificationTypes = provider.GetDefaultNotificationTypes();
+                        if (defaultNotificationTypes != null)
+                        {
+                            notificationTypes.AddRange(defaultNotificationTypes);
+                        }
                     }
                     catch (Exception e)
                     {

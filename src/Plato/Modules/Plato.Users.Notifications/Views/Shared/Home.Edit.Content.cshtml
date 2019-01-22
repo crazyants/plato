@@ -2,8 +2,11 @@
 @{
     var i = 0;
 }
-<input type="hidden" asp-for="Id" />
 
+@Html.Raw(ViewData["types"])
+
+
+<input type="hidden" asp-for="Id" />
 <div class="accordion" role="tablist">
     @foreach (var category in Model.CategorizedNotificationTypes.Keys)
     {
@@ -21,23 +24,23 @@
             <div id="@contentId" class="collapse show" role="tabpanel" aria-labelledby="@headerId" data-parent="#accordion">
                 <table class="table table-hover m-0 p-0">
                     <tbody>
-                    @foreach (var notificationType in Model.CategorizedNotificationTypes[category])
-                    {
-                        <tr>
-                            <td class="col-10">
-                                <h6>@T[notificationType.Title]</h6>
-                                @T[notificationType.Description]
-                            </td>
-                            <td class="col-2">
-                                <label>
-                                    <span class="switch switch-round">
-                                        <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@notificationType.Name" checked="@Model.EnabledNotificationTypes?.Any(x => x.Name == notificationType.Name)" />
-                                        <span class="switch-slider"></span>
-                                    </span>
-                                </label>
-                            </td>
-                        </tr>
-                    }
+                        @foreach (var notificationType in Model.CategorizedNotificationTypes[category])
+                        {
+                            <tr>
+                                <td class="col-10">
+                                    <h6>@T[notificationType.Title]</h6>
+                                    @T[notificationType.Description]
+                                </td>
+                                <td class="col-2">
+                                    <label>
+                                        <span class="switch switch-round">
+                                            <input class="form-check-input" type="checkbox" value="true" id="Checkbox.@notificationType.Name" name="Checkbox.@notificationType.Name" checked="@Model.EnabledNotificationTypes.FirstOrDefault(x => x.Name == notificationType.Name)?.Enabled" />
+                                            <span class="switch-slider"></span>
+                                        </span>
+                                    </label>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
