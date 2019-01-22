@@ -130,7 +130,7 @@ namespace Plato.Users
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
-            // register view adaptors
+            // register view adapters
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
             
             // Register reputation providers

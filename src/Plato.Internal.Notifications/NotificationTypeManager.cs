@@ -11,6 +11,7 @@ namespace Plato.Internal.Notifications
     {
 
         private IEnumerable<INotificationType> _notificationTypes;
+        private IEnumerable<INotificationType> _defaultNotificationTypes;
 
         private readonly IEnumerable<INotificationTypeProvider> _providers;
         private readonly ILogger<NotificationTypeManager> _logger;
@@ -47,6 +48,32 @@ namespace Plato.Internal.Notifications
             }
 
             return _notificationTypes;
+
+        }
+
+        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
+        {
+            if (_defaultNotificationTypes == null)
+            {
+                var notificationTypes = new List<INotificationType>();
+                foreach (var provider in _providers)
+                {
+                    try
+                    {
+                        notificationTypes.AddRange(provider.GetDefaultNotificationTypes());
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e,
+                            $"An exception occurred within the notification type provider. Please review your notification provider and try again. {e.Message}");
+                        throw;
+                    }
+                }
+
+                _defaultNotificationTypes = notificationTypes;
+            }
+
+            return _defaultNotificationTypes;
 
         }
         

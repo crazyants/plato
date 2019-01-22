@@ -8,6 +8,8 @@ namespace Plato.Internal.Notifications.Abstractions
 
         IEnumerable<INotificationType> GetNotificationTypes();
 
+        IEnumerable<INotificationType> GetDefaultNotificationTypes();
+        
         IDictionary<string, IEnumerable<INotificationType>> GetCategorizedNotificationTypes();
 
     }

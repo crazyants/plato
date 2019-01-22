@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -54,14 +56,52 @@ namespace Plato.Users.Notifications.ViewProviders
             {
                 return await BuildIndexAsync(viewModel, context);
             }
+            
+            // Get all notification types to enable by default
+            var defaultNotificationTypes = _notificationTypeManager.GetDefaultNotificationTypes();
+            var defaultUserNotificationTypes = new List<UserNotificationType>();
+            foreach (var notificationType in defaultNotificationTypes)
+            {
+                defaultUserNotificationTypes.Add(new UserNotificationType(notificationType.Name));
+            }
 
+            // Holds our list of enabled notification types
+            var enabledNotificationTypes = new List<UserNotificationType>();
+
+            // Get saved notificaiton types
             var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();
 
+            // We have previously saved settings
+            if (userNotificationSettings.NotificationTypes != null)
+            {
+
+                // Add all user specified notification types
+                enabledNotificationTypes.AddRange(userNotificationSettings.NotificationTypes);
+
+                // Loop through all available notification types to see if the user has saved
+                // a value (on or off) for the notification type, if no value is specified
+                // ensure the notification type is added to our list of enabled notification types by default
+                foreach (var userNotification in defaultUserNotificationTypes)
+                {
+                    var foundNotification = userNotificationSettings.NotificationTypes.First(n =>
+                        n.Name.Equals(userNotification.Name, StringComparison.OrdinalIgnoreCase));
+                    if (foundNotification == null)
+                    {
+                        enabledNotificationTypes.Add(userNotification);
+                    }
+                }
+            }
+            else
+            {
+                // If we don't have any notification types ensure we enable all by default
+                enabledNotificationTypes.AddRange(defaultUserNotificationTypes);
+            }
+            
             var editNotificationsViewModel = new EditNotificationsViewModel()
             {
                 Id = user.Id,
                 CategorizedNotificationTypes = _notificationTypeManager.GetCategorizedNotificationTypes(),
-                EnabledNotificationTypes = userNotificationSettings.NotificationTypes
+                EnabledNotificationTypes = enabledNotificationTypes
             };
             
             return Views(

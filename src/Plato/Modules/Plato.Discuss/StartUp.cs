@@ -21,6 +21,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -63,7 +64,9 @@ namespace Plato.Discuss
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IReplyService, ReplyService>();
 
-       
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
             
