@@ -27,9 +27,7 @@ namespace Plato.Discuss.Moderation.Controllers
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
-
-      
-
+        
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -254,7 +252,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
 
@@ -271,6 +269,57 @@ namespace Plato.Discuss.Moderation.Controllers
             }
 
             var result = await _moderatorStore.DeleteAsync(moderator);
+            if (result)
+            {
+                _alerter.Success(T["Moderator Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not delete the moderator"]);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        /// <summary>
+        /// Deletes all entries from the moderators table for the given userId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+
+            var ok = int.TryParse(id, out int userId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var user = await _userStore.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Get all moderator entries for the given user
+            var moderators = await _moderatorStore.QueryAsync()
+                .Select<ModeratorQueryParams>(q => { q.UserId.Equals(user.Id); })
+                .ToList();
+
+            var result = false;
+            if (moderators?.Data != null)
+            {
+                result = true;
+                foreach (var moderator in moderators.Data)
+                {
+                    if (!await _moderatorStore.DeleteAsync(moderator))
+                    {
+                        result = false;
+                    }
+                }
+            }
+
             if (result)
             {
                 _alerter.Success(T["Moderator Deleted Successfully"]);

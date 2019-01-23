@@ -13,7 +13,18 @@
                  <ul class="list-group list-group-flush list-group-hover">
                     <li class="list-group-item list-group-item-action">
                      
-                         <div role="button" class="btn btn-expand" title="@T["Channels"]" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
+                        <div class="dropdown float-right">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @T["Edit"]
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <button type="submit" asp-controller="Admin" asp-route-action="DeleteUser" asp-route-id="@user.Id.ToString()" data-provide="confirm" class="dropdown-item dropdown-item-danger">
+                                    @T["Delete Moderator"]
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div role="button" class="btn btn-expand" title="@T["Channels"]" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
                              <i class="fal fa-chevron-right"></i>
                          </div>
                          

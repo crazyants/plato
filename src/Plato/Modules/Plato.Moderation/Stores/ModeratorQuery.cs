@@ -59,6 +59,8 @@ namespace Plato.Moderation.Stores
     {
 
         private WhereInt _id;
+        private WhereInt _userId;
+        private WhereInt _categoryId;
         private WhereString _keywords;
         
         public WhereInt Id
@@ -67,6 +69,18 @@ namespace Plato.Moderation.Stores
             set => _id = value;
         }
 
+        public WhereInt UserId
+        {
+            get => _userId ?? (_userId = new WhereInt());
+            set => _userId = value;
+        }
+
+        public WhereInt CategoryId
+        {
+            get => _categoryId ?? (_categoryId = new WhereInt());
+            set => _categoryId = value;
+        }
+        
         public WhereString Keywords
         {
             get => _keywords ?? (_keywords = new WhereString());
@@ -190,6 +204,21 @@ namespace Plato.Moderation.Stores
                 sb.Append(_query.Params.Id.ToSqlString("m.Id"));
             }
 
+            // UserId
+            if (_query.Params.UserId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.UserId.Operator);
+                sb.Append(_query.Params.UserId.ToSqlString("m.UserId"));
+            }
+            
+            // CategoryId
+            if (_query.Params.CategoryId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.CategoryId.Operator);
+                sb.Append(_query.Params.CategoryId.ToSqlString("m.CategoryId"));
+            }
 
             return sb.ToString();
 

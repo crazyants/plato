@@ -48,10 +48,10 @@ namespace Plato.Discuss.Moderation.Navigation
                 return;
             }
             
-            // Add edit topic option
+            // Add moderator options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
-                        .Add(T["Pin Topic"], int.MinValue, edit => edit
+                        .Add(T["Pin Topic"], 1, edit => edit
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
                                 ["id"] = topic.Id,
@@ -59,7 +59,16 @@ namespace Plato.Discuss.Moderation.Navigation
                             })
                             .Permission(ModeratorPermissions.PinTopics)
                             .LocalNav()
-                        ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                        )
+                        .Add(T["Hide Topic"], 2, edit => edit
+                                .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                                {
+                                    ["id"] = topic.Id,
+                                    ["alias"] = topic.Alias
+                                })
+                                .Permission(ModeratorPermissions.HideTopics)
+                                .LocalNav()
+                            ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
 

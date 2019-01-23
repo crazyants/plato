@@ -24,6 +24,13 @@ namespace Plato.Discuss.Moderation
         public static readonly ModeratorPermission PinTopics =
             new ModeratorPermission("PinTopics", "Can pin any topic");
 
+        public static readonly ModeratorPermission HideTopics =
+            new ModeratorPermission("HideTopics", "Can hide any topic");
+
+        public static readonly ModeratorPermission ShowTopics =
+            new ModeratorPermission("ShowTopics", "Can make hidden topics visible");
+
+
         public IEnumerable<ModeratorPermission> GetPermissions()
         {
             return new[]
@@ -32,7 +39,9 @@ namespace Plato.Discuss.Moderation
                 EditReplies,
                 DeleteTopics,
                 DeleteReplies,
-                PinTopics
+                PinTopics,
+                HideTopics,
+                ShowTopics
             };
         }
 
@@ -49,7 +58,9 @@ namespace Plato.Discuss.Moderation
                         EditReplies,
                         DeleteTopics,
                         DeleteReplies,
-                        PinTopics
+                        PinTopics,
+                        HideTopics,
+                        ShowTopics
                     }
                 }
             };
