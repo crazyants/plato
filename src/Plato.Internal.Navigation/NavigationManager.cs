@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Navigation
 {
@@ -52,12 +53,13 @@ namespace Plato.Internal.Navigation
         public IEnumerable<MenuItem> BuildMenu(string name, ActionContext actionContext)
         {
 
-            var builder = new NavigationBuilder();
-            builder.ActionContext = actionContext;
+            var builder = new NavigationBuilder
+            {
+                ActionContext = actionContext
+            };
 
             // Processes all navigation builders to create a flat list of menu items.
             // If a navigation builder fails, it is ignored.
-            
             foreach (var navigationProvider in _navigationProviders)
             {
                 try
@@ -76,7 +78,7 @@ namespace Plato.Internal.Navigation
             Merge(menuItems);
 
             // Remove unauthorized menu items
-            //menuItems = Authorize(menuItems, actionContext.HttpContext.User);
+            menuItems = Authorize(menuItems, actionContext.HttpContext.User);
 
             // Compute Url and RouteValues properties to Href
             menuItems = ComputeHref(menuItems, actionContext);
@@ -273,29 +275,29 @@ namespace Plato.Internal.Navigation
         
         List<MenuItem> Authorize(IEnumerable<MenuItem> items, ClaimsPrincipal user)
         {
-            var filtered = new List<MenuItem>();
+            var output = new List<MenuItem>();
 
             foreach (var item in items)
             {
-                // TODO: Attach actual user and remove this clause
+            
                 if (user == null)
                 {
-                    filtered.Add(item);
+                    output.Add(item);
                 }
-                //else if (!item.Permissions.Any())
-                //{
-                //    filtered.Add(item);
-                //}
-                //else
-                //{
-                //    foreach (var permission in item.Permissions)
-                //    {
-                //        if (_authorizationService.AuthorizeAsync(user, permission, item.Resource).Result)
-                //        {
-                //            filtered.Add(item);
-                //        }
-                //    }
-                //}
+                else if (!item.Permissions.Any())
+                {
+                    output.Add(item);
+                }
+                else
+                {
+                    foreach (var permission in item.Permissions)
+                    {
+                        if (_authorizationService.AuthorizeAsync<Permission>(user, item.Resource, permission).Result)
+                        {
+                            output.Add(item);
+                        }
+                    }
+                }
 
                 // Process child items
                 var oldItems = item.Items;
@@ -303,7 +305,7 @@ namespace Plato.Internal.Navigation
                 item.Items = Authorize(item.Items, user).ToList();
             }
 
-            return filtered;
+            return output;
         }
 
         List<MenuItem> Reduce(IEnumerable<MenuItem> items)

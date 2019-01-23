@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Layout.Razor
 {
@@ -29,7 +26,7 @@ namespace Plato.Internal.Layout.Razor
                 if (_currentUser == null)
                 {
                     // Attempt to get user set via our AuthenticatedUserMiddleware
-                    var user = ViewContext.HttpContext.Features[typeof(User)];
+                    var user = ViewContext.HttpContext.Items[typeof(User)];
                     _currentUser = (User) user;
                 }
 
@@ -72,7 +69,7 @@ namespace Plato.Internal.Layout.Razor
             foreach (var view in views)
             {
                 var viewResult = await DisplayAsync(view);
-                builder.AppendHtml(viewResult);
+                var htmlContentBuilder = builder.AppendHtml(viewResult);
             }
 
             return builder;

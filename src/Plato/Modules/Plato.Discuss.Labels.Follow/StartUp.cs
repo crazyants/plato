@@ -62,5 +62,7 @@ namespace Plato.Discuss.Labels.Follow
             IServiceProvider serviceProvider)
         {
         }
+
     }
+
 }

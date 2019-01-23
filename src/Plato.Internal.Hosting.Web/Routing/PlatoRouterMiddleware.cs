@@ -87,7 +87,7 @@ namespace Plato.Internal.Hosting.Web.Routing
         {
 
             var serviceProvider = httpContext.RequestServices;
-            var startups = serviceProvider.GetServices<IStartup>();
+            var startUps = serviceProvider.GetServices<IStartup>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
             var appBuilder = new ApplicationBuilder(serviceProvider);
 
@@ -107,12 +107,12 @@ namespace Plato.Internal.Hosting.Web.Routing
                 inlineConstraintResolver);
 
             // Configure modules
-            foreach (var startup in startups)
+            foreach (var startup in startUps)
             {
                 startup.Configure(appBuilder, prefixedRouteBuilder, serviceProvider);
             }
                  
-            //// Add the default templated route to each shell 
+            //// Add the default template route to each shell 
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,
                 "Default",
@@ -125,8 +125,8 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             routeBuilder.Routes.Insert(0, AttributeRouting.CreateAttributeMegaRoute(serviceProvider));
 
-            // Attempt to get homepage route for tennet from site settings store
-            // If the tennet has not been created yet siteService will return null
+            // Attempt to get homepage route for tenant from site settings store
+            // If the tenant has not been created yet siteService will return null
             // if siteService returns null users will be presented with the SetUp module
             var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
             if (siteService != null)
@@ -172,7 +172,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             var pipeline = appBuilder.Build();
             return pipeline;
         }
+
     }
-
-
+    
 }

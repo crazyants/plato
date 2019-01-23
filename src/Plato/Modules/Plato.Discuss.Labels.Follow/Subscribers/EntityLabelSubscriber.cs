@@ -123,7 +123,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             _deferredTaskManager.AddTask(async context =>
             {
 
-                // Get all follows for found labels
+                // Get all follows for label
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {

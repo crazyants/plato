@@ -23,6 +23,7 @@ namespace Plato.Internal.Navigation
             //Permissions = new List<Permission>();
             Classes = new List<string>();
             Attributes = new ConcurrentDictionary<string, object>();
+            Permissions = new List<IPermission>();
             Items = new List<MenuItem>();
             LinkToFirstChild = true;
         }
@@ -53,7 +54,7 @@ namespace Plato.Internal.Navigation
         
         public MenuItemView View { get; set; }
         
-        public List<Permission> Permissions { get; }
+        public List<IPermission> Permissions { get; }
         
         public List<string> Classes { get; }
 

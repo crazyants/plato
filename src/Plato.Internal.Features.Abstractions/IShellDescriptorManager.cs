@@ -22,7 +22,7 @@ namespace Plato.Internal.Features.Abstractions
 
         Task<IEnumerable<IShellFeature>> GetFeatureDependenciesAsync(string featureId);
 
-        Task<IEnumerable<IShellFeature>> GetDepdendentFeaturesAsync(string featureId);
+        Task<IEnumerable<IShellFeature>> GetDependentFeaturesAsync(string featureId);
 
     }
 

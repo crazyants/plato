@@ -42,7 +42,8 @@ namespace Plato.Discuss.Moderation
             
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
-   
+            services.AddScoped<INavigationProvider, TopicMenu>();
+
         }
 
         public override void Configure(

@@ -127,7 +127,7 @@ namespace Plato.Internal.Features
             });
         }
 
-        public async Task<IEnumerable<IShellFeature>> GetDepdendentFeaturesAsync(string featureId)
+        public async Task<IEnumerable<IShellFeature>> GetDependentFeaturesAsync(string featureId)
         {
             // Load minimal features
             await EnsureFeaturesLoadedAsync();
@@ -160,7 +160,7 @@ namespace Plato.Internal.Features
             {
                 var f = feature;
                 f.FeatureDependencies = await GetFeatureDependenciesAsync(f.ModuleId);
-                f.DependentFeatures = await GetDepdendentFeaturesAsync(f.ModuleId);
+                f.DependentFeatures = await GetDependentFeaturesAsync(f.ModuleId);
                 _features.TryUpdate(f.ModuleId, f, feature);
             }
         }

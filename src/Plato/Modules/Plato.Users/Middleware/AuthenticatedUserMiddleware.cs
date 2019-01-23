@@ -98,7 +98,7 @@ namespace Plato.Users.Middleware
             lock (user)
             {
                 // Add user to httpContext for subsequent use
-                context.Features[typeof(User)] = user;
+                context.Items[typeof(User)] = user;
             }
             
         }

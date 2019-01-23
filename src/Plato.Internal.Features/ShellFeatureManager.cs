@@ -91,6 +91,9 @@ namespace Plato.Internal.Features
             var featureIds = feature.DependentFeatures
                 .Select(d => d.ModuleId).ToArray();
 
+
+
+
           return await DisableFeaturesAsync(featureIds);
 
         }
@@ -407,7 +410,7 @@ namespace Plato.Internal.Features
                     var handlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
                     var handlersList = handlers.ToList();
 
-                    // Interate through each feature we wish to invoke
+                    // Iterate through each feature we wish to invoke
                     // Use the event handlers if available else just add to contexts collection
                     foreach (var feature in features)
                     {

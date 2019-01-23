@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Navigation
 {
@@ -99,11 +100,12 @@ namespace Plato.Internal.Navigation
             return this;
         }
 
-        //public NavigationItemBuilder Permission(Permission permission)
-        //{
-        //    _item.Permissions.Add(permission);
-        //    return this;
-        //}
+        public NavigationItemBuilder Permission(IPermission permission)
+        {
+       
+            _item.Permissions.Add(permission);
+            return this;
+        }
 
         public NavigationItemBuilder View(string viewName, object model = null)
         {
