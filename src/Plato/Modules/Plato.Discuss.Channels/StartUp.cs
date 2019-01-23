@@ -22,6 +22,8 @@ using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Channels.Handlers;
 using Plato.Discuss.Channels.Services;
+using Plato.Entities.Repositories;
+using Plato.Entities.Stores;
 
 namespace Plato.Discuss.Channels
 {
@@ -36,8 +38,7 @@ namespace Plato.Discuss.Channels
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-       
+            
             //// Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
@@ -74,7 +75,7 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
             services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
        
-            // Register view adaptors
+            // Register view adapters
             services.AddScoped<IViewAdaptorProvider, ModerationViewAdaptorProvider>();
             services.AddScoped<IViewAdaptorProvider, TopicListItemViewAdaptor>();
 
@@ -82,7 +83,7 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
 
-            // Channel details updated
+            // Channel details updater
             services.AddScoped<IChannelDetailsUpdater, ChannelDetailsUpdater>();
 
         }

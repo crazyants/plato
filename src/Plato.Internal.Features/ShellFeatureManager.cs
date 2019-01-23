@@ -342,8 +342,8 @@ namespace Plato.Internal.Features
             var descriptor = new ShellDescriptor();
             foreach (var feature in enabledFeatures)
             {
-                var diable = featureIds.Any(f => f.Equals(feature.ModuleId, StringComparison.InvariantCultureIgnoreCase));
-                if (!diable)
+                var disable = featureIds.Any(f => f.Equals(feature.ModuleId, StringComparison.InvariantCultureIgnoreCase));
+                if (!disable)
                 {
                     descriptor.Modules.Add(new ShellModule(feature));
                 }
@@ -374,7 +374,7 @@ namespace Plato.Internal.Features
             Func<IFeatureEventContext, IFeatureEventHandler, Task<ConcurrentDictionary<string, IFeatureEventContext>>> invoker)
         {
 
-            // Holds the results of all our event executation contexts
+            // Holds the results of all our event execution contexts
             var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
 
             // Get setting before recycle
@@ -383,14 +383,14 @@ namespace Plato.Internal.Features
 
             // Build temporary shell descriptor to ensure feature event handlers are available
             // The feature may also reference dependencies via DI so ensure we also
-            // add any dependencies for the features to our temporary shell descrioptor
+            // add any dependencies for the features to our temporary shell descriptors
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
             {
                 // Add dependencies for feature to descriptor
-                if (feature.Dependencies.Any())
+                if (feature.FeatureDependencies.Any())
                 {
-                    foreach (var dependency in feature.Dependencies)
+                    foreach (var dependency in feature.FeatureDependencies)
                     {
                         descriptor.Modules.Add(new ShellModule(dependency.ModuleId, dependency.Version));
                     }

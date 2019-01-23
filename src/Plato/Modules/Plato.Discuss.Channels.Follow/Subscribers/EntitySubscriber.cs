@@ -11,6 +11,7 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
+using Plato.Notifications.Services;
 
 namespace Plato.Discuss.Channels.Follow.Subscribers
 {
@@ -22,19 +23,22 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IUserDataMerger _userDataMerger;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public EntitySubscriber(
             IBroker broker,
             IDeferredTaskManager deferredTaskManager,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
-            IUserDataMerger userDataMerger)
+            IUserDataMerger userDataMerger,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _broker = broker;
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
             _followStore = followStore;
             _userDataMerger = userDataMerger;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
 
         #region "Implementation"
@@ -159,7 +163,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                 {
 
                     // Email notifications
-                    if (user.NotificationEnabled(EmailNotifications.NewTopic))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
                     {
                         await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
                         {
@@ -168,7 +172,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                     }
 
                     // Web notifications
-                    if (user.NotificationEnabled(WebNotifications.NewTopic))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
                     {
                         await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
                         {
@@ -253,7 +257,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                 {
 
                     // Email notifications
-                    if (user.NotificationEnabled(EmailNotifications.NewTopic))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
                     {
                         await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
                         {
@@ -262,7 +266,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
                     }
 
                     // Web notifications
-                    if (user.NotificationEnabled(WebNotifications.NewTopic))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
                     {
                         await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
                         {

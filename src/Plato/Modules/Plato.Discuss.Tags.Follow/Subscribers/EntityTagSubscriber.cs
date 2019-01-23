@@ -13,6 +13,7 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
+using Plato.Notifications.Services;
 using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags.Follow.Subscribers
@@ -26,14 +27,16 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IUserDataMerger _userDataMerger;
-     
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+
         public EntityTagSubscriber(
             IBroker broker,
             IDeferredTaskManager deferredTaskManager,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
             IUserDataMerger userDataMerger,
-            IEntityStore<TEntity> entityStore)
+            IEntityStore<TEntity> entityStore, 
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _broker = broker;
             _deferredTaskManager = deferredTaskManager;
@@ -41,6 +44,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             _followStore = followStore;
             _userDataMerger = userDataMerger;
             _entityStore = entityStore;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
 
         #region "Implementation"
@@ -151,7 +155,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
                 {
 
                     // Email notifications
-                    if (user.NotificationEnabled(EmailNotifications.NewTag))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTag))
                     {
                         await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTag)
                         {
@@ -160,7 +164,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
                     }
 
                     // Web notifications
-                    if (user.NotificationEnabled(WebNotifications.NewTag))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTag))
                     {
                         await _notificationManager.SendAsync(new Notification(WebNotifications.NewTag)
                         {

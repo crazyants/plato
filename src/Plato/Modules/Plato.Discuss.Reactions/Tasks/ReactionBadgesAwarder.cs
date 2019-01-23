@@ -17,6 +17,7 @@ using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Internal.Badges.NotificationTypes;
+using Plato.Notifications.Services;
 
 namespace Plato.Discuss.Reactions.Tasks
 {
@@ -79,19 +80,22 @@ namespace Plato.Discuss.Reactions.Tasks
         private readonly IPlatoUserStore<User> _userStore;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public ReactionBadgesAwarder(
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
-            INotificationManager<Badge> notificaitonManager,
-            IUserReputationAwarder userReputationAwarder)
+            INotificationManager<Badge> notificationManager,
+            IUserReputationAwarder userReputationAwarder,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _userStore = userStore;
-            _notificationManager = notificaitonManager;
+            _notificationManager = notificationManager;
             _userReputationAwarder = userReputationAwarder;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
@@ -132,7 +136,7 @@ namespace Plato.Discuss.Reactions.Tasks
                         .OrderBy("LastLoginDate", OrderBy.Desc)
                         .ToList();
 
-                    // Send notificaitons
+                    // Send notifications
                     if (users != null)
                     {
                         foreach (var user in users.Data)
@@ -153,7 +157,7 @@ namespace Plato.Discuss.Reactions.Tasks
                             // ---------------
 
                             // Email notification
-                            if (user.NotificationEnabled(EmailNotifications.NewBadge))
+                            if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewBadge))
                             {
                                 await _notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
                                 {
@@ -163,7 +167,7 @@ namespace Plato.Discuss.Reactions.Tasks
                             }
 
                             // Web notification
-                            if (user.NotificationEnabled(WebNotifications.NewBadge))
+                            if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewBadge))
                             {
                                 await _notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
                                 {

@@ -15,6 +15,7 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Labels.Models;
 using Plato.Labels.Stores;
 using Plato.Notifications.Extensions;
+using Plato.Notifications.Services;
 
 namespace Plato.Discuss.Labels.Follow.Subscribers
 {
@@ -28,6 +29,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IUserDataMerger _userDataMerger;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public EntityLabelSubscriber(
             IBroker broker,
@@ -36,7 +38,8 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             IFollowStore<Follows.Models.Follow> followStore,
             IUserDataMerger userDataMerger,
             IEntityLabelStore<EntityLabel> entityLabelStore,
-            IEntityStore<TEntity> entityStore)
+            IEntityStore<TEntity> entityStore,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _broker = broker;
             _deferredTaskManager = deferredTaskManager;
@@ -45,6 +48,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             _userDataMerger = userDataMerger;
             _entityLabelStore = entityLabelStore;
             _entityStore = entityStore;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
 
         #region "Implementation"
@@ -155,7 +159,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
                 {
 
                     // Email notifications
-                    if (user.NotificationEnabled(EmailNotifications.NewLabel))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewLabel))
                     {
                         await _notificationManager.SendAsync(new Notification(EmailNotifications.NewLabel)
                         {
@@ -164,7 +168,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
                     }
 
                     // Web notifications
-                    if (user.NotificationEnabled(WebNotifications.NewLabel))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewLabel))
                     {
                         await _notificationManager.SendAsync(new Notification(WebNotifications.NewLabel)
                         {

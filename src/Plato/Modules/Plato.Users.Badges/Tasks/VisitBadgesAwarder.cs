@@ -17,6 +17,7 @@ using Plato.Internal.Models.Badges;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
 using Plato.Internal.Badges.NotificationTypes;
+using Plato.Notifications.Services;
 
 namespace Plato.Users.Badges.Tasks
 {
@@ -73,19 +74,22 @@ namespace Plato.Users.Badges.Tasks
         private readonly IPlatoUserStore<User> _userStore;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public VisitBadgesAwarder(
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
             INotificationManager<Badge> notificationManager, 
-            IUserReputationAwarder userReputationAwarder)
+            IUserReputationAwarder userReputationAwarder,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _userStore = userStore;
             _notificationManager = notificationManager;
             _userReputationAwarder = userReputationAwarder;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
@@ -146,17 +150,16 @@ namespace Plato.Users.Badges.Tasks
                             // ---------------
 
                             // Email notification
-                            if (user.NotificationEnabled(EmailNotifications.NewBadge))
+                            if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewBadge))
                             {
                                 await _notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
                                 {
-                                    To = user,
-                                    From = bot
+                                    To = user
                                 }, (Badge)badge);
                             }
 
                             // Web notification
-                            if (user.NotificationEnabled(WebNotifications.NewBadge))
+                            if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewBadge))
                             {
                                 await _notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
                                 {

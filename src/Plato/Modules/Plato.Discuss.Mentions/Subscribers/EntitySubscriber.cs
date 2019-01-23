@@ -14,6 +14,7 @@ using Plato.Discuss.Mentions.NotificationTypes;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
 using Plato.Notifications.Extensions;
+using Plato.Notifications.Services;
 
 namespace Plato.Discuss.Mentions.Subscribers
 {
@@ -26,6 +27,7 @@ namespace Plato.Discuss.Mentions.Subscribers
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IMentionsParser _mentionParser;
         private readonly ILogger<EntitySubscriber<TEntity>> _logger;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IBroker _broker;
 
         public EntitySubscriber(
@@ -34,12 +36,14 @@ namespace Plato.Discuss.Mentions.Subscribers
             INotificationManager<TEntity> notificationManager,
             IMentionsParser mentionParser,
             ILogger<EntitySubscriber<TEntity>> logger,
-            IBroker broker)
+            IBroker broker,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _entityMentionsManager = entityMentionsManager;
             _entityMentionsStore = entityMentionsStore;
             _mentionParser = mentionParser;
             _broker = broker;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _logger = logger;
             _notificationManager = notificationManager;
         }
@@ -222,7 +226,7 @@ namespace Plato.Discuss.Mentions.Subscribers
             {
 
                 // Email notifications
-                if (user.NotificationEnabled(EmailNotifications.NewMention))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewMention))
                 {
                     await _notificationManager.SendAsync(new Notification(EmailNotifications.NewMention)
                     {
@@ -231,7 +235,7 @@ namespace Plato.Discuss.Mentions.Subscribers
                 }
 
                 // Web notifications
-                if (user.NotificationEnabled(WebNotifications.NewMention))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewMention))
                 {
                     await _notificationManager.SendAsync(new Notification(WebNotifications.NewMention)
                     {

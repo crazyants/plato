@@ -11,6 +11,7 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
+using Plato.Notifications.Services;
 
 namespace Plato.Discuss.Follow.Subscribers
 {
@@ -27,19 +28,22 @@ namespace Plato.Discuss.Follow.Subscribers
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IUserDataMerger _userDataMerger;
         private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public EntityReplySubscriber(
             IBroker broker,
             INotificationManager<TEntityReply> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
             IUserDataMerger userDataMerger,
-            IDeferredTaskManager deferredTaskManager)
+            IDeferredTaskManager deferredTaskManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _broker = broker;
             _notificationManager = notificationManager;
             _followStore = followStore;
             _userDataMerger = userDataMerger;
             _deferredTaskManager = deferredTaskManager;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
         
         #region "Implementation"
@@ -145,7 +149,7 @@ namespace Plato.Discuss.Follow.Subscribers
                 {
 
                     // Email notifications
-                    if (user.NotificationEnabled(EmailNotifications.NewReply))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewReply))
                     {
                         await _notificationManager.SendAsync(new Notification(EmailNotifications.NewReply)
                         {
@@ -154,7 +158,7 @@ namespace Plato.Discuss.Follow.Subscribers
                     }
 
                     // Web notifications
-                    if (user.NotificationEnabled(WebNotifications.NewReply))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewReply))
                     {
                         await _notificationManager.SendAsync(new Notification(WebNotifications.NewReply)
                         {
