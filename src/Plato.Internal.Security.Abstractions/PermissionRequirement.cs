@@ -3,7 +3,7 @@ using System;
 
 namespace Plato.Internal.Security.Abstractions
 {
-    public class PermissionRequirement<TPermission> : IAuthorizationRequirement where TPermission : class, IPermission
+    public class PermissionRequirement : IAuthorizationRequirement 
     {
         public PermissionRequirement(IPermission permission)
         {

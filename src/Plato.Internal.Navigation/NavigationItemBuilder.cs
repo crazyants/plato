@@ -102,7 +102,6 @@ namespace Plato.Internal.Navigation
 
         public NavigationItemBuilder Permission(IPermission permission)
         {
-       
             _item.Permissions.Add(permission);
             return this;
         }

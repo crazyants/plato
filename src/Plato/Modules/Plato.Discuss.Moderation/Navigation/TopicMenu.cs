@@ -7,6 +7,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.Navigation
 {
@@ -66,13 +67,11 @@ namespace Plato.Discuss.Moderation.Navigation
                                     ["id"] = topic.Id,
                                     ["alias"] = topic.Alias
                                 })
-                                .Permission(ModeratorPermissions.HideTopics)
+                                .Resource(topic.CategoryId)
+                                .Permission(ModeratorPermissions.PinTopics)
                                 .LocalNav()
                             ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-
-
-
 
         }
 

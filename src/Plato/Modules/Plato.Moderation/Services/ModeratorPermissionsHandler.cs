@@ -13,7 +13,7 @@ using Plato.Moderation.Stores;
 namespace Plato.Moderation.Services
 {
 
-    public class ModeratorPermissionsHandler : AuthorizationHandler<PermissionRequirement<ModeratorPermission>>
+    public class ModeratorPermissionsHandler : AuthorizationHandler<PermissionRequirement>
     {
 
         private readonly IPlatoUserStore<User> _userStore;
@@ -31,7 +31,7 @@ namespace Plato.Moderation.Services
 
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
-            PermissionRequirement<ModeratorPermission> requirement)
+            PermissionRequirement requirement)
         {
 
             if (context.HasSucceeded)
@@ -98,7 +98,7 @@ namespace Plato.Moderation.Services
             {
                 foreach (var claim in moderator.Claims)
                 {
-                    if (!String.Equals(claim.ClaimType, ModeratorPermission.ClaimType, StringComparison.OrdinalIgnoreCase))
+                    if (!String.Equals(claim.ClaimType, ModeratorPermission.ClaimTypeName, StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
@@ -145,9 +145,7 @@ namespace Plato.Moderation.Services
         }
 
         #endregion
-
-
-
+        
     }
 
 }

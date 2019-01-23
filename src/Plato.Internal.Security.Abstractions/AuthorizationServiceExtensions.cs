@@ -22,7 +22,7 @@ namespace Plato.Internal.Security.Abstractions
             var result = await service.AuthorizeAsync(
                 principal, 
                 resource, 
-                new PermissionRequirement<TPermission>(permission));
+                new PermissionRequirement(permission));
             return result.Succeeded ? true : false;
         }
         

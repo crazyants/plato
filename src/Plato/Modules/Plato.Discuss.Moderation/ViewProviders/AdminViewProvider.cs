@@ -186,7 +186,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
                 if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
                 {
                     var permissionName = key.Substring("Checkbox.".Length);
-                    moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
+                    moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimTypeName, ClaimValue = permissionName });
                 }
             }
 

@@ -60,17 +60,21 @@ namespace Plato.Discuss.Moderation.Controllers
             var moderators = await _moderatorStore.GetCategorizedModeratorsAsync();
             
             var claims = "";
-            foreach (var moderator in moderators)
+            if (moderators != null)
             {
-                claims += moderator.Key.DisplayName + "<br>";
-                foreach (var channel in moderator.Value)
+                foreach (var moderator in moderators)
                 {
-                    claims += channel.CategoryId + "<br>";
-                    foreach (var claim in channel.Claims)
+                    claims += moderator.Key.DisplayName + "<br>";
+                    foreach (var channel in moderator.Value)
                     {
-                        claims += "- " + claim.ClaimType + " - " + claim.ClaimValue + "<br>";
+                        claims += channel.CategoryId + "<br>";
+                        foreach (var claim in channel.Claims)
+                        {
+                            claims += "- " + claim.ClaimType + " - " + claim.ClaimValue + "<br>";
+                        }
                     }
                 }
+
             }
 
 

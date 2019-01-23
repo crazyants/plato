@@ -220,11 +220,11 @@ namespace Plato.Roles.Controllers
                 if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
                 {
                     var permissionName = key.Substring("Checkbox.".Length);
-                    roleClaims.Add(new RoleClaim { ClaimType = Permission.ClaimType, ClaimValue = permissionName });
+                    roleClaims.Add(new RoleClaim { ClaimType = Permission.ClaimTypeName, ClaimValue = permissionName });
                 }
             }
 
-            role.RoleClaims.RemoveAll(c => c.ClaimType == Permission.ClaimType);
+            role.RoleClaims.RemoveAll(c => c.ClaimType == Permission.ClaimTypeName);
             role.RoleClaims.AddRange(roleClaims);
             
             var result = await _roleViewProvider.ProvideUpdateAsync(role, this);

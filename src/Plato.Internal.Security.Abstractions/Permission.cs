@@ -7,7 +7,9 @@ namespace Plato.Internal.Security.Abstractions
     public class Permission : IPermission
     {
 
-        public const string ClaimType = "Permission";
+        public const string ClaimTypeName = "Permission";
+
+        public string ClaimType { get; set; }
 
         public string Name { get; set; }
 
@@ -17,7 +19,12 @@ namespace Plato.Internal.Security.Abstractions
 
         public IEnumerable<IPermission> ImpliedBy { get; set; }
 
-        public Permission(string name)
+        public Permission()
+        {
+            ClaimType = ClaimTypeName;
+        }
+
+        public Permission(string name) : this()
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }

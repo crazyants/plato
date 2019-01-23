@@ -10,7 +10,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Roles.Services
 {
-    public class RolesPermissionsHandler : AuthorizationHandler<PermissionRequirement<Permission>>
+    public class RolesPermissionsHandler : AuthorizationHandler<PermissionRequirement>
     {
         private readonly RoleManager<Role> _roleManager;
 
@@ -23,7 +23,7 @@ namespace Plato.Roles.Services
 
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context, 
-            PermissionRequirement<Permission> requirement)
+            PermissionRequirement requirement)
         {
             if (context.HasSucceeded)
             {
@@ -59,7 +59,7 @@ namespace Plato.Roles.Services
                 {
                     foreach (var claim in role.RoleClaims)
                     {
-                        if (!String.Equals(claim.ClaimType, Permission.ClaimType, StringComparison.OrdinalIgnoreCase))
+                        if (!String.Equals(claim.ClaimType, Permission.ClaimTypeName, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }

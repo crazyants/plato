@@ -1,24 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Moderation.Models
 {
-    public class ModeratorPermission : IPermission
+    public class ModeratorPermission : Permission
     {
+        
+        public new const string ClaimTypeName = "ModeratorPermission";
 
-        public const string ClaimType = "ModeratorPermission";
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public string Category { get; set; }
-
-        public IEnumerable<IPermission> ImpliedBy { get; set; }
-
-        public ModeratorPermission(string name)
+        public ModeratorPermission()
+        {
+            ClaimType = ClaimTypeName;
+        }
+        
+        public ModeratorPermission(string name) : this()
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
