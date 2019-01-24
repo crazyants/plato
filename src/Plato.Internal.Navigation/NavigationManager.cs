@@ -292,7 +292,7 @@ namespace Plato.Internal.Navigation
                 {
                     foreach (var permission in item.Permissions)
                     {
-                        if (_authorizationService.AuthorizeAsync<Permission>(user, item.Resource, permission).Result)
+                        if (_authorizationService.AuthorizeAsync(user, item.Resource, permission).Result)
                         {
                             output.Add(item);
                         }

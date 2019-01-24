@@ -228,7 +228,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             var result = new List<string>();
             foreach (var permission in permissions)
             {
-                if (await _authorizationService.AuthorizeAsync<ModeratorPermission>(principal, moderator.CategoryId, permission))
+                if (await _authorizationService.AuthorizeAsync(principal, moderator.CategoryId, permission))
                 {
                     result.Add(permission.Name);
                 }

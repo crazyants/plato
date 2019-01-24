@@ -58,6 +58,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                 ["id"] = topic.Id,
                                 ["alias"] = topic.Alias
                             })
+                            .Resource(topic.CategoryId)
                             .Permission(ModeratorPermissions.PinTopics)
                             .LocalNav()
                         )
@@ -68,7 +69,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                     ["alias"] = topic.Alias
                                 })
                                 .Resource(topic.CategoryId)
-                                .Permission(ModeratorPermissions.PinTopics)
+                                .Permission(ModeratorPermissions.HideTopics)
                                 .LocalNav()
                             ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );

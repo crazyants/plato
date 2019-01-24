@@ -63,7 +63,6 @@ namespace Plato.Roles.Services
                         {
                             continue;
                         }
-
                         var permissionName = claim.ClaimValue;
                         if (grantingNames.Contains(permissionName))
                         {
@@ -103,7 +102,7 @@ namespace Plato.Roles.Services
             }
 
             // Administrator permission grants them all
-            stack.Add(StandardPermissions.Administrator.Name);
+            //stack.Add(StandardPermissions.Administrator.Name);
         }
 
         #endregion

@@ -40,6 +40,25 @@ namespace Plato.Moderation.Services
                 return;
             }
 
+            // We always need to be authenticated for moderator permissions to apply
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                return;
+            }
+
+            // The resource represents the channel we are checking against
+            if (context.Resource == null)
+            {
+                return;
+            }
+
+            // Ensure we can convert our resource Id
+            var validChannel = int.TryParse(context.Resource.ToString(), out var categoryId);
+            if (!validChannel)
+            {
+                return;
+            }
+
             // Get all moderators
             var moderators = await _moderatorStore
                 .QueryAsync()
@@ -50,18 +69,7 @@ namespace Plato.Moderation.Services
             {
                 return;
             }
-
-            // The resource represents the channel we are checking against
-            if (context.Resource == null)
-            {
-                return;
-            }
-            
-            // Determine which set of permissions would satisfy the access check
-            var grantingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            PermissionNames(requirement.Permission, grantingNames);
-
+    
             // Get username from claims
             var claims = context.User.Claims
                 .FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType);
@@ -81,18 +89,28 @@ namespace Plato.Moderation.Services
                 return;
             }
 
-            // Get all moderator entries for given identity
+            // Get all moderator entries for given identity and resource
             var userEntries = moderators.Data
-                .Where(m => m.UserId == user.Id)
+                .Where(m => m.UserId == user.Id & m.CategoryId == categoryId)
                 .ToList();
 
+            // No moderator entries for the user and resource
+            if (!userEntries.Any())
+            {
+                return;
+            }
+
             // Reduce our user entries to only parents of current resource we are checking
-            
+
             var moderatorsToExamine = new List<Moderator>();
             foreach (var moderator in userEntries)
             {
                 moderatorsToExamine.Add(moderator);
             }
+            
+            // Determine which set of permissions would satisfy the access check
+            var grantingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            PermissionNames(requirement.Permission, grantingNames);
 
             foreach (var moderator in moderatorsToExamine)
             {
@@ -141,7 +159,7 @@ namespace Plato.Moderation.Services
             }
 
             // Administrator permission grants them all
-            stack.Add(StandardPermissions.Administrator.Name);
+            //stack.Add(StandardPermissions.Administrator.Name);
         }
 
         #endregion
