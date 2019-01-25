@@ -7,7 +7,7 @@ namespace Plato.Internal.Security.Abstractions
     public static class AuthorizationServiceExtensions
     {
 
-        public static Task<bool> AuthorizeAsync<TPermission>(
+        public static Task<bool> AuthorizeAsync(
             this IAuthorizationService service,
             ClaimsPrincipal principal,
             IPermission permission)

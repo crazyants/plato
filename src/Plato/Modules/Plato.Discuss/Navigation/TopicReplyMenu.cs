@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Navigation
@@ -38,22 +39,9 @@ namespace Plato.Discuss.Navigation
                 return;
             }
 
-            //// Edit reply
-            //builder.Add(T["Edit"], int.MinValue + 1, edit => edit
-            //        .IconCss("fal fa-pencil")
-            //        .Attributes(new Dictionary<string, object>()
-            //        {
-            //            {"data-provide", "tooltip"},
-            //            {"title", T["Edit"]}
-            //        })
-            //        .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
-            //        {
-            //            ["id"] = reply?.Id ?? 0
-            //        })
-            //        //.Permission(Permissions.ManageRoles)
-            //        .LocalNav()
-            //    , new string[] {"edit-reply", "text-muted", "text-hidden"});
-            
+            //// Get user from context
+            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+      
             // Options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
@@ -63,17 +51,18 @@ namespace Plato.Discuss.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-
                         .Add(T["Edit"], int.MinValue + 1, edit => edit
                             .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
                                 ["id"] = reply?.Id ?? 0
                             })
-                            //.Permission(Permissions.ManageRoles)
+                            .Permission(user?.Id == reply.CreatedUserId ?
+                                Permissions.EditOwnReplies :
+                                Permissions.EditAnyReply)
                             .LocalNav())
                         .Add(T["Report"], report => report
                             .Action("Popular", "Home", "Plato.Discuss")
-                            //.Permission(Permissions.ManageRoles)
+                            .Permission(Permissions.ReportReplies)
                             .LocalNav()
                         ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );

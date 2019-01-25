@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
-using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.Navigation
 {
@@ -41,9 +39,10 @@ namespace Plato.Discuss.Moderation.Navigation
                 return;
             }
             
-
             // Get user from context
             var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+
+            // We always need a user for the moderator
             if (user == null)
             {
                 return;
@@ -52,6 +51,12 @@ namespace Plato.Discuss.Moderation.Navigation
             // Add moderator options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
+                        .IconCss("fa fa-ellipsis-h")
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-provide", "tooltip"},
+                            {"title", T["Options"]}
+                        })
                         .Add(T["Pin Topic"], 1, edit => edit
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {

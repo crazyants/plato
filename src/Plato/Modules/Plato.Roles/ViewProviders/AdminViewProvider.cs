@@ -196,7 +196,7 @@ namespace Plato.Roles.ViewProviders
             var result = new List<string>();
             foreach (var permission in permissions)
             {
-                if (await _authorizationService.AuthorizeAsync<Permission>(principal, permission))
+                if (await _authorizationService.AuthorizeAsync(principal, permission))
                 {
                     result.Add(permission.Name);
                 }

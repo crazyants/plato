@@ -425,7 +425,6 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             var results  = await _platoUserStore.QueryAsync()
-                .Take(1, 1000)
                 .Select<UserQueryParams>(q => q.RoleName.Equals(roleName))
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();

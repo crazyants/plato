@@ -40,8 +40,11 @@ namespace Plato.Discuss.Navigation
             {
                 return;
             }
-
-            // Build options menu
+            
+            // Get user from context
+            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+       
+            // Add topic options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
@@ -50,45 +53,27 @@ namespace Plato.Discuss.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Report"], int.MaxValue, report => report
-                            .Action("Report", "Home", "Plato.Discuss")
-                            .Attributes(new Dictionary<string, object>()
-                            {
-                                {"data-toggle", "dialog"}
-                            })
-                            //.Permission(user.Id == topic.Id ?
-                            //    Permissions.EditOwnTopics :
-                            //    Permissions.EditAnyTopic)
-                            .LocalNav()
-                        ), new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
-                );
-
-
-            // Get user from context
-            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
-            if (user == null)
-            {
-                return;
-            }
-            
-            // Add edit topic option
-            builder
-                .Add(T["Options"], int.MaxValue, options => options
                         .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
                                 ["id"] = topic.Id,
                                 ["alias"] = topic.Alias
                             })
-                            .Permission(user.Id == topic.CreatedUserId ?
+                            .Permission(user?.Id == topic.CreatedUserId ?
                                 Permissions.EditOwnTopics :
                                 Permissions.EditAnyTopic)
                             .LocalNav()
+                        )
+                        .Add(T["Report"], int.MaxValue, report => report
+                            .Action("Report", "Home", "Plato.Discuss")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-toggle", "dialog"}
+                            })
+                            .Permission(Permissions.ReportTopics)
+                            .LocalNav()
                         ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-
-
-
 
         }
 

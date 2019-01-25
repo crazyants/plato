@@ -29,7 +29,14 @@ namespace Plato.Discuss
 
         public static readonly Permission DeleteAnyReply =
             new Permission("DeleteAnyReply", "Can delete any reply");
-        
+
+        public static readonly Permission ReportTopics =
+            new Permission("ReportTopics", "Can report topics");
+
+        public static readonly Permission ReportReplies =
+            new Permission("ReportReplies", "Can report replies");
+
+
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
@@ -41,7 +48,9 @@ namespace Plato.Discuss
                 DeleteOwnTopics,
                 DeleteAnyTopic,
                 DeleteOwnReplies,
-                DeleteAnyReply
+                DeleteAnyReply,
+                ReportTopics,
+                ReportReplies
             };
         }
 
@@ -61,7 +70,9 @@ namespace Plato.Discuss
                         DeleteOwnTopics,
                         DeleteAnyTopic,
                         DeleteOwnReplies,
-                        DeleteAnyReply
+                        DeleteAnyReply,
+                        ReportTopics,
+                        ReportReplies
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -72,7 +83,9 @@ namespace Plato.Discuss
                         EditOwnTopics,
                         EditOwnReplies,
                         DeleteOwnTopics,
-                        DeleteOwnReplies
+                        DeleteOwnReplies,
+                        ReportTopics,
+                        ReportReplies
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -83,7 +96,18 @@ namespace Plato.Discuss
                         EditOwnTopics,
                         EditOwnReplies,
                         DeleteOwnTopics,
-                        DeleteOwnReplies
+                        DeleteOwnReplies,
+                        ReportTopics,
+                        ReportReplies
+                    }
+                },
+                new DefaultPermissions<Permission>
+                {
+                    RoleName = DefaultRoles.Anonymous,
+                    Permissions = new[]
+                    {
+                        ReportTopics,
+                        ReportReplies
                     }
                 }
             };

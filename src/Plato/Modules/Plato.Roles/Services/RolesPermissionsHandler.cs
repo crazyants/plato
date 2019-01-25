@@ -31,6 +31,19 @@ namespace Plato.Roles.Services
                 return;
             }
 
+            // var principal = context.User;
+            //if (!context.User.Identity.IsAuthenticated)
+            //{
+            //    // Dummy identity
+            //    var identity = new ClaimsIdentity(new[]
+            //    {
+            //        new Claim(ClaimTypes.Role,  DefaultRoles.Anonymous)
+            //    }, null);
+
+            //    // Dummy principal
+            //    principal = new ClaimsPrincipal(identity);
+            //}
+
             // Determine which set of permissions would satisfy the access check
             var grantingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -38,11 +51,9 @@ namespace Plato.Roles.Services
 
             // Determine what set of roles should be examined by the access check
             var rolesToExamine = new List<string> { DefaultRoles.Anonymous };
-
             if (context.User.Identity.IsAuthenticated)
             {
                 rolesToExamine.Add(DefaultRoles.Member);
-                // Add roles from the user
                 foreach (var claim in context.User.Claims)
                 {
                     if (claim.Type == ClaimTypes.Role)
@@ -50,6 +61,11 @@ namespace Plato.Roles.Services
                         rolesToExamine.Add(claim.Value);
                     }
                 }
+            }
+            else
+            {
+                // Examine anonymous role claims for the current permission
+                rolesToExamine.Add(DefaultRoles.Anonymous);
             }
 
             foreach (var roleName in rolesToExamine)

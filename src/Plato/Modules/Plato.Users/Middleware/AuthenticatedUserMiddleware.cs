@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Middleware
@@ -76,10 +79,10 @@ namespace Plato.Users.Middleware
         {
 
             // If the request is not authenticated move along
-            if (!context.User.Identity.IsAuthenticated)
-            {
-                return;
-            }
+            //if (!context.User.Identity.IsAuthenticated)
+            //{
+            //    return;
+            //}
 
             // Get context facade
             var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
@@ -88,11 +91,38 @@ namespace Plato.Users.Middleware
                 return;
             }
 
-            // Attempt tto get user from database
+            // Attempt tto get user from data store
             var user = await contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
+
+
+                // Dummy identity
+                //var identity = new ClaimsIdentity(new[]
+                //{
+                //    new Claim(ClaimTypes.Role,  DefaultRoles.Anonymous)
+                //}, null);
+
+                //// Dummy principal
+                //var principal = new ClaimsPrincipal(identity);
+
+                //var roleManager = context.RequestServices.GetRequiredService<RoleManager<Role>>();
+                //var anonymousRole = await roleManager.FindByNameAsync(DefaultRoles.Anonymous);
+
+                //context.Items[typeof(User)] = new User()
+                //{
+                //    RoleNames = new List<string>()
+                //    {
+                //        DefaultRoles.Anonymous
+                //    },
+                //    UserRoles = new List<Role>()
+                //    {
+                //        anonymousRole
+                //    }
+                //};
+
                 return;
+
             }
 
             lock (user)
