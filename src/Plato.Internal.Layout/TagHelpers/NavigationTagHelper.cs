@@ -242,7 +242,7 @@ namespace Plato.Internal.Layout.TagHelpers
             return sb.ToString();
             
         }
-        
+
         string BuildLink(MenuItem item)
         {
             var linkClass = _level == 0 | this.Collaspsable
@@ -270,7 +270,7 @@ namespace Plato.Internal.Layout.TagHelpers
             {
                 linkClass += " active";
             }
-            
+
             var targetEvent = "";
             var targetCss = " data-toggle=\"dropdown\"";
             if (this.Collaspsable)
@@ -278,50 +278,66 @@ namespace Plato.Internal.Layout.TagHelpers
                 targetCss = " data-toggle=\"collapse\"";
                 targetEvent = $" data-target=\"#menu-{_index}\" aria-controls=\"#menu-{_index}\"";
             }
-            
-            var sb = new StringBuilder();
-            sb.Append("<a class=\"")
-                .Append(linkClass)
-                .Append("\" href=\"")
-                .Append(item.Href)
-                .Append("\"")
-                .Append(item.Items.Count > 0 ? targetEvent : "")
-                .Append(item.Items.Count > 0 ? targetCss : "")
-                .Append(" aria-expanded=\"")
-                .Append(IsLinkExpandedOrChildSelected(item).ToString().ToLower())
-                .Append("\"");
 
-            if (item.Attributes.Count > 0)
+            var sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(item.DividerCss))
             {
-                var i = 0;
-                foreach (var attr in item.Attributes)
+                sb.Append("<div class=\"")
+                    .Append(item.DividerCss)
+                    .Append("\"></div>");
+            }
+            else
+            {
+
+
+                sb.Append("<a class=\"")
+                    .Append(linkClass)
+                    .Append("\" href=\"")
+                    .Append(item.Href)
+                    .Append("\"")
+                    .Append(item.Items.Count > 0 ? targetEvent : "")
+                    .Append(item.Items.Count > 0 ? targetCss : "")
+                    .Append(" aria-expanded=\"")
+                    .Append(IsLinkExpandedOrChildSelected(item).ToString().ToLower())
+                    .Append("\"");
+
+                if (item.Attributes.Count > 0)
                 {
-                    if (i == 0)
+                    var i = 0;
+                    foreach (var attr in item.Attributes)
                     {
-                        sb.Append(" ");
-                    }
-                    sb.Append(attr.Key)
-                        .Append("=\"")
-                        .Append(attr.Value.ToString())
-                        .Append("\"");
-                    if (i < item.Attributes.Count)
-                    {
-                        sb.Append(" ");
+                        if (i == 0)
+                        {
+                            sb.Append(" ");
+                        }
+
+                        sb.Append(attr.Key)
+                            .Append("=\"")
+                            .Append(attr.Value.ToString())
+                            .Append("\"");
+                        if (i < item.Attributes.Count)
+                        {
+                            sb.Append(" ");
+                        }
                     }
                 }
-            }
-            sb.Append(">");
 
-            if (!String.IsNullOrEmpty(item.IconCss))
-            {
-                sb.Append("<i class=\"")
-                    .Append(item.IconCss)
-                    .Append("\"></i>");
+                sb.Append(">");
+
+                if (!String.IsNullOrEmpty(item.IconCss))
+                {
+                    sb.Append("<i class=\"")
+                        .Append(item.IconCss)
+                        .Append("\"></i>");
+                }
+
+                sb.Append("<span class=\"nav-text\">")
+                    .Append(item.Text.Value)
+                    .Append("</span>")
+                    .Append("</a>");
+
             }
-            sb.Append("<span class=\"nav-text\">")
-                .Append(item.Text.Value)
-                .Append("</span>")
-                .Append("</a>");
 
             return sb.ToString();
         }

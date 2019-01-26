@@ -57,7 +57,16 @@ namespace Plato.Discuss.Moderation.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Pin Topic"], 1, edit => edit
+                        .Add(T["Edit"], int.MinValue, edit => edit
+                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["id"] = topic.Id,
+                                ["alias"] = topic.Alias
+                            })
+                            .Permission(ModeratorPermissions.EditTopics)
+                            .LocalNav()
+                        )
+                        .Add(T["Pin"], 1, edit => edit
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
                                 ["id"] = topic.Id,
@@ -67,7 +76,7 @@ namespace Plato.Discuss.Moderation.Navigation
                             .Permission(ModeratorPermissions.PinTopics)
                             .LocalNav()
                         )
-                        .Add(T["Hide Topic"], 2, edit => edit
+                        .Add(T["Hide"], 2, edit => edit
                                 .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                                 {
                                     ["id"] = topic.Id,
@@ -76,7 +85,22 @@ namespace Plato.Discuss.Moderation.Navigation
                                 .Resource(topic.CategoryId)
                                 .Permission(ModeratorPermissions.HideTopics)
                                 .LocalNav()
-                            ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                            )
+                        .Add(T["Divider"], int.MaxValue - 1, divider => divider
+                                .DividerCss("dropdown-divider")
+                                .LocalNav()
+                        )
+                        .Add(T["Delete"],  int.MaxValue, edit => edit
+                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["id"] = topic.Id,
+                                ["alias"] = topic.Alias
+                            })
+                            .Resource(topic.CategoryId)
+                            .Permission(ModeratorPermissions.DeleteTopics)
+                            .LocalNav(), new List<string>() { "dropdown-item", "dropdown-item-danger" }
+                        )
+                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
         }

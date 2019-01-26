@@ -64,7 +64,7 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditAnyTopic)
                             .LocalNav()
                         )
-                        .Add(T["Report"], int.MaxValue, report => report
+                        .Add(T["Report"], int.MaxValue - 10, report => report
                             .Action("Report", "Home", "Plato.Discuss")
                             .Attributes(new Dictionary<string, object>()
                             {

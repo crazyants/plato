@@ -106,6 +106,12 @@ namespace Plato.Internal.Navigation
             return this;
         }
 
+        public NavigationItemBuilder DividerCss(string css)
+        {
+            _item.DividerCss = css;
+            return this;
+        }
+        
         public NavigationItemBuilder View(string viewName, object model = null)
         {
             _item.View = new MenuItemView()

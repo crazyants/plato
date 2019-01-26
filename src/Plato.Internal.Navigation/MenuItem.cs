@@ -56,6 +56,8 @@ namespace Plato.Internal.Navigation
         
         public List<IPermission> Permissions { get; }
         
+        public string DividerCss { get; set; }
+
         public List<string> Classes { get; }
 
         public IDictionary<string, object> Attributes { get; set; }
