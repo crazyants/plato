@@ -90,7 +90,7 @@ namespace Plato.Discuss
                 },
                 new DefaultPermissions<Permission>
                 {
-                    RoleName = DefaultRoles.Employee,
+                    RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
                         EditOwnTopics,

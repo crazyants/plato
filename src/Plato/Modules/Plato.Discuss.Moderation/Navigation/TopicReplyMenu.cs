@@ -88,6 +88,7 @@ namespace Plato.Discuss.Moderation.Navigation
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider
+                            .Permission(ModeratorPermissions.DeleteReplies)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(T["Delete"], int.MaxValue, delete => delete

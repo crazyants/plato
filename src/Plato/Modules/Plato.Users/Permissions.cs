@@ -67,7 +67,7 @@ namespace Plato.Users
                 },
                 new DefaultPermissions<Permission>
                 {
-                    RoleName = DefaultRoles.Employee,
+                    RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
                         ViewUsers

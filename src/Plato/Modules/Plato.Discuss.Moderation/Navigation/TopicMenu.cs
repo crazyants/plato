@@ -77,10 +77,9 @@ namespace Plato.Discuss.Moderation.Navigation
                             .LocalNav()
                         )
                         .Add(T["Hide"], 2, edit => edit
-                                .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                                .Action("HideTopic", "Home", "Plato.Discuss.Moderation", new RouteValueDictionary()
                                 {
-                                    ["id"] = topic.Id,
-                                    ["alias"] = topic.Alias
+                                    ["id"] = topic.Id
                                 })
                                 .Resource(topic.CategoryId)
                                 .Permission(ModeratorPermissions.HideTopics)
@@ -97,7 +96,8 @@ namespace Plato.Discuss.Moderation.Navigation
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider
-                                .DividerCss("dropdown-divider").LocalNav()
+                            .Permission(ModeratorPermissions.DeleteTopics)
+                            .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(T["Delete"],  int.MaxValue, delete => delete
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()

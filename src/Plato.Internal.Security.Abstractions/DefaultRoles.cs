@@ -5,14 +5,14 @@
 
         public const string Anonymous = "Anonymous";
         public const string Member = "Member";
-        public const string Employee = "Employee";
+        public const string Staff = "Staff";
         public const string Administrator = "Administrator";
         
         public static string[] ToList() => new[]
         {
             Anonymous,
             Member,
-            Employee,
+            Staff,
             Administrator
         };
 
