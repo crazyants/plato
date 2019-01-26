@@ -36,7 +36,7 @@ namespace Plato.Internal.Navigation
 
         public string Url { get; set; }
 
-        public string Position { get; set; }
+        public string Authority { get; set; }
 
         public int Order { get; set; }
 

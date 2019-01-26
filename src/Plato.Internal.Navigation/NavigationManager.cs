@@ -123,26 +123,31 @@ namespace Plato.Internal.Navigation
 
                         items.RemoveAt(x);
 
-                        // If the item to merge is more authoritative then use its values
-                        if (cursor.Position != null && source.Position == null)
+                        // If the cursor to merge is more authoritative then the source then use its values
+                        if (cursor.Authority != null && source.Authority == null)
                         {
+
                             source.Culture = cursor.Culture;
                             source.Href = cursor.Href;
                             source.Id = cursor.Id;
                             source.LinkToFirstChild = cursor.LinkToFirstChild;
                             source.LocalNav = cursor.LocalNav;
-                            source.Position = cursor.Position;
+                            source.Authority = cursor.Authority;
                             source.Order = cursor.Order;
                             source.Resource = cursor.Resource;
                             source.RouteValues = cursor.RouteValues;
                             source.Text = cursor.Text;
                             source.Url = cursor.Url;
+                            source.DividerCss = cursor.DividerCss;
 
-                            //source.Permissions.Clear();
-                            //source.Permissions.AddRange(cursor.Permissions);
+                            // Merge permissions
+                            source.Permissions.Clear();
+                            source.Permissions.AddRange(cursor.Permissions);
 
+                            // Merge classes
                             source.Classes.Clear();
                             source.Classes.AddRange(cursor.Classes);
+
                         }
                     }
                 }

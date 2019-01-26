@@ -79,10 +79,10 @@ namespace Plato.Users.Middleware
         {
 
             // If the request is not authenticated move along
-            //if (!context.User.Identity.IsAuthenticated)
-            //{
-            //    return;
-            //}
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                return;
+            }
 
             // Get context facade
             var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
@@ -93,36 +93,11 @@ namespace Plato.Users.Middleware
 
             // Attempt tto get user from data store
             var user = await contextFacade.GetAuthenticatedUserAsync();
+
+            // User not found
             if (user == null)
             {
-
-
-                // Dummy identity
-                //var identity = new ClaimsIdentity(new[]
-                //{
-                //    new Claim(ClaimTypes.Role,  DefaultRoles.Anonymous)
-                //}, null);
-
-                //// Dummy principal
-                //var principal = new ClaimsPrincipal(identity);
-
-                //var roleManager = context.RequestServices.GetRequiredService<RoleManager<Role>>();
-                //var anonymousRole = await roleManager.FindByNameAsync(DefaultRoles.Anonymous);
-
-                //context.Items[typeof(User)] = new User()
-                //{
-                //    RoleNames = new List<string>()
-                //    {
-                //        DefaultRoles.Anonymous
-                //    },
-                //    UserRoles = new List<Role>()
-                //    {
-                //        anonymousRole
-                //    }
-                //};
-
                 return;
-
             }
 
             lock (user)

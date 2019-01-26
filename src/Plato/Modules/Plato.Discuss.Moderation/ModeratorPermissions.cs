@@ -10,27 +10,47 @@ namespace Plato.Discuss.Moderation
     {
 
         public static readonly ModeratorPermission EditTopics =
-            new ModeratorPermission("EditAnyTopic", "Can edit any topic");
+            new ModeratorPermission("EditTopics", "Can edit topics");
 
         public static readonly ModeratorPermission EditReplies =
-            new ModeratorPermission("EditAnyReply", "Can edit any reply");
+            new ModeratorPermission("EditReplies", "Can edit replies");
 
         public static readonly ModeratorPermission DeleteTopics =
-            new ModeratorPermission("DeleteAnyTopic", "Can delete any topic");
+            new ModeratorPermission("DeleteTopics", "Can delete topics");
 
         public static readonly ModeratorPermission DeleteReplies =
-            new ModeratorPermission("DeleteAnyReply", "Can delete any reply");
+            new ModeratorPermission("DeleteReplies", "Can delete replies");
 
         public static readonly ModeratorPermission PinTopics =
-            new ModeratorPermission("PinTopics", "Can pin any topic");
+            new ModeratorPermission("PinTopics", "Can pin topics");
 
+        public static readonly ModeratorPermission UnpinTopics =
+            new ModeratorPermission("UnpinTopics", "Can unpin topics");
+        
         public static readonly ModeratorPermission HideTopics =
-            new ModeratorPermission("HideTopics", "Can hide any topic");
+            new ModeratorPermission("HideTopics", "Can hide topics");
 
         public static readonly ModeratorPermission ShowTopics =
-            new ModeratorPermission("ShowTopics", "Can make hidden topics visible");
+            new ModeratorPermission("ShowTopics", "Can make topics visible");
 
+        public static readonly ModeratorPermission HideReplies =
+            new ModeratorPermission("HideReplies", "Can hide replies");
 
+        public static readonly ModeratorPermission ShowReplies =
+            new ModeratorPermission("ShowReplies", "Can make replies visible");
+        
+        public static readonly ModeratorPermission TopicsToSpam =
+            new ModeratorPermission("TopicsToSpam", "Can move topics to SPAM");
+
+        public static readonly ModeratorPermission TopicsFromSpam =
+            new ModeratorPermission("TopicsFromSpam", "Can remove topics from SPAM");
+
+        public static readonly ModeratorPermission RepliesToSpam =
+            new ModeratorPermission("RepliesToSpam", "Can move replies to SPAM");
+
+        public static readonly ModeratorPermission RepliesFromSpam =
+            new ModeratorPermission("RepliesFromSpam", "Can remove replies from SPAM");
+        
         public IEnumerable<ModeratorPermission> GetPermissions()
         {
             return new[]
@@ -40,8 +60,15 @@ namespace Plato.Discuss.Moderation
                 DeleteTopics,
                 DeleteReplies,
                 PinTopics,
+                UnpinTopics,
                 HideTopics,
-                ShowTopics
+                ShowTopics,
+                HideReplies,
+                ShowReplies,
+                TopicsToSpam,
+                TopicsFromSpam,
+                RepliesToSpam,
+                RepliesFromSpam
             };
         }
 
@@ -59,8 +86,15 @@ namespace Plato.Discuss.Moderation
                         DeleteTopics,
                         DeleteReplies,
                         PinTopics,
+                        UnpinTopics,
                         HideTopics,
-                        ShowTopics
+                        ShowTopics,
+                        HideReplies,
+                        ShowReplies,
+                        TopicsToSpam,
+                        TopicsFromSpam,
+                        RepliesToSpam,
+                        RepliesFromSpam
                     }
                 }
             };

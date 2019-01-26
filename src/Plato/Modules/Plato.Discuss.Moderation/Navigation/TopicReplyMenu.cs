@@ -9,14 +9,14 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Moderation.Navigation
 {
-    public class TopicMenu : INavigationProvider
+    public class TopicReplyMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
-        public TopicMenu(
+        public TopicReplyMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor)
         {
@@ -27,28 +27,30 @@ namespace Plato.Discuss.Moderation.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
-            // Get model from context
+            // Get model from navigation builder
             var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             if (topic == null)
             {
                 return;
             }
-            
-            // Get user from context
-            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
 
-            // We always need a user for the moderator
-            if (user == null)
+
+            // Get model from navigation builder
+            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            if (reply == null)
             {
                 return;
             }
-            
-            // Add moderator options
+
+            //// Get user from context
+            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+      
+            // Options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
@@ -58,57 +60,47 @@ namespace Plato.Discuss.Moderation.Navigation
                             {"title", T["Options"]}
                         })
                         .Add(T["Edit"], "1", int.MinValue, edit => edit
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
+                                ["id"] = reply?.Id ?? 0
                             })
-                            .Permission(ModeratorPermissions.EditTopics)
-                            .LocalNav()
-                        )
-                        .Add(T["Pin"], 1, edit => edit
+                            .Resource(topic.CategoryId)
+                            .Permission(ModeratorPermissions.EditReplies)
+                            .LocalNav())
+                        .Add(T["Hide"], 2, edit => edit
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
                                 ["id"] = topic.Id,
                                 ["alias"] = topic.Alias
                             })
                             .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.PinTopics)
+                            .Permission(ModeratorPermissions.HideReplies)
                             .LocalNav()
                         )
-                        .Add(T["Hide"], 2, edit => edit
+                        .Add(T["Spam"], 3, spam => spam
+                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["id"] = topic.Id,
+                                ["alias"] = topic.Alias
+                            })
+                            .Resource(topic.CategoryId)
+                            .Permission(ModeratorPermissions.RepliesToSpam)
+                            .LocalNav()
+                        )
+                        .Add(T["Divider"], int.MaxValue - 1, divider => divider
+                            .DividerCss("dropdown-divider").LocalNav()
+                        )
+                        .Add(T["Delete"], int.MaxValue, delete => delete
                                 .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                                 {
                                     ["id"] = topic.Id,
                                     ["alias"] = topic.Alias
                                 })
                                 .Resource(topic.CategoryId)
-                                .Permission(ModeratorPermissions.HideTopics)
-                                .LocalNav()
-                            )
-                        .Add(T["Spam"], 2, spam => spam
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
-                            })
-                            .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.TopicsToSpam)
-                            .LocalNav()
+                                .Permission(ModeratorPermissions.DeleteReplies)
+                                .LocalNav(), new List<string>() { "dropdown-item", "dropdown-item-danger" }
                         )
-                        .Add(T["Divider"], int.MaxValue - 1, divider => divider
-                                .DividerCss("dropdown-divider").LocalNav()
-                        )
-                        .Add(T["Delete"],  int.MaxValue, delete => delete
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
-                            })
-                            .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.DeleteTopics)
-                            .LocalNav(), new List<string>() { "dropdown-item", "dropdown-item-danger" }
-                        )
+
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 

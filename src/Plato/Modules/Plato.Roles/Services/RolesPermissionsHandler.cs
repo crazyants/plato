@@ -30,20 +30,7 @@ namespace Plato.Roles.Services
                 // This handler is not revoking any pre-existing grants.
                 return;
             }
-
-            // var principal = context.User;
-            //if (!context.User.Identity.IsAuthenticated)
-            //{
-            //    // Dummy identity
-            //    var identity = new ClaimsIdentity(new[]
-            //    {
-            //        new Claim(ClaimTypes.Role,  DefaultRoles.Anonymous)
-            //    }, null);
-
-            //    // Dummy principal
-            //    principal = new ClaimsPrincipal(identity);
-            //}
-
+            
             // Determine which set of permissions would satisfy the access check
             var grantingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -53,7 +40,7 @@ namespace Plato.Roles.Services
             var rolesToExamine = new List<string> { DefaultRoles.Anonymous };
             if (context.User.Identity.IsAuthenticated)
             {
-                rolesToExamine.Add(DefaultRoles.Member);
+                //rolesToExamine.Add(DefaultRoles.Member);
                 foreach (var claim in context.User.Claims)
                 {
                     if (claim.Type == ClaimTypes.Role)

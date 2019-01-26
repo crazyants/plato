@@ -31,14 +31,14 @@ namespace Plato.Internal.Navigation
 
         public NavigationBuilder Add(
             LocalizedString caption,
-            string position,
+            string authority,
             int order,
             Action<NavigationItemBuilder> itemBuilder,
             IEnumerable<string> classes = null)
         {
             var childBuilder = new NavigationItemBuilder();
             childBuilder.Caption(caption);
-            childBuilder.Position(position);
+            childBuilder.Authority(authority);
             childBuilder.Order(order);
             itemBuilder(childBuilder);
             Contained.AddRange(childBuilder.Build());

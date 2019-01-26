@@ -51,7 +51,7 @@ namespace Plato.Discuss.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Edit"], int.MinValue + 1, edit => edit
+                        .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
                                 ["id"] = reply?.Id ?? 0
@@ -60,7 +60,7 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditOwnReplies :
                                 Permissions.EditAnyReply)
                             .LocalNav())
-                        .Add(T["Report"], report => report
+                        .Add(T["Report"], int.MaxValue - 10, report => report
                             .Action("Popular", "Home", "Plato.Discuss")
                             .Permission(Permissions.ReportReplies)
                             .LocalNav()

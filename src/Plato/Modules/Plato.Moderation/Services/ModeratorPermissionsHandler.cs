@@ -46,7 +46,7 @@ namespace Plato.Moderation.Services
                 return;
             }
 
-            // The resource represents the channel we are checking against
+            // The resource represents the category we are checking against
             if (context.Resource == null)
             {
                 return;

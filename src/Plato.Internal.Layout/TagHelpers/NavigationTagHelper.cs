@@ -289,8 +289,7 @@ namespace Plato.Internal.Layout.TagHelpers
             }
             else
             {
-
-
+                
                 sb.Append("<a class=\"")
                     .Append(linkClass)
                     .Append("\" href=\"")

@@ -26,9 +26,9 @@ namespace Plato.Internal.Navigation
             return this;
         }
 
-        public NavigationItemBuilder Position(string position)
+        public NavigationItemBuilder Authority(string authority)
         {
-            _item.Position = position;
+            _item.Authority = authority;
             return this;
         }
 
