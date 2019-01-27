@@ -76,49 +76,57 @@ namespace Plato.Discuss.Moderation.Navigation
                             .Permission(ModeratorPermissions.PinTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsClosed ? T["Open"] : T["Close"], 2, edit => edit
-                            .Action(topic.IsClosed ? "OpenTopic" : "CloseTopic", "Home", "Plato.Discuss.Moderation", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id
-                            })
+                        .Add(topic.IsClosed ? T["Mark Open"] : T["Mark Closed"], 2, edit => edit
+                            .Action(topic.IsClosed ? "OpenTopic" : "CloseTopic", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = topic.Id
+                                })
                             .Resource(topic.CategoryId)
-                            .Permission(topic.IsClosed  
+                            .Permission(topic.IsClosed
                                 ? ModeratorPermissions.OpenTopics
                                 : ModeratorPermissions.CloseTopics)
                             .LocalNav()
                         )
-                        .Add(T["Hide"], 2, edit => edit
-                                .Action("HideTopic", "Home", "Plato.Discuss.Moderation", new RouteValueDictionary()
+                        .Add(topic.IsPrivate ? T["Mark Public"] : T["Mark Private"], 2, edit => edit
+                            .Action(topic.IsPrivate ? "ShowTopic" : "HideTopic", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
                                 {
                                     ["id"] = topic.Id
                                 })
-                                .Resource(topic.CategoryId)
-                                .Permission(ModeratorPermissions.HideTopics)
-                                .LocalNav()
-                            )
-                        .Add(T["Spam"], 2, spam => spam
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
-                            })
                             .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.TopicsToSpam)
+                            .Permission(topic.IsPrivate
+                                ? ModeratorPermissions.ShowTopics
+                                : ModeratorPermissions.HideTopics)
+                            .LocalNav()
+                        )
+                        .Add(topic.IsSpam ? T["Remove From Spam"] : T["Mark As Spam"], 2, spam => spam
+                            .Action(topic.IsSpam ? "TopicFromSpam" : "TopicToSpam", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = topic.Id
+                                })
+                            .Resource(topic.CategoryId)
+                            .Permission(topic.IsSpam
+                                ? ModeratorPermissions.TopicFromSpam
+                                : ModeratorPermissions.TopicToSpam)
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider
                             .Permission(ModeratorPermissions.DeleteTopics)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(T["Delete"],  int.MaxValue, delete => delete
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
-                            })
-                            .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.DeleteTopics)
-                            .LocalNav(), new List<string>() { "dropdown-item", "dropdown-item-danger" }
+                        .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, delete => delete
+                                .Action(topic.IsDeleted ? "RestoreTopic" : "DeleteTopic", "Home",
+                                    "Plato.Discuss.Moderation", new RouteValueDictionary()
+                                    {
+                                        ["id"] = topic.Id
+                                    })
+                                .Resource(topic.CategoryId)
+                                .Permission(topic.IsDeleted
+                                    ? ModeratorPermissions.RestoreTopics
+                                    : ModeratorPermissions.DeleteTopics)
+                                .LocalNav(), new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );

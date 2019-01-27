@@ -84,7 +84,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                 ["alias"] = topic.Alias
                             })
                             .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.RepliesToSpam)
+                            .Permission(ModeratorPermissions.ReplyToSpam)
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider

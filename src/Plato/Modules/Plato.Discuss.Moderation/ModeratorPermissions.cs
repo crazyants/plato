@@ -18,9 +18,15 @@ namespace Plato.Discuss.Moderation
         public static readonly ModeratorPermission DeleteTopics =
             new ModeratorPermission("DeleteTopics", "Delete topics");
 
+        public static readonly ModeratorPermission RestoreTopics =
+            new ModeratorPermission("RestoreTopics", "Restore deleted topics");
+        
         public static readonly ModeratorPermission DeleteReplies =
             new ModeratorPermission("DeleteReplies", "Delete replies");
 
+        public static readonly ModeratorPermission RestoreReplies =
+            new ModeratorPermission("RestoreReply", "Restore deleted replies");
+        
         public static readonly ModeratorPermission PinTopics =
             new ModeratorPermission("PinTopics", "Pin topics");
 
@@ -45,16 +51,16 @@ namespace Plato.Discuss.Moderation
         public static readonly ModeratorPermission ShowReplies =
             new ModeratorPermission("ShowReplies", "Show replies");
         
-        public static readonly ModeratorPermission TopicsToSpam =
+        public static readonly ModeratorPermission TopicToSpam =
             new ModeratorPermission("TopicsToSpam", "Move topics to SPAM");
 
-        public static readonly ModeratorPermission TopicsFromSpam =
+        public static readonly ModeratorPermission TopicFromSpam =
             new ModeratorPermission("TopicsFromSpam", "Remove topics from SPAM");
 
-        public static readonly ModeratorPermission RepliesToSpam =
+        public static readonly ModeratorPermission ReplyToSpam =
             new ModeratorPermission("RepliesToSpam", "Move replies to SPAM");
 
-        public static readonly ModeratorPermission RepliesFromSpam =
+        public static readonly ModeratorPermission ReplyFromSpam =
             new ModeratorPermission("RepliesFromSpam", "Remove replies from SPAM");
         
         public IEnumerable<ModeratorPermission> GetPermissions()
@@ -64,7 +70,9 @@ namespace Plato.Discuss.Moderation
                 EditTopics,
                 EditReplies,
                 DeleteTopics,
+                RestoreTopics,
                 DeleteReplies,
+                RestoreReplies,
                 PinTopics,
                 UnpinTopics,
                 CloseTopics,
@@ -73,10 +81,10 @@ namespace Plato.Discuss.Moderation
                 ShowTopics,
                 HideReplies,
                 ShowReplies,
-                TopicsToSpam,
-                TopicsFromSpam,
-                RepliesToSpam,
-                RepliesFromSpam
+                TopicToSpam,
+                TopicFromSpam,
+                ReplyToSpam,
+                ReplyFromSpam
             };
         }
 
@@ -101,10 +109,10 @@ namespace Plato.Discuss.Moderation
                         ShowTopics,
                         HideReplies,
                         ShowReplies,
-                        TopicsToSpam,
-                        TopicsFromSpam,
-                        RepliesToSpam,
-                        RepliesFromSpam
+                        TopicToSpam,
+                        TopicFromSpam,
+                        ReplyToSpam,
+                        ReplyFromSpam
                     }
                 }
             };

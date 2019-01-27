@@ -9,6 +9,12 @@
                 @T["Private"]
             </span>
         }
+        @if (Model.Topic.IsSpam)
+        {
+            <span class="badge badge-warning">
+                @T["SPAM"]
+            </span>
+        }
         @if (Model.Topic.IsDeleted)
         {
             <span class="badge badge-danger">
