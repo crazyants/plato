@@ -124,6 +124,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
                     Moderator newOrUpdatedModerator = null;
                     moderator.CategoryId = categoryId;
+                    moderator.Claims = GetPostedClaims();
 
                     // If so update existing moderator
                     if (existingModerator != null)
@@ -163,8 +164,26 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
         #endregion
-        
+
         #region "Private Methods"
+
+
+        IList<ModeratorClaim> GetPostedClaims()
+        {
+            // Build a list of claims to add or update
+            var moderatorClaims = new List<ModeratorClaim>();
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
+                {
+                    var permissionName = key.Substring("Checkbox.".Length);
+                    moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimTypeName, ClaimValue = permissionName });
+                }
+            }
+
+            return moderatorClaims;
+
+        }
 
         List<int> GetChannelsToAdd()
         {
