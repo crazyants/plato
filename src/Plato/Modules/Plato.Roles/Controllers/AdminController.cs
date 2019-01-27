@@ -132,7 +132,7 @@ namespace Plato.Roles.Controllers
         public async Task<IActionResult> Create()
         {
 
-            // Ensuer we have permission
+            // Ensure we have permission
             //if (!await _authorizationService.AuthorizeAsync(User, Permissions.AddRoles))
             //{
             //    return Unauthorized();

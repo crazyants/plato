@@ -6,21 +6,19 @@ namespace Plato.Discuss.Moderation
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ViewQueue =
-            new Permission("ViewQueue", "Can view moderation queue");
+        public static readonly Permission ViewModerationQueue =
+            new Permission("ViewModerationQueue", "View moderation queue");
 
-        public static readonly Permission ApproveTopics =
-            new Permission("ApproveTopics", "Can approve topics");
-
-        public static readonly Permission RejectTopics =
-            new Permission("RejectTopics", "Can reject topics");
+        public static readonly Permission ViewSpamQueue =
+            new Permission("ViewSpamQueue", "View SPAM queue");
 
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ViewQueue
+                ViewModerationQueue,
+                ViewSpamQueue
             };
         }
 
@@ -33,7 +31,8 @@ namespace Plato.Discuss.Moderation
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ViewQueue
+                        ViewModerationQueue,
+                        ViewSpamQueue
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -41,7 +40,8 @@ namespace Plato.Discuss.Moderation
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ViewQueue
+                        ViewModerationQueue,
+                        ViewSpamQueue
                     }
                 }
             };

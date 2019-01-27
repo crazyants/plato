@@ -10,46 +10,52 @@ namespace Plato.Discuss.Moderation
     {
 
         public static readonly ModeratorPermission EditTopics =
-            new ModeratorPermission("EditTopics", "Can edit topics");
+            new ModeratorPermission("EditTopics", "Edit topics");
 
         public static readonly ModeratorPermission EditReplies =
-            new ModeratorPermission("EditReplies", "Can edit replies");
+            new ModeratorPermission("EditReplies", "Edit replies");
 
         public static readonly ModeratorPermission DeleteTopics =
-            new ModeratorPermission("DeleteTopics", "Can delete topics");
+            new ModeratorPermission("DeleteTopics", "Delete topics");
 
         public static readonly ModeratorPermission DeleteReplies =
-            new ModeratorPermission("DeleteReplies", "Can delete replies");
+            new ModeratorPermission("DeleteReplies", "Delete replies");
 
         public static readonly ModeratorPermission PinTopics =
-            new ModeratorPermission("PinTopics", "Can pin topics");
+            new ModeratorPermission("PinTopics", "Pin topics");
 
         public static readonly ModeratorPermission UnpinTopics =
-            new ModeratorPermission("UnpinTopics", "Can unpin topics");
+            new ModeratorPermission("UnpinTopics", "Unpin topics");
         
-        public static readonly ModeratorPermission HideTopics =
-            new ModeratorPermission("HideTopics", "Can hide topics");
+        public static readonly ModeratorPermission CloseTopics =
+            new ModeratorPermission("CloseTopics", "Close topics");
 
+        public static readonly ModeratorPermission OpenTopics =
+            new ModeratorPermission("OpenTopics", "Open topics");
+
+        public static readonly ModeratorPermission HideTopics =
+            new ModeratorPermission("HideTopics", "Hide topics");
+        
         public static readonly ModeratorPermission ShowTopics =
-            new ModeratorPermission("ShowTopics", "Can make topics visible");
+            new ModeratorPermission("ShowTopics", "Show topics");
 
         public static readonly ModeratorPermission HideReplies =
-            new ModeratorPermission("HideReplies", "Can hide replies");
+            new ModeratorPermission("HideReplies", "Hide replies");
 
         public static readonly ModeratorPermission ShowReplies =
-            new ModeratorPermission("ShowReplies", "Can make replies visible");
+            new ModeratorPermission("ShowReplies", "Show replies");
         
         public static readonly ModeratorPermission TopicsToSpam =
-            new ModeratorPermission("TopicsToSpam", "Can move topics to SPAM");
+            new ModeratorPermission("TopicsToSpam", "Move topics to SPAM");
 
         public static readonly ModeratorPermission TopicsFromSpam =
-            new ModeratorPermission("TopicsFromSpam", "Can remove topics from SPAM");
+            new ModeratorPermission("TopicsFromSpam", "Remove topics from SPAM");
 
         public static readonly ModeratorPermission RepliesToSpam =
-            new ModeratorPermission("RepliesToSpam", "Can move replies to SPAM");
+            new ModeratorPermission("RepliesToSpam", "Move replies to SPAM");
 
         public static readonly ModeratorPermission RepliesFromSpam =
-            new ModeratorPermission("RepliesFromSpam", "Can remove replies from SPAM");
+            new ModeratorPermission("RepliesFromSpam", "Remove replies from SPAM");
         
         public IEnumerable<ModeratorPermission> GetPermissions()
         {
@@ -61,6 +67,8 @@ namespace Plato.Discuss.Moderation
                 DeleteReplies,
                 PinTopics,
                 UnpinTopics,
+                CloseTopics,
+                OpenTopics,
                 HideTopics,
                 ShowTopics,
                 HideReplies,
@@ -87,6 +95,8 @@ namespace Plato.Discuss.Moderation
                         DeleteReplies,
                         PinTopics,
                         UnpinTopics,
+                        CloseTopics,
+                        OpenTopics,
                         HideTopics,
                         ShowTopics,
                         HideReplies,

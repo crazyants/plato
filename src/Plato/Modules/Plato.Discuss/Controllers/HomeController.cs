@@ -134,7 +134,7 @@ namespace Plato.Discuss.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Build infinate scroll options
+            // Build infinite scroll options
             opts.Scroller = new ScrollerOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
@@ -147,7 +147,7 @@ namespace Plato.Discuss.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
+            // Add view options to context for use within view adapters
             HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
 
             // If we have a pager.page querystring value return paged results

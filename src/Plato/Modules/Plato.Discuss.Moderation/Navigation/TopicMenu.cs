@@ -76,6 +76,17 @@ namespace Plato.Discuss.Moderation.Navigation
                             .Permission(ModeratorPermissions.PinTopics)
                             .LocalNav()
                         )
+                        .Add(topic.IsClosed ? T["Open"] : T["Close"], 2, edit => edit
+                            .Action(topic.IsClosed ? "OpenTopic" : "CloseTopic", "Home", "Plato.Discuss.Moderation", new RouteValueDictionary()
+                            {
+                                ["id"] = topic.Id
+                            })
+                            .Resource(topic.CategoryId)
+                            .Permission(topic.IsClosed  
+                                ? ModeratorPermissions.OpenTopics
+                                : ModeratorPermissions.CloseTopics)
+                            .LocalNav()
+                        )
                         .Add(T["Hide"], 2, edit => edit
                                 .Action("HideTopic", "Home", "Plato.Discuss.Moderation", new RouteValueDictionary()
                                 {

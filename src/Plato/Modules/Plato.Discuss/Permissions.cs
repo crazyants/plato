@@ -7,34 +7,52 @@ namespace Plato.Discuss
     {
 
         public static readonly Permission EditOwnTopics =
-            new Permission("EditOwnTopics", "Can edit own topics");
+            new Permission("EditOwnTopics", "Edit own topics");
 
         public static readonly Permission EditAnyTopic =
-            new Permission("EditAnyTopic", "Can edit any topic");
+            new Permission("EditAnyTopic", "Edit any topic");
 
         public static readonly Permission EditOwnReplies =
-            new Permission("EditOwnReplies", "Can edit own replies");
+            new Permission("EditOwnReplies", "Edit own replies");
 
         public static readonly Permission EditAnyReply =
-            new Permission("EditAnyReply", "Can edit any reply");
+            new Permission("EditAnyReply", "Edit any reply");
         
         public static readonly Permission DeleteOwnTopics = 
-            new Permission("DeleteOwnTopics", "Can add new users");
+            new Permission("DeleteOwnTopics", "Delete own topics");
 
         public static readonly Permission DeleteAnyTopic =
-            new Permission("DeleteAnyTopic", "Can edit existing users");
+            new Permission("DeleteAnyTopic", "Delete any topic");
 
         public static readonly Permission DeleteOwnReplies =
-            new Permission("DeleteOwnReplies", "Can delete owned replies");
+            new Permission("DeleteOwnReplies", "Delete own replies");
 
         public static readonly Permission DeleteAnyReply =
-            new Permission("DeleteAnyReply", "Can delete any reply");
+            new Permission("DeleteAnyReply", "Delete any reply");
 
         public static readonly Permission ReportTopics =
-            new Permission("ReportTopics", "Can report topics");
+            new Permission("ReportTopics", "Report topics");
 
         public static readonly Permission ReportReplies =
-            new Permission("ReportReplies", "Can report replies");
+            new Permission("ReportReplies", "Report replies");
+
+        public static readonly Permission ViewPrivateTopics =
+            new Permission("ViewPrivateTopics", "View hidden topics");
+
+        public static readonly Permission ViewPrivateReplies =
+            new Permission("ViewPrivateReplies", "View hidden replies");
+
+        public static readonly Permission ViewSpamTopics =
+            new Permission("ViewSpamTopics", "View topics flagged as SPAM");
+
+        public static readonly Permission ViewSpamReplies =
+            new Permission("ViewSpamReplies", "View replies flagged as SPAM");
+        
+        public static readonly Permission ViewDeletedTopics =
+            new Permission("ViewDeletedTopics", "View deleted topics");
+
+        public static readonly Permission ViewDeletedReplies =
+            new Permission("ViewDeletedReplies", "View deleted replies");
 
 
         public IEnumerable<Permission> GetPermissions()
@@ -50,7 +68,13 @@ namespace Plato.Discuss
                 DeleteOwnReplies,
                 DeleteAnyReply,
                 ReportTopics,
-                ReportReplies
+                ReportReplies,
+                ViewPrivateTopics,
+                ViewPrivateReplies,
+                ViewSpamTopics,
+                ViewSpamReplies,
+                ViewDeletedTopics,
+                ViewDeletedReplies
             };
         }
 
@@ -72,7 +96,13 @@ namespace Plato.Discuss
                         DeleteOwnReplies,
                         DeleteAnyReply,
                         ReportTopics,
-                        ReportReplies
+                        ReportReplies,
+                        ViewPrivateTopics,
+                        ViewPrivateReplies,
+                        ViewSpamTopics,
+                        ViewSpamReplies,
+                        ViewDeletedTopics,
+                        ViewDeletedReplies
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -98,7 +128,13 @@ namespace Plato.Discuss
                         DeleteOwnTopics,
                         DeleteOwnReplies,
                         ReportTopics,
-                        ReportReplies
+                        ReportReplies,
+                        ViewPrivateTopics,
+                        ViewPrivateReplies,
+                        ViewSpamTopics,
+                        ViewSpamReplies,
+                        ViewDeletedTopics,
+                        ViewDeletedReplies
                     }
                 },
                 new DefaultPermissions<Permission>

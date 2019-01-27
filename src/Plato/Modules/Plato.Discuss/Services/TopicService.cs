@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
@@ -19,17 +22,23 @@ namespace Plato.Discuss.Services
         private readonly IEntityStore<Topic> _topicStore;
         private readonly IFeatureFacade _featureFacade;
         private readonly IPlatoRoleStore _roleStore;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public TopicService(
             IContextFacade contextFacade,
             IEntityStore<Topic> topicStore,
             IFeatureFacade featureFacade,
-            IPlatoRoleStore roleStore)
+            IPlatoRoleStore roleStore,
+            IAuthorizationService authorizationService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _contextFacade = contextFacade;
             _topicStore = topicStore;
             _featureFacade = featureFacade;
             _roleStore = roleStore;
+            _authorizationService = authorizationService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IPagedResults<Topic>> GetTopicsAsync(TopicIndexOptions options, PagerOptions pager)
@@ -52,13 +61,16 @@ namespace Plato.Discuss.Services
             // Get authenticated user for use within view adaptor below
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Get anonymous role for use within view adaptor below
+            // Get principal
+            var principal = _httpContextAccessor.HttpContext.User;
+
+            // Get anonymous role for use within view adapt or below
             var anonymousRole = await _roleStore.GetByNameAsync(DefaultRoles.Anonymous);
 
             // Return tailored results
             return await _topicStore.QueryAsync()
                 .Take(pager.Page, pager.PageSize)
-                .Select<EntityQueryParams>(q =>
+                .Select<EntityQueryParams>(async q => 
                 {
 
                     if (feature != null)
@@ -127,13 +139,29 @@ namespace Plato.Discuss.Services
                         }
 
                     }
-                    
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
 
-                    //q.IsPinned.True();
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        Permissions.ViewPrivateTopics))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        Permissions.ViewSpamTopics))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        Permissions.ViewDeletedReplies))
+                    {
+                        q.HideDeleted.True();
+                    }
                     
+                    //q.IsPinned.True();
                     //if (!string.IsNullOrEmpty(filterOptions.Search))
                     //{
                     //    q.UserName.IsIn(filterOptions.Search).Or();
@@ -142,6 +170,7 @@ namespace Plato.Discuss.Services
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
+
                 })
                 .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();

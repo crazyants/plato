@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Data.Abstractions;
@@ -419,6 +420,11 @@ namespace Plato.Internal.Repositories.Users
                         }
                         user.UserRoles = data;
                     }
+                }
+
+                if (user.UserRoles != null)
+                {
+                    user.RoleNames = user.UserRoles.Select(r => r.Name).ToList();
                 }
 
             }

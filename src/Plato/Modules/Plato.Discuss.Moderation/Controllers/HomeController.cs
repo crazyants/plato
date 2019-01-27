@@ -117,7 +117,118 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-    
+        public async Task<IActionResult> CloseTopic(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var topic = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the topic exists
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.CloseTopics))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update topic
+            topic.ModifiedUserId = user?.Id ?? 0;
+            topic.ModifiedDate = DateTimeOffset.UtcNow;
+            topic.IsClosed = true;
+
+            // Save changes and return results
+            var result = await _entityManager.UpdateAsync(topic);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Topic closed Successfully."]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not close the topic"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Discuss",
+                ["Controller"] = "Home",
+                ["Action"] = "Topic",
+                ["Id"] = topic.Id,
+                ["Alias"] = topic.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> OpenTopic(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var topic = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the topic exists
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.OpenTopics))
+            {
+                return Unauthorized();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update topic
+            topic.ModifiedUserId = user?.Id ?? 0;
+            topic.ModifiedDate = DateTimeOffset.UtcNow;
+            topic.IsClosed = false;
+
+            // Save changes and return results
+            var result = await _entityManager.UpdateAsync(topic);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Topic opened Successfully."]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not open the topic"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Discuss",
+                ["Controller"] = "Home",
+                ["Action"] = "Topic",
+                ["Id"] = topic.Id,
+                ["Alias"] = topic.Alias
+            }));
+
+        }
+
+
     }
 
 }

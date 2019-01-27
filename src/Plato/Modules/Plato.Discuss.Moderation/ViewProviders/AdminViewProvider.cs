@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
@@ -176,6 +178,45 @@ namespace Plato.Discuss.Moderation.ViewProviders
         #endregion
 
         #region "Private Methods"
+
+        async Task<IEnumerable<User>> GetPostedUsers()
+        {
+
+            var usersJson = "";
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.Equals("users"))
+                {
+                    usersJson = _request.Form[key];
+                }
+            }
+
+
+            // Build users to effect
+            List<User> users = null;
+            if (!String.IsNullOrEmpty(usersJson))
+            {
+                var items = JsonConvert.DeserializeObject<IEnumerable<UserApiResult>>(usersJson);
+                foreach (var item in items)
+                {
+                    if (item.Id > 0)
+                    {
+                        if (users == null)
+                        {
+                            users = new List<User>();
+                        }
+                        var user = await _userStore.GetByIdAsync(item.Id);
+                        if (user != null)
+                        {
+                            users.Add(user);
+                        }
+                    }
+                }
+            }
+
+            return users;
+
+        }
 
         IList<ModeratorClaim> GetPostedClaims()
         {
