@@ -195,7 +195,7 @@ namespace Plato.Stars.Handlers
                                 FROM {prefix}_Stars s WITH (nolock) 
                                 LEFT OUTER JOIN {prefix}_Users u ON s.CreatedUserId = u.Id 
                                 WHERE (
-                                    f.Id = @Id 
+                                    s.Id = @Id 
                                 )")
                     .ForTable(_stars)
                     .WithParameter(_stars.PrimaryKeyColumn));

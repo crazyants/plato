@@ -12,10 +12,10 @@ $(function (win, doc, $) {
 
     'use strict';
 
-    // Provides state changes functionality for the follow button
-    var followToggler = function () {
+    // Provides state changes functionality for the star button
+    var starToggler = function () {
 
-        var dataKey = "followToggler",
+        var dataKey = "starToggler",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -95,7 +95,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).markdownEditor
+                    // $(selector).starToggler
                     return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -107,7 +107,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().markdownEditor 
+                    // $().starToggler
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -125,10 +125,10 @@ $(function (win, doc, $) {
 
     }();
 
-    // Provides the ability to follow an entity
-    var followButton = function () {
+    // Provides the ability to star an entity
+    var starButton = function () {
 
-        var dataKey = "followButton",
+        var dataKey = "starButton",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -191,7 +191,7 @@ $(function (win, doc, $) {
                 };
 
                 win.$.Plato.Http({
-                    url: "api/follows/follow/post",
+                    url: "api/stars/star/post",
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function(data) {
@@ -211,7 +211,7 @@ $(function (win, doc, $) {
                 };
 
                 win.$.Plato.Http({
-                    url: "api/follows/follow/delete",
+                    url: "api/stars/star/delete",
                     method: "DELETE",
                     data: JSON.stringify(params)
                 }).done(function(data) {
@@ -275,7 +275,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).markdownEditor
+                    // $(selector).starButton
                     return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -287,7 +287,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().markdownEditor 
+                    // $().starButton
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -305,10 +305,10 @@ $(function (win, doc, $) {
 
     }();
 
-    // Mimics the follow button but uses a hidden checkbox to persist state
-    var followCheckbox = function () {
+    // Mimics the star button but uses a hidden checkbox to persist state
+    var starCheckbox = function () {
 
-        var dataKey = "followCheckable",
+        var dataKey = "starCheckbox",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -378,7 +378,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).markdownEditor
+                    // $(selector).starCheckbox
                     return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -390,7 +390,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().markdownEditor 
+                    // $().starCheckbox
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -409,18 +409,18 @@ $(function (win, doc, $) {
     }();
     
     $.fn.extend({
-        followButton: followButton.init,
-        followToggler: followToggler.init,
-        followCheckbox: followCheckbox.init
+        starButton: starButton.init,
+        starToggler: starToggler.init,
+        starheckbox: starCheckbox.init
     });
     
     $(doc).ready(function () {
 
-        $('[data-provide="follow-button"]')
-            .followButton();
+        $('[data-provide="star-button"]')
+            .starButton();
 
-        $('[data-provide="follow-checkbox"]')
-            .followCheckbox();
+        $('[data-provide="star-checkbox"]')
+            .starCheckbox();
      
     });
 
