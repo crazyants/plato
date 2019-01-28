@@ -63,20 +63,23 @@ namespace Plato.Discuss.Moderation.Navigation
                                 ["id"] = topic.Id,
                                 ["alias"] = topic.Alias
                             })
+                            .Resource(topic.CategoryId)
                             .Permission(ModeratorPermissions.EditTopics)
                             .LocalNav()
                         )
-                        .Add(T["Pin"], 1, edit => edit
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
-                            })
+                        .Add(topic.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                            .Action(topic.IsPinned ? "UnpinTopic" : "PinTopic", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = topic.Id
+                                })
                             .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.PinTopics)
+                            .Permission(topic.IsPinned
+                                ? ModeratorPermissions.UnpinTopics
+                                : ModeratorPermissions.PinTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsClosed ? T["Mark Open"] : T["Mark Closed"], 2, edit => edit
+                        .Add(topic.IsClosed ? T["Open"] : T["Close"], 2, edit => edit
                             .Action(topic.IsClosed ? "OpenTopic" : "CloseTopic", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {
@@ -88,7 +91,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                 : ModeratorPermissions.CloseTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsPrivate ? T["Mark Public"] : T["Mark Private"], 2, edit => edit
+                        .Add(topic.IsPrivate ? T["Public"] : T["Private"], 2, edit => edit
                             .Action(topic.IsPrivate ? "ShowTopic" : "HideTopic", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {
@@ -100,7 +103,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                 : ModeratorPermissions.HideTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsSpam ? T["Remove From Spam"] : T["Mark As Spam"], 2, spam => spam
+                        .Add(topic.IsSpam ? T["Not Spam"] : T["Spam"], 2, spam => spam
                             .Action(topic.IsSpam ? "TopicFromSpam" : "TopicToSpam", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {

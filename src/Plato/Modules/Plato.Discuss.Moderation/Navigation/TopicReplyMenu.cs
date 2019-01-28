@@ -67,39 +67,44 @@ namespace Plato.Discuss.Moderation.Navigation
                             .Resource(topic.CategoryId)
                             .Permission(ModeratorPermissions.EditReplies)
                             .LocalNav())
-                        .Add(T["Hide"], 2, edit => edit
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
-                            })
+                        .Add(reply.IsPrivate ? T["Public"] : T["Private"], 2, edit => edit
+                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
                             .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.HideReplies)
+                            .Permission(reply.IsPrivate
+                                ? ModeratorPermissions.ShowReplies
+                                : ModeratorPermissions.HideReplies)
                             .LocalNav()
                         )
-                        .Add(T["Spam"], 3, spam => spam
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
-                            })
+                        .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
                             .Resource(topic.CategoryId)
-                            .Permission(ModeratorPermissions.ReplyToSpam)
+                            .Permission(reply.IsSpam
+                                ? ModeratorPermissions.ReplyFromSpam
+                                : ModeratorPermissions.ReplyToSpam)
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider
                             .Permission(ModeratorPermissions.DeleteReplies)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(T["Delete"], int.MaxValue, delete => delete
-                                .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                        .Add(reply.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, delete => delete
+                                .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Discuss.Moderation", new RouteValueDictionary()
                                 {
-                                    ["id"] = topic.Id,
-                                    ["alias"] = topic.Alias
+                                    ["id"] = reply?.Id ?? 0
                                 })
                                 .Resource(topic.CategoryId)
-                                .Permission(ModeratorPermissions.DeleteReplies)
-                                .LocalNav(), new List<string>() { "dropdown-item", "dropdown-item-danger" }
+                                .Permission(reply.IsDeleted
+                                    ? ModeratorPermissions.RestoreReplies
+                                    : ModeratorPermissions.DeleteReplies)
+                                .LocalNav(), new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
 
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}

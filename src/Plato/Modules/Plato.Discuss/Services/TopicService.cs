@@ -89,7 +89,7 @@ namespace Plato.Discuss.Services
                         case FilterBy.Participated:
                             if (user != null)
                             {
-                                q.CreatedUserId.Equals(user.Id);
+                                q.ParticipatedUserId.Equals(user.Id);
                             }
                             break;
                     }

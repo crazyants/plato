@@ -80,6 +80,8 @@ namespace Plato.Entities.Stores
         private WhereInt _modifiedUserId;
         private WhereDate _modifiedDate;
 
+        private WhereInt _participatedUserId;
+
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -163,8 +165,7 @@ namespace Plato.Entities.Stores
             get => _showClosed ?? (_showClosed = new WhereBool());
             set => _showClosed = value;
         }
-
-
+        
         public WhereBool IsPinned
         {
             get => _isPinned ?? (_isPinned = new WhereBool());
@@ -217,6 +218,12 @@ namespace Plato.Entities.Stores
         {
             get => _modifiedDate ?? (_modifiedDate = new WhereDate());
             set => _modifiedDate = value;
+        }
+
+        public WhereInt ParticipatedUserId
+        {
+            get => _participatedUserId ?? (_participatedUserId = new WhereInt());
+            set => _participatedUserId = value;
         }
 
     }
@@ -617,6 +624,25 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.LabelId.ToSqlString("LabelId"))
                     .Append("))");
             }
+
+            // ParticipatedUserId
+            // Returns all entities with replies by the supplied ParticipatedUserId
+            // Excludes entities created by the supplied ParticipatedUserId
+            if (_query.Params.ParticipatedUserId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.LabelId.Operator);
+                sb.Append(" e.Id IN (")
+                    .Append("SELECT EntityId FROM ")
+                    .Append(_entityRepliesTableName)
+                    .Append(" WHERE (")
+                    .Append(_query.Params.ParticipatedUserId.ToSqlString("CreatedUserId"))
+                    .Append(") AND e.CreatedUserId != ")
+                    .Append(_query.Params.ParticipatedUserId.Value)
+                    .Append(")");
+            }
+
+            
 
             // TagId
             // --> Only available if the Tags feature is enabled
