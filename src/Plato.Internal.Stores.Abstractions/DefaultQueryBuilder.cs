@@ -140,6 +140,17 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
+
+        public WhereInt Equals(int value, Action<StringBuilder> builder)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" OR ");
+            Value = value;
+            _builder.Append("{0} = ").Append(value.ToString());
+            builder(_builder);
+            return this;
+        }
+
         public WhereInt LessThan(int value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))

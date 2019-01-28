@@ -92,6 +92,16 @@ namespace Plato.Discuss.Services
                                 q.ParticipatedUserId.Equals(user.Id);
                             }
                             break;
+                        case FilterBy.Following:
+                            if (user != null)
+                            {
+                                q.FollowUserId.Equals(user.Id, b =>
+                                {
+                                    // Restrict follows by topic
+                                    b.Append(" AND f.[Name] = 'Topic'");
+                                });
+                            }
+                            break;
                     }
 
                     // Restrict results via user role if the channels feature is enabled

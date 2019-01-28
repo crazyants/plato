@@ -1,0 +1,13 @@
+Name: Plato Stars
+Description: Adds the ability to for users to star or bookmark entities.
+Category: Discussions
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.WebApi",
+		Version: "1.0.0"
+	}
+]

@@ -81,6 +81,7 @@ namespace Plato.Entities.Stores
         private WhereDate _modifiedDate;
 
         private WhereInt _participatedUserId;
+        private WhereInt _followUserId;
 
         public WhereInt Id
         {
@@ -226,6 +227,12 @@ namespace Plato.Entities.Stores
             set => _participatedUserId = value;
         }
 
+        public WhereInt FollowUserId
+        {
+            get => _followUserId ?? (_followUserId = new WhereInt());
+            set => _followUserId = value;
+        }
+        
     }
 
     #endregion
@@ -310,6 +317,7 @@ namespace Plato.Entities.Stores
         private readonly string _entityRepliesTableName;
         private readonly string _entityLabelsTableName;
         private readonly string _entityTagsTableName;
+        private readonly string _entityFollowsTableName;
         private readonly string _categoryRolesTableName;
 
         private readonly EntityQuery<TModel> _query;
@@ -324,6 +332,7 @@ namespace Plato.Entities.Stores
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
             _entityLabelsTableName = GetTableNameWithPrefix("EntityLabels");
             _entityTagsTableName = GetTableNameWithPrefix("EntityTags");
+            _entityFollowsTableName = GetTableNameWithPrefix("Follows");
             _categoryRolesTableName = GetTableNameWithPrefix("CategoryRoles");
 
         }
@@ -624,26 +633,7 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.LabelId.ToSqlString("LabelId"))
                     .Append("))");
             }
-
-            // ParticipatedUserId
-            // Returns all entities with replies by the supplied ParticipatedUserId
-            // Excludes entities created by the supplied ParticipatedUserId
-            if (_query.Params.ParticipatedUserId.Value > -1)
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.LabelId.Operator);
-                sb.Append(" e.Id IN (")
-                    .Append("SELECT EntityId FROM ")
-                    .Append(_entityRepliesTableName)
-                    .Append(" WHERE (")
-                    .Append(_query.Params.ParticipatedUserId.ToSqlString("CreatedUserId"))
-                    .Append(") AND e.CreatedUserId != ")
-                    .Append(_query.Params.ParticipatedUserId.Value)
-                    .Append(")");
-            }
-
             
-
             // TagId
             // --> Only available if the Tags feature is enabled
             if (_query.Params.TagId.Value > -1)
@@ -658,6 +648,21 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
+            // FollowUserId
+            // --> Only available if the follow feature is enabled
+            if (_query.Params.FollowUserId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.FollowUserId.Operator);
+                sb.Append(" e.Id IN (")
+                    .Append("SELECT ThingId FROM ")
+                    .Append(_entityFollowsTableName)
+                    .Append(" f WHERE (")
+                    .Append(_query.Params.FollowUserId.ToSqlString("f.CreatedUserId"))
+                    .Append("))");
+            }
+
+            
 
             // CreatedUserId
             if (_query.Params.CreatedUserId.Value > -1)
@@ -666,6 +671,25 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.CreatedUserId.Operator);
                 sb.Append(_query.Params.CreatedUserId.ToSqlString("e.CreatedUserId"));
             }
+            
+            // ParticipatedUserId
+            // --> Returns all entities with replies by the supplied
+            // --> user and excludes entities created by the supplied user
+            if (_query.Params.ParticipatedUserId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.LabelId.Operator);
+                sb.Append(" e.Id IN (")
+                    .Append("SELECT EntityId FROM ")
+                    .Append(_entityRepliesTableName)
+                    .Append(" WHERE (")
+                    .Append(_query.Params.ParticipatedUserId.ToSqlString("CreatedUserId"))
+                    .Append(") AND e.CreatedUserId != ")
+                    .Append(_query.Params.ParticipatedUserId.Value)
+                    .Append(")");
+            }
+
+
 
             // -----------------
             // private 
