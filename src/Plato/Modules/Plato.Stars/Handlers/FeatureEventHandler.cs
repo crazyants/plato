@@ -13,7 +13,7 @@ namespace Plato.Stars.Handlers
         public string Version { get; } = "1.0.0";
 
         // Follows table
-        private readonly SchemaTable _follows = new SchemaTable()
+        private readonly SchemaTable _stars = new SchemaTable()
         {
             Name = "Stars",
             Columns = new List<SchemaColumn>()
@@ -120,8 +120,8 @@ namespace Plato.Stars.Handlers
 
                 // drop entity follows
                 builder
-                    .DropTable(_follows)
-                    .DropDefaultProcedures(_follows)
+                    .DropTable(_stars)
+                    .DropDefaultProcedures(_stars)
                     .DropProcedure(new SchemaProcedure("SelectFollowsPaged"))
                     .DropProcedure(new SchemaProcedure("SelectFollowsByNameAndThingId"))
                     .DropProcedure(new SchemaProcedure("SelectFollowByNameThingIdAndCreatedUserId"));
@@ -179,42 +179,42 @@ namespace Plato.Stars.Handlers
         {
             
             builder
-                .CreateTable(_follows)
-                .CreateDefaultProcedures(_follows);
+                .CreateTable(_stars)
+                .CreateDefaultProcedures(_stars);
             
             // Overwrite our SelectFollowById created via CreateDefaultProcedures
             // above to also return basic user data with follow
             builder.CreateProcedure(
                 new SchemaProcedure(
-                        $"SelectFollowById",
-                        @"SELECT f.*, 
+                        $"SelectStarById",
+                        @"SELECT s.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
                                 u.NormalizedUserName 
-                                FROM {prefix}_Follows f WITH (nolock) 
-                                LEFT OUTER JOIN {prefix}_Users u ON f.CreatedUserId = u.Id 
+                                FROM {prefix}_Stars s WITH (nolock) 
+                                LEFT OUTER JOIN {prefix}_Users u ON s.CreatedUserId = u.Id 
                                 WHERE (
                                     f.Id = @Id 
                                 )")
-                    .ForTable(_follows)
-                    .WithParameter(_follows.PrimaryKeyColumn));
+                    .ForTable(_stars)
+                    .WithParameter(_stars.PrimaryKeyColumn));
                     
             builder
                 .CreateProcedure(
-                    new SchemaProcedure("SelectFollowsByNameAndThingId",
-                            @"SELECT f.*, 
+                    new SchemaProcedure("SelectStarsByNameAndThingId",
+                            @"SELECT s.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
                                 u.NormalizedUserName 
-                                FROM {prefix}_Follows f WITH (nolock) 
-                                LEFT OUTER JOIN {prefix}_Users u ON f.CreatedUserId = u.Id 
+                                FROM {prefix}_Stars s WITH (nolock) 
+                                LEFT OUTER JOIN {prefix}_Users u ON s.CreatedUserId = u.Id 
                                 WHERE (
-                                    (f.[Name] = @Name AND f.ThingId = @ThingId) AND
+                                    (s.[Name] = @Name AND s.ThingId = @ThingId) AND
                                     (u.EmailConfirmed = 1 AND u.LockoutEnabled = 0)
                                 )")
-                        .ForTable(_follows)
+                        .ForTable(_stars)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
@@ -232,18 +232,18 @@ namespace Plato.Stars.Handlers
             
             builder
                 .CreateProcedure(
-                    new SchemaProcedure("SelectFollowByNameThingIdAndCreatedUserId",
-                            @"SELECT f.*, 
+                    new SchemaProcedure("SelectStarByNameThingIdAndCreatedUserId",
+                            @"SELECT s.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
                                 u.NormalizedUserName 
-                                FROM {prefix}_Follows f WITH (nolock) 
-                                LEFT OUTER JOIN {prefix}_Users u ON f.CreatedUserId = u.Id 
+                                FROM {prefix}_Stars s WITH (nolock) 
+                                LEFT OUTER JOIN {prefix}_Users u ON s.CreatedUserId = u.Id 
                                 WHERE (
-                                    f.[Name] = @Name AND f.ThingId = @ThingId AND u.Id = @CreatedUserId
+                                    s.[Name] = @Name AND s.ThingId = @ThingId AND u.Id = @CreatedUserId
                                 )")
-                        .ForTable(_follows)
+                        .ForTable(_stars)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
@@ -264,8 +264,8 @@ namespace Plato.Stars.Handlers
                             }
                         }));
             
-            builder.CreateProcedure(new SchemaProcedure("SelectFollowsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_follows)
+            builder.CreateProcedure(new SchemaProcedure("SelectStarsPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_stars)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()

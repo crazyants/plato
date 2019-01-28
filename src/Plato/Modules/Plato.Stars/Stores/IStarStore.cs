@@ -7,9 +7,9 @@ namespace Plato.Stars.Stores
     public interface IStarStore<TModel> : IStore<TModel> where TModel : class
     {
 
-        Task<IEnumerable<TModel>> SelectFollowsByNameAndThingId(string name, int thingId);
+        Task<IEnumerable<TModel>> SelectByNameAndThingId(string name, int thingId);
 
-        Task<TModel> SelectFollowByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId);
+        Task<TModel> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId);
 
     }
 

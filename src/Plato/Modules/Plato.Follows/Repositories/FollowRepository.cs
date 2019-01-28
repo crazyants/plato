@@ -128,7 +128,7 @@ namespace Plato.Follows.Repositories
             return success > 0 ? true : false;
         }
 
-        public async Task<IEnumerable<Follow>> SelectFollowsByNameAndThingId(string name, int thingId)
+        public async Task<IEnumerable<Follow>> SelectByNameAndThingId(string name, int thingId)
         {
             List<Follow> output = null;
             using (var context = _dbContext)
@@ -154,7 +154,7 @@ namespace Plato.Follows.Repositories
             return output;
         }
 
-        public async Task<Follow> SelectFollowByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
+        public async Task<Follow> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
         {
             Follow follow = null;
             using (var context = _dbContext)

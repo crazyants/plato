@@ -26,20 +26,20 @@ namespace Plato.Stars.Repositories
         
         #region "Implementation"
 
-        public async Task<Star> InsertUpdateAsync(Star follow)
+        public async Task<Star> InsertUpdateAsync(Star star)
         {
-            if (follow == null)
+            if (star == null)
             {
-                throw new ArgumentNullException(nameof(follow));
+                throw new ArgumentNullException(nameof(star));
             }
                 
             var id = await InsertUpdateInternal(
-                follow.Id,
-                follow.Name,
-                follow.ThingId,
-                follow.CancellationToken,
-                follow.CreatedUserId,
-                follow.CreatedDate);
+                star.Id,
+                star.Name,
+                star.ThingId,
+                star.CancellationToken,
+                star.CreatedUserId,
+                star.CreatedDate);
 
             if (id > 0)
             {
@@ -52,22 +52,22 @@ namespace Plato.Stars.Repositories
 
         public async Task<Star> SelectByIdAsync(int id)
         {
-            Star follow = null;
+            Star star = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFollowById", id);
+                    "SelectStarById", id);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    follow = new Star();
-                    follow.PopulateModel(reader);
+                    star = new Star();
+                    star.PopulateModel(reader);
                 }
 
             }
 
-            return follow;
+            return star;
         }
 
         public async Task<IPagedResults<Star>> SelectAsync(params object[] inputParams)
@@ -84,7 +84,7 @@ namespace Plato.Stars.Repositories
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFollowsPaged",
+                    "SelectStarsPaged",
                     inputParams
                 );
 
@@ -114,7 +114,7 @@ namespace Plato.Stars.Repositories
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting entity with id: {id}");
+                _logger.LogInformation($"Deleting star with id: {id}");
             }
 
             var success = 0;
@@ -122,20 +122,20 @@ namespace Plato.Stars.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteFollowById", id);
+                    "DeleteStarById", id);
             }
 
             return success > 0 ? true : false;
         }
 
-        public async Task<IEnumerable<Star>> SelectFollowsByNameAndThingId(string name, int thingId)
+        public async Task<IEnumerable<Star>> SelectByNameAndThingId(string name, int thingId)
         {
             List<Star> output = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFollowsByNameAndThingId",
+                    "SelectStarsByNameAndThingId",
                     name,
                     thingId);
                 if ((reader != null) && (reader.HasRows))
@@ -154,27 +154,27 @@ namespace Plato.Stars.Repositories
             return output;
         }
 
-        public async Task<Star> SelectFollowByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
+        public async Task<Star> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
         {
-            Star follow = null;
+            Star star = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFollowByNameThingIdAndCreatedUserId", 
+                    "SelectStarByNameThingIdAndCreatedUserId", 
                     name,
                     thingId,
                     createdUserId);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    follow = new Star();
-                    follow.PopulateModel(reader);
+                    star = new Star();
+                    star.PopulateModel(reader);
                 }
 
             }
 
-            return follow;
+            return star;
         }
 
         #endregion

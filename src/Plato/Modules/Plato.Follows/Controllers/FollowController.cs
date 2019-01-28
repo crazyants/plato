@@ -50,7 +50,7 @@ namespace Plato.Follows.Controllers
             }
 
             // Is the user already following the thing?
-            var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+            var existingFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
                 follow.Name,
                 follow.ThingId,
                 user.Id);
@@ -104,7 +104,7 @@ namespace Plato.Follows.Controllers
                 return base.UnauthorizedException();
             }
             
-            var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+            var existingFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
                 follow.Name,
                 follow.ThingId,
                 user.Id);

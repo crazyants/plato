@@ -55,7 +55,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                var entityFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                var entityFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
                     followType.Name,
                     entity.Id,
                     user.Id);
@@ -89,7 +89,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                var entityFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                var entityFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
                     followType.Name,
                     entity.Id,
                     user.Id);
@@ -148,7 +148,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             var followType = FollowTypes.Topic;
       
             // Get any existing follow
-            var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+            var existingFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
                 followType.Name,
                 entity.Id,
                 user.Id);

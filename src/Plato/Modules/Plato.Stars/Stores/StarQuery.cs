@@ -8,7 +8,7 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Stars.Stores
 {
 
-    #region "FollowQuery"
+    #region "StarQuery"
 
     public class StarQuery : DefaultQuery<Star>
     {
@@ -20,20 +20,20 @@ namespace Plato.Stars.Stores
             _store = store;
         }
 
-        public FollowQueryParams Params { get; set; }
+        public StarQueryParams Params { get; set; }
 
         public override IQuery<Star> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (FollowQueryParams)Convert.ChangeType(defaultParams, typeof(FollowQueryParams));
+            Params = (StarQueryParams)Convert.ChangeType(defaultParams, typeof(StarQueryParams));
             return this;
         }
 
         public override async Task<IPagedResults<Star>> ToList()
         {
 
-            var builder = new FollowQueryBuilder(this);
+            var builder = new StarQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
@@ -47,20 +47,20 @@ namespace Plato.Stars.Stores
 
             return data;
         }
-        
+
     }
 
     #endregion
 
-    #region "FollowQueryParams"
+    #region "StarQueryParams"
 
-    public class FollowQueryParams
+    public class StarQueryParams
     {
-        
+
         private WhereInt _id;
         private WhereInt _thingId;
         private WhereString _name;
-      
+
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -72,40 +72,38 @@ namespace Plato.Stars.Stores
             get => _thingId ?? (_thingId = new WhereInt());
             set => _thingId = value;
         }
-        
+
         public WhereString Name
         {
             get => _name ?? (_name = new WhereString());
             set => _name = value;
         }
-        
+
     }
 
     #endregion
 
-    #region "FollowQueryBuilder"
+    #region "StarQueryBuilder"
 
-    public class FollowQueryBuilder : IQueryBuilder
+    public class StarQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
-        private readonly string _followsTableName;
+        private readonly string _starsTableName;
         private readonly string _usersTableName;
-
         private readonly StarQuery _query;
 
-        public FollowQueryBuilder(StarQuery query)
+        public StarQueryBuilder(StarQuery query)
         {
             _query = query;
-            _followsTableName = GetTableNameWithPrefix("Follows");
+            _starsTableName = GetTableNameWithPrefix("Stars");
             _usersTableName = GetTableNameWithPrefix("Users");
-
         }
 
         #endregion
 
         #region "Implementation"
-        
+
         public string BuildSqlPopulate()
         {
 
@@ -152,7 +150,7 @@ namespace Plato.Stars.Stores
         string BuildTables()
         {
             var sb = new StringBuilder();
-            sb.Append(_followsTableName)
+            sb.Append(_starsTableName)
                 .Append(" f WITH (nolock) LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" u ON f.CreatedUserId = u.Id");
@@ -201,7 +199,7 @@ namespace Plato.Stars.Stores
             return sb.ToString();
 
         }
-        
+
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)

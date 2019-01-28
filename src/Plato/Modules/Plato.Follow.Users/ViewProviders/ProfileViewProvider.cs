@@ -40,7 +40,7 @@ namespace Plato.Follow.Users.ViewProviders
             var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
             if (currentUser != null)
             {
-                var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                var existingFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
                     followType.Name,
                     user.Id,
                     currentUser.Id);

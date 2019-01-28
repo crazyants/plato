@@ -163,7 +163,7 @@ namespace Plato.Follows.Stores
             });
         }
 
-        public async Task<IEnumerable<Follow>> SelectFollowsByNameAndThingId(string name, int thingId)
+        public async Task<IEnumerable<Follow>> SelectByNameAndThingId(string name, int thingId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), name, thingId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -175,12 +175,12 @@ namespace Plato.Follows.Stores
                         name, thingId, token.ToString());
                 }
 
-                return await _followRepository.SelectFollowsByNameAndThingId(name, thingId);
+                return await _followRepository.SelectByNameAndThingId(name, thingId);
 
             });
         }
 
-        public async Task<Follow> SelectFollowByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
+        public async Task<Follow> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), name, thingId, createdUserId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -192,7 +192,7 @@ namespace Plato.Follows.Stores
                       name,  createdUserId, thingId, token.ToString());
                 }
 
-                return await _followRepository.SelectFollowByNameThingIdAndCreatedUserId(name, thingId, createdUserId);
+                return await _followRepository.SelectByNameThingIdAndCreatedUserId(name, thingId, createdUserId);
 
             });
         }
