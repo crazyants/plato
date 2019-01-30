@@ -411,7 +411,7 @@ $(function (win, doc, $) {
     $.fn.extend({
         starButton: starButton.init,
         starToggler: starToggler.init,
-        starheckbox: starCheckbox.init
+        starCheckbox: starCheckbox.init
     });
     
     $(doc).ready(function () {

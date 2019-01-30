@@ -82,6 +82,7 @@ namespace Plato.Entities.Stores
 
         private WhereInt _participatedUserId;
         private WhereInt _followUserId;
+        private WhereInt _starUserId;
 
         public WhereInt Id
         {
@@ -232,7 +233,13 @@ namespace Plato.Entities.Stores
             get => _followUserId ?? (_followUserId = new WhereInt());
             set => _followUserId = value;
         }
-        
+
+        public WhereInt StarUserId
+        {
+            get => _starUserId ?? (_starUserId = new WhereInt());
+            set => _starUserId = value;
+        }
+
     }
 
     #endregion
@@ -317,7 +324,8 @@ namespace Plato.Entities.Stores
         private readonly string _entityRepliesTableName;
         private readonly string _entityLabelsTableName;
         private readonly string _entityTagsTableName;
-        private readonly string _entityFollowsTableName;
+        private readonly string _followsTableName;
+        private readonly string _starsTableName;
         private readonly string _categoryRolesTableName;
 
         private readonly EntityQuery<TModel> _query;
@@ -332,7 +340,8 @@ namespace Plato.Entities.Stores
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
             _entityLabelsTableName = GetTableNameWithPrefix("EntityLabels");
             _entityTagsTableName = GetTableNameWithPrefix("EntityTags");
-            _entityFollowsTableName = GetTableNameWithPrefix("Follows");
+            _followsTableName = GetTableNameWithPrefix("Follows");
+            _starsTableName = GetTableNameWithPrefix("Stars");
             _categoryRolesTableName = GetTableNameWithPrefix("CategoryRoles");
 
         }
@@ -656,14 +665,26 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.FollowUserId.Operator);
                 sb.Append(" e.Id IN (")
                     .Append("SELECT ThingId FROM ")
-                    .Append(_entityFollowsTableName)
+                    .Append(_followsTableName)
                     .Append(" f WHERE (")
                     .Append(_query.Params.FollowUserId.ToSqlString("f.CreatedUserId"))
                     .Append("))");
             }
 
+            // StarUserId
+            // --> Only available if the follow feature is enabled
+            if (_query.Params.StarUserId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.StarUserId.Operator);
+                sb.Append(" e.Id IN (")
+                    .Append("SELECT ThingId FROM ")
+                    .Append(_starsTableName)
+                    .Append(" s WHERE (")
+                    .Append(_query.Params.StarUserId.ToSqlString("s.CreatedUserId"))
+                    .Append("))");
+            }
             
-
             // CreatedUserId
             if (_query.Params.CreatedUserId.Value > -1)
             {

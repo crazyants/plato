@@ -102,6 +102,16 @@ namespace Plato.Discuss.Services
                                 });
                             }
                             break;
+                        case FilterBy.Starred:
+                            if (user != null)
+                            {
+                                q.StarUserId.Equals(user.Id, b =>
+                                {
+                                    // Restrict follows by topic
+                                    b.Append(" AND s.[Name] = 'Topic'");
+                                });
+                            }
+                            break;
                     }
 
                     // Restrict results via user role if the channels feature is enabled

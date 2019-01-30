@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
-using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -19,7 +15,6 @@ using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
-using YamlDotNet.Serialization;
 
 namespace Plato.Discuss.Moderation.Controllers
 {

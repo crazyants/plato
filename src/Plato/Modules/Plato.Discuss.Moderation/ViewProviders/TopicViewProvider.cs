@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -15,21 +16,37 @@ namespace Plato.Discuss.Moderation.ViewProviders
     public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
+        private readonly IContextFacade _contextFacade;
         private readonly IModeratorStore<Moderator> _moderatorStore;
-        private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
         public TopicViewProvider(
             IModeratorStore<Moderator> moderatorStore,
-            IPlatoUserStore<User> ploatUserStore)
+            IPlatoUserStore<User> platoUserStore, 
+            IContextFacade contextFacade)
         {
             _moderatorStore = moderatorStore;
-            _ploatUserStore = ploatUserStore;
+            _platoUserStore = platoUserStore;
+            _contextFacade = contextFacade;
         }
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Topic moderator, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
         {
+
+            // Add moderator to context
+            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
+            {
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                if (user != null)
+                {
+                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
+                }
+            }
+
+            // ----------------
+
 
             IPagedResults<User> users = null;
 
@@ -40,7 +57,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
             if (moderators != null)
             {
-                users = await _ploatUserStore.QueryAsync()
+                users = await _platoUserStore.QueryAsync()
                     .Take(1, 20)
                     .Select<UserQueryParams>(q =>
                     {
@@ -59,28 +76,93 @@ namespace Plato.Discuss.Moderation.ViewProviders
             
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Topic oldModerator, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic topic, IViewProviderContext context)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            // Add moderator to context
+            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
+            {
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                if (user != null)
+                {
+                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
+                }
+            }
+
+            return default(IViewProviderResult);
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Topic moderator, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext context)
         {
 
-            return Task.FromResult(default(IViewProviderResult));
+            // Add moderator to context
+            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
+            {
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                if (user != null)
+                {
+                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
+                }
+            }
+            
+            return default(IViewProviderResult);
+
         }
-
-
-        public override Task<IViewProviderResult> BuildUpdateAsync(Topic model, IViewProviderContext context)
+        
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
         {
 
-            return Task.FromResult(default(IViewProviderResult));
+            // Add moderator to context
+            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
+            {
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                if (user != null)
+                {
+                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
+                }
+            }
+
+            return default(IViewProviderResult);
 
         }
 
         #endregion
-        
+
+        #region "Private Methods"
+
+        async Task<Moderator> GetModerator(User user, Topic topic)
+        {
+
+
+            // Get all moderators
+            var moderators = await _moderatorStore
+                .QueryAsync()
+                .ToList();
+
+            // No need to check permissions if we don't have any moderators
+            if (moderators == null)
+            {
+                return null;
+            }
+
+            // Get all moderator entries for given identity and resource
+            var userEntries = moderators.Data
+                .Where(m => m.UserId == user.Id & m.CategoryId == topic.CategoryId)
+                .ToList();
+
+            // No moderator entries for the user and resource
+            if (!userEntries.Any())
+            {
+                return null;
+            }
+
+            return userEntries[0];
+
+        }
+
+
+        #endregion
 
     }
 

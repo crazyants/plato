@@ -43,7 +43,7 @@ namespace Plato.Discuss.Navigation
             
             // Get user from context
             var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
-       
+            
             // Add topic options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
