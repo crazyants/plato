@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 
 namespace Plato.Internal.Layout.Views
 {
@@ -13,7 +13,7 @@ namespace Plato.Internal.Layout.Views
 
         public ViewContext ViewContext { get; set; }
 
-        public IEnumerable<IViewAdaptorResult> ViewAdaptorResults { get; set; }
+        public IEnumerable<IViewAdapterResult> ViewAdaptorResults { get; set; }
 
         public object Value { get; set; }
         

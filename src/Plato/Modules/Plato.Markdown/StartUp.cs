@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Markdown.Assets;
@@ -32,7 +32,7 @@ namespace Plato.Markdown
             services.AddSingleton<IMarkdownParserFactory, MarkdownParserFactory>();
 
             // Register view adaptors
-            services.AddScoped<IViewAdaptorProvider, EditorViewAdaptorProvider>();
+            services.AddScoped<IViewAdapterProvider, EditorViewAdapterProvider>();
             
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

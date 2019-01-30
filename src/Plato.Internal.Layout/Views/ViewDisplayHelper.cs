@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 
 namespace Plato.Internal.Layout.Views
 {
@@ -42,21 +42,18 @@ namespace Plato.Internal.Layout.Views
             // Build view descriptor
             var viewDescriptor = _viewFactory.Create(view);
 
-            // Get registered view adaptor providers for the view
-            var viewAdaptorManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdaptorManager>();
-            var viewAdaptorResults = await viewAdaptorManager.GetViewAdaptors(view.ViewName);
+            // Get registered view adapter providers for the view
+            var viewAdapterManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdapterManager>();
+            var viewAdapterResults = await viewAdapterManager.GetViewAdapters(view.ViewName);
 
-            // Build display context
-            var displayContext = new ViewDisplayContext()
+            // Invoke the view with supplied context
+            return await _viewFactory.InvokeAsync(new ViewDisplayContext()
             {
                 ViewDescriptor = viewDescriptor,
-                ViewAdaptorResults = viewAdaptorResults,
+                ViewAdaptorResults = viewAdapterResults,
                 ViewContext = this.ViewContext,
                 ServiceProvider = _serviceProvider
-            };
-
-            // Invoke the view
-            return await _viewFactory.InvokeAsync(displayContext);
+            });
 
         }
 

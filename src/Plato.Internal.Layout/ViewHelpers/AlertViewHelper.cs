@@ -8,7 +8,7 @@ namespace Plato.Internal.Layout.ViewHelpers
     public class AlertViewHelper : EmbeddedView
     {
 
-        readonly AlertInfo _alert;
+        private readonly AlertInfo _alert;
 
         public AlertViewHelper(AlertInfo alert)
         {

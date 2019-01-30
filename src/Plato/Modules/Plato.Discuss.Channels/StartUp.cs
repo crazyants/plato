@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Channels.Navigation;
 using Plato.Discuss.Channels.Subscribers;
@@ -76,8 +76,8 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
        
             // Register view adapters
-            services.AddScoped<IViewAdaptorProvider, ModerationViewAdaptorProvider>();
-            services.AddScoped<IViewAdaptorProvider, TopicListItemViewAdaptor>();
+            services.AddScoped<IViewAdapterProvider, ModerationViewAdapterProvider>();
+            services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();

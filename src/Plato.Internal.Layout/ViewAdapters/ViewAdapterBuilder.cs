@@ -5,46 +5,46 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Html;
 
-namespace Plato.Internal.Layout.ViewAdaptors
+namespace Plato.Internal.Layout.ViewAdapters
 {
     
-    public class ViewAdaptorBuilder : IViewAdaptorBuilder
+    public class ViewAdapterBuilder : IViewAdapterBuilder
     {
         public string ViewName { get; }
 
-        private readonly IViewAdaptorResult _viewAdaptorResult;
+        private readonly IViewAdapterResult _viewAdapterResult;
 
-        public IViewAdaptorResult ViewAdaptorResult => _viewAdaptorResult;
+        public IViewAdapterResult ViewAdapterResult => _viewAdapterResult;
 
-        public ViewAdaptorBuilder(string viewName) 
+        public ViewAdapterBuilder(string viewName) 
         {
-            _viewAdaptorResult = new ViewAdaptorResult();
+            _viewAdapterResult = new ViewAdapterResult();
             ViewName = viewName;
         }
         
-        public IViewAdaptorBuilder AdaptOutput(Func<IHtmlContent, IHtmlContent> alteration)
+        public IViewAdapterBuilder AdaptOutput(Func<IHtmlContent, IHtmlContent> alteration)
         {
             if (alteration == null)
             {
                 throw new NullReferenceException(nameof(alteration));
             }
 
-            _viewAdaptorResult.OutputAlterations.Add(alteration);
+            _viewAdapterResult.OutputAlterations.Add(alteration);
             return this;
         }
 
-        public IViewAdaptorBuilder AdaptView(string viewName)
+        public IViewAdapterBuilder AdaptView(string viewName)
         {
             if (viewName == null)
             {
                 throw new NullReferenceException(nameof(viewName));
             }
 
-            _viewAdaptorResult.ViewAlterations.Add(viewName);
+            _viewAdapterResult.ViewAlterations.Add(viewName);
             return this;
         }
 
-        public IViewAdaptorBuilder AdaptView(string[] viewNames)
+        public IViewAdapterBuilder AdaptView(string[] viewNames)
         {
             foreach (var viewName in viewNames)
             {
@@ -53,7 +53,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
             return this;
         }
 
-        public IViewAdaptorBuilder AdaptModel<TModel>(Func<TModel, object> alteration) where TModel : class
+        public IViewAdapterBuilder AdaptModel<TModel>(Func<TModel, object> alteration) where TModel : class
         {
             if (alteration == null)
             {
@@ -82,7 +82,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
 
             });
 
-            _viewAdaptorResult.ModelAlterations.Add(typedDelegate);
+            _viewAdapterResult.ModelAlterations.Add(typedDelegate);
             return this;
         }
         

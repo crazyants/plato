@@ -10,7 +10,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Models.Shell;
@@ -131,7 +131,7 @@ namespace Plato.Users
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
             // register view adapters
-            services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
+            services.AddScoped<IViewAdapterProvider, UserListAdapter>();
             
             // Register reputation providers
             services.AddScoped<IReputationsProvider<Reputation>, Reputations>();

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 
 namespace Plato.Internal.Layout.Views
 {
@@ -10,7 +10,7 @@ namespace Plato.Internal.Layout.Views
 
         public IView View { get; set; }
         
-        public IEnumerable<IViewAdaptorResult> ViewAdaptorResults { get; set; }
+        public IEnumerable<IViewAdapterResult> ViewAdaptorResults { get; set; }
 
         public int Priority { get; set; }
         

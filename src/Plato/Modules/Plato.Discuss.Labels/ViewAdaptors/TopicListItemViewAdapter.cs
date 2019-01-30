@@ -9,14 +9,14 @@ using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Labels.Models;
 using Plato.Labels.Stores;
 
-namespace Plato.Discuss.Labels.ViewAdaptors
+namespace Plato.Discuss.Labels.ViewAdapters
 {
 
-    public class TopicListItemViewAdaptor : BaseAdaptorProvider
+    public class TopicListItemViewAdapter : BaseAdapterProvider
     {
         
         private readonly ILabelStore<Label> _labelStore;
@@ -26,7 +26,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
         private readonly ITopicService _topicService;
         private readonly IActionContextAccessor _actionContextAccessor;
 
-        public TopicListItemViewAdaptor(
+        public TopicListItemViewAdapter(
             ILabelStore<Label> labelStore,
             IFeatureFacade featureFacade,
             ITopicService topicService, 
@@ -42,7 +42,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             _actionContextAccessor = actionContextAccessor;
         }
 
-        public override async Task<IViewAdaptorResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync()
         {
             
             // Get feature
@@ -50,7 +50,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             if (feature == null)
             {
                 // Feature not found
-                return default(IViewAdaptorResult);
+                return default(IViewAdapterResult);
             }
 
             // Get all labels for feature
@@ -58,7 +58,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             if (labels == null)
             {
                 // No labels available to adapt the view 
-                return default(IViewAdaptorResult);
+                return default(IViewAdapterResult);
             }
 
             // Build a dictionary we can use below within our AdaptModel
@@ -67,7 +67,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Labels
             // Instead we update the model for the topic item view component
-            // here via our view adaptor to include the label data for the entity
+            // here via our view adapter to include the label data for the entity
             // This way the label data is only ever populated if the labels feature is enabled
             return await Adapt("TopicListItem", v =>
             {

@@ -4,18 +4,18 @@ using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 
 namespace Plato.Discuss.Channels.ViewAdaptors
 {
 
-    public class TopicListItemViewAdaptor : BaseAdaptorProvider
+    public class TopicListItemViewAdapter : BaseAdapterProvider
     {
 
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
-        public TopicListItemViewAdaptor(
+        public TopicListItemViewAdapter(
             ICategoryStore<Channel> channelStore,
             IFeatureFacade featureFacade)
         {
@@ -23,7 +23,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             _featureFacade = featureFacade;
         }
 
-        public override async Task<IViewAdaptorResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync()
         {
 
             // Get feature
@@ -31,7 +31,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             if (feature == null)
             {
                 // Feature not found
-                return default(IViewAdaptorResult);
+                return default(IViewAdapterResult);
             }
 
             // Get all categories for feature
@@ -39,7 +39,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             if (channels == null)
             {
                 // No categories available to adapt the view 
-                return default(IViewAdaptorResult);
+                return default(IViewAdapterResult);
             }
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Channels

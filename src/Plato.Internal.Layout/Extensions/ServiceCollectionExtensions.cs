@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.Localizers;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Theming;
 using Plato.Internal.Layout.Views;
@@ -29,7 +29,7 @@ namespace Plato.Internal.Layout.Extensions
             this IServiceCollection services)
         {
             // view adaptors
-            services.TryAddScoped<IViewAdaptorManager, ViewAdaptorManager>();
+            services.TryAddScoped<IViewAdapterManager, ViewAdapterManager>();
 
             return services;
 

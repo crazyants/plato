@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Html;
 
-namespace Plato.Internal.Layout.ViewAdaptors
+namespace Plato.Internal.Layout.ViewAdapters
 {
-    public interface IViewAdaptorResult
+    public interface IViewAdapterResult
     {
 
-        IViewAdaptorBuilder Builder { get; set; }
+        IViewAdapterBuilder Builder { get; set; }
 
         IList<Func<IHtmlContent, IHtmlContent>> OutputAlterations { get; set; }
 

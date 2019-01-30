@@ -5,20 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
-using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Channels.ViewAdaptors
 {
 
-    public class ModerationViewAdaptorProvider : BaseAdaptorProvider
+    public class ModerationViewAdapterProvider : BaseAdapterProvider
     {
 
         private readonly ICategoryStore<Channel> _channelStore;
 
         private IHtmlLocalizer T { get; }
         
-        public ModerationViewAdaptorProvider(
+        public ModerationViewAdapterProvider(
             ICategoryStore<Channel> channelStore,
             IHtmlLocalizer htmlLocalizer)
         {
@@ -26,7 +26,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             T = htmlLocalizer;
         }
 
-        public override Task<IViewAdaptorResult> ConfigureAsync()
+        public override Task<IViewAdapterResult> ConfigureAsync()
         {
 
             // Plato.Discuss.Moderation does not have a dependency on Plato.Discuss.Channels

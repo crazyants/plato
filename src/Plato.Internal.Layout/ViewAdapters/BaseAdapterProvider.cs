@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Plato.Internal.Layout.ViewAdaptors
+namespace Plato.Internal.Layout.ViewAdapters
 {
-    public abstract class BaseAdaptorProvider : IViewAdaptorProvider
+    public abstract class BaseAdapterProvider : IViewAdapterProvider
     {
 
         private string _viewName;
 
         public string ViewName => _viewName;
 
-        public abstract Task<IViewAdaptorResult> ConfigureAsync();
+        public abstract Task<IViewAdapterResult> ConfigureAsync();
 
-        public Task<IViewAdaptorResult> Adapt(
+        public Task<IViewAdapterResult> Adapt(
             string viewName,
-            Action<IViewAdaptorBuilder> configure)
+            Action<IViewAdapterBuilder> configure)
         {
 
-            // Which view is our adaptor modifying
+            // Which view is our adapter modifying
             // Not important mainly used for logging purposes
             _viewName = viewName;
 
-            // Apply adaptor builder & return compiled results
-            var builder = new ViewAdaptorBuilder(viewName);
+            // Apply adapter builder & return compiled results
+            var builder = new ViewAdapterBuilder(viewName);
             configure(builder);
 
             // Ensure results are aware of the builder that created them
-            var result = builder.ViewAdaptorResult;
+            var result = builder.ViewAdapterResult;
             result.Builder = builder;
 
             // Return results
