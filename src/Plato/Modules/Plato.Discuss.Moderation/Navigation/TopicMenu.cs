@@ -54,30 +54,15 @@ namespace Plato.Discuss.Moderation.Navigation
                 return;
             }
 
-            // Get moderator upon first request
+            // Get moderator from context provided by moderator topic view provider
             var moderator = builder.ActionContext.HttpContext.Items[typeof(Moderator)] as Moderator;
 
-            // We always need a moderator to render this menu
+            // We always need a moderator to show this menu
             if (moderator == null)
             {
                 return;
             }
             
-            Permission editPermission = null;
-            Permission deletePermission = null;
-            if (moderator != null)
-            {
-                // User moderator permissions
-                editPermission = ModeratorPermissions.EditTopics;
-                deletePermission = ModeratorPermissions.DeleteTopics;
-            }
-            else
-            {
-                // User role permissions
-                editPermission = user?.Id == topic.CreatedUserId ? Discuss.Permissions.EditOwnTopics : Discuss.Permissions.EditAnyTopic;
-                deletePermission = user?.Id == topic.CreatedUserId ? Discuss.Permissions.DeleteOwnTopics : Discuss.Permissions.DeleteAnyTopic;
-            }
-
             // Add moderator options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
@@ -94,7 +79,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                 ["alias"] = topic.Alias
                             })
                             .Resource(topic.CategoryId)
-                            .Permission(editPermission)
+                            .Permission(ModeratorPermissions.EditTopics)
                             .LocalNav()
                         )
                         .Add(topic.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
@@ -156,45 +141,17 @@ namespace Plato.Discuss.Moderation.Navigation
                                         ["id"] = topic.Id
                                     })
                                 .Resource(topic.CategoryId)
-                                .Permission(deletePermission)
-                                .LocalNav(), new List<string>() {"dropdown-item", "dropdown-item-danger"}
+                                .Permission(ModeratorPermissions.DeleteTopics)
+                                .LocalNav(),
+                            topic.IsDeleted
+                                ? new List<string>() { "dropdown-item", "dropdown-item-success" }
+                                : new List<string>() { "dropdown-item", "dropdown-item-danger" }
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
         }
-
-
-        //async Task<Moderator> GetModerator(User user, Topic topic)
-        //{
-
-
-        //    // Get all moderators
-        //    var moderators = await _moderatorStore
-        //        .QueryAsync()
-        //        .ToList();
-
-        //    // No need to check permissions if we don't have any moderators
-        //    if (moderators == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    // Get all moderator entries for given identity and resource
-        //    var userEntries = moderators.Data
-        //        .Where(m => m.UserId == user.Id & m.CategoryId == topic.CategoryId)
-        //        .ToList();
-
-        //    // No moderator entries for the user and resource
-        //    if (!userEntries.Any())
-        //    {
-        //        return null;
-        //    }
-
-        //    return userEntries[0];
-
-        //}
-
+        
     }
 
 }

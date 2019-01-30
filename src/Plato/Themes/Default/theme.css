@@ -80,6 +80,15 @@
     background-color: #007bff;
 }
 
+.dropdown-item-info:hover,
+.dropdown-item-info:focus { background: #17a2b8; }
+
+.dropdown-item-warning:hover,
+.dropdown-item-warning:focus { background: #ffc107; }
+
+.dropdown-item-success:hover,
+.dropdown-item-success:focus { background: #28a745; }
+
 .dropdown-item-danger:hover,
 .dropdown-item-danger:focus { background: #dc3545; }
 

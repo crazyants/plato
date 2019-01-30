@@ -34,19 +34,13 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         public override async Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
         {
-
+            
             // Add moderator to context
-            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
-            {
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
-                if (user != null)
-                {
-                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
-                }
-            }
+            await HydrateModeratorContext(topic, context);
 
             // ----------------
 
+            // Add moderators panel to sidebar
 
             IPagedResults<User> users = null;
 
@@ -80,15 +74,8 @@ namespace Plato.Discuss.Moderation.ViewProviders
         {
 
             // Add moderator to context
-            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
-            {
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
-                if (user != null)
-                {
-                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
-                }
-            }
-
+            await HydrateModeratorContext(topic, context);
+            
             return default(IViewProviderResult);
 
         }
@@ -97,15 +84,8 @@ namespace Plato.Discuss.Moderation.ViewProviders
         {
 
             // Add moderator to context
-            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
-            {
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
-                if (user != null)
-                {
-                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
-                }
-            }
-            
+            await HydrateModeratorContext(topic, context);
+
             return default(IViewProviderResult);
 
         }
@@ -114,14 +94,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
         {
 
             // Add moderator to context
-            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
-            {
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
-                if (user != null)
-                {
-                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
-                }
-            }
+            await HydrateModeratorContext(topic, context);
 
             return default(IViewProviderResult);
 
@@ -131,16 +104,27 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         #region "Private Methods"
 
-        async Task<Moderator> GetModerator(User user, Topic topic)
+        async Task HydrateModeratorContext(Topic topic, IViewProviderContext context)
         {
 
+            // Add moderator to context
+            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
+            {
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                if (user != null)
+                {
+                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
+                }
+            }
 
+        }
+        async Task<Moderator> GetModerator(User user, Topic topic)
+        {
+            
             // Get all moderators
             var moderators = await _moderatorStore
                 .QueryAsync()
                 .ToList();
-
-            // No need to check permissions if we don't have any moderators
             if (moderators == null)
             {
                 return null;

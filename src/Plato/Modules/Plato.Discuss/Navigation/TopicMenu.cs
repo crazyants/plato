@@ -59,12 +59,12 @@ namespace Plato.Discuss.Navigation
                                 ["id"] = topic.Id,
                                 ["alias"] = topic.Alias
                             })
-                            .Permission(user?.Id == topic.CreatedUserId ?
-                                Permissions.EditOwnTopics :
-                                Permissions.EditAnyTopic)
+                            .Permission(user?.Id == topic.CreatedUserId
+                                ? Permissions.EditOwnTopics
+                                : Permissions.EditAnyTopic)
                             .LocalNav()
                         )
-                        .Add(T["Report"], int.MaxValue - 10, report => report
+                        .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Discuss")
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -72,7 +72,28 @@ namespace Plato.Discuss.Navigation
                             })
                             .Permission(Permissions.ReportTopics)
                             .LocalNav()
-                        ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                        )
+                        .Add(T["Divider"], int.MaxValue - 1, divider => divider
+                            .Permission(user?.Id == topic.CreatedUserId
+                                ? Permissions.DeleteOwnTopics
+                                : Permissions.DeleteAnyTopic)
+                            .DividerCss("dropdown-divider").LocalNav()
+                        )
+                        .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Action(topic.IsDeleted ? "RestoreTopic" : "DeleteTopic", "Home", "Plato.Discuss",
+                                    new RouteValueDictionary()
+                                    {
+                                        ["id"] = topic.Id
+                                    })
+                                .Permission(user?.Id == topic.CreatedUserId
+                                    ? Permissions.DeleteOwnTopics
+                                    : Permissions.DeleteAnyTopic)
+                                .LocalNav(),
+                            topic.IsDeleted
+                                ? new List<string>() {"dropdown-item", "dropdown-item-success"}
+                                : new List<string>() {"dropdown-item", "dropdown-item-danger"}
+                        )
+                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
         }
