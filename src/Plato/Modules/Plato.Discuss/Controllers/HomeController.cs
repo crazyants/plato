@@ -312,6 +312,51 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
+            // Ensure we have permission to view deleted topics
+            if (topic.IsDeleted)
+            {
+                if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId, Permissions.ViewDeletedTopics))
+                {
+                    // Redirect back to main index
+                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    {
+                        ["Area"] = "Plato.Discuss",
+                        ["Controller"] = "Home",
+                        ["Action"] = "Index"
+                    }));
+                }
+            }
+
+            // Ensure we have permission to view private topics
+            if (topic.IsPrivate)
+            {
+                if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId, Permissions.ViewPrivateTopics))
+                {
+                    // Redirect back to main index
+                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    {
+                        ["Area"] = "Plato.Discuss",
+                        ["Controller"] = "Home",
+                        ["Action"] = "Index"
+                    }));
+                }
+            }
+
+            // Ensure we have permission to view spam topics
+            if (topic.IsSpam)
+            {
+                if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId, Permissions.ViewSpamTopics))
+                {
+                    // Redirect back to main index
+                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    {
+                        ["Area"] = "Plato.Discuss",
+                        ["Controller"] = "Home",
+                        ["Action"] = "Index"
+                    }));
+                }
+            }
+
             // default options
             if (opts == null)
             {
