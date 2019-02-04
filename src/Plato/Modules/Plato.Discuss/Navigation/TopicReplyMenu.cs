@@ -64,7 +64,22 @@ namespace Plato.Discuss.Navigation
                             .Action("Popular", "Home", "Plato.Discuss")
                             .Permission(Permissions.ReportReplies)
                             .LocalNav()
-                        ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                        )
+                        .Add(reply.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Discuss",
+                                    new RouteValueDictionary()
+                                    {
+                                        ["id"] = reply.Id
+                                    })
+                                .Permission(user?.Id == reply.CreatedUserId
+                                    ? Permissions.DeleteOwnReplies
+                                    : Permissions.DeleteAnyReply)
+                                .LocalNav(),
+                            reply.IsDeleted
+                                ? new List<string>() { "dropdown-item", "dropdown-item-success" }
+                                : new List<string>() { "dropdown-item", "dropdown-item-danger" }
+                        )
+                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
         }

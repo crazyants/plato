@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.Navigation
 {
@@ -47,8 +48,14 @@ namespace Plato.Discuss.Moderation.Navigation
                 return;
             }
 
-            //// Get user from context
-            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+            // Get moderator from context provided by moderator topic view provider
+            var moderator = builder.ActionContext.HttpContext.Items[typeof(Moderator)] as Moderator;
+
+            // We always need a moderator to show this menu
+            if (moderator == null)
+            {
+                return;
+            }
       
             // Options
             builder

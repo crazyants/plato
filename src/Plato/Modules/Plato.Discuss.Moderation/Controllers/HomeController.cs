@@ -20,18 +20,16 @@ namespace Plato.Discuss.Moderation.Controllers
 {
     public class HomeController : Controller
     {
-
-        private readonly IAuthorizationService _authorizationService;
-
+        
         private readonly IPostManager<Topic> _topicManager;
         private readonly IPostManager<Reply> _replyManager;
-
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IAlerter _alerter;
+        private readonly IAuthorizationService _authorizationService;
 
         public IHtmlLocalizer T { get; }
 
@@ -435,11 +433,11 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic removed from SPAM"]);
+                _alerter.Success(T["Topic deleted successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not remove topic from SPAM"]);
+                _alerter.Danger(T["Could not delete the topic"]);
             }
 
             // Redirect back to topic

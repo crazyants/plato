@@ -44,6 +44,22 @@ namespace Plato.Discuss.Navigation
             // Get user from context
             var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
             
+            Permission deletePermission = null;
+            if (topic.IsDeleted)
+            {
+                // Do we have restore permissions?
+                deletePermission = user?.Id == topic.CreatedUserId
+                    ? Permissions.RestoreOwnTopics
+                    : Permissions.RestoreAnyTopic;
+            }
+            else
+            {
+                // Do we have delete permissions?
+                deletePermission = user?.Id == topic.CreatedUserId
+                    ? Permissions.DeleteOwnTopics
+                    : Permissions.DeleteAnyTopic;
+            }
+
             // Add topic options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
@@ -85,9 +101,7 @@ namespace Plato.Discuss.Navigation
                                     {
                                         ["id"] = topic.Id
                                     })
-                                .Permission(user?.Id == topic.CreatedUserId
-                                    ? Permissions.DeleteOwnTopics
-                                    : Permissions.DeleteAnyTopic)
+                                .Permission(deletePermission)
                                 .LocalNav(),
                             topic.IsDeleted
                                 ? new List<string>() {"dropdown-item", "dropdown-item-success"}

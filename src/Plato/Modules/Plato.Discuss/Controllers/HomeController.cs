@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
@@ -17,6 +18,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using YamlDotNet.Serialization;
@@ -37,8 +39,9 @@ namespace Plato.Discuss.Controllers
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
+        private readonly IAuthorizationService _authorizationService;
 
-        private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -55,7 +58,8 @@ namespace Plato.Discuss.Controllers
             IPostManager<Topic> topicManager,
             IPostManager<Reply> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
-            IPlatoUserStore<User> ploatUserStore)
+            IPlatoUserStore<User> platoUserStore,
+            IAuthorizationService authorizationService)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -66,7 +70,8 @@ namespace Plato.Discuss.Controllers
             _replyManager = replyManager;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
-            _ploatUserStore = ploatUserStore;
+            _platoUserStore = platoUserStore;
+            _authorizationService = authorizationService;
 
             T = localizer;
             S = stringLocalizer;
@@ -78,7 +83,7 @@ namespace Plato.Discuss.Controllers
         #region "Actions"
 
         // -----------------
-        // Topics
+        // Latest Topics
         // -----------------
 
         public async Task<IActionResult> Index(
@@ -161,6 +166,10 @@ namespace Plato.Discuss.Controllers
             return View(await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
 
         }
+
+        // -----------------
+        // Popular Topics
+        // -----------------
 
         public Task<IActionResult> Popular(
             TopicIndexOptions opts,
@@ -287,7 +296,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // display topic
+        // Display topic
         // -----------------
 
         public async Task<IActionResult> Topic(
@@ -379,7 +388,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // post new reply
+        // Post new reply
         // -----------------
 
         [HttpPost]
@@ -459,8 +468,10 @@ namespace Plato.Discuss.Controllers
             return await Topic(topic.Id, 0, null, null);
 
         }
-        
-        // edit topic
+      
+        // -----------------
+        // Edit topic
+        // -----------------
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -566,7 +577,9 @@ namespace Plato.Discuss.Controllers
 
         }
 
-        // edit reply
+        // -----------------
+        // Edit reply
+        // -----------------
 
         public async Task<IActionResult> EditReply(int id)
         {
@@ -680,21 +693,159 @@ namespace Plato.Discuss.Controllers
 
         }
 
+        // -----------------
+        // Report Topic
+        // -----------------
+
         public Task<IActionResult> Report(
             int entityId,
             int entityReplyId = 0)
         {
-
-
             // Return view
             return Task.FromResult((IActionResult) View());
 
         }
 
+        // -----------------
+        // Delete Topic
+        // -----------------
+
+        public async Task<IActionResult> DeleteTopic(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get topic
+            var topic = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the topic exists
+            if (topic == null)
+            {
+                return NotFound();
+            }
+            
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+                user.Id == topic.CreatedUserId
+                    ? Permissions.DeleteOwnTopics
+                    : Permissions.DeleteAnyTopic))
+            {
+                return Unauthorized();
+            }
+            
+            // Update topic
+            topic.ModifiedUserId = user?.Id ?? 0;
+            topic.ModifiedDate = DateTimeOffset.UtcNow;
+            topic.IsDeleted = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(topic);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Topic deleted successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not delete the topic"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Discuss",
+                ["Controller"] = "Home",
+                ["Action"] = "Topic",
+                ["Id"] = topic.Id,
+                ["Alias"] = topic.Alias
+            }));
+            
+        }
+
+        public async Task<IActionResult> RestoreTopic(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get topic
+            var topic = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the topic exists
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+                user.Id == topic.CreatedUserId
+                    ? Permissions.RestoreOwnTopics
+                    : Permissions.RestoreAnyTopic))
+            {
+                return Unauthorized();
+            }
+
+            // Update topic
+            topic.ModifiedUserId = user?.Id ?? 0;
+            topic.ModifiedDate = DateTimeOffset.UtcNow;
+            topic.IsDeleted = false;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(topic);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Topic restored successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not restore the topic"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Discuss",
+                ["Controller"] = "Home",
+                ["Action"] = "Topic",
+                ["Id"] = topic.Id,
+                ["Alias"] = topic.Alias
+            }));
+
+        }
+        
         #endregion
 
         #region "Private Methods"
-        
+
 
         string GetInfiniteScrollCallbackUrl()
         {
@@ -723,7 +874,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
         async Task CreateSampleData()
         {
 
-            var users = await _ploatUserStore.QueryAsync()
+            var users = await _platoUserStore.QueryAsync()
                 .Take(1, 1000)
                 .Select<UserQueryParams>(q => { })
                 .OrderBy("LastLoginDate", OrderBy.Desc)
