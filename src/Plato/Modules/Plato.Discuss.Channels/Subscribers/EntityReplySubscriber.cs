@@ -76,19 +76,19 @@ namespace Plato.Discuss.Channels.Subscribers
         async Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
         {
 
-            // No need to update cateogry for private entities
+            // No need to update category for private entities
             if (reply.IsPrivate)
             {
                 return reply;
             }
 
-            // No need to update cateogry for soft deleted replies
+            // No need to update category for soft deleted replies
             if (reply.IsDeleted)
             {
                 return reply;
             }
 
-            // No need to update cateogry for replies flagged as spam
+            // No need to update category for replies flagged as spam
             if (reply.IsSpam)
             {
                 return reply;
@@ -124,24 +124,6 @@ namespace Plato.Discuss.Channels.Subscribers
 
         async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
         {
-
-            // No need to update cateogry for private entities
-            if (reply.IsPrivate)
-            {
-                return reply;
-            }
-
-            // No need to update cateogry for soft deleted replies
-            if (reply.IsDeleted)
-            {
-                return reply;
-            }
-
-            // No need to update cateogry for replies flagged as spam
-            if (reply.IsSpam)
-            {
-                return reply;
-            }
 
             // Get the entity we are replying to
             var entity = await _topicStore.GetByIdAsync(reply.EntityId);

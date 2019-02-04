@@ -13,9 +13,9 @@ $(function (win, doc, $) {
     'use strict';
 
     // Provides state changes functionality for the star button
-    var starToggler = function () {
+    var starToggle = function () {
 
-        var dataKey = "starToggler",
+        var dataKey = "starToggle",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -95,7 +95,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).starToggler
+                    // $(selector).starToggle
                     return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -107,7 +107,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().starToggler
+                    // $().starToggle
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -185,7 +185,7 @@ $(function (win, doc, $) {
 
                 var params = {
                     Id: 0,
-                    Name: this.getFollowType($caller),
+                    Name: this.getStarType($caller),
                     CreatedUserId: 0,
                     ThingId: this.getThingId($caller)
                 };
@@ -197,7 +197,7 @@ $(function (win, doc, $) {
                 }).done(function(data) {
 
                     if (data.statusCode === 200) {
-                        $caller.followToggler("enable");
+                        $caller.starToggle("enable");
                     }
 
                 });
@@ -206,7 +206,7 @@ $(function (win, doc, $) {
             unsubscribe: function($caller) {
 
                 var params = {
-                    Name: this.getFollowType($caller),
+                    Name: this.getStarType($caller),
                     ThingId: this.getThingId($caller)
                 };
 
@@ -216,7 +216,7 @@ $(function (win, doc, $) {
                     data: JSON.stringify(params)
                 }).done(function(data) {
                     if (data.statusCode === 200) {
-                        $caller.followToggler("disable");
+                        $caller.starToggle("disable");
                     }
                 });
 
@@ -228,13 +228,13 @@ $(function (win, doc, $) {
                 }
                 return action;
             },
-            getFollowType: function($caller) {
+            getStarType: function($caller) {
                 var followType = "";
-                if ($caller.attr("data-follow-type")) {
-                    followType = $caller.attr("data-follow-type");
+                if ($caller.attr("data-star-type")) {
+                    followType = $caller.attr("data-star-type");
                 }
                 if (followType === "") {
-                    throw new Error("A follow type  is required in order to follow an item.");
+                    throw new Error("A star type  is required in order to star an item.");
                 }
                 return followType;
             },
@@ -304,124 +304,15 @@ $(function (win, doc, $) {
         };
 
     }();
-
-    // Mimics the star button but uses a hidden checkbox to persist state
-    var starCheckbox = function () {
-
-        var dataKey = "starCheckbox",
-            dataIdKey = dataKey + "Id";
-
-        var defaults = {
-            event: "change"
-        };
-
-        var methods = {
-            init: function($caller, methodName) {
-                if (methodName) {
-                    if (this[methodName]) {
-                        this[methodName].apply(this, [$caller]);
-                    } else {
-                        alert(methodName + " is not a valid method!");
-                    }
-                    return;
-                }
-
-                methods.bind($caller);
-
-            },
-            bind: function($caller) {
-
-                var event = $caller.data(dataKey).event;
-                if (event) {
-                    $caller.on(event,
-                        function(e) {
-                            e.preventDefault();
-                            if ($(this).is(":checked")) {
-                                $caller.parent().followToggler("enable");
-                            } else {
-                                $caller.parent().followToggler("disable");
-                            }
-
-                        });
-                }
-
-            },
-            unbind: function($caller) {
-                var event = $caller.data(dataKey).event;
-                if (event) {
-                    $caller.unbind(event);
-                }
-            }
-        };
-
-        return {
-            init: function() {
-
-                var options = {};
-                var methodName = null;
-                for (var i = 0; i < arguments.length; ++i) {
-                    var a = arguments[i];
-                    switch (a.constructor) {
-                    case Object:
-                        $.extend(options, a);
-                        break;
-                    case String:
-                        methodName = a;
-                        break;
-                    case Boolean:
-                        break;
-                    case Number:
-                        break;
-                    case Function:
-                        break;
-                    }
-                }
-
-                if (this.length > 0) {
-                    // $(selector).starCheckbox
-                    return this.each(function() {
-                        if (!$(this).data(dataIdKey)) {
-                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                            $(this).data(dataIdKey, id);
-                            $(this).data(dataKey, $.extend({}, defaults, options));
-                        } else {
-                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
-                        }
-                        methods.init($(this), methodName);
-                    });
-                } else {
-                    // $().starCheckbox
-                    if (methodName) {
-                        if (methods[methodName]) {
-                            var $caller = $("body");
-                            $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
-                        } else {
-                            alert(methodName + " is not a valid method!");
-                        }
-                    }
-                }
-
-            }
-
-        };
-
-    }();
     
     $.fn.extend({
         starButton: starButton.init,
-        starToggler: starToggler.init,
-        starCheckbox: starCheckbox.init
+        starToggle: starToggle.init,
     });
     
     $(doc).ready(function () {
-
         $('[data-provide="star-button"]')
             .starButton();
-
-        $('[data-provide="star-checkbox"]')
-            .starCheckbox();
-     
     });
 
 }(window, document, jQuery));

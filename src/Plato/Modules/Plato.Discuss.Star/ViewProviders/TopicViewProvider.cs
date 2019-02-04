@@ -68,7 +68,7 @@ namespace Plato.Discuss.Star.ViewProviders
             return Views(
                 View<StarViewModel>("Star.Display.Tools", model =>
                 {
-                    model.FollowType = followType;
+                    model.StarType = followType;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
@@ -77,39 +77,9 @@ namespace Plato.Discuss.Star.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext updater)
         {
-            if (entity == null)
-            {
-                return await BuildIndexAsync(new Topic(), updater);
-            }
-
-            var isFollowing = false;
-            var starType = StarTypes.Topic;
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user != null)
-            {
-                var entityFollow = await _starStore.SelectByNameThingIdAndCreatedUserId(
-                    starType.Name,
-                    entity.Id,
-                    user.Id);
-                if (entityFollow != null)
-                {
-                    isFollowing = true;
-                }
-            }
-            
-            return Views(
-                View<StarViewModel>("Star.Edit.Sidebar", model =>
-                {
-                    model.FollowType = starType;
-                    model.FollowHtmlName = StarHtmlName;
-                    model.ThingId = entity.Id;
-                    model.IsFollowing = isFollowing;
-                    return model;
-                }).Zone("sidebar").Order(2)
-            );
-
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext updater)

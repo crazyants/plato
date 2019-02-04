@@ -9,26 +9,26 @@
         @if (!Model.IsFollowing)
         {
             <div class="text-muted">
-                @T[Model.FollowType.SubscribeDescription]
+                @T[Model.StarType.SubscribeDescription]
                 <br /><br />
             </div>
-            <button class="btn btn-block btn-secondary" data-on-css="btn-danger" data-off-css="btn-secondary" data-provide="star-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
+            <button class="btn btn-block btn-secondary" data-on-css="btn-danger" data-off-css="btn-secondary" data-provide="star-button" data-follow-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
                 <i class="fal fa-bell"></i> 
                 <span>
-                    @T[Model.FollowType.SubscribeText]
+                    @T[Model.StarType.SubscribeText]
                 </span>
             </button>
         }
         else
         {
             <div class="text-muted">
-                @T[Model.FollowType.UnsubscribeDescription]
+                @T[Model.StarType.UnsubscribeDescription]
                 <br /><br />
             </div>
-            <button class="btn btn-block btn-danger" data-on-css="btn-danger" data-off-css="btn-secondary" data-provide="star-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
+            <button class="btn btn-block btn-danger" data-on-css="btn-danger" data-off-css="btn-secondary" data-provide="star-button" data-follow-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
                 <i class="fal fa-bell-slash"></i> 
                 <span>
-                    @T[Model.FollowType.UnsubscribeText]
+                    @T[Model.StarType.UnsubscribeText]
                 </span>
             </button>
         }

@@ -44,20 +44,34 @@ namespace Plato.Discuss.Channels.Subscribers
             {
                 Key = "EntityUpdated"
             }, async message => await EntityUpdated(message.What));
+
+            // Deleted
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityDeleted"
+            }, async message => await EntityDeleted(message.What));
         }
 
         public void Unsubscribe()
         {
 
+            // Created
             _broker.Unsub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
 
+            // Updated
             _broker.Unsub<TEntity>(new MessageOptions()
             {
                 Key = "EntityUpdated"
             }, async message => await EntityUpdated(message.What));
+
+            // Deleted
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityDeleted"
+            }, async message => await EntityDeleted(message.What));
 
         }
         
@@ -68,19 +82,19 @@ namespace Plato.Discuss.Channels.Subscribers
         async Task<TEntity> EntityCreated(TEntity entity)
         {
 
-            // No need to update cateogry for private entities
+            // No need to update category for private entities
             if (entity.IsPrivate)
             {
                 return entity;
             }
 
-            // No need to update cateogry for soft deleted entities
+            // No need to update category for soft deleted entities
             if (entity.IsDeleted)
             {
                 return entity;
             }
 
-            // No need to update cateogry for entities flagged as spam
+            // No need to update category for entities flagged as spam
             if (entity.IsSpam)
             {
                 return entity;
@@ -109,24 +123,30 @@ namespace Plato.Discuss.Channels.Subscribers
 
         async Task<TEntity> EntityUpdated(TEntity entity)
         {
-
-            // No need to update cateogry for private entities
-            if (entity.IsPrivate)
+            
+            // Ensure we have a categoryId for the entity
+            if (entity.CategoryId <= 0)
             {
                 return entity;
             }
 
-            // No need to update cateogry for soft deleted entities
-            if (entity.IsDeleted)
+            // Ensure we found the category
+            var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
+            if (channel == null)
             {
                 return entity;
             }
 
-            // No need to update cateogry for entities flagged as spam
-            if (entity.IsSpam)
-            {
-                return entity;
-            }
+            // Update channel details
+            await _channelDetailsUpdater.UpdateAsync(channel.Id);
+
+            // Return
+            return entity;
+
+        }
+
+        async Task<TEntity> EntityDeleted(TEntity entity)
+        {
 
             // Ensure we have a categoryId for the entity
             if (entity.CategoryId <= 0)
