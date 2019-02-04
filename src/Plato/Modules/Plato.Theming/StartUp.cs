@@ -5,7 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Navigation;
 using Plato.Theming.Assets;
+using Plato.Theming.Navigation;
 
 namespace Plato.Theming
 {
@@ -23,6 +25,9 @@ namespace Plato.Theming
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
+
+            // Register navigation provider
+            services.AddScoped<INavigationProvider, AdminMenu>();
 
         }
 

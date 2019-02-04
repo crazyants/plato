@@ -84,12 +84,14 @@ namespace Plato.Discuss.Services
                             {
                                 q.CreatedUserId.Equals(user.Id);
                             }
+
                             break;
                         case FilterBy.Participated:
                             if (user != null)
                             {
                                 q.ParticipatedUserId.Equals(user.Id);
                             }
+
                             break;
                         case FilterBy.Following:
                             if (user != null)
@@ -100,6 +102,7 @@ namespace Plato.Discuss.Services
                                     b.Append(" AND f.[Name] = 'Topic'");
                                 });
                             }
+
                             break;
                         case FilterBy.Starred:
                             if (user != null)
@@ -110,6 +113,12 @@ namespace Plato.Discuss.Services
                                     b.Append(" AND s.[Name] = 'Topic'");
                                 });
                             }
+
+                            break;
+
+                        case FilterBy.NoReplies:
+
+                            q.TotalReplies.Equals(0);
                             break;
                     }
 
@@ -175,7 +184,7 @@ namespace Plato.Discuss.Services
 
                     // Hide deleted?
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        Permissions.ViewDeletedReplies))
+                        Permissions.ViewDeletedTopics))
                     {
                         q.HideDeleted.True();
                     }

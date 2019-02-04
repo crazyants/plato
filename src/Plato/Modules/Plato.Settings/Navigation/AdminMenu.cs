@@ -21,7 +21,7 @@ namespace Plato.Settings.Navigation
             }
 
             builder
-                .Add(T["Settings"], 9999, configuration => configuration
+                .Add(T["Settings"], int.MaxValue, configuration => configuration
                     .IconCss("fal fa-cog")
                     .Add(T["General Settings"], 1, installed => installed
                         .Action("Index", "Admin", "Plato.Settings")

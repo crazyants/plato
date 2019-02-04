@@ -1035,7 +1035,7 @@
 .tree input:checked + label > i.check-icon:after { opacity: 1; }
 
 /* default labels */
-.label { background-color: #E4ECF5; color: #007bff; }
+.label { background-color: #E4ECF5; color: #007bff; border-radius: 0.25rem !important; }
 a.label:hover,
 .label.active { background: #007bff; color: #fff; }
 

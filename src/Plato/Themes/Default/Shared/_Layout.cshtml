@@ -24,8 +24,8 @@
 
     <div class="nav nav-tabs bg-light">
         <div class="container-fluid">
-            <div class="row">
-                <div class="navbar col-12 px-3" role="navigation">
+           
+                <div class="navbar px-4" role="navigation">
                     <a class="navbar-brand" href="#">
                         @T["Plato"]
                     </a>
@@ -49,19 +49,17 @@
                                                 <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                             </div>
                                         </li>
-                                        <li class="nav-item">
-                                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
-                                        </li>
+                                     
                                     </ul>
                                 </form>
                             }
                             else
                             {
-                                <ul class="nav nav-pills float-right app-nav">
-                                    <li class="nav-item login">
+                                <ul class="nav nav-pills float-right">
+                                    <li class="nav-item">
                                         <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                                     </li>
-                                    <li class="nav-item register">
+                                    <li class="nav-item">
                                         <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
                                     </li>
                                 </ul>
@@ -74,11 +72,12 @@
 
                     </div>
                 </div>
-            </div>
+          
         </div>
     </div>
 
-    <div class="container mt-4">
+<div class="container-fluid">
+    <div class=" p-4">
         <nav aria-label="breadcrumb">
             <breadcrumb class="breadcrumb p-0 bg-transparent col-12" />
         </nav>
@@ -88,6 +87,7 @@
             <p>&copy; @System.DateTime.Now.Year - Plato</p>
         </footer>
     </div>
+</div>
 
     <assets section="Footer" />
     <scripts section="Footer" />

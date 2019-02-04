@@ -21,7 +21,7 @@ namespace Plato.WebApi.Navigation
             }
 
             builder
-                .Add(T["Settings"], 9999, configuration => configuration
+                .Add(T["Settings"], int.MaxValue, configuration => configuration
                     .IconCss("fal fa-cog")
                     .Add(T["Web Api Settings"], 6, webApiSettings => webApiSettings
                         .Action("Index", "Admin", "Plato.WebApi")

@@ -84,6 +84,13 @@ namespace Plato.Entities.Stores
         private WhereInt _followUserId;
         private WhereInt _starUserId;
 
+        private WhereInt _totalViews;
+        private WhereInt _totalReplies;
+        private WhereInt _totalParticipants;
+        private WhereInt _totalReactions;
+        private WhereInt _totalFollows;
+        
+
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -239,7 +246,38 @@ namespace Plato.Entities.Stores
             get => _starUserId ?? (_starUserId = new WhereInt());
             set => _starUserId = value;
         }
+        
+        public WhereInt TotalViews
+        {
+            get => _totalViews ?? (_totalViews = new WhereInt());
+            set => _totalViews = value;
+        }
 
+        public WhereInt TotalReplies
+        {
+            get => _totalReplies ?? (_totalReplies = new WhereInt());
+            set => _totalReplies = value;
+        }
+
+        public WhereInt TotalParticipants
+        {
+            get => _totalParticipants ?? (_totalParticipants = new WhereInt());
+            set => _totalParticipants = value;
+        }
+
+        public WhereInt TotalReactions
+        {
+            get => _totalReactions ?? (_totalReactions = new WhereInt());
+            set => _totalReactions = value;
+        }
+
+        public WhereInt TotalFollows
+        {
+            get => _totalFollows ?? (_totalFollows = new WhereInt());
+            set => _totalFollows = value;
+        }
+
+        
     }
 
     #endregion
@@ -684,7 +722,48 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.StarUserId.ToSqlString("s.CreatedUserId"))
                     .Append("))");
             }
-            
+
+            // TotalViews
+            if (_query.Params.TotalViews.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TotalViews.Operator);
+                sb.Append(_query.Params.TotalViews.ToSqlString("e.TotalViews"));
+            }
+
+            // TotalReplies
+            if (_query.Params.TotalReplies.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TotalReplies.Operator);
+                sb.Append(_query.Params.TotalReplies.ToSqlString("e.TotalReplies"));
+            }
+
+            // TotalParticipants
+            if (_query.Params.TotalParticipants.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TotalParticipants.Operator);
+                sb.Append(_query.Params.TotalParticipants.ToSqlString("e.TotalParticipants"));
+            }
+
+            // TotalReactions
+            if (_query.Params.TotalReactions.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TotalReactions.Operator);
+                sb.Append(_query.Params.TotalReactions.ToSqlString("e.TotalReactions"));
+            }
+
+            // TotalFollows
+            if (_query.Params.TotalFollows.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TotalFollows.Operator);
+                sb.Append(_query.Params.TotalFollows.ToSqlString("e.TotalFollows"));
+            }
+
+
             // CreatedUserId
             if (_query.Params.CreatedUserId.Value > -1)
             {
@@ -935,6 +1014,18 @@ namespace Plato.Entities.Stores
                     return "e.IsPinned";
                 case "ispinned":
                     return "e.IsPinned";
+                case "deleted":
+                    return "e.IsDeleted";
+                case "isdeleted":
+                    return "e.IsDeleted";
+                case "private":
+                    return "e.IsPrivate";
+                case "isprivate":
+                    return "e.IsPrivate";
+                case "spam":
+                    return "e.IsSpam";
+                case "isspam":
+                    return "e.IsSpam";
                 case "created":
                     return "e.CreatedDate";
                 case "createddate":

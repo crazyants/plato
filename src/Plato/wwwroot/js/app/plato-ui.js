@@ -387,13 +387,15 @@ $(function (win, doc, $) {
                         }
                     });
 
-                
+
+                var $body = $("body,html");
                 var $target = null,
                     href = $caller.prop("tagName") === "A" && $caller.attr("href");
                 if (href) {
                     $target = $(href);
                 } else {
                     $target = $caller.data(dataKey).target;
+                    $body = $caller;
                 }
 
                 var interval = $caller.data(dataKey).interval,
@@ -404,11 +406,9 @@ $(function (win, doc, $) {
                 if ($target) {
                     top = position === "top" ? $target.offset().top : $target.offset().bottom;
                 }
-
-                console.log("scrollTo: " + top + offset);
-
+                             
                 // animate scroll
-                $caller.stop().animate({
+                $body.stop().animate({
                         scrollTop: top + offset
                     },
                     interval,

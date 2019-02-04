@@ -50,11 +50,11 @@ $(function (win, doc, $) {
 
 $.Plato.Discuss = {
     context: null,
-    init: function (context) {
+    init: function(context) {
 
         this.context = context;
 
         context.logger.logInfo("$.Plato.Discuss initializing");
 
     }
-}
+};
