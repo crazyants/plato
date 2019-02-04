@@ -144,11 +144,9 @@ namespace Plato.Discuss.Moderation.ViewProviders
             return userEntries[0];
 
         }
-
-
+        
         #endregion
 
     }
-
-
+    
 }

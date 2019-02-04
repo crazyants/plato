@@ -220,9 +220,7 @@ namespace Plato.Discuss.Tags.ViewProviders
                         }
                     }
                 }
-
-
-
+                
                 // Get authenticated user
                 var user = await _contextFacade.GetAuthenticatedUserAsync();
 

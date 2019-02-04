@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Models;
@@ -31,6 +31,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         private readonly ITagStore<Tag> _tagStore;
         private readonly ITagManager<Tag> _tagManager;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IContextFacade _contextFacade;
 
         private readonly IStringLocalizer T;
 
@@ -45,7 +46,8 @@ namespace Plato.Discuss.Tags.ViewProviders
             ITagStore<Tag> tagStore, 
             IEntityTagManager<EntityTag> entityTagManager,
             ITagManager<Tag> tagManager,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IContextFacade contextFacade)
         {
             _replyStore = replyStore;
             _entityTagStore = entityTagStore;
@@ -53,6 +55,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             _entityTagManager = entityTagManager;
             _tagManager = tagManager;
             _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
             _request = httpContextAccessor.HttpContext.Request;
 
             T = stringLocalize;
@@ -180,6 +183,9 @@ namespace Plato.Discuss.Tags.ViewProviders
                     }
                 }
 
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
                 // Add new entity labels
                 foreach (var tag in tagsToAdd)
                 {
@@ -187,7 +193,9 @@ namespace Plato.Discuss.Tags.ViewProviders
                     {
                         EntityId = reply.EntityId,
                         EntityReplyId = reply.Id,
-                        TagId = tag.Id
+                        TagId = tag.Id,
+                        CreatedUserId = user?.Id ?? 0,
+                        CreatedDate = DateTime.UtcNow
                     });
                     if (!result.Succeeded)
                     {
@@ -267,6 +275,9 @@ namespace Plato.Discuss.Tags.ViewProviders
         async Task<Tag> CreateTag(string name, int entityId, int replyId)
         {
 
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
             // Get feature for tag
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
 
@@ -274,7 +285,9 @@ namespace Plato.Discuss.Tags.ViewProviders
             var tagManagerResult = await _tagManager.CreateAsync(new Tag()
             {
                 FeatureId = feature?.Id ?? 0,
-                Name = name
+                Name = name,
+                CreatedUserId = user?.Id ?? 0,
+                CreatedDate = DateTime.UtcNow
             });
 
             if (tagManagerResult.Succeeded)

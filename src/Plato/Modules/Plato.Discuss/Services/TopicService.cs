@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
@@ -192,6 +191,7 @@ namespace Plato.Discuss.Services
                     // q.Id.Between(1, 5);
 
                 })
+                .OrderBy("IsPinned",  OrderBy.Desc)
                 .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
 

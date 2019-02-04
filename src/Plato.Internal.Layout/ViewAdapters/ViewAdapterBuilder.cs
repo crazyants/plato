@@ -61,12 +61,12 @@ namespace Plato.Internal.Layout.ViewAdapters
             }
             
             // wrapper to convert delegates generic argument type
-            // to concrete type (object) for storage within adaptor result
+            // to concrete type (object) for storage within adapter result
             var typedDelegate = new Func<object, object>((object input) =>
             {
 
-                // use first argument from anonymous type as mdoel
-                // todo: implement support for mulitple arguments within anonymous types
+                // use first argument from anonymous type as model
+                // todo: implement support for multiple arguments within anonymous types
                 if (IsViewModelAnonymousType(input))
                 {
                     var args = new List<object>();

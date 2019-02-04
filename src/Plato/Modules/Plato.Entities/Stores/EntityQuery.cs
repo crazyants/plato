@@ -931,6 +931,10 @@ namespace Plato.Entities.Stores
                     return "e.TotalReactions";
                 case "totalreactions":
                     return "e.TotalReactions";
+                case "pinned":
+                    return "e.IsPinned";
+                case "ispinned":
+                    return "e.IsPinned";
                 case "created":
                     return "e.CreatedDate";
                 case "createddate":

@@ -66,12 +66,6 @@ namespace Plato.Roles.Services
                         {
                             continue;
                         }
-
-                        var testingVars = "";
-                        if (grantingNames.Contains("EditAnyTopic"))
-                        {
-                            testingVars = "set me";
-                        }
                         
                         var permissionName = claim.ClaimValue;
                         if (grantingNames.Contains(permissionName))
