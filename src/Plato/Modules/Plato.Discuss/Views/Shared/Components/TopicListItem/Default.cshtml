@@ -24,7 +24,7 @@
                 </span>
             </li>
         </ol>
-        <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" title="@T["Jump to last post"]" data-toggle="tooltip">
+        <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Jump" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" asp-route-replyId="@Model.Topic.LastReplyId" title="@T["Jump to last post"]" data-toggle="tooltip">
             <date utc="@Model.Topic.LastReplyDate"></date>
         </a>
     </div>

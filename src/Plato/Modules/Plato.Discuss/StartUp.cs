@@ -128,7 +128,13 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Create" }
             );
 
-
+            // discuss jump to reply
+            routes.MapAreaRoute(
+                name: "DiscussJumpToReply",
+                areaName: "Plato.Discuss",
+                template: "discuss/j/{id:int}/{alias}/{replyId:int?}",
+                defaults: new { controller = "Home", action = "Jump" }
+            );
         }
     }
 }

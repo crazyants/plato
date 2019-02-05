@@ -40,6 +40,7 @@ namespace Plato.Discuss.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IReplyService _replyService;
 
         private readonly IPlatoUserStore<User> _platoUserStore;
 
@@ -59,7 +60,8 @@ namespace Plato.Discuss.Controllers
             IPostManager<Reply> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService, 
+            IReplyService replyService)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -72,6 +74,7 @@ namespace Plato.Discuss.Controllers
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
+            _replyService = replyService;
 
             T = localizer;
             S = stringLocalizer;
@@ -1034,11 +1037,93 @@ namespace Plato.Discuss.Controllers
             }));
 
         }
+
+        // -----------------
+        // Jump to reply
+        // -----------------
+
+        public async Task<IActionResult> Jump(
+            int id,
+            int replyId,
+            TopicOptions opts,
+            PagerOptions pager)
+        {
+
+            var topic = await _entityStore.GetByIdAsync(id);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // default options
+            if (opts == null)
+            {
+                opts = new TopicOptions();
+            }
+
+            // default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+            
+            // Set entity Id for replies to return
+            opts.Params.EntityId = topic.Id;
+
+            // We need to iterate all replies to calculate the offset
+            pager.Page = 1;
+            pager.PageSize = int.MaxValue;
+
+            // Get offset for reply
+            var offset = 0;
+            var replies = await _replyService.GetRepliesAsync(opts, pager);
+            if (replies?.Data != null)
+            {
+                foreach (var reply in replies.Data)
+                {
+                    offset++;
+                    if (reply.Id == replyId)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (offset == 0)
+            {
+                // Could not locate offset, fallback by simply redirecting to topic
+                return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Discuss",
+                    ["Controller"] = "Home",
+                    ["Action"] = "Topic",
+                    ["Id"] = topic.Id,
+                    ["Alias"] = topic.Alias
+                }));
+            }
+
+            // Redirect back to specific offset within topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Discuss",
+                ["Controller"] = "Home",
+                ["Action"] = "Topic",
+                ["Id"] = topic.Id,
+                ["Alias"] = topic.Alias,
+                ["Offset"] = offset
+            }));
+
+        }
         
         #endregion
 
         #region "Private Methods"
 
+        async Task<IPagedResults<Reply>> GetRepliesAsync(TopicOptions opts, PagerOptions pager)
+        {
+            return await _replyService.GetRepliesAsync(opts, pager);
+
+        }
 
         string GetInfiniteScrollCallbackUrl()
         {
