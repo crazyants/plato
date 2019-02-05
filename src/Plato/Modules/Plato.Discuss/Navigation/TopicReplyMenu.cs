@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Navigation
 {
@@ -41,7 +42,22 @@ namespace Plato.Discuss.Navigation
 
             //// Get user from context
             var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
-      
+
+            // Get delete / restore permission
+            Permission deletePermission = null;
+            if (reply.IsDeleted)
+            {
+                deletePermission = user?.Id == reply.CreatedUserId
+                    ? Permissions.RestoreOwnReplies
+                    : Permissions.RestoreAnyReply;
+            }
+            else
+            {
+                deletePermission = user?.Id == reply.CreatedUserId
+                    ? Permissions.DeleteOwnReplies
+                    : Permissions.DeleteAnyReply;
+            }
+            
             // Options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
@@ -71,9 +87,7 @@ namespace Plato.Discuss.Navigation
                                     {
                                         ["id"] = reply.Id
                                     })
-                                .Permission(user?.Id == reply.CreatedUserId
-                                    ? Permissions.DeleteOwnReplies
-                                    : Permissions.DeleteAnyReply)
+                                .Permission(deletePermission)
                                 .LocalNav(),
                             reply.IsDeleted
                                 ? new List<string>() { "dropdown-item", "dropdown-item-success" }

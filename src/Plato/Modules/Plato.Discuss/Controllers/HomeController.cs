@@ -424,7 +424,9 @@ namespace Plato.Discuss.Controllers
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
+                {
                     return View("GetTopicReplies", viewModel);
+                }
             }
             
             // Return view
@@ -752,7 +754,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // Delete Topic
+        // Delete / Restore Topic
         // -----------------
 
         public async Task<IActionResult> DeleteTopic(string id)
@@ -820,7 +822,7 @@ namespace Plato.Discuss.Controllers
             }));
             
         }
-
+     
         public async Task<IActionResult> RestoreTopic(string id)
         {
 
@@ -873,6 +875,152 @@ namespace Plato.Discuss.Controllers
             else
             {
                 _alerter.Danger(T["Could not restore the topic"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Discuss",
+                ["Controller"] = "Home",
+                ["Action"] = "Topic",
+                ["Id"] = topic.Id,
+                ["Alias"] = topic.Alias
+            }));
+
+        }
+        
+        // -----------------
+        // Delete / Restore Reply
+        // -----------------
+        
+        public async Task<IActionResult> DeleteReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Ensure the reply exists
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the topic exists
+            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+                user.Id == reply.CreatedUserId
+                    ? Permissions.DeleteOwnReplies
+                    : Permissions.DeleteAnyReply))
+            {
+                return Unauthorized();
+            }
+
+            // Update reply
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsDeleted = true;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Reply deleted successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not delete the reply"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Discuss",
+                ["Controller"] = "Home",
+                ["Action"] = "Topic",
+                ["Id"] = topic.Id,
+                ["Alias"] = topic.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> RestoreReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Ensure the reply exists
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the topic exists
+            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+                user.Id == reply.CreatedUserId
+                    ? Permissions.RestoreOwnReplies
+                    : Permissions.RestoreAnyReply))
+            {
+                return Unauthorized();
+            }
+
+            // Update reply
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsDeleted = false;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Reply restored successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not restore the reply"]);
             }
 
             // Redirect back to topic

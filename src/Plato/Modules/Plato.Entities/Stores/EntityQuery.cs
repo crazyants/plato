@@ -788,9 +788,7 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.ParticipatedUserId.Value)
                     .Append(")");
             }
-
-
-
+            
             // -----------------
             // private 
             // -----------------

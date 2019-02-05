@@ -33,18 +33,36 @@ namespace Plato.Discuss.Subscribers
 
         public void Subscribe()
         {
+
+            // Created
             _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
+
+            // Updated
+            _broker.Sub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyUpdated(message.What));
+
         }
 
         public void Unsubscribe()
         {
+
+            // Created
             _broker.Unsub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
+
+            // Updated
+            _broker.Unsub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyUpdated(message.What));
+
         }
 
         public void Dispose()
@@ -78,12 +96,39 @@ namespace Plato.Discuss.Subscribers
             {
                 return reply;
             }
+
+            // Update entity details
+            return await EntityDetailsUpdater(reply);
+
+        }
+
+        async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
+        {
+
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
+            // Update entity details
+            return await EntityDetailsUpdater(reply);
             
+        }
+        
+        #endregion
+
+        #region "Private Methods"
+
+        private async Task<TEntityReply> EntityDetailsUpdater(TEntityReply reply)
+        {
+            
+            // We need an entity to update
             if (reply.EntityId <= 0)
             {
                 return reply;
             }
 
+            // Ensure the entity exists
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
@@ -92,13 +137,16 @@ namespace Plato.Discuss.Subscribers
             
             // Get entity details to update
             var details = entity.GetOrCreate<PostDetails>();
-            
+
             // Get last 5 unique users & total unique user count
             var users = await _entityUsersStore.QueryAsync()
                 .Take(1, 5)
                 .Select<EntityUserQueryParams>(q =>
                 {
                     q.EntityId.Equals(entity.Id);
+                    q.HidePrivate.True();
+                    q.HideDeleted.True();
+                    q.HideSpam.True();
                 })
                 .OrderBy("r.CreatedDate", OrderBy.Desc)
                 .ToList();
@@ -113,32 +161,32 @@ namespace Plato.Discuss.Subscribers
             await _entityStore.UpdateAsync(entity);
 
             return reply;
-            
-        }
 
+        }
+        
         #endregion
 
-        async Task<IEnumerable<EntityUser>> GetLastFiveUniqueUsers(int entityId)
-        {
-            
-            var results = await _entityUsersStore.QueryAsync()
-                .Take(1, 20)
-                .Select<EntityUserQueryParams>(q =>
-                {
-                    q.EntityId.Equals(entityId);
-                })
-                .OrderBy("r.CreatedDate", OrderBy.Desc)
-                .ToList();
+        //async Task<IEnumerable<EntityUser>> GetLastFiveUniqueUsers(int entityId)
+        //{
 
-            return results.Data;
+        //    var results = await _entityUsersStore.QueryAsync()
+        //        .Take(1, 20)
+        //        .Select<EntityUserQueryParams>(q =>
+        //        {
+        //            q.EntityId.Equals(entityId);
+        //        })
+        //        .OrderBy("r.CreatedDate", OrderBy.Desc)
+        //        .ToList();
 
-            //return await _entityUsersStore.GetUniqueUsers(new EntityUserQueryParams()
-            //{
-            //    EntityId = entityId,
-            //    PageSize = 5,
-            //    Sort = EntityUserQueryParams.SortBy.CreatedDate
-            //});
-        }
+        //    return results.Data;
+
+        //    //return await _entityUsersStore.GetUniqueUsers(new EntityUserQueryParams()
+        //    //{
+        //    //    EntityId = entityId,
+        //    //    PageSize = 5,
+        //    //    Sort = EntityUserQueryParams.SortBy.CreatedDate
+        //    //});
+        //}
 
         //async Task<IPagedResults<TEntityReply>> GetReplies(Entity entity)
         //{

@@ -60,7 +60,12 @@ namespace Plato.Entities.Stores
 
         private WhereInt _entityId;
         private WhereString _userName;
-
+        private WhereBool _showPrivate;
+        private WhereBool _hidePrivate;
+        private WhereBool _showSpam;
+        private WhereBool _hideSpam;
+        private WhereBool _hideDeleted;
+        private WhereBool _showDeleted;
 
         public WhereInt EntityId
         {
@@ -73,7 +78,43 @@ namespace Plato.Entities.Stores
             get => _userName ?? (_userName = new WhereString());
             set => _userName = value;
         }
+        
+        public WhereBool ShowPrivate
+        {
+            get => _showPrivate ?? (_showPrivate = new WhereBool());
+            set => _showPrivate = value;
+        }
 
+        public WhereBool HidePrivate
+        {
+            get => _hidePrivate ?? (_hidePrivate = new WhereBool());
+            set => _hidePrivate = value;
+        }
+
+
+        public WhereBool HideSpam
+        {
+            get => _hideSpam ?? (_hideSpam = new WhereBool());
+            set => _hideSpam = value;
+        }
+
+        public WhereBool ShowSpam
+        {
+            get => _showSpam ?? (_showSpam = new WhereBool());
+            set => _showSpam = value;
+        }
+        
+        public WhereBool HideDeleted
+        {
+            get => _hideDeleted ?? (_hideDeleted = new WhereBool());
+            set => _hideDeleted = value;
+        }
+
+        public WhereBool ShowDeleted
+        {
+            get => _showDeleted ?? (_showDeleted = new WhereBool());
+            set => _showDeleted = value;
+        }
 
     }
 
@@ -215,6 +256,67 @@ namespace Plato.Entities.Stores
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
                 sb.Append(_query.Params.Username.ToSqlString("Username", "Keywords"));
+            }
+
+            // -----------------
+            // private 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HidePrivate.Value && !_query.Params.ShowPrivate.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HidePrivate.Operator);
+                sb.Append("r.IsPrivate = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowPrivate.Value && !_query.Params.HidePrivate.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowPrivate.Operator);
+                sb.Append("r.IsPrivate = 1");
+            }
+
+            // -----------------
+            // spam 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideSpam.Value && !_query.Params.ShowSpam.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideSpam.Operator);
+                sb.Append("r.IsSpam = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowSpam.Value && !_query.Params.HideSpam.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowSpam.Operator);
+                sb.Append("r.IsSpam = 1");
+            }
+
+
+            // -----------------
+            // deleted 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideDeleted.Value && !_query.Params.ShowDeleted.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideDeleted.Operator);
+                sb.Append("r.IsDeleted = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowDeleted.Value && !_query.Params.HideDeleted.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowDeleted.Operator);
+                sb.Append("r.IsDeleted = 1");
             }
 
             return sb.ToString();
