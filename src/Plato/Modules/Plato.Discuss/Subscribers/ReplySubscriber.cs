@@ -160,47 +160,12 @@ namespace Plato.Discuss.Subscribers
             // Persist the updates
             await _entityStore.UpdateAsync(entity);
 
+            // Return our reply
             return reply;
 
         }
         
         #endregion
-
-        //async Task<IEnumerable<EntityUser>> GetLastFiveUniqueUsers(int entityId)
-        //{
-
-        //    var results = await _entityUsersStore.QueryAsync()
-        //        .Take(1, 20)
-        //        .Select<EntityUserQueryParams>(q =>
-        //        {
-        //            q.EntityId.Equals(entityId);
-        //        })
-        //        .OrderBy("r.CreatedDate", OrderBy.Desc)
-        //        .ToList();
-
-        //    return results.Data;
-
-        //    //return await _entityUsersStore.GetUniqueUsers(new EntityUserQueryParams()
-        //    //{
-        //    //    EntityId = entityId,
-        //    //    PageSize = 5,
-        //    //    Sort = EntityUserQueryParams.SortBy.CreatedDate
-        //    //});
-        //}
-
-        //async Task<IPagedResults<TEntityReply>> GetReplies(Entity entity)
-        //{
-        //    return await _entityReplyStore.QueryAsync()
-        //        .Select<EntityReplyQueryParams>(q =>
-        //        {
-        //            q.EntityId.Equals(entity.Id);
-        //            q.IsPrivate.False();
-        //            q.IsSpam.False();
-        //            q.IsDeleted.False();
-        //        })
-        //        .ToList();
-
-        //}
 
     }
 

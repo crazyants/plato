@@ -52,26 +52,19 @@ namespace Plato.Internal.Layout.TagHelpers
         private int _level;
         private int _index;
         private object _cssClasses;
-
-
+        
         private readonly INavigationManager _navigationManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IActionContextAccessor _actionContextAccesor;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IViewHelperFactory _viewHelperFactory;
-
         private IViewDisplayHelper _viewDisplayHelper;
 
         public NavigationTagHelper(
             INavigationManager navigationManager,
-            IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccesor,
-            IHttpContextAccessor httpContextAccessor, IViewHelperFactory viewHelperFactory)
+            IActionContextAccessor actionContextAccessor,
+            IViewHelperFactory viewHelperFactory)
         {
             _navigationManager = navigationManager;
-            _urlHelperFactory = urlHelperFactory;
-            _actionContextAccesor = actionContextAccesor;
-            _httpContextAccessor = httpContextAccessor;
+            _actionContextAccessor = actionContextAccessor;
             _viewHelperFactory = viewHelperFactory;
         }
         
@@ -86,21 +79,21 @@ namespace Plato.Internal.Layout.TagHelpers
             output.TagMode = TagMode.StartTagAndEndTag;
             
             // Get action context
-            var acttionContext = _actionContextAccesor.ActionContext;
+            var actionContext = _actionContextAccessor.ActionContext;
 
             // Add navigation model if provided to action context for
             // optional use within any navigation builders later on
             if (this.Model != null)
             {
-                acttionContext.HttpContext.Items[this.Model.GetType()] = this.Model;
+                actionContext.HttpContext.Items[this.Model.GetType()] = this.Model;
             }
             
             // Build navigation
             var sb = new StringBuilder();
-            var items = _navigationManager.BuildMenu(this.Name, acttionContext);
+            var items = _navigationManager.BuildMenu(this.Name, actionContext);
             if (items != null)
             {
-                BuildNavigationRecursivly(items.ToList(), sb);
+                BuildNavigationRecursively(items.ToList(), sb);
             }
             
             output.PreContent.SetHtmlContent(sb.ToString());
@@ -155,7 +148,7 @@ namespace Plato.Internal.Layout.TagHelpers
             return false;
         }
 
-        string BuildNavigationRecursivly(
+        string BuildNavigationRecursively(
             List<MenuItem> items, 
             StringBuilder sb)
         {
@@ -206,7 +199,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 }
 
                 sb.Append(item.View != null 
-                        ? Buildview(item)
+                        ? BuildView(item)
                         : BuildLink(item));
 
                 _index++;
@@ -214,7 +207,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 if (item.Items.Count > 0)
                 {
                     _level++;
-                    BuildNavigationRecursivly(item.Items, sb);
+                    BuildNavigationRecursively(item.Items, sb);
                     AddTabs(_level, sb);
                     _level--;
                 }
@@ -341,11 +334,12 @@ namespace Plato.Internal.Layout.TagHelpers
             return sb.ToString();
         }
 
-        string Buildview(MenuItem item)
+        string BuildView(MenuItem item)
         {
 
             EnsureViewHelper();
             
+            // todo: remove awaiter
             var view = new View(item.View.ViewName, item.View.Model);
             var viewResult =  _viewDisplayHelper.DisplayAsync(view)
                 .GetAwaiter()
@@ -420,6 +414,7 @@ namespace Plato.Internal.Layout.TagHelpers
             }
 
             return sb;
+
         }
 
     }
