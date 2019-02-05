@@ -4751,7 +4751,7 @@ $(function (win, doc, $) {
                 var $bar = $caller.find(".resizable-bar"),
                     resizing = false,
                     cursorPosition = { x: 0, y: 0 },
-                    currentHeight = 0;
+                    dimensions = { w: 0, h: 0 };
                 
                 // Bar events
 
@@ -4759,9 +4759,14 @@ $(function (win, doc, $) {
                     function (e) {
                         resizing = true;
                         cursorPosition = { x: e.clientX, y: e.clientY };
-                        currentHeight = $caller.height();
+                        dimensions = { w: $caller.width(), h: $caller.height() };
                         if (!methods._isExpanded($caller)) {
-                            methods._setCollapseHeight($caller, $caller.height());
+                            if (methods._isHorizontal($caller)) {
+                                methods._setCollapseSize($caller, $caller.height());
+                            } else {
+                                methods._setCollapseSize($caller, $caller.width());
+                            }
+                            
                         }
                     });
 
@@ -4783,10 +4788,29 @@ $(function (win, doc, $) {
                         if (resizing === false) {
                             return;
                         }
+                        
                         var newPosition = { x: e.clientX, y: e.clientY },
-                            delta = parseInt(newPosition.y - cursorPosition.y),
-                            newHeight = parseInt(currentHeight - Math.floor(delta));
-                        $caller.css({ "height": newHeight + "px" });
+                            horizontal = methods._isHorizontal($caller),
+                            delta = horizontal
+                                ? parseInt(newPosition.y - cursorPosition.y)
+                                : parseInt(newPosition.x - cursorPosition.x),
+                            size = horizontal
+                                ? parseInt(dimensions.h - Math.floor(delta))
+                                : parseInt(dimensions.w - Math.floor(delta));
+
+                        if (horizontal) {
+                            $caller.css({ "height": size });
+                        } else {
+                            $caller.css({ "width": size });
+                        }
+                        
+                    });
+
+                // Bind close buttons
+                $caller.find(".resizable-close").bind("click",
+                    function (e) {
+                        e.preventDefault();
+                        methods.hide($caller);
                     });
 
             },
@@ -4801,34 +4825,72 @@ $(function (win, doc, $) {
 
             },
             toggle: function ($caller) {
-                console.log("caller height: " + $caller.height());
-                console.log("win height: " + $(win).height());
                 if (methods._isExpanded($caller)) {
                     methods.collapse($caller);
                 } else {
                     methods.expand($caller);
                 }
             },
-            expand: function($caller) {
-                $caller.css({ "height": $(win).height() });
+            expand: function ($caller) {
+                if (methods._isHorizontal($caller)) {
+                    $caller.css({ "height": $(win).height() });
+                } else {
+                    $caller.css({ "width": $(win).width() });
+                }
+            },
+            show: function ($caller) {
+                if ($caller.hasClass("resizable-hidden")) {
+                    $caller.removeClass("resizable-hidden");
+                }
+            },
+            hide: function ($caller) {
+                if (!$caller.hasClass("resizable-hidden")) {
+                    $caller.addClass("resizable-hidden");
+                }
             },
             collapse: function ($caller) {
-                var height = methods._getCollapseHeight($caller);
-                $caller.css({ "height": height });
+                var size = methods._getCollapseSize($caller);
+                if (methods._isHorizontal($caller)) {
+                    $caller.css({ "height": size });
+                } else {
+                    $caller.css({ "width": size });
+                }
             },
             _isExpanded($caller) {
-                return $caller.height() === $(win).height();
+                if (methods._isHorizontal($caller)) {
+                    return $caller.height() === $(win).height();
+                }
+                return $caller.width() === $(win).width();
             },
-            _setCollapseHeight: function($caller, height) {
-                $caller.attr("data-collapse-height", height);
+            _setCollapseSize: function ($caller, size) {
+                $caller.attr("data-collapse-size", size);
             },
-            _getCollapseHeight: function ($caller) {
-                var height = parseInt($caller.attr("data-collapse-height"));
-                if (!win.isNaN(height)) {
-                    return height;
+            _getCollapseSize: function ($caller) {
+                var size = parseInt($caller.attr("data-collapse-size"));
+                if (!win.isNaN(size)) {
+                    return size;
                 }
                 return 300;
+            },
+            _isHorizontal: function($caller) {
+                return methods._isTop($caller) || methods._isBottom($caller);
+            },
+            _isVertical: function ($caller) {
+                return methods._isLeft($caller) || methods._isRight($caller);
+            },
+            _isLeft: function ($caller) {
+                return $caller.hasClass("resizable-left");
+            },
+            _isTop: function ($caller) {
+                return $caller.hasClass("resizable-top");
+            },
+            _isRight: function ($caller) {
+                return $caller.hasClass("resizable-right");
+            },
+            _isBottom: function ($caller) {
+                return $caller.hasClass("resizable-bottom");
             }
+
         };
 
         return {

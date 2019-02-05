@@ -33,10 +33,19 @@ $(function (win, doc, $) {
             }
         });
 
-        $('[data-provide="postReply"]').scrollTo({
-            onComplete: function($caller, $target) {
-                $target.find("textarea").focus();
-            }
+        //$('[data-provide="postReply"]').scrollTo({
+        //    onComplete: function($caller, $target) {
+        //        $target.find("textarea").focus();
+        //    }
+        //});
+        
+        $('[data-provide="postReply"]').bind("click", function(e) {
+
+            e.preventDefault();
+
+            /* resizeable */
+            $('[data-provide="resizeable"]').resizeable("show");
+
         });
 
     });

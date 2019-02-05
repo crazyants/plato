@@ -1120,45 +1120,87 @@ a.label:hover,
     z-index: 10000;
     position: fixed;
     width: 100%;
-    left: 0;
-    background: white;
+    opacity: 1;
+    background: #eee;
 }
 
-.resizable-top { top: 0; }
-.resizable-bottom { bottom: 0;  }
 
-.resizable-bar {
+.resizable-top {  left: 0;  top: 0; height: 400px; }
+.resizable-bottom { left: 0; bottom: 0; height: 625px;  }
+.resizable-left { display: table; left: 0;  top: 0; width: 400px;  }
+.resizable-right { display: table; top: 0; right: 0; width: 400px;  }
+
+.resizable-hidden.resizable-bottom { opacity: 0; visibility: hidden; bottom: -625px; }
+
+.resizable-top .resizable-bar,
+.resizable-bottom .resizable-bar {
     width: 100%;
     height: 12px;
-    border-top: 1px solid #ddd; 
-    border-bottom: 1px solid #ddd;
-    background-color: #eee;
+    cursor: n-resize;
+}
+
+.resizable-bottom   .resizable-bar {
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.resizable-left .resizable-bar,
+.resizable-right .resizable-bar {
+    height: 100%;
+    cursor: e-resize;
+}
+
+.resizable-left .resizable-content,
+.resizable-right .resizable-bar {
+    display: table-cell;
+}
+
+.resizable-left .resizable-bar,
+.resizable-right .resizable-content  {
+    display: table-cell;
+}
+
+.resizable-top .resizable-bar {
+    bottom: 0;
+    z-index: 10001;
+}
+
+.resizable-bar {
+    border: 0;
+    background: #eee;
+    border-color: #dddddd;
     margin: 0;
-    padding: 0;
+    padding: 6px;
     -moz-user-select: none; 
     -ms-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-    cursor: n-resize;
     text-align: center;
 }
 
 .resizable-bar:hover {
-      background-color: #007bff;
+    background: #ddd;
 }
 
 .resizable-content {
     display: block;
+    overflow: hidden;
 }
 
 .resizable-header {
     border-bottom: 1px solid #dddddd;
     padding: 0.75rem 1.23rem;
+    background: white;
+}
+
+.resizable-close {
+    padding: 0.25rem;
+    float: right;
 }
 
 .resizable-body {
     padding: 1.25rem;
-    overflow-y: auto;
-    height: 300px;
     background-color: #f8f8f8;
 }
