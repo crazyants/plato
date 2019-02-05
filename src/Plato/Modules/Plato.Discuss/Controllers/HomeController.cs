@@ -1074,7 +1074,7 @@ namespace Plato.Discuss.Controllers
             pager.Page = 1;
             pager.PageSize = int.MaxValue;
 
-            // Get offset for reply
+            // Get offset for given reply
             var offset = 0;
             var replies = await _replyService.GetRepliesAsync(opts, pager);
             if (replies?.Data != null)
@@ -1091,7 +1091,7 @@ namespace Plato.Discuss.Controllers
 
             if (offset == 0)
             {
-                // Could not locate offset, fallback by simply redirecting to topic
+                // Could not locate offset, fallback by redirecting to topic
                 return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
@@ -1102,7 +1102,7 @@ namespace Plato.Discuss.Controllers
                 }));
             }
 
-            // Redirect back to specific offset within topic
+            // Redirect to offset within topic
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["Area"] = "Plato.Discuss",
@@ -1118,13 +1118,7 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Private Methods"
-
-        async Task<IPagedResults<Reply>> GetRepliesAsync(TopicOptions opts, PagerOptions pager)
-        {
-            return await _replyService.GetRepliesAsync(opts, pager);
-
-        }
-
+        
         string GetInfiniteScrollCallbackUrl()
         {
 

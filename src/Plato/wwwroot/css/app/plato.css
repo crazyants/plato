@@ -1147,6 +1147,10 @@ a.label:hover,
       background-color: #007bff;
 }
 
+.resizable-content {
+    display: block;
+}
+
 .resizable-header {
     border-bottom: 1px solid #dddddd;
     padding: 0.75rem 1.23rem;

@@ -4732,48 +4732,102 @@ $(function (win, doc, $) {
         var defaults = {};
 
         var methods = {
-            timer: null,
-            init: function($caller, methodName) {
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return null;
+                }
+                
                 this.bind($caller);
+
             },
             bind: function($caller) {
 
-                var id = $caller.data(dataKey).id,
-                    focusEvent = "focus",
-                    blurEvent = "blur";
+                var $bar = $caller.find(".resizable-bar"),
+                    resizing = false,
+                    cursorPosition = { x: 0, y: 0 },
+                    currentHeight = 0;
+                
+                // Bar events
 
-                if (id !== "") {
-                    focusEvent = focusEvent + "." + id;
-                    blurEvent = blurEvent + "." + id;
-                }
-
-                $caller.on(focusEvent,
-                    function(e) {
-                        methods.stopTimer();
-                    });
-
-                $caller.on(blurEvent,
-                    function(e) {
-                        methods.startTimer($(this), e);
-                    });
-
-            },
-            unbind: function($caller) {
-                $caller.unbind('blur');
-                $caller.unbind('focus');
-            },
-            startTimer: function($caller, e) {
-                this.stopTimer();
-                this.timer = setTimeout(function() {
-                        if ($caller.data(dataKey).onBlur) {
-                            $caller.data(dataKey).onBlur($caller, e);
+                $bar.bind("mousedown",
+                    function (e) {
+                        resizing = true;
+                        cursorPosition = { x: e.clientX, y: e.clientY };
+                        currentHeight = $caller.height();
+                        if (!methods._isExpanded($caller)) {
+                            methods._setCollapseHeight($caller, $caller.height());
                         }
-                    },
-                    $caller.data(dataKey).interval);
+                    });
+
+                $bar.bind("dblclick",
+                    function(e) {
+                        methods.toggle($caller);
+                    });
+
+                // Window events 
+
+                $(win).bind("mouseup",
+                    function (e) {
+                        resizing = false;
+                        cursorPosition = { x: 0, y: 0 };
+                    });
+
+                $(win).bind("mousemove",
+                    function(e) {
+                        if (resizing === false) {
+                            return;
+                        }
+                        var newPosition = { x: e.clientX, y: e.clientY },
+                            delta = parseInt(newPosition.y - cursorPosition.y),
+                            newHeight = parseInt(currentHeight - Math.floor(delta));
+                        $caller.css({ "height": newHeight + "px" });
+                    });
+
             },
-            stopTimer: function() {
-                win.clearTimeout(this.timer);
-                this.timer = null;
+            unbind: function ($caller) {
+
+                var $bar = $caller.find(".resizable-bar");
+                if ($bar.length > 0) {
+                    $bar.unbind("mousedown");
+                }
+                $(win).unbind("mouseup");
+                $(win).unbind("mousemove");
+
+            },
+            toggle: function ($caller) {
+                console.log("caller height: " + $caller.height());
+                console.log("win height: " + $(win).height());
+                if (methods._isExpanded($caller)) {
+                    methods.collapse($caller);
+                } else {
+                    methods.expand($caller);
+                }
+            },
+            expand: function($caller) {
+                $caller.css({ "height": $(win).height() });
+            },
+            collapse: function ($caller) {
+                var height = methods._getCollapseHeight($caller);
+                $caller.css({ "height": height });
+            },
+            _isExpanded($caller) {
+                return $caller.height() === $(win).height();
+            },
+            _setCollapseHeight: function($caller, height) {
+                $caller.attr("data-collapse-height", height);
+            },
+            _getCollapseHeight: function ($caller) {
+                var height = parseInt($caller.attr("data-collapse-height"));
+                if (!win.isNaN(height)) {
+                    return height;
+                }
+                return 300;
             }
         };
 
@@ -4803,7 +4857,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).blurSpy()
+                    // $(selector).resizeable()
                     return this.each(function () {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -4815,7 +4869,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().blurSpy()
+                    // $().resizeable()
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -4855,10 +4909,11 @@ $(function (win, doc, $) {
         selectDropdown: selectDropdown.init,
         labelSelectDropdown: labelSelectDropdown.init,
         categorySelectDropdown: categorySelectDropdown.init,
-        confirm: confirm.init,
         autoTargetBlank: autoTargetBlank.init,
         autoLinkImages: autoLinkImages.init,
-        markdownBody: markdownBody.init
+        markdownBody: markdownBody.init,
+        confirm: confirm.init,
+        resizeable: resizeable.init
     });
 
     // ---------------------------
@@ -4926,6 +4981,9 @@ $(function (win, doc, $) {
 
         /* infiniteScroll */
         this.find('[data-provide="infiniteScroll"]').infiniteScroll();
+
+        /* resizeable */
+        this.find('[data-provide="resizeable"]').resizeable();
 
     };
 
