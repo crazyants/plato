@@ -297,8 +297,7 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowSpam.Operator);
                 sb.Append("r.IsSpam = 1");
             }
-
-
+            
             // -----------------
             // deleted 
             // -----------------

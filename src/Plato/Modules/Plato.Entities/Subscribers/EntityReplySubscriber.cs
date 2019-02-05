@@ -29,18 +29,37 @@ namespace Plato.Entities.Subscribers
 
         public void Subscribe()
         {
+
+            // Created
             _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
+           
+            // Updated
+            _broker.Sub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyUpdated(message.What));
+
+
         }
 
         public void Unsubscribe()
         {
+
+            // Created
             _broker.Unsub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
+
+            // Updated
+            _broker.Unsub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyUpdated(message.What));
+            
         }
 
         public void Dispose()
@@ -75,36 +94,60 @@ namespace Plato.Entities.Subscribers
                 return reply;
             }
 
+            // Update entity details
+            return await UpdateEntityDetailsAsync(reply);
+
+        }
+
+        async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
+        {
+
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
+            // Update entity details
+            return await UpdateEntityDetailsAsync(reply);
+
+        }
+        
+        async Task<TEntityReply> UpdateEntityDetailsAsync(TEntityReply reply)
+        {
+
+            // Get entity
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
                 return reply;
             }
 
-            // Update totals
+            // Get reply details
+            TEntityReply lastReply = null;
+            int totalReplies = 0, totalParticipants = 0;
             var replies = await GetReplies(entity);
             if (replies?.Data != null)
             {
-                entity.TotalReplies = replies.Total;
-                entity.TotalParticipants = GetTotalUniqueParicipantCount(replies.Data);
+                totalReplies = replies.Total;
+                totalParticipants = GetTotalUniqueParticipantCount(replies.Data);
+                lastReply = replies.Data[0];
             }
-
+          
             // Update last reply 
-            entity.LastReplyId = reply.Id;
-            entity.LastReplyUserId = reply.CreatedUserId;
-            entity.LastReplyDate = reply.CreatedDate;
-            
+            entity.TotalReplies = totalReplies;
+            entity.TotalParticipants = totalParticipants;
+            entity.LastReplyId = lastReply?.Id ?? 0;
+            entity.LastReplyUserId = lastReply?.CreatedUserId ?? 0;
+            entity.LastReplyDate = lastReply?.CreatedDate ?? null;
+
             // Persist the updates
             await _entityStore.UpdateAsync(entity);
-            
-            // Return reply
+
             return reply;
 
         }
 
-        #endregion
-
-        int GetTotalUniqueParicipantCount(IEnumerable<TEntityReply> replies)
+        int GetTotalUniqueParticipantCount(IEnumerable<TEntityReply> replies)
         {
 
             var output = 0;
@@ -133,10 +176,13 @@ namespace Plato.Entities.Subscribers
                     q.HideSpam.True();
                     q.HideDeleted.True();
                 })
+                .OrderBy("CreatedDate", OrderBy.Desc)
                 .ToList();
 
         }
-        
+
+        #endregion
+
     }
-    
+
 }

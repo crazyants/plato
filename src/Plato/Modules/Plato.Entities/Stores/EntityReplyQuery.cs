@@ -89,8 +89,7 @@ namespace Plato.Entities.Stores
             get => _categoryId ?? (_categoryId = new WhereInt());
             set => _categoryId = value;
         }
-
-
+        
         public WhereString Keywords
         {
             get => _keywords ?? (_keywords = new WhereString());
@@ -108,8 +107,7 @@ namespace Plato.Entities.Stores
             get => _showPrivate ?? (_showPrivate = new WhereBool());
             set => _showPrivate = value;
         }
-
-
+        
         public WhereBool HideSpam
         {
             get => _hideSpam ?? (_hideSpam = new WhereBool());
@@ -133,8 +131,7 @@ namespace Plato.Entities.Stores
             get => _showDeleted ?? (_showDeleted = new WhereBool());
             set => _showDeleted = value;
         }
-
-
+        
         public WhereBool IsClosed
         {
             get => _isClosed ?? (_isClosed = new WhereBool());

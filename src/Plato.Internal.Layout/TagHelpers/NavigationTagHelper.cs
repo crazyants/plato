@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Abstractions.Extensions;
@@ -68,7 +66,7 @@ namespace Plato.Internal.Layout.TagHelpers
             _viewHelperFactory = viewHelperFactory;
         }
         
-        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
             // Get default CSS classes
@@ -93,13 +91,11 @@ namespace Plato.Internal.Layout.TagHelpers
             var items = _navigationManager.BuildMenu(this.Name, actionContext);
             if (items != null)
             {
-                BuildNavigationRecursively(items.ToList(), sb);
+                await BuildNavigationRecursivelyAsync(items.ToList(), sb);
             }
             
             output.PreContent.SetHtmlContent(sb.ToString());
-
-            return Task.CompletedTask;
-
+            
         }
 
         bool IsLinkExpandedOrChildSelected(MenuItem menuItem)
@@ -148,7 +144,7 @@ namespace Plato.Internal.Layout.TagHelpers
             return false;
         }
 
-        string BuildNavigationRecursively(
+        async Task<string> BuildNavigationRecursivelyAsync(
             List<MenuItem> items, 
             StringBuilder sb)
         {
@@ -199,7 +195,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 }
 
                 sb.Append(item.View != null 
-                        ? BuildView(item)
+                        ? await BuildViewAsync(item)
                         : BuildLink(item));
 
                 _index++;
@@ -207,7 +203,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 if (item.Items.Count > 0)
                 {
                     _level++;
-                    BuildNavigationRecursively(item.Items, sb);
+                    await BuildNavigationRecursivelyAsync(item.Items, sb);
                     AddTabs(_level, sb);
                     _level--;
                 }
@@ -334,17 +330,12 @@ namespace Plato.Internal.Layout.TagHelpers
             return sb.ToString();
         }
 
-        string BuildView(MenuItem item)
+        async Task<string> BuildViewAsync(MenuItem item)
         {
 
             EnsureViewHelper();
             
-            // todo: remove awaiter
-            var view = new View(item.View.ViewName, item.View.Model);
-            var viewResult =  _viewDisplayHelper.DisplayAsync(view)
-                .GetAwaiter()
-                .GetResult();
-
+            var viewResult = await _viewDisplayHelper.DisplayAsync(new View(item.View.ViewName, item.View.Model));
             return viewResult.Stringify();
 
         }
