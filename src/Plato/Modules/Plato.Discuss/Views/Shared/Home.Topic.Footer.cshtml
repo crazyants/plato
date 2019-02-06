@@ -1,8 +1,9 @@
 ﻿@model EditReplyViewModel
 
-<div class="resizable resizable-bottom resizable-hidden transition" data-provide="resizeable">
+<div class="resizable resizable-bottom resizable-hidden" data-provide="resizeable">
     <div class="resizable-bar"></div>
-    <div class="resizable-content">
+    <div class="resizable-container">
+    
         <div class="resizable-header">
             <h6 class="d-inline-block text-uppercase">@T["Post a reply"]</h6>
             <a href="#" data-toggle="tooltip" title="@T["Close Reply"]" class="btn btn-sm btn-secondary float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
@@ -58,5 +59,6 @@
 
 
         </div>
+   
     </div>
 </div>

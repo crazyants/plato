@@ -73,6 +73,13 @@
     border-radius: 0;
 }
 
+.md-textarea::-webkit-scrollbar { background:#eee; width: 9px; }
+.md-textarea::-webkit-scrollbar-thumb:vertical { border-radius: 4px; margin: 0; cursor: default; background-color: #ccc;  }
+.md-textarea::-webkit-scrollbar-thumb:vertical:hover { background-color: #aaa; }
+.md-textarea::-webkit-scrollbar-button:start:decrement,
+.md-textarea::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
+
+
 .md-editor .md-preview { overflow: auto; max-height: 600px; }
 
 /* header selection dropdown */
@@ -160,13 +167,13 @@
     width: 100%;
 }
 
-.emoji-dropdown { padding: 0 0.50rem; max-height: 250px; overflow-y: auto; }
-.emoji-dropdown .dropdown-item { cursor: pointer; width: auto; clear: none; width: 32px; transition: all 0.15s ease-out; }
-.emoji-dropdown .dropdown-item:hover { transform: scale(1.5); }
+.md-emoji-dropdown { padding: 0 0.50rem; max-height: 250px; overflow-y: auto; }
+.md-emoji-dropdown .dropdown-item { cursor: pointer; width: auto; clear: none; width: 32px; transition: all 0.15s ease-out; }
+.md-emoji-dropdown .dropdown-item:hover { transform: scale(1.5); }
 
-.quote-dropdown button.dropdown-item { cursor: pointer; clear: none; padding: 0; }
-.quote-dropdown blockquote { padding: 0; margin: 0; }
-.quote-dropdown blockquote p {
+.md-quote-dropdown button.dropdown-item { cursor: pointer; clear: none; padding: 0; }
+.md-quote-dropdown blockquote { padding: 0; margin: 0; }
+.md-quote-dropdown blockquote p {
     padding: 0.50rem 0.75em; 
     margin: 0;
     border-top-color: transparent !important;

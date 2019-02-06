@@ -946,9 +946,6 @@
             return this;
         }
         
-        // Give flag that tells the editor to enter preview mode
-        this.$isPreview = true;
-
         var $editor = this.$editor,
             $textarea = this.$textarea,
             $writeTab = $("#writeTab" + $editor.attr("id")),
@@ -958,15 +955,18 @@
         
         if ($textarea.val().trim() === "") {
             $textarea.focus();
-            //return false;
+            return false;
         }
+
+        // Give flag that tells the editor to enter preview mode
+        this.$isPreview = true;
 
         win.$.Plato.Http({
             url: "api/markdown/parse/post",
             method: "POST",
             async: false,
             data: JSON.stringify({
-                markdown: $textarea.val()
+                markdown: $textarea.val().trim()
             })
         }).done(function (response) {
 
@@ -1643,7 +1643,7 @@
                       dropdown: {
                           title: "Heading",
                           width: "200px",
-                          css: "md-header-dropdown",
+                          css: "dropdown-menu-right md-header-dropdown",
                           items: [
                               {
                                   name: 'cmdHeading1',
@@ -1719,7 +1719,7 @@
                         dropdown: {
                             title: "Link To URL",
                             width: "450px",
-                            css: "dropdown",
+                            css: "dropdown-menu-right",
                             items: null,
                             html:
                                 '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary mt-2"></button></fieldset></div>'
@@ -1790,7 +1790,7 @@
                         dropdown: {
                             title: "Link To Image",
                             width: "450px",
-                            css: "dropdown",
+                            css: "dropdown-menu-right",
                             items: null,
                             html:
                                 '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary mt-2"></button></fieldset></div>'
@@ -1863,10 +1863,10 @@
                         dropdown: {
                             title: "Add Emoji",
                             width: "418px",
-                            css: "dropdown",
+                            css: "dropdown-menu-right",
                             items: null,
                             html:
-                                '<div class="emoji-dropdown"><p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p></div>'
+                                '<div class="md-emoji-dropdown"><p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p></div>'
                         },
                         icon: {
                             glyph: 'glyphicon glyphicon-search',
@@ -1891,7 +1891,7 @@
                                         if (response.result) {
 
                                             // Build emoji dropdown
-                                            var $div = $dropdown.find(".emoji-dropdown");
+                                            var $div = $dropdown.find(".md-emoji-dropdown");
                                             $div.empty();
                                             for (var i = 0; i < response.result.length - 1; i++) {
                                                 $div.append($("<button>",
@@ -1943,7 +1943,7 @@
                         dropdown: {
                             title: "Embed Video",
                             width: "450px",
-                            css: "dropdown",
+                            css: "dropdown-menu-right",
                             items: null,
                             html:
                                 '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary mt-2"></button></fieldset></div>'
@@ -2139,14 +2139,14 @@
                       dropdown: {
                           title: "Blockquote",
                           width: "200px",
-                          css: "dropdown quote-dropdown user-content",
+                          css: "dropdown-menu-right md-quote-dropdown markdown-body",
                           items: [
                               {
                                   name: 'cmdBlockquotePrimary',
                                   hotkey: "",
                                   text:
                                       '<blockquote><p class="primary">Primary</p></blockquote>',
-                                  value: '> {class="primary"} ',
+                                  value: '> ',
                                   callback: function(e, $target) {
                                       $.fn.markdown.handlers.insertQuote(e, $target);
                                   }

@@ -2,22 +2,17 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Markdown.Services;
 using Plato.WebApi.Controllers;
 
 namespace Plato.Markdown.Controllers
 {
 
-
     public class MarkDownInput
     {
         public string Markdown { get; set; }
     }
-
-
+    
     public class ParseController : BaseWebApiController
     {
         private readonly IMarkdownParserFactory _markdownParserFactory;

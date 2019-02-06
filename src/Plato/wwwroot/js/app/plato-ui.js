@@ -4752,6 +4752,7 @@ $(function (win, doc, $) {
             bind: function($caller) {
 
                 var $bar = $caller.find(".resizable-bar"),
+                    $container = $caller.find(".resizable-container"),
                     resizing = false,
                     cursorPosition = { x: 0, y: 0 },
                     dimensions = { w: 0, h: 0 };
@@ -4761,6 +4762,9 @@ $(function (win, doc, $) {
                 $bar.bind("mousedown",
                     function (e) {
                         resizing = true;
+                        if (!$bar.hasClass("active")) {
+                            $bar.addClass("active");
+                        }
                         cursorPosition = { x: e.clientX, y: e.clientY };
                         dimensions = { w: $caller.width(), h: $caller.height() };
                         if (!methods._isExpanded($caller)) {
@@ -4783,6 +4787,9 @@ $(function (win, doc, $) {
                 $(win).bind("mouseup",
                     function (e) {
                         resizing = false;
+                        if ($bar.hasClass("active")) {
+                            $bar.removeClass("active");
+                        }
                         cursorPosition = { x: 0, y: 0 };
                     });
 
@@ -4803,8 +4810,10 @@ $(function (win, doc, $) {
 
                         if (horizontal) {
                             $caller.css({ "height": size });
+                            $container.css({ "height": size - $bar.height() });
                         } else {
                             $caller.css({ "width": size });
+                            $container.css({ "width": size - $bar.width() });
                         }
                         
                     });
@@ -4835,10 +4844,28 @@ $(function (win, doc, $) {
                 }
             },
             expand: function ($caller) {
+
+                var $bar = $caller.find(".resizable-bar"),
+                    $container = $caller.find(".resizable-container");
                 if (methods._isHorizontal($caller)) {
                     $caller.css({ "height": $(win).height() });
+                    $container.css({ "height": $(win).height() - $bar.height() });
                 } else {
                     $caller.css({ "width": $(win).width() });
+                    $container.css({ "height": $(win).width() - $bar.width() });
+                }
+            },
+            collapse: function ($caller) {
+
+                var size = methods._getCollapseSize($caller),
+                    $bar = $caller.find(".resizable-bar"),
+                    $container = $caller.find(".resizable-container");
+                if (methods._isHorizontal($caller)) {
+                    $caller.css({ "height": size });
+                    $container.css({ "height": size - $bar.height() });
+                } else {
+                    $caller.css({ "width": size });
+                    $container.css({ "width": size - $bar.width() });
                 }
             },
             show: function ($caller) {
@@ -4869,14 +4896,7 @@ $(function (win, doc, $) {
                     }
                 }
             },
-            collapse: function ($caller) {
-                var size = methods._getCollapseSize($caller);
-                if (methods._isHorizontal($caller)) {
-                    $caller.css({ "height": size });
-                } else {
-                    $caller.css({ "width": size });
-                }
-            },
+        
             _isExpanded($caller) {
                 if (methods._isHorizontal($caller)) {
                     return $caller.height() === $(win).height();

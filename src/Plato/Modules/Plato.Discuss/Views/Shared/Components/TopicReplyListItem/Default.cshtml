@@ -62,7 +62,11 @@
             <div class="@css" data-infinite-scroll-highlight="@Model.Reply.Offset" data-provide="markdownBody">
                 @Html.Raw(@Model.Reply.Html)
             </div>
-            <div class="hidden" id="@quoteId">@Model.Reply.Message</div>
+            <div class="hidden" 
+                 id="@quoteId"
+                 data-reply-url="@Url.Action("Jump", "Home", new { id = Model.Topic.Id, alias = Model.Topic.Alias, replyId = Model.Reply.Id })"
+                 data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
+           
             <navigation name="topicreply-footer"
                         model="Model.Reply"
                         enable-list="false" />

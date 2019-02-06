@@ -40,7 +40,6 @@
 /* Badges */
 /* ------------------- */
 
-
 .badge-secondary { background: #ddd; color: #888; }
 
 /* ------------------- */
@@ -123,3 +122,16 @@
 }
 
 .navbar-dark hr { border-top: 1px solid rgba(200, 200, 200, 0.1); }
+
+/* ------------------- */
+/* Markdown Editor */
+/* ------------------- */
+
+.md-textarea::-webkit-scrollbar-thumb:vertical:hover { background-color: #007bff; }
+
+/* ------------------- */
+/* Resizable Area */
+/* ------------------- */
+
+.resizable-bar.active,
+.resizable-bar:hover { background-color: #007bff; }

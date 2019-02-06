@@ -11,7 +11,7 @@ namespace Plato.Markdown.Services
     public class MarkdownParserMarkdig : IMarkdownParser
     {
 
-        public static MarkdownPipeline Pipeline;
+        public static MarkdownPipeline _pipeline;
 
         private readonly bool _usePragmaLines;
 
@@ -20,10 +20,10 @@ namespace Plato.Markdown.Services
             Action<MarkdownPipelineBuilder> config)
         {
             _usePragmaLines = usePragmaLines;
-            if (Pipeline == null)
+            if (_pipeline == null)
             {
                 var builder = CreatePipelineBuilder(config);
-                Pipeline = builder.Build();
+                _pipeline = builder.Build();
             }
         }
 
@@ -38,7 +38,7 @@ namespace Plato.Markdown.Services
                 
             var htmlWriter = new StringWriter();
             var renderer = CreateRenderer(htmlWriter);
-            Markdig.Markdown.Convert(markdown, renderer, Pipeline);
+            Markdig.Markdown.Convert(markdown, renderer, _pipeline);
             return Task.FromResult(htmlWriter.ToString());
 
         }
@@ -69,6 +69,7 @@ namespace Plato.Markdown.Services
                     .UseMediaLinks()
                     .UseListExtras()
                     .UseFigures()
+                    .UseBootstrap()
                     .UseTaskLists()
                     .UseCustomContainers()
                     .UseGenericAttributes()
