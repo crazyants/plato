@@ -12,9 +12,9 @@ namespace Plato.Discuss.Star
             new StarType(
                 "Topic",
                 "Star",
-                "Star this topic to quickly jump in anytime...",
+                "Star this topic",
                 "Unstar",
-                "You've starred this topic. Remove your star below...");
+                "Delete star");
 
         public IEnumerable<IStarType> GetFollowTypes()
         {

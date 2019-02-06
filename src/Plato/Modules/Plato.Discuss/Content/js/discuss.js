@@ -42,7 +42,7 @@ $(function (win, doc, $) {
                     $quote = $(selector),
                     context = $.Plato.Context;
 
-                // Apply Localizer
+                // Apply localizer
                 var text = "In response to";
                 if (context.localizer) {
                     text = context.localizer.get(text);
@@ -107,7 +107,6 @@ $.Plato.Discuss = {
     init: function(context) {
 
         this.context = context;
-
         context.logger.logInfo("$.Plato.Discuss initializing");
 
     }

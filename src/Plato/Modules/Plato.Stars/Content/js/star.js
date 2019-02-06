@@ -3,8 +3,12 @@ if (typeof jQuery === "undefined") {
     throw new Error("Plato requires jQuery");
 }
 
+if (typeof $.Plato.Locale === "undefined") {
+    throw new Error("$.Plato.Locale is required");
+}
+
 if (typeof $.Plato.Context === "undefined") {
-    throw new Error("$.Plato.Context Required");
+    throw new Error("$.Plato.Context is required");
 }
 
 /* follow buttons */
@@ -40,32 +44,72 @@ $(function (win, doc, $) {
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
                     offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
 
-                $caller
-                    .removeClass(offCss)
-                    .addClass(onCss)
-                    .attr("data-action", "unsubscribe");
+                if (offCss) {
+                    $caller.removeClass(offCss);
+                }
 
-                $caller.find("i")
-                    .removeClass("fa-bell")
-                    .addClass("fa-bell-slash");
+                if (onCss) {
+                    $caller.addClass(onCss);
+                }
 
+                // Update action
+                $caller.attr("data-action", "unsubscribe");
+
+                // Update icon
+                $caller.find("i").removeClass("fal").addClass("fa");
+
+                // Hide tooltip
+                if ($caller.tooltip) {
+                    $caller.tooltip("hide");
+                }
+
+                // Update tooltip
+                if ($caller.attr("data-unsubscribe-tooltip")) {
+                    if ($caller.tooltip) {
+                        $caller.attr("data-original-title", $caller.attr("data-unsubscribe-tooltip"));
+                    } else {
+                        $caller.attr("title", $caller.attr("data-unsubscribe-tooltip"));
+                    }
+                }
+
+                // Update text
                 $caller.find("span").text($caller.attr("data-unsubscribe-text"));
-
+              
             },
             disable: function($caller) {
 
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
                     offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
 
-                $caller
-                    .removeClass(onCss)
-                    .addClass(offCss)
-                    .attr("data-action", "subscribe");
+                if (onCss) {
+                    $caller.removeClass(onCss);
+                }
 
-                $caller.find("i")
-                    .removeClass("fa-bell-slash")
-                    .addClass("fa-bell");
+                if (offCss) {
+                    $caller.addClass(offCss);
+                }
 
+                // Update action
+                $caller.attr("data-action", "subscribe");
+
+                // Update icon
+                $caller.find("i").removeClass("fa").addClass("fal");
+
+                // Hide tooltip
+                if ($caller.tooltip) {
+                    $caller.tooltip("hide");
+                }
+
+                // Update tooltip
+                if ($caller.attr("data-subscribe-tooltip")) {
+                    if ($caller.tooltip) {
+                        $caller.attr("data-original-title", $caller.attr("data-subscribe-tooltip"));
+                    } else {
+                        $caller.attr("title", $caller.attr("data-subscribe-tooltip"));
+                    }
+                }
+
+                // Update text
                 $caller.find("span").text($caller.attr("data-subscribe-text"));
 
             }
@@ -197,7 +241,21 @@ $(function (win, doc, $) {
                 }).done(function(data) {
 
                     if (data.statusCode === 200) {
+
+                        // Enable button
                         $caller.starToggle("enable");
+
+                        //// Bootstrap notify
+                        //win.$.Plato.UI.notify({
+                        //        // options
+                        //    message: win.$.Plato.Locale.get("Star Added Successfully")
+                        //    },
+                        //    {
+                        //        width: "auto",
+                        //        type: 'success',
+                        //        delay: 2000
+                        //    });
+
                     }
 
                 });
@@ -216,7 +274,21 @@ $(function (win, doc, $) {
                     data: JSON.stringify(params)
                 }).done(function(data) {
                     if (data.statusCode === 200) {
+
+                        // Disable button
                         $caller.starToggle("disable");
+                        
+                        //// Bootstrap notify
+                        //win.$.Plato.UI.notify({
+                        //        // options
+                        //    message: win.$.Plato.Locale.get("Star Deleted Successfully")
+                        //    },
+                        //    {
+                        //        width: "auto",
+                        //        type: 'success',
+                        //        delay: 2000
+                        //    });
+                        
                     }
                 });
 

@@ -25,7 +25,7 @@
         element: 'body',
         position: "fixed",
         type: "info",
-        allow_dismiss: true,
+        allow_dismiss: false,
         allow_duplicates: true,
         newest_on_top: false,
         showProgressbar: false,

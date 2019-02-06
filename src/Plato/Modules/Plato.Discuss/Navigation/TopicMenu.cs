@@ -110,6 +110,22 @@ namespace Plato.Discuss.Navigation
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
+            if (!topic.IsClosed)
+            {
+                builder
+                    .Add(T["Reply"], int.MaxValue, options => options
+                            .IconCss("fa fa-reply")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-provide", "postReply"},
+                                {"data-toggle", "tooltip"},
+                                {"title", T["Reply"]}
+                            })
+                        , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
+                    );
+
+            }
+
         }
 
     }

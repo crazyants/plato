@@ -32,8 +32,15 @@ namespace Plato.Discuss.Navigation
             {
                 return;
             }
-        
-            // Get model from navigation builder
+
+            // Get topic from context
+            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (topic == null)
+            {
+                return;
+            }
+            
+            // Get reply from context
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             if (reply == null)
             {
@@ -95,19 +102,23 @@ namespace Plato.Discuss.Navigation
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-            
-            builder
-                .Add(T["Reply"], int.MaxValue, options => options
-                    .IconCss("fa fa-reply")
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-provide", "postQuote"},
-                        {"data-toggle", "tooltip"},
-                        {"data-quote-selector", "#quote" + reply.Id.ToString()},
-                        {"title", T["Reply"]}
-                    })
-                    , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
-                );
+
+            if (!topic.IsClosed)
+            {
+                builder
+                    .Add(T["Reply"], int.MaxValue, options => options
+                            .IconCss("fa fa-reply")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-provide", "postQuote"},
+                                {"data-toggle", "tooltip"},
+                                {"data-quote-selector", "#quote" + reply.Id.ToString()},
+                                {"title", T["Reply"]}
+                            })
+                        , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
+                    );
+
+            }
 
 
 

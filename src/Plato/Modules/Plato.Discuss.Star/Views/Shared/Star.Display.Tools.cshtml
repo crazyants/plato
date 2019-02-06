@@ -2,14 +2,14 @@
 
 @if (!Model.IsFollowing)
 {
-    <button data-toggle="tooltip" title="@T[Model.StarType.SubscribeDescription]" class="btn btn-secondary" data-on-css="btn-danger" data-off-css="btn-secondary" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
+    <button data-toggle="tooltip" title="@T[Model.StarType.SubscribeDescription]" class="btn star-off" data-on-css="star-on" data-off-css="star-off" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-subscribe-tooltip="@T[Model.StarType.SubscribeDescription]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.StarType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
         <i class="fal fa-star"></i> 
     </button>
 }
 else
 {
-    <button data-toggle="tooltip" title="@T[Model.StarType.UnsubscribeDescription]" class="btn btn-danger" data-on-css="btn-danger" data-off-css="btn-secondary" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
-        <i class="fal fa-star"></i>
+    <button data-toggle="tooltip" title="@T[Model.StarType.UnsubscribeDescription]" class="btn star-on" data-on-css="star-on" data-off-css="star-off" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-subscribe-tooltip="@T[Model.StarType.SubscribeDescription]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.StarType.UnsubscribeDescription]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
+        <i class="fa fa-star"></i>
     </button>
 }
 

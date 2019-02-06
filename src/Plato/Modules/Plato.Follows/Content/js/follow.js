@@ -3,6 +3,10 @@ if (typeof jQuery === "undefined") {
     throw new Error("Plato requires jQuery");
 }
 
+if (typeof $.Plato.Locale === "undefined") {
+    throw new Error("$.Plato.Locale is required");
+}
+
 if (typeof $.Plato.Context === "undefined") {
     throw new Error("$.Plato.Context Required");
 }
@@ -13,9 +17,9 @@ $(function (win, doc, $) {
     'use strict';
 
     // Provides state changes functionality for the follow button
-    var followToggler = function () {
+    var followToggle = function () {
 
-        var dataKey = "followToggler",
+        var dataKey = "followToggle",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -49,23 +53,59 @@ $(function (win, doc, $) {
                     .removeClass("fa-bell")
                     .addClass("fa-bell-slash");
 
+                // Hide tooltip
+                if ($caller.tooltip) {
+                    $caller.tooltip("hide");
+                }
+
+                // Update tooltip
+                if ($caller.attr("data-unsubscribe-tooltip")) {
+                    if ($caller.tooltip) {
+                        $caller.attr("data-original-title", $caller.attr("data-unsubscribe-tooltip"));
+                    } else {
+                        $caller.attr("title", $caller.attr("data-unsubscribe-tooltip"));
+                    }
+                }
+                
                 $caller.find("span").text($caller.attr("data-unsubscribe-text"));
 
             },
             disable: function($caller) {
 
+                // Update css
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
                     offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
 
-                $caller
-                    .removeClass(onCss)
-                    .addClass(offCss)
-                    .attr("data-action", "subscribe");
+                if (onCss) {
+                    $caller.removeClass(onCss);
+                }
 
-                $caller.find("i")
-                    .removeClass("fa-bell-slash")
-                    .addClass("fa-bell");
+                if (offCss) {
+                    $caller.addClass(offCss);
+                }
 
+                // Update action
+                $caller.attr("data-action", "subscribe");
+
+                // Update icon
+                $caller.find("i").removeClass("fa-bell-slash").addClass("fa-bell");
+
+                
+                // Hide tooltip
+                if ($caller.tooltip) {
+                    $caller.tooltip("hide");
+                }
+                
+                // Update tooltip
+                if ($caller.attr("data-subscribe-tooltip")) {
+                    if ($caller.tooltip) {
+                        $caller.attr("data-original-title", $caller.attr("data-subscribe-tooltip"));
+                    } else {
+                        $caller.attr("title", $caller.attr("data-subscribe-tooltip"));
+                    }
+                }
+
+                // Update text
                 $caller.find("span").text($caller.attr("data-subscribe-text"));
 
             }
@@ -95,7 +135,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).markdownEditor
+                    // $(selector).followToggle
                     return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -107,7 +147,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().markdownEditor 
+                    // $().followToggle
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -195,9 +235,22 @@ $(function (win, doc, $) {
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function(data) {
-
                     if (data.statusCode === 200) {
-                        $caller.followToggler("enable");
+
+                        // Enable button
+                        $caller.followToggle("enable");
+                        
+                        //// Bootstrap notify
+                        //win.$.Plato.UI.notify({
+                        //        // options
+                        //    message: win.$.Plato.Locale.get("Follow Added Successfully")
+                        //    },
+                        //    {
+                        //        width: "auto",
+                        //        type: 'success',
+                        //        delay: 2000
+                        //    });
+                        
                     }
 
                 });
@@ -216,7 +269,21 @@ $(function (win, doc, $) {
                     data: JSON.stringify(params)
                 }).done(function(data) {
                     if (data.statusCode === 200) {
-                        $caller.followToggler("disable");
+
+                        // Disable button
+                        $caller.followToggle("disable");
+                        
+                        //// Bootstrap notify
+                        //win.$.Plato.UI.notify({
+                        //        // options
+                        //    message: win.$.Plato.Locale.get("Follow Deleted Successfully")
+                        //    },
+                        //    {
+                        //        width: "auto",
+                        //        type: 'success',
+                        //        delay: 2000
+                        //    });
+
                     }
                 });
 
@@ -337,9 +404,9 @@ $(function (win, doc, $) {
                         function(e) {
                             e.preventDefault();
                             if ($(this).is(":checked")) {
-                                $caller.parent().followToggler("enable");
+                                $caller.parent().followToggle("enable");
                             } else {
-                                $caller.parent().followToggler("disable");
+                                $caller.parent().followToggle("disable");
                             }
 
                         });
@@ -410,7 +477,7 @@ $(function (win, doc, $) {
     
     $.fn.extend({
         followButton: followButton.init,
-        followToggler: followToggler.init,
+        followToggle: followToggle.init,
         followCheckbox: followCheckbox.init
     });
     
