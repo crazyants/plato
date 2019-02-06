@@ -1,8 +1,12 @@
 ﻿@model Topic
 
-<a href="#postReply" data-toggle="tooltip" data-provide="postReply" class="btn btn-primary text-uppercase" title="@T["Post a reply"]">
-    <i class="fal fa-fw fa-plus"></i>
-    @T["Reply"]
-</a>
+@if (!Model.IsClosed)
+{
+    <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" data-toggle="tooltip" data-provide="postReply" class="btn btn-primary text-uppercase" title="@T["Post a reply"]">
+        <i class="fal fa-fw fa-plus"></i>
+        @T["Reply"]
+    </a>
+}
+
 
 

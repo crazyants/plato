@@ -3,6 +3,7 @@
     var css = Model.Reply.Offset == Model.Reply.SelectedOffset
         ? "markdown-body p-3 infinite-scroll-item infinite-scroll-item-active"
         : "markdown-body p-3 infinite-scroll-item";
+    var quoteId = "quote" + Model.Reply.Id;
 }
 
 <div class="topic-reply-left">
@@ -61,6 +62,7 @@
             <div class="@css" data-infinite-scroll-highlight="@Model.Reply.Offset" data-provide="markdownBody">
                 @Html.Raw(@Model.Reply.Html)
             </div>
+            <div class="hidden" id="@quoteId">@Model.Reply.Message</div>
             <navigation name="topicreply-footer"
                         model="Model.Reply"
                         enable-list="false" />

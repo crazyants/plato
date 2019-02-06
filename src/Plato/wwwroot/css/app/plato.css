@@ -50,12 +50,18 @@
 
 .markdown-body blockquote p { padding: 0.75rem; }
 .markdown-body blockquote p,
-.markdown-body blockquote p.primary{ border: 1px solid #D9DDE7; border-left: 4px solid #007bff; background: #F3F7FF; }
-.markdown-body blockquote p.secondary { border: 1px solid #eee; border-left: 4px solid #ccc; background: #f8f8f8; }
-.markdown-body blockquote p.success { border: 1px solid #D9DDE7; border-left: 4px solid #08B735; background: #EFFFF3; }
-.markdown-body blockquote p.info { border: 1px solid #E0E9E8; border-left: 4px solid #299E97; background: #F9FFFF; }
-.markdown-body blockquote p.warning { border: 1px solid #E6DFD8; border-left: 4px solid #F6A800; background: #FFF8F1; }
-.markdown-body blockquote p.danger { border: 1px solid #E8D8D8; border-left: 4px solid red; background: #FFF0F0; }
+.markdown-body blockquote p.primary,
+.quote-dropdown blockquote p.primary { border: 1px solid #D9DDE7; border-left: 4px solid #007bff; background: #F3F7FF; }
+.markdown-body blockquote p.secondary, 
+.quote-dropdown blockquote p.secondary { border: 1px solid #eee; border-left: 4px solid #ccc; background: #f8f8f8; }
+.markdown-body blockquote p.success,
+.quote-dropdown blockquote p.success { border: 1px solid #D9DDE7; border-left: 4px solid #08B735; background: #EFFFF3; }
+.markdown-body blockquote p.info,
+.quote-dropdown blockquote p.info { border: 1px solid #E0E9E8; border-left: 4px solid #299E97; background: #F9FFFF; }
+.markdown-body blockquote p.warning,
+.quote-dropdown blockquote p.warning { border: 1px solid #E6DFD8; border-left: 4px solid #F6A800; background: #FFF8F1; }
+.markdown-body blockquote p.danger,
+.quote-dropdown blockquote p.danger { border: 1px solid #E8D8D8; border-left: 4px solid red; background: #FFF0F0; }
 
 /* lists */
 
@@ -1117,10 +1123,9 @@ a.label:hover,
 /* slide css */
 
 .resizable {
-    z-index: 10000;
+    z-index: 10;
     position: fixed;
     width: 100%;
-    opacity: 1;
     background: #eee;
 }
 
@@ -1130,7 +1135,7 @@ a.label:hover,
 .resizable-left { display: table; left: 0;  top: 0; width: 400px;  }
 .resizable-right { display: table; top: 0; right: 0; width: 400px;  }
 
-.resizable-hidden.resizable-bottom { opacity: 0; visibility: hidden; bottom: -625px; }
+.resizable-hidden.resizable-bottom {  bottom: -100%; }
 
 .resizable-top .resizable-bar,
 .resizable-bottom .resizable-bar {
@@ -1169,7 +1174,7 @@ a.label:hover,
 
 .resizable-bar {
     border: 0;
-    background: #eee;
+    background: #f8f8f8;
     border-color: #dddddd;
     margin: 0;
     padding: 6px;
@@ -1181,7 +1186,7 @@ a.label:hover,
 }
 
 .resizable-bar:hover {
-    background: #ddd;
+    background: #eee;
 }
 
 .resizable-content {
@@ -1196,8 +1201,7 @@ a.label:hover,
 }
 
 .resizable-close {
-    padding: 0.25rem;
-    float: right;
+    display: inline-block;
 }
 
 .resizable-body {

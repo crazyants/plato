@@ -24,27 +24,54 @@ $(function (win, doc, $) {
     });
 
     $(doc).ready(function () {
-        
-        $('[data-provide="postQuote"]').scrollTo({
-            onComplete: function ($caller, $target) {
-                var $textarea = $target.find("textarea");
 
-                $textarea.focus();
-            }
-        });
+        // Quote
 
-        //$('[data-provide="postReply"]').scrollTo({
-        //    onComplete: function($caller, $target) {
-        //        $target.find("textarea").focus();
-        //    }
-        //});
-        
+        $('[data-provide="postQuote"]').bind("click",
+            function(e) {
+
+                e.preventDefault();
+
+                // Get element containing quote
+                var value = "",
+                    selector = $(this).attr("data-quote-selector"),
+                    $quote = $(selector);
+                if ($quote.length > 0) {
+                    value = ">" + $quote.html()
+                        .replace(/\n\r/g, "\n")
+                        .replace(/\n/g, "\n > ");
+
+                }
+
+                /* resizeable */
+                $('[data-provide="resizeable"]').resizeable("toggleVisibility", {
+                    onShow: function ($caller) {
+                        var $textArea = $caller.find(".md-textarea");
+                        if ($textArea.length > 0) {
+                            $textArea.val(value);
+                            $textArea.focus();
+                        }
+                    }
+                });
+
+
+            });
+
+        // Reply
+
         $('[data-provide="postReply"]').bind("click", function(e) {
 
             e.preventDefault();
 
             /* resizeable */
-            $('[data-provide="resizeable"]').resizeable("show");
+            $('[data-provide="resizeable"]').resizeable("toggleVisibility", {
+                    onShow: function($caller) {
+                        var $textArea = $caller.find(".md-textarea");
+                        if ($textArea.length > 0) {
+                            $textArea.focus();
+                        }
+                    }
+                });
 
         });
 

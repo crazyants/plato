@@ -4729,7 +4729,10 @@ $(function (win, doc, $) {
         var dataKey = "resizeable",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+            onShow: null,
+            onHide: null
+        };
 
         var methods = {
             init: function ($caller, methodName) {
@@ -4841,11 +4844,29 @@ $(function (win, doc, $) {
             show: function ($caller) {
                 if ($caller.hasClass("resizable-hidden")) {
                     $caller.removeClass("resizable-hidden");
+
+                    // onShow event
+                    if ($caller.data(dataKey).onShow) {
+                        $caller.data(dataKey).onShow($caller);
+                    }
+
+                }
+            },
+            toggleVisibility: function($caller) {
+                if ($caller.hasClass("resizable-hidden")) {
+                    methods.show($caller);
+                } else {
+                    methods.hide($caller);
                 }
             },
             hide: function ($caller) {
                 if (!$caller.hasClass("resizable-hidden")) {
                     $caller.addClass("resizable-hidden");
+
+                    // onShow event
+                    if ($caller.data(dataKey).onHide) {
+                        $caller.data(dataKey).onHide($caller);
+                    }
                 }
             },
             collapse: function ($caller) {
