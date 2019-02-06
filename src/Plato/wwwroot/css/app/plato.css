@@ -86,7 +86,8 @@
 .markdown-body blockquote.success { border: 1px solid #D9DDE7; border-left: 4px solid #08B735; background: #EFFFF3; }
 .markdown-body blockquote.info { border: 1px solid #E0E9E8; border-left: 4px solid #299E97; background: #F9FFFF; }
 .markdown-body blockquote.warning { border: 1px solid #E6DFD8; border-left: 4px solid #F6A800; background: #FFF8F1; }
-.markdown-body blockquote.danger { border: 1px solid #E8D8D8; border-left: 4px solid red; background: #FFF0F0; }*/
+.markdown-body blockquote.danger { border: 1px solid #E8D8D8; border-left: 4px solid red; background: #FFF0F0; }
+
 
 /* lists */
 
@@ -1172,22 +1173,20 @@ a.label:hover,
 .resizable-container::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
 
 .resizable-top {  left: 0;  top: 0; height: 400px; }
-.resizable-bottom { left: 0; top: auto; bottom: 0; height: 625px;  }
+.resizable-bottom { left: 0; top: auto; bottom: 0; height: calc(75vh);  }
 .resizable-left { display: table; left: 0;  top: 0; width: 400px;  }
 .resizable-right { display: table; top: 0; right: 0; width: 400px;  }
 
-.resizable-hidden.resizable-bottom { bottom: auto; top: 100%; }
+.resizable-hidden.resizable-bottom { height: 0 !important; }
 
 .resizable-top .resizable-bar,
 .resizable-bottom .resizable-bar {
-    width: 100%;
     height: 12px;
     cursor: n-resize;
 }
 
 .resizable-left .resizable-bar,
 .resizable-right .resizable-bar {
-    height: 100%;
     cursor: e-resize;
 }
 
@@ -1200,19 +1199,32 @@ a.label:hover,
 .resizable-bar {
     background: #eee;
     margin: 0;
-    padding: 6px;
+    color: #000;
+    line-height: normal;
     -moz-user-select: none; 
     -ms-user-select: none;
     -webkit-user-select: none;
     user-select: none;
     text-align: center;
+    position: relative;
 }
+
+.resizable-bar i {
+    position: absolute;
+    left: 50%;
+    top: 5px;
+    transform: translate(-50%, -50%);
+    color: #888;
+    margin: 0;
+    transform-origin: center center;
+    transition: all 0.15s ease-out;
+}
+
 
 .resizable-bar.active,
 .resizable-bar:hover {
     background: #eee;
 }
-
 
 .resizable-header {
     border-bottom: 1px solid #dddddd;

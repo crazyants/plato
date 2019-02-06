@@ -4844,7 +4844,6 @@ $(function (win, doc, $) {
                 }
             },
             expand: function ($caller) {
-
                 var $bar = $caller.find(".resizable-bar"),
                     $container = $caller.find(".resizable-container");
                 if (methods._isHorizontal($caller)) {
@@ -4856,7 +4855,6 @@ $(function (win, doc, $) {
                 }
             },
             collapse: function ($caller) {
-
                 var size = methods._getCollapseSize($caller),
                     $bar = $caller.find(".resizable-bar"),
                     $container = $caller.find(".resizable-container");
@@ -4871,32 +4869,28 @@ $(function (win, doc, $) {
             show: function ($caller) {
                 if ($caller.hasClass("resizable-hidden")) {
                     $caller.removeClass("resizable-hidden");
-
                     // onShow event
                     if ($caller.data(dataKey).onShow) {
                         $caller.data(dataKey).onShow($caller);
                     }
-
                 }
             },
-            toggleVisibility: function($caller) {
+            hide: function ($caller) {
+                if (!$caller.hasClass("resizable-hidden")) {
+                    $caller.addClass("resizable-hidden");
+                    // onHide event
+                    if ($caller.data(dataKey).onHide) {
+                        $caller.data(dataKey).onHide($caller);
+                    }
+                }
+            },
+            toggleVisibility: function ($caller) {
                 if ($caller.hasClass("resizable-hidden")) {
                     methods.show($caller);
                 } else {
                     methods.hide($caller);
                 }
             },
-            hide: function ($caller) {
-                if (!$caller.hasClass("resizable-hidden")) {
-                    $caller.addClass("resizable-hidden");
-
-                    // onShow event
-                    if ($caller.data(dataKey).onHide) {
-                        $caller.data(dataKey).onHide($caller);
-                    }
-                }
-            },
-        
             _isExpanded($caller) {
                 if (methods._isHorizontal($caller)) {
                     return $caller.height() === $(win).height();
@@ -4911,7 +4905,7 @@ $(function (win, doc, $) {
                 if (!win.isNaN(size)) {
                     return size;
                 }
-                return 300;
+                return Math.floor($(win).height() / 2);
             },
             _isHorizontal: function($caller) {
                 return methods._isTop($caller) || methods._isBottom($caller);

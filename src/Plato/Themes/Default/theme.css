@@ -133,5 +133,9 @@
 /* Resizable Area */
 /* ------------------- */
 
+.resizable-bar { background-color: #96deff; }
+
 .resizable-bar.active,
 .resizable-bar:hover { background-color: #007bff; }
+
+.resizable-bar i { color: white;}
