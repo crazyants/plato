@@ -89,7 +89,8 @@ namespace Plato.Entities.Stores
         private WhereInt _totalParticipants;
         private WhereInt _totalReactions;
         private WhereInt _totalFollows;
-        
+        private WhereInt _totalStars;
+
 
         public WhereInt Id
         {
@@ -277,7 +278,12 @@ namespace Plato.Entities.Stores
             set => _totalFollows = value;
         }
 
-        
+        public WhereInt TotalStars
+        {
+            get => _totalStars ?? (_totalStars = new WhereInt());
+            set => _totalStars = value;
+        }
+
     }
 
     #endregion
@@ -763,6 +769,14 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.TotalFollows.ToSqlString("e.TotalFollows"));
             }
 
+            // TotalStars
+            if (_query.Params.TotalStars.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TotalStars.Operator);
+                sb.Append(_query.Params.TotalStars.ToSqlString("e.TotalStars"));
+            }
+
 
             // CreatedUserId
             if (_query.Params.CreatedUserId.Value > -1)
@@ -1004,6 +1018,10 @@ namespace Plato.Entities.Stores
                     return "e.TotalFollows";
                 case "totalfollows":
                     return "e.TotalFollows";
+                case "stars":
+                    return "e.TotalStars";
+                case "totalstars":
+                    return "e.TotalStars";
                 case "reactions":
                     return "e.TotalReactions";
                 case "totalreactions":

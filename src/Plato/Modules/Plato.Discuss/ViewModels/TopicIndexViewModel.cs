@@ -101,13 +101,15 @@ namespace Plato.Discuss.ViewModels
 
     public enum SortBy
     {
-        LastReply = 0,
-        Replies = 1,
-        Views = 2,
-        Participants = 3,
-        Reactions = 4,
-        Created = 5,
-        Modified = 6
+        LastReply,
+        Replies,
+        Views,
+        Participants,
+        Reactions,
+        Follows,
+        Stars,
+        Created,
+        Modified
     }
 
     public enum FilterBy

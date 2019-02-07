@@ -55,6 +55,8 @@ namespace Plato.Entities.Models
 
         public int TotalReports { get; set; }
 
+        public int TotalStars { get; set; }
+
         public double DailyViews { get; set; }
 
         public double DailyReplies { get; set; }
@@ -65,6 +67,8 @@ namespace Plato.Entities.Models
 
         public double DailyReports { get; set; }
 
+        public double DailyStars { get; set; }
+        
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
@@ -182,21 +186,6 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("Urls")) 
                 Urls = Convert.ToString(dr["Urls"]);
             
-            if (dr.ColumnIsNotNull("TotalViews"))
-                TotalViews = Convert.ToInt32(dr["TotalViews"]);
-
-            if (dr.ColumnIsNotNull("TotalReplies"))
-                TotalReplies = Convert.ToInt32(dr["TotalReplies"]);
-            
-            if (dr.ColumnIsNotNull("TotalParticipants"))
-                TotalParticipants = Convert.ToInt32(dr["TotalParticipants"]);
-
-            if (dr.ColumnIsNotNull("TotalReactions"))
-                TotalReactions = Convert.ToInt32(dr["TotalReactions"]);
-            
-            if (dr.ColumnIsNotNull("TotalFollows"))
-                TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
-            
             if (dr.ColumnIsNotNull("IsPrivate"))
                 IsPrivate = Convert.ToBoolean(dr["IsPrivate"]);
 
@@ -211,7 +200,47 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("IsClosed"))
                 IsClosed = Convert.ToBoolean(dr["IsClosed"]);
+            
+            if (dr.ColumnIsNotNull("TotalViews"))
+                TotalViews = Convert.ToInt32(dr["TotalViews"]);
 
+            if (dr.ColumnIsNotNull("TotalReplies"))
+                TotalReplies = Convert.ToInt32(dr["TotalReplies"]);
+            
+            if (dr.ColumnIsNotNull("TotalParticipants"))
+                TotalParticipants = Convert.ToInt32(dr["TotalParticipants"]);
+
+            if (dr.ColumnIsNotNull("TotalReactions"))
+                TotalReactions = Convert.ToInt32(dr["TotalReactions"]);
+            
+            if (dr.ColumnIsNotNull("TotalFollows"))
+                TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
+
+            if (dr.ColumnIsNotNull("TotalReports"))
+                TotalReports = Convert.ToInt32(dr["TotalReports"]);
+
+            if (dr.ColumnIsNotNull("TotalStars"))
+                TotalStars = Convert.ToInt32(dr["TotalStars"]);
+
+            if (dr.ColumnIsNotNull("DailyViews"))
+                DailyViews = Convert.ToDouble(dr["DailyViews"]);
+
+
+            if (dr.ColumnIsNotNull("DailyReplies"))
+                DailyReplies = Convert.ToDouble(dr["DailyReplies"]);
+
+            if (dr.ColumnIsNotNull("DailyReactions"))
+                DailyReactions = Convert.ToDouble(dr["DailyReactions"]);
+
+            if (dr.ColumnIsNotNull("DailyFollows"))
+                DailyFollows = Convert.ToDouble(dr["DailyFollows"]);
+
+            if (dr.ColumnIsNotNull("DailyReports"))
+                DailyReports = Convert.ToDouble(dr["DailyReports"]);
+            
+            if (dr.ColumnIsNotNull("DailyStars"))
+                DailyStars = Convert.ToDouble(dr["DailyStars"]);
+            
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 

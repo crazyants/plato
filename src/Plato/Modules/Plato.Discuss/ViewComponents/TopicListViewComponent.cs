@@ -87,6 +87,16 @@ namespace Plato.Discuss.ViewComponents
             },
             new SortColumn()
             {
+                Text = "Follows",
+                Value =  SortBy.Follows
+            },
+            new SortColumn()
+            {
+                Text = "Stars",
+                Value =  SortBy.Stars
+            },
+            new SortColumn()
+            {
                 Text = "Created",
                 Value = SortBy.Created
             },

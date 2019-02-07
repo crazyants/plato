@@ -77,7 +77,7 @@ $(function (win, doc, $) {
 
                 var $dialog = methods.getOrCreate($caller);
                 $dialog.modal("show");
-
+                
                 methods.load($caller);
 
                 // onShow event
@@ -118,6 +118,7 @@ $(function (win, doc, $) {
                             $body.html(response);
                         }
                     }
+                    
                     // onLoad event
                     if ($caller.data(dataKey).onLoad) {
                         $caller.data(dataKey).onLoad($caller, response.result);
@@ -491,7 +492,7 @@ $(function (win, doc, $) {
             linkSelector: ".list-group-item",
             enableCheckBoxes: true,
             onClick: null, // triggers when the linkSelector is clicked
-            onToggle: function ($tree, $toggler, e) {
+            onToggle: function ($tree, $toggle, e) {
                 // Prevent onClick raising when we toggle a node
                 e.preventDefault();
                 e.stopPropagation();

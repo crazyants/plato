@@ -9,6 +9,8 @@ namespace Plato.Stars.ViewModels
         
         public bool IsFollowing { get; set; }
 
+        public int TotalStars { get; set; }
+
         public IStarType StarType { get; set; }
 
     }

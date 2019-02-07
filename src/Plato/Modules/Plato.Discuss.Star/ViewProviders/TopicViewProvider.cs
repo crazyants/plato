@@ -71,6 +71,7 @@ namespace Plato.Discuss.Star.ViewProviders
                     model.StarType = followType;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
+                    model.TotalStars = entity.TotalStars;
                     return model;
                 }).Zone("tools").Order(int.MinValue)
             );

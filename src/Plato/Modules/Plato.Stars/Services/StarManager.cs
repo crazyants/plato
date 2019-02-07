@@ -12,18 +12,15 @@ namespace Plato.Stars.Services
     public class StarManager : IStarManager<Star>
     {
 
-        private readonly IStarStore<Star> _followStore;
-        private readonly IAliasCreator _aliasCreator;
+        private readonly IStarStore<Star> _starStore;
         private readonly IBroker _broker;
 
         public StarManager(
-            IAliasCreator aliasCreator,
             IBroker broker,
-            IStarStore<Star> followStore)
+            IStarStore<Star> starStore)
         {
             _broker = broker;
-            _followStore = followStore;
-            _aliasCreator = aliasCreator;
+            _starStore = starStore;
         }
 
         #region "Implementation"
@@ -60,26 +57,26 @@ namespace Plato.Stars.Services
                 throw new ArgumentNullException(nameof(model.Name));
             }
             
-            // Invoke FollowCreating subscriptions
-            foreach (var handler in _broker.Pub<Star>(this, "FollowCreating"))
+            // Invoke StarCreating subscriptions
+            foreach (var handler in _broker.Pub<Star>(this, "StarCreating"))
             {
                 model = await handler.Invoke(new Message<Star>(model, this));
             }
 
             var result = new CommandResult<Star>();
 
-            var newFollow = await _followStore.CreateAsync(model);
-            if (newFollow != null)
+            var newStar = await _starStore.CreateAsync(model);
+            if (newStar != null)
             {
 
-                // Invoke FollowCreated subscriptions
-                foreach (var handler in _broker.Pub<Star>(this, "FollowCreated"))
+                // Invoke StarCreated subscriptions
+                foreach (var handler in _broker.Pub<Star>(this, "StarCreated"))
                 {
-                    newFollow = await handler.Invoke(new Message<Star>(newFollow, this));
+                    newStar = await handler.Invoke(new Message<Star>(newStar, this));
                 }
 
                 // Return success
-                return result.Success(newFollow);
+                return result.Success(newStar);
 
             }
 
@@ -118,26 +115,26 @@ namespace Plato.Stars.Services
                 throw new ArgumentNullException(nameof(model.Name));
             }
             
-            // Invoke FollowUpdating subscriptions
-            foreach (var handler in _broker.Pub<Star>(this, "FollowUpdating"))
+            // Invoke StarUpdating subscriptions
+            foreach (var handler in _broker.Pub<Star>(this, "StarUpdating"))
             {
                 model = await handler.Invoke(new Message<Star>(model, this));
             }
 
             var result = new CommandResult<Star>();
 
-            var follow = await _followStore.UpdateAsync(model);
-            if (follow != null)
+            var updatedStar = await _starStore.UpdateAsync(model);
+            if (updatedStar != null)
             {
 
-                // Invoke FollowUpdated subscriptions
-                foreach (var handler in _broker.Pub<Star>(this, "FollowUpdated"))
+                // Invoke StarUpdated subscriptions
+                foreach (var handler in _broker.Pub<Star>(this, "StarUpdated"))
                 {
-                    follow = await handler.Invoke(new Message<Star>(follow, this));
+                    updatedStar = await handler.Invoke(new Message<Star>(updatedStar, this));
                 }
 
                 // Return success
-                return result.Success(follow);
+                return result.Success(updatedStar);
             }
 
             return result.Failed(new CommandError("An unknown error occurred whilst attempting to update a follow."));
@@ -153,19 +150,19 @@ namespace Plato.Stars.Services
                 throw new ArgumentNullException(nameof(model));
             }
             
-            // Invoke FollowDeleting subscriptions
-            foreach (var handler in _broker.Pub<Star>(this, "FollowDeleting"))
+            // Invoke StarDeleting subscriptions
+            foreach (var handler in _broker.Pub<Star>(this, "StarDeleting"))
             {
                 model = await handler.Invoke(new Message<Star>(model, this));
             }
             
             var result = new CommandResult<Star>();
 
-            if (await _followStore.DeleteAsync(model))
+            if (await _starStore.DeleteAsync(model))
             {
 
-                // Invoke FollowDeleted subscriptions
-                foreach (var handler in _broker.Pub<Star>(this, "FollowDeleted"))
+                // Invoke StarDeleted subscriptions
+                foreach (var handler in _broker.Pub<Star>(this, "StarDeleted"))
                 {
                     model = await handler.Invoke(new Message<Star>(model, this));
                 }

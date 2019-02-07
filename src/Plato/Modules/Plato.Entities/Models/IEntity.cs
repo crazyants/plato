@@ -57,6 +57,8 @@ namespace Plato.Entities.Models
 
         int TotalReports { get; set; }
 
+        int TotalStars { get; set; }
+        
         double DailyViews { get; set; }
 
         double DailyReplies { get; set; }
@@ -67,6 +69,8 @@ namespace Plato.Entities.Models
 
         double DailyReports { get; set; }
 
+        double DailyStars { get; set; }
+        
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }

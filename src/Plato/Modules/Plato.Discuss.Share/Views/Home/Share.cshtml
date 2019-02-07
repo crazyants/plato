@@ -5,7 +5,7 @@
 
 <div class="modal-header">
     <h6 class="modal-title">
-        Share
+        @T["Share"]
     </h6>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">
@@ -13,17 +13,20 @@
         </span>
     </button>
 </div>
+
 <div class="modal-body" style="max-height: 550px; overflow: auto;">
-    <input id="shareUrl" value="@Model.EntityUrl" type="text" class="form-control col-12"/>
+    
+    <input readonly value="@Model.EntityUrl" type="text" class="form-control col-12" />
+    
 </div>
 
 <script>
-    $(function(win, doc, $) {
-        
-     
-                $("#shareDialog").find("#shareUrl").select();
-                
-            
-      
+    $(function (win, doc, $) {
+        $(doc).ready(function () {
+            $("#shareDialog").on('shown.bs.modal',
+                function (e) {
+                    $(this).find("input").select();
+                });
+        });
     }(window, document, jQuery));
 </script>

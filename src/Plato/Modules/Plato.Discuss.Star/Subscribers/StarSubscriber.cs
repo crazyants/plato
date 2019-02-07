@@ -27,108 +27,119 @@ namespace Plato.Discuss.Star.Subscribers
         public void Subscribe()
         {
  
+            // Created
             _broker.Sub<Stars.Models.Star>(new MessageOptions()
             {
-                Key = "FollowCreated"
-            }, async message => await FollowCreated(message.What));
+                Key = "StarCreated"
+            }, async message => await StarCreated(message.What));
             
+            // Updated
             _broker.Sub<Stars.Models.Star>(new MessageOptions()
             {
-                Key = "FollowDeleted"
-            }, async message => await FollowDeleted(message.What));
+                Key = "StarDeleted"
+            }, async message => await StarDeleted(message.What));
 
         }
 
         public void Unsubscribe()
         {
-            // Add a reputation for new follows
+            // Created
             _broker.Unsub<Stars.Models.Star>(new MessageOptions()
             {
-                Key = "FollowCreated"
-            }, async message => await FollowCreated(message.What));
+                Key = "StarCreated"
+            }, async message => await StarCreated(message.What));
 
+            // Updated
             _broker.Unsub<Stars.Models.Star>(new MessageOptions()
             {
-                Key = "FollowDeleted"
-            }, async message => await FollowDeleted(message.What));
+                Key = "StarDeleted"
+            }, async message => await StarDeleted(message.What));
 
         }
 
-        private async Task<Stars.Models.Star> FollowCreated(Stars.Models.Star follow)
+        private async Task<Stars.Models.Star> StarCreated(Stars.Models.Star star)
         {
 
-            if (follow == null)
+            if (star == null)
             {
                 return null;
             }
 
-            // Is this a tag follow?
-            if (!follow.Name.Equals(StarTypes.Topic.Name, StringComparison.OrdinalIgnoreCase))
+            // Is this a topic star?
+            if (!star.Name.Equals(StarTypes.Topic.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return follow;
+                return star;
             }
             
-            // Ensure the topic we are following still exists
-            var existingTopic = await _entityStore.GetByIdAsync(follow.ThingId);
-            if (existingTopic == null)
+            // Ensure the topic we are starring exists
+            var topic = await _entityStore.GetByIdAsync(star.ThingId);
+            if (topic == null)
             {
-                return follow;
+                return star;
             }
 
-            // Update total follows
-            existingTopic.TotalFollows = existingTopic.TotalFollows + 1;
+            // Update total stars
+            topic.TotalStars = topic.TotalStars + 1;
 
             // Persist changes
-            var updatedTopic = await _entityStore.UpdateAsync(existingTopic);
+            var updatedTopic = await _entityStore.UpdateAsync(topic);
             if (updatedTopic != null)
             {
-                // Award reputation for following topic
-                //await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId);
+                // Award reputation to user starring the topic
+                await _reputationAwarder.AwardAsync(Reputations.StarTopic, star.CreatedUserId);
+
+                // Award reputation to topic author when there topic is starred
+                await _reputationAwarder.AwardAsync(Reputations.StarredTopic, topic.CreatedUserId);
+
             }
-            
-            return follow;
+
+            return star;
 
         }
 
-        private async Task<Stars.Models.Star> FollowDeleted(Stars.Models.Star follow)
+        private async Task<Stars.Models.Star> StarDeleted(Stars.Models.Star star)
         {
 
-            if (follow == null)
+            if (star == null)
             {
                 return null;
             }
 
-            // Is this a topic follow?
-            if (!follow.Name.Equals(StarTypes.Topic.Name, StringComparison.OrdinalIgnoreCase))
+            // Is this a topic star?
+            if (!star.Name.Equals(StarTypes.Topic.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return follow;
+                return star;
             }
 
-            // Ensure the topic we are following still exists
-            var existingTopic = await _entityStore.GetByIdAsync(follow.ThingId);
-            if (existingTopic == null)
+            // Ensure the topic we are starring exists
+            var topic = await _entityStore.GetByIdAsync(star.ThingId);
+            if (topic == null)
             {
-                return follow;
+                return star;
             }
 
-            // Update total follows
-            existingTopic.TotalFollows = existingTopic.TotalFollows - 1;
+            // Update total stars
+            topic.TotalStars = topic.TotalStars - 1;
         
             // Ensure we don't go negative
-            if (existingTopic.TotalFollows < 0)
+            if (topic.TotalStars < 0)
             {
-                existingTopic.TotalFollows = 0;
+                topic.TotalStars = 0;
             }
             
             // Persist changes
-            var updatedTopic = await _entityStore.UpdateAsync(existingTopic);
+            var updatedTopic = await _entityStore.UpdateAsync(topic);
             if (updatedTopic != null)
             {
-                // Revoke reputation for following tag
-                //await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId);
+                // Revoke reputation from user removing the topic star
+                await _reputationAwarder.RevokeAsync(Reputations.StarTopic, star.CreatedUserId);
+
+                // Revoke reputation from topic author for user removing there topic star
+                await _reputationAwarder.RevokeAsync(Reputations.StarredTopic, topic.CreatedUserId);
+
             }
             
-            return follow;
+            return star;
 
         }
 

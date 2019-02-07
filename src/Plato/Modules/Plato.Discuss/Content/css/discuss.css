@@ -9,17 +9,14 @@
 .topic-reply-left a.avatar-link { float: left; margin-top: 1.1rem; }
 .topic-reply-left  .avatar { width: 36px; height: 36px; }
 
+/* reply body arrow */
+
 .topic-reply-left + .topic-reply-body:before,
 .topic-reply-left + .topic-reply-body:after {
-
-  
-  
-    transform-origin: center center;
     content: "";
     display: inline-block;
     position: absolute;
     pointer-events: none;
- 
 }
 
 .topic-reply-left + .topic-reply-body:before { left: -18px; top: 24px; }
