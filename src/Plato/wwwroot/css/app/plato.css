@@ -51,32 +51,17 @@
 .markdown-body blockquote {
     display: block;
     font-size: 100%;
-    padding: 0.75rem;
-    border: 1px solid #D9DDE7; 
-    border-left: 4px solid #007bff;
-    background: #F6FaFF;
-    padding: 0.75rem;
+   
+    padding: 0.25rem 0.75rem;
     position: relative;
-}
-
-.markdown-body blockquote:before {
-    content: '\201C';
-    position: absolute;
-    top: -0.5rem;
-    left: 95%;
-    transform: translate(-50%, -50%);
-    width: 3rem;
-    height: 2rem;
-    font: 6em/1.08em 'PT Sans', sans-serif;
-    color: #ddd;
-    text-align: center;
+    border-left: .25em solid #dfe2e5;
+    color: #6a737d;
 }
 
 .markdown-body blockquote footer {
-    padding-top: 0.75rem;
     display: block;
     text-align: left;
-    border-top: 1px solid #D9DDE7; 
+    padding: 0 0 0.25rem 0;
     font-size: 0.875em;
     color: #888;
 }

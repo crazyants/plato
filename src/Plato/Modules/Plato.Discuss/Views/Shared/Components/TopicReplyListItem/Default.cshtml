@@ -14,7 +14,7 @@
 <div class="topic-reply-body">
     <card class="card card-body-flush">
         <card-title>
-            <div data-infinite-scroll-offset="@Model.Reply.Offset" class="float-left col-12">
+            <div data-infinite-scroll-offset="@Model.Reply.Offset">
                 <div class="card-title float-left">
                     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
                         @Model.Reply.CreatedBy.DisplayName

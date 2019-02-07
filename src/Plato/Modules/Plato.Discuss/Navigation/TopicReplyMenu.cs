@@ -84,7 +84,13 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditAnyReply)
                             .LocalNav())
                         .Add(T["Report"], int.MaxValue - 10, report => report
-                            .Action("Popular", "Home", "Plato.Discuss")
+                            .Action("Report", "Home", "Plato.Discuss")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-provide", "dialog"},
+                                {"data-dialog-modal-css", "modal fade"},
+                                {"data-dialog-css", "modal-dialog modal-lg"}
+                            })
                             .Permission(Permissions.ReportReplies)
                             .LocalNav()
                         )

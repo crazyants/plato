@@ -84,7 +84,9 @@ namespace Plato.Discuss.Navigation
                             .Action("Report", "Home", "Plato.Discuss")
                             .Attributes(new Dictionary<string, object>()
                             {
-                                {"data-toggle", "dialog"}
+                                {"data-provide", "dialog"},
+                                {"data-dialog-modal-css", "modal fade"},
+                                {"data-dialog-css", "modal-dialog modal-lg"}
                             })
                             .Permission(Permissions.ReportTopics)
                             .LocalNav()

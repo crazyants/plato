@@ -59,15 +59,15 @@ namespace Plato.Discuss.Share.Navigation
                             {
                                 ["id"] = reply.EntityId.ToString(),
                                 ["alias"] = topic.Alias,
-                                ["offset"] = reply.Offset.ToString()
+                                ["replyId"] = reply.Id.ToString()
                             })
                             .Attributes(new Dictionary<string, object>()
                             {
-                                {"data-toggle", "dialog"},
-                                {"data-dialog-modal-css", "modal"},
-                                {"data-dialog-css", "modal-dialog"}
+                                {"data-provide", "dialog"},
+                                {"data-dialog-modal-css", "modal fade"},
+                                {"data-dialog-css", "modal-dialog modal-lg"}
                             })
-                            //.Permission(Permissions.ManageRoles)
+                            .Permission(Permissions.ShareReplies)
                             .LocalNav()
                         ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );

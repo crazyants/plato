@@ -26,7 +26,7 @@ namespace Plato.Discuss.Share.Controllers
 
         // Share dialog
 
-        public async Task<IActionResult> Share(int id, int offset = 0)
+        public async Task<IActionResult> Share(int id, int replyId = 0)
         {
 
             // We always need an entity Id
@@ -43,19 +43,32 @@ namespace Plato.Discuss.Share.Controllers
             }
       
             // Build route values
-            var routeValues = new RouteValueDictionary()
-            {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Topic",
-                ["Id"] = entity.Id,
-                ["Alias"] = entity.Alias
-            };
+        
+            RouteValueDictionary routeValues = null;
 
             // Append offset
-            if (offset > 0)
+            if (replyId > 0)
             {
-                routeValues.Add("offset", offset);
+                routeValues = new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Discuss",
+                    ["Controller"] = "Home",
+                    ["Action"] = "Jump",
+                    ["Id"] = entity.Id,
+                    ["Alias"] = entity.Alias,
+                    ["ReplyId"] = replyId
+                };
+            }
+            else
+            {
+                routeValues = new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Discuss",
+                    ["Controller"] = "Home",
+                    ["Action"] = "Topic",
+                    ["Id"] = entity.Id,
+                    ["Alias"] = entity.Alias
+                };
             }
 
             // Build view model

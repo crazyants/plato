@@ -94,7 +94,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                 : ModeratorPermissions.PinTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsClosed ? T["Open"] : T["Close"], 2, edit => edit
+                        .Add(topic.IsClosed ? T["Unlock"] : T["Lock"], 2, edit => edit
                             .Action(topic.IsClosed ? "OpenTopic" : "CloseTopic", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {
@@ -106,7 +106,7 @@ namespace Plato.Discuss.Moderation.Navigation
                                 : ModeratorPermissions.CloseTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsPrivate ? T["Public"] : T["Private"], 2, edit => edit
+                        .Add(topic.IsPrivate ? T["Publish"] : T["Hide"], 2, edit => edit
                             .Action(topic.IsPrivate ? "ShowTopic" : "HideTopic", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {

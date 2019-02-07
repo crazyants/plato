@@ -9,20 +9,32 @@
 .topic-reply-left a.avatar-link { float: left; margin-top: 1.1rem; }
 .topic-reply-left  .avatar { width: 36px; height: 36px; }
 
-.topic-reply-left + .topic-reply-body:before {
+.topic-reply-left + .topic-reply-body:before,
+.topic-reply-left + .topic-reply-body:after {
+
+  
+  
+    transform-origin: center center;
     content: "";
+    display: inline-block;
     position: absolute;
-    top: 1.75rem;
-    left: 0;
-    margin-left: -6px;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-    display: block;
-    height: .75rem;
-    width: .75rem;
-    background-color: transparent;
-    border: 1px solid #ddd;
     pointer-events: none;
+ 
+}
+
+.topic-reply-left + .topic-reply-body:before { left: -18px; top: 24px; }
+.topic-reply-left + .topic-reply-body:after { left: -16px; top: 25px; }
+
+/* arrow border */
+.topic-reply-left + .topic-reply-body:before {
+    border: 10px solid transparent;
+    border-right-color: #ddd;
+}
+
+/* arrow background */
+.topic-reply-left + .topic-reply-body:after {
+    border: 9px solid transparent;
+    border-right-color: #f8f8f8;
 }
 
 /* disable avatar column for smaller devices */

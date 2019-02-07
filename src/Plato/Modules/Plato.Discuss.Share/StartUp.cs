@@ -6,6 +6,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Discuss.Share.Navigation;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Share
 {
@@ -25,7 +26,9 @@ namespace Plato.Discuss.Share
             services.AddScoped<INavigationProvider, TopicMenu>();
             services.AddScoped<INavigationProvider, TopicReplyMenu>();
 
-
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+            
         }
 
         public override void Configure(

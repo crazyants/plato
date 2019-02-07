@@ -34,10 +34,10 @@ namespace Plato.Discuss.Moderation
             new ModeratorPermission("UnpinTopics", "Unpin topics");
         
         public static readonly ModeratorPermission CloseTopics =
-            new ModeratorPermission("CloseTopics", "Close topics");
+            new ModeratorPermission("CloseTopics", "Lock topics");
 
         public static readonly ModeratorPermission OpenTopics =
-            new ModeratorPermission("OpenTopics", "Open topics");
+            new ModeratorPermission("OpenTopics", "Unlock topics");
 
         public static readonly ModeratorPermission HideTopics =
             new ModeratorPermission("HideTopics", "Hide topics");

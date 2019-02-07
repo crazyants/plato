@@ -90,8 +90,7 @@ $(function (win, doc, $) {
 
                 var $dialog = methods.getOrCreate($caller);
                 $dialog.modal("hide");
-
-
+                
                 // onHide event
                 if ($caller.data(dataKey).onShow) {
                     $caller.data(dataKey).onShow($caller);
@@ -5018,14 +5017,11 @@ $(function (win, doc, $) {
     // ----------------------------
 
     $.fn.platoUI = function(opts) {
-
-        /* dialog */
-        //this.find('[data-provide="dialog"]').dialog();
-
+        
         /* dialogSpy */
-        this.find('[data-toggle="dialog"]').dialogSpy();
+        this.find('[data-provide="dialog"]').dialogSpy();
 
-        /* Scoll to a specific element. 
+        /* Scroll to a specific element. */
         this.find('[data-provide="scroll"]').scrollTo();
 
         /* pagedList */
@@ -5090,16 +5086,17 @@ $(function (win, doc, $) {
 
     $(doc).ready(function () {
 
+        // Init plato UI
         $("body").platoUI();
 
         // Activate plug-ins used within infiniteScroll load
         $().infiniteScroll(function ($ele) {
 
-            /* Initialize bootstrap tooltips upon load */
+            /* Initialize bootstrap tooltips upon infiniteScroll load */
             win.$.Plato.UI.initToolTips($ele);
             
-            /* Initialize dialogSpy upon load */
-            $ele.find('[data-toggle="dialog"]').dialogSpy();
+            /* Initialize dialogSpy upon infiniteScroll load */
+            $ele.find('[data-provide="dialog"]').dialogSpy();
             
         }, "ready");
 

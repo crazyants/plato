@@ -74,7 +74,7 @@ namespace Plato.Discuss.Moderation.Navigation
                             .Resource(topic.CategoryId)
                             .Permission(ModeratorPermissions.EditReplies)
                             .LocalNav())
-                        .Add(reply.IsPrivate ? T["Public"] : T["Private"], 2, edit => edit
+                        .Add(reply.IsPrivate ? T["Publish"] : T["Hide"], 2, edit => edit
                             .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {

@@ -1,13 +1,2 @@
-﻿.star-off
-{
-    border: 0;
-    background-color: transparent;
-    color: #888;
-}
-
-.star-on
-{
-    border: 0;
-    background-color: transparent;
-    color: #C7B459;
-}
+﻿.star-off {}
+.star-on {}
