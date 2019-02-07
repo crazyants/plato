@@ -52,12 +52,12 @@ namespace Plato.Core
                 defaults: new { controller = "Home", action = "Error" }
             );
 
-            // Unauthorized page route
+            // Unauthorized / access denied page route
             routes.MapAreaRoute(
                 name: "UnauthorizedPage",
                 areaName: "Plato.Core",
-                template: "unauthorized",
-                defaults: new { controller = "Home", action = "Unauthorized" }
+                template: "denied",
+                defaults: new { controller = "Home", action = "Denied" }
             );
 
         }

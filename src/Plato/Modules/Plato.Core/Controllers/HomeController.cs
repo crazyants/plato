@@ -71,11 +71,11 @@ namespace Plato.Core.Controllers
         }
 
         // ---------------------
-        // Unauthorized
+        // Unauthorized / Access Denied
         // ---------------------
 
         [HttpGet, AllowAnonymous]
-        public Task<IActionResult> Unauthorized()
+        public Task<IActionResult> Denied()
         {
 
             // Build breadcrumb
@@ -84,15 +84,14 @@ namespace Plato.Core.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Unauthorized"]);
+                ).Add(S["Access Denied"]);
             });
             
             // Return view
             return Task.FromResult((IActionResult)View());
 
         }
-
-
+        
         // ---------------------
         // Error page
         // ---------------------

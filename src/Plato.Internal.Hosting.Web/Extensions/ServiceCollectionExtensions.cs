@@ -309,7 +309,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 switch (context.HttpContext.Response.StatusCode)
                 {
                     case 401:
-                        context.HttpContext.Response.Redirect("/unauthorized");
+                        context.HttpContext.Response.Redirect("/denied");
                         break;
                     case 500:
                         context.HttpContext.Response.Redirect("/error");

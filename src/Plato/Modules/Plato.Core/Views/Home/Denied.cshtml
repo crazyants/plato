@@ -7,12 +7,11 @@
     
 }
 
-<h4>@T["Unauthorized"]</h4>
-<span class="text-muted">@T[text]</span>
-
+<h4>@T["Access Denied"]</h4>
 @if (this.CurrentUser == null)  {
 <div class="row">
     <div class="col-md-6">
+        <span class="text-muted">@T[text]</span>
         <hr />
         @await DisplayAsync(new View("LoginForm", new
         {
@@ -26,7 +25,10 @@
 } 
 else 
 {
-    <p class="pt-3">
+    <p>
+        @T[text]
+    </p>
+    <p>
         <a class="btn btn-primary" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
             <i class="fal fa-home"></i>
             @T["Return Home"]

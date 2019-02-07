@@ -1,7 +1,6 @@
 ﻿@model LoginViewModel
 
-
-<form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+<form asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label class="col-form-label font-weight-bold">@T["Username"]</label>
@@ -23,9 +22,9 @@
         <button type="submit" role="button" class="btn btn-lg btn-primary btn-block">@T["Login"]</button>
     </div>
     <p>
-        <a asp-route-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Create a new account"]</a> @T["or"]
-        <a asp-route-action="ForgotPassword" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Forgot your password"]</a>
+        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Create a new account"]</a> @T["or"]
+        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="ForgotPassword" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Forgot your password"]</a>
         <br /><br />
-        @T["Before you can login you must first"] <a asp-route-action="ConfirmEmail" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["confirm your email address"]</a>
+        @T["Before you can login you must first"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="ConfirmEmail" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["confirm your email address"]</a>
     </p>
 </form>

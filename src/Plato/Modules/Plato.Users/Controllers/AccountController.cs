@@ -20,6 +20,7 @@ using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Services;
 
@@ -28,6 +29,8 @@ namespace Plato.Users.Controllers
 
     public class AccountController : Controller
     {
+
+        #region "Constructor"
 
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly UserManager<User> _userManager;
@@ -38,6 +41,7 @@ namespace Plato.Users.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
         private readonly IOptions<IdentityOptions> _identityOptions;
+        private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IHtmlLocalizer T { get; }
 
@@ -54,7 +58,8 @@ namespace Plato.Users.Controllers
             IContextFacade contextFacade,
             IEmailManager emailManager,
             IPlatoUserStore<User> platoUserStore,
-            IOptions<IdentityOptions> identityOptions)
+            IOptions<IdentityOptions> identityOptions,
+            IBreadCrumbManager breadCrumbManager)
         {
             _userManager = userManager;
             _signInManager = signInManage;
@@ -65,14 +70,22 @@ namespace Plato.Users.Controllers
             _emailManager = emailManager;
             _platoUserStore = platoUserStore;
             _identityOptions = identityOptions;
+            _breadCrumbManager = breadCrumbManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
 
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        #endregion
+
+        #region "Actions"
+
+        // -----------------
+        // Login
+        // -----------------
+
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
@@ -389,17 +402,23 @@ namespace Plato.Users.Controllers
             //var user = _httpContextAccessor.HttpContext.User;
             //var claims = user.Claims;
 
+            // ----------------------------------------------------------------
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Login"]);
+            });
+            
             ViewData["ReturnUrl"] = returnUrl;
             return View(new LoginViewModel());
 
         }
-
-
-
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
      
@@ -461,20 +480,29 @@ namespace Plato.Users.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        // -----------------
+        // Register
+        // -----------------
+
+        [HttpGet, AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
+       
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Register"]);
+            });
+
             ViewData["ReturnUrl"] = returnUrl;
             return View(new RegisterViewModel());
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(
-            RegisterViewModel model, 
-            string returnUrl = null)
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model,  string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
@@ -522,15 +550,27 @@ namespace Plato.Users.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
-
-        [HttpGet]
-        [AllowAnonymous]
+        
+        [HttpGet, AllowAnonymous]
         public IActionResult RegisterConfirmation()
         {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Register"]);
+            });
+
             return View();
         }
         
+        // -----------------
+        // Logoff
+        // -----------------
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
@@ -538,17 +578,28 @@ namespace Plato.Users.Controllers
             await _signInManager.SignOutAsync();
             return Redirect("~/");
         }
+        
+        // -----------------
+        // Confirm Email
+        // -----------------
 
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public IActionResult ConfirmEmail()
         {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Confirm Email"]);
+            });
+
             return View(new ConfirmEmailViewModel());
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmEmail(ConfirmEmailViewModel model)
         {
 
@@ -578,17 +629,38 @@ namespace Plato.Users.Controllers
             return RedirectToAction(nameof(ConfirmEmailConfirmation));
         }
         
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public IActionResult ConfirmEmailConfirmation()
         {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Confirm Email"]);
+            });
+
             return View();
         }
         
-        [HttpGet]
-        [AllowAnonymous]
+        // -----------------
+        // Activate Account
+        // -----------------
+
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> ActivateAccount(string code = null)
         {
+            
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Activate Account"]);
+            });
 
             var isValidConfirmationToken = false;
             if (!String.IsNullOrEmpty(code))
@@ -612,9 +684,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> ActivateAccount(ActivateAccountViewModel model)
         {
 
@@ -648,23 +718,44 @@ namespace Plato.Users.Controllers
             return await ActivateAccount(model.ConfirmationToken);
         }
         
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public IActionResult ActivateAccountConfirmation()
         {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Activate Account"]);
+            });
+            
             return View();
+
         }
         
-        [HttpGet]
-        [AllowAnonymous]
+        // -----------------
+        // Forgot Password
+        // -----------------
+
+        [HttpGet, AllowAnonymous]
         public IActionResult ForgotPassword()
         {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Forgot Password"]);
+            });
+            
             return View(new ForgotPasswordViewModel());
         }
         
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
           
@@ -699,18 +790,40 @@ namespace Plato.Users.Controllers
             
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
         {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Forgot Password"]);
+            });
+
             return View();
         }
+        
+        // -----------------
+        // Reset Password
+        // -----------------
 
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> ResetPassword(string code = null)
         {
 
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Reset Password"]);
+            });
+
+            // Check token
             var isValidResetToken = false;
             if (!String.IsNullOrEmpty(code))
             {
@@ -724,6 +837,7 @@ namespace Plato.Users.Controllers
                 }
             }
 
+            // Return view
             return View(new ResetPasswordViewModel
             {
                 IsValidResetToken = isValidResetToken,
@@ -731,9 +845,7 @@ namespace Plato.Users.Controllers
             });
         }
         
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
          
@@ -770,23 +882,37 @@ namespace Plato.Users.Controllers
             return await ResetPassword(model.ResetToken);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
         {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Reset Password"]);
+            });
+
             return View();
         }
         
-        [HttpGet]
-        [AllowAnonymous]
+        // -----------------
+        // Lock out
+        // -----------------
+
+        [HttpGet, AllowAnonymous]
         public IActionResult Lockout()
         {
             return View();
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        // -----------------
+        // Two factor
+        // -----------------
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null)
         {
             if (!ModelState.IsValid)
@@ -821,7 +947,11 @@ namespace Plato.Users.Controllers
                 return View();
             }
         }
-        
+
+        #endregion
+
+        #region "Private Methods"
+
         IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -913,7 +1043,9 @@ namespace Plato.Users.Controllers
             return result.Failed("An error occurred whilst attempting to send the email confirmation email.");
 
         }
-        
+
+        #endregion
+
     }
 
 }
