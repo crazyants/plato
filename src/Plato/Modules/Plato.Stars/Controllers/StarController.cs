@@ -75,9 +75,8 @@ namespace Plato.Stars.Controllers
             {
 
                 // Award reputation
-                
-                // Send notifications
-                
+
+              
                 return base.Result(result);
             }
 

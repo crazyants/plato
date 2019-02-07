@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewComponents

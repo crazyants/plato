@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Core.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Core.Controllers
 {
@@ -48,6 +44,11 @@ namespace Plato.Core.Controllers
 
         #region "Actions"
 
+        // ---------------------
+        // Homepage
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
         public Task<IActionResult> Index()
         {
             
@@ -61,7 +62,6 @@ namespace Plato.Core.Controllers
               
             });
             
-         
             // Build view
             //var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
 
@@ -69,9 +69,59 @@ namespace Plato.Core.Controllers
             return Task.FromResult((IActionResult)View());
             
         }
+
+        // ---------------------
+        // Unauthorized
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Unauthorized()
+        {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Unauthorized"]);
+            });
+            
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+
+        // ---------------------
+        // Error page
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Error()
+        {
+            
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Error"]);
+            });
+            
+            // Build model
+            var model = new ErrorViewModel() {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            // Return view
+            return Task.FromResult((IActionResult)View(model));
+            
+        }
         
         #endregion
-        
+
     }
     
 }

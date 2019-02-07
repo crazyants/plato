@@ -115,13 +115,24 @@ namespace Plato.Discuss.Navigation
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
-                            .Attributes(new Dictionary<string, object>()
-                            {
-                                {"data-provide", "postReply"},
-                                {"data-toggle", "tooltip"},
-                                {"title", T["Reply"]}
-                            })
-                        , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
+                            .Action("Login", "Account", "Plato.Users",
+                                new RouteValueDictionary()
+                                {
+                                    ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
+                                })
+                            .Attributes(user == null
+                                ? new Dictionary<string, object>()
+                                {
+                                    {"data-toggle", "tooltip"},
+                                    {"title", T["Login to Reply"]}
+                                }
+                                : new Dictionary<string, object>()
+                                {
+                                    {"data-provide", "postReply"},
+                                    {"data-toggle", "tooltip"},
+                                    {"title", T["Reply"]}
+                                })
+                        , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
                     );
 
             }

@@ -6,6 +6,13 @@ namespace Plato.Discuss
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        public static readonly Permission PostTopics =
+            new Permission("PostTopics", "Post topics");
+
+        public static readonly Permission PostReplies =
+            new Permission("PostReplies", "Post Replies");
+
+
         public static readonly Permission EditOwnTopics =
             new Permission("EditOwnTopics", "Edit own topics");
 
@@ -72,6 +79,8 @@ namespace Plato.Discuss
         {
             return new[]
             {
+                PostTopics,
+                PostReplies,
                 EditOwnTopics,
                 EditAnyTopic,
                 EditOwnReplies,
@@ -104,6 +113,8 @@ namespace Plato.Discuss
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
+                        PostTopics,
+                        PostReplies,
                         EditOwnTopics,
                         EditAnyTopic,
                         EditOwnReplies,
@@ -131,6 +142,8 @@ namespace Plato.Discuss
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
+                        PostTopics,
+                        PostReplies,
                         EditOwnTopics,
                         EditOwnReplies,
                         DeleteOwnTopics,
@@ -144,6 +157,8 @@ namespace Plato.Discuss
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
+                        PostTopics,
+                        PostReplies,
                         EditOwnTopics,
                         EditOwnReplies,
                         DeleteOwnTopics,

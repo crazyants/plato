@@ -1,0 +1,35 @@
+﻿@model UnauthorizedViewModel
+@{
+    ViewData["Title"] = "Unauthorized";
+    var text =  this.CurrentUser == null 
+        ? "You must be logged in to access the requested page."
+        : "Sorry but you don't have permission to access the requested page.";
+    
+}
+
+<h4>@T["Unauthorized"]</h4>
+<span class="text-muted">@T[text]</span>
+
+@if (this.CurrentUser == null)  {
+<div class="row">
+    <div class="col-md-6">
+        <hr />
+        @await DisplayAsync(new View("LoginForm", new
+        {
+            email = "",
+            username = "",
+            password = "",
+            rememberMe = false
+        }))
+    </div>
+</div>
+} 
+else 
+{
+    <p class="pt-3">
+        <a class="btn btn-primary" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+            <i class="fal fa-home"></i>
+            @T["Return Home"]
+        </a>
+    </p>
+}

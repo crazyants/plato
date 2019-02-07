@@ -203,6 +203,12 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Create(int channel)
         {
+
+            if (!await _authorizationService.AuthorizeAsync(this.User, channel, Permissions.PostTopics))
+            {
+                return Unauthorized();
+            }
+            
             var topic = new Topic();
             if (channel > 0)
             {
@@ -525,14 +531,25 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-
+            // Get topic we are editing
             var topic = await _entityStore.GetByIdAsync(id);
             if (topic == null)
             {
                 return NotFound();
             }
 
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
 
+            // Do we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+                user?.Id == topic.CreatedUserId
+                    ? Permissions.EditOwnTopics
+                    : Permissions.EditAnyTopic))
+            {
+                return Unauthorized();
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -634,18 +651,33 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> EditReply(int id)
         {
 
+            // Get reply we are editing
             var reply = await _entityReplyStore.GetByIdAsync(id);
             if (reply == null)
             {
                 return NotFound();
             }
 
+            // Get reply entity
             var topic = await _entityStore.GetByIdAsync(reply.EntityId);
             if (topic == null)
             {
                 return NotFound();
             }
+            
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
 
+            // Do we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+                user?.Id == reply.CreatedUserId
+                    ? Permissions.EditOwnReplies
+                    : Permissions.EditAnyReply))
+            {
+                return Unauthorized();
+            }
+
+            // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home

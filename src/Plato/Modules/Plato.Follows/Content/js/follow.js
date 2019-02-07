@@ -89,7 +89,6 @@ $(function (win, doc, $) {
 
                 // Update icon
                 $caller.find("i").removeClass("fa-bell-slash").addClass("fa-bell");
-
                 
                 // Hide tooltip
                 if ($caller.tooltip) {

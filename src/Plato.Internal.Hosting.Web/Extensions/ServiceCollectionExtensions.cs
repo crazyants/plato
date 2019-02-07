@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -290,18 +291,34 @@ namespace Plato.Internal.Hosting.Web.Extensions
             {
                 logger.AddConsole();
                 logger.AddDebug();
-                
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 ListAllRegisteredServices(app);
             }
             else
-            {
-                app.UseExceptionHandler("/Home/Error");
+            {   
+                app.UseExceptionHandler("/error");
             }
 
-            // add authentication middleware
+            // Add custom error handling for specific status codes
+            // UseStatusCodePages should be called before request
+            // handling middle wares in the pipeline (for example,
+            // Static File Middleware and MVC Middleware).
+            app.UseStatusCodePages(context =>
+            {
+                switch (context.HttpContext.Response.StatusCode)
+                {
+                    case 401:
+                        context.HttpContext.Response.Redirect("/unauthorized");
+                        break;
+                    case 500:
+                        context.HttpContext.Response.Redirect("/error");
+                        break;
+                }
+                return Task.CompletedTask;
+            });
 
+            // Add authentication middleware
             app.UseAuthentication();
             
             // Load static files
