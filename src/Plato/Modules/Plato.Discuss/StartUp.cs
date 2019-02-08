@@ -6,11 +6,12 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
 using Plato.Discuss.Assets;
+using Plato.Discuss.Badges;
 using Plato.Discuss.Models;
 using Plato.Discuss.Navigation;
-using Plato.Discuss.Reactions.Badges;
 using Plato.Discuss.Services;
 using Plato.Discuss.Subscribers;
+using Plato.Discuss.Tasks;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
@@ -25,6 +26,7 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -92,8 +94,14 @@ namespace Plato.Discuss
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
 
             // Badge providers
-            services.AddScoped<IBadgesProvider<Badge>, DiscussBadges>();
-            
+            services.AddScoped<IBadgesProvider<Badge>, TopicBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, ReplyBadges>();
+
+            // Background tasks
+            services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, ReplyBadgesAwarder>();
+
+
         }
 
         public override void Configure(

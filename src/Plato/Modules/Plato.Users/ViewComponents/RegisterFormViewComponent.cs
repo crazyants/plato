@@ -4,11 +4,11 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewComponents
 {
-    
-    public class LoginFormViewComponent : ViewComponent
+
+    public class RegisterFormViewComponent : ViewComponent
     {
 
-        public LoginFormViewComponent()
+        public RegisterFormViewComponent()
         {
 
         }
@@ -17,17 +17,18 @@ namespace Plato.Users.ViewComponents
             string email,
             string userName,
             string password,
-            bool rememberMe)
+            string confirmPassword)
         {
-            return Task.FromResult((IViewComponentResult)View(new LoginViewModel()
+            return Task.FromResult((IViewComponentResult)View(new RegisterViewModel()
             {
                 Email = email,
                 UserName = userName,
                 Password = password,
-                RememberMe = rememberMe
+                ConfirmPassword = confirmPassword
             }));
         }
 
     }
+
 
 }
