@@ -16,6 +16,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions;
@@ -46,6 +47,7 @@ namespace Plato.Users.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IViewProviderManager<LoginViewModel> _loginViewProvider;
         private readonly IViewProviderManager<RegisterViewModel> _registerViewProvider;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -65,7 +67,8 @@ namespace Plato.Users.Controllers
             IOptions<IdentityOptions> identityOptions,
             IBreadCrumbManager breadCrumbManager, 
             IViewProviderManager<LoginViewModel> loginViewProvider,
-            IViewProviderManager<RegisterViewModel> registerViewProvider)
+            IViewProviderManager<RegisterViewModel> registerViewProvider,
+            IAlerter alerter)
         {
             _userManager = userManager;
             _signInManager = signInManage;
@@ -79,6 +82,7 @@ namespace Plato.Users.Controllers
             _breadCrumbManager = breadCrumbManager;
             _loginViewProvider = loginViewProvider;
             _registerViewProvider = registerViewProvider;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -109,14 +113,15 @@ namespace Plato.Users.Controllers
                     .LocalNav()
                 ).Add(S["Login"]);
             });
-            
+
+            ViewData["ReturnUrl"] = returnUrl;
+
             // Build view
             var result = await _loginViewProvider.ProvideIndexAsync(new LoginViewModel(), this);
 
             // Return view
             return View(result);
-
-
+            
             //ViewData["ReturnUrl"] = returnUrl;
             //return View(new LoginViewModel());
 
@@ -126,62 +131,32 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
      
+            // Add return Url to viewData
              ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
 
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(
-                    model.UserName,
-                    model.Password,
-                    model.RememberMe,
-                    lockoutOnFailure: false);
-
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
-                }
-
-                if (result.RequiresTwoFactor)
-                {
-                    //return RedirectToAction(nameof(LoginWith2fa), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                    ModelState.AddModelError(string.Empty, "Account Required Two Factor Authentication.");
-                    return View(model);
-                }
-
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning(2, "User account locked out.");
-                    ModelState.AddModelError(string.Empty, "Account Locked out.");
-                    return View(model);
-                }
-                
-                // Inform the user the account requires confirmation
-                if (_identityOptions.Value.SignIn.RequireConfirmedEmail)
-                {
-                    var user = await _userManager.FindByNameAsync(model.UserName);
-                    if (user != null)
-                    {
-                        var validPassword = await _userManager.CheckPasswordAsync(user, model.Password);
-                        if (validPassword)
-                        {
-                            // Valid credentials entered
-                            ModelState.AddModelError(string.Empty, T["Before you can login you must first confirm your email address. Use the \"Confirm your email address\" link below to resend your account confirmation email."].Value);
-                            return View(model);
-                        }
-                    }
-                }
-
-                // Username & password not found
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
-                
+             // Build view
+             await _loginViewProvider.ProvideUpdateAsync(model, this);
+            
+             // Log errors
+             var hasErrors = false;
+             foreach (var modelState in ViewData.ModelState.Values)
+             {
+                 foreach (var error in modelState.Errors)
+                 {
+                     _alerter.Danger(T[error.ErrorMessage]);
+                     hasErrors = true;
+                 }
+             }
+             
+             // Did any view provider generate an error?
+             if (hasErrors)
+             {
+                return await Login(returnUrl);
             }
+          
+             // Authentication successfully redirect to return Url
+             return RedirectToLocal(returnUrl);
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
         }
 
         // -----------------
@@ -201,9 +176,9 @@ namespace Plato.Users.Controllers
                 ).Add(S["Register"]);
             });
 
+            // Add return Url to viewData
             ViewData["ReturnUrl"] = returnUrl;
-            //return View(new RegisterViewModel());
-
+        
             // Build view
             var result = await _registerViewProvider.ProvideIndexAsync(new RegisterViewModel(), this);
 

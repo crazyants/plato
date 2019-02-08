@@ -47,23 +47,26 @@ namespace Plato.Users.Google.reCAPTCHA3.ViewProviders
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(LoginViewModel viewModel, IViewProviderContext context)
         {
-            
+
             var recaptchaResponse = _request.Form["g-recaptcha-response"];
 
-            if (String.IsNullOrEmpty(recaptchaResponse) )
+            if (String.IsNullOrEmpty(recaptchaResponse))
             {
-                context.Updater.ModelState.AddModelError(string.Empty, "Sorry but we could not obtain a captcha response from Google");
+                context.Updater.ModelState.AddModelError(string.Empty, "You must indicate your not a robot!");
+                return await BuildIndexAsync(viewModel, context);
             }
 
-            _recaptchaService.Validate(recaptchaResponse);
-            _recaptchaService.OnComplete += (sender, response) =>
+            var response = _recaptchaService.Validate(recaptchaResponse);
+            if (!response.Succeeded)
             {
-
-            };
-
+                context.Controller.ModelState.AddModelError(string.Empty,
+                    "Sorry we could not validate you are human. Please try again!");
+            }
+     
             return await BuildIndexAsync(viewModel, context);
 
 
         }
+
     }
 }
