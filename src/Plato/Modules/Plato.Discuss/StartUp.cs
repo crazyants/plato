@@ -8,6 +8,7 @@ using Plato.Discuss.Handlers;
 using Plato.Discuss.Assets;
 using Plato.Discuss.Models;
 using Plato.Discuss.Navigation;
+using Plato.Discuss.Reactions.Badges;
 using Plato.Discuss.Services;
 using Plato.Discuss.Subscribers;
 using Plato.Discuss.ViewProviders;
@@ -19,7 +20,9 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
 
@@ -87,6 +90,9 @@ namespace Plato.Discuss
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Reply>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
+
+            // Badge providers
+            services.AddScoped<IBadgesProvider<Badge>, DiscussBadges>();
             
         }
 

@@ -42,17 +42,19 @@ namespace Plato.Users.Badges
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, VisitBadges>();
             services.AddScoped<IBadgesProvider<Badge>, ProfileBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, ReputationBadges>();
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, AutobiographerBadgeAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ConfirmedMemberBadgeAwarder>();
             services.AddScoped<IBackgroundTaskProvider, VisitBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, ReputationBadgesAwarder>();
 
-            // User profile view proviers
+            // User profile view providers
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
 
-            // Badge view proviers
+            // Badge view providers
             services.AddScoped<IViewProviderManager<Badge>, ViewProviderManager<Badge>>();
             services.AddScoped<IViewProvider<Badge>, BadgeViewProvider>();
 

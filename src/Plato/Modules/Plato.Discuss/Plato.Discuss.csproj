@@ -47,4 +47,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
+
 </Project>
