@@ -16,6 +16,8 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
@@ -27,7 +29,7 @@ using Plato.Users.Services;
 namespace Plato.Users.Controllers
 {
 
-    public class AccountController : Controller
+    public class AccountController : Controller, IUpdateModel
     {
 
         #region "Constructor"
@@ -42,6 +44,8 @@ namespace Plato.Users.Controllers
         private readonly IEmailManager _emailManager;
         private readonly IOptions<IdentityOptions> _identityOptions;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IViewProviderManager<LoginViewModel> _loginViewProvider;
+        private readonly IViewProviderManager<RegisterViewModel> _registerViewProvider;
 
         public IHtmlLocalizer T { get; }
 
@@ -59,7 +63,9 @@ namespace Plato.Users.Controllers
             IEmailManager emailManager,
             IPlatoUserStore<User> platoUserStore,
             IOptions<IdentityOptions> identityOptions,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager, 
+            IViewProviderManager<LoginViewModel> loginViewProvider,
+            IViewProviderManager<RegisterViewModel> registerViewProvider)
         {
             _userManager = userManager;
             _signInManager = signInManage;
@@ -71,6 +77,8 @@ namespace Plato.Users.Controllers
             _platoUserStore = platoUserStore;
             _identityOptions = identityOptions;
             _breadCrumbManager = breadCrumbManager;
+            _loginViewProvider = loginViewProvider;
+            _registerViewProvider = registerViewProvider;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -88,319 +96,8 @@ namespace Plato.Users.Controllers
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-
-            var sb = new StringBuilder();
-
-            sb.Append("<br>")
-                .Append("<strong>Email Resources</strong>")
-                .Append("<br>");
-
-            var resourceValues1 = await _localeStore.GetResourcesAsync<LocaleEmail>("en-US");
-            foreach (var resource in resourceValues1)
-            {
-                sb.Append("<strong>File Name:</strong> ")
-                    .Append(resource.Resource.Name)
-                    .Append("<BR>");
-                sb.Append("<strong>Location:</strong>")
-                    .Append(resource.Resource.Location)
-                    .Append("<BR>");
-
-                foreach (var template in resource.Values)
-                {
-                    sb.Append("To: ").Append(template.To);
-                    sb.Append("<BR>");
-                    sb.Append("Subject: ").Append(template.Subject);
-                    sb.Append("<BR>");
-                }
-            }
-
-            sb.Append("<br>")
-                .Append("-------------------------------------------------")
-                .Append("<br>");
-
-            sb.Append("<br>")
-                .Append("<strong>String Resources</strong>")
-                .Append("<br>");
-
-            var resourceValues = await _localeStore.GetResourcesAsync<LocaleString>("en-US");
-            foreach (var resourceValue in resourceValues)
-            {
-                sb.Append("<strong>File Name:</strong> ")
-                    .Append(resourceValue.Resource.Name)
-                    .Append("<BR>");
-                sb.Append("<strong>Location:</strong>")
-                    .Append(resourceValue.Resource.Location)
-                    .Append("<BR>");
-
-                foreach (var keyValue in resourceValue.Values)
-                {
-                    sb.Append("Key: ").Append(keyValue.Name);
-                    sb.Append("<BR>");
-                    sb.Append("Value: ").Append(keyValue.Value);
-                    sb.Append("<BR>");
-                }
-            }
-
-            sb.Append("<br>")
-                .Append("-------------------------------------------------")
-                .Append("<br>");
-
-
-            //sb.Append("<br>")
-            //    .Append("<strong>LocaleEmails Resources</strong>")
-            //    .Append("<br>");
-
-            //var resources2 = await _localeManager.GetResourcesAsync<LocaleEmails>("en-GB");
-            //foreach (var resource in resources2)
-            //{
-            //    foreach (var template in resource.Templates)
-            //    {
-            //        sb.Append("To: ").Append(template.To);
-            //        sb.Append("<BR>");
-            //        sb.Append("Subject: ").Append(template.Subject);
-            //        sb.Append("<BR>");
-            //    }
-            //}
-
-            //sb.Append("<br>")
-            //    .Append("-------------------------------------------------")
-            //    .Append("<br>");
-
-
-            //var currentLocale = await _localeManager.GetResourcesAsync("en-US");
-            //foreach (var resource in currentLocale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
-            //{
-
-            //    var emails = (LocaleEmails) resource.Model;
-
-            //    sb.Append("Templates: ").Append(emails.Templates.Count());
-            //    sb.Append("<BR>");
-
-            //    foreach (var email in emails.Templates)
-            //    {
-            //        sb.Append("To: ").Append(email.To);
-            //        sb.Append("<BR>");
-            //        sb.Append("Subject: ").Append(email.Subject);
-            //        sb.Append("<BR>");
-            //    }
-
-            //}
-
-            //sb.Append("<br>")
-            //    .Append("-------------------------------------------------")
-            //    .Append("<br>");
-
-
-            // -----------
-
-
-            //    var locales = await _localeManager.GetLocalesAsync();
-
-
-            //foreach (var locale in locales)
-            //{
-
-            //    sb
-            //        .Append("<strong>Name:</strong> ")
-            //        .Append(locale.Descriptor.Name)
-            //        .Append("<br>")
-            //        .Append("<strong>Path:</strong> ")
-            //        .Append(locale.Descriptor.Path);
-
-
-            //    foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
-            //    {
-
-            //        sb
-            //            .Append("<br>")
-            //            .Append("<strong>LocaleEmails</strong> ")
-            //            .Append("<br>");
-
-            //        var emails = (LocaleEmails) resource.Model;
-
-            //        sb.Append("Templates: ").Append(emails.Templates.Count());
-            //        sb.Append("<BR>");
-
-            //        foreach (var email in emails.Templates)
-            //        {
-            //            sb.Append("To: ").Append(email.To);
-            //            sb.Append("<BR>");
-            //            sb.Append("Subject: ").Append(email.Subject);
-            //            sb.Append("<BR>");
-            //        }
-
-            //    }
-
-            //    foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleStrings)))
-            //    {
-
-            //        sb
-            //            .Append("<br>")
-            //            .Append("<strong>LocaleStrings</strong> ")
-            //            .Append("<br>");
-
-            //        var kvps = (LocaleStrings)resource.Model;
-
-            //        sb.Append("Locales: ").Append(kvps.KeyValues.Count());
-            //        sb.Append("<BR>");
-
-            //        foreach (var kvp in kvps.KeyValues)
-            //        {
-            //            sb.Append("Key: ").Append(kvp.Key);
-            //            sb.Append("<BR>");
-            //            sb.Append("Value: ").Append(kvp.Value);
-            //            sb.Append("<BR>");
-            //        }
-
-
-            //    }
-
-
-            //    sb.Append("<hr>");
-
-            //}
-
-            //ViewData["Locales"] = sb.ToString();
-
-
-            var rnd = new Random();
             
-            var usernames = new string[]
-                {
-                    "John D",
-                    "Mark Dogs",
-                    "Reverbe ",
-                    "Johan",
-                    "jcarreira ",
-                    "tokyo2002 ",
-                    "ebevernage",
-                    "pwelter34",
-                    "frankmonroe",
-                    "tabs",
-                    "johangw",
-                    "raymak23",
-                    "beats",
-                    "Fred",
-                    "shan",
-                    "scottrudy",
-                    "thechop",
-                    "lyrog",
-                    "daniel.gehr",
-                    "Cedrik",
-                    "nathanchase",
-                    "MattPress",
-                    "gert.oelof",
-                    "abiniyam",
-                    "austinh ",
-                    "wasimf",
-                    "project.ufa",
-                    "einaradolfsen",
-                    "bstj",
-                    "samos",
-                    "jintoppy",
-                    "mhelin",
-                    "eric-914",
-                    "marcus85",
-                    "leopetes",
-                    "angaler1984",
-                    "PeterMull",
-                    "Stevie",
-                    "coder90",
-                    "sharah",
-                    "Stephen25",
-                    "P4a7ker",
-                    "Tipsy",
-                    "Ryan",
-                    "AndyLivey",
-                    "RobertW",
-                    "ArronG",
-                    "Aleena",
-                    "Annie",
-                    "Cassie",
-                    "Lachlan",
-                    "Summers",
-                    "Isla",
-                    "Greer55",
-                    "Carry",
-                    "Loulou",
-                    "MPatterson",
-                    "Padilla",
-                    "dejavu1987",
-                    "fjanon",
-                    "project.ufa",
-                    "vraptorche",
-                    "appleskin",
-                    "jintoppy",
-                    "mhelin",
-                    "NajiJzr",
-                    "eric-914",
-                    "cportermo",
-                    "jack4it",
-                    "sapocockas",
-                    "srowan",
-                    "atpw25",
-                    "ralmlopez",
-                    "PartyLineLimo",
-                    "murdocj",
-                    "unichan2018",
-                    "eliemichael",
-                    "typedef",
-                    "MattEllison",
-                    "JaiPundir",
-                    "zyberzero",
-                    "tim",
-                    "zakjan",
-                    "revered",
-                    "Breaker222",
-                    "xenod",
-                    "mortenbrudv",
-                    "cmd_shell",
-                    "mcrose",
-                    "cusdom",
-                    "recruit-jp",
-                    "house",
-                    "TedProsoft",
-                    "luison",
-                    "fritz",
-                    "eric",
-                    "rossang",
-                    "AlDennis",
-                    "Oxid2178",
-                    "CasiOo",
-                    "JimShelly",
-                    "cisco",
-                    "ToadRage",
-                    "ericedgar ",
-                    "bryan",
-                    "joshuaharderr",
-                    "mvehar",
-                    "arkadiusz-cholewa",
-                    "necipakif",
-                    "PeterEltgroth",
-                    "redone218",
-                    "iiiyx",
-                    "seanmill",
-                    "00ffx"
-                };
-
-        
-            foreach (var username in usernames)
-            {
-                var displayName = username;
-                var userNAme = username;
-                var email = username + "@example.com";
-                var password = "34Fdckf#343";
-
-                var result = await _platoUserManager.CreateAsync(new User()
-                {
-                    UserName = userNAme,
-                    Email = email,
-                    DisplayName = displayName
-                }, password);
-            }
-
-            //var user = _httpContextAccessor.HttpContext.User;
-            //var claims = user.Claims;
+            //await CreateSampleUsers();
 
             // ----------------------------------------------------------------
 
@@ -413,8 +110,15 @@ namespace Plato.Users.Controllers
                 ).Add(S["Login"]);
             });
             
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(new LoginViewModel());
+            // Build view
+            var result = await _loginViewProvider.ProvideIndexAsync(new LoginViewModel(), this);
+
+            // Return view
+            return View(result);
+
+
+            //ViewData["ReturnUrl"] = returnUrl;
+            //return View(new LoginViewModel());
 
         }
         
@@ -485,7 +189,7 @@ namespace Plato.Users.Controllers
         // -----------------
 
         [HttpGet, AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
+        public async Task<IActionResult> Register(string returnUrl = null)
         {
        
             // Build breadcrumb
@@ -498,7 +202,15 @@ namespace Plato.Users.Controllers
             });
 
             ViewData["ReturnUrl"] = returnUrl;
-            return View(new RegisterViewModel());
+            //return View(new RegisterViewModel());
+
+            // Build view
+            var result = await _registerViewProvider.ProvideIndexAsync(new RegisterViewModel(), this);
+
+            // Return view
+            return View(result);
+
+
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
@@ -951,6 +663,147 @@ namespace Plato.Users.Controllers
         #endregion
 
         #region "Private Methods"
+
+        async Task CreateSampleUsers()
+        {
+
+            var rnd = new Random();
+
+            var usernames = new string[]
+                {
+                    "John D",
+                    "Mark Dogs",
+                    "Reverbe ",
+                    "Johan",
+                    "jcarreira ",
+                    "tokyo2002 ",
+                    "ebevernage",
+                    "pwelter34",
+                    "frankmonroe",
+                    "tabs",
+                    "johangw",
+                    "raymak23",
+                    "beats",
+                    "Fred",
+                    "shan",
+                    "scottrudy",
+                    "thechop",
+                    "lyrog",
+                    "daniel.gehr",
+                    "Cedrik",
+                    "nathanchase",
+                    "MattPress",
+                    "gert.oelof",
+                    "abiniyam",
+                    "austinh ",
+                    "wasimf",
+                    "project.ufa",
+                    "einaradolfsen",
+                    "bstj",
+                    "samos",
+                    "jintoppy",
+                    "mhelin",
+                    "eric-914",
+                    "marcus85",
+                    "leopetes",
+                    "angaler1984",
+                    "PeterMull",
+                    "Stevie",
+                    "coder90",
+                    "sharah",
+                    "Stephen25",
+                    "P4a7ker",
+                    "Tipsy",
+                    "Ryan",
+                    "AndyLivey",
+                    "RobertW",
+                    "ArronG",
+                    "Aleena",
+                    "Annie",
+                    "Cassie",
+                    "Lachlan",
+                    "Summers",
+                    "Isla",
+                    "Greer55",
+                    "Carry",
+                    "Loulou",
+                    "MPatterson",
+                    "Padilla",
+                    "dejavu1987",
+                    "fjanon",
+                    "project.ufa",
+                    "vraptorche",
+                    "appleskin",
+                    "jintoppy",
+                    "mhelin",
+                    "NajiJzr",
+                    "eric-914",
+                    "cportermo",
+                    "jack4it",
+                    "sapocockas",
+                    "srowan",
+                    "atpw25",
+                    "ralmlopez",
+                    "PartyLineLimo",
+                    "murdocj",
+                    "unichan2018",
+                    "eliemichael",
+                    "typedef",
+                    "MattEllison",
+                    "JaiPundir",
+                    "zyberzero",
+                    "tim",
+                    "zakjan",
+                    "revered",
+                    "Breaker222",
+                    "xenod",
+                    "mortenbrudv",
+                    "cmd_shell",
+                    "mcrose",
+                    "cusdom",
+                    "recruit-jp",
+                    "house",
+                    "TedProsoft",
+                    "luison",
+                    "fritz",
+                    "eric",
+                    "rossang",
+                    "AlDennis",
+                    "Oxid2178",
+                    "CasiOo",
+                    "JimShelly",
+                    "cisco",
+                    "ToadRage",
+                    "ericedgar ",
+                    "bryan",
+                    "joshuaharderr",
+                    "mvehar",
+                    "arkadiusz-cholewa",
+                    "necipakif",
+                    "PeterEltgroth",
+                    "redone218",
+                    "iiiyx",
+                    "seanmill",
+                    "00ffx"
+                };
+
+
+            foreach (var username in usernames)
+            {
+                var displayName = username;
+                var userNAme = username;
+                var email = username + "@example.com";
+                var password = "34Fdckf#343";
+
+                var newUserResult = await _platoUserManager.CreateAsync(new User()
+                {
+                    UserName = userNAme,
+                    Email = email,
+                    DisplayName = displayName
+                }, password);
+            }
+
+        }
 
         IActionResult RedirectToLocal(string returnUrl)
         {

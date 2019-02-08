@@ -82,7 +82,7 @@ namespace Plato.Users
             // Context facade
             //services.TryAddScoped<IContextFacade, ContextFacade>();
             
-            // Configurate authentication cookie options
+            // Configure authentication cookie options
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = "plato_" + _cookieSuffix.ToLower();
@@ -107,11 +107,11 @@ namespace Plato.Users
             services.AddScoped<INavigationProvider, EditProfileMenu>();
             services.AddScoped<INavigationProvider, ProfileMenu>();
 
-            // Admin view proviers
+            // Admin view providers
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, AdminViewProvider>();
           
-            // Profile view proviers
+            // Profile view providers
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
 
@@ -126,6 +126,14 @@ namespace Plato.Users
             // Edit user settings view provider
             services.AddScoped<IViewProviderManager<EditSettingsViewModel>, ViewProviderManager<EditSettingsViewModel>>();
             services.AddScoped<IViewProvider<EditSettingsViewModel>, EditSettingsViewProvider>();
+
+            // Login view provider
+            services.AddScoped<IViewProviderManager<LoginViewModel>, ViewProviderManager<LoginViewModel>>();
+            services.AddScoped<IViewProvider<LoginViewModel>, LoginViewProvider>();
+
+            // Register view provider
+            services.AddScoped<IViewProviderManager<RegisterViewModel>, ViewProviderManager<RegisterViewModel>>();
+            services.AddScoped<IViewProvider<RegisterViewModel>, RegisterViewProvider>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

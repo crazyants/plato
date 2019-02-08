@@ -1,0 +1,15 @@
+Name:  Plato Users Google reCAPTCHA3
+Description: Adds Googles "I'm not a robot" reCAPTCHA to Plato's login & registration pages.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Users
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Users",
+		Version: "1.0.0"
+	Shared
+	}
+]
