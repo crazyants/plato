@@ -1,11 +1,13 @@
-﻿using Plato.Users.Google.reCAPTCHA3.Models;
+﻿using Plato.Users.reCAPTCHA2.Models;
 
-namespace Plato.Users.Google.reCAPTCHA3.Services
+namespace Plato.Users.reCAPTCHA2.Services
 {
 
     public interface IReCaptchaService
     {
+
         ReCaptchaResponse Validate(string encodedResponse);
+
     }
 
 }

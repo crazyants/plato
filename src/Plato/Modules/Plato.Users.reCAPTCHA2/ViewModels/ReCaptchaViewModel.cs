@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Users.Google.reCAPTCHA3.ViewModels
+namespace Plato.Users.reCAPTCHA2.ViewModels
 {
     public class ReCaptchaViewModel
     {

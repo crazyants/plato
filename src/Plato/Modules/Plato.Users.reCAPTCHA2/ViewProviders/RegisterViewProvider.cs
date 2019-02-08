@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Users.reCAPTCHA2.ViewModels;
 using Plato.Users.ViewModels;
-using Plato.Users.Google.reCAPTCHA3.ViewModels;
 
-namespace Plato.Users.Google.reCAPTCHA3.ViewProviders
+namespace Plato.Users.reCAPTCHA2.ViewProviders
 {
     public class RegisterViewProvider : BaseViewProvider<RegisterViewModel>
     {

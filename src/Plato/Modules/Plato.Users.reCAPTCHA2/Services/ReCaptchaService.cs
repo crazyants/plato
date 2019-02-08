@@ -1,9 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using System.Net;
-using Plato.Users.Google.reCAPTCHA3.Models;
+using Plato.Users.reCAPTCHA2.Models;
 
-namespace Plato.Users.Google.reCAPTCHA3.Services
+namespace Plato.Users.reCAPTCHA2.Services
 {
+
+
+    // https://developers.google.com/recaptcha/docs/display
 
     public class ReCaptchaService : IReCaptchaService
     {
@@ -16,12 +20,18 @@ namespace Plato.Users.Google.reCAPTCHA3.Services
         public ReCaptchaResponse Validate(string encodedResponse)
         {
 
-            var privateKey = "6LeY1w4UA44AAAAG3a1f-_0m5-B1jgyCPHVTAmfixj232";
+            var privateKey = "6LeKPZAUAAAAABBL3fkiJD6v6vnSK89TarniqVHm";
             var uri = $"https://www.google.com/recaptcha/api/siteverify?secret={privateKey}&response={encodedResponse}";
 
             var client = new WebClient();
             var response = client.DownloadString(uri);
-            return JsonConvert.DeserializeObject<ReCaptchaResponse>(response);
+            if (!String.IsNullOrEmpty(response))
+            {
+                return JsonConvert.DeserializeObject<ReCaptchaResponse>(response);
+            }
+
+            return null;
+
 
         }
         

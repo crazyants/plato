@@ -2,29 +2,28 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Plato.Users.Google.reCAPTCHA3.Models
+namespace Plato.Users.reCAPTCHA2.Models
 {
     public class ReCaptchaResponse
     {
 
         [JsonProperty("success")]
         public string Success { get; set; }
+        
+        [JsonProperty("error-codes")]
+        public IList<string> ErrorCodes { get; set; } = new List<string>();
 
         public bool Succeeded
         {
             get
             {
-                if (this.Success.Equals("success", StringComparison.OrdinalIgnoreCase))
+                if (this.Success.Equals("true", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
-
                 return false;
             }
         }
-
-        [JsonProperty("error-codes")]
-        public List<string> ErrorCodes { get; set; }
-
+        
     }
 }

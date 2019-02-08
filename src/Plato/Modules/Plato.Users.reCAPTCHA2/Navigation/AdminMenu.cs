@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Users.Google.reCAPTCHA3
+namespace Plato.Users.reCAPTCHA2.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -20,12 +20,14 @@ namespace Plato.Users.Google.reCAPTCHA3
                 return;
             }
 
-            //builder
-            //    .Add(T["Demo Page"], "1", 1, home => home
-            //        .Action("Index", "Admin", "Plato.Discussions")
-            //        //.Permission(Permissions.ManageRoles)
-            //        .LocalNav()
-            //    );
+            builder
+                .Add(T["Settings"], int.MaxValue, configuration => configuration
+                    .IconCss("fal fa-cog")
+                    .Add(T["reCAPTCHA2 Settings"], 2, installed => installed
+                        .Action("Index", "Admin", "Plato.Users.reCAPTCHA2")
+                        //.Permission(Permissions.ManageUsers)
+                        .LocalNav()
+                    ));
 
 
         }
