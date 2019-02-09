@@ -23,7 +23,7 @@ namespace Plato.Users.reCAPTCHA2.Navigation
             builder
                 .Add(T["Settings"], int.MaxValue, configuration => configuration
                     .IconCss("fal fa-cog")
-                    .Add(T["reCAPTCHA2 Settings"], 2, installed => installed
+                    .Add(T["reCAPTCHA2"], 2, installed => installed
                         .Action("Index", "Admin", "Plato.Users.reCAPTCHA2")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()

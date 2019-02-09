@@ -9,7 +9,6 @@ Dependencies:
 [
 	{
 		Id: "Plato.Users",
-		Version: "1.0.0"
-	Shared
+		Version: "1.0.0"	
 	}
 ]

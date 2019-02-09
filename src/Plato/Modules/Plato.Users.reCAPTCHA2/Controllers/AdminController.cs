@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Users.reCAPTCHA2.Models;
+using Plato.Users.reCAPTCHA2.Stores;
+using Plato.Users.reCAPTCHA2.ViewModels;
 
 namespace Plato.Users.reCAPTCHA2.Controllers
 {
@@ -18,6 +19,8 @@ namespace Plato.Users.reCAPTCHA2.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IViewProviderManager<ReCaptchaSettings> _viewProvider;
+        private readonly IReCaptchaSettingsStore<ReCaptchaSettings> _recaptchaSettingsStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -28,11 +31,15 @@ namespace Plato.Users.reCAPTCHA2.Controllers
             IStringLocalizer<AdminController> stringLocalizer,
             IAuthorizationService authorizationService,
             IAlerter alerter, 
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IViewProviderManager<ReCaptchaSettings> viewProvider,
+            IReCaptchaSettingsStore<ReCaptchaSettings> recaptchaSettingsStore)
         {
             _authorizationService = authorizationService;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
+            _viewProvider = viewProvider;
+            _recaptchaSettingsStore = recaptchaSettingsStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -50,18 +57,42 @@ namespace Plato.Users.reCAPTCHA2.Controllers
                 ).Add(S["Settings"], channels => channels
                     .Action("Index", "Admin", "Plato.Settings")
                     .LocalNav()
-                ).Add(S["Email Settings"]);
+                ).Add(S["reCAPTCHA2 Settings"]);
             });
 
-            //Build view
-            //var result = await _viewProvider.ProvideEditAsync(new EmailSettings(), this);
+            // Get reCAPTCHA settings
+            var settings = await _recaptchaSettingsStore.GetAsync();
+
+            // Build view
+            var result = await _viewProvider.ProvideEditAsync(new ReCaptchaSettings()
+            {
+                SiteKey = settings?.SiteKey ?? "",
+                Secret = settings?.Secret ?? ""
+            }, this);
 
             //Return view
-            //return View(result);
+            return View(result);
 
+        }
 
-            return View();
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Index))]
+        public async Task<IActionResult> IndexPost(ReCaptchaSettingsViewModel viewModel)
+        {
+
+            // Execute view providers ProvideUpdateAsync method
+            await _viewProvider.ProvideUpdateAsync(new ReCaptchaSettings()
+            {
+                SiteKey = viewModel.SiteKey,
+                Secret = viewModel.Secret
+            }, this);
+
+            // Add alert
+            _alerter.Success(T["Settings Updated Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
+
         }
 
     }
+
 }

@@ -60,7 +60,7 @@ namespace Plato.Email.Controllers
                 ).Add(S["Settings"], channels => channels
                     .Action("Index", "Admin", "Plato.Settings")
                     .LocalNav()
-                ).Add(S["Email Settings"]);
+                ).Add(S["Email"]);
             });
 
             // Build view
@@ -71,8 +71,7 @@ namespace Plato.Email.Controllers
             
         }
         
-        [HttpPost]
-        [ActionName(nameof(Index))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(EmailSettingsViewModel viewModel)
         {
       

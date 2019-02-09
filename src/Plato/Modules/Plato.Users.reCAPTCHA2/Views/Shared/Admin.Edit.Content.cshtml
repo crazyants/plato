@@ -16,11 +16,23 @@
                                 <strong>@T["Site Key"]</strong>
                                 <span asp-validation-for="@Model.SiteKey" class="text-danger"></span>
                                 <br />
-                                <span class="text-muted">@T["The public reCAPTCHA Site Key provided by Google."]</span>
+                                <span class="text-muted">@T["Your public reCAPTCHA2 site key."]</span>
                             </label>
                             <input asp-for="@Model.SiteKey" class="form-control" autofocus />
                         </div>
                     </fieldset>
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="DefaultFrom">
+                            <label asp-for="@Model.Secret">
+                                <strong>@T["Secret"]</strong>
+                                <span asp-validation-for="@Model.Secret" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["Your private reCAPTCHA2 secret."]</span>
+                            </label>
+                            <input asp-for="@Model.Secret" class="form-control" />
+                        </div>
+                    </fieldset>
+
                 </div>
             </div>
 

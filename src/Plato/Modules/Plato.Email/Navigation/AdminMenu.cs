@@ -23,7 +23,7 @@ namespace Plato.Email.Navigation
             builder
                 .Add(T["Settings"], int.MaxValue, configuration => configuration
                     .IconCss("fal fa-cog")
-                    .Add(T["Email Settings"], 2, installed => installed
+                    .Add(T["Email"], 2, installed => installed
                         .Action("Index", "Admin", "Plato.Email")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()

@@ -10,6 +10,7 @@ using Plato.Users.ViewModels;
 using Plato.Users.reCAPTCHA2.Models;
 using Plato.Users.reCAPTCHA2.Services;
 using Plato.Users.reCAPTCHA2.Navigation;
+using Plato.Users.reCAPTCHA2.Stores;
 using Plato.Users.reCAPTCHA2.ViewProviders;
 
 namespace Plato.Users.reCAPTCHA2
@@ -25,6 +26,8 @@ namespace Plato.Users.reCAPTCHA2
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            // Stores
+            services.AddScoped<IReCaptchaSettingsStore<ReCaptchaSettings>, ReCaptchaSettingsStore>();
 
             // Login view provider
             services.AddScoped<IViewProviderManager<LoginViewModel>, ViewProviderManager<LoginViewModel>>();
@@ -52,5 +55,7 @@ namespace Plato.Users.reCAPTCHA2
             IServiceProvider serviceProvider)
         {
         }
+
     }
+
 }
