@@ -32,7 +32,7 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
             IViewProviderContext context)
         {
 
-            // Get reCAPTCHA settings
+            // Get settings
             var settings = await _recaptchaSettingsStore.GetAsync();
 
             // Build view model
@@ -84,7 +84,7 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
                 if (response == null)
                 {
                     context.Controller.ModelState.AddModelError(string.Empty,
-                        "Sorry but a problem occurred communicating with the Google reCaptcha service. Please try again!");
+                        "A problem occurred communicating with the Google reCAPTCHA service. Please try again. If the problem persists please contact us.");
                     return await BuildIndexAsync(viewModel, context);
                 }
 
@@ -92,8 +92,15 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
                 if (response.ErrorCodes.Count > 0)
                 {
                     context.Controller.ModelState.AddModelError(string.Empty,
-                        "Sorry we could not validate you are human. Response from Google: " +
+                        "A configuration error with Google reCAPTCHA has occurred. Response from Google: " +
                         String.Join(Environment.NewLine, response.ErrorCodes.Select(c => c).ToArray())); 
+                    return await BuildIndexAsync(viewModel, context);
+                }
+
+                if (!response.Succeeded)
+                {
+                    context.Controller.ModelState.AddModelError(string.Empty,
+                        "The Google reCAPTCHA service could not validate you are a human. If this is incorrect please contact us.");
                     return await BuildIndexAsync(viewModel, context);
                 }
 

@@ -14,10 +14,10 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(RegisterViewModel viewModel, IViewProviderContext context)
         {
 
-            var recaptchaViewMddel = new ReCaptchaViewModel();
+            var recaptchaViewModel = new ReCaptchaViewModel();
 
             return Task.FromResult(Views(
-                 View<ReCaptchaViewModel>("Register.Google.reCAPTCHA2", model => recaptchaViewMddel).Zone("content").Order(int.MaxValue)
+                 View<ReCaptchaViewModel>("Register.Google.reCAPTCHA2", model => recaptchaViewModel).Zone("content").Order(int.MaxValue)
              ));
 
         }
