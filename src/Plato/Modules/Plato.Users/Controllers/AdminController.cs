@@ -1,10 +1,8 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Extensions;
@@ -16,7 +14,6 @@ using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Users.Services;
-using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users.Controllers
 {

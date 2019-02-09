@@ -46,7 +46,7 @@ namespace Plato.Users.Controllers
         private readonly IOptions<IdentityOptions> _identityOptions;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IViewProviderManager<LoginViewModel> _loginViewProvider;
-        private readonly IViewProviderManager<RegisterViewModel> _registerViewProvider;
+        private readonly IViewProviderManager<UserRegistration> _registerViewProvider;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -67,7 +67,7 @@ namespace Plato.Users.Controllers
             IOptions<IdentityOptions> identityOptions,
             IBreadCrumbManager breadCrumbManager, 
             IViewProviderManager<LoginViewModel> loginViewProvider,
-            IViewProviderManager<RegisterViewModel> registerViewProvider,
+            IViewProviderManager<UserRegistration> registerViewProvider,
             IAlerter alerter)
         {
             _userManager = userManager;
@@ -230,9 +230,20 @@ namespace Plato.Users.Controllers
 
             // Add return Url to viewData
             ViewData["ReturnUrl"] = returnUrl;
-        
+
+            var rnd = new Random();
+            var email = "email@EmAil" + rnd.Next(0, 10000) + rnd.Next(0, 10000) + ".com";
+
+            var model = new UserRegistration()
+            {
+                UserName = email,
+                Email = email,
+                Password = "H4s#32ffw1" + rnd.Next(0, 10000),
+                ConfirmPassword = "H4s#32ffw1" + rnd.Next(0, 10000)
+            };
+
             // Build view
-            var result = await _registerViewProvider.ProvideIndexAsync(new RegisterViewModel(), this);
+            var result = await _registerViewProvider.ProvideIndexAsync(model, this);
 
             // Return view
             return View(result);
@@ -243,53 +254,134 @@ namespace Plato.Users.Controllers
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model,  string returnUrl = null)
         {
+
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
+
+            // Build model for view providers
+            var registration = new UserRegistration()
             {
-                var user = new User
-                {
-                    UserName = model.UserName,
-                    Email = model.Email
-                };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                UserName = model.UserName,
+                Email = model.Email,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword
+            };
+
+            // Validate model state within all involved view providers
+            if (await _registerViewProvider.IsModelStateValid(registration, this))
+            {
+
+                // Get composed type from all involved view providers
+                var registerViewModel = await _registerViewProvider.GetComposedType(this);
+                
+                // Create the user from composed type
+                var result = await _userManager.CreateAsync(registerViewModel, registerViewModel.Password);
                 if (result.Succeeded)
                 {
                     
-                    // Send account activation email
-                    var emailConfirmationResult = await _platoUserManager.GetEmailConfirmationUserAsync(model.UserName);
-                    if (emailConfirmationResult.Succeeded)
-                    {
-                        var updatedUser = emailConfirmationResult.Response;
-                        if (updatedUser != null)
-                        {
-                            updatedUser.ConfirmationToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(updatedUser.ConfirmationToken));
-                            var emailResult = await SendEmailConfirmationTokenAsync(updatedUser);
-                            if (!emailResult.Succeeded)
-                            {
-                                foreach (var error in emailResult.Errors)
-                                {
-                                    ViewData.ModelState.AddModelError(string.Empty, error.Description);
-                                }
-                                return View(model);
-                            }
-                        }
-                    }
+                    // Indicate new flag to allow optional update
+                    // on first creation within any involved view provider
+                    registerViewModel.IsNewUser = true;
 
-                    // Redirect to confirmation page
+                    // Execute view providers update method
+                    // var viewResult = await _registerViewProvider.ProvideUpdateAsync(registerViewModel, this);
+                    await _registerViewProvider.ProvideUpdateAsync(registerViewModel, this);
+
+                    //// Did any involved view provider generate an error?
+                    //var hasErrors = false;
+                    //foreach (var modelState in ViewData.ModelState.Values)
+                    //{
+                    //    foreach (var error in modelState.Errors)
+                    //    {
+                    //        hasErrors = true;
+                    //    }
+                    //}
+
+                    //// Display errors from any involved view providers
+                    //if (hasErrors)
+                    //{
+                    //    return View(viewResult);
+                    //}
+
+                    // Success - Redirect to confirmation page
                     return RedirectToAction(nameof(RegisterConfirmation));
 
                 }
-
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    // Errors that may have occurred whilst creating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                //// Some when wrong, add errors to model state
+                //foreach (var error in result.Errors)
+                //{
+                //    ModelState.AddModelError(string.Empty, error.Description);
+                //}
+
+            }
+        
+
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
                 }
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            return await Register(returnUrl);
+
+
+            //if (ModelState.IsValid)
+            //{
+            //    var user = new User
+            //    {
+            //        UserName = model.UserName,
+            //        Email = model.Email
+            //    };
+            //    var result = await _userManager.CreateAsync(user, model.Password);
+            //    if (result.Succeeded)
+            //    {
+
+            //        // Send account activation email
+            //        var emailConfirmationResult = await _platoUserManager.GetEmailConfirmationUserAsync(model.UserName);
+            //        if (emailConfirmationResult.Succeeded)
+            //        {
+            //            var updatedUser = emailConfirmationResult.Response;
+            //            if (updatedUser != null)
+            //            {
+            //                updatedUser.ConfirmationToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(updatedUser.ConfirmationToken));
+            //                var emailResult = await SendEmailConfirmationTokenAsync(updatedUser);
+            //                if (!emailResult.Succeeded)
+            //                {
+            //                    foreach (var error in emailResult.Errors)
+            //                    {
+            //                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+            //                    }
+            //                    return View(model);
+            //                }
+            //            }
+            //        }
+
+            //        // Redirect to confirmation page
+            //        return RedirectToAction(nameof(RegisterConfirmation));
+
+            //    }
+
+            //    foreach (var error in result.Errors)
+            //    {
+            //        ModelState.AddModelError(string.Empty, error.Description);
+            //    }
+            //}
+
+            //// If we got this far, something failed, redisplay form
+            //return View(model);
         }
-        
+
         [HttpGet, AllowAnonymous]
         public IActionResult RegisterConfirmation()
         {

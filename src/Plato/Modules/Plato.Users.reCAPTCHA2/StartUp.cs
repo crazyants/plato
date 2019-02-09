@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Users.ViewModels;
 using Plato.Users.reCAPTCHA2.Models;
@@ -34,8 +35,8 @@ namespace Plato.Users.reCAPTCHA2
             services.AddScoped<IViewProvider<LoginViewModel>, LoginViewProvider>();
 
             // Register view provider
-            services.AddScoped<IViewProviderManager<RegisterViewModel>, ViewProviderManager<RegisterViewModel>>();
-            services.AddScoped<IViewProvider<RegisterViewModel>, RegisterViewProvider>();
+            services.AddScoped<IViewProviderManager<UserRegistration>, ViewProviderManager<UserRegistration>>();
+            services.AddScoped<IViewProvider<UserRegistration>, RegisterViewProvider>();
             
             // Admin view provider
             services.AddScoped<IViewProviderManager<ReCaptchaSettings>, ViewProviderManager<ReCaptchaSettings>>();

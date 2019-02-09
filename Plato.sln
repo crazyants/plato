@@ -223,6 +223,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Users.reCAPTCHA2", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.StopForumSpam", "src\Plato\Modules\Plato.StopForumSpam\Plato.StopForumSpam.csproj", "{68D9FA10-77A8-4577-B186-C524BF7FC9A6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Users.StopForumSpam", "src\Plato\Modules\Plato.Users.StopForumSpam\Plato.Users.StopForumSpam.csproj", "{01A39B6C-01B3-4F9C-A2CE-BAB83083D465}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -641,6 +643,10 @@ Global
 		{68D9FA10-77A8-4577-B186-C524BF7FC9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68D9FA10-77A8-4577-B186-C524BF7FC9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D9FA10-77A8-4577-B186-C524BF7FC9A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01A39B6C-01B3-4F9C-A2CE-BAB83083D465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01A39B6C-01B3-4F9C-A2CE-BAB83083D465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01A39B6C-01B3-4F9C-A2CE-BAB83083D465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01A39B6C-01B3-4F9C-A2CE-BAB83083D465}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -751,6 +757,7 @@ Global
 		{F8F4A969-D930-479A-B464-1D1DCE97159D} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{6358074B-C0B7-4A14-8165-AF1E81F15848} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{68D9FA10-77A8-4577-B186-C524BF7FC9A6} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{01A39B6C-01B3-4F9C-A2CE-BAB83083D465} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

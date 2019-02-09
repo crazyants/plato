@@ -54,7 +54,7 @@ namespace Plato.StopForumSpam.Services
             }
 
             var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = method.ToString();
+            request.Method = method.ToString().ToUpper();
             request.Timeout = Timeout * 1000;
             request.UserAgent = "Mozilla/5.0 (Windows NT x.y; rv:10.0) Gecko/20100101 Firefox/10.0";
 
