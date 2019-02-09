@@ -2,7 +2,7 @@ Name:  Plato Users reCAPTCHA2
 Description: Adds Googles "I'm not a robot" reCAPTCHA2 to both the login & registration pages within Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Users
+Category: Spam
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 

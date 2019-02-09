@@ -12,7 +12,7 @@ namespace Plato.Users.reCAPTCHA2.Models
         
         [JsonProperty("error-codes")]
         public IList<string> ErrorCodes { get; set; } = new List<string>();
-
+        
         public bool Succeeded
         {
             get
@@ -26,4 +26,5 @@ namespace Plato.Users.reCAPTCHA2.Models
         }
         
     }
+
 }

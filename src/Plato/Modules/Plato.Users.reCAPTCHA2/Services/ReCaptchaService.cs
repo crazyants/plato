@@ -7,16 +7,15 @@ using Plato.Users.reCAPTCHA2.Stores;
 
 namespace Plato.Users.reCAPTCHA2.Services
 {
-
-
+    
     // https://developers.google.com/recaptcha/docs/display
 
     public class ReCaptchaService : IReCaptchaService
     {
+
         private readonly IReCaptchaSettingsStore<ReCaptchaSettings> _recaptchaSettingsStore;
 
-        public ReCaptchaService(
-            IReCaptchaSettingsStore<ReCaptchaSettings> recaptchaSettingsStore)
+        public ReCaptchaService(IReCaptchaSettingsStore<ReCaptchaSettings> recaptchaSettingsStore)
         {
             _recaptchaSettingsStore = recaptchaSettingsStore;
         }
@@ -35,8 +34,7 @@ namespace Plato.Users.reCAPTCHA2.Services
             }
 
             return null;
-
-
+            
         }
         
     }

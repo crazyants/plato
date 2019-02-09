@@ -199,8 +199,6 @@ namespace Plato.Users.ViewProviders
                     user.PhotoUrl = await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
-                //user.EmailConfirmed = true;
-
                 // Update username and email
                 await _userManager.SetUserNameAsync(user, model.UserName);
 
@@ -212,9 +210,6 @@ namespace Plato.Users.ViewProviders
                     await _userManager.SetEmailAsync(user, model.Email);
                 }
                 
-                // As we are updating via the Admin CP set back to "true"
-                // await _userEmailStore.SetEmailConfirmedAsync(user, true, CancellationToken.None);
-
                 // Persist changes
                 var result = await _platoUserManager.UpdateAsync(user);
                 if (result.Succeeded)

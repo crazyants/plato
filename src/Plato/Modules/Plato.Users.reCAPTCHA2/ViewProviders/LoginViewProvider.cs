@@ -15,8 +15,8 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
     {
 
         private readonly IReCaptchaService _recaptchaService;
-        private readonly HttpRequest _request;
         private readonly IReCaptchaSettingsStore<ReCaptchaSettings> _recaptchaSettingsStore;
+        private readonly HttpRequest _request;
 
         public LoginViewProvider(
             IHttpContextAccessor httpContextAccessor,
@@ -65,12 +65,19 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
             IViewProviderContext context)
         {
 
+            //var model = new LoginViewModel();
+
+            //if (!await context.Updater.TryUpdateModelAsync(model))
+            //{
+            //    return await BuildEditAsync(viewModel, context);
+            //}
+
             if (await ValidateModelAsync(viewModel, context.Updater))
             {
 
                 var recaptchaResponse = _request.Form["g-recaptcha-response"];
 
-                // No valid posted - user has probably not ticked check box
+                // No value posted - user has probably not checked "I'm not a robot" checkbox
                 if (String.IsNullOrEmpty(recaptchaResponse))
                 {
                     context.Updater.ModelState.AddModelError(string.Empty, "You must indicate your not a robot!");
@@ -88,7 +95,7 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
                     return await BuildIndexAsync(viewModel, context);
                 }
 
-                // Response was invalid
+                // Configuration issues?
                 if (response.ErrorCodes.Count > 0)
                 {
                     context.Controller.ModelState.AddModelError(string.Empty,
@@ -97,10 +104,11 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
                     return await BuildIndexAsync(viewModel, context);
                 }
 
+                // Response failed
                 if (!response.Succeeded)
                 {
                     context.Controller.ModelState.AddModelError(string.Empty,
-                        "The Google reCAPTCHA service could not validate you are a human. If this is incorrect please contact us.");
+                        "The Google reCAPTCHA service could not validate you are human. If this is incorrect please contact us.");
                     return await BuildIndexAsync(viewModel, context);
                 }
 

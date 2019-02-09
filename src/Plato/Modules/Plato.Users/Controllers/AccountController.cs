@@ -134,28 +134,80 @@ namespace Plato.Users.Controllers
             // Add return Url to viewData
              ViewData["ReturnUrl"] = returnUrl;
 
-             // Build view
-             await _loginViewProvider.ProvideUpdateAsync(model, this);
+             // Execute any involved view providers
+             var viewResult = await _loginViewProvider.ProvideUpdateAsync(model, this);
             
-             // Log errors
+             // Determine if any errors occurred within involved view providers
              var hasErrors = false;
              foreach (var modelState in ViewData.ModelState.Values)
              {
                  foreach (var error in modelState.Errors)
                  {
-                     _alerter.Danger(T[error.ErrorMessage]);
                      hasErrors = true;
                  }
              }
              
-             // Did any view provider generate an error?
+             // Did any involved view provider generate an error?
              if (hasErrors)
              {
-                return await Login(returnUrl);
+                 return View(viewResult);
             }
-          
-             // Authentication successfully redirect to return Url
-             return RedirectToLocal(returnUrl);
+
+             // No errors from view providers, continue login
+             // This doesn't count login failures towards account lockout
+             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+             var result = await _signInManager.PasswordSignInAsync(
+                 model.UserName,
+                 model.Password,
+                 model.RememberMe,
+                 lockoutOnFailure: false);
+
+             // Success
+             if (result.Succeeded)
+             {
+                 _logger.LogInformation(1, "User logged in.");
+                 return RedirectToLocal(returnUrl);
+            }
+
+             // If we reach this point authentication failed for some reason
+
+             if (result.RequiresTwoFactor)
+             {
+                 //return RedirectToAction(nameof(LoginWith2fa), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                 ModelState.AddModelError(string.Empty,
+                     "Account Required Two Factor Authentication.");
+                 return View(viewResult);
+            }
+
+             if (result.IsLockedOut)
+             {
+                 _logger.LogWarning(2, "User account locked out.");
+                 ModelState.AddModelError(string.Empty, "Account Locked out.");
+                 return View(viewResult);
+            }
+
+             // Inform the user the account requires confirmation
+             if (_identityOptions.Value.SignIn.RequireConfirmedEmail)
+             {
+                 var user = await _userManager.FindByNameAsync(model.UserName);
+                 if (user != null)
+                 {
+                     var validPassword = await _userManager.CheckPasswordAsync(user, model.Password);
+                     if (validPassword)
+                     {
+                         // Valid credentials entered
+                         ModelState.AddModelError(string.Empty,
+                             "Before you can login you must first confirm your email address. Use the \"Confirm your email address\" link below to resend your account confirmation email.");
+                        return View(viewResult);
+                    }
+                 }
+             }
+
+             // Invalid login credentials
+             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+
+            return View(viewResult);
+
 
         }
 
