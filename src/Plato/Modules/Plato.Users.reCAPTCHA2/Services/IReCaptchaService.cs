@@ -1,4 +1,5 @@
-﻿using Plato.Users.reCAPTCHA2.Models;
+﻿using System.Threading.Tasks;
+using Plato.Users.reCAPTCHA2.Models;
 
 namespace Plato.Users.reCAPTCHA2.Services
 {
@@ -6,7 +7,7 @@ namespace Plato.Users.reCAPTCHA2.Services
     public interface IReCaptchaService
     {
 
-        ReCaptchaResponse Validate(string encodedResponse);
+        Task<ReCaptchaResponse> Validate(string encodedResponse);
 
     }
 

@@ -1,0 +1,15 @@
+﻿@model ReCaptchaViewModel
+
+@if (!string.IsNullOrEmpty(Model.SiteKey) && !string.IsNullOrEmpty(Model.Secret))
+{
+    <div class="form-group">
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <div class="g-recaptcha" data-sitekey="@Model.SiteKey"></div>
+    </div>
+}
+else
+{
+    <div class="alert alert-secondary">
+        @T["Google reCAPTCHA has not been configured. Please visit the admin dashboard and configure the reCAPTCHA2 settings under \"Settings\"."]
+    </div>
+}

@@ -1,7 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
 using System.Net;
+using System.Threading.Tasks;
 using Plato.Users.reCAPTCHA2.Models;
+using Plato.Users.reCAPTCHA2.Stores;
 
 namespace Plato.Users.reCAPTCHA2.Services
 {
@@ -11,17 +13,19 @@ namespace Plato.Users.reCAPTCHA2.Services
 
     public class ReCaptchaService : IReCaptchaService
     {
-        
-        public ReCaptchaService()
-        {
+        private readonly IReCaptchaSettingsStore<ReCaptchaSettings> _recaptchaSettingsStore;
 
+        public ReCaptchaService(
+            IReCaptchaSettingsStore<ReCaptchaSettings> recaptchaSettingsStore)
+        {
+            _recaptchaSettingsStore = recaptchaSettingsStore;
         }
 
-        public ReCaptchaResponse Validate(string encodedResponse)
+        public async Task<ReCaptchaResponse> Validate(string encodedResponse)
         {
-
-            var privateKey = "6LeKPZAUAAAAABBL3fkiJD6v6vnSK89TarniqVHm";
-            var uri = $"https://www.google.com/recaptcha/api/siteverify?secret={privateKey}&response={encodedResponse}";
+            var settings = await _recaptchaSettingsStore.GetAsync();
+            var secret = settings?.Secret ?? "";
+            var uri = $"https://www.google.com/recaptcha/api/siteverify?secret={secret}&response={encodedResponse}";
 
             var client = new WebClient();
             var response = client.DownloadString(uri);

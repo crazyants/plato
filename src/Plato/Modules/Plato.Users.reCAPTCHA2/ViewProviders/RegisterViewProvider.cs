@@ -17,7 +17,7 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
             var recaptchaViewMddel = new ReCaptchaViewModel();
 
             return Task.FromResult(Views(
-                 View<ReCaptchaViewModel>("Register.Google.reCAPTCHA3", model => recaptchaViewMddel).Zone("content").Order(int.MaxValue)
+                 View<ReCaptchaViewModel>("Register.Google.reCAPTCHA2", model => recaptchaViewMddel).Zone("content").Order(int.MaxValue)
              ));
 
         }
