@@ -10,7 +10,6 @@ using Plato.Users.reCAPTCHA2.Models;
 using Plato.Users.reCAPTCHA2.Services;
 using Plato.Users.reCAPTCHA2.Stores;
 using Plato.Users.reCAPTCHA2.ViewModels;
-using Plato.Users.ViewModels;
 
 namespace Plato.Users.reCAPTCHA2.ViewProviders
 {
@@ -101,15 +100,9 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
                     "The Google reCAPTCHA service could not validate you are human. If this is incorrect please contact us.");
                 return false;
             }
-            
-            // Validate model
-            return await updater.TryUpdateModelAsync(new RegisterViewModel
-            {
-                UserName = registration.UserName,
-                Email = registration.Email,
-                Password = registration.Password,
-                ConfirmPassword = registration.ConfirmPassword
-            });
+
+
+            return true;
         }
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(UserRegistration viewModel, IViewProviderContext context)

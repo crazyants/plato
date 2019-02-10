@@ -2,16 +2,17 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 using Plato.Users.reCAPTCHA2.Models;
 using Plato.Users.reCAPTCHA2.Services;
 using Plato.Users.reCAPTCHA2.Stores;
 using Plato.Users.reCAPTCHA2.ViewModels;
-using Plato.Users.ViewModels;
 
 namespace Plato.Users.reCAPTCHA2.ViewProviders
 {
-    public class LoginViewProvider : BaseViewProvider<LoginViewModel>
+    public class LoginViewProvider : BaseViewProvider<UserLogin>
     {
 
         private readonly IReCaptchaService _recaptchaService;
@@ -28,7 +29,7 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
             _request = httpContextAccessor.HttpContext.Request;
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(LoginViewModel viewModel,
+        public override async Task<IViewProviderResult> BuildIndexAsync(UserLogin viewModel,
             IViewProviderContext context)
         {
 
@@ -50,72 +51,67 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(LoginViewModel viewModel,
+        public override Task<IViewProviderResult> BuildDisplayAsync(UserLogin viewModel,
             IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(LoginViewModel viewModel, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(UserLogin viewModel, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(LoginViewModel viewModel,
-            IViewProviderContext context)
+        public override async Task<bool> ValidateModelAsync(UserLogin userLogin, IUpdateModel updater)
         {
 
-            //var model = new LoginViewModel();
+            var recaptchaResponse = _request.Form["g-recaptcha-response"];
 
-            //if (!await context.Updater.TryUpdateModelAsync(model))
-            //{
-            //    return await BuildEditAsync(viewModel, context);
-            //}
-
-            if (await ValidateModelAsync(viewModel, context.Updater))
+            // No valid posted - user has probably not ticked check box
+            if (String.IsNullOrEmpty(recaptchaResponse))
             {
-
-                var recaptchaResponse = _request.Form["g-recaptcha-response"];
-
-                // No value posted - user has probably not checked "I'm not a robot" checkbox
-                if (String.IsNullOrEmpty(recaptchaResponse))
-                {
-                    context.Updater.ModelState.AddModelError(string.Empty, "You must indicate your not a robot!");
-                    return await BuildIndexAsync(viewModel, context);
-                }
-
-                // Validate posted recaptcha response
-                var response = await _recaptchaService.Validate(recaptchaResponse);
-
-                // No response received
-                if (response == null)
-                {
-                    context.Controller.ModelState.AddModelError(string.Empty,
-                        "A problem occurred communicating with the Google reCAPTCHA service. Please try again. If the problem persists please contact us.");
-                    return await BuildIndexAsync(viewModel, context);
-                }
-
-                // Configuration issues?
-                if (response.ErrorCodes.Count > 0)
-                {
-                    context.Controller.ModelState.AddModelError(string.Empty,
-                        "A configuration error with Google reCAPTCHA has occurred. Response from Google: " +
-                        String.Join(Environment.NewLine, response.ErrorCodes.Select(c => c).ToArray())); 
-                    return await BuildIndexAsync(viewModel, context);
-                }
-
-                // Response failed
-                if (!response.Succeeded)
-                {
-                    context.Controller.ModelState.AddModelError(string.Empty,
-                        "The Google reCAPTCHA service could not validate you are human. If this is incorrect please contact us.");
-                    return await BuildIndexAsync(viewModel, context);
-                }
-
+                updater.ModelState.AddModelError(string.Empty, "You must indicate your not a robot!");
+                return false;
             }
-            
-            return await BuildIndexAsync(viewModel, context);
 
+            // Validate posted recaptcha response
+            var response = await _recaptchaService.Validate(recaptchaResponse);
+
+            // No response received
+            if (response == null)
+            {
+                updater.ModelState.AddModelError(string.Empty,
+                    "A problem occurred communicating with the Google reCAPTCHA service. Please try again. If the problem persists please contact us.");
+                return false;
+            }
+
+            // Configuration issues?
+            if (response.ErrorCodes.Count > 0)
+            {
+                updater.ModelState.AddModelError(string.Empty,
+                    "A configuration error with Google reCAPTCHA has occurred. Response from Google: " +
+                    String.Join(Environment.NewLine, response.ErrorCodes.Select(c => c).ToArray()));
+                return false;
+            }
+
+            // Response failed
+            if (!response.Succeeded)
+            {
+                updater.ModelState.AddModelError(string.Empty,
+                    "The Google reCAPTCHA service could not validate you are human. If this is incorrect please contact us.");
+                return false;
+            }
+
+
+            return true;
+
+        }
+
+
+        public override async Task<IViewProviderResult> BuildUpdateAsync(UserLogin viewModel,
+            IViewProviderContext context)
+        {
+            return await BuildIndexAsync(viewModel, context);
         }
         
     }

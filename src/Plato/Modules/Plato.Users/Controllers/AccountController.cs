@@ -45,7 +45,7 @@ namespace Plato.Users.Controllers
         private readonly IEmailManager _emailManager;
         private readonly IOptions<IdentityOptions> _identityOptions;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IViewProviderManager<LoginViewModel> _loginViewProvider;
+        private readonly IViewProviderManager<UserLogin> _loginViewProvider;
         private readonly IViewProviderManager<UserRegistration> _registerViewProvider;
         private readonly IAlerter _alerter;
 
@@ -66,7 +66,7 @@ namespace Plato.Users.Controllers
             IPlatoUserStore<User> platoUserStore,
             IOptions<IdentityOptions> identityOptions,
             IBreadCrumbManager breadCrumbManager, 
-            IViewProviderManager<LoginViewModel> loginViewProvider,
+            IViewProviderManager<UserLogin> loginViewProvider,
             IViewProviderManager<UserRegistration> registerViewProvider,
             IAlerter alerter)
         {
@@ -114,100 +114,129 @@ namespace Plato.Users.Controllers
                 ).Add(S["Login"]);
             });
 
+            // Persist returnUrl
             ViewData["ReturnUrl"] = returnUrl;
 
             // Build view
-            var result = await _loginViewProvider.ProvideIndexAsync(new LoginViewModel(), this);
+            var result = await _loginViewProvider.ProvideIndexAsync(new UserLogin(), this);
 
             // Return view
             return View(result);
-            
-            //ViewData["ReturnUrl"] = returnUrl;
-            //return View(new LoginViewModel());
-
+          
         }
-        
+
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-     
-            // Add return Url to viewData
-             ViewData["ReturnUrl"] = returnUrl;
 
-             // Execute any involved view providers
-             var viewResult = await _loginViewProvider.ProvideUpdateAsync(model, this);
-            
-             // Determine if any errors occurred within involved view providers
-             var hasErrors = false;
-             foreach (var modelState in ViewData.ModelState.Values)
-             {
-                 foreach (var error in modelState.Errors)
-                 {
-                     hasErrors = true;
-                 }
-             }
-             
-             // Did any involved view provider generate an error?
-             if (hasErrors)
-             {
-                 return View(viewResult);
-            }
+            // Persist returnUrl
+            ViewData["ReturnUrl"] = returnUrl;
 
-             // No errors from view providers, continue login
-             // This doesn't count login failures towards account lockout
-             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-             var result = await _signInManager.PasswordSignInAsync(
-                 model.UserName,
-                 model.Password,
-                 model.RememberMe,
-                 lockoutOnFailure: false);
+            // Build view provider model
+            var userLogin = new UserLogin()
+            {
+                UserName = model.UserName,
+                Password = model.Password,
+                RememberMe = model.RememberMe
+            };
 
-             // Success
-             if (result.Succeeded)
-             {
-                 _logger.LogInformation(1, "User logged in.");
-                 return RedirectToLocal(returnUrl);
-            }
+            // Validate model state within all involved view providers
+            if (await _loginViewProvider.IsModelStateValid(userLogin, this))
+            {
 
-             // If we reach this point authentication failed for some reason
+                // Get composed type from all involved view providers
+                var loginViewModel = await _loginViewProvider.GetComposedType(this);
 
-             if (result.RequiresTwoFactor)
-             {
-                 //return RedirectToAction(nameof(LoginWith2fa), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                 ModelState.AddModelError(string.Empty,
-                     "Account Required Two Factor Authentication.");
-                 return View(viewResult);
-            }
+                // Authenticate composed type
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(
+                    loginViewModel.UserName,
+                    loginViewModel.Password,
+                    loginViewModel.RememberMe,
+                    lockoutOnFailure: false);
 
-             if (result.IsLockedOut)
-             {
-                 _logger.LogWarning(2, "User account locked out.");
-                 ModelState.AddModelError(string.Empty, "Account Locked out.");
-                 return View(viewResult);
-            }
+                // Success
+                if (result.Succeeded)
+                {
 
-             // Inform the user the account requires confirmation
-             if (_identityOptions.Value.SignIn.RequireConfirmedEmail)
-             {
-                 var user = await _userManager.FindByNameAsync(model.UserName);
-                 if (user != null)
-                 {
-                     var validPassword = await _userManager.CheckPasswordAsync(user, model.Password);
-                     if (validPassword)
-                     {
-                         // Valid credentials entered
-                         ModelState.AddModelError(string.Empty,
-                             "Before you can login you must first confirm your email address. Use the \"Confirm your email address\" link below to resend your account confirmation email.");
-                        return View(viewResult);
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation(1, "User logged in.");
                     }
-                 }
-             }
+                    
+                    // Execute view providers update method
+                    var viewResult = await _loginViewProvider.ProvideUpdateAsync(loginViewModel, this);
 
-             // Invalid login credentials
-             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    // No further errors have occurred perform final redirect
+                    if (ModelState.ErrorCount == 0)
+                    {
+                        // Redirect to returnUrl
+                        return RedirectToLocal(returnUrl);
+                    }
 
-            return View(viewResult);
+                    // Display errors from Update method
+                    return View(viewResult);
+                    
+                }
 
+                if (result.RequiresTwoFactor)
+                {
+                    //return RedirectToAction(nameof(LoginWith2fa), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    if (ModelState.ErrorCount == 0)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                            "Account requires two factor authentication.");
+                    }
+                }
+
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning(2, "User account locked out.");
+                    if (ModelState.ErrorCount == 0)
+                    {
+                        ModelState.AddModelError(string.Empty, "Account locked out.");
+                    }
+                }
+
+                // Inform the user the account requires confirmation
+                if (_identityOptions.Value.SignIn.RequireConfirmedEmail)
+                {
+                    var user = await _userManager.FindByNameAsync(model.UserName);
+                    if (user != null)
+                    {
+                        var validPassword = await _userManager.CheckPasswordAsync(user, model.Password);
+                        if (validPassword)
+                        {
+                            // Valid credentials entered
+                            if (ModelState.ErrorCount == 0)
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                    "Before you can login you must first confirm your email address. Use the \"Confirm your email address\" link below to resend your account confirmation email.");
+                            }
+                        }
+                    }
+                }
+
+                // Invalid login credentials
+                if (ModelState.ErrorCount == 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                }
+
+            }
+
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await Login(returnUrl);
 
         }
 
@@ -234,6 +263,7 @@ namespace Plato.Users.Controllers
             var rnd = new Random();
             var email = "email@EmAil" + rnd.Next(0, 10000) + rnd.Next(0, 10000) + ".com";
 
+            // TODO remove
             var model = new UserRegistration()
             {
                 UserName = email,
@@ -248,13 +278,13 @@ namespace Plato.Users.Controllers
             // Return view
             return View(result);
 
-
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model,  string returnUrl = null)
         {
 
+            // Persist returnUrl
             ViewData["ReturnUrl"] = returnUrl;
 
             // Build model for view providers
@@ -285,44 +315,22 @@ namespace Plato.Users.Controllers
                     // Execute view providers update method
                     // var viewResult = await _registerViewProvider.ProvideUpdateAsync(registerViewModel, this);
                     await _registerViewProvider.ProvideUpdateAsync(registerViewModel, this);
-
-                    //// Did any involved view provider generate an error?
-                    //var hasErrors = false;
-                    //foreach (var modelState in ViewData.ModelState.Values)
-                    //{
-                    //    foreach (var error in modelState.Errors)
-                    //    {
-                    //        hasErrors = true;
-                    //    }
-                    //}
-
-                    //// Display errors from any involved view providers
-                    //if (hasErrors)
-                    //{
-                    //    return View(viewResult);
-                    //}
-
+                    
                     // Success - Redirect to confirmation page
                     return RedirectToAction(nameof(RegisterConfirmation));
 
                 }
                 else
                 {
-                    // Errors that may have occurred whilst creating the entity
+                    // Report errors that may have occurred whilst creating the user
                     foreach (var error in result.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-                //// Some when wrong, add errors to model state
-                //foreach (var error in result.Errors)
-                //{
-                //    ModelState.AddModelError(string.Empty, error.Description);
-                //}
-
+             
             }
         
-
             // if we reach this point some view model validation
             // failed within a view provider, display model state errors
             foreach (var modelState in ViewData.ModelState.Values)
@@ -335,51 +343,6 @@ namespace Plato.Users.Controllers
 
             return await Register(returnUrl);
 
-
-            //if (ModelState.IsValid)
-            //{
-            //    var user = new User
-            //    {
-            //        UserName = model.UserName,
-            //        Email = model.Email
-            //    };
-            //    var result = await _userManager.CreateAsync(user, model.Password);
-            //    if (result.Succeeded)
-            //    {
-
-            //        // Send account activation email
-            //        var emailConfirmationResult = await _platoUserManager.GetEmailConfirmationUserAsync(model.UserName);
-            //        if (emailConfirmationResult.Succeeded)
-            //        {
-            //            var updatedUser = emailConfirmationResult.Response;
-            //            if (updatedUser != null)
-            //            {
-            //                updatedUser.ConfirmationToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(updatedUser.ConfirmationToken));
-            //                var emailResult = await SendEmailConfirmationTokenAsync(updatedUser);
-            //                if (!emailResult.Succeeded)
-            //                {
-            //                    foreach (var error in emailResult.Errors)
-            //                    {
-            //                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
-            //                    }
-            //                    return View(model);
-            //                }
-            //            }
-            //        }
-
-            //        // Redirect to confirmation page
-            //        return RedirectToAction(nameof(RegisterConfirmation));
-
-            //    }
-
-            //    foreach (var error in result.Errors)
-            //    {
-            //        ModelState.AddModelError(string.Empty, error.Description);
-            //    }
-            //}
-
-            //// If we got this far, something failed, redisplay form
-            //return View(model);
         }
 
         [HttpGet, AllowAnonymous]
@@ -746,6 +709,7 @@ namespace Plato.Users.Controllers
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null)
         {
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -763,7 +727,11 @@ namespace Plato.Users.Controllers
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User with ID {UserId} logged in with 2fa.", user.Id);
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("User with ID {UserId} logged in with 2fa.", user.Id);
+                }
+
                 return RedirectToLocal(returnUrl);
             }
             else if (result.IsLockedOut)

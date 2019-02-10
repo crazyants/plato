@@ -128,8 +128,8 @@ namespace Plato.Users
             services.AddScoped<IViewProvider<EditSettingsViewModel>, EditSettingsViewProvider>();
 
             // Login view provider
-            services.AddScoped<IViewProviderManager<LoginViewModel>, ViewProviderManager<LoginViewModel>>();
-            services.AddScoped<IViewProvider<LoginViewModel>, LoginViewProvider>();
+            services.AddScoped<IViewProviderManager<UserLogin>, ViewProviderManager<UserLogin>>();
+            services.AddScoped<IViewProvider<UserLogin>, LoginViewProvider>();
 
             // Register view provider
             services.AddScoped<IViewProviderManager<UserRegistration>, ViewProviderManager<UserRegistration>>();

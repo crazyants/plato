@@ -268,8 +268,7 @@ namespace Plato.Users.Controllers
                     
                     // Everything was OK
                     _alerter.Success(T["User Created Successfully!"]);
-
-                    // Redirect to edit user
+                    
                     // Redirect back to edit user
                     return RedirectToAction(nameof(Edit), new RouteValueDictionary()
                     {
