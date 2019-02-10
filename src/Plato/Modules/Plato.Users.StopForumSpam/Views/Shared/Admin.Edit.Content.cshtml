@@ -1,5 +1,24 @@
 ﻿@model StopForumSpamSettingsViewModel
 
+<br/>
+xxxxxxxxx
+<br/>
+
+<input id="level" 
+       name="level"
+       type="text" 
+       data-provide="slider"
+       data-slider-value="1"
+       data-slider-ticks="[1, 50, 100]" 
+       data-slider-lock-to-ticks="true"/>
+
+<br/>
+xxxxxxxxx
+<br/>
+
+
+@ViewData["Test"]
+
 <form asp-route-action="Index" method="post" enctype="multipart/form-data">
 
     <card>
@@ -11,7 +30,7 @@
             <div class="row">
                 <div class="col">
                     <fieldset>
-                        <div class="form-group" asp-validation-class-for="DefaultFrom">
+                        <div class="form-group" asp-validation-class-for="ApiKey">
                             <label asp-for="@Model.ApiKey">
                                 <strong>@T["Api Key"]</strong>
                                 <span asp-validation-for="@Model.ApiKey" class="text-danger"></span>
@@ -20,10 +39,62 @@
                             </label>
                             <input asp-for="@Model.ApiKey" class="form-control" autofocus />
                         </div>
-                    </fieldset>                 
+                    </fieldset>    
                 </div>
             </div>
+            
+            <div class="row">
+                <div class="col">
+                    
+              
 
+
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="UserNameThreshold">
+                            <label asp-for="@Model.UserNameThreshold">
+                                <strong>@T["Username Threshold"]</strong>
+                                <span asp-validation-for="@Model.UserNameThreshold" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["The number of times a username can appear before it's flagged as SPAM."]</span>
+                            </label>
+                            <input asp-for="@Model.UserNameThreshold" class="form-control" autofocus />
+                        </div>
+                    </fieldset>       
+                </div>
+                <div class="col">
+                
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="EmailThreshold">
+                            <label asp-for="@Model.EmailThreshold">
+                                <strong>@T["Email Threshold"]</strong>
+                                <span asp-validation-for="@Model.EmailThreshold" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["The number of times an email can appear before it's flagged as SPAM."]</span>
+                            </label>
+                            <input asp-for="@Model.EmailThreshold" class="form-control" autofocus />
+                        </div>
+                    </fieldset>       
+                </div>
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="IpAddressThreshold">
+                            <label asp-for="@Model.IpAddressThreshold">
+                                <strong>@T["IP Address Threshold"]</strong>
+                                <span asp-validation-for="@Model.IpAddressThreshold" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["The number of times an IP address can appear before it's flagged as SPAM."]</span>
+                            </label>
+                            <input asp-for="@Model.IpAddressThreshold" class="form-control" autofocus />
+                        </div>
+                    </fieldset>       
+                </div>
+            </div>
+            
         </card-body>
     </card>
 
@@ -34,3 +105,6 @@
     </card>
 
 </form>
+
+<link rel="stylesheet" href="/plato.users.stopforumspam/content/css/bootstrap-slider.css" />
+<script src="/plato.users.stopforumspam/content/js/bootstrap-slider.js" section="Footer"></script>

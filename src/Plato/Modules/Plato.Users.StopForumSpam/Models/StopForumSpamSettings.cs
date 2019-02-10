@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Users.StopForumSpam.Models
@@ -8,6 +9,7 @@ namespace Plato.Users.StopForumSpam.Models
     {
 
         public string ApiKey { get; set; }
+        
         
     }
 

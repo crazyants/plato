@@ -13,8 +13,8 @@ namespace Plato.Internal.Scripting.Abstractions
 
         }
 
-        public ScriptBlock(string script, int priority)
-            : this(new HtmlString(script), null, priority)
+        public ScriptBlock(string script, int order)
+            : this(new HtmlString(script), null, order)
         {
 
         }
@@ -30,8 +30,17 @@ namespace Plato.Internal.Scripting.Abstractions
         {
         }
 
+        public ScriptBlock(Dictionary<string, object> attributes)
+            : this(null, attributes, int.MaxValue)
+        {
+        }
+        public ScriptBlock(Dictionary<string, object> attributes, int order)
+            : this(null, attributes, order)
+        {
+        }
+
         public ScriptBlock(IHtmlContent content, Dictionary<string, object> attributes, int order)
-            : this(content, attributes, int.MaxValue, true, true)
+            : this(content, attributes, order, true, true)
         {
         }
 

@@ -73,7 +73,7 @@ namespace Plato.WebApi.Controllers
                 ).Add(S["Settings"], channels => channels
                     .Action("Index", "Admin", "Plato.Settings")
                     .LocalNav()
-                ).Add(S["Web Api Settings"]);
+                ).Add(S["Web Api"]);
             });
 
             // Build view

@@ -57,7 +57,7 @@ namespace Plato.Users.reCAPTCHA2.Controllers
                 ).Add(S["Settings"], channels => channels
                     .Action("Index", "Admin", "Plato.Settings")
                     .LocalNav()
-                ).Add(S["reCAPTCHA2 Settings"]);
+                ).Add(S["reCAPTCHA2"]);
             });
 
             // Get reCAPTCHA settings

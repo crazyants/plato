@@ -1,9 +1,9 @@
 ﻿@model SiteSettingsViewModel
 @{
-    ViewData["Title"] = "General Settings";
+    ViewData["Title"] = "General";
 }
 
-<h4>@T["General Settings"]</h4>
+<h4>@T[ViewData["Title"].ToString()]</h4>
 <span class="text-muted">@T["Manage general application settings."]</span>
 <hr/>
 
@@ -11,7 +11,7 @@
     
     <card>
         <card-title>
-            <h6 class="card-title">@T["General"]</h6>
+            <h6 class="card-title">@T["Settings"]</h6>
         </card-title>
         <card-body>
             

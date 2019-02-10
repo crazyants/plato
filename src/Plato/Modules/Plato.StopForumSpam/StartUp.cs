@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Abstractions.SetUp;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.StopForumSpam.Services;
 
 namespace Plato.StopForumSpam
 {
@@ -22,13 +20,10 @@ namespace Plato.StopForumSpam
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            //// Set-up event handler
-            //services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-
-            //// Feature installation event handler
-            //services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
-
-
+            //// Set-up StopForumSpam services
+            services.AddScoped<IStopForumSpamClient, StopForumSpamClient>();
+            services.AddScoped<IStopForumSpamChecker, StopForumSpamChecker>();
+            
         }
 
         public override void Configure(

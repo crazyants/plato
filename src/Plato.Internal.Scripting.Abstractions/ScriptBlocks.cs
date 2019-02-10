@@ -20,11 +20,42 @@ namespace Plato.Internal.Scripting.Abstractions
                 var exists = false;
                 foreach (var localBlock in _blocks)
                 {
-                    if (localBlock.Content.Stringify().Equals(block.Content.Stringify(), StringComparison.OrdinalIgnoreCase))
+                    
+                    // Is the content unique?
+                    if (block.Content != null && localBlock.Content != null)
                     {
-                        exists = true;
-                        break;
+                        if (localBlock.Content.Stringify().Equals(block.Content.Stringify(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            exists = true;
+                            break;
+                        }
                     }
+
+                    // Are the attributes unique?
+                    if (block.Attributes != null && localBlock.Attributes != null)
+                    {
+                        var identicalAttributes = true;
+                        foreach (var localAttribute in localBlock.Attributes)
+                        {
+                            foreach (var blockAttribute in block.Attributes)
+                            {
+                                if (blockAttribute.Key == localAttribute.Key)
+                                {
+                                    if (blockAttribute.Value != localAttribute.Value)
+                                    {
+                                        identicalAttributes = false;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (identicalAttributes)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                
                 }
 
                 if (exists)

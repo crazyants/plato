@@ -45,7 +45,7 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
 
             // Build view
             return Views(
-                View<ReCaptchaViewModel>("Register.Google.reCAPTCHA2", model => recaptchaViewModel).Zone("content")
+                View<ReCaptchaViewModel>("Google.reCAPTCHA2", model => recaptchaViewModel).Zone("content")
                     .Order(int.MaxValue)
             );
 

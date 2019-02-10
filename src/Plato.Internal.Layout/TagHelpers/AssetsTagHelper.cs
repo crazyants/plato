@@ -31,8 +31,7 @@ namespace Plato.Internal.Layout.TagHelpers
         }
 
         #endregion
-
-
+        
         #region "Implementation"
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -134,7 +133,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     .Where(g => g.TargetEnvironment == defaultEnvironment.TargetEnvironment)
                     .ToList();
 
-                // Interate through each matching provided environment adding
+                // Iterate through each matching provided environment adding
                 // resources from that environment into our default environments
                 foreach (var group in matchingEnvironments)
                 {

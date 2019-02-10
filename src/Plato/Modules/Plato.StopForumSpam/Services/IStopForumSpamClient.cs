@@ -1,11 +1,14 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Plato.StopForumSpam.Models;
 
 namespace Plato.StopForumSpam.Services
 {
-    public interface IClient
+    public interface IStopForumSpamClient
     {
+        
+        void Configure(Action<StopForumSpamClientOptions> configure);
 
         Task<Response> CheckEmailAddressAsync(string emailAddress);
 

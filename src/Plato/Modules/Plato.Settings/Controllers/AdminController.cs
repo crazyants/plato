@@ -71,7 +71,10 @@ namespace Plato.Settings.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Admin", "Plato.Admin")
                     .LocalNav()
-                ).Add(S["Settings"]);
+                ).Add(S["Settings"], channels => channels
+                    .Action("Index", "Admin", "Plato.Settings")
+                    .LocalNav()
+                ).Add(S["General"]);
             });
             
             return View(await GetModel());

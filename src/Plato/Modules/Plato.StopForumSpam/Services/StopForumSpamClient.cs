@@ -8,21 +8,23 @@ using Plato.StopForumSpam.Models;
 namespace Plato.StopForumSpam.Services
 {
     
-    public class Client : HttpClient, IClient
+    public class StopForumSpamClient : HttpClient, IStopForumSpamClient
     {
-
-        private readonly string _apiKey;
+        
         private readonly string _format;
 
-        public Client() : this(string.Empty)
-        {
+        public StopForumSpamClientOptions Options { get; private set; }
 
+        public StopForumSpamClient() 
+        {
+            this._format = "json";
         }
 
-        public Client(string apiKey)
+        public void Configure(Action<StopForumSpamClientOptions> configure)
         {
-            this._apiKey = apiKey;
-            this._format = "json";
+            var options = new StopForumSpamClientOptions();
+            configure(options);
+            this.Options = options;
         }
 
         public async Task<Response> CheckEmailAddressAsync(string emailAddress)
@@ -115,9 +117,15 @@ namespace Plato.StopForumSpam.Services
 
         public async Task<Response> AddSpammerAsync(string username, string emailAddress, IPAddress ipAddress)
         {
-            if (string.IsNullOrWhiteSpace(this._apiKey))
+
+            if (this.Options == null)
             {
-                throw new ArgumentNullException(nameof(this._apiKey));
+                throw new ArgumentNullException(nameof(this.Options));
+            }
+
+            if (string.IsNullOrWhiteSpace(this.Options.ApiKey))
+            {
+                throw new ArgumentNullException(nameof(this.Options.ApiKey));
             }
 
             if (string.IsNullOrWhiteSpace(username))
@@ -135,7 +143,7 @@ namespace Plato.StopForumSpam.Services
                 {"username", username},
                 {"ip_addr", ipAddress.ToString()},
                 {"email", emailAddress},
-                {"api_key", this._apiKey}
+                {"api_key", this.Options.ApiKey}
             };
 
             return Response.Parse(await this.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters), this._format);
