@@ -1,22 +1,10 @@
 ﻿@model StopForumSpamSettingsViewModel
-
-<br/>
-xxxxxxxxx
-<br/>
-
-<input id="level" 
-       name="level"
-       type="text" 
-       data-provide="slider"
-       data-slider-value="1"
-       data-slider-ticks="[1, 50, 100]" 
-       data-slider-lock-to-ticks="true"/>
-
-<br/>
-xxxxxxxxx
-<br/>
-
-
+@using Newtonsoft.Json
+@{
+    var json = JsonConvert.SerializeObject(Model.AggressionLevels);
+    var i = 0;
+    var count = Model.AggressionLevels?.Count();
+}
 @ViewData["Test"]
 
 <form asp-route-action="Index" method="post" enctype="multipart/form-data">
@@ -46,9 +34,35 @@ xxxxxxxxx
             <div class="row">
                 <div class="col">
                     
-              
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="UserNameThreshold">
+                            
+                            <label for="level">
+                                <strong>@T["Filter Level"]</strong>
+                                <br/>
+                                <span class="text-muted">@T["The number of times a username can appear before it's flagged as SPAM."]</span>
+                            </label>
+                            <br/>
+                            
+                            <div class="alert alert-secondary">
+                         
+                                <div class="text-center">
+                                    <div class="d-inline-block col-9">
+                            
+                                        <input id="level" style="width: 100%;" name="level" type="text"/>
+                                        <div id="sliderResults" class="pt-3">
+                                            <h6>@Model.SelectedAggressionLevel?.Name</h6>
+                                            <div class="text-muted">@Model.SelectedAggressionLevel?.Description</div>
+                                        </div>
+                                            
+                                    </div>
+                                </div>
 
-
+                            </div>
+                        
+                        </div>
+                    </fieldset>       
+                    
                 </div>
             </div>
             
@@ -106,5 +120,63 @@ xxxxxxxxx
 
 </form>
 
-<link rel="stylesheet" href="/plato.users.stopforumspam/content/css/bootstrap-slider.css" />
-<script src="/plato.users.stopforumspam/content/js/bootstrap-slider.js" section="Footer"></script>
+<link rel="stylesheet" href="/css/vendors/bootstrap-slider.css" />
+<script src="/js/vendors/bootstrap-slider.js" section="Footer"></script>
+
+<script section="Footer">
+
+    $(document).ready(function() {
+
+        // Get slider
+        var $slider = $('#level');
+        if ($slider.length === 0) {
+            return;
+        }
+
+        // Prepare slider data
+        var data = {
+            json: @Html.Raw(json),
+            ticks: function() {
+                var ticks = [];
+                for (var i = 0; i < this.json.length; i++) {
+                    ticks.push(this.json[i].tick);
+                }
+                return ticks;
+            },
+            get: function(tick) {
+                for (var i = 0; i < this.json.length; i++) {
+                    if (this.json[i].tick === parseInt(tick)) {
+                        return this.json[i];
+                    }
+                }
+                return null;
+            }
+        }
+ 
+        // Prepare slider
+        $slider.slider({
+            tooltip: 'always',
+            ticks: data.ticks(),
+            formatter: function(value) {
+                return 'Current value: ' + value;
+            },
+            lock_to_ticks: true
+        });
+
+        // Slider onChange
+        $slider.on("slide",
+            function(e) {
+                var level = data.get(e.value);
+                if (level == null) {
+                    return;
+                }
+                var $results = $("#sliderResults");
+                if ($results.length > 0) {
+                    $results.find("h6").text(level.name);
+                    $results.find("div").text(level.description);
+                }
+            });
+
+    });
+
+</script>

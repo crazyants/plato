@@ -25,6 +25,8 @@
     <None Remove="Assets\**" />
     <None Remove="Modules\**" />
     <None Remove="Themes\Default\Content\**" />
+    <Content Remove="wwwroot\css\vendors\bootstrap-slider.css" />
+    <Content Remove="wwwroot\js\vendors\bootstrap-slider.js" />
     <Content Include="Themes\Default\theme.css" />
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -67,6 +69,11 @@
     <Folder Include="App_Data\Schemas\1.0.0\rollback\" />
     <Folder Include="App_Data\Schemas\1.0.0\upgrade\" />
     <Folder Include="App_Data\Sites\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\vendors\bootstrap-slider.css" />
+    <None Include="wwwroot\js\vendors\bootstrap-slider.js" />
   </ItemGroup>
 
   <ItemGroup>
