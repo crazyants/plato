@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 
 namespace Plato.StopForumSpam
@@ -20,10 +21,13 @@ namespace Plato.StopForumSpam
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            //// Set-up StopForumSpam services
+            //// StopForumSpam services
             services.AddScoped<IStopForumSpamClient, StopForumSpamClient>();
             services.AddScoped<IStopForumSpamChecker, StopForumSpamChecker>();
-            
+
+            // Operations manager
+            services.AddScoped<ISpamOperationsManager<SpamOperation>, SpamOperationsManager<SpamOperation>>();
+
         }
 
         public override void Configure(

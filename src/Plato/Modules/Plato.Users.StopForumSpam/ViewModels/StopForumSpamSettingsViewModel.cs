@@ -57,25 +57,20 @@ namespace Plato.Users.StopForumSpam.ViewModels
 
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "username threshold")]
-        public int UserNameThreshold { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "email threshold")]
-        public int EmailThreshold { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "ip address threshold")]
-        public int IpAddressThreshold { get; set; }
-
+        [Display(Name = "spam level")]
         public int SpamLevel { get; set; }
+
+        // ----------
+
+        public IEnumerable<SpamOperation> SpamOperations { get; set; }
+
+        public IDictionary<string, IEnumerable<SpamOperation>> CategorizedSpamOperations { get; set; }
 
         public SpamLevel SelectedSpamLevel
         {
             get { return _spamLevels.FirstOrDefault(l => l.Tick == SpamLevel); }
         }
+
         public IEnumerable<SpamLevel> SpamLevels { get; private set; } = _spamLevels;
    
     }

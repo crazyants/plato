@@ -27,7 +27,7 @@ namespace Plato.Users.StopForumSpam.Controllers
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IViewProviderManager<StopForumSpamSettings> _viewProvider;
-        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _recaptchaSettingsStore;
+        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
         private readonly IScriptManager _scriptManager;
         private readonly IContextFacade _contextFacade;
 
@@ -44,7 +44,7 @@ namespace Plato.Users.StopForumSpam.Controllers
             IAlerter alerter, 
             IBreadCrumbManager breadCrumbManager,
             IViewProviderManager<StopForumSpamSettings> viewProvider,
-            IStopForumSpamSettingsStore<StopForumSpamSettings> recaptchaSettingsStore,
+            IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore,
             IStopForumSpamChecker stopForumSpamChecker, 
             IScriptManager scriptManager,
             IContextFacade contextFacade)
@@ -53,7 +53,7 @@ namespace Plato.Users.StopForumSpam.Controllers
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _viewProvider = viewProvider;
-            _recaptchaSettingsStore = recaptchaSettingsStore;
+            _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
             _stopForumSpamChecker = stopForumSpamChecker;
             _scriptManager = scriptManager;
             _contextFacade = contextFacade;
@@ -86,13 +86,14 @@ namespace Plato.Users.StopForumSpam.Controllers
             });
 
             // Get StopForumSpam settings
-            var settings = await _recaptchaSettingsStore.GetAsync();
+            var settings = await _stopForumSpamSettingsStore.GetAsync();
 
             // Build view
             var result = await _viewProvider.ProvideEditAsync(new StopForumSpamSettings()
             {
                 ApiKey = settings?.ApiKey ?? "",
-                SpamLevel = settings?.SpamLevel ?? 0
+                SpamLevel = settings?.SpamLevel ?? 0,
+                SpamOperations = settings?.SpamOperations ?? null
             }, this);
             
             var user = new User()
@@ -144,7 +145,8 @@ namespace Plato.Users.StopForumSpam.Controllers
             // Execute view providers ProvideUpdateAsync method
             await _viewProvider.ProvideUpdateAsync(new StopForumSpamSettings()
             {
-                ApiKey = viewModel.ApiKey
+                ApiKey = viewModel.ApiKey,
+                SpamLevel = viewModel.SpamLevel
             }, this);
 
             // Add alert

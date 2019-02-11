@@ -6,7 +6,6 @@
 @ViewData["Test"]
 
 <form asp-route-action="Index" method="post" enctype="multipart/form-data">
-
     <card>
         <card-title>
             <h6 class="card-title">@T["Settings"]</h6>
@@ -25,95 +24,154 @@
                             </label>
                             <input asp-for="@Model.ApiKey" class="form-control" autofocus />
                         </div>
-                    </fieldset>    
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col">
-                    
+                    </fieldset>
+
                     <fieldset>
-                        <div class="form-group" asp-validation-class-for="UserNameThreshold">
-                            
-                            <label for="level">
-                                <strong>@T["Aggression Level"]</strong>
-                                <br/>
+                        <div class="form-group" asp-validation-class-for="SpamLevel">
+
+                            <label asp-for="@Model.SpamLevel">
+                                <strong>@T["Aggression Level"]</strong><br />
                                 <span class="text-muted">@T["Customize how aggressively the SPAM filter should act."]</span>
                             </label>
-                            <br/>
+                            <br />
                             <div class="alert alert-secondary">
-                         
                                 <div class="text-center">
-                                    <div class="d-inline-block col-9">
-                            
-                                        <div class="float-left">
-                                            @T["Low"]
-                                        </div>
-                                        <div class="float-right">
-                                            @T["High"]
-                                        </div>
-                                      
-
-                                        <input id="level" style="width: 100%;" name="level" type="text"/>
+                                    <div id="slider" class="d-inline-block col-9">
+                                        <div class="float-left">@T["Low"]</div>
+                                        <div class="float-right">@T["High"]</div>
+                                        <input asp-for="@Model.SpamLevel" style="width: 100%;" />
                                         <div id="sliderResults" class="pt-3">
                                             <h6>@Model.SelectedSpamLevel?.Name</h6>
                                             <div class="text-muted">@Model.SelectedSpamLevel?.Description</div>
                                         </div>
-                                            
                                     </div>
                                 </div>
-
                             </div>
-                        
+
                         </div>
-                    </fieldset>       
+                    </fieldset>
                     
+                    <fieldset>
+                        
+                        <table id="tblPermissions" class="table">
+                            @foreach (var category in Model.CategorizedSpamOperations.Keys)
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="col-12 bg-light">
+                                            <h6>@category</h6>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var operation in Model.CategorizedSpamOperations[category])
+                                {
+                                    var existingOptions = Model.SpamOperations.FirstOrDefault(o => o.Name.Equals(operation.Name, StringComparison.OrdinalIgnoreCase));
+                                    var contentId = "panel" + operation.Name;
+                                    <tr>
+                                        <td class="col-12">
+                                         
+                                            <div class="card card-body-flush">
+
+                                                <div class="card-header">
+                                                    <h6>
+                                                        <a data-toggle="collapse" href="#@contentId" aria-expanded="true" aria-controls="collapseOne">
+                                                            @T[operation.Name]
+                                                        </a>
+                                                    </h6>
+                                                    @if (!string.IsNullOrEmpty(operation.Description))
+                                                    {
+                                                        @T[operation.Description]
+                                                    }
+                                                </div>
+                                                <div id="@contentId" class="card-body collapse">
+
+                                                    <ul class="list-group list-group-flush list-group-hover">
+                                                        <li class="list-group-item list-group-item-action">
+                                                            <label class="row">
+                                                                <span class="col-10">
+                                                                    <h6>@T["Flag As Spam"]</h6>
+                                                                    @T["If enabled any entry detected as SPAM that is persisted to the Plato database will be automatically flagged as SPAM. Entries will only be visible to those who have permission to view SPAM."]
+                                                                </span>
+                                                                <span class="col-2 text-right">
+                                                                    <span class="switch switch-round">
+                                                                        <input class="form-check-input" type="checkbox" value="flagAsSpam" name="flagAsSpam.@operation.Name" checked="@existingOptions?.FlagAsSpam"/>
+                                                                        <span class="switch-slider"></span>
+                                                                    </span>
+                                                                </span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-group-item list-group-item-action">
+                                                            <label class="row">
+                                                                <span class="col-10">
+                                                                    <h6>@T["Notify Admins"]</h6>
+                                                                    @T["If enabled trigger a web & email notification for any entry detected as SPAM to all users within the administrators role with a link to review the entry. If disabled no administrator notifications will be sent."]"]
+                                                                </span>
+                                                                <span class="col-2 text-right">
+                                                                    <span class="switch switch-round">
+                                                                        <input class="form-check-input" type="checkbox" value="notifyAdmin" name="notifyAdmin.@operation.Name" checked="@existingOptions?.NotifyAdmin"/>
+                                                                        <span class="switch-slider"></span>
+                                                                    </span>
+                                                                </span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-group-item list-group-item-action">
+                                                            <label class="row">
+                                                                <span class="col-10">
+                                                                    <h6>@T["Notify Staff"]</h6>
+                                                                    @T["If enabled trigger a web & email notification for any entry detected as SPAM to all users within the staff role with a link to review the entry. If disabled no staff notifications will be sent."]
+                                                                </span>
+                                                                <span class="col-2 text-right">
+                                                                    <span class="switch switch-round">
+                                                                        <input class="form-check-input" type="checkbox" value="notifyStaff" name="notifyStaff.@operation.Name" checked="@existingOptions?.NotifyStaff"/>
+                                                                        <span class="switch-slider"></span>
+                                                                    </span>
+                                                                </span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-group-item list-group-item-action">
+                                                            <label class="row">
+                                                                <span class="col-10">
+                                                                    <h6>@T["Alter Database"]</h6>
+                                                                    @T["If enabled the Plato database will be modified even if an entry is detected as SPAM. If disabled the Plato database will not be modified if an entry is detected as SPAM. "]
+                                                                </span>
+                                                                <span class="col-2 text-right">
+                                                                    <span class="switch switch-round">
+                                                                        <input class="form-check-input" type="checkbox" value="allowAlter" name="allowAlter.@operation.Name" checked="@existingOptions?.AllowAlter"/>
+                                                                        <span class="switch-slider"></span>
+                                                                    </span>
+                                                                </span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <label class="row">
+                                                                <span class="col-12">
+                                                                    <h6>@T["Error Message"]</h6>
+                                                                    @T["Customize the error message presented to users if they perform this operation is detected as SPAM."]
+                                                                </span>
+                                                                <span class="col-12 pt-2">
+                                                                    <textarea class="form-control" name="customMessage.@operation.Name">@existingOptions?.Message</textarea>
+                                                                </span>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+
+                                            </div>
+                                      
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            }
+                        </table>
+
+                    </fieldset>
+
                 </div>
             </div>
-            
-            <div id="thresholds">
-                <div class="col">
-                    <fieldset>
-                        <div class="form-group" asp-validation-class-for="UserNameThreshold">
-                            <label asp-for="@Model.UserNameThreshold">
-                                <strong>@T["Username Threshold"]</strong>
-                                <span asp-validation-for="@Model.UserNameThreshold" class="text-danger"></span>
-                                <br />
-                                <span class="text-muted">@T["The number of times a username can appear before it's flagged as SPAM."]</span>
-                            </label>
-                            <input data-threshold-id="username" asp-for="@Model.UserNameThreshold" class="form-control" />
-                        </div>
-                    </fieldset>       
-                </div>
-                <div class="col">
-                
-                    <fieldset>
-                        <div class="form-group" asp-validation-class-for="EmailThreshold">
-                            <label asp-for="@Model.EmailThreshold">
-                                <strong>@T["Email Threshold"]</strong>
-                                <span asp-validation-for="@Model.EmailThreshold" class="text-danger"></span>
-                                <br />
-                                <span class="text-muted">@T["The number of times an email can appear before it's flagged as SPAM."]</span>
-                            </label>
-                            <input data-threshold-id="email" asp-for="@Model.EmailThreshold" class="form-control" />
-                        </div>
-                    </fieldset>       
-                </div>
-                <div class="col">
-                    <fieldset>
-                        <div class="form-group" asp-validation-class-for="IpAddressThreshold">
-                            <label asp-for="@Model.IpAddressThreshold">
-                                <strong>@T["IP Address Threshold"]</strong>
-                                <span asp-validation-for="@Model.IpAddressThreshold" class="text-danger"></span>
-                                <br />
-                                <span class="text-muted">@T["The number of times an IP address can appear before it's flagged as SPAM."]</span>
-                            </label>
-                            <input data-threshold-id="ip" asp-for="@Model.IpAddressThreshold" class="form-control" />
-                        </div>
-                    </fieldset>       
-                </div>
-            </div>
-            
+        
         </card-body>
     </card>
 
@@ -133,7 +191,7 @@
     $(document).ready(function() {
 
         // Get slider
-        var $slider = $('#level');
+        var $slider = $('#slider').find("input");
         if ($slider.length === 0) {
             return;
         }
@@ -162,6 +220,7 @@
         $slider.slider({
             tooltip: 'always',
             ticks: data.ticks(),
+            value: @Model.SpamLevel.ToString(),
             formatter: function(value) {
                 var level = data.get(value);
                 if (level == null) {

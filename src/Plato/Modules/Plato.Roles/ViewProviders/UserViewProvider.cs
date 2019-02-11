@@ -20,10 +20,10 @@ namespace Plato.Roles.ViewProviders
         private readonly SignInManager<User> _signInManager;
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IContextFacade _contextFacade;
- 
-        private readonly IStringLocalizer T;
-
         private readonly HttpRequest _request;
+
+        private readonly IStringLocalizer T;
+        
 
         public UserViewProvider(
             UserManager<User> userManager,

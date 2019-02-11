@@ -6,6 +6,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.StopForumSpam.Models;
 using Plato.Users.StopForumSpam.Stores;
 using Plato.Users.StopForumSpam.Models;
 using Plato.Users.StopForumSpam.Navigation;
@@ -35,6 +36,9 @@ namespace Plato.Users.StopForumSpam
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
+            // Register spam operations provider
+            services.AddScoped<ISpamOperationsProvider<SpamOperation>, SpamOperations>();
+            
         }
 
         public override void Configure(

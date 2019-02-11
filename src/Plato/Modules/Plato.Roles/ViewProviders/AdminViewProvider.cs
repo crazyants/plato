@@ -172,7 +172,7 @@ namespace Plato.Roles.ViewProviders
                 return new List<string>();
             }
 
-            // If the role is anonymous set the authtype to
+            // If the role is anonymous set the auth type to
             // null to ensure IsAuthenticated is set to false
             var authType = role.Name != DefaultRoles.Anonymous
                 ? "UserAuthType"
