@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Plato.Internal.Abstractions;
 
 namespace Plato.StopForumSpam.Models
 {
     
     [DataContract]
-    public class SpamOperation : ISpamOperation
+    public class SpamOperation : Serializable, ISpamOperation
     {
 
         [DataMember(Name = "name")]

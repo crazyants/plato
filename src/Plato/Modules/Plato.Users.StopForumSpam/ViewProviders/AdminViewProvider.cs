@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -66,7 +67,7 @@ namespace Plato.Users.StopForumSpam.ViewProviders
             var spamOperations = _spamOperationsManager.GetSpamOperations();
             
             // Build operations to add
-            var operationsToAdd = new List<SpamOperation>();
+            var operationsToAdd = new ConcurrentDictionary<string, SpamOperation>();
             foreach (var operation in spamOperations)
             {
 
@@ -109,7 +110,8 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                         }
                     }
 
-                    operationsToAdd.Add(operation);
+                    // Ensure unique entries
+                    operationsToAdd.AddOrUpdate(operation.Name, operation, (k, v) => operation);
                 }
             }
          
@@ -129,7 +131,7 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                 {
                     ApiKey = settings.ApiKey,
                     SpamLevel = settings.SpamLevel,
-                    SpamOperations = operationsToAdd
+                    SpamOperations = operationsToAdd.Values
                 };
 
                 // Persist settings
