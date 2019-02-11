@@ -4,41 +4,51 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
+using Plato.StopForumSpam.Models;
 
 namespace Plato.Users.StopForumSpam.ViewModels
 {
     public class StopForumSpamSettingsViewModel
     {
 
-        private static IEnumerable<AggressionLevel> _aggressionLevels = new List<AggressionLevel>()
+        private static IEnumerable<SpamLevel> _spamLevels = new List<SpamLevel>()
         {
-            new AggressionLevel()
+            new SpamLevel()
             {
-                Name = "Low",
-                Description = "Only check against the users IP address appears",
-                Tick = 0
+             
+                Name = "Check against the users username, email address & IP address",
+                Description = "All details must appear within the StopForumSpam database for the user to be flagged as SPAM. Some SPAM may get through but false positives will be reduced.",
+                Frequencies = new SpamFrequencies()
+                {
+                    UserName = new SpamFrequency(1),
+                    Email = new SpamFrequency(1),
+                    IpAddress = new SpamFrequency(1)
+                }
             },
-            new AggressionLevel()
+            new SpamLevel()
             {
-                Name = "Medium",
-                Description = "Check against the users email address and IP address.",
-                Tick = 33
+               
+                Name = "Check against the users email address and IP address",
+                Description = "The users email address & IP address must appear within the StopForumSpam database for the user to be flagged as SPAM. Usernames will be ignored. Some SPAM may get through but false positives based on username will be reduced.",
+                Tick = 50,
+                Frequencies = new SpamFrequencies()
+                {
+                    Email = new SpamFrequency(1),
+                    IpAddress = new SpamFrequency(1)
+                }
             },
-            new AggressionLevel()
+            new SpamLevel()
             {
-                Name = "High",
-                Description = "Check against the users username, email address & IP address",
-                Tick = 66
-            },
-            new AggressionLevel()
-            {
-                Name = "Custom",
-                Description = "Check against the users username, email address & IP address",
-                Tick = 100
+                Name = "Check against the users IP address only",
+                Description = "If the users IP address appears within the StopForumSpam database the user will be flagged as SPAM. Catches the most SPAM but can lead to more false positives.",
+                Tick = 100,
+                Frequencies = new SpamFrequencies()
+                {
+                    IpAddress = new SpamFrequency(1)
+                }
             }
         };
-
-
+        
         [Required]
         [StringLength(255)]
         [DataType(DataType.Text)]
@@ -60,16 +70,20 @@ namespace Plato.Users.StopForumSpam.ViewModels
         [Display(Name = "ip address threshold")]
         public int IpAddressThreshold { get; set; }
 
-        public AggressionLevel SelectedAggressionLevel { get; set; } = _aggressionLevels.First();
+        public int SpamLevel { get; set; }
 
-        public IEnumerable<AggressionLevel> AggressionLevels { get; set; } = _aggressionLevels;
+        public SpamLevel SelectedSpamLevel
+        {
+            get { return _spamLevels.FirstOrDefault(l => l.Tick == SpamLevel); }
+        }
+        public IEnumerable<SpamLevel> SpamLevels { get; private set; } = _spamLevels;
    
     }
     
     [DataContract]
-    public class AggressionLevel
+    public class SpamLevel
     {
-
+        
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
@@ -78,8 +92,11 @@ namespace Plato.Users.StopForumSpam.ViewModels
 
         [DataMember(Name = "tick")]
         public short Tick { get; set; }
-        
-    }
 
+        [DataMember(Name = "frequencies")]
+        public SpamFrequencies Frequencies { get; set; }
+
+    }
+    
 }
 

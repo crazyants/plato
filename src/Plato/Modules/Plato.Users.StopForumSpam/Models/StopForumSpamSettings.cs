@@ -9,8 +9,10 @@ namespace Plato.Users.StopForumSpam.Models
     {
 
         public string ApiKey { get; set; }
+
+        public int SpamLevel { get; set; }
         
-        
+
     }
 
     public enum AggressionLevel

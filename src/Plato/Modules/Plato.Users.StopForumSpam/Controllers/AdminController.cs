@@ -91,11 +91,10 @@ namespace Plato.Users.StopForumSpam.Controllers
             // Build view
             var result = await _viewProvider.ProvideEditAsync(new StopForumSpamSettings()
             {
-                ApiKey = settings?.ApiKey ?? ""
+                ApiKey = settings?.ApiKey ?? "",
+                SpamLevel = settings?.SpamLevel ?? 0
             }, this);
-
-
-
+            
             var user = new User()
             {
                 UserName = "RobertUserm",
@@ -104,7 +103,10 @@ namespace Plato.Users.StopForumSpam.Controllers
             };
 
             // Configure checker
-            _stopForumSpamChecker.Configure(o => { o.ApiKey = settings?.ApiKey ?? ""; });
+            _stopForumSpamChecker.Configure(o =>
+            {
+                o.ApiKey = settings?.ApiKey ?? "";
+            });
 
             // Get frequencies
             var frequencies = await _stopForumSpamChecker.CheckAsync(user);
@@ -113,13 +115,13 @@ namespace Plato.Users.StopForumSpam.Controllers
 
             sb
                 .Append("Username: ")
-                .Append(frequencies.UserName)
+                .Append(frequencies.UserName.Count)
                 .Append(", ")
                 .Append("Email: ")
-                .Append(frequencies.Email)
+                .Append(frequencies.Email.Count)
                 .Append(", ")
                 .Append("Ip: ")
-                .Append(frequencies.IpAddress)
+                .Append(frequencies.IpAddress.Count)
                 .Append(", ")
                 .Append("success: ")
                 .Append(frequencies.Success)

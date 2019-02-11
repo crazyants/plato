@@ -1,9 +1,7 @@
 ﻿@model StopForumSpamSettingsViewModel
 @using Newtonsoft.Json
 @{
-    var json = JsonConvert.SerializeObject(Model.AggressionLevels);
-    var i = 0;
-    var count = Model.AggressionLevels?.Count();
+    var json = JsonConvert.SerializeObject(Model.SpamLevels);
 }
 @ViewData["Test"]
 
@@ -38,21 +36,28 @@
                         <div class="form-group" asp-validation-class-for="UserNameThreshold">
                             
                             <label for="level">
-                                <strong>@T["Filter Level"]</strong>
+                                <strong>@T["Aggression Level"]</strong>
                                 <br/>
-                                <span class="text-muted">@T["The number of times a username can appear before it's flagged as SPAM."]</span>
+                                <span class="text-muted">@T["Customize how aggressively the SPAM filter should act."]</span>
                             </label>
                             <br/>
-                            
                             <div class="alert alert-secondary">
                          
                                 <div class="text-center">
                                     <div class="d-inline-block col-9">
                             
+                                        <div class="float-left">
+                                            @T["Low"]
+                                        </div>
+                                        <div class="float-right">
+                                            @T["High"]
+                                        </div>
+                                      
+
                                         <input id="level" style="width: 100%;" name="level" type="text"/>
                                         <div id="sliderResults" class="pt-3">
-                                            <h6>@Model.SelectedAggressionLevel?.Name</h6>
-                                            <div class="text-muted">@Model.SelectedAggressionLevel?.Description</div>
+                                            <h6>@Model.SelectedSpamLevel?.Name</h6>
+                                            <div class="text-muted">@Model.SelectedSpamLevel?.Description</div>
                                         </div>
                                             
                                     </div>
@@ -66,7 +71,7 @@
                 </div>
             </div>
             
-            <div class="row">
+            <div id="thresholds">
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="UserNameThreshold">
@@ -76,7 +81,7 @@
                                 <br />
                                 <span class="text-muted">@T["The number of times a username can appear before it's flagged as SPAM."]</span>
                             </label>
-                            <input asp-for="@Model.UserNameThreshold" class="form-control" autofocus />
+                            <input data-threshold-id="username" asp-for="@Model.UserNameThreshold" class="form-control" />
                         </div>
                     </fieldset>       
                 </div>
@@ -90,7 +95,7 @@
                                 <br />
                                 <span class="text-muted">@T["The number of times an email can appear before it's flagged as SPAM."]</span>
                             </label>
-                            <input asp-for="@Model.EmailThreshold" class="form-control" autofocus />
+                            <input data-threshold-id="email" asp-for="@Model.EmailThreshold" class="form-control" />
                         </div>
                     </fieldset>       
                 </div>
@@ -103,7 +108,7 @@
                                 <br />
                                 <span class="text-muted">@T["The number of times an IP address can appear before it's flagged as SPAM."]</span>
                             </label>
-                            <input asp-for="@Model.IpAddressThreshold" class="form-control" autofocus />
+                            <input data-threshold-id="ip" asp-for="@Model.IpAddressThreshold" class="form-control" />
                         </div>
                     </fieldset>       
                 </div>
@@ -152,13 +157,17 @@
                 return null;
             }
         }
- 
+
         // Prepare slider
         $slider.slider({
             tooltip: 'always',
             ticks: data.ticks(),
             formatter: function(value) {
-                return 'Current value: ' + value;
+                var level = data.get(value);
+                if (level == null) {
+                    return "";
+                }
+                return level.name;
             },
             lock_to_ticks: true
         });
@@ -166,15 +175,20 @@
         // Slider onChange
         $slider.on("slide",
             function(e) {
+
+                // Get level for selection
                 var level = data.get(e.value);
-                if (level == null) {
+                if (!level) {
                     return;
                 }
+
+                // Update text
                 var $results = $("#sliderResults");
                 if ($results.length > 0) {
                     $results.find("h6").text(level.name);
                     $results.find("div").text(level.description);
                 }
+             
             });
 
     });

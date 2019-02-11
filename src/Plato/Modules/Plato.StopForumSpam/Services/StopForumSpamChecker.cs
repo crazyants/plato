@@ -17,13 +17,14 @@ namespace Plato.StopForumSpam.Services
             _stopForumSpamClient = stopForumSpamClient;
         }
 
-        public StopForumSpamClientOptions Options { get; set; }
+        public StopForumSpamClientOptions Options { get; private set; }
 
         public void Configure(Action<StopForumSpamClientOptions> configure)
         {
             _stopForumSpamClient.Configure(configure);
+            this.Options = _stopForumSpamClient.Options;
         }
-        
+
         public async Task<SpamFrequencies> CheckAsync(string userName, string email, string ipAddress)
         {
             return await CheckAsync(new User()
@@ -36,6 +37,12 @@ namespace Plato.StopForumSpam.Services
 
         public async Task<SpamFrequencies> CheckAsync(IUser user)
         {
+
+            // We need options
+            if (this.Options == null)
+            {
+                throw new ArgumentNullException(nameof(this.Options));
+            }
 
             // Make request & get response
             var spamResponse = await _stopForumSpamClient.CheckAsync(
@@ -78,9 +85,9 @@ namespace Plato.StopForumSpam.Services
 
             return new SpamFrequencies()
             {
-                UserName = usernameFrequency,
-                Email = emailFrequency,
-                IpAddress = ipFrequency,
+                UserName = new SpamFrequency(usernameFrequency),
+                Email = new SpamFrequency(emailFrequency),
+                IpAddress = new SpamFrequency(ipFrequency),
                 Success = success
             };
             

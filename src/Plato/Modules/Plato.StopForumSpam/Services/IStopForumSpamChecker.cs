@@ -9,10 +9,10 @@ namespace Plato.StopForumSpam.Services
     public interface IStopForumSpamChecker
     {
 
+        StopForumSpamClientOptions Options { get; }
+
         void Configure(Action<StopForumSpamClientOptions> configure);
         
-        StopForumSpamClientOptions Options { get; set; }
-
         Task<SpamFrequencies> CheckAsync(string userName, string email, string ipAddress);
 
         Task<SpamFrequencies> CheckAsync(IUser user);

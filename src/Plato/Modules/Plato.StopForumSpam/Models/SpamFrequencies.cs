@@ -1,16 +1,41 @@
-﻿namespace Plato.StopForumSpam.Models
+﻿using System.Runtime.Serialization;
+using YamlDotNet.Serialization.NodeDeserializers;
+
+namespace Plato.StopForumSpam.Models
 {
+    [DataContract]
     public class SpamFrequencies
     {
 
-        public int UserName { get; set; }
+        [DataMember(Name = "userName")]
+        public SpamFrequency UserName { get; set; } = new SpamFrequency();
 
-        public int Email { get; set; }
+        [DataMember(Name = "email")]
+        public SpamFrequency Email { get; set; } = new SpamFrequency();
 
-        public int IpAddress { get; set; }
+        [DataMember(Name = "ipAddress")]
+        public SpamFrequency IpAddress { get; set; } = new SpamFrequency();
 
+        [DataMember(Name = "success")]
         public bool Success { get; set; }
 
     }
 
+    [DataContract]
+    public class SpamFrequency {
+
+        public SpamFrequency()
+        {
+        }
+
+        public SpamFrequency(int count) : this()
+        {
+            Count = count;
+        }
+        
+        [DataMember(Name = "count")]
+        public int Count { get; set; }
+
+    }
+    
 }

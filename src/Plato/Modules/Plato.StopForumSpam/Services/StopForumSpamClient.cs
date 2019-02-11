@@ -13,7 +13,7 @@ namespace Plato.StopForumSpam.Services
         
         private readonly string _format;
 
-        public StopForumSpamClientOptions Options { get; private set; }
+        public StopForumSpamClientOptions Options { get; private set; } = new StopForumSpamClientOptions();
 
         public StopForumSpamClient() 
         {
@@ -22,9 +22,7 @@ namespace Plato.StopForumSpam.Services
 
         public void Configure(Action<StopForumSpamClientOptions> configure)
         {
-            var options = new StopForumSpamClientOptions();
-            configure(options);
-            this.Options = options;
+            configure(this.Options);
         }
 
         public async Task<Response> CheckEmailAddressAsync(string emailAddress)

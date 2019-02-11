@@ -3,7 +3,7 @@
     public class StopForumSpamClientOptions
     {
         public string ApiKey { get; set; }
-
+        
     }
 
 }

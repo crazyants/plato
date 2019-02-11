@@ -7,7 +7,9 @@ namespace Plato.StopForumSpam.Services
 {
     public interface IStopForumSpamClient
     {
-        
+
+        StopForumSpamClientOptions Options { get; }
+
         void Configure(Action<StopForumSpamClientOptions> configure);
 
         Task<Response> CheckEmailAddressAsync(string emailAddress);
