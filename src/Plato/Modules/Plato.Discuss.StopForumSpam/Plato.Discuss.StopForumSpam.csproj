@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.StopForumSpam</AssemblyName>
-    <PackageId>Plato.StopForumSpam</PackageId>
+    <AssemblyName>Plato.Discuss.StopForumSpam</AssemblyName>
+    <PackageId>Plato.Discuss.StopForumSpam</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -22,7 +22,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
-    <ProjectReference Include="..\Plato.StopForumSpam.Client\Plato.StopForumSpam.Client.csproj" />
+    <ProjectReference Include="..\Plato.StopForumSpam\Plato.StopForumSpam.csproj" />
   </ItemGroup>
 
   <ItemGroup>

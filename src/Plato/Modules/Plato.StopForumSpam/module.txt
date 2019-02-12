@@ -1,5 +1,5 @@
 Name: Plato StopForumSpam
-Description: Adds core StopForumSpam services into Plato.
+Description: Adds core StopForumSpam settings & services into Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Spam
@@ -9,6 +9,10 @@ Dependencies:
 [	
 	{
 		Id: "Plato.Admin",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.StopForumSpam.Client",
 		Version: "1.0.0"
 	}
 ]

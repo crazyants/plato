@@ -1,0 +1,7 @@
+Name: Plato StopForumSpam Client
+Description: Adds services to allow Plato to interact with the StopForumspam API.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0

@@ -1,0 +1,14 @@
+Name: Plato Discuss StopForumSpam
+Description: Adds StopForumSpam checks when posting new topics or replies within the discuss module.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.StopForumSpam",
+		Version: "1.0.0"
+	}
+]

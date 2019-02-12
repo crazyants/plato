@@ -3,14 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.StopForumSpam.Models;
-using Plato.Users.StopForumSpam.Stores;
-using Plato.Users.StopForumSpam.Models;
-using Plato.Users.StopForumSpam.Navigation;
-using Plato.Users.StopForumSpam.ViewProviders;
 
 namespace Plato.Users.StopForumSpam
 {
@@ -25,20 +19,11 @@ namespace Plato.Users.StopForumSpam
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-            // Stores
-            services.AddScoped<IStopForumSpamSettingsStore<StopForumSpamSettings>, StopForumSpamSettingsStore>();
             
-            // Admin view provider
-            services.AddScoped<IViewProviderManager<StopForumSpamSettings>, ViewProviderManager<StopForumSpamSettings>>();
-            services.AddScoped<IViewProvider<StopForumSpamSettings>, AdminViewProvider>();
-                     
-            // Navigation provider
-            services.AddScoped<INavigationProvider, AdminMenu>();
-
             // Register spam operations provider
             services.AddScoped<ISpamOperationsProvider<SpamOperation>, SpamOperations>();
             
+
         }
 
         public override void Configure(
