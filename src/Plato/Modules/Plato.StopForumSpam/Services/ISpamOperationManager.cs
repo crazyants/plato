@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
-using Plato.StopForumSpam.Models;
 
 namespace Plato.StopForumSpam.Services
 {
-    public interface ISpamOperationManager<TModel> where TModel : class
+    public interface ISpamOperationManager<TOperation> where TOperation : class
     {
 
-        Task<IEnumerable<ICommandResult<TModel>>> ExecuteAsync(ISpamOperationType operationType, TModel model);
+        IEnumerable<TOperation> GetSpamOperations();
+
+        Task<IDictionary<string, IEnumerable<TOperation>>> GetCategorizedSpamOperationsAsync();
 
     }
 

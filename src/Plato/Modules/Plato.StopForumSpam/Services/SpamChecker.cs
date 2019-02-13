@@ -26,8 +26,25 @@ namespace Plato.StopForumSpam.Services
         public async Task<bool> CheckAsync(IUser user)
         {
 
+            // Get StopForumSpam settings
+            var settings = await _stopForumSpamSettingsStore.GetAsync();
+
+            // If we don't have any settings or an API key always return
+            // false as we are unable to determine if the details are SPAM
+
+            if (settings == null)
+            {
+                return false;
+            }
+
+            // We always need an API key
+            if (string.IsNullOrEmpty(settings?.ApiKey))
+            {
+                return false;
+            }
+
             // Get configured spam level
-            var level = await GetLevel();
+            var level = GetLevel(settings);
 
             // We always need a level to check against
             if (level == null)
@@ -35,22 +52,29 @@ namespace Plato.StopForumSpam.Services
                 throw new ArgumentNullException(nameof(level));
             }
 
-            // Get StopForumSpam results
+            // Configure frequency checker
+            _spamFrequencies.Configure(o =>
+            {
+                o.ApiKey = settings?.ApiKey ?? "";
+            });
+
+            // Get frequencies
             var frequencies = await _spamFrequencies.GetAsync(user);
 
-            // Ensure we have results
+            // Ensure we have frequencies
             if (frequencies == null)
             {
                 return false;
             }
 
-            // If an error occurs whilst communicating with SFS simply return false
+            // If an error occurs simply return false
             if (!frequencies.Success)
             {
                 return false;
             }
-            
-            // Check results against configured level 
+
+            // We have frequencies to check against our configured spam level
+            // Go ahead and check frequencies against configured level 
 
             if (level.Frequencies.UserName.Appears)
             {
@@ -80,9 +104,8 @@ namespace Plato.StopForumSpam.Services
 
         }
 
-        async Task<SpamLevel> GetLevel()
+        private SpamLevel GetLevel(StopForumSpamSettings settings)
         {
-            var settings = await _stopForumSpamSettingsStore.GetAsync();
             return DefaultSpamLevels.SpamLevels.FirstOrDefault(l => l.Tick == settings?.SpamLevel) ??
                    DefaultSpamLevels.SpamLevels.FirstOrDefault(l => l.Tick == DefaultSpamLevels.DefaultSpamLevel);
         }

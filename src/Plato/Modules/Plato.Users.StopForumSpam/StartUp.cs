@@ -9,7 +9,8 @@ using Plato.Internal.Models.Users;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 using Plato.Users.StopForumSpam.ViewProviders;
-using Plato.Users.StopForumSpam.SpamOperations;
+using Plato.Users.StopForumSpam.SpamOperators;
+
 
 namespace Plato.Users.StopForumSpam
 {
@@ -26,25 +27,23 @@ namespace Plato.Users.StopForumSpam
         {
             
             // Register spam operation type providers
-            services.AddScoped<ISpamOperationTypeProvider<SpamOperationType>, SpamOperationTypes>();
+            services.AddScoped<ISpamOperationProvider<SpamOperation>, SpamOperations>();
             
-            // Register spam operation manager for users
-            services.AddScoped<ISpamOperationManager<User>, SpamOperationManager<User>>();
+            // Register spam operator manager for users
+            services.AddScoped<ISpamOperatorManager<User>, SpamOperatorManager<User>>();
 
-            // Register spam operation providers
-            services.AddScoped<ISpamOperationProvider<User>, RegistrationOperation>();
-            services.AddScoped<ISpamOperationProvider<User>, LoginOperation>();
+            // Register spam operator providers
+            services.AddScoped<ISpamOperatorProvider<User>, RegistrationOperator>();
+            services.AddScoped<ISpamOperatorProvider<User>, LoginOperator>();
 
-            //// Login view provider
-            //services.AddScoped<IViewProviderManager<UserLogin>, ViewProviderManager<UserLogin>>();
-            //services.AddScoped<IViewProvider<UserLogin>, LoginViewProvider>();
+            // Login view provider
+            services.AddScoped<IViewProviderManager<UserLogin>, ViewProviderManager<UserLogin>>();
+            services.AddScoped<IViewProvider<UserLogin>, LoginViewProvider>();
 
-            // Register view provider
+            // Registration view provider
             services.AddScoped<IViewProviderManager<UserRegistration>, ViewProviderManager<UserRegistration>>();
             services.AddScoped<IViewProvider<UserRegistration>, RegisterViewProvider>();
-
-
-
+            
         }
 
         public override void Configure(

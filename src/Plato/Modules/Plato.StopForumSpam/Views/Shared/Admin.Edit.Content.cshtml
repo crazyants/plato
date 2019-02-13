@@ -60,8 +60,12 @@
                         {
                             foreach (var operation in Model.CategorizedSpamOperations[category])
                             {
-                                var existingOptions = Model.SpamOperations.FirstOrDefault(o => o.Name.Equals(operation.Name, StringComparison.OrdinalIgnoreCase));
+                                var existingOperation = Model.SpamOperations.FirstOrDefault(o => o.Name.Equals(operation.Name, StringComparison.OrdinalIgnoreCase));
                                 var contentId = "panel" + operation.Name;
+                                var messageId = "message-" + operation.Name;
+                                var messageCss = existingOperation == null
+                                    ? operation.CustomMessage ? "list-group-item" : "list-group-item hidden"
+                                    : existingOperation.CustomMessage ? "list-group-item" : "list-group-item hidden";
                                 <fieldset>
                                     <div class="form-group">
                                         <div class="card card-body-flush">
@@ -86,7 +90,7 @@
                                                             </span>
                                                             <span class="col-2 text-right">
                                                                 <span class="switch switch-round">
-                                                                    <input class="form-check-input" type="checkbox" value="flagAsSpam" name="flagAsSpam.@operation.Name" checked="@existingOptions?.FlagAsSpam" />
+                                                                    <input class="form-check-input" type="checkbox" value="flagAsSpam" name="flagAsSpam.@operation.Name" checked="@existingOperation?.FlagAsSpam" />
                                                                     <span class="switch-slider"></span>
                                                                 </span>
                                                             </span>
@@ -100,7 +104,7 @@
                                                             </span>
                                                             <span class="col-2 text-right">
                                                                 <span class="switch switch-round">
-                                                                    <input class="form-check-input" type="checkbox" value="notifyAdmin" name="notifyAdmin.@operation.Name" checked="@existingOptions?.NotifyAdmin" />
+                                                                    <input class="form-check-input" type="checkbox" value="notifyAdmin" name="notifyAdmin.@operation.Name" checked="@existingOperation?.NotifyAdmin" />
                                                                     <span class="switch-slider"></span>
                                                                 </span>
                                                             </span>
@@ -114,7 +118,7 @@
                                                             </span>
                                                             <span class="col-2 text-right">
                                                                 <span class="switch switch-round">
-                                                                    <input class="form-check-input" type="checkbox" value="notifyStaff" name="notifyStaff.@operation.Name" checked="@existingOptions?.NotifyStaff" />
+                                                                    <input class="form-check-input" type="checkbox" value="notifyStaff" name="notifyStaff.@operation.Name" checked="@existingOperation?.NotifyStaff" />
                                                                     <span class="switch-slider"></span>
                                                                 </span>
                                                             </span>
@@ -123,25 +127,25 @@
                                                     <li class="list-group-item list-group-item-action">
                                                         <label class="row">
                                                             <span class="col-10">
-                                                                <h6>@T["Alter Database"]</h6>
-                                                                @T["If enabled the Plato database will be modified even if an entry is detected as SPAM. If disabled the Plato database will not be modified if an entry is detected as SPAM. "]
+                                                                <h6>@T["Custom Error"]</h6>
+                                                                @T["Enable this option to display a custom error message to users when submissions are detected as SPAM. If this option is enabled the Plato database will not be modified. Disable this option to still allow submissions but optionally flag submissions as spam or trigger notifications."]
                                                             </span>
                                                             <span class="col-2 text-right">
                                                                 <span class="switch switch-round">
-                                                                    <input class="form-check-input" type="checkbox" value="allowAlter" name="allowAlter.@operation.Name" checked="@existingOptions?.AllowAlter" />
+                                                                    <input class="form-check-input toggle-message" data-message-selector='#@messageId' type="checkbox" value="allowAlter" name="allowAlter.@operation.Name" checked="@existingOperation?.CustomMessage" />
                                                                     <span class="switch-slider"></span>
                                                                 </span>
                                                             </span>
                                                         </label>
                                                     </li>
-                                                    <li class="list-group-item">
+                                                    <li id="@messageId" class="@messageCss">
                                                         <label class="row">
                                                             <span class="col-12">
                                                                 <h6>@T["Error Message"]</h6>
-                                                                @T["Customize the error message presented to users if they perform this operation is detected as SPAM."]
+                                                                @T["Customise the error message presented to end users if there submission is detected as SPAM."]
                                                             </span>
                                                             <span class="col-12 pt-2">
-                                                                <textarea rows="6" class="form-control" name="customMessage.@operation.Name">@existingOptions?.Message</textarea>
+                                                                <textarea rows="6" class="form-control" name="customMessage.@operation.Name">@existingOperation?.Message</textarea>
                                                             </span>
                                                         </label>
                                                     </li>
@@ -158,9 +162,7 @@
                     {
                         <h6>@T["No Operations"]</h6>
                         @T["No spam operations have been registered. At minimum you should enable the Plato.User.StopForumSpam feature."]
-
                     }
-
 
                 </div>
             </div>
@@ -180,9 +182,10 @@
 <script src="/js/vendors/bootstrap-slider.js" section="Footer"></script>
 
 <script section="Footer">
+    
 
     $(document).ready(function() {
-
+        
         // Get slider
         var $slider = $('#slider').find("input");
         if ($slider.length === 0) {
@@ -242,6 +245,31 @@
                 }
              
             });
+
+        // Custom error onChange
+        
+        $(".toggle-message").each(function() {
+            $(this).change(function () {
+
+                var selector = $(this).attr("data-message-selector"),
+                    $message = $(selector);
+                if ($message.length > 0) {
+                    if ($message.hasClass("hidden")) {
+                        $message.removeClass("hidden");
+                    }
+
+                    if ($(this).prop("checked")) {
+                        $message.slideDown();
+                    } else {
+                        $message.slideUp();
+                    }
+                }
+          
+
+            });
+
+        });
+
 
     });
 

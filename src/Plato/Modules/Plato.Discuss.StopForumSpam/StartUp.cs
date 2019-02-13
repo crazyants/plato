@@ -20,7 +20,7 @@ namespace Plato.Discuss.StopForumSpam
         public override void ConfigureServices(IServiceCollection services)
         {
             // Register spam operations provider
-            services.AddScoped<ISpamOperationTypeProvider<Plato.StopForumSpam.Models.SpamOperationType>, SpamOperationTypes>();
+            //services.AddScoped<ISpamOperationProvider<SpamOperation>, SpamOperations>();
             
         }
 

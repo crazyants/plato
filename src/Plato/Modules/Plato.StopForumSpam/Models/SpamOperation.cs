@@ -6,7 +6,7 @@ namespace Plato.StopForumSpam.Models
 {
     
     [DataContract]
-    public class SpamOperationType : Serializable, ISpamOperationType
+    public class SpamOperation : Serializable, ISpamOperation
     {
 
         [DataMember(Name = "name")]
@@ -28,16 +28,16 @@ namespace Plato.StopForumSpam.Models
         public bool NotifyStaff { get; set; }
 
         [DataMember(Name = "allowAlter")]
-        public bool AllowAlter { get; set; }
+        public bool CustomMessage { get; set; }
 
         [DataMember(Name = "message")]
         public string Message { get; set; }
 
-        public SpamOperationType()
+        public SpamOperation()
         {
         }
 
-        public SpamOperationType(string name) : this()
+        public SpamOperation(string name) : this()
         {
             // We always need a name
             if (string.IsNullOrEmpty(name))
@@ -47,7 +47,7 @@ namespace Plato.StopForumSpam.Models
             Name = name;
         }
 
-        public SpamOperationType(string name, string description) : this(name)
+        public SpamOperation(string name, string description) : this(name)
         {
             Description = description;
         }

@@ -15,16 +15,16 @@ namespace Plato.StopForumSpam.ViewProviders
     {
 
         private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _recaptchaSettingsStore;
-        private readonly ISpamOperationTypeManager<SpamOperationType> _spamOperationTypeManager;
+        private readonly ISpamOperationManager<SpamOperation> _spamOperationManager;
         private readonly HttpRequest _request;
 
         public AdminViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IStopForumSpamSettingsStore<StopForumSpamSettings> recaptchaSettingsStore,
-            ISpamOperationTypeManager<SpamOperationType> spamOperationTypeManager)
+            ISpamOperationManager<SpamOperation> spamOperationManager)
         {
             _recaptchaSettingsStore = recaptchaSettingsStore;
-            _spamOperationTypeManager = spamOperationTypeManager;
+            _spamOperationManager = spamOperationManager;
             _request = httpContextAccessor.HttpContext.Request;
 
         }
@@ -46,8 +46,8 @@ namespace Plato.StopForumSpam.ViewProviders
                 ApiKey = settings.ApiKey,
                 SpamLevel = settings.SpamLevel,
                 SpamOperations = settings.SpamOperations ??
-                                 _spamOperationTypeManager.GetSpamOperations(),
-                CategorizedSpamOperations = await _spamOperationTypeManager.GetCategorizedSpamOperationsAsync()
+                                 _spamOperationManager.GetSpamOperations(),
+                CategorizedSpamOperations = await _spamOperationManager.GetCategorizedSpamOperationsAsync()
             };
 
             return Views(
@@ -63,17 +63,17 @@ namespace Plato.StopForumSpam.ViewProviders
         {
 
             // All possible spam operations
-            var spamOperations = _spamOperationTypeManager.GetSpamOperations();
+            var spamOperations = _spamOperationManager.GetSpamOperations();
             
             // Build operations to add
-            var operationsToAdd = new ConcurrentDictionary<string, SpamOperationType>();
+            var operationsToAdd = new ConcurrentDictionary<string, SpamOperation>();
             foreach (var operation in spamOperations)
             {
 
                 operation.FlagAsSpam = false;
                 operation.NotifyAdmin = false;
                 operation.NotifyStaff = false;
-                operation.AllowAlter = false;
+                operation.CustomMessage = false;
 
                 foreach (var key in _request.Form.Keys)
                 {
@@ -94,7 +94,7 @@ namespace Plato.StopForumSpam.ViewProviders
                                     operation.NotifyStaff = true;
                                     break;
                                 case "allowAlter":
-                                    operation.AllowAlter = true;
+                                    operation.CustomMessage = true;
                                     break;
                             }
                         }

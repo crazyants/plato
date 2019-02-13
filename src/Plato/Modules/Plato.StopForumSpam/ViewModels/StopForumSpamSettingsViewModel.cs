@@ -24,9 +24,9 @@ namespace Plato.StopForumSpam.ViewModels
 
         // ----------
 
-        public IEnumerable<SpamOperationType> SpamOperations { get; set; }
+        public IEnumerable<SpamOperation> SpamOperations { get; set; }
 
-        public IDictionary<string, IEnumerable<SpamOperationType>> CategorizedSpamOperations { get; set; }
+        public IDictionary<string, IEnumerable<SpamOperation>> CategorizedSpamOperations { get; set; }
 
         public SpamLevel SelectedSpamLevel
         {

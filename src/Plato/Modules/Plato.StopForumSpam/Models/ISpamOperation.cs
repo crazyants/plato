@@ -1,6 +1,6 @@
 ﻿namespace Plato.StopForumSpam.Models
 {
-    public interface ISpamOperationType
+    public interface ISpamOperation
     {
 
         string Name { get; set; }
@@ -15,7 +15,7 @@
 
         bool NotifyStaff { get; set; }
 
-        bool AllowAlter { get; set; }
+        bool CustomMessage { get; set; }
         
         string Message { get; set; }
 

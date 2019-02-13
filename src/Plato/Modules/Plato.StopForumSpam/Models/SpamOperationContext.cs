@@ -1,20 +1,20 @@
 ﻿namespace Plato.StopForumSpam.Models
 {
 
-    public interface ISpamOperationContext<TModel> where TModel : class
+    public interface ISpamOperatorContext<TModel> where TModel : class
     {
         TModel Model { get; set; }
 
-        ISpamOperationType Operation { get; set; }
+        ISpamOperation Operation { get; set; }
 
     }
 
-    public class SpamOperationContext<TModel> : ISpamOperationContext<TModel> where TModel : class
+    public class SpamOperatorContext<TModel> : ISpamOperatorContext<TModel> where TModel : class
     {
 
         public TModel Model { get; set; }
 
-        public ISpamOperationType Operation { get; set; }
+        public ISpamOperation Operation { get; set; }
 
     }
 

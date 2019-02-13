@@ -2,93 +2,93 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 using Plato.StopForumSpam.Models;
-using Plato.StopForumSpam.Stores;
 
 namespace Plato.StopForumSpam.Services
 {
     
-    public class SpamOperationManager<TModel> : ISpamOperationManager<TModel> where TModel : class
+    public class SpamOperationManager<TOperation> : ISpamOperationManager<TOperation> where TOperation : class, ISpamOperation
     {
 
-        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
-        private readonly IEnumerable<ISpamOperationProvider<TModel>> _spamOperationsProviders;
-        private readonly ILogger<SpamOperationManager<TModel>> _logger;
+        private IEnumerable<TOperation> _operations;
+
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IEnumerable<ISpamOperationProvider<TOperation>> _providers;
+        private readonly ILogger<SpamOperationManager<TOperation>> _logger;
+        private readonly ITypedModuleProvider _typedModuleProvider;
 
         public SpamOperationManager(
-            IEnumerable<ISpamOperationProvider<TModel>> spamOperationProviders,
-            IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore,
-            ILogger<SpamOperationManager<TModel>> logger)
+            IEnumerable<ISpamOperationProvider<TOperation>> providers,
+            ILogger<SpamOperationManager<TOperation>> logger,
+            ITypedModuleProvider typedModuleProvider,
+            IAuthorizationService authorizationService)
         {
-            _spamOperationsProviders = spamOperationProviders;
-            _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
+            _providers = providers;
+            _typedModuleProvider = typedModuleProvider;
+            _authorizationService = authorizationService;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ICommandResult<TModel>>> ExecuteAsync(ISpamOperationType operation, TModel model)
+        public IEnumerable<TOperation> GetSpamOperations()
         {
-            
-            // If the spam operation has been updated within the database ensure
-            // we use the updated version from the database as opposed to the default
-            var settings = await _stopForumSpamSettingsStore.GetAsync();
-            var existingOperation = settings?.SpamOperations?.FirstOrDefault(o => o.Name.Equals(operation.Name));
-            if (existingOperation != null)
-            {
-                operation = existingOperation;
-            }
 
-            // Create context for providers
-            var context = new SpamOperationContext<TModel>()
+            if (_operations == null)
             {
-                Model = model,
-                Operation = operation
-            };
-
-            // Invoke providers
-            var results = new List<ICommandResult<TModel>>();
-            foreach (var operationProvider in _spamOperationsProviders)
-            {
-                try
+                var operations = new List<TOperation>();
+                foreach (var provider in _providers)
                 {
-                    var result = await operationProvider.ExecuteAsync(context);
-                    if (result != null)
+                    try
                     {
-                        results.Add(result);
+                        operations.AddRange(provider.GetSpamOperations());
                     }
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, $"An error occurred whilst invoking the ExecuteAsync method within a spam operation provider for type '{operation.Name}'.");
-                }
-            }
-
-            // Log results
-            foreach (var result in results)
-            {
-                if (result.Succeeded)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
+                    catch (Exception e)
                     {
-                        _logger.LogInformation($"Spam Operation '{operation.Name}' Success!");
-                    }
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        if (_logger.IsEnabled(LogLevel.Critical))
-                        {
-                            _logger.LogCritical($"Spam Operation of type '{operation.Name}' failed with the following error: {error.Description}");
-                        }
+                        _logger.LogError(e,
+                            $"An exception occurred within the spam operation provider. Please review your spam operation provider and try again. {e.Message}");
+                        throw;
                     }
                 }
 
+                _operations = operations;
             }
 
-            return results;
+            return _operations;
 
+        }
+
+        public async Task<IDictionary<string, IEnumerable<TOperation>>> GetCategorizedSpamOperationsAsync()
+        {
+
+            var output = new Dictionary<string, IEnumerable<TOperation>>();
+
+            foreach (var provider in _providers)
+            {
+
+                var module = await _typedModuleProvider.GetModuleForDependency(provider.GetType());
+                var name = module.Descriptor.Name;
+                var operations = provider.GetSpamOperations();
+                foreach (var operation in operations)
+                {
+                    var category = operation.Category;
+                    var title = String.IsNullOrWhiteSpace(category) ?
+                        name :
+                        category;
+
+                    if (output.ContainsKey(title))
+                    {
+                        output[title] = output[title].Concat(new[] { operation });
+                    }
+                    else
+                    {
+                        output.Add(title, new[] { operation });
+                    }
+                }
+            }
+
+            return output;
         }
 
     }

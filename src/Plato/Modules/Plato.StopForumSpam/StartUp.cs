@@ -26,15 +26,14 @@ namespace Plato.StopForumSpam
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-          
+            
             // Operations type manager
-            services.AddScoped<ISpamOperationTypeManager<SpamOperationType>, SpamOperationTypeManager<SpamOperationType>>();
+            services.AddScoped<ISpamOperationManager<SpamOperation>, SpamOperationManager<SpamOperation>>();
 
             // Spam level checker
             services.AddScoped<ISpamChecker, SpamChecker>();
             
-            // Stores
+            // Settings store
             services.AddScoped<IStopForumSpamSettingsStore<StopForumSpamSettings>, StopForumSpamSettingsStore>();
 
             // Admin view provider
@@ -43,9 +42,7 @@ namespace Plato.StopForumSpam
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
-
-
-
+            
         }
 
         public override void Configure(
