@@ -27,16 +27,14 @@ namespace Plato.Users.ViewModels
         [DataType(DataType.EmailAddress)]
         [Display(Name = "email address")]
         public string Email { get; set; }
-
-
+        
         public string Location { get; set; }
 
         public string Bio { get; set; }
 
         [DataType(DataType.Url)]
         public string Url { get; set; }
-
-
+        
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
@@ -59,6 +57,8 @@ namespace Plato.Users.ViewModels
         public bool DisplayPasswordFields { get; set; }
 
         public bool EmailConfirmed { get; set; }
+
+        public bool IsSpam { get; set; }
 
     }
 

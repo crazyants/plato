@@ -27,25 +27,25 @@ namespace Plato.Users.StopForumSpam.SpamOperators
 
             // Create result
             var result = new SpamOperatorResult<User>();
-
-            // Spam checks returned false, return success
-            // to indicate no further work is needed
-            if (!await _spamChecker.CheckAsync(context.Model))
+                         
+            // If our result is OK simply return
+            var spamResult = await _spamChecker.CheckAsync(context.Model);
+            if (spamResult.Succeeded)
             {
                 return result.Success(context.Model);
             }
             
-            // Flag as SPAM?
-            if (context.Operation.FlagAsSpam)
+            // Notify administrators of SPAM
+            if (context.Operation.NotifyAdmin)
             {
-                context.Model.IsSpam = true;
+                NotifyAdmins();
             }
 
-            // Notify administrators of SPAM
-            NotifyAdmins();
-
             // Notify staff of SPAM
-            NotifyStaff();
+            if (context.Operation.NotifyStaff)
+            {
+                NotifyStaff();
+            }
 
             // Return failed with our updated model and operation
             // This provides the calling code with the operation error message

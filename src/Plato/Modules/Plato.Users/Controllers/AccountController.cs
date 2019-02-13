@@ -281,7 +281,7 @@ namespace Plato.Users.Controllers
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model,  string returnUrl = null)
+        public async Task<IActionResult> Register(RegisterViewModel viewModel,  string returnUrl = null)
         {
 
             // Persist returnUrl
@@ -290,10 +290,10 @@ namespace Plato.Users.Controllers
             // Build model for view providers
             var registration = new UserRegistration()
             {
-                UserName = model.UserName,
-                Email = model.Email,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword
+                UserName = viewModel.UserName,
+                Email = viewModel.Email,
+                Password = viewModel.Password,
+                ConfirmPassword = viewModel.ConfirmPassword
             };
 
             // Validate model state within all involved view providers
@@ -301,20 +301,22 @@ namespace Plato.Users.Controllers
             {
 
                 // Get composed type from all involved view providers
-                var registerViewModel = await _registerViewProvider.GetComposedType(this);
-                
+                var model = await _registerViewProvider.GetComposedType(this);
+
                 // Create the user from composed type
-                var result = await _userManager.CreateAsync(registerViewModel, registerViewModel.Password);
+                var result = await _platoUserManager.CreateAsync(model.UserName, model.Email, model.Password);
+        
+                //var result = await _userManager.CreateAsync(registerViewModel, registerViewModel.Password);
                 if (result.Succeeded)
                 {
                     
                     // Indicate new flag to allow optional update
                     // on first creation within any involved view provider
-                    registerViewModel.IsNewUser = true;
+                    model.IsNewUser = true;
 
                     // Execute view providers update method
                     // var viewResult = await _registerViewProvider.ProvideUpdateAsync(registerViewModel, this);
-                    await _registerViewProvider.ProvideUpdateAsync(registerViewModel, this);
+                    await _registerViewProvider.ProvideUpdateAsync(model, this);
                     
                     // Success - Redirect to confirmation page
                     return RedirectToAction(nameof(RegisterConfirmation));
@@ -886,8 +888,9 @@ namespace Plato.Users.Controllers
                 {
                     UserName = userNAme,
                     Email = email,
+                    Password = password,
                     DisplayName = displayName
-                }, password);
+                });
             }
 
         }

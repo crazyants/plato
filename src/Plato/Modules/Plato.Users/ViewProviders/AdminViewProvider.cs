@@ -113,7 +113,8 @@ namespace Plato.Users.ViewProviders
                 LastLoginDate = user.LastLoginDate,
                 IsNewUser = user.Id == 0,
                 DisplayPasswordFields = user.Id == 0,
-                EmailConfirmed = user.EmailConfirmed
+                EmailConfirmed = user.EmailConfirmed,
+                IsSpam = user.IsSpam
             };
 
             return Task.FromResult(

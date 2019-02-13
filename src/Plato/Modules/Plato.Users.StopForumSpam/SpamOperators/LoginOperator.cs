@@ -32,7 +32,8 @@ namespace Plato.Users.StopForumSpam.SpamOperators
 
             // Spam checks returned false, return success
             // to indicate no further work is needed
-            if (!await _spamChecker.CheckAsync(context.Model))
+            var spamResult = await _spamChecker.CheckAsync(context.Model);
+            if (spamResult.Succeeded)
             {
                 return result.Success(context.Model);
             }

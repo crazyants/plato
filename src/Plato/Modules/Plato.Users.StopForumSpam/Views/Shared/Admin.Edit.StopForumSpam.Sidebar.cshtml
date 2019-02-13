@@ -1,0 +1,40 @@
+﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using Plato.StopForumSpam.Services
+@model UserSpamViewModel
+@{
+    var i = 0;
+}
+@if (!Model.SpamCheckerResult.Succeeded && !Model.IsNewUser)
+{
+<div class="alert alert-danger">
+    <p>
+        <i class="fal fa-exclamation-triangle mr-2"></i>
+
+        @if (Model.SpamCheckerResult.Errors.Any())
+        {
+            @T["This user may be automatically flagged as SPAM as the "]
+            @foreach (var error in Model.SpamCheckerResult.Errors)
+            {
+                i++;
+                @T[error.Description]
+                @if (i < Model.SpamCheckerResult.Errors.Count())
+                {
+                    <span>
+                        ,
+                    </span>
+                }
+            }
+            @T[" appears within the StopForumSpam.com database"]
+        }
+
+
+
+    </p>
+    <p>
+        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id" class="btn btn-danger">
+            @T["Whitelist User"]
+        </a>
+    </p>
+</div>
+}
+

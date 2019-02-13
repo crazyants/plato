@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Users;
+using Plato.StopForumSpam.Client.Models;
 using Plato.StopForumSpam.Client.Services;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Stores;
@@ -9,7 +10,7 @@ using Plato.StopForumSpam.ViewModels;
 
 namespace Plato.StopForumSpam.Services
 {
-    
+
     public class SpamChecker : ISpamChecker
     {
         private readonly ISpamFrequencies _spamFrequencies;
@@ -23,24 +24,27 @@ namespace Plato.StopForumSpam.Services
             _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
         }
 
-        public async Task<bool> CheckAsync(IUser user)
+        public async Task<ISpamCheckerResult> CheckAsync(IUser user)
         {
 
             // Get StopForumSpam settings
             var settings = await _stopForumSpamSettingsStore.GetAsync();
 
+            // The result we'll return
+            var result = new SpamCheckerResult();
+            
             // If we don't have any settings or an API key always return
             // false as we are unable to determine if the details are SPAM
 
             if (settings == null)
             {
-                return false;
+                return result.Success();
             }
 
             // We always need an API key
             if (string.IsNullOrEmpty(settings?.ApiKey))
             {
-                return false;
+                return result.Success();
             }
 
             // Get configured spam level
@@ -64,23 +68,23 @@ namespace Plato.StopForumSpam.Services
             // Ensure we have frequencies
             if (frequencies == null)
             {
-                return false;
+                return result.Success();
             }
 
             // If an error occurs simply return false
             if (!frequencies.Success)
             {
-                return false;
+                return result.Success();
             }
 
             // We have frequencies to check against our configured spam level
             // Go ahead and check frequencies against configured level 
-
+            
             if (level.Frequencies.UserName.Appears)
             {
                 if (frequencies.UserName.Appears)
                 {
-                    return true;
+                    result.Error(RequestType.Username);
                 }
             }
 
@@ -88,7 +92,7 @@ namespace Plato.StopForumSpam.Services
             {
                 if (frequencies.Email.Appears)
                 {
-                    return true;
+                    result.Error(RequestType.EmailAddress);
                 }
             }
 
@@ -96,11 +100,11 @@ namespace Plato.StopForumSpam.Services
             {
                 if (frequencies.IpAddress.Appears)
                 {
-                    return true;
+                    result.Error(RequestType.IpAddress);
                 }
             }
-            
-            return false;
+
+            return result;
 
         }
 

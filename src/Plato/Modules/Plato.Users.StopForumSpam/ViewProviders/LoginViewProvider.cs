@@ -3,6 +3,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Net.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.StopForumSpam.Services;
 
 namespace Plato.Users.StopForumSpam.ViewProviders
@@ -10,15 +11,18 @@ namespace Plato.Users.StopForumSpam.ViewProviders
     public class LoginViewProvider : BaseViewProvider<UserLogin>
     {
 
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISpamOperatorManager<User> _spamOperatorManager;
         private readonly IClientIpAddress _clientIpAddress;
 
         public LoginViewProvider(
             IClientIpAddress clientIpAddress, 
-            ISpamOperatorManager<User> spamOperatorManager)
+            ISpamOperatorManager<User> spamOperatorManager,
+            IPlatoUserStore<User> platoUserStore)
         {
             _clientIpAddress = clientIpAddress;
             _spamOperatorManager = spamOperatorManager;
+            _platoUserStore = platoUserStore;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(UserLogin viewModel,
@@ -60,7 +64,10 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                     {
                         if (result.Operation.CustomMessage)
                         {
-                            updater.ModelState.AddModelError(string.Empty, result.Operation.Message);
+                            updater.ModelState.AddModelError(string.Empty,
+                                !string.IsNullOrEmpty(result.Operation.Message)
+                                    ? result.Operation.Message
+                                    : $"Sorry but we've identified your details have been used by known spammers.");
                             valid = false;
                         }
                     }
@@ -70,12 +77,51 @@ namespace Plato.Users.StopForumSpam.ViewProviders
             return valid;
 
         }
-
-
-        public override async Task<IViewProviderResult> BuildUpdateAsync(UserLogin viewModel,
+        
+        public override async Task<IViewProviderResult> BuildUpdateAsync(UserLogin userLogin,
             IViewProviderContext context)
         {
-            return await BuildIndexAsync(viewModel, context);
+            if (!context.Updater.ModelState.IsValid)
+            {
+                return await BuildIndexAsync(userLogin, context);
+            }
+
+            // Execute registered spam operators
+            var results = await _spamOperatorManager.OperateAsync(SpamOperations.Login, new User()
+            {
+                UserName = userLogin.UserName,
+                Email = userLogin.Email,
+                IpV4Address = _clientIpAddress.GetIpV4Address()
+            });
+
+            var flagAsSpam = false;
+            if (results != null)
+            {
+                foreach (var result in results)
+                {
+                    if (!result.Succeeded)
+                    {
+                        if (result.Operation.FlagAsSpam)
+                        {
+                            flagAsSpam = true;
+                        }
+                    }
+                }
+            }
+
+            // Do we need to update the IsSpam flag?
+            if (flagAsSpam)
+            {
+                var user = await _platoUserStore.GetByUserNameAsync(userLogin.UserName);
+                if (user != null)
+                {
+                    user.IsSpam = true;
+                    await _platoUserStore.UpdateAsync(user);
+                }
+            }
+
+            return await BuildIndexAsync(userLogin, context);
+
         }
         
     }

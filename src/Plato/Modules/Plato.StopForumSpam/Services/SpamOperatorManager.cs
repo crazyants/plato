@@ -45,7 +45,7 @@ namespace Plato.StopForumSpam.Services
                 Operation = operation
             };
 
-            // Invoke providers
+            // Invoke provided operators
             var results = new List<ISpamOperatorResult<TModel>>();
             foreach (var spamOperator in _spamOperators)
             {

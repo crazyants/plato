@@ -75,7 +75,15 @@ namespace Plato.Users.Services
 
         }
 
-
+        public async Task<ICommandResult<TUser>> CreateAsync(
+            string userName,
+            string email,
+            string password,
+            string[] roleNames = null)
+        {
+            return await CreateAsync(userName, string.Empty, email, password, roleNames);
+        }
+        
         public async Task<ICommandResult<TUser>> CreateAsync(TUser user)
         {
             return await CreateAsync(user, user.Password);

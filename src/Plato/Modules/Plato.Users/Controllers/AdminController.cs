@@ -254,7 +254,6 @@ namespace Plato.Users.Controllers
                     model.DisplayName,
                     model.Email,
                     model.Password);
-
                 if (result.Succeeded)
                 {
 

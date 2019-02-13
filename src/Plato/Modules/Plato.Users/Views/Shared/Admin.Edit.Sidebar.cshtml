@@ -1,5 +1,4 @@
 ﻿@model EditUserViewModel
-
 @if (!Model.EmailConfirmed && !Model.IsNewUser)
 {
     <div class="alert alert-danger">
@@ -13,6 +12,27 @@
     </div>
 }
 
+@if (!Model.IsSpam && !Model.IsNewUser)
+{
+    <div class="alert alert-danger">
+        <p>
+            <i class="fal fa-exclamation-triangle mr-2"></i>
+            @T["This user has been flagged as SPAM. Any content posted by this user will require manual approval. If this is a genuine user you can whitelist this user below..."]
+        </p>
+        <p>
+            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id" class="btn btn-danger">
+                @T["Whitelist User"]
+            </a>
+        </p>
+        <p>
+            <a href="#">
+                Why was this account flagged as SPAM?
+            </a>
+        </p>
+    </div>
+}
+
+
 <card>
     <card-title>
         <h6 class="card-title">@T["Photo"]</h6>
@@ -24,13 +44,13 @@
                        asp-for="AvatarFile"
                        data-upload="avatar"
                        data-upload-preview-selector="#avatarPreview"
-                       data-upload-accept=".png, .jpg, .jpeg"/>
+                       data-upload-accept=".png, .jpg, .jpeg" />
                 <label for="imageUpload">
                     <i class="fa fa-upload"></i>
                 </label>
             </div>
             <div class="avatar-preview">
-                <avatar id="avatarPreview" class="avatar" url="@Model.Avatar.Url"/>
+                <avatar id="avatarPreview" class="avatar" url="@Model.Avatar.Url" />
             </div>
         </div>
     </card-body>

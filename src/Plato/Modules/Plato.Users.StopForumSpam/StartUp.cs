@@ -32,7 +32,7 @@ namespace Plato.Users.StopForumSpam
             // Register spam operator manager for users
             services.AddScoped<ISpamOperatorManager<User>, SpamOperatorManager<User>>();
 
-            // Register spam operator providers
+            // Register spam operators
             services.AddScoped<ISpamOperatorProvider<User>, RegistrationOperator>();
             services.AddScoped<ISpamOperatorProvider<User>, LoginOperator>();
 
@@ -43,7 +43,11 @@ namespace Plato.Users.StopForumSpam
             // Registration view provider
             services.AddScoped<IViewProviderManager<UserRegistration>, ViewProviderManager<UserRegistration>>();
             services.AddScoped<IViewProvider<UserRegistration>, RegisterViewProvider>();
-            
+
+            // Admin view provider
+            services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
+            services.AddScoped<IViewProvider<User>, AdminViewProvider>();
+
         }
 
         public override void Configure(
