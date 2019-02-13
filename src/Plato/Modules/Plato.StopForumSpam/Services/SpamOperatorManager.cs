@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Stores;
 
@@ -14,15 +13,15 @@ namespace Plato.StopForumSpam.Services
     {
 
         private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
-        private readonly IEnumerable<ISpamOperatorProvider<TModel>> _spamOperationsProviders;
+        private readonly IEnumerable<ISpamOperatorProvider<TModel>> _spamOperators;
         private readonly ILogger<SpamOperatorManager<TModel>> _logger;
 
         public SpamOperatorManager(
-            IEnumerable<ISpamOperatorProvider<TModel>> spamOperationProviders,
+            IEnumerable<ISpamOperatorProvider<TModel>> spamOperators,
             IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore,
             ILogger<SpamOperatorManager<TModel>> logger)
         {
-            _spamOperationsProviders = spamOperationProviders;
+            _spamOperators = spamOperators;
             _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
             _logger = logger;
         }
@@ -39,7 +38,7 @@ namespace Plato.StopForumSpam.Services
                 operation = existingOperation;
             }
 
-            // Create context for providers
+            // Create context for involved providers
             var context = new SpamOperatorContext<TModel>()
             {
                 Model = model,
@@ -48,11 +47,11 @@ namespace Plato.StopForumSpam.Services
 
             // Invoke providers
             var results = new List<ISpamOperatorResult<TModel>>();
-            foreach (var operationProvider in _spamOperationsProviders)
+            foreach (var spamOperator in _spamOperators)
             {
                 try
                 {
-                    var result = await operationProvider.OperateAsync(context);
+                    var result = await spamOperator.OperateAsync(context);
                     if (result != null)
                     {
                         results.Add(result);
