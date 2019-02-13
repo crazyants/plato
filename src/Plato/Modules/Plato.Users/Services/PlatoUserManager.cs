@@ -12,6 +12,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Net.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -21,18 +22,15 @@ namespace Plato.Users.Services
 
     public class PlatoUserManager<TUser> : IPlatoUserManager<TUser> where TUser : class, IUser
     {
-
-        public const string ForwardForHeader = "X-Forwarded-For";
-        public const string RemoteAddrHeader = "REMOTE_ADDR";
-
+        
         private readonly UserManager<TUser> _userManager;
-        private readonly IOptions<IdentityOptions> _identityOptions;
-        private readonly IStringLocalizer<PlatoUserManager<TUser>> T;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBroker _broker;
+        private readonly IClientIpAddress _clientIpAddress;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IPlatoUserStore<TUser> _platoUserStore;
         private readonly IUserColorProvider _userColorProvider;
+
+        private readonly IStringLocalizer<PlatoUserManager<TUser>> T;
 
         public PlatoUserManager(
             IOptions<IdentityOptions> identityOptions,
@@ -41,16 +39,16 @@ namespace Plato.Users.Services
             IHttpContextAccessor httpContextAccessor,
             ISiteSettingsStore siteSettingsStore,
             IPlatoUserStore<TUser> platoUserStore,
-            IBroker broker,
-            IUserColorProvider userColorProvider)
+            IUserColorProvider userColorProvider, 
+            IClientIpAddress clientIpAddress,
+            IBroker broker)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _identityOptions = identityOptions;
             _siteSettingsStore = siteSettingsStore;
             _platoUserStore = platoUserStore;
             _userManager = userManager;
-            _broker = broker;
             _userColorProvider = userColorProvider;
+            _clientIpAddress = clientIpAddress;
+            _broker = broker;
 
             T = stringLocalizer;
 
@@ -139,12 +137,12 @@ namespace Plato.Users.Services
             
             if (String.IsNullOrEmpty(user.IpV4Address))
             {
-                user.IpV4Address = GetIpV4Address();
+                user.IpV4Address = _clientIpAddress.GetIpV4Address();
             }
 
             if (String.IsNullOrEmpty(user.IpV6Address))
             {
-                user.IpV6Address = GetIpV6Address();
+                user.IpV6Address = _clientIpAddress.GetIpV6Address();
             }
 
             // Add new roles
@@ -491,67 +489,6 @@ namespace Plato.Users.Services
         #endregion
 
         #region "Private Methods"
-
-        string GetIpV4Address(bool tryUseXForwardHeader = true)
-        {
-
-            var value = string.Empty;
-
-            // Check X-Forwarded-For
-            // Is the request forwarded via a proxy?
-            if (tryUseXForwardHeader)
-            {
-                value = _httpContextAccessor.GetRequestHeaderValueAs<string>(ForwardForHeader)?.Split(',').FirstOrDefault();
-            }
-
-            // If no "X-Forwarded-For" header, get REMOTE_ADDR header instead
-            if (String.IsNullOrEmpty(value))
-            {
-                value = _httpContextAccessor.GetRequestHeaderValueAs<string>(RemoteAddrHeader);
-            }
-
-            // Nothing yet, check .NET core implementation (HttpContext.Connection)
-            if (String.IsNullOrEmpty(value))
-            {
-                // This can sometimes be null in earlier versions of .NET core
-                if (_httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress != null)
-                {
-                    value = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                }
-            }
-
-            // Translate to valid IP 
-            IPAddress ip = null;
-            if (!String.IsNullOrEmpty(value))
-            {
-                // Attempt to parse IP address
-                IPAddress.TryParse(value, out ip);
-                // If we got an IPV6 address, then we need to ask the network for the IPV4 address 
-                // This usually only happens when the browser is on the same machine as the server.
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
-                {
-                    ip = Dns.GetHostEntry(ip).AddressList
-                        .First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
-                }
-            }
-
-            return ip == null ? string.Empty : ip.ToString();
-
-        }
-
-        string GetIpV6Address()
-        {
-            var ip = GetIpV4Address();
-            if (!String.IsNullOrEmpty(ip))
-            {
-                var addressList = Dns.GetHostEntry(ip).AddressList;
-                if (addressList != null)
-                {
-                    ip = addressList.FirstOrDefault()?.ToString();
-                }
-            }
-            return ip;
-        }
 
         private async Task<TUser> FindByUsernameOrEmailAsync(string userIdentifier)
         {

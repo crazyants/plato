@@ -6,12 +6,12 @@ using Plato.StopForumSpam.Client.Models;
 namespace Plato.StopForumSpam.Client.Services
 {
     
-    public class StopForumSpamChecker : IStopForumSpamChecker
+    public class SpamFrequencies : ISpamFrequencies
     {
 
         private readonly IStopForumSpamClient _stopForumSpamClient;
 
-        public StopForumSpamChecker(
+        public SpamFrequencies(
             IStopForumSpamClient stopForumSpamClient)
         {
             _stopForumSpamClient = stopForumSpamClient;
@@ -25,9 +25,9 @@ namespace Plato.StopForumSpam.Client.Services
             this.Options = _stopForumSpamClient.Options;
         }
 
-        public async Task<SpamFrequencies> CheckAsync(string userName, string email, string ipAddress)
+        public async Task<Models.SpamFrequencies> GetAsync(string userName, string email, string ipAddress)
         {
-            return await CheckAsync(new User()
+            return await GetAsync(new User()
             {
                 UserName = userName,
                 Email = email,
@@ -35,7 +35,7 @@ namespace Plato.StopForumSpam.Client.Services
             });
         }
 
-        public async Task<SpamFrequencies> CheckAsync(IUser user)
+        public async Task<Models.SpamFrequencies> GetAsync(IUser user)
         {
 
             // We need options
@@ -83,7 +83,7 @@ namespace Plato.StopForumSpam.Client.Services
                 }
             }
 
-            return new SpamFrequencies()
+            return new Models.SpamFrequencies()
             {
                 UserName = new SpamFrequency(usernameFrequency),
                 Email = new SpamFrequency(emailFrequency),

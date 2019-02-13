@@ -10,44 +10,6 @@ namespace Plato.StopForumSpam.ViewModels
 {
     public class StopForumSpamSettingsViewModel
     {
-
-        private static IEnumerable<SpamLevel> _spamLevels = new List<SpamLevel>()
-        {
-            new SpamLevel()
-            {
-             
-                Name = "Check against the users username, email address & IP address",
-                Description = "All details must appear within the StopForumSpam database for the user to be flagged as SPAM. Some SPAM may get through but false positives will be reduced.",
-                Frequencies = new SpamFrequencies()
-                {
-                    UserName = new SpamFrequency(1),
-                    Email = new SpamFrequency(1),
-                    IpAddress = new SpamFrequency(1)
-                }
-            },
-            new SpamLevel()
-            {
-               
-                Name = "Check against the users email address and IP address",
-                Description = "The users email address & IP address must appear within the StopForumSpam database for the user to be flagged as SPAM. Usernames will be ignored. Some SPAM may get through but false positives based on username will be reduced.",
-                Tick = 50,
-                Frequencies = new SpamFrequencies()
-                {
-                    Email = new SpamFrequency(1),
-                    IpAddress = new SpamFrequency(1)
-                }
-            },
-            new SpamLevel()
-            {
-                Name = "Check against the users IP address only",
-                Description = "If the users IP address appears within the StopForumSpam database the user will be flagged as SPAM. Catches the most SPAM but can lead to more false positives.",
-                Tick = 100,
-                Frequencies = new SpamFrequencies()
-                {
-                    IpAddress = new SpamFrequency(1)
-                }
-            }
-        };
         
         [Required]
         [StringLength(255)]
@@ -62,21 +24,34 @@ namespace Plato.StopForumSpam.ViewModels
 
         // ----------
 
-        public IEnumerable<SpamOperation> SpamOperations { get; set; }
+        public IEnumerable<SpamOperationType> SpamOperations { get; set; }
 
-        public IDictionary<string, IEnumerable<SpamOperation>> CategorizedSpamOperations { get; set; }
+        public IDictionary<string, IEnumerable<SpamOperationType>> CategorizedSpamOperations { get; set; }
 
         public SpamLevel SelectedSpamLevel
         {
-            get { return _spamLevels.FirstOrDefault(l => l.Tick == SpamLevel); }
+            get { return DefaultSpamLevels.SpamLevels.FirstOrDefault(l => l.Tick == SpamLevel); }
         }
 
-        public IEnumerable<SpamLevel> SpamLevels { get; private set; } = _spamLevels;
+        public IEnumerable<SpamLevel> SpamLevels { get; private set; } = DefaultSpamLevels.SpamLevels;
    
+    }
+
+
+    public interface ISpamLevel
+    {
+        string Name { get; set; }
+
+        string Description { get; set; }
+
+        short Tick { get; set; }
+
+        SpamFrequencies Frequencies { get; set; }
+
     }
     
     [DataContract]
-    public class SpamLevel
+    public class SpamLevel : ISpamLevel
     {
         
         [DataMember(Name = "name")]

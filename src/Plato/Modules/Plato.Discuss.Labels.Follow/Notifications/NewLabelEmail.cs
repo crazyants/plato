@@ -7,7 +7,6 @@ using Plato.Discuss.Labels.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;

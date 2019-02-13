@@ -46,6 +46,7 @@ using Plato.Internal.Badges.Extensions;
 using Plato.Internal.Drawing.Extensions;
 using Plato.Internal.Hosting.Web.Configuration;
 using Plato.Internal.Localization.Extensions;
+using Plato.Internal.Net.Extensions;
 using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Reputations.Extensions;
 using Plato.Internal.Scripting.Extensions;
@@ -109,6 +110,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoViewFeature();
                 internalServices.AddPlatoTagHelpers();
                 internalServices.AddPlatoAssets();
+                internalServices.AddPlatoNet();
                 internalServices.AddPlatoScripting();
                 internalServices.AddPlatoShellFeatures();
                 internalServices.AddPlatoMessaging();

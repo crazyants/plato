@@ -229,6 +229,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.StopForumSpam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.StopForumSpam.Client", "src\Plato\Modules\Plato.StopForumSpam.Client\Plato.StopForumSpam.Client.csproj", "{9E468DC0-5CB4-4FEA-85D2-6E730CA0B2FB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Net", "src\Plato.Internal.Net\Plato.Internal.Net.csproj", "{AB8290DF-84B0-46BA-9D75-6E3421A7DD4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Net.Abstractions", "src\Plato.Internal.Net.Abstractions\Plato.Internal.Net.Abstractions.csproj", "{EF5F0541-5BA9-4B4C-B46B-47F7C73099C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -659,6 +663,14 @@ Global
 		{9E468DC0-5CB4-4FEA-85D2-6E730CA0B2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E468DC0-5CB4-4FEA-85D2-6E730CA0B2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E468DC0-5CB4-4FEA-85D2-6E730CA0B2FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB8290DF-84B0-46BA-9D75-6E3421A7DD4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB8290DF-84B0-46BA-9D75-6E3421A7DD4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB8290DF-84B0-46BA-9D75-6E3421A7DD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB8290DF-84B0-46BA-9D75-6E3421A7DD4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF5F0541-5BA9-4B4C-B46B-47F7C73099C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF5F0541-5BA9-4B4C-B46B-47F7C73099C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF5F0541-5BA9-4B4C-B46B-47F7C73099C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF5F0541-5BA9-4B4C-B46B-47F7C73099C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -772,6 +784,8 @@ Global
 		{01A39B6C-01B3-4F9C-A2CE-BAB83083D465} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{FA4DC0D8-BD73-46D3-9592-70AB7398A992} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{9E468DC0-5CB4-4FEA-85D2-6E730CA0B2FB} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{AB8290DF-84B0-46BA-9D75-6E3421A7DD4C} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{EF5F0541-5BA9-4B4C-B46B-47F7C73099C0} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

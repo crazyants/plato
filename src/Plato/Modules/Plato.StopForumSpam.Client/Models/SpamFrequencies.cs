@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using YamlDotNet.Serialization.NodeDeserializers;
 
 namespace Plato.StopForumSpam.Client.Models
@@ -32,7 +33,10 @@ namespace Plato.StopForumSpam.Client.Models
         {
             Count = count;
         }
-        
+
+        [JsonIgnore]
+        public bool Appears => Count > 0;
+
         [DataMember(Name = "count")]
         public int Count { get; set; }
 

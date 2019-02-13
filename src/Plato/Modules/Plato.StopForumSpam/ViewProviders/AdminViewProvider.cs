@@ -15,16 +15,16 @@ namespace Plato.StopForumSpam.ViewProviders
     {
 
         private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _recaptchaSettingsStore;
-        private readonly ISpamOperationsManager<SpamOperation> _spamOperationsManager;
+        private readonly ISpamOperationTypeManager<SpamOperationType> _spamOperationTypeManager;
         private readonly HttpRequest _request;
 
         public AdminViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IStopForumSpamSettingsStore<StopForumSpamSettings> recaptchaSettingsStore,
-            ISpamOperationsManager<SpamOperation> spamOperationsManager)
+            ISpamOperationTypeManager<SpamOperationType> spamOperationTypeManager)
         {
             _recaptchaSettingsStore = recaptchaSettingsStore;
-            _spamOperationsManager = spamOperationsManager;
+            _spamOperationTypeManager = spamOperationTypeManager;
             _request = httpContextAccessor.HttpContext.Request;
 
         }
@@ -46,8 +46,8 @@ namespace Plato.StopForumSpam.ViewProviders
                 ApiKey = settings.ApiKey,
                 SpamLevel = settings.SpamLevel,
                 SpamOperations = settings.SpamOperations ??
-                                 _spamOperationsManager.GetSpamOperations(),
-                CategorizedSpamOperations = await _spamOperationsManager.GetCategorizedSpamOperationsAsync()
+                                 _spamOperationTypeManager.GetSpamOperations(),
+                CategorizedSpamOperations = await _spamOperationTypeManager.GetCategorizedSpamOperationsAsync()
             };
 
             return Views(
@@ -63,10 +63,10 @@ namespace Plato.StopForumSpam.ViewProviders
         {
 
             // All possible spam operations
-            var spamOperations = _spamOperationsManager.GetSpamOperations();
+            var spamOperations = _spamOperationTypeManager.GetSpamOperations();
             
             // Build operations to add
-            var operationsToAdd = new ConcurrentDictionary<string, SpamOperation>();
+            var operationsToAdd = new ConcurrentDictionary<string, SpamOperationType>();
             foreach (var operation in spamOperations)
             {
 

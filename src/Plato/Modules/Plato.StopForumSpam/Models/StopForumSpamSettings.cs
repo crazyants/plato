@@ -16,7 +16,7 @@ namespace Plato.StopForumSpam.Models
         public int SpamLevel { get; set; }
 
         [DataMember(Name = "operations")]
-        public IEnumerable<SpamOperation> SpamOperations { get; set; }
+        public IEnumerable<SpamOperationType> SpamOperations { get; set; }
     
         
     }

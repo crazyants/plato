@@ -50,109 +50,117 @@
 
                         </div>
                     </fieldset>
-                    
-                    @foreach (var category in Model.CategorizedSpamOperations.Keys)
-                    {            
-                        @*<h6 class="text-muted">@T[category]</h6>*@
-                        foreach (var operation in Model.CategorizedSpamOperations[category])
-                         {
-                             var existingOptions = Model.SpamOperations.FirstOrDefault(o => o.Name.Equals(operation.Name, StringComparison.OrdinalIgnoreCase));
-                             var contentId = "panel" + operation.Name;
-                             <fieldset>
-                                 <div class="form-group">
-                                     <div class="card card-body-flush">
-                                         <div class="card-header">
-                                             <h6>
-                                                 <a data-toggle="collapse" href="#@contentId" aria-expanded="true" aria-controls="collapseOne">
-                                                     @T[operation.Name]
-                                                 </a>
-                                             </h6>
-                                             @if (!string.IsNullOrEmpty(operation.Description))
-                                             {
-                                                 @T[operation.Description]
-                                             }
-                                         </div>
-                                         <div id="@contentId" class="card-body collapse">
 
-                                             <ul class="list-group list-group-flush list-group-hover">
-                                                 <li class="list-group-item list-group-item-action">
-                                                     <label class="row">
-                                                         <span class="col-10">
-                                                             <h6>@T["Flag As Spam"]</h6>
-                                                             @T["If enabled any entry detected as SPAM that is persisted to the Plato database will be automatically flagged as SPAM. Entries will only be visible to those who have permission to view SPAM."]
-                                                         </span>
-                                                         <span class="col-2 text-right">
-                                                             <span class="switch switch-round">
-                                                                 <input class="form-check-input" type="checkbox" value="flagAsSpam" name="flagAsSpam.@operation.Name" checked="@existingOptions?.FlagAsSpam" />
-                                                                 <span class="switch-slider"></span>
-                                                             </span>
-                                                         </span>
-                                                     </label>
-                                                 </li>
-                                                 <li class="list-group-item list-group-item-action">
-                                                     <label class="row">
-                                                         <span class="col-10">
-                                                             <h6>@T["Notify Admins"]</h6>
-                                                             @T["If enabled trigger a web & email notification for any entry detected as SPAM to all users within the administrators role with a link to review the entry. If disabled no administrator notifications will be sent."]"]
-                                                         </span>
-                                                         <span class="col-2 text-right">
-                                                             <span class="switch switch-round">
-                                                                 <input class="form-check-input" type="checkbox" value="notifyAdmin" name="notifyAdmin.@operation.Name" checked="@existingOptions?.NotifyAdmin" />
-                                                                 <span class="switch-slider"></span>
-                                                             </span>
-                                                         </span>
-                                                     </label>
-                                                 </li>
-                                                 <li class="list-group-item list-group-item-action">
-                                                     <label class="row">
-                                                         <span class="col-10">
-                                                             <h6>@T["Notify Staff"]</h6>
-                                                             @T["If enabled trigger a web & email notification for any entry detected as SPAM to all users within the staff role with a link to review the entry. If disabled no staff notifications will be sent."]
-                                                         </span>
-                                                         <span class="col-2 text-right">
-                                                             <span class="switch switch-round">
-                                                                 <input class="form-check-input" type="checkbox" value="notifyStaff" name="notifyStaff.@operation.Name" checked="@existingOptions?.NotifyStaff" />
-                                                                 <span class="switch-slider"></span>
-                                                             </span>
-                                                         </span>
-                                                     </label>
-                                                 </li>
-                                                 <li class="list-group-item list-group-item-action">
-                                                     <label class="row">
-                                                         <span class="col-10">
-                                                             <h6>@T["Alter Database"]</h6>
-                                                             @T["If enabled the Plato database will be modified even if an entry is detected as SPAM. If disabled the Plato database will not be modified if an entry is detected as SPAM. "]
-                                                         </span>
-                                                         <span class="col-2 text-right">
-                                                             <span class="switch switch-round">
-                                                                 <input class="form-check-input" type="checkbox" value="allowAlter" name="allowAlter.@operation.Name" checked="@existingOptions?.AllowAlter" />
-                                                                 <span class="switch-slider"></span>
-                                                             </span>
-                                                         </span>
-                                                     </label>
-                                                 </li>
-                                                 <li class="list-group-item">
-                                                     <label class="row">
-                                                         <span class="col-12">
-                                                             <h6>@T["Error Message"]</h6>
-                                                             @T["Customize the error message presented to users if they perform this operation is detected as SPAM."]
-                                                         </span>
-                                                         <span class="col-12 pt-2">
-                                                             <textarea rows="6" class="form-control" name="customMessage.@operation.Name">@existingOptions?.Message</textarea>
-                                                         </span>
-                                                     </label>
-                                                 </li>
-                                             </ul>
+                    @if (Model.CategorizedSpamOperations.Any())
+                    {
+                        <h6>@T["Operations"]</h6>
+                        @T["Operations are added by various features and allow you to customize how SPAM is managed for each feature."]
+                        <hr/>
+                        @foreach (var category in Model.CategorizedSpamOperations.Keys)
+                        {
+                            foreach (var operation in Model.CategorizedSpamOperations[category])
+                            {
+                                var existingOptions = Model.SpamOperations.FirstOrDefault(o => o.Name.Equals(operation.Name, StringComparison.OrdinalIgnoreCase));
+                                var contentId = "panel" + operation.Name;
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="card card-body-flush">
+                                            <div class="card-header">
+                                                <h6>
+                                                    <a data-toggle="collapse" href="#@contentId" aria-expanded="true" aria-controls="collapseOne">
+                                                        @T[operation.Name]
+                                                    </a>
+                                                </h6>
+                                                @if (!string.IsNullOrEmpty(operation.Description))
+                                                {
+                                                    @T[operation.Description]
+                                                }
+                                            </div>
+                                            <div id="@contentId" class="card-body collapse">
+                                                <ul class="list-group list-group-flush list-group-hover">
+                                                    <li class="list-group-item list-group-item-action">
+                                                        <label class="row">
+                                                            <span class="col-10">
+                                                                <h6>@T["Flag As Spam"]</h6>
+                                                                @T["If enabled any entry detected as SPAM that is persisted to the Plato database will be automatically flagged as SPAM. Entries will only be visible to those who have permission to view SPAM."]
+                                                            </span>
+                                                            <span class="col-2 text-right">
+                                                                <span class="switch switch-round">
+                                                                    <input class="form-check-input" type="checkbox" value="flagAsSpam" name="flagAsSpam.@operation.Name" checked="@existingOptions?.FlagAsSpam" />
+                                                                    <span class="switch-slider"></span>
+                                                                </span>
+                                                            </span>
+                                                        </label>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-action">
+                                                        <label class="row">
+                                                            <span class="col-10">
+                                                                <h6>@T["Notify Admins"]</h6>
+                                                                @T["If enabled trigger a web & email notification for any entry detected as SPAM to all users within the administrators role with a link to review the entry. If disabled no administrator notifications will be sent."]"]
+                                                            </span>
+                                                            <span class="col-2 text-right">
+                                                                <span class="switch switch-round">
+                                                                    <input class="form-check-input" type="checkbox" value="notifyAdmin" name="notifyAdmin.@operation.Name" checked="@existingOptions?.NotifyAdmin" />
+                                                                    <span class="switch-slider"></span>
+                                                                </span>
+                                                            </span>
+                                                        </label>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-action">
+                                                        <label class="row">
+                                                            <span class="col-10">
+                                                                <h6>@T["Notify Staff"]</h6>
+                                                                @T["If enabled trigger a web & email notification for any entry detected as SPAM to all users within the staff role with a link to review the entry. If disabled no staff notifications will be sent."]
+                                                            </span>
+                                                            <span class="col-2 text-right">
+                                                                <span class="switch switch-round">
+                                                                    <input class="form-check-input" type="checkbox" value="notifyStaff" name="notifyStaff.@operation.Name" checked="@existingOptions?.NotifyStaff" />
+                                                                    <span class="switch-slider"></span>
+                                                                </span>
+                                                            </span>
+                                                        </label>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-action">
+                                                        <label class="row">
+                                                            <span class="col-10">
+                                                                <h6>@T["Alter Database"]</h6>
+                                                                @T["If enabled the Plato database will be modified even if an entry is detected as SPAM. If disabled the Plato database will not be modified if an entry is detected as SPAM. "]
+                                                            </span>
+                                                            <span class="col-2 text-right">
+                                                                <span class="switch switch-round">
+                                                                    <input class="form-check-input" type="checkbox" value="allowAlter" name="allowAlter.@operation.Name" checked="@existingOptions?.AllowAlter" />
+                                                                    <span class="switch-slider"></span>
+                                                                </span>
+                                                            </span>
+                                                        </label>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <label class="row">
+                                                            <span class="col-12">
+                                                                <h6>@T["Error Message"]</h6>
+                                                                @T["Customize the error message presented to users if they perform this operation is detected as SPAM."]
+                                                            </span>
+                                                            <span class="col-12 pt-2">
+                                                                <textarea rows="6" class="form-control" name="customMessage.@operation.Name">@existingOptions?.Message</textarea>
+                                                            </span>
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            }
 
-                                         </div>
-
-                                     </div>
-                                 </div>
-                             </fieldset>
-                         }
+                        }
+                    }
+                    else
+                    {
+                        <h6>@T["No Operations"]</h6>
+                        @T["No spam operations have been registered. At minimum you should enable the Plato.User.StopForumSpam feature."]
 
                     }
-                    
+
 
                 </div>
             </div>

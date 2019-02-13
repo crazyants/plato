@@ -2,93 +2,93 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Abstractions;
 using Plato.StopForumSpam.Models;
+using Plato.StopForumSpam.Stores;
 
 namespace Plato.StopForumSpam.Services
 {
     
-    public class SpamOperationsManager<TOperation> : ISpamOperationsManager<TOperation> where TOperation : class, ISpamOperation
+    public class SpamOperationManager<TModel> : ISpamOperationManager<TModel> where TModel : class
     {
 
-        private IEnumerable<TOperation> _operations;
+        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
+        private readonly IEnumerable<ISpamOperationProvider<TModel>> _spamOperationsProviders;
+        private readonly ILogger<SpamOperationManager<TModel>> _logger;
 
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IEnumerable<ISpamOperationsProvider<TOperation>> _providers;
-        private readonly ILogger<SpamOperationsManager<TOperation>> _logger;
-        private readonly ITypedModuleProvider _typedModuleProvider;
-
-        public SpamOperationsManager(
-            IEnumerable<ISpamOperationsProvider<TOperation>> providers,
-            ILogger<SpamOperationsManager<TOperation>> logger,
-            ITypedModuleProvider typedModuleProvider,
-            IAuthorizationService authorizationService)
+        public SpamOperationManager(
+            IEnumerable<ISpamOperationProvider<TModel>> spamOperationProviders,
+            IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore,
+            ILogger<SpamOperationManager<TModel>> logger)
         {
-            _providers = providers;
-            _typedModuleProvider = typedModuleProvider;
-            _authorizationService = authorizationService;
+            _spamOperationsProviders = spamOperationProviders;
+            _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
             _logger = logger;
         }
 
-        public IEnumerable<TOperation> GetSpamOperations()
+        public async Task<IEnumerable<ICommandResult<TModel>>> ExecuteAsync(ISpamOperationType operation, TModel model)
         {
-
-            if (_operations == null)
+            
+            // If the spam operation has been updated within the database ensure
+            // we use the updated version from the database as opposed to the default
+            var settings = await _stopForumSpamSettingsStore.GetAsync();
+            var existingOperation = settings?.SpamOperations?.FirstOrDefault(o => o.Name.Equals(operation.Name));
+            if (existingOperation != null)
             {
-                var operations = new List<TOperation>();
-                foreach (var provider in _providers)
-                {
-                    try
-                    {
-                        operations.AddRange(provider.GetSpamOperations());
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e,
-                            $"An exception occurred within the spam operation provider. Please review your spam operation provider and try again. {e.Message}");
-                        throw;
-                    }
-                }
-
-                _operations = operations;
+                operation = existingOperation;
             }
 
-            return _operations;
-
-        }
-
-        public async Task<IDictionary<string, IEnumerable<TOperation>>> GetCategorizedSpamOperationsAsync()
-        {
-
-            var output = new Dictionary<string, IEnumerable<TOperation>>();
-
-            foreach (var provider in _providers)
+            // Create context for providers
+            var context = new SpamOperationContext<TModel>()
             {
+                Model = model,
+                Operation = operation
+            };
 
-                var module = await _typedModuleProvider.GetModuleForDependency(provider.GetType());
-                var name = module.Descriptor.Name;
-                var operations = provider.GetSpamOperations();
-                foreach (var operation in operations)
+            // Invoke providers
+            var results = new List<ICommandResult<TModel>>();
+            foreach (var operationProvider in _spamOperationsProviders)
+            {
+                try
                 {
-                    var category = operation.Category;
-                    var title = String.IsNullOrWhiteSpace(category) ?
-                        name :
-                        category;
-
-                    if (output.ContainsKey(title))
+                    var result = await operationProvider.ExecuteAsync(context);
+                    if (result != null)
                     {
-                        output[title] = output[title].Concat(new[] { operation });
+                        results.Add(result);
                     }
-                    else
-                    {
-                        output.Add(title, new[] { operation });
-                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An error occurred whilst invoking the ExecuteAsync method within a spam operation provider for type '{operation.Name}'.");
                 }
             }
 
-            return output;
+            // Log results
+            foreach (var result in results)
+            {
+                if (result.Succeeded)
+                {
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation($"Spam Operation '{operation.Name}' Success!");
+                    }
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        if (_logger.IsEnabled(LogLevel.Critical))
+                        {
+                            _logger.LogCritical($"Spam Operation of type '{operation.Name}' failed with the following error: {error.Description}");
+                        }
+                    }
+                }
+
+            }
+
+            return results;
+
         }
 
     }

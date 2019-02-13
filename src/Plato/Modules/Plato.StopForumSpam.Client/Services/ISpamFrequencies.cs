@@ -6,16 +6,16 @@ using Plato.StopForumSpam.Client.Models;
 namespace Plato.StopForumSpam.Client.Services
 {
 
-    public interface IStopForumSpamChecker
+    public interface ISpamFrequencies
     {
 
         StopForumSpamClientOptions Options { get; }
 
         void Configure(Action<StopForumSpamClientOptions> configure);
         
-        Task<SpamFrequencies> CheckAsync(string userName, string email, string ipAddress);
+        Task<Models.SpamFrequencies> GetAsync(string userName, string email, string ipAddress);
 
-        Task<SpamFrequencies> CheckAsync(IUser user);
+        Task<Models.SpamFrequencies> GetAsync(IUser user);
 
     }
     

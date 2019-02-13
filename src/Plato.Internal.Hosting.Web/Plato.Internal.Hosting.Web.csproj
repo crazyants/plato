@@ -27,6 +27,7 @@
     <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules\Plato.Internal.Modules.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Net\Plato.Internal.Net.csproj" />
     <ProjectReference Include="..\Plato.Internal.Notifications\Plato.Internal.Notifications.csproj" />
     <ProjectReference Include="..\Plato.Internal.Reputations\Plato.Internal.Reputations.csproj" />
     <ProjectReference Include="..\Plato.Internal.Scripting\Plato.Internal.Scripting.csproj" />

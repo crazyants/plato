@@ -4,10 +4,10 @@ using Plato.StopForumSpam.Models;
 namespace Plato.Discuss.StopForumSpam
 {
 
-    public class SpamOperations : ISpamOperationsProvider<SpamOperation>
+    public class SpamOperationTypes : ISpamOperationTypeProvider<Plato.StopForumSpam.Models.SpamOperationType>
     {
 
-        public static readonly SpamOperation Topic = new SpamOperation(
+        public static readonly Plato.StopForumSpam.Models.SpamOperationType Topic = new Plato.StopForumSpam.Models.SpamOperationType(
             "Topics",
             "Customize what will happen when topics are detected as SPAM.")
         {
@@ -18,7 +18,7 @@ namespace Plato.Discuss.StopForumSpam
             Message = "Sorry but we've identified your details have been used by known spammers. Your account has been temporarily locked. You can login and continue to participate however your content won't appear until your account has been manually approved by an administrator or staff member."
         };
 
-        public static readonly SpamOperation Reply = new SpamOperation(
+        public static readonly Plato.StopForumSpam.Models.SpamOperationType Reply = new Plato.StopForumSpam.Models.SpamOperationType(
             "Replies",
             "Customize what will happen when replies are detected as SPAM.")
         {
@@ -29,7 +29,7 @@ namespace Plato.Discuss.StopForumSpam
             Message = "Sorry but we've identified your details have been used by known spammers. Your account has been temporarily locked. You will receive an email notification once an administrator or staff member has manually reviewed and white listed your account."
         };
 
-        public IEnumerable<SpamOperation> GetSpamOperations()
+        public IEnumerable<Plato.StopForumSpam.Models.SpamOperationType> GetSpamOperationTypes()
         {
             return new[]
             {

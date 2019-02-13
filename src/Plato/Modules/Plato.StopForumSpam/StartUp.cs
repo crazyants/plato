@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
@@ -27,8 +28,11 @@ namespace Plato.StopForumSpam
         {
 
           
-            // Operations manager
-            services.AddScoped<ISpamOperationsManager<SpamOperation>, SpamOperationsManager<SpamOperation>>();
+            // Operations type manager
+            services.AddScoped<ISpamOperationTypeManager<SpamOperationType>, SpamOperationTypeManager<SpamOperationType>>();
+
+            // Spam level checker
+            services.AddScoped<ISpamChecker, SpamChecker>();
             
             // Stores
             services.AddScoped<IStopForumSpamSettingsStore<StopForumSpamSettings>, StopForumSpamSettingsStore>();

@@ -1,6 +1,6 @@
 ﻿namespace Plato.StopForumSpam.Models
 {
-    public interface ISpamOperation
+    public interface ISpamOperationType
     {
 
         string Name { get; set; }
@@ -20,7 +20,5 @@
         string Message { get; set; }
 
     }
-
-
-
+    
 }

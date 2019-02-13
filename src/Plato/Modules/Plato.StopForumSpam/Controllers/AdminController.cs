@@ -28,10 +28,7 @@ namespace Plato.StopForumSpam.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IViewProviderManager<StopForumSpamSettings> _viewProvider;
         private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
-        private readonly IScriptManager _scriptManager;
-        private readonly IContextFacade _contextFacade;
-
-        private readonly IStopForumSpamChecker _stopForumSpamChecker;
+        private readonly ISpamFrequencies _spamFrequencies;
 
         public IHtmlLocalizer T { get; }
 
@@ -45,18 +42,15 @@ namespace Plato.StopForumSpam.Controllers
             IBreadCrumbManager breadCrumbManager,
             IViewProviderManager<StopForumSpamSettings> viewProvider,
             IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore,
-            IStopForumSpamChecker stopForumSpamChecker, 
-            IScriptManager scriptManager,
-            IContextFacade contextFacade)
+            ISpamFrequencies spamFrequencies)
         {
             _authorizationService = authorizationService;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _viewProvider = viewProvider;
             _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
-            _stopForumSpamChecker = stopForumSpamChecker;
-            _scriptManager = scriptManager;
-            _contextFacade = contextFacade;
+            _spamFrequencies = spamFrequencies;
+       
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -104,13 +98,13 @@ namespace Plato.StopForumSpam.Controllers
             };
 
             // Configure checker
-            _stopForumSpamChecker.Configure(o =>
+            _spamFrequencies.Configure(o =>
             {
                 o.ApiKey = settings?.ApiKey ?? "";
             });
 
             // Get frequencies
-            var frequencies = await _stopForumSpamChecker.CheckAsync(user);
+            var frequencies = await _spamFrequencies.GetAsync(user);
             
             var sb = new StringBuilder();
 

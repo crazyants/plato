@@ -73,7 +73,7 @@ namespace Plato.Internal.Abstractions
             _errors.AddRange(result.Errors);
         }
 
-        public CommandResult<TResponse> Success()
+        public virtual CommandResult<TResponse> Success()
         {
             return new CommandResult<TResponse>()
             {
@@ -81,7 +81,7 @@ namespace Plato.Internal.Abstractions
             };
         }
 
-        public CommandResult<TResponse> Success(object response)
+        public virtual ICommandResult<TResponse> Success(object response)
         {
 
             // No response object just return success
@@ -98,7 +98,7 @@ namespace Plato.Internal.Abstractions
             };
         }
 
-        public CommandResult<TResponse> Failed(string message)
+        public virtual ICommandResult<TResponse> Failed(string message)
         {
             var result = new CommandResult<TResponse>()
             {
@@ -110,7 +110,7 @@ namespace Plato.Internal.Abstractions
             return result;
         }
         
-        public CommandResult<TResponse> Failed(params CommandError[] errors)
+        public virtual ICommandResult<TResponse> Failed(params CommandError[] errors)
         {
             var result = new CommandResult<TResponse>()
             {

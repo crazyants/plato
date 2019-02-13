@@ -77,7 +77,7 @@ namespace Plato.StopForumSpam.Client.Models
             var lastSeen = token.SelectToken("lastseen");
             if (lastSeen != null)
             {
-                if (DateTime.TryParse((String)lastSeen, out var dt))
+                if (DateTime.TryParse((string)lastSeen, out var dt))
                 {
                     part.LastSeen = dt;
                 }
