@@ -1,48 +1,53 @@
-﻿@using Plato.Internal.Abstractions.Extensions
-@model UserSpamViewModel
+﻿@model StopForumSpamViewModel
 @{
     var i = 0;
 }
 
-@if (!Model.IsNewUser)
+@if (!Model.IsNewUser && !Model.IsSpam)
 {
-    @if (Model.SpamCheckerResult.Succeeded)
-     {
-         <div class="alert alert-secondary">
-             <p>
-                 <i class="fal fa-exclamation-triangle mr-2"></i>
-                 <strong>@T["StopForumSpam"]</strong>
-</p>
-             <p>
-                 @if (Model.SpamCheckerResult.Results.Success)
-                 {
-                     @T["Some of the details for this user appear within the StopForumSpam database."]
-                 }
-             </p>
-             <p>
-                 <a href="#" data-toggle="modal" data-target="#spamDetailsModal" class="btn btn-primary">
-                     @T["Learn More"]
-                 </a>
-             </p>
-             <p>
+    // The checker succeeded (i.e. the user won't be flagged as SPAM)
+    @if (Model.Checker.Succeeded)
+    {
+        // We found results so still inform 
+        if (Model.Checker.Results.HasResults)
+        {
+              <div class="alert alert-secondary">
+                  <p>
+                      <i class="fal fa-exclamation-triangle mr-2"></i>
+                      <strong>@T["Possible SPAM?"]</strong>
+                  </p>
+                  <p>
+                      @if (Model.Checker.Results.Success)
+                      {
+                          @T["Some of the details for this user appear within the StopForumSpam database."]
+                      }
+                  </p>
+                  <p>
+                      <a href="#" data-toggle="modal" data-target="#spamDetailsModal" class="btn btn-primary">
+                          @T["Learn More"]
+                      </a>
+                  </p>
+                  <p>
 
-             </p>
-         </div>
+                  </p>
+              </div>
+          }
      }
     else
     {
+        // The checker failed (the user will be flagged as SPAM)
          <div class="alert alert-danger">
              <p>
                  <i class="fal fa-exclamation-triangle mr-2"></i>
 
-                 @if (Model.SpamCheckerResult.Errors.Any())
+                 @if (Model.Checker.Errors.Any())
                  {
                      @T["This user will be flagged as SPAM as the "]
-                     @foreach (var error in Model.SpamCheckerResult.Errors)
+                     foreach (var error in Model.Checker.Errors)
                       {
                           i++;
                           @T[error.Description]
-                          @if (i < Model.SpamCheckerResult.Errors.Count())
+                          @if (i < Model.Checker.Errors.Count())
                            {
                                <span>
                                    ,
@@ -79,22 +84,22 @@
             <div class="modal-body">
                 
                 <h6>
-                    @T["StopForumSpam Results"]
+                    @T["Spam Results"]
                 </h6>
                 <p>
-                    @T["You can see below the number of times the details for this user appear within the StopForumSpam database..."]
+                    @T["You can see below the number of times the details for this user have been reported to StopForumSpam..."]
                 </p>
                 <div class="row">
                     <div class="col-4">
-                        <h4>@Model.SpamCheckerResult.Results.UserName.Count.ToPrettyInt()</h4>
+                        <h4>@Model.Checker.Results.UserName.Count.ToPrettyInt()</h4>
                         <h6>@T["Username"]</h6>
                     </div>
                     <div class="col-4">
-                        <h4>@Model.SpamCheckerResult.Results.Email.Count.ToPrettyInt()</h4>
+                        <h4>@Model.Checker.Results.Email.Count.ToPrettyInt()</h4>
                         <h6>@T["Email Address"]</h6>
                     </div>
                     <div class="col-4">
-                        <h4>@Model.SpamCheckerResult.Results.IpAddress.Count.ToPrettyInt()</h4>
+                        <h4>@Model.Checker.Results.IpAddress.Count.ToPrettyInt()</h4>
                         <h6>@T["IP Address"]</h6>
                     </div>
                 </div>

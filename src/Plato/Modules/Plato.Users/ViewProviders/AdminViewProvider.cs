@@ -110,6 +110,7 @@ namespace Plato.Users.ViewProviders
                 Location = details.Profile.Location,
                 Url = details.Profile.Url,
                 Bio = details.Profile.Bio,
+                CreatedDate = user.CreatedDate,
                 LastLoginDate = user.LastLoginDate,
                 IsNewUser = user.Id == 0,
                 DisplayPasswordFields = user.Id == 0,

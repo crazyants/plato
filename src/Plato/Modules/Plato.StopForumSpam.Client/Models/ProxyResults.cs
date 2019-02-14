@@ -15,6 +15,8 @@ namespace Plato.StopForumSpam.Client.Models
 
         bool Success { get; set; }
 
+        bool HasResults { get; }
+
     }
 
     [DataContract]
@@ -33,7 +35,9 @@ namespace Plato.StopForumSpam.Client.Models
         [DataMember(Name = "success")]
         public bool Success { get; set; }
 
+        public bool HasResults => UserName.Appears | Email.Appears | IpAddress.Appears;
+
     }
-    
-    
+
+
 }

@@ -1,5 +1,25 @@
 ﻿@model EditUserViewModel
 
+@if (Model.IsSpam && !Model.IsNewUser)
+{
+    <div class="alert alert-danger">
+        <p>
+            <i class="fal fa-exclamation-triangle mr-2"></i>
+            <strong>@T["Unconfirmed Email"]</strong>
+        </p>
+        <p>
+            @T["This user has been flagged as SPAM. Any content posted by this user will require manual approval."]
+        </p>
+        <p>
+            <h6>@T["Genuine User?"]</h6>
+            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
+                @T["Whitelist"]
+            </a>
+            @T["to ensure this user is never checked for SPAM."]
+        </p>
+    </div>
+}
+
 <card>
     <card-title>
         <h6 class="card-title">@T["Account Details"]</h6>

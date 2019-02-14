@@ -9,8 +9,8 @@
 else
 {
     <span class="text-muted">
-        @@@Model.UserName, @T["Last login"]
-        <date utc="@Model.LastLoginDate"></date>
+        @T["Joined "] <date utc="@Model.CreatedDate"></date>,
+        @T["Seen:"] <date utc="@Model.LastLoginDate"></date>
     </span>
 }
 <hr />

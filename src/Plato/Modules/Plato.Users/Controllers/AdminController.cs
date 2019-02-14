@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
+        private readonly IUserEmails _userEmails;
         private readonly IAuthorizationService _authorizationService;
         private readonly IViewProviderManager<User> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -41,7 +43,7 @@ namespace Plato.Users.Controllers
             UserManager<User> userManager,
             IAlerter alerter,
             IPlatoUserManager<User> platoUserManager,
-            IContextFacade contextFacade, IAuthorizationService authorizationService)
+            IContextFacade contextFacade, IAuthorizationService authorizationService, IUserEmails userEmails)
         {
             _viewProvider = viewProvider;
             _userManager = userManager;
@@ -50,6 +52,7 @@ namespace Plato.Users.Controllers
             _platoUserManager = platoUserManager;
             _contextFacade = contextFacade;
             _authorizationService = authorizationService;
+            _userEmails = userEmails;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -372,6 +375,47 @@ namespace Plato.Users.Controllers
 
         }
 
+        public async Task<IActionResult> ResendConfirmationEmail(string id)
+        {
+
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            
+            // Resent confirmation email
+            var result = await _platoUserManager.GetEmailConfirmationUserAsync(currentUser.Email);
+            if (result.Succeeded)
+            {
+                var user = result.Response;
+                if (user != null)
+                {
+                    user.ConfirmationToken = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ConfirmationToken));
+                    var emailResult = await _userEmails.SendEmailConfirmationTokenAsync(user);
+                    if (result.Succeeded)
+                    {
+                        _alerter.Success(T["Confirmation email sent successfully!"]);
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            _alerter.Danger(T[error.Description]);
+                        }
+                    }
+                    
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+            
+        }
+
         public async Task<IActionResult> ConfirmEmail(string id)
         {
             // Get user
@@ -387,7 +431,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["User activated Successfully!"]);
+                _alerter.Success(T["User confirmed successfully!"]);
             }
             else
             {

@@ -2,14 +2,16 @@
 
 namespace Plato.Users.StopForumSpam.ViewModels
 {
-    public class UserSpamViewModel
+    public class StopForumSpamViewModel
     {
 
         public int Id { get; set; }
 
-        public ISpamCheckerResult SpamCheckerResult { get; set; }
-        
         public bool IsNewUser { get; set; }
+
+        public bool IsSpam { get; set; }
+
+        public ISpamCheckerResult Checker { get; set; }
 
     }
 

@@ -10,10 +10,10 @@ namespace Plato.StopForumSpam.Models
     {
 
         public bool Succeeded => !Errors.Any();
-
+        
         public IEnumerable<CommandError> Errors { get; protected set; }
 
-        public IProxyResults Results{ get; protected set; }
+        public IProxyResults Results { get; protected set; }
 
         public SpamCheckerResult()
         {

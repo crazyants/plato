@@ -79,9 +79,13 @@ namespace Plato.Users
             // Custom User Manager
             services.AddScoped<IPlatoUserManager<User>, PlatoUserManager<User>>();
 
+            // User account emails
+            services.TryAddScoped<IUserEmails, UserEmails>();
+
+
             // Context facade
             //services.TryAddScoped<IContextFacade, ContextFacade>();
-            
+
             // Configure authentication cookie options
             services.ConfigureApplicationCookie(options =>
             {

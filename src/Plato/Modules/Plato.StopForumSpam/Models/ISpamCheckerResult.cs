@@ -5,9 +5,7 @@ namespace Plato.StopForumSpam.Models
 {
     public interface ISpamCheckerResult : ICommandResultBase
     {
-
         IProxyResults Results { get; }
-
     }
 
 }

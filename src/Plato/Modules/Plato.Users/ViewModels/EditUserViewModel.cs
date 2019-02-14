@@ -45,6 +45,8 @@ namespace Plato.Users.ViewModels
         public IFormFile AvatarFile { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; }
+        
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public DateTimeOffset? LastLoginDate { get; set; }
 

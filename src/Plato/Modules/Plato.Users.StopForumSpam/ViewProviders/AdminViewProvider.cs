@@ -34,20 +34,18 @@ namespace Plato.Users.StopForumSpam.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
             
-            // Get spam result
-            var result = await _spamChecker.CheckAsync(user);
-           
             // Build view model
-            var viewModel = new UserSpamViewModel()
+            var viewModel = new StopForumSpamViewModel()
             {
                 Id = user.Id,
                 IsNewUser = user.Id == 0,
-                SpamCheckerResult = result
+                IsSpam = user.IsSpam,
+                Checker = await _spamChecker.CheckAsync(user)
             };
 
             // Build view
             return Views(
-                View<UserSpamViewModel>("Admin.Edit.StopForumSpam.Sidebar", model => viewModel).Zone("sidebar")
+                View<StopForumSpamViewModel>("Admin.Edit.StopForumSpam.Sidebar", model => viewModel).Zone("sidebar")
                     .Order(int.MinValue)
             );
             

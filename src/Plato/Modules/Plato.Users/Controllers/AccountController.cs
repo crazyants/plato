@@ -35,14 +35,12 @@ namespace Plato.Users.Controllers
 
         #region "Constructor"
 
+        private readonly IUserEmails _userEmails;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly ILocaleStore _localeStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IContextFacade _contextFacade;
-        private readonly IEmailManager _emailManager;
         private readonly IOptions<IdentityOptions> _identityOptions;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IViewProviderManager<UserLogin> _loginViewProvider;
@@ -60,29 +58,24 @@ namespace Plato.Users.Controllers
             SignInManager<User> signInManage,
             ILogger<AccountController> logger, 
             IPlatoUserManager<User> platoUserManager,
-            ILocaleStore localeStore,
-            IContextFacade contextFacade,
-            IEmailManager emailManager,
             IPlatoUserStore<User> platoUserStore,
             IOptions<IdentityOptions> identityOptions,
             IBreadCrumbManager breadCrumbManager, 
             IViewProviderManager<UserLogin> loginViewProvider,
             IViewProviderManager<UserRegistration> registerViewProvider,
-            IAlerter alerter)
+            IAlerter alerter, IUserEmails userEmails)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _logger = logger;
             _platoUserManager = platoUserManager;
-            _localeStore = localeStore;
-            _contextFacade = contextFacade;
-            _emailManager = emailManager;
             _platoUserStore = platoUserStore;
             _identityOptions = identityOptions;
             _breadCrumbManager = breadCrumbManager;
             _loginViewProvider = loginViewProvider;
             _registerViewProvider = registerViewProvider;
             _alerter = alerter;
+            _userEmails = userEmails;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -408,7 +401,7 @@ namespace Plato.Users.Controllers
                     if (user != null)
                     {
                         user.ConfirmationToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ConfirmationToken));
-                        var emailResult = await SendEmailConfirmationTokenAsync(user);
+                        var emailResult = await _userEmails.SendEmailConfirmationTokenAsync(user);
                         if (!emailResult.Succeeded)
                         {
                             foreach (var error in emailResult.Errors)
@@ -567,7 +560,7 @@ namespace Plato.Users.Controllers
                         if (await _userManager.IsEmailConfirmedAsync(user))
                         {
                             user.ResetToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ResetToken));
-                            var emailResult = await SendPasswordResetTokenAsync(user);
+                            var emailResult = await _userEmails.SendPasswordResetTokenAsync(user);
                             if (!emailResult.Succeeded)
                             {
                                 foreach (var error in emailResult.Errors)
@@ -907,86 +900,8 @@ namespace Plato.Users.Controllers
             }
         }
         
-        async Task<ICommandResult<EmailMessage>> SendPasswordResetTokenAsync(User user)
-        {
-            
-            // Get reset password email
-            var culture = await _contextFacade.GetCurrentCultureAsync();
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, "ResetPassword");
-            if (email != null)
-            {
-
-                // Build reset password link
-                var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                {
-                    ["Area"] = "Plato.Users",
-                    ["Controller"] = "Account",
-                    ["Action"] = "ResetPassword",
-                    ["Code"] = user.ResetToken
-                });
-
-                var body = string.Format(email.Message, user.DisplayName, callbackUrl);
-
-                var message = new MailMessage()
-                {
-                    Subject = email.Subject,
-                    Body = WebUtility.HtmlDecode(body),
-                    IsBodyHtml = true
-                };
-
-                message.To.Add(user.Email);
-
-                // send email
-                return await _emailManager.SaveAsync(message);
-                
-            }
-
-            var result = new CommandResult<EmailMessage>();
-            return result.Failed("An error occurred whilst attempting to send the password reset token email.");
-
-        }
-        
-        async Task<ICommandResult<EmailMessage>> SendEmailConfirmationTokenAsync(User user)
-        {
-
-            // Get reset password email
-            var culture = await _contextFacade.GetCurrentCultureAsync();
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, "ConfirmEmail");
-            if (email != null)
-            {
-
-                // Build email confirmation link
-                var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                {
-                    ["Area"] = "Plato.Users",
-                    ["Controller"] = "Account",
-                    ["Action"] = "ActivateAccount",
-                    ["Code"] = user.ConfirmationToken
-                });
-
-                var body = string.Format(email.Message, user.DisplayName, callbackUrl);
-
-                var message = new MailMessage()
-                {
-                    Subject = email.Subject,
-                    Body = WebUtility.HtmlDecode(body),
-                    IsBodyHtml = true
-                };
-
-                message.To.Add(user.Email);
-
-                // send email
-                return await _emailManager.SaveAsync(message);
-
-            }
-
-            var result = new CommandResult<EmailMessage>();
-            return result.Failed("An error occurred whilst attempting to send the email confirmation email.");
-
-        }
-
+     
+      
         #endregion
 
     }
