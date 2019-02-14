@@ -21,7 +21,7 @@ namespace Plato.Theming.Navigation
             }
            
             builder
-                .Add(T["Theming"], int.MaxValue - 1, users => users
+                .Add(T["Theming"], int.MaxValue - 2, users => users
                     .IconCss("fal fa-palette fa-flip-y")
                     .Add(T["Manage Themes"], 1, create => create
                         .Action("Index", "Admin", "Plato.Discuss")

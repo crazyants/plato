@@ -22,6 +22,7 @@ namespace Plato.Users.Notifications.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {
+
         private readonly IViewProviderManager<EditNotificationsViewModel> _editProfileViewProvider;
         private readonly IContextFacade _contextFacade;
         private readonly UserManager<User> _userManager;
@@ -58,16 +59,13 @@ namespace Plato.Users.Notifications.Controllers
 
         public async Task<IActionResult> EditProfile()
         {
-
-
-
+            
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return NotFound();
             }
-
-
+            
             // -------------------
 
             // Get saved notification types

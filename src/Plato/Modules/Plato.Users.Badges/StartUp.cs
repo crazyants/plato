@@ -19,7 +19,6 @@ using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Models.Badges;
 using Plato.Notifications.Services;
 using Plato.Users.Badges.Handlers;
-using Plato.Users.Badges.Services;
 using Plato.Users.Badges.Tasks;
 using Plato.Users.Badges.ViewProviders;
 
@@ -77,8 +76,6 @@ namespace Plato.Users.Badges
             services.AddScoped<INotificationProvider<Badge>, NewBadgeEmail>();
             services.AddScoped<INotificationProvider<Badge>, NewBadgeWeb>();
 
-            services.AddScoped<IUserNotificationTypeDefaults, DummyUserNotificationTypeDefaults>();
-            
         }
 
         public override void Configure(

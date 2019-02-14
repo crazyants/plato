@@ -22,7 +22,7 @@ namespace Plato.Roles.Navigation
 
 
             builder
-                .Add(T["Roles"], 9997, roles => roles
+                .Add(T["Roles"], int.MaxValue - 3, roles => roles
                     .IconCss("fal fa-lock")
                     .Add(T["Manage"], 3, manage => manage
                         .Action("Index", "Admin", "Plato.Roles")

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Net.Mail;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
@@ -8,20 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Emails.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Localization.Abstractions;
-using Plato.Internal.Localization.Abstractions.Models;
-using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -94,7 +85,7 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             
-            //await CreateSampleUsers();
+            await CreateSampleUsers();
 
             // ----------------------------------------------------------------
 

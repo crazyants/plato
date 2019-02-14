@@ -21,8 +21,8 @@ namespace Plato.StopForumSpam.Navigation
             }
 
             builder
-                .Add(T["Settings"], int.MaxValue, configuration => configuration
-                    .IconCss("fal fa-cog")
+                .Add(T["SPAM"], int.MaxValue - 1, configuration => configuration
+                    .IconCss("fal fa-exclamation-triangle")
                     .Add(T["StopForumSpam"], 2, installed => installed
                         .Action("Index", "Admin", "Plato.StopForumSpam")
                         //.Permission(Permissions.ManageUsers)

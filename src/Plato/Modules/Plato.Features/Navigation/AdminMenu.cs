@@ -21,7 +21,7 @@ namespace Plato.Features.Navigation
             }
 
             builder
-                .Add(T["Features"], int.MaxValue - 2, features => features
+                .Add(T["Features"], int.MaxValue - 5, features => features
                     .IconCss("fal fa-cube")
                     .Add(T["Manage Features"], "15", manage => manage
                         .Action("Index", "Admin", "Plato.Features")

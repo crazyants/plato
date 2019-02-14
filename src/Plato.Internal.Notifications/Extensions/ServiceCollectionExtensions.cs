@@ -11,17 +11,24 @@ namespace Plato.Internal.Notifications.Extensions
         public static IServiceCollection AddPlatoNotifications(
             this IServiceCollection services)
         {
-            
+
             // Type Manager
             services.TryAddScoped<INotificationTypeManager, NotificationTypeManager>();
 
+            // The below implementations are replaced with real
+            // implementations within Plato.Notifications module
+            // ----------
+
             // Dummy user notification implementation
             services.TryAddScoped<IUserNotificationsManager<UserNotification>, DummyUserNotificationsManager>();
+
+            // Dummy user notification type defaults implementation
+            services.AddScoped<IUserNotificationTypeDefaults, DummyUserNotificationTypeDefaults>();
 
             return services;
 
         }
 
-
     }
+
 }

@@ -65,6 +65,28 @@ namespace Plato.Users.reCAPTCHA2.ViewProviders
         public override async Task<bool> ValidateModelAsync(UserLogin userLogin, IUpdateModel updater)
         {
 
+            // Get settings
+            var settings = await _recaptchaSettingsStore.GetAsync();
+
+            // If we don't have any settings we can't perform the checks 
+            // Ensure we return true to still allow the user to login
+
+            if (settings == null)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(settings.SiteKey))
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(settings.Secret))
+            {
+                return true;
+            }
+
+            // Get posted response
             var recaptchaResponse = _request.Form["g-recaptcha-response"];
 
             // No valid posted - user has probably not ticked check box

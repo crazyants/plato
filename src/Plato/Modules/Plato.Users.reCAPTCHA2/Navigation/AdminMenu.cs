@@ -21,8 +21,8 @@ namespace Plato.Users.reCAPTCHA2.Navigation
             }
 
             builder
-                .Add(T["Settings"], int.MaxValue, configuration => configuration
-                    .IconCss("fal fa-cog")
+                .Add(T["SPAM"], int.MaxValue - 1, configuration => configuration
+                    .IconCss("fal fa-exclamation-triangle")
                     .Add(T["reCAPTCHA2"], 2, installed => installed
                         .Action("Index", "Admin", "Plato.Users.reCAPTCHA2")
                         //.Permission(Permissions.ManageUsers)
