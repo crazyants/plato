@@ -6,26 +6,26 @@ using Plato.StopForumSpam.Client.Models;
 namespace Plato.StopForumSpam.Client.Services
 {
     
-    public class SpamFrequencies : ISpamFrequencies
+    public class SpamProxy : ISpamProxy
     {
 
-        private readonly IStopForumSpamClient _stopForumSpamClient;
+        private readonly ISpamClient _spamClient;
 
-        public SpamFrequencies(
-            IStopForumSpamClient stopForumSpamClient)
+        public SpamProxy(
+            ISpamClient spamClient)
         {
-            _stopForumSpamClient = stopForumSpamClient;
+            _spamClient = spamClient;
         }
 
-        public StopForumSpamClientOptions Options { get; private set; }
+        public ClientOptions Options { get; private set; }
 
-        public void Configure(Action<StopForumSpamClientOptions> configure)
+        public void Configure(Action<ClientOptions> configure)
         {
-            _stopForumSpamClient.Configure(configure);
-            this.Options = _stopForumSpamClient.Options;
+            _spamClient.Configure(configure);
+            this.Options = _spamClient.Options;
         }
 
-        public async Task<Models.SpamFrequencies> GetAsync(string userName, string email, string ipAddress)
+        public async Task<IProxyResults> GetAsync(string userName, string email, string ipAddress)
         {
             return await GetAsync(new User()
             {
@@ -35,7 +35,7 @@ namespace Plato.StopForumSpam.Client.Services
             });
         }
 
-        public async Task<Models.SpamFrequencies> GetAsync(IUser user)
+        public async Task<IProxyResults> GetAsync(IUser user)
         {
 
             // We need options
@@ -45,7 +45,7 @@ namespace Plato.StopForumSpam.Client.Services
             }
 
             // Make request & get response
-            var spamResponse = await _stopForumSpamClient.CheckAsync(
+            var spamResponse = await _spamClient.CheckAsync(
                 user.UserName,
                 user.Email,
                 user.IpV4Address);
@@ -83,11 +83,11 @@ namespace Plato.StopForumSpam.Client.Services
                 }
             }
 
-            return new Models.SpamFrequencies()
+            return new Models.ProxyResults()
             {
-                UserName = new SpamFrequency(usernameFrequency),
-                Email = new SpamFrequency(emailFrequency),
-                IpAddress = new SpamFrequency(ipFrequency),
+                UserName = new ProxyResult(usernameFrequency),
+                Email = new ProxyResult(emailFrequency),
+                IpAddress = new ProxyResult(ipFrequency),
                 Success = success
             };
             

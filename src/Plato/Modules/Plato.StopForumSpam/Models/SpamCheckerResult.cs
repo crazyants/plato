@@ -1,31 +1,40 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Plato.Internal.Abstractions;
 using Plato.StopForumSpam.Client.Models;
-using System.Collections.Generic;
 
 namespace Plato.StopForumSpam.Models
 {
-
-    public interface ISpamCheckerResult : ICommandResultBase
-    {
-    }
-
+    
     public class SpamCheckerResult : ISpamCheckerResult
     {
-        
-        public bool Succeeded { get; protected set; }
+
+        public bool Succeeded => !Errors.Any();
 
         public IEnumerable<CommandError> Errors { get; protected set; }
 
+        public IProxyResults Results{ get; protected set; }
+
+        public SpamCheckerResult()
+        {
+            Errors = new List<CommandError>();
+            Results = new ProxyResults();
+        }
+
         public ISpamCheckerResult Success()
+        {
+            return new SpamCheckerResult();
+        }
+
+        public ISpamCheckerResult Success(IProxyResults results)
         {
             return new SpamCheckerResult()
             {
-                Succeeded = true
+                Results = results
             };
         }
 
-        public ISpamCheckerResult Fail(IEnumerable<RequestType> requestTypes)
+        public ISpamCheckerResult Fail(IEnumerable<RequestType> requestTypes, IProxyResults results)
         {
 
             var errors = new List<CommandError>();
@@ -47,8 +56,8 @@ namespace Plato.StopForumSpam.Models
 
             return new SpamCheckerResult()
             {
-                Succeeded = false,
-                Errors = errors
+                Errors = errors,
+                Results = results
             };
         }
         

@@ -33,8 +33,7 @@ namespace Plato.Users.StopForumSpam.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
-
-         
+            
             // Get spam result
             var result = await _spamChecker.CheckAsync(user);
            

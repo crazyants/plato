@@ -8,18 +8,18 @@ using Plato.StopForumSpam.Models;
 namespace Plato.StopForumSpam.Stores
 {
     
-    public class StopForumSpamSettingsStore : IStopForumSpamSettingsStore<StopForumSpamSettings>
+    public class SpamSettingsStore : ISpamSettingsStore<SpamSettings>
     {
 
         private const string SettingsKey = "StopForumSpamSettings";
 
         private readonly IDictionaryStore _dictionaryStore;
-        private readonly ILogger<StopForumSpamSettingsStore> _logger;
+        private readonly ILogger<SpamSettingsStore> _logger;
         private readonly ICacheManager _cacheManager;
 
-        public StopForumSpamSettingsStore(
+        public SpamSettingsStore(
             IDictionaryStore dictionaryStore,
-            ILogger<StopForumSpamSettingsStore> logger,
+            ILogger<SpamSettingsStore> logger,
             IMemoryCache memoryCache,
             ICacheManager cacheManager)
         {
@@ -28,14 +28,14 @@ namespace Plato.StopForumSpam.Stores
             _logger = logger;
         }
 
-        public async Task<StopForumSpamSettings> GetAsync()
+        public async Task<SpamSettings> GetAsync()
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType());
             return await _cacheManager.GetOrCreateAsync(token,
-                async (cacheEntry) => await _dictionaryStore.GetAsync<StopForumSpamSettings>(SettingsKey));
+                async (cacheEntry) => await _dictionaryStore.GetAsync<SpamSettings>(SettingsKey));
         }
 
-        public async Task<StopForumSpamSettings> SaveAsync(StopForumSpamSettings model)
+        public async Task<SpamSettings> SaveAsync(SpamSettings model)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -43,7 +43,7 @@ namespace Plato.StopForumSpam.Stores
                 _logger.LogInformation("StopForumSpam settings updating");
             }
 
-            var settings = await _dictionaryStore.UpdateAsync<StopForumSpamSettings>(SettingsKey, model);
+            var settings = await _dictionaryStore.UpdateAsync<SpamSettings>(SettingsKey, model);
             if (settings != null)
             {
                 _cacheManager.CancelTokens(this.GetType());

@@ -11,16 +11,16 @@ using Plato.StopForumSpam.ViewModels;
 
 namespace Plato.StopForumSpam.ViewProviders
 {
-    public class AdminViewProvider : BaseViewProvider<StopForumSpamSettings>
+    public class AdminViewProvider : BaseViewProvider<SpamSettings>
     {
 
-        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _recaptchaSettingsStore;
+        private readonly ISpamSettingsStore<SpamSettings> _recaptchaSettingsStore;
         private readonly ISpamOperationManager<SpamOperation> _spamOperationManager;
         private readonly HttpRequest _request;
 
         public AdminViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IStopForumSpamSettingsStore<StopForumSpamSettings> recaptchaSettingsStore,
+            ISpamSettingsStore<SpamSettings> recaptchaSettingsStore,
             ISpamOperationManager<SpamOperation> spamOperationManager)
         {
             _recaptchaSettingsStore = recaptchaSettingsStore;
@@ -29,19 +29,19 @@ namespace Plato.StopForumSpam.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(StopForumSpamSettings viewModel, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(SpamSettings viewModel, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(StopForumSpamSettings viewModel, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(SpamSettings viewModel, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override  async Task<IViewProviderResult> BuildEditAsync(StopForumSpamSettings settings, IViewProviderContext context)
+        public override  async Task<IViewProviderResult> BuildEditAsync(SpamSettings settings, IViewProviderContext context)
         {
-            var viewModel = new StopForumSpamSettingsViewModel()
+            var viewModel = new SpamSettingsViewModel()
             {
                 ApiKey = settings.ApiKey,
                 SpamLevelId = settings.SpamLevelId,
@@ -50,14 +50,14 @@ namespace Plato.StopForumSpam.ViewProviders
             };
 
             return Views(
-                View<StopForumSpamSettingsViewModel>("Admin.Edit.Header", model => viewModel).Zone("header").Order(1),
-                View<StopForumSpamSettingsViewModel>("Admin.Edit.Tools", model => viewModel).Zone("tools").Order(1),
-                View<StopForumSpamSettingsViewModel>("Admin.Edit.Content", model => viewModel).Zone("content").Order(1)
+                View<SpamSettingsViewModel>("Admin.Edit.Header", model => viewModel).Zone("header").Order(1),
+                View<SpamSettingsViewModel>("Admin.Edit.Tools", model => viewModel).Zone("tools").Order(1),
+                View<SpamSettingsViewModel>("Admin.Edit.Content", model => viewModel).Zone("content").Order(1)
             );
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(StopForumSpamSettings settings,
+        public override async Task<IViewProviderResult> BuildUpdateAsync(SpamSettings settings,
             IViewProviderContext context)
         {
 
@@ -114,7 +114,7 @@ namespace Plato.StopForumSpam.ViewProviders
             }
          
             // Build model
-            var model = new StopForumSpamSettingsViewModel();
+            var model = new SpamSettingsViewModel();
 
             // Validate model
             if (!await context.Updater.TryUpdateModelAsync(model))
@@ -125,7 +125,7 @@ namespace Plato.StopForumSpam.ViewProviders
             // Update settings
             if (context.Updater.ModelState.IsValid)
             {
-                settings = new StopForumSpamSettings()
+                settings = new SpamSettings()
                 {
                     ApiKey = settings.ApiKey,
                     SpamLevelId = settings.SpamLevelId,

@@ -1,6 +1,6 @@
 ﻿namespace Plato.StopForumSpam.Client.Models
 {
-    public class StopForumSpamClientOptions
+    public class ClientOptions
     {
         public string ApiKey { get; set; }
         

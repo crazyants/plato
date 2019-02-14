@@ -31,9 +31,7 @@ namespace Plato.Users.StopForumSpam.SpamOperators
             // Create result
             var result = new SpamOperatorResult<User>();
             
-            // Spam checks returned false, return success
-            // to indicate no further work is needed
-
+            // User is OK
             var spamResult = await _spamChecker.CheckAsync(context.Model);
             if (spamResult.Succeeded)
             {

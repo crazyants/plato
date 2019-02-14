@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using Plato.Internal.Abstractions;
 
@@ -7,8 +6,9 @@ namespace Plato.StopForumSpam.Models
 {
 
     [DataContract]
-    public class StopForumSpamSettings : Serializable
+    public class SpamSettings : Serializable
     {
+
         [DataMember(Name = "apiKey")]
         public string ApiKey { get; set; }
 

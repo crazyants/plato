@@ -22,9 +22,9 @@ namespace Plato.StopForumSpam.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IViewProviderManager<StopForumSpamSettings> _viewProvider;
-        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
-        private readonly ISpamFrequencies _spamFrequencies;
+        private readonly IViewProviderManager<SpamSettings> _viewProvider;
+        private readonly ISpamSettingsStore<SpamSettings> _spamSettingsStore;
+        private readonly ISpamProxy _spamProxy;
 
         public IHtmlLocalizer T { get; }
 
@@ -36,16 +36,16 @@ namespace Plato.StopForumSpam.Controllers
             IAuthorizationService authorizationService,
             IAlerter alerter, 
             IBreadCrumbManager breadCrumbManager,
-            IViewProviderManager<StopForumSpamSettings> viewProvider,
-            IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore,
-            ISpamFrequencies spamFrequencies)
+            IViewProviderManager<SpamSettings> viewProvider,
+            ISpamSettingsStore<SpamSettings> spamSettingsStore,
+            ISpamProxy spamProxy)
         {
             _authorizationService = authorizationService;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _viewProvider = viewProvider;
-            _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
-            _spamFrequencies = spamFrequencies;
+            _spamSettingsStore = spamSettingsStore;
+            _spamProxy = spamProxy;
        
 
             T = htmlLocalizer;
@@ -76,10 +76,10 @@ namespace Plato.StopForumSpam.Controllers
             });
 
             // Get StopForumSpam settings
-            var settings = await _stopForumSpamSettingsStore.GetAsync();
+            var settings = await _spamSettingsStore.GetAsync();
 
             // Build view
-            var result = await _viewProvider.ProvideEditAsync(new StopForumSpamSettings()
+            var result = await _viewProvider.ProvideEditAsync(new SpamSettings()
             {
                 ApiKey = settings?.ApiKey ?? "",
                 SpamLevelId = settings?.SpamLevelId ?? SpamLevelDefaults.SpamLevelId,
@@ -94,13 +94,13 @@ namespace Plato.StopForumSpam.Controllers
             };
 
             // Configure checker
-            _spamFrequencies.Configure(o =>
+            _spamProxy.Configure(o =>
             {
                 o.ApiKey = settings?.ApiKey ?? "";
             });
 
             // Get frequencies
-            var frequencies = await _spamFrequencies.GetAsync(user);
+            var frequencies = await _spamProxy.GetAsync(user);
             
             var sb = new StringBuilder();
 
@@ -129,11 +129,11 @@ namespace Plato.StopForumSpam.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Index))]
-        public async Task<IActionResult> IndexPost(StopForumSpamSettingsViewModel viewModel)
+        public async Task<IActionResult> IndexPost(SpamSettingsViewModel viewModel)
         {
 
             // Execute view providers ProvideUpdateAsync method
-            await _viewProvider.ProvideUpdateAsync(new StopForumSpamSettings()
+            await _viewProvider.ProvideUpdateAsync(new SpamSettings()
             {
                 ApiKey = viewModel.ApiKey,
                 SpamLevelId = viewModel.SpamLevelId

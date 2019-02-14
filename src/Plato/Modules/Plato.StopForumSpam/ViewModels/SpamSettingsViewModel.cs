@@ -5,7 +5,7 @@ using Plato.StopForumSpam.Models;
 
 namespace Plato.StopForumSpam.ViewModels
 {
-    public class StopForumSpamSettingsViewModel
+    public class SpamSettingsViewModel
     {
         
         [Required]

@@ -33,12 +33,11 @@ namespace Plato.StopForumSpam
             services.AddScoped<ISpamChecker, SpamChecker>();
             
             // Settings store
-            services.AddScoped<IStopForumSpamSettingsStore<StopForumSpamSettings>, StopForumSpamSettingsStore>();
- 
+            services.AddScoped<ISpamSettingsStore<SpamSettings>, SpamSettingsStore>();
 
             // Admin view provider
-            services.AddScoped<IViewProviderManager<StopForumSpamSettings>, ViewProviderManager<StopForumSpamSettings>>();
-            services.AddScoped<IViewProvider<StopForumSpamSettings>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<SpamSettings>, ViewProviderManager<SpamSettings>>();
+            services.AddScoped<IViewProvider<SpamSettings>, AdminViewProvider>();
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();

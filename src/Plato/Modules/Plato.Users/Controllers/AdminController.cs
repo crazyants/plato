@@ -66,20 +66,23 @@ namespace Plato.Users.Controllers
 
             var claims = "";
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            foreach (var role in user.UserRoles)
+            if (user?.UserRoles != null)
             {
-
-                foreach (var claim in role.RoleClaims)
+                foreach (var role in user.UserRoles)
                 {
-                    //if (claim.Type == ClaimTypes.Role)
-                    //{
-                    claims += claim.ClaimType + " - " + claim.ClaimValue + "<br>";
-                    //}
+
+                    foreach (var claim in role.RoleClaims)
+                    {
+                        //if (claim.Type == ClaimTypes.Role)
+                        //{
+                        claims += claim.ClaimType + " - " + claim.ClaimValue + "<br>";
+                        //}
+                    }
+
                 }
 
             }
-            
+
 
             claims += "<br><br>----------<br><br>";
 

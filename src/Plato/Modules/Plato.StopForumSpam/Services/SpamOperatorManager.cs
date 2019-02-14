@@ -12,17 +12,17 @@ namespace Plato.StopForumSpam.Services
     public class SpamOperatorManager<TModel> : ISpamOperatorManager<TModel> where TModel : class
     {
 
-        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
+        private readonly ISpamSettingsStore<SpamSettings> _spamSettingsStore;
         private readonly IEnumerable<ISpamOperatorProvider<TModel>> _spamOperators;
         private readonly ILogger<SpamOperatorManager<TModel>> _logger;
 
         public SpamOperatorManager(
             IEnumerable<ISpamOperatorProvider<TModel>> spamOperators,
-            IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore,
+            ISpamSettingsStore<SpamSettings> spamSettingsStore,
             ILogger<SpamOperatorManager<TModel>> logger)
         {
             _spamOperators = spamOperators;
-            _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
+            _spamSettingsStore = spamSettingsStore;
             _logger = logger;
         }
 
@@ -31,7 +31,7 @@ namespace Plato.StopForumSpam.Services
             
             // If the spam operation has been updated within the database ensure
             // we use the updated version from the database as opposed to the default
-            var settings = await _stopForumSpamSettingsStore.GetAsync();
+            var settings = await _spamSettingsStore.GetAsync();
             var existingOperation = settings?.SpamOperations?.FirstOrDefault(o => o.Name.Equals(operation.Name));
             if (existingOperation != null)
             {

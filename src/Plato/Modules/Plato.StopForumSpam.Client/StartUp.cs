@@ -16,9 +16,9 @@ namespace Plato.StopForumSpam.Client
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            // StopForumSpam services
-            services.AddScoped<IStopForumSpamClient, StopForumSpamClient>();
-            services.AddScoped<ISpamFrequencies, SpamFrequencies>();
+            // Register StopForumSpam services
+            services.AddScoped<ISpamClient, SpamClient>();
+            services.AddScoped<ISpamProxy, SpamProxy>();
         }
 
         public override void Configure(

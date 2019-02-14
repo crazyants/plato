@@ -13,22 +13,24 @@ namespace Plato.StopForumSpam.Services
 
     public class SpamChecker : ISpamChecker
     {
-        private readonly ISpamFrequencies _spamFrequencies;
-        private readonly IStopForumSpamSettingsStore<StopForumSpamSettings> _stopForumSpamSettingsStore;
+        private readonly ISpamProxy _spamProxy;
+        private readonly ISpamSettingsStore<SpamSettings> _spamSettingsStore;
 
         public SpamChecker(
-            ISpamFrequencies spamFrequencies,
-            IStopForumSpamSettingsStore<StopForumSpamSettings> stopForumSpamSettingsStore)
+            ISpamProxy spamProxy,
+            ISpamSettingsStore<SpamSettings> spamSettingsStore)
         {
-            _spamFrequencies = spamFrequencies;
-            _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
+            _spamProxy = spamProxy;
+            _spamSettingsStore = spamSettingsStore;
         }
-        
+
+        #region "Implementation"
+
         public async Task<ISpamCheckerResult> CheckAsync(IUser user)
         {
             
             // Get StopForumSpam settings
-            var settings = await _stopForumSpamSettingsStore.GetAsync();
+            var settings = await _spamSettingsStore.GetAsync();
             
             // Identify which flags to check
             var level = settings != null
@@ -40,27 +42,26 @@ namespace Plato.StopForumSpam.Services
             }
 
             // Return result
-            return await CheckAsync(user, settings?.ApiKey ?? string.Empty, level.Flags);
+            return await CheckInternalAsync(user, settings?.ApiKey ?? string.Empty, level.Flags);
 
         }
         
         public async Task<ISpamCheckerResult> CheckAsync(IUser user, RequestType flags)
         {
             
-            // Get StopForumSpam settings
-            var settings = await _stopForumSpamSettingsStore.GetAsync();
+            // Get settings
+            var settings = await _spamSettingsStore.GetAsync();
             
-            // Return result
-            return await CheckAsync(user, settings?.ApiKey ?? string.Empty, flags);
+            // Return results
+            return await CheckInternalAsync(user, settings?.ApiKey ?? string.Empty, flags);
 
         }
 
+        #endregion
+
         #region "Private Methods"
-        
-        async Task<ISpamCheckerResult> CheckAsync(
-            IUser user,
-            string apiKey,
-            RequestType checkAgainst)
+
+        async Task<ISpamCheckerResult> CheckInternalAsync(IUser user, string apiKey, RequestType flags)
         {
 
             // The result we'll return
@@ -73,10 +74,10 @@ namespace Plato.StopForumSpam.Services
             }
            
             // Configure frequency checker
-            _spamFrequencies.Configure(o => { o.ApiKey = apiKey; });
+            _spamProxy.Configure(o => { o.ApiKey = apiKey; });
 
             // Get frequencies
-            var frequencies = await _spamFrequencies.GetAsync(user);
+            var frequencies = await _spamProxy.GetAsync(user);
 
             // Ensure we have frequencies
             if (frequencies == null)
@@ -90,9 +91,9 @@ namespace Plato.StopForumSpam.Services
                 return result.Success();
             }
             
-            // Check flags
+            // Check configured flags for configured level and compile errors
             var errors = new List<RequestType>();
-            switch (checkAgainst)
+            switch (flags)
             {
                 case RequestType.Username | RequestType.EmailAddress | RequestType.IpAddress:
 
@@ -127,8 +128,8 @@ namespace Plato.StopForumSpam.Services
             }
 
             return errors.Count > 0
-                ? result.Fail(errors)
-                : result.Success();
+                ? result.Fail(errors, frequencies)
+                : result.Success(frequencies);
 
         }
 

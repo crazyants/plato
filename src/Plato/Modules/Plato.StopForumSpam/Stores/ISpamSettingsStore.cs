@@ -2,7 +2,7 @@
 
 namespace Plato.StopForumSpam.Stores
 {
-    public interface IStopForumSpamSettingsStore<T> : ISettingsStore<T> where T : class
+    public interface ISpamSettingsStore<T> : ISettingsStore<T> where T : class
     {
     }
 

@@ -5,12 +5,12 @@ using Plato.StopForumSpam.Client.Models;
 
 namespace Plato.StopForumSpam.Client.Services
 {
-    public interface IStopForumSpamClient
+    public interface ISpamClient
     {
 
-        StopForumSpamClientOptions Options { get; }
+        ClientOptions Options { get; }
 
-        void Configure(Action<StopForumSpamClientOptions> configure);
+        void Configure(Action<ClientOptions> configure);
 
         Task<Response> CheckEmailAddressAsync(string emailAddress);
 

@@ -8,19 +8,19 @@ using Plato.StopForumSpam.Client.Models;
 namespace Plato.StopForumSpam.Client.Services
 {
     
-    public class StopForumSpamClient : HttpClient, IStopForumSpamClient
+    public class SpamClient : HttpClient, ISpamClient
     {
         
         private readonly string _format;
 
-        public StopForumSpamClientOptions Options { get; private set; } = new StopForumSpamClientOptions();
+        public ClientOptions Options { get; private set; } = new ClientOptions();
 
-        public StopForumSpamClient() 
+        public SpamClient() 
         {
             this._format = "json";
         }
 
-        public void Configure(Action<StopForumSpamClientOptions> configure)
+        public void Configure(Action<ClientOptions> configure)
         {
             configure(this.Options);
         }
