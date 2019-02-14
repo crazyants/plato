@@ -110,7 +110,7 @@
                     <div class="col-6">
                         <h6>@T["Spam User?"]</h6>
                         <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
-                            @T["Blacklist "]
+                            @T["Lock this account "]
                         </a>
                         @T["to ensure this user can never contribute."]
                     </div>
@@ -119,7 +119,7 @@
                         <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
                             @T["Whitelist"]
                         </a>
-                        @T["to ensure this user is never checked for SPAM."]
+                        @T["to ensure this user is never flagged as SPAM."]
                     </div>
                 </div>
 

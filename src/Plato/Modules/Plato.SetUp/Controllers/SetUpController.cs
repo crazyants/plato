@@ -44,7 +44,7 @@ namespace Plato.SetUp.Controllers
             var setUpViewModel = new SetUpViewModel()
             {
                 SiteName = "Plato",
-                ConnectionString = "server=localhost;trusted_connection=true;database=plato1",
+                ConnectionString = "server=localhost;trusted_connection=true;database=plato2",
                 TablePrefix = "plato",
                 UserName = "admin",
                 Email = "admin@admin.com",
@@ -53,8 +53,7 @@ namespace Plato.SetUp.Controllers
             };
 
             return View(setUpViewModel);
-
-
+            
         }
 
         [HttpPost]

@@ -147,7 +147,7 @@ namespace Plato.Users.Handlers
                     {
                         Name = "LockoutEnd",
                         Nullable = true,
-                        DbType = DbType.DateTime2
+                        DbType = DbType.DateTimeOffset
                     },
                     new SchemaColumn()
                     {
@@ -265,12 +265,23 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsBanned",
+                        Name = "IsBlackListed",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "BanExpiryDate",
+                        Name = "IsWhiteListed",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "BlackListedExpiryDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "WhiteListedExpiryDate",
                         DbType = DbType.DateTimeOffset,
                         Nullable = true
                     },
@@ -785,23 +796,24 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
                         Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTime2
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTimeOffset
                     },
                     new SchemaColumn()
                     {
                         Name = "ModifiedUserId",
                         DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     }
                 }
             };

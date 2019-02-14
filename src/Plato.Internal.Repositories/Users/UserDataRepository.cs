@@ -123,12 +123,12 @@ namespace Plato.Internal.Repositories.Users
             var id = await InsertUpdateInternal(
                 data.Id,
                 data.UserId,
-                data.Key.ToEmptyIfNull().TrimToSize(255),
-                data.Value.ToEmptyIfNull(),
-                data.CreatedDate.ToDateIfNull(),
+                data.Key,
+                data.Value,
                 data.CreatedUserId,
-                data.ModifiedDate.ToDateIfNull(),
-                data.ModifiedUserId);
+                data.CreatedDate,
+                data.ModifiedUserId,
+                data.ModifiedDate);
             if (id > 0)
                 return await SelectByIdAsync(id);
             return null;
@@ -202,10 +202,10 @@ namespace Plato.Internal.Repositories.Users
             int userId,
             string key,
             string value,
-            DateTime? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
-            int modifiedUserId)
+            DateTimeOffset? createdDate,
+            int modifiedUserId,
+            DateTimeOffset? modifiedDate)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -227,10 +227,10 @@ namespace Plato.Internal.Repositories.Users
                     userId,
                     key.ToEmptyIfNull().TrimToSize(255),
                     value.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
                     createdUserId,
-                    modifiedDate.ToDateIfNull(),
+                    createdDate.ToDateIfNull(),
                     modifiedUserId,
+                    modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 

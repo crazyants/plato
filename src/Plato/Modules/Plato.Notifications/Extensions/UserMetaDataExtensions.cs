@@ -1,13 +1,11 @@
 ﻿using System;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
-using Plato.Notifications.Services;
 
 namespace Plato.Notifications.Extensions
 {
-
-
     public static class UserMetaDataExtensions
     {
 
