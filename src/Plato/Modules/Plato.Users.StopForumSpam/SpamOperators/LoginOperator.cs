@@ -4,13 +4,14 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
+using Plato.StopForumSpam.Stores;
 
 namespace Plato.Users.StopForumSpam.SpamOperators
 {
 
     public class LoginOperator : ISpamOperatorProvider<User>
     {
-        
+
         private readonly ISpamChecker _spamChecker;
         
         public LoginOperator(ISpamChecker spamChecker)
@@ -29,9 +30,10 @@ namespace Plato.Users.StopForumSpam.SpamOperators
 
             // Create result
             var result = new SpamOperatorResult<User>();
-
+            
             // Spam checks returned false, return success
             // to indicate no further work is needed
+
             var spamResult = await _spamChecker.CheckAsync(context.Model);
             if (spamResult.Succeeded)
             {

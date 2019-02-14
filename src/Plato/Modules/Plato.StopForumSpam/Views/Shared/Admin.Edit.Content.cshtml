@@ -29,7 +29,7 @@
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="SpamLevel">
 
-                            <label asp-for="@Model.SpamLevel">
+                            <label asp-for="@Model.SpamLevelId">
                                 <strong>@T["Aggression Level"]</strong><br />
                                 <span class="text-muted">@T["Customize how aggressively the SPAM filter should act."]</span>
                             </label>
@@ -39,7 +39,7 @@
                                     <div id="slider" class="d-inline-block col-9">
                                         <div class="float-left">@T["Low"]</div>
                                         <div class="float-right">@T["High"]</div>
-                                        <input asp-for="@Model.SpamLevel" style="width: 100%;" />
+                                        <input asp-for="@Model.SpamLevelId" style="width: 100%;" />
                                         <div id="sliderResults" class="pt-3">
                                             <h6>@Model.SelectedSpamLevel?.Name</h6>
                                             <div class="text-muted">@Model.SelectedSpamLevel?.Description</div>
@@ -183,7 +183,6 @@
 
 <script section="Footer">
     
-
     $(document).ready(function() {
         
         // Get slider
@@ -198,13 +197,13 @@
             ticks: function() {
                 var ticks = [];
                 for (var i = 0; i < this.json.length; i++) {
-                    ticks.push(this.json[i].tick);
+                    ticks.push(this.json[i].id);
                 }
                 return ticks;
             },
-            get: function(tick) {
+            get: function(id) {
                 for (var i = 0; i < this.json.length; i++) {
-                    if (this.json[i].tick === parseInt(tick)) {
+                    if (this.json[i].id === parseInt(id)) {
                         return this.json[i];
                     }
                 }
@@ -216,7 +215,7 @@
         $slider.slider({
             tooltip: 'always',
             ticks: data.ticks(),
-            value: @Model.SpamLevel.ToString(),
+            value: @Model.SpamLevelId.ToString(),
             formatter: function(value) {
                 var level = data.get(value);
                 if (level == null) {

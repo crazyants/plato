@@ -3,11 +3,12 @@
 namespace Plato.StopForumSpam.Client.Models
 {
 
+    [Flags]
     public enum RequestType
     {
-        IpAddress,
-        Username,
-        EmailAddress
+        IpAddress = 1,
+        Username = 2,
+        EmailAddress = 4
     }
 
     public class ResponsePart

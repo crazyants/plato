@@ -8,7 +8,8 @@ namespace Plato.Users.StopForumSpam.SpamOperators
 {
     public class RegistrationOperator : Plato.StopForumSpam.Services.ISpamOperatorProvider<User>
     {
-        
+
+   
         private readonly ISpamChecker _spamChecker;
      
         public RegistrationOperator(ISpamChecker spamChecker)

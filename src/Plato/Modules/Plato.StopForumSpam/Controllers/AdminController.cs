@@ -82,7 +82,7 @@ namespace Plato.StopForumSpam.Controllers
             var result = await _viewProvider.ProvideEditAsync(new StopForumSpamSettings()
             {
                 ApiKey = settings?.ApiKey ?? "",
-                SpamLevel = settings?.SpamLevel ?? 0,
+                SpamLevelId = settings?.SpamLevelId ?? SpamLevelDefaults.SpamLevelId,
                 SpamOperations = settings?.SpamOperations ?? null
             }, this);
             
@@ -136,7 +136,7 @@ namespace Plato.StopForumSpam.Controllers
             await _viewProvider.ProvideUpdateAsync(new StopForumSpamSettings()
             {
                 ApiKey = viewModel.ApiKey,
-                SpamLevel = viewModel.SpamLevel
+                SpamLevelId = viewModel.SpamLevelId
             }, this);
 
             // Add alert

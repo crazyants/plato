@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Plato.StopForumSpam.Client.Models;
 using Plato.StopForumSpam.Models;
 
 namespace Plato.StopForumSpam.ViewModels
@@ -20,7 +17,7 @@ namespace Plato.StopForumSpam.ViewModels
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "spam level")]
-        public int SpamLevel { get; set; }
+        public int SpamLevelId { get; set; }
 
         // ----------
 
@@ -28,44 +25,13 @@ namespace Plato.StopForumSpam.ViewModels
 
         public IDictionary<string, IEnumerable<SpamOperation>> CategorizedSpamOperations { get; set; }
 
-        public SpamLevel SelectedSpamLevel
+        public ISpamLevel SelectedSpamLevel
         {
-            get { return DefaultSpamLevels.SpamLevels.FirstOrDefault(l => l.Tick == SpamLevel); }
+            get { return SpamLevelDefaults.SpamLevels.FirstOrDefault(l => l.Id == SpamLevelId); }
         }
 
-        public IEnumerable<SpamLevel> SpamLevels { get; private set; } = DefaultSpamLevels.SpamLevels;
+        public IEnumerable<ISpamLevel> SpamLevels { get; private set; } = SpamLevelDefaults.SpamLevels;
    
-    }
-
-
-    public interface ISpamLevel
-    {
-        string Name { get; set; }
-
-        string Description { get; set; }
-
-        short Tick { get; set; }
-
-        SpamFrequencies Frequencies { get; set; }
-
-    }
-    
-    [DataContract]
-    public class SpamLevel : ISpamLevel
-    {
-        
-        [DataMember(Name = "name")]
-        public string Name { get; set; }
-
-        [DataMember(Name = "description")]
-        public string Description { get; set; }
-
-        [DataMember(Name = "tick")]
-        public short Tick { get; set; }
-
-        [DataMember(Name = "frequencies")]
-        public SpamFrequencies Frequencies { get; set; }
-
     }
     
 }

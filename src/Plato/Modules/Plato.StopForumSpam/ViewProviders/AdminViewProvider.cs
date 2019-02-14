@@ -31,29 +31,28 @@ namespace Plato.StopForumSpam.ViewProviders
 
         public override Task<IViewProviderResult> BuildDisplayAsync(StopForumSpamSettings viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(StopForumSpamSettings viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override  async Task<IViewProviderResult> BuildEditAsync(StopForumSpamSettings settings, IViewProviderContext context)
         {
-            var recaptchaSettingsViewModel = new StopForumSpamSettingsViewModel()
+            var viewModel = new StopForumSpamSettingsViewModel()
             {
                 ApiKey = settings.ApiKey,
-                SpamLevel = settings.SpamLevel,
-                SpamOperations = settings.SpamOperations ??
-                                 _spamOperationManager.GetSpamOperations(),
+                SpamLevelId = settings.SpamLevelId,
+                SpamOperations = settings.SpamOperations ??_spamOperationManager.GetSpamOperations(),
                 CategorizedSpamOperations = await _spamOperationManager.GetCategorizedSpamOperationsAsync()
             };
 
             return Views(
-                View<StopForumSpamSettingsViewModel>("Admin.Edit.Header", model => recaptchaSettingsViewModel).Zone("header").Order(1),
-                View<StopForumSpamSettingsViewModel>("Admin.Edit.Tools", model => recaptchaSettingsViewModel).Zone("tools").Order(1),
-                View<StopForumSpamSettingsViewModel>("Admin.Edit.Content", model => recaptchaSettingsViewModel).Zone("content").Order(1)
+                View<StopForumSpamSettingsViewModel>("Admin.Edit.Header", model => viewModel).Zone("header").Order(1),
+                View<StopForumSpamSettingsViewModel>("Admin.Edit.Tools", model => viewModel).Zone("tools").Order(1),
+                View<StopForumSpamSettingsViewModel>("Admin.Edit.Content", model => viewModel).Zone("content").Order(1)
             );
 
         }
@@ -129,7 +128,7 @@ namespace Plato.StopForumSpam.ViewProviders
                 settings = new StopForumSpamSettings()
                 {
                     ApiKey = settings.ApiKey,
-                    SpamLevel = settings.SpamLevel,
+                    SpamLevelId = settings.SpamLevelId,
                     SpamOperations = operationsToAdd.Values
                 };
 

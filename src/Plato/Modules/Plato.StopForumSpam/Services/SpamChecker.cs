@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Users;
@@ -6,7 +7,6 @@ using Plato.StopForumSpam.Client.Models;
 using Plato.StopForumSpam.Client.Services;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Stores;
-using Plato.StopForumSpam.ViewModels;
 
 namespace Plato.StopForumSpam.Services
 {
@@ -23,44 +23,57 @@ namespace Plato.StopForumSpam.Services
             _spamFrequencies = spamFrequencies;
             _stopForumSpamSettingsStore = stopForumSpamSettingsStore;
         }
-
+        
         public async Task<ISpamCheckerResult> CheckAsync(IUser user)
         {
-
+            
             // Get StopForumSpam settings
             var settings = await _stopForumSpamSettingsStore.GetAsync();
-
-            // The result we'll return
-            var result = new SpamCheckerResult();
             
-            // If we don't have any settings or an API key always return
-            // false as we are unable to determine if the details are SPAM
-
-            if (settings == null)
-            {
-                return result.Success();
-            }
-
-            // We always need an API key
-            if (string.IsNullOrEmpty(settings?.ApiKey))
-            {
-                return result.Success();
-            }
-
-            // Get configured spam level
-            var level = GetLevel(settings);
-
-            // We always need a level to check against
+            // Identify which flags to check
+            var level = settings != null
+                ? SpamLevelDefaults.SpamLevels.FirstOrDefault(l => l.Id == settings.SpamLevelId)
+                : SpamLevelDefaults.SpamLevels.FirstOrDefault(l => l.Id == SpamLevelDefaults.SpamLevelId);
             if (level == null)
             {
                 throw new ArgumentNullException(nameof(level));
             }
 
-            // Configure frequency checker
-            _spamFrequencies.Configure(o =>
+            // Return result
+            return await CheckAsync(user, settings?.ApiKey ?? string.Empty, level.Flags);
+
+        }
+        
+        public async Task<ISpamCheckerResult> CheckAsync(IUser user, RequestType flags)
+        {
+            
+            // Get StopForumSpam settings
+            var settings = await _stopForumSpamSettingsStore.GetAsync();
+            
+            // Return result
+            return await CheckAsync(user, settings?.ApiKey ?? string.Empty, flags);
+
+        }
+
+        #region "Private Methods"
+        
+        async Task<ISpamCheckerResult> CheckAsync(
+            IUser user,
+            string apiKey,
+            RequestType checkAgainst)
+        {
+
+            // The result we'll return
+            var result = new SpamCheckerResult();
+
+            // We always need an API key to perform checks
+            if (string.IsNullOrEmpty(apiKey))
             {
-                o.ApiKey = settings?.ApiKey ?? "";
-            });
+                return result.Success();
+            }
+           
+            // Configure frequency checker
+            _spamFrequencies.Configure(o => { o.ApiKey = apiKey; });
 
             // Get frequencies
             var frequencies = await _spamFrequencies.GetAsync(user);
@@ -71,48 +84,55 @@ namespace Plato.StopForumSpam.Services
                 return result.Success();
             }
 
-            // If an error occurs simply return false
+            // If an error occurs whilst obtaining frequencies simply return success
             if (!frequencies.Success)
             {
                 return result.Success();
             }
-
-            // We have frequencies to check against our configured spam level
-            // Go ahead and check frequencies against configured level 
             
-            if (level.Frequencies.UserName.Appears)
+            // Check flags
+            var errors = new List<RequestType>();
+            switch (checkAgainst)
             {
-                if (frequencies.UserName.Appears)
-                {
-                    result.Error(RequestType.Username);
-                }
+                case RequestType.Username | RequestType.EmailAddress | RequestType.IpAddress:
+
+                    if (frequencies.UserName.Appears && frequencies.Email.Appears & frequencies.IpAddress.Appears)
+                    {
+                        errors.Add(RequestType.Username);
+                        errors.Add(RequestType.EmailAddress);
+                        errors.Add(RequestType.IpAddress);
+                    }
+
+                    break;
+
+                case RequestType.EmailAddress | RequestType.IpAddress:
+
+                    if (frequencies.Email.Appears & frequencies.IpAddress.Appears)
+                    {
+                        errors.Add(RequestType.EmailAddress);
+                        errors.Add(RequestType.IpAddress);
+                    }
+
+                    break;
+
+                case RequestType.IpAddress:
+
+                    if (frequencies.IpAddress.Appears)
+                    {
+                        errors.Add(RequestType.IpAddress);
+                    }
+
+                    break;
+
             }
 
-            if (level.Frequencies.Email.Appears)
-            {
-                if (frequencies.Email.Appears)
-                {
-                    result.Error(RequestType.EmailAddress);
-                }
-            }
-
-            if (level.Frequencies.IpAddress.Appears)
-            {
-                if (frequencies.IpAddress.Appears)
-                {
-                    result.Error(RequestType.IpAddress);
-                }
-            }
-
-            return result;
+            return errors.Count > 0
+                ? result.Fail(errors)
+                : result.Success();
 
         }
 
-        private SpamLevel GetLevel(StopForumSpamSettings settings)
-        {
-            return DefaultSpamLevels.SpamLevels.FirstOrDefault(l => l.Tick == settings?.SpamLevel) ??
-                   DefaultSpamLevels.SpamLevels.FirstOrDefault(l => l.Tick == DefaultSpamLevels.DefaultSpamLevel);
-        }
+        #endregion
 
     }
 
