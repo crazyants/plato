@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +16,7 @@ using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Security.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
@@ -384,7 +387,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            // Resent confirmation email
+            // Resend confirmation email
             var result = await _platoUserManager.GetEmailConfirmationUserAsync(currentUser.Email);
             if (result.Succeeded)
             {
@@ -418,6 +421,7 @@ namespace Plato.Users.Controllers
 
         public async Task<IActionResult> ConfirmEmail(string id)
         {
+
             // Get user
             var currentUser = await _userManager.FindByIdAsync(id);
             if (currentUser == null)
@@ -447,6 +451,126 @@ namespace Plato.Users.Controllers
                 ["id"] = id
             });
         }
+
+        public async Task<IActionResult> VerifyUser(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Reset spam status
+            currentUser.IsSpam = false;
+            currentUser.IsSpamUpdatedUserId = 0;
+            currentUser.IsSpamUpdatedDate = null;
+
+            // Reset banned status
+            currentUser.IsBanned = false;
+            currentUser.IsBannedUpdatedUserId = 0;
+            currentUser.IsBannedUpdatedDate = null;
+            
+            // Update verified status
+            currentUser.IsVerified = true;
+            currentUser.IsVerifiedUpdatedUserId = user.Id;
+            currentUser.IsVerifiedUpdatedDate = DateTimeOffset.UtcNow;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["User verified successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+
+        }
+
+        public async Task<IActionResult> BanUser(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Reset spam status
+            currentUser.IsSpam = false;
+            currentUser.IsSpamUpdatedUserId = 0;
+            currentUser.IsSpamUpdatedDate = null;
+
+            // Reset verified status
+            currentUser.IsVerified = false;
+            currentUser.IsVerifiedUpdatedUserId = 0;
+            currentUser.IsVerifiedUpdatedDate = DateTimeOffset.UtcNow;
+
+            // Update banned status
+            currentUser.IsBanned = true;
+            currentUser.IsBannedUpdatedUserId = user.Id;
+            currentUser.IsBannedUpdatedDate = DateTimeOffset.UtcNow;
+            
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["User banned successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+        }
+
 
         #endregion
 

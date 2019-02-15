@@ -89,11 +89,23 @@ namespace Plato.Internal.Models.Users
 
         public bool IsSpam { get; set; }
 
+        public int IsSpamUpdatedUserId { get; set; }
+
+        public DateTimeOffset? IsSpamUpdatedDate { get; set; }
+
         public bool IsVerified { get; set; }
 
-        public bool BanEnabled { get; set; }
-        
-        public DateTimeOffset? BanExpiryDate { get; set; }
+        public int IsVerifiedUpdatedUserId { get; set; }
+
+        public DateTimeOffset? IsVerifiedUpdatedDate { get; set; }
+
+        public bool IsBanned { get; set; }
+
+        public int IsBannedUpdatedUserId { get; set; }
+
+        public DateTimeOffset? IsBannedUpdatedDate { get; set; }
+
+        public DateTimeOffset? IsBannedExpiryDate { get; set; }
         
         public UserType UserType { get; set; } = UserType.None;
 
@@ -299,14 +311,32 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("IsSpam"))
                 IsSpam = Convert.ToBoolean(dr["IsSpam"]);
 
+            if (dr.ColumnIsNotNull("IsSpamUpdatedUserId"))
+                IsSpamUpdatedUserId = Convert.ToInt32(dr["IsSpamUpdatedUserId"]);
+            
+            if (dr.ColumnIsNotNull("IsSpamUpdatedDate"))
+                IsSpamUpdatedDate = (DateTimeOffset)dr["IsSpamUpdatedDate"];
+            
             if (dr.ColumnIsNotNull("IsVerified"))
                 IsVerified = Convert.ToBoolean(dr["IsVerified"]);
 
-            if (dr.ColumnIsNotNull("BanEnabled"))
-                BanEnabled = Convert.ToBoolean(dr["BanEnabled"]);
+            if (dr.ColumnIsNotNull("IsVerifiedUpdatedUserId"))
+                IsVerifiedUpdatedUserId = Convert.ToInt32(dr["IsVerifiedUpdatedUserId"]);
 
-            if (dr.ColumnIsNotNull("BanExpiryDate"))
-                BanExpiryDate = (DateTimeOffset)dr["BanExpiryDate"];
+            if (dr.ColumnIsNotNull("IsVerifiedUpdatedDate"))
+                IsVerifiedUpdatedDate = (DateTimeOffset)dr["IsVerifiedUpdatedDate"];
+            
+            if (dr.ColumnIsNotNull("IsBanned"))
+                IsBanned = Convert.ToBoolean(dr["IsBanned"]);
+
+            if (dr.ColumnIsNotNull("IsBannedUpdatedUserId"))
+                IsBannedUpdatedUserId = Convert.ToInt32(dr["IsBannedUpdatedUserId"]);
+
+            if (dr.ColumnIsNotNull("IsBannedUpdatedDate"))
+                IsBannedUpdatedDate = (DateTimeOffset)dr["IsBannedUpdatedDate"];
+            
+            if (dr.ColumnIsNotNull("IsBannedExpiryDate"))
+                IsBannedExpiryDate = (DateTimeOffset)dr["IsBannedExpiryDate"];
             
             if (dr.ColumnIsNotNull("UserType"))
                 UserType = (UserType)Convert.ToInt16(dr["UserType"]);

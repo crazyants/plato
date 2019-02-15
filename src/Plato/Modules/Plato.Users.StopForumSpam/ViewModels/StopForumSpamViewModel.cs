@@ -11,6 +11,8 @@ namespace Plato.Users.StopForumSpam.ViewModels
 
         public bool IsSpam { get; set; }
 
+        public bool IsVerified { get; set; }
+
         public ISpamCheckerResult Checker { get; set; }
 
     }

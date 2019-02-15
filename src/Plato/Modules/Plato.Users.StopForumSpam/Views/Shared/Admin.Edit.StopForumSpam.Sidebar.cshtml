@@ -87,7 +87,7 @@
                     @T["Spam Results"]
                 </h6>
                 <p>
-                    @T["You can see below the number of times the details for this user have been reported to StopForumSpam..."]
+                    @T["You can see below the number of times this users username, email address & IP address appear within the StopForumSpam database..."]
                 </p>
                 <div class="row">
                     <div class="col-4">
@@ -109,15 +109,15 @@
                 <div class="row">
                     <div class="col-6">
                         <h6>@T["Spam User?"]</h6>
-                        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
-                            @T["Lock this account "]
+                        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="BanUser" asp-route-id="@Model.Id">
+                            @T["Ban"]
                         </a>
-                        @T["to ensure this user can never contribute."]
+                        @T["to ensure this user can never login or contribute."]
                     </div>
                     <div class="col-6">
                         <h6>@T["Genuine User?"]</h6>
-                        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
-                            @T["Whitelist"]
+                        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="VerifyUser" asp-route-id="@Model.Id">
+                            @T["Verify"]
                         </a>
                         @T["to ensure this user is never flagged as SPAM."]
                     </div>

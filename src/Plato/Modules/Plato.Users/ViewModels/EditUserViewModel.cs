@@ -56,13 +56,29 @@ namespace Plato.Users.ViewModels
         
         public bool IsNewUser { get; set; }
         
-        public bool IsVerified { get; set; }
-
         public bool DisplayPasswordFields { get; set; }
 
         public bool EmailConfirmed { get; set; }
 
         public bool IsSpam { get; set; }
+
+        public SimpleUser IsSpamUpdatedUser { get; set; }
+
+        public DateTimeOffset? IsSpamUpdatedDate { get; set; }
+        
+        public bool IsVerified { get; set; }
+
+        public SimpleUser IsVerifiedUpdatedUser { get; set; }
+
+        public DateTimeOffset? IsVerifiedUpdatedDate { get; set; }
+
+
+        public bool IsBanned { get; set; }
+
+        public SimpleUser IsBannedUpdatedUser { get; set; }
+
+        public DateTimeOffset? IsBannedUpdatedDate { get; set; }
+
 
     }
 

@@ -1,20 +1,28 @@
 ﻿@model EditUserViewModel
-
+@{
+    var verifiedToolTip = "";
+    if (Model.IsVerifiedUpdatedUser != null)
+    {
+        verifiedToolTip = String.Format(T["Verified as genuine by {0}, {1}"].Value,
+            Model.IsVerifiedUpdatedUser.DisplayName,
+            Model.IsVerifiedUpdatedDate.ToPrettyDate());
+    }
+}
 @if (Model.IsNewUser)
 {
     <h4>@T["Add User"]</h4>
 }
 else
 {
-    <h4>
+    <h4 class="d-inline-block">
         @T["Edit User"] @Model.DisplayName
-        @if (Model.IsVerified)
-        {
-            <span class="pip pip-primary">
-                <i class="fal fa-check"></i>
-            </span>
-        }
     </h4>
+    @if (Model.IsVerified)
+     {
+         <span data-toggle="tooltip" title="@verifiedToolTip" class="badge badge-sm badge-primary rounded-circle align-top mt-1">
+             <i class="fal fa-check"></i>
+         </span>
+     }
     
 }
 

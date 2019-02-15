@@ -265,17 +265,50 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "IsSpamUpdatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsSpamUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "IsVerified",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "BanEnabled",
+                        Name = "IsVerifiedUpdatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsVerifiedUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsBanned",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "BanExpiryDate",
+                        Name = "IsBannedUpdatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsBannedUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsBannedExpiryDate",
                         DbType = DbType.DateTimeOffset,
                         Nullable = true
                     },
@@ -369,7 +402,9 @@ namespace Plato.Users.Handlers
                     UserName = context.AdminUsername,
                     PhotoColor = _userColorProvider.GetColor(),
                     EmailConfirmed = true,
-                    IsVerified = true
+                    IsVerified = true,
+                    IsVerifiedUpdatedUserId = 1,
+                    IsVerifiedUpdatedDate = DateTimeOffset.UtcNow
                 }, context.AdminPassword);
                 if (!result1.Succeeded)
                 {
@@ -388,6 +423,8 @@ namespace Plato.Users.Handlers
                     DisplayName = "Plato Bot",
                     EmailConfirmed = true,
                     IsVerified = true,
+                    IsVerifiedUpdatedUserId = 1,
+                    IsVerifiedUpdatedDate = DateTimeOffset.UtcNow,
                     PhotoUrl = "/images/bot.png",
                     PhotoColor = _userColorProvider.GetColor(),
                     UserType = UserType.Bot

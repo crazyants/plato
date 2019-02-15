@@ -29,6 +29,7 @@ namespace Plato.Users.ViewProviders
         private static string _pathToAvatarFolder;
         private static string _urltoAvatarFolder;
 
+        private readonly IPlatoUserStore<User> _userStore;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _hostEnvironment;
@@ -49,11 +50,13 @@ namespace Plato.Users.ViewProviders
             IPlatoUserManager<User> platoUserManager,
             IHostingEnvironment hostEnvironment,
             IFileStore fileStore,
-            IUploadFolder uploadFolder)
+            IUploadFolder uploadFolder,
+            IPlatoUserStore<User> userStore)
         {
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
             _uploadFolder = uploadFolder;
+            _userStore = userStore;
             _userPhotoStore = userPhotoStore;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
             _platoUserManager = platoUserManager;
@@ -95,11 +98,30 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
 
             var details = user.GetOrCreate<UserDetail>();
 
+            User isVerifiedBy = null;
+            User isSpamBy = null;
+            User isBannedBy = null;
+
+            if (user.IsVerified && user.IsVerifiedUpdatedUserId > 0)
+            {
+                isVerifiedBy = await _userStore.GetByIdAsync(user.IsVerifiedUpdatedUserId);
+            }
+
+            if (user.IsSpam && user.IsSpamUpdatedUserId > 0)
+            {
+                isSpamBy = await _userStore.GetByIdAsync(user.IsVerifiedUpdatedUserId);
+            }
+
+            if (user.IsBanned && user.IsBannedUpdatedUserId > 0)
+            {
+                isBannedBy = await _userStore.GetByIdAsync(user.IsBannedUpdatedUserId);
+            }
+            
             var viewModel = new EditUserViewModel()
             {
                 Id = user.Id,
@@ -116,18 +138,24 @@ namespace Plato.Users.ViewProviders
                 DisplayPasswordFields = user.Id == 0,
                 EmailConfirmed = user.EmailConfirmed,
                 IsSpam = user.IsSpam,
-                IsVerified = user.IsVerified
+                IsSpamUpdatedUser = isSpamBy != null ? new SimpleUser(isSpamBy) : null,
+                IsSpamUpdatedDate = user.IsSpamUpdatedDate,
+                IsVerified = user.IsVerified,
+                IsVerifiedUpdatedUser = isVerifiedBy != null ? new SimpleUser(isVerifiedBy) : null,
+                IsVerifiedUpdatedDate = user.IsVerifiedUpdatedDate,
+                IsBanned = user.IsBanned,
+                IsBannedUpdatedUser = isBannedBy != null ? new SimpleUser(isBannedBy) : null,
+                IsBannedUpdatedDate = user.IsBannedUpdatedDate
             };
 
-            return Task.FromResult(
-                Views(
+            return Views(
                     View<EditUserViewModel>("Admin.Edit.Header", model => viewModel).Zone("header"),
                     View<EditUserViewModel>("Admin.Edit.Meta", model => viewModel).Zone("meta"),
                     View<EditUserViewModel>("Admin.Edit.Content", model => viewModel).Zone("content"),
                     View<EditUserViewModel>("Admin.Edit.Sidebar", model => viewModel).Zone("sidebar"),
                     View<EditUserViewModel>("Admin.Edit.Footer", model => viewModel).Zone("footer"),
                     View<EditUserViewModel>("Admin.Edit.Actions", model => viewModel).Zone("actions")
-                ));
+                );
 
         }
         
