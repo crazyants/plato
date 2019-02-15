@@ -62,12 +62,11 @@ namespace Plato.Roles
             // Register moderation permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
-            // Register default role manager
-            services.TryAddScoped<IDefaultRolesManager, DefaultRolesManager>();
+      
 
             // Register feature & set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+            //services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Register additional authorization handler for implied permissions
             services.AddScoped<IAuthorizationHandler, RolesPermissionsHandler>();

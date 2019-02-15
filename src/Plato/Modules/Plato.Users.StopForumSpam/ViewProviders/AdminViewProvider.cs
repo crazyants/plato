@@ -40,6 +40,8 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                 Id = user.Id,
                 IsNewUser = user.Id == 0,
                 IsSpam = user.IsSpam,
+                IsVerified = user.IsVerified,
+                IsBanned = user.IsBanned,
                 Checker = await _spamChecker.CheckAsync(user)
             };
 

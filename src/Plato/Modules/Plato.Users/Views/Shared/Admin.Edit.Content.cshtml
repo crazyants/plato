@@ -3,26 +3,53 @@
 @if (Model.IsSpam && !Model.IsNewUser)
 {
     <div class="alert alert-danger">
-        <p>
-            <i class="fal fa-exclamation-triangle mr-2"></i>
-            <strong>@T["Spam Account"]</strong>
-        </p>
-        <p>
-            @T["This user has been flagged as SPAM. Any content posted by this user will also be flagged as SPAM and will require manual approval."]
-        </p>
-        <p>
-            <h6>@T["Genuine User?"]</h6>
-            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
-                @T["Whitelist"]
-            </a>
-            @T["to ensure this user is never checked for SPAM."]
-        </p>
+        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveSpam" asp-route-id="@Model.Id" class="float-right">
+            @T["Remove from SPAM"]
+        </a>
+        <i class="fal fa-exclamation-triangle mr-2"></i>
+        @if (Model.IsSpamUpdatedUser != null)
+        {
+            <span>
+                @T["This user was flagged as SPAM by"]
+                @Model.IsSpamUpdatedUser.DisplayName,
+                <date utc="Model.IsSpamUpdatedDate"></date>
+            </span>
+        }
+        else
+        {
+            @T["This user has been flagged as SPAM"]
+        }
+    </div>
+}
+
+@if (Model.IsBanned && !Model.IsNewUser)
+{
+    <div class="alert alert-danger">
+        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveBan" asp-route-id="@Model.Id" class="float-right">
+            @T["Remove Ban"]
+        </a>
+        <i class="fal fa-exclamation-triangle mr-2"></i>
+        @if (Model.IsBannedUpdatedUser != null)
+        {
+            <span>
+                @T["This user was banned by"]
+                @Model.IsBannedUpdatedUser.DisplayName,
+                <date utc="Model.IsBannedUpdatedDate"></date>
+            </span>
+        }
+        else
+        {
+            @T["This user has been banned"]
+        }
     </div>
 }
 
 <card>
     <card-title>
         <h6 class="card-title">@T["Account Details"]</h6>
+        <navigation name="admin-user"
+                    class="nav navbar p-0 float-right"
+                    child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
     </card-title>
     <card-body>
         <div class="form-group" asp-validation-class-for="DisplayName">

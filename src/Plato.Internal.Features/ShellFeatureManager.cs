@@ -194,6 +194,7 @@ namespace Plato.Internal.Features
             {
                 // Update descriptor within database
                 await AddFeaturesAndSave(featureIds);
+                
             }
             
             // dispose current shell context
@@ -483,7 +484,8 @@ namespace Plato.Internal.Features
                     // These will be activated again via BuildTenantPipeline within
                     // Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
                     var broker = scope.ServiceProvider.GetService<IBroker>();
-                    broker.Dispose();
+                    broker?.Dispose();
+              
 
                 }
 

@@ -107,6 +107,7 @@ namespace Plato.Users
 
             // Navigation providers
             services.AddScoped<INavigationProvider, AdminMenu>();
+            services.AddScoped<INavigationProvider, AdminUserMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, EditProfileMenu>();
             services.AddScoped<INavigationProvider, ProfileMenu>();

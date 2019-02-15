@@ -72,7 +72,13 @@ namespace Plato.StopForumSpam.Services
             {
                 return result.Success();
             }
-           
+            
+            // Skip SPAM checks for verified users
+            if (user.IsVerified)
+            {
+                return result.Success();
+            }
+
             // Configure frequency checker
             _spamProxy.Configure(o => { o.ApiKey = apiKey; });
 

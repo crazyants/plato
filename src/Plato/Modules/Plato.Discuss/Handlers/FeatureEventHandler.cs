@@ -25,7 +25,7 @@ namespace Plato.Discuss.Handlers
 
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly IShellFeatureStore<ShellFeature> _shellFeatureStore;
-
+  
         public FeatureEventHandler(ISchemaBuilder schemaBuilder,
             IShellFeatureStore<ShellFeature> shellFeatureStore)
         {
@@ -59,7 +59,7 @@ namespace Plato.Discuss.Handlers
                 await _shellFeatureStore.UpdateAsync(feature);
 
             }
-
+            
         }
 
         public override Task UninstallingAsync(IFeatureEventContext context)

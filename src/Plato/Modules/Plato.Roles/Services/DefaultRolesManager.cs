@@ -1,20 +1,21 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Roles.Services
 {
-
     /// <summary>
     /// Adds the default roles required by Plato.
     /// </summary>
     public class DefaultRolesManager : IDefaultRolesManager
     {
-        
+
         private readonly IEnumerable<IPermissionsProvider<Permission>> _permissionProviders;
         private readonly RoleManager<Role> _roleManager;
 
@@ -25,10 +26,10 @@ namespace Plato.Roles.Services
             _permissionProviders = permissionProviders;
             _roleManager = roleManager;
         }
-        
+
         public async Task InstallDefaultRolesAsync()
         {
-      
+
             // Iterate through all permission providers
             foreach (var permissionProvider in _permissionProviders)
             {
@@ -39,7 +40,7 @@ namespace Plato.Roles.Services
                 // Iterate through default permissions
                 // Create a role with the permissions if one does not exist
                 // If role exists merge found default permissions with role
-                
+
                 foreach (var defaultPermission in defaultPermissions)
                 {
                     var role = await _roleManager.FindByNameAsync(defaultPermission.RoleName);
@@ -50,7 +51,7 @@ namespace Plato.Roles.Services
                         role = new Role { Name = defaultPermission.RoleName };
                         await _roleManager.CreateAsync(role);
                     }
-                    
+
                     // merge the default permissions into the new or existing role
                     var defaultPermissionNames = (defaultPermission.Permissions ?? Enumerable.Empty<Permission>()).Select(x => x.Name);
                     var currentPermissionNames = ((Role)role).RoleClaims.Where(x => x.ClaimType == Permission.ClaimTypeName).Select(x => x.ClaimValue).ToList();
@@ -69,7 +70,7 @@ namespace Plato.Roles.Services
                             await _roleManager.AddClaimAsync(role, new Claim(Permission.ClaimTypeName, permissionName));
                         }
                     }
-                    
+
                 }
 
             }
@@ -89,4 +90,5 @@ namespace Plato.Roles.Services
         }
 
     }
+
 }

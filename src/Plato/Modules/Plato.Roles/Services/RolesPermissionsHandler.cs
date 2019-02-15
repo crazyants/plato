@@ -40,7 +40,6 @@ namespace Plato.Roles.Services
             var rolesToExamine = new List<string> { DefaultRoles.Anonymous };
             if (context.User.Identity.IsAuthenticated)
             {
-                //rolesToExamine.Add(DefaultRoles.Member);
                 foreach (var claim in context.User.Claims)
                 {
                     if (claim.Type == ClaimTypes.Role)

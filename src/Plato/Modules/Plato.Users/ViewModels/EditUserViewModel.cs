@@ -71,8 +71,7 @@ namespace Plato.Users.ViewModels
         public SimpleUser IsVerifiedUpdatedUser { get; set; }
 
         public DateTimeOffset? IsVerifiedUpdatedDate { get; set; }
-
-
+        
         public bool IsBanned { get; set; }
 
         public SimpleUser IsBannedUpdatedUser { get; set; }

@@ -452,7 +452,7 @@ namespace Plato.Users.Controllers
             });
         }
 
-        public async Task<IActionResult> VerifyUser(string id)
+        public async Task<IActionResult> ValidateUser(string id)
         {
 
             // We need to be authenticated
@@ -512,6 +512,56 @@ namespace Plato.Users.Controllers
 
         }
 
+        public async Task<IActionResult> InvalidateUser(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            
+            // Reset verified status
+            currentUser.IsVerified = false;
+            currentUser.IsVerifiedUpdatedUserId = 0;
+            currentUser.IsVerifiedUpdatedDate = null;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Verified status deleted successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+
+        }
+        
         public async Task<IActionResult> BanUser(string id)
         {
 
@@ -543,7 +593,7 @@ namespace Plato.Users.Controllers
             // Reset verified status
             currentUser.IsVerified = false;
             currentUser.IsVerifiedUpdatedUserId = 0;
-            currentUser.IsVerifiedUpdatedDate = DateTimeOffset.UtcNow;
+            currentUser.IsVerifiedUpdatedDate = null;
 
             // Update banned status
             currentUser.IsBanned = true;
@@ -571,7 +621,153 @@ namespace Plato.Users.Controllers
             });
         }
 
+        public async Task<IActionResult> RemoveBan(string id)
+        {
 
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            
+            // Reset banned status
+            currentUser.IsBanned = false;
+            currentUser.IsBannedUpdatedUserId = 0;
+            currentUser.IsBannedUpdatedDate = null;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Ban removed successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+        }
+
+        public async Task<IActionResult> SpamUser(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            
+            // Update spam status
+            currentUser.IsSpam = true;
+            currentUser.IsSpamUpdatedUserId = user.Id;
+            currentUser.IsSpamUpdatedDate = DateTimeOffset.UtcNow; 
+            
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Add to SPAM successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+        }
+
+        public async Task<IActionResult> RemoveSpam(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Reset spam status
+            currentUser.IsSpam = false;
+            currentUser.IsSpamUpdatedUserId = 0;
+            currentUser.IsSpamUpdatedDate = null;
+            
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Removed from SPAM successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+        }
+        
         #endregion
 
         #region "Private Methods"

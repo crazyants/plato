@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Roles.Services;
 
 namespace Plato.Roles.Handlers
@@ -143,7 +144,7 @@ namespace Plato.Roles.Handlers
                 
             }
 
-            // Add default roles
+            // Add default roles & permissions
             await _defaultRolesManager.InstallDefaultRolesAsync();
             
         }

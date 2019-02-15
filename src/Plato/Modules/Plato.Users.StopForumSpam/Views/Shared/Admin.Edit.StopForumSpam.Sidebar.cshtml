@@ -3,7 +3,7 @@
     var i = 0;
 }
 
-@if (!Model.IsNewUser && !Model.IsSpam)
+@if (!Model.IsNewUser && !Model.IsSpam && !Model.IsVerified && !Model.IsBanned)
 {
     // The checker succeeded (i.e. the user won't be flagged as SPAM)
     @if (Model.Checker.Succeeded)
@@ -73,19 +73,18 @@
 <div class="modal fade" id="spamDetailsModal" tabindex="-1" role="dialog" aria-labelledby="spamDetailsModalHeader" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header hidden">
+            <div class="modal-header">
                 <h5 class="modal-title" id="spamDetailsModalHeader">
                     @T["Spam Results"]
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">
+                        <i class="fal fa-times"></i>
+                    </span>
                 </button>
             </div>
             <div class="modal-body">
                 
-                <h6>
-                    @T["Spam Results"]
-                </h6>
                 <p>
                     @T["You can see below the number of times this users username, email address & IP address appear within the StopForumSpam database..."]
                 </p>
@@ -116,7 +115,7 @@
                     </div>
                     <div class="col-6">
                         <h6>@T["Genuine User?"]</h6>
-                        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="VerifyUser" asp-route-id="@Model.Id">
+                        <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ValidateUser" asp-route-id="@Model.Id">
                             @T["Verify"]
                         </a>
                         @T["to ensure this user is never flagged as SPAM."]
