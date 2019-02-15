@@ -265,23 +265,17 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsBlackListed",
+                        Name = "IsVerified",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsWhiteListed",
+                        Name = "BanEnabled",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "BlackListedExpiryDate",
-                        DbType = DbType.DateTimeOffset,
-                        Nullable = true
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "WhiteListedExpiryDate",
+                        Name = "BanExpiryDate",
                         DbType = DbType.DateTimeOffset,
                         Nullable = true
                     },
@@ -374,7 +368,8 @@ namespace Plato.Users.Handlers
                     Email = context.AdminEmail,
                     UserName = context.AdminUsername,
                     PhotoColor = _userColorProvider.GetColor(),
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    IsVerified = true
                 }, context.AdminPassword);
                 if (!result1.Succeeded)
                 {
@@ -392,7 +387,7 @@ namespace Plato.Users.Handlers
                     UserName = "PlatoBot",
                     DisplayName = "Plato Bot",
                     EmailConfirmed = true,
-                    LockoutEnabled = true,
+                    IsVerified = true,
                     PhotoUrl = "/images/bot.png",
                     PhotoColor = _userColorProvider.GetColor(),
                     UserType = UserType.Bot

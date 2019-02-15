@@ -1032,7 +1032,7 @@ namespace Plato.Internal.Data.Schemas
 
         #endregion
 
-        #region "Helper"
+        #region "Helpers"
         
         string GetTableName(string tableName)
         {
@@ -1085,8 +1085,7 @@ namespace Plato.Internal.Data.Schemas
         }
         
         #endregion
-
-
-
+        
     }
+
 }

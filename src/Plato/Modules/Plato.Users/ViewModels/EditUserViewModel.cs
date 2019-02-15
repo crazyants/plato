@@ -56,6 +56,8 @@ namespace Plato.Users.ViewModels
         
         public bool IsNewUser { get; set; }
         
+        public bool IsVerified { get; set; }
+
         public bool DisplayPasswordFields { get; set; }
 
         public bool EmailConfirmed { get; set; }

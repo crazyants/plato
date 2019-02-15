@@ -89,14 +89,12 @@ namespace Plato.Internal.Models.Users
 
         public bool IsSpam { get; set; }
 
-        public bool IsBlackListed { get; set; }
+        public bool IsVerified { get; set; }
 
-        public bool IsWhiteListed { get; set; }
-
-        public DateTimeOffset? BlackListedExpiryDate { get; set; }
-
-        public DateTimeOffset? WhiteListedExpiryDate { get; set; }
-
+        public bool BanEnabled { get; set; }
+        
+        public DateTimeOffset? BanExpiryDate { get; set; }
+        
         public UserType UserType { get; set; } = UserType.None;
 
         public int CreatedUserId { get; set; }
@@ -301,18 +299,15 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("IsSpam"))
                 IsSpam = Convert.ToBoolean(dr["IsSpam"]);
 
-            if (dr.ColumnIsNotNull("IsBlackListed"))
-                IsBlackListed = Convert.ToBoolean(dr["IsBlackListed"]);
+            if (dr.ColumnIsNotNull("IsVerified"))
+                IsVerified = Convert.ToBoolean(dr["IsVerified"]);
 
-            if (dr.ColumnIsNotNull("IsWhiteListed"))
-                IsWhiteListed = Convert.ToBoolean(dr["IsWhiteListed"]);
+            if (dr.ColumnIsNotNull("BanEnabled"))
+                BanEnabled = Convert.ToBoolean(dr["BanEnabled"]);
 
-            if (dr.ColumnIsNotNull("BlackListedExpiryDate"))
-                BlackListedExpiryDate = (DateTimeOffset)dr["BlackListedExpiryDate"];
-
-            if (dr.ColumnIsNotNull("WhiteListedExpiryDate"))
-                WhiteListedExpiryDate = (DateTimeOffset)dr["WhiteListedExpiryDate"];
-
+            if (dr.ColumnIsNotNull("BanExpiryDate"))
+                BanExpiryDate = (DateTimeOffset)dr["BanExpiryDate"];
+            
             if (dr.ColumnIsNotNull("UserType"))
                 UserType = (UserType)Convert.ToInt16(dr["UserType"]);
             

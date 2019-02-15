@@ -51,13 +51,11 @@ namespace Plato.Internal.Models.Users
 
         bool IsSpam { get; set; }
 
-        bool IsBlackListed { get; set; }
-
-        bool IsWhiteListed { get; set; }
-
-        DateTimeOffset? BlackListedExpiryDate { get; set; }
-
-        DateTimeOffset? WhiteListedExpiryDate { get; set; }
+        bool IsVerified { get; set; }
+        
+        bool BanEnabled { get; set; }
+        
+        DateTimeOffset? BanExpiryDate { get; set; }
         
         UserType UserType { get; set; }
 

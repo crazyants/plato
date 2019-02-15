@@ -115,7 +115,8 @@ namespace Plato.Users.ViewProviders
                 IsNewUser = user.Id == 0,
                 DisplayPasswordFields = user.Id == 0,
                 EmailConfirmed = user.EmailConfirmed,
-                IsSpam = user.IsSpam
+                IsSpam = user.IsSpam,
+                IsVerified = user.IsVerified
             };
 
             return Task.FromResult(

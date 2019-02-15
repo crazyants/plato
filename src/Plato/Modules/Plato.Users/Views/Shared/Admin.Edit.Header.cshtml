@@ -6,7 +6,16 @@
 }
 else
 {
-    <h4>@T["Edit User"] @Model.DisplayName</h4>
+    <h4>
+        @T["Edit User"] @Model.DisplayName
+        @if (Model.IsVerified)
+        {
+            <span class="pip pip-primary">
+                <i class="fal fa-check"></i>
+            </span>
+        }
+    </h4>
+    
 }
 
 
