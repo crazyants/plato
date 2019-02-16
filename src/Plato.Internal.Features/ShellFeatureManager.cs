@@ -13,7 +13,6 @@ using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Features
@@ -41,8 +40,7 @@ namespace Plato.Internal.Features
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<ShellFeatureManager> _logger;
         private readonly IShellContextFactory _shellContextFactory;
-        private readonly ITypedModuleProvider _typedModuleProvider;
-
+ 
         public ShellFeatureManager(
             IShellDescriptorStore shellDescriptorStore,
             IShellDescriptorManager shellDescriptorManager,
@@ -50,8 +48,7 @@ namespace Plato.Internal.Features
             IHttpContextAccessor httpContextAccessor,
             IShellContextFactory shellContextFactory,
             ILogger<ShellFeatureManager> logger,
-            IPlatoHost platoHost,
-            ITypedModuleProvider typedModuleProvider)
+            IPlatoHost platoHost)
         {
             _shellDescriptorStore = shellDescriptorStore;
             _shellDescriptorManager = shellDescriptorManager;
@@ -59,7 +56,6 @@ namespace Plato.Internal.Features
             _httpContextAccessor = httpContextAccessor;
             _shellContextFactory = shellContextFactory;
             _platoHost = platoHost;
-            _typedModuleProvider = typedModuleProvider;
             _logger = logger;
         }
 

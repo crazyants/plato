@@ -9,8 +9,10 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Moderation.Navigation;
 using Plato.Discuss.Moderation.ViewProviders;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
+using Plato.Discuss.Moderation.Handlers;
 
 namespace Plato.Discuss.Moderation
 {
@@ -27,7 +29,10 @@ namespace Plato.Discuss.Moderation
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // Admin view providers
             services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
             services.AddScoped<IViewProvider<Moderator>, AdminViewProvider>();

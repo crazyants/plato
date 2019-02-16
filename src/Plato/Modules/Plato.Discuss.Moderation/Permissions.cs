@@ -11,8 +11,7 @@ namespace Plato.Discuss.Moderation
 
         public static readonly Permission ViewSpamQueue =
             new Permission("ViewSpamQueue", "View SPAM queue");
-
-
+        
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]

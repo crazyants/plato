@@ -17,7 +17,6 @@
     <ProjectReference Include="..\Plato.Internal.Features.Abstractions\Plato.Internal.Features.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Security.Abstractions\Plato.Internal.Security.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Shell.Abstractions\Plato.Internal.Shell.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
   </ItemGroup>
