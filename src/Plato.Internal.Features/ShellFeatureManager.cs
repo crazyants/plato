@@ -72,7 +72,7 @@ namespace Plato.Internal.Features
             // Get features to enable
             var feature = await _shellDescriptorManager.GetFeatureAsync(featureId);
 
-            // Ensure we also enable disabled dependencies
+            // Ensure we also enable dependencies
             var featureIds = feature.FeatureDependencies
                 .Select(d => d.ModuleId).ToArray();
             
@@ -87,11 +87,11 @@ namespace Plato.Internal.Features
             // Get feature to disable
             var feature = await _shellDescriptorManager.GetFeatureAsync(featureId);
 
-            // Ensure we also disable enabled dependent features
+            // Ensure we also disable dependents
             var featureIds = feature.DependentFeatures
                 .Select(d => d.ModuleId).ToArray();
             
-
+            // Disable features
           return await DisableFeaturesAsync(featureIds);
 
         }
@@ -420,11 +420,11 @@ namespace Plato.Internal.Features
             var shellSettings = _runningShellTable.Match(httpContext);
             
             // Build temporary shell descriptor to ensure feature event handlers are available
-            // The feature may also reference dependencies via DI so ensure we also
-            // add any dependencies for the features to our temporary shell descriptors
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
             {
+                // The feature may also reference dependencies via DI so ensure we also
+                // add any dependencies for the features to our temporary shell descriptors
                 if (feature.FeatureDependencies.Any())
                 {
                     foreach (var dependency in feature.FeatureDependencies)
@@ -435,7 +435,7 @@ namespace Plato.Internal.Features
                 descriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
             }
 
-            // Create a new shell context with features we need to enable / disable
+            // Create a new shell context with features and all dependencies we need to enable / disable feature
             using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, descriptor))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
@@ -462,23 +462,15 @@ namespace Plato.Internal.Features
                             ServiceProvider = scope.ServiceProvider,
                             Logger = _logger
                         };
-
-
-                        // Holds our response from supplied delegates
-                        ConcurrentDictionary<string, IFeatureEventContext> handlerContexts = null;
-
+                        
+                   
                         // Get event handler for feature we are invoking
                         var featureHandler = handlersList.FirstOrDefault(h => h.ModuleId == feature.ModuleId);
-                        if (featureHandler != null)
-                        {
-                            // Invoke FeatureEventHandler
-                            handlerContexts = await handler(context, featureHandler);
-                        }
-                        else
-                        {
-                            // No FeatureEventHandler specified for feature
-                            handlerContexts = noHandler(context);
-                        }
+
+                        // Get response from responsible delegate
+                        var handlerContexts = featureHandler != null
+                            ? await handler(context, featureHandler)
+                            : noHandler(context);
 
                         // Compile results from delegates
                         if (handlerContexts != null)
