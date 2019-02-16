@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Categories.Models;
 using Plato.Internal.Abstractions.SetUp;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
@@ -20,7 +19,6 @@ using Plato.Roles.ViewProviders;
 using Plato.Roles.Handlers;
 using Plato.Roles.Navigation;
 using Plato.Roles.Services;
-
 
 namespace Plato.Roles
 {
@@ -62,7 +60,8 @@ namespace Plato.Roles
             // Register moderation permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
-      
+            // Register feature & set-up event handler
+            services.AddScoped<IDefaultRolesManager, DefaultRolesManager>();
 
             // Register feature & set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
@@ -87,5 +86,7 @@ namespace Plato.Roles
             );
             
         }
+
     }
+
 }

@@ -25,6 +25,7 @@ namespace Plato.Internal.Models.Shell
         public ShellModule()
         {
         }
+
         public ShellModule(IShellFeature feature)
         {
             this.Id = feature.Id;

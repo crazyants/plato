@@ -31,8 +31,7 @@ namespace Plato.Categories.Controllers
             return base.NoResults();
         }
         
-        [HttpPost]
-        [ResponseCache(NoStore = true)]
+        [HttpPost, ResponseCache(NoStore = true)]
         public Task<IActionResult> Post([FromBody] CategoryBase category)
         {
      

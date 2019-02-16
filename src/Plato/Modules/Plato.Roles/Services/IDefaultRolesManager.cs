@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Plato.Internal.Security.Abstractions
+namespace Plato.Roles.Services
 {
     public interface IDefaultRolesManager
     {

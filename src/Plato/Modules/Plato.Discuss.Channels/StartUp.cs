@@ -9,7 +9,6 @@ using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Channels.Navigation;
 using Plato.Discuss.Channels.Subscribers;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Categories.Models;
@@ -20,10 +19,7 @@ using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewAdaptors;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
-using Plato.Discuss.Channels.Handlers;
 using Plato.Discuss.Channels.Services;
-using Plato.Entities.Repositories;
-using Plato.Entities.Stores;
 
 namespace Plato.Discuss.Channels
 {
@@ -39,9 +35,6 @@ namespace Plato.Discuss.Channels
         public override void ConfigureServices(IServiceCollection services)
         {
             
-            //// Feature event handler
-            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
-
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();

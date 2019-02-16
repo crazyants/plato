@@ -90,9 +90,7 @@ namespace Plato.Internal.Features
             // Ensure we also disable enabled dependent features
             var featureIds = feature.DependentFeatures
                 .Select(d => d.ModuleId).ToArray();
-
-
-
+            
 
           return await DisableFeaturesAsync(featureIds);
 
@@ -113,15 +111,51 @@ namespace Plato.Internal.Features
                 async (context, handler) =>
                 {
 
+                    // Return if feature is already enabled, no need to enable
+                    if (context.Feature.IsEnabled)
+                    {
+                        return null;
+                    }
+
                     var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
 
-                    // Ensure feature is not already enabled
-                    if (!context.Feature.IsEnabled)
+                    try
                     {
+                        await handler.InstallingAsync(context);
+                        contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
+                        {
+                            foreach (var error in context.Errors)
+                            {
+                                v.Errors.Add(error.Key, error.Value);
+                            }
+
+                            return v;
+                        });
+
+                    }
+                    catch (Exception e)
+                    {
+                        contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
+                        {
+                            v.Errors.Add(context.Feature.ModuleId, e.Message);
+                            return v;
+                        });
+                    }
+
+                    // Did any event encounter errors?
+                    var hasErrors = contexts
+                        .Where(c => c.Value.Errors.Any());
+
+                    // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+                    if (!hasErrors.Any())
+                    {
+
+                        // Update descriptor within database
+                        var descriptor = await AddFeaturesAndSave(featureIds);
 
                         try
                         {
-                            await handler.InstallingAsync(context);
+                            await handler.InstalledAsync(context);
                             contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
@@ -131,11 +165,9 @@ namespace Plato.Internal.Features
 
                                 return v;
                             });
-
                         }
                         catch (Exception e)
                         {
-                            context.Errors.Add(context.Feature.ModuleId, e.Message);
                             contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 v.Errors.Add(context.Feature.ModuleId, e.Message);
@@ -143,46 +175,31 @@ namespace Plato.Internal.Features
                             });
                         }
 
-                        // Did any event encounter errors?
-                        var hasErrors = contexts
-                            .Where(c => c.Value.Errors.Any());
-
-                        // No errors update descriptor, raise InstalledAsync and recycle ShellContext
-                        if (!hasErrors.Any())
-                        {
-
-                            // Update descriptor within database
-                            var descriptor = await AddFeaturesAndSave(featureIds);
-                        
-                            try
-                            {
-                                await handler.InstalledAsync(context);
-                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
-                                {
-                                    foreach (var error in context.Errors)
-                                    {
-                                        v.Errors.Add(error.Key, error.Value);
-                                    }
-
-                                    return v;
-                                });
-                            }
-                            catch (Exception e)
-                            {
-                                context.Errors.Add(context.Feature.ModuleId, e.Message);
-                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
-                                {
-                                    v.Errors.Add(context.Feature.ModuleId, e.Message);
-                                    return v;
-                                });
-                            }
-
-                        }
-
                     }
 
                     return contexts;
+                    
+                }, context =>
+                {
 
+                    // Return if feature is already enabled, no need to enable
+                    if (context.Feature.IsEnabled)
+                    {
+                        return null;
+                    }
+
+                    var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
+                    contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
+                    {
+                        foreach (var error in context.Errors)
+                        {
+                            v.Errors.Add(error.Key, error.Value);
+                        }
+
+                        return v;
+                    });
+                    return contexts;
+                    
                 });
             
             // Did any event encounter errors?
@@ -220,20 +237,57 @@ namespace Plato.Internal.Features
                 async (context, handler) =>
                 {
 
+                    // Return if feature is already disabled - no need to disable
+                    if (!context.Feature.IsEnabled)
+                    {
+                        return null;
+                    }
+
                     var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
 
-                    // Ensure feature is enabled
-                    if (context.Feature.IsEnabled)
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation($"{context.Feature.ModuleId} InstallingAsync Event Raised");
+                    }
+
+                    try
+                    {
+                        await handler.UninstallingAsync(context);
+                        contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
+                        {
+                            foreach (var error in context.Errors)
+                            {
+                                v.Errors.Add(error.Key, error.Value);
+                            }
+
+                            return v;
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
+                        {
+                            v.Errors.Add(context.Feature.ModuleId, e.Message);
+                            return v;
+                        });
+                    }
+
+
+                    // Did any event encounter errors?
+                    var hasErrors = contexts
+                        .Where(c => c.Value.Errors.Any())
+                        .ToList();
+
+                    // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+                    if (!hasErrors.Any())
                     {
 
-                        if (_logger.IsEnabled(LogLevel.Information))
-                        {
-                            _logger.LogInformation($"{context.Feature.ModuleId} InstallingAsync Event Raised");
-                        }
+                        // Update descriptor within database
+                        await RemoveFeaturesAndSave(featureIds);
 
                         try
                         {
-                            await handler.UninstallingAsync(context);
+                            await handler.UninstalledAsync(context);
                             contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
@@ -243,66 +297,45 @@ namespace Plato.Internal.Features
 
                                 return v;
                             });
+
                         }
                         catch (Exception e)
                         {
                             contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
-                                foreach (var error in context.Errors)
-                                {
-                                    v.Errors.Add(context.Feature.ModuleId, e.Message);
-                                }
-
+                                v.Errors.Add(context.Feature.ModuleId, e.Message);
                                 return v;
                             });
                         }
-                     
+                        
+                        return contexts;
 
-                        // Did any event encounter errors?
-                        var hasErrors = contexts
-                            .Where(c => c.Value.Errors.Any())
-                            .ToList();
-
-                        // No errors update descriptor, raise InstalledAsync and recycle ShellContext
-                        if (!hasErrors.Any())
-                        {
-
-                            // Update descriptor within database
-                            await RemoveFeaturesAndSave(featureIds);
-                           
-                            try
-                            {
-                                await handler.UninstalledAsync(context);
-                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
-                                {
-                                    foreach (var error in context.Errors)
-                                    {
-                                        v.Errors.Add(error.Key, error.Value);
-                                    }
-
-                                    return v;
-                                });
-
-                            }
-                            catch (Exception e)
-                            {
-                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
-                                {
-                                    foreach (var error in context.Errors)
-                                    {
-                                        v.Errors.Add(context.Feature.ModuleId, e.Message);
-                                    }
-
-                                    return v;
-                                });
-                            }
-
-
-                        }
                     }
-                    
-                    return contexts;
 
+                    return null;
+
+                },
+                context =>
+                {
+
+                    // Return if feature is already disabled - no need to disable
+                    if (!context.Feature.IsEnabled)
+                    {
+                        return null;
+                    }
+
+                    var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
+                    contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
+                    {
+                        foreach (var error in context.Errors)
+                        {
+                            v.Errors.Add(error.Key, error.Value);
+                        }
+
+                        return v;
+                    });
+                    return contexts;
+                    
                 });
             
             // Did any event encounter errors?
@@ -375,7 +408,8 @@ namespace Plato.Internal.Features
 
         async Task<ConcurrentDictionary<string, IFeatureEventContext>> InvokeFeatureEvents(
             IList<IShellFeature> features,
-            Func<IFeatureEventContext, IFeatureEventHandler, Task<ConcurrentDictionary<string, IFeatureEventContext>>> invoker)
+            Func<IFeatureEventContext, IFeatureEventHandler, Task<ConcurrentDictionary<string, IFeatureEventContext>>> handler,
+            Func<IFeatureEventContext, ConcurrentDictionary<string, IFeatureEventContext>> noHandler)
         {
 
             // Holds the results of all our event execution contexts
@@ -384,14 +418,13 @@ namespace Plato.Internal.Features
             // Get setting before recycle
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
-
+            
             // Build temporary shell descriptor to ensure feature event handlers are available
             // The feature may also reference dependencies via DI so ensure we also
             // add any dependencies for the features to our temporary shell descriptors
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
             {
-                // Add dependencies for feature to descriptor
                 if (feature.FeatureDependencies.Any())
                 {
                     foreach (var dependency in feature.FeatureDependencies)
@@ -430,13 +463,26 @@ namespace Plato.Internal.Features
                             Logger = _logger
                         };
 
-                        // get event handler for feature we are invoking
+
+                        // Holds our response from supplied delegates
+                        ConcurrentDictionary<string, IFeatureEventContext> handlerContexts = null;
+
+                        // Get event handler for feature we are invoking
                         var featureHandler = handlersList.FirstOrDefault(h => h.ModuleId == feature.ModuleId);
                         if (featureHandler != null)
                         {
+                            // Invoke FeatureEventHandler
+                            handlerContexts = await handler(context, featureHandler);
+                        }
+                        else
+                        {
+                            // No FeatureEventHandler specified for feature
+                            handlerContexts = noHandler(context);
+                        }
 
-                            // Invoke handler
-                            var handlerContexts = await invoker(context, featureHandler);
+                        // Compile results from delegates
+                        if (handlerContexts != null)
+                        {
                             foreach (var handlerContext in handlerContexts)
                             {
                                 contexts.AddOrUpdate(feature.ModuleId, handlerContext.Value, (k, v) =>
@@ -449,35 +495,21 @@ namespace Plato.Internal.Features
                                     return v;
                                 });
 
-                            }
 
-                            // Log any errors
-                            if (context.Errors.Count > 0)
-                            {
-                                foreach (var error in context.Errors)
-                                {
-                                    _logger.LogCritical(error.Value,
-                                        $"An error occurred whilst invoking within {this.GetType().FullName}");
-                                }
                             }
 
                         }
-                        else
+
+                        // Log any errors
+                        if (context.Errors.Count > 0)
                         {
-
-                            // no matching IFeatureEventHandler
-                            contexts.AddOrUpdate(feature.ModuleId, context, (k, v) =>
+                            foreach (var error in context.Errors)
                             {
-                                foreach (var error in context.Errors)
-                                {
-                                    v.Errors.Add(error.Key, error.Value);
-                                }
-
-                                return v;
-                            });
-
+                                _logger.LogCritical(error.Value,
+                                    $"An error occurred whilst invoking within {this.GetType().FullName}");
+                            }
                         }
-
+                        
                     }
 
                     // Deactivate all message broker subscriptions 
@@ -486,7 +518,6 @@ namespace Plato.Internal.Features
                     var broker = scope.ServiceProvider.GetService<IBroker>();
                     broker?.Dispose();
               
-
                 }
 
             }

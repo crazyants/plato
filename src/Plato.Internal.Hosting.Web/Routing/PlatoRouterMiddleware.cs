@@ -75,7 +75,7 @@ namespace Plato.Internal.Hosting.Web.Routing
                     }
                 }
             }
-
+            
             await pipeline.Invoke(httpContext);
 
         }
