@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Moderation.Models;
 
@@ -28,7 +27,7 @@ namespace Plato.Discuss.Moderation.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

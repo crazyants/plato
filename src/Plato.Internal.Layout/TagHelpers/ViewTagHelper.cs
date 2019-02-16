@@ -69,7 +69,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 builder = new HtmlContentBuilder();
                 foreach (var view in Model)
                 {
-                    builder.AppendHtml(await InvokeView(view));
+                    builder.AppendHtml(await _viewDisplayHelper.DisplayAsync(view));
                 }
             }
             else
@@ -77,7 +77,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 if (this.Model is IView)
                 {
                     builder = new HtmlContentBuilder();
-                    builder.AppendHtml(await InvokeView(this.Model));
+                    builder.AppendHtml(await _viewDisplayHelper.DisplayAsync(this.Model));
                 }
             }
        
@@ -85,9 +85,5 @@ namespace Plato.Internal.Layout.TagHelpers
 
         }
         
-        async Task<IHtmlContent> InvokeView(IView view)
-        {
-            return await _viewDisplayHelper.DisplayAsync(view);
-        }
     }
 }

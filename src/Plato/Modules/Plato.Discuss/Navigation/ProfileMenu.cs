@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation;
 
@@ -26,6 +23,7 @@ namespace Plato.Discuss.Navigation
         
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
+
             if (!String.Equals(name, "profile", StringComparison.OrdinalIgnoreCase))
             {
                 return;

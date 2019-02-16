@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
@@ -92,9 +91,7 @@ namespace Plato.Discuss.Navigation
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider
-                            .Permission(user?.Id == topic.CreatedUserId
-                                ? Permissions.DeleteOwnTopics
-                                : Permissions.DeleteAnyTopic)
+                            .Permission(deletePermission)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
@@ -117,11 +114,6 @@ namespace Plato.Discuss.Navigation
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
-                            .Action("Login", "Account", "Plato.Users",
-                                new RouteValueDictionary()
-                                {
-                                    ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
-                                })
                             .Attributes(user == null
                                 ? new Dictionary<string, object>()
                                 {
@@ -134,6 +126,13 @@ namespace Plato.Discuss.Navigation
                                     {"data-toggle", "tooltip"},
                                     {"title", T["Reply"]}
                                 })
+                            .Action("Login", "Account", "Plato.Users",
+                                new RouteValueDictionary()
+                                {
+                                    ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
+                                })
+                            .Permission(Permissions.PostReplies)
+                            .LocalNav()
                         , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
                     );
 

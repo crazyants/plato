@@ -10,6 +10,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Navigation
 {
+
     public class TopicReplyMenu : INavigationProvider
     {
 
@@ -28,7 +29,7 @@ namespace Plato.Discuss.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -114,11 +115,6 @@ namespace Plato.Discuss.Navigation
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
-                            .Action("Login", "Account", "Plato.Users",
-                                new RouteValueDictionary()
-                                {
-                                    ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
-                                })
                             .Attributes(user == null
                                 ? new Dictionary<string, object>()
                                 {
@@ -132,6 +128,13 @@ namespace Plato.Discuss.Navigation
                                     {"data-toggle", "tooltip"},
                                     {"title", T["Reply"]}
                                 })
+                            .Action("Login", "Account", "Plato.Users",
+                                new RouteValueDictionary()
+                                {
+                                    ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
+                                })
+                            .Permission(Permissions.PostReplies)
+                            .LocalNav()
                         , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
                     );
 

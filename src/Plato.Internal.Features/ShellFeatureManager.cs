@@ -13,6 +13,7 @@ using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Features
@@ -419,24 +420,40 @@ namespace Plato.Internal.Features
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
             
-            // Build temporary shell descriptor to ensure feature event handlers are available
-            var descriptor = new ShellDescriptor();
+            // Build a list of all unique features we are enabling / disabling
+            var uniqueFeatures = new ConcurrentDictionary<string, IShellFeature>();
             foreach (var feature in features)
             {
-                // The feature may also reference dependencies via DI so ensure we also
+                // The feature may also reference dependencies so ensure we also
                 // add any dependencies for the features to our temporary shell descriptors
                 if (feature.FeatureDependencies.Any())
                 {
                     foreach (var dependency in feature.FeatureDependencies)
                     {
-                        descriptor.Modules.Add(new ShellModule(dependency.ModuleId, dependency.Version));
+                        if (!uniqueFeatures.ContainsKey(dependency.ModuleId))
+                        {
+                            uniqueFeatures.TryAdd(dependency.ModuleId, dependency);
+                        }
                     }
                 }
-                descriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
+                if (!uniqueFeatures.ContainsKey(feature.ModuleId))
+                {
+                    uniqueFeatures.TryAdd(feature.ModuleId, feature);
+                }
             }
 
+            // Ensure minimum features are always available within the temporary shell descriptor
+            // We may depend upon services from the required features within the features we are enabling / disabling
+            var minimumShellDescriptor = _shellContextFactory.MinimumShellDescriptor();
+
+            // Add features and dependencies we are enabling / disabling to our minimum shell descriptor
+            foreach (var feature in uniqueFeatures.Values)
+            {
+                minimumShellDescriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
+            }
+         
             // Create a new shell context with features and all dependencies we need to enable / disable feature
-            using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, descriptor))
+            using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, minimumShellDescriptor))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
                 {
@@ -467,7 +484,7 @@ namespace Plato.Internal.Features
                         // Get event handler for feature we are invoking
                         var featureHandler = handlersList.FirstOrDefault(h => h.ModuleId == feature.ModuleId);
 
-                        // Get response from responsible delegate
+                        // Get response from responsible func
                         var handlerContexts = featureHandler != null
                             ? await handler(context, featureHandler)
                             : noHandler(context);
@@ -509,11 +526,11 @@ namespace Plato.Internal.Features
                     // Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
                     var broker = scope.ServiceProvider.GetService<IBroker>();
                     broker?.Dispose();
-              
+                 
                 }
 
             }
-
+            
             return contexts;
 
         }

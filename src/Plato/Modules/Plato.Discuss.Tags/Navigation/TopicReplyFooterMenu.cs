@@ -6,6 +6,7 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Tags.Navigation
 {
+
     public class TopicReplyFooterMenu : INavigationProvider
     {
 
@@ -24,7 +25,7 @@ namespace Plato.Discuss.Tags.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-reply-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

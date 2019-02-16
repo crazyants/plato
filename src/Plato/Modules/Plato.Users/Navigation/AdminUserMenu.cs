@@ -23,18 +23,28 @@ namespace Plato.Users.Navigation
                 return;
             }
 
+            // Add topic options
             builder
-                .Add(T["Users"], int.MaxValue - 4, users => users
-                    .IconCss("fal fa-users")
-                    .Add(T["Manage"], 1, manage => manage
-                        .Action("Index", "Admin", "Plato.Users")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ).Add(T["Add"], 2, create => create
-                        .Action("Create", "Admin", "Plato.Users")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ));
+                .Add(T["Options"], int.MaxValue, options => options
+                        .IconCss("fa fa-ellipsis-h")
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-provide", "tooltip"},
+                            {"title", T["Options"]}
+                        })
+                        .Add(T["Update Password"], int.MinValue, edit => edit
+                            .Action("Edit", "Home", "Plato.Discuss")
+                            .LocalNav()
+                        )
+                        .Add(T["Mark As Verified"], int.MinValue, edit => edit
+                            .Action("Edit", "Home", "Plato.Discuss")
+                            .LocalNav()
+                        )
+
+
+
+                    , new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
+                );
 
 
 

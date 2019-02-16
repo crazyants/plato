@@ -24,7 +24,7 @@ namespace Plato.Discuss.Reactions.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -41,6 +41,7 @@ namespace Plato.Discuss.Reactions.Navigation
                         topic,
                         reply
                     })
+                    .Permission(Permissions.ReactToReplies)
                 );
             
         }

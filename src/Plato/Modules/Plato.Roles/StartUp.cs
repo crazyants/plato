@@ -65,7 +65,6 @@ namespace Plato.Roles
 
             // Register feature & set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-            //services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Register additional authorization handler for implied permissions
             services.AddScoped<IAuthorizationHandler, RolesPermissionsHandler>();

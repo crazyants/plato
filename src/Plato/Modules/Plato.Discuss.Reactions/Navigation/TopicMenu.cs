@@ -46,6 +46,7 @@ namespace Plato.Discuss.Reactions.Navigation
                     {
                         topic = topic
                     })
+                    .Permission(Permissions.ReactToTopics)
                 );
 
         }

@@ -26,7 +26,7 @@ namespace Plato.Discuss.Share.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

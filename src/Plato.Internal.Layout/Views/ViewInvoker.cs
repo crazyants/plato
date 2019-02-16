@@ -41,7 +41,7 @@ namespace Plato.Internal.Layout.Views
             _logger = logger;
         }
 
-        // implementation
+        // Implementation
 
         public void Contextualize(ViewDisplayContext context)
         {
@@ -78,8 +78,7 @@ namespace Plato.Internal.Layout.Views
 
             // else we have a partial view
             return await InvokePartialAsync(view.ViewName, view.Model);
-
-
+            
         }
 
         // privates

@@ -51,7 +51,7 @@ namespace Plato.Internal.Layout.Views
             {
                 ViewDescriptor = viewDescriptor,
                 ViewAdaptorResults = viewAdapterResults,
-                ViewContext = this.ViewContext,
+                ViewContext = ViewContext,
                 ServiceProvider = _serviceProvider
             });
 

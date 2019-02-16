@@ -14,6 +14,7 @@ using Plato.Discuss.Reactions.Badges;
 using Plato.Discuss.Reactions.Tasks;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss.Reactions
@@ -38,6 +39,9 @@ namespace Plato.Discuss.Reactions
             services.AddScoped<INavigationProvider, TopicFooterMenu>();
             services.AddScoped<INavigationProvider, TopicReplyMenu>();
             services.AddScoped<INavigationProvider, TopicReplyFooterMenu>();
+         
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

@@ -26,19 +26,19 @@ namespace Plato.Internal.Layout.Views
         public async Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext)
         {
 
-            // Contextulize generic view invoker
+            // Contextulize view invoker
             _viewInvoker.Contextualize(displayContext);
 
             // Apply view & model alterations
             if (displayContext.ViewAdaptorResults != null)
             {
-                foreach (var viewAdaptorResult in displayContext.ViewAdaptorResults)
+                foreach (var viewAdapterResult in displayContext.ViewAdaptorResults)
                 {
 
                     var updatedView = displayContext.ViewDescriptor.View;
 
                     // Apply view alterations
-                    var viewAlterations = viewAdaptorResult.ViewAlterations;
+                    var viewAlterations = viewAdapterResult.ViewAlterations;
                     if (viewAlterations.Count > 0)
                     {
                         foreach (var alteration in viewAlterations)
@@ -48,7 +48,7 @@ namespace Plato.Internal.Layout.Views
                     }
 
                     // Apply model alterations
-                    var modelAlterations = viewAdaptorResult.ModelAlterations;
+                    var modelAlterations = viewAdapterResult.ModelAlterations;
                     if (modelAlterations.Count > 0)
                     {
                         foreach (var alteration in modelAlterations)
@@ -66,12 +66,12 @@ namespace Plato.Internal.Layout.Views
             // Invoke generic view
             var htmlContent = await _viewInvoker.InvokeAsync(displayContext.ViewDescriptor.View);
 
-            // Apply adaptor output alterations
+            // Apply adapter output alterations
             if (displayContext.ViewAdaptorResults != null)
             {
-                foreach (var viewAdaptorResult in displayContext.ViewAdaptorResults)
+                foreach (var viewAdapterResult in displayContext.ViewAdaptorResults)
                 {
-                    var alterations = viewAdaptorResult.OutputAlterations;
+                    var alterations = viewAdapterResult.OutputAlterations;
                     if (alterations.Count > 0)
                     {
                         foreach (var alteration in alterations)

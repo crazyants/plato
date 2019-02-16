@@ -39,7 +39,6 @@
                 <table id="tblPermissions" class="table table-hover">
                     @foreach (var category in Model.CategorizedPermissions.Keys)
                     {
-          
                         <thead>
                         <tr>
                             <th colspan="3" class="col-12 bg-light">
@@ -55,9 +54,10 @@
                         <tbody>
                         @foreach (var permission in Model.CategorizedPermissions[category])
                         {
-
                             <tr data-text="@permission.Description">
-                                <td class="col-10">@permission.Description</td>
+                                <td class="col-10">
+                                        @permission.Description
+                                </td>
                                 <td class="col-1 text-center">
                                     <label>
                                         <span class="switch switch-round">
@@ -87,11 +87,13 @@
     </card-body>
 </card>
 
-<script section="Footer">$(document).ready(function() {
+<script section="Footer">
+    $(document).ready(function() {
         $("#ckbAll").change(function() {
             var checked = $(this).prop("checked");
             $("#tblPermissions").find('input[type="checkbox"]').each(function() {
                 $(this).prop("checked", checked);
             });
         });
-    });</script>
+    });
+</script>

@@ -18,13 +18,14 @@ namespace Plato.Internal.Layout.Views
         public ViewDescriptor TryAdd(IView view)
         {
             
+            // TODO: Do we need this? 
             var descriptor = new ViewDescriptor()
             {
                 Name = view.ViewName,
                 View = view
             };
 
-            _views.TryAdd(view.ViewName, descriptor);
+            //_views.TryAdd(view.ViewName, descriptor);
 
             return descriptor;
 
