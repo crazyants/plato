@@ -27,7 +27,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             _topicStore = topicStore;
         }
 
-        public async Task<ISpamOperatorResult<Topic>> UpdateModelAsync(ISpamOperatorContext<Topic> context)
+        public async Task<ISpamOperatorResult<Topic>> ValidateModelAsync(ISpamOperatorContext<Topic> context)
         {
 
             // Ensure correct operation provider
@@ -45,7 +45,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
 
             // Create result
             var result = new SpamOperatorResult<Topic>();
-            
+
             // User is OK
             var spamResult = await _spamChecker.CheckAsync(user);
             if (spamResult.Succeeded)
@@ -53,6 +53,33 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
                 return result.Success(context.Model);
             }
 
+            // Return failed with our updated model and operation
+            // This provides the calling code with the operation error message
+            return result.Failed(context.Model, context.Operation);
+
+
+        }
+
+        public async Task<ISpamOperatorResult<Topic>> UpdateModelAsync(ISpamOperatorContext<Topic> context)
+        {
+            
+            var validation = await ValidateModelAsync(context);
+
+            // Not an operator of interest
+            if (validation == null)
+            {
+                return null;
+            }
+
+            // If validation succeeded no need to perform further actions
+            if (validation.Succeeded)
+            {
+                return null;
+            }
+            
+            // Create result
+            var result = new SpamOperatorResult<Topic>();
+            
             // Flag as SPAM?
             if (context.Operation.FlagAsSpam)
             {

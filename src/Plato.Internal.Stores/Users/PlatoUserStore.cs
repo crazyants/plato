@@ -175,12 +175,19 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetByUserNameAsync(string userName)
         {
+
+            if (String.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentNullException(nameof(userName));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByUsername, userName);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByUserNameAsync(userName);
                 return await _userDataMerger.MergeAsync(user);
             });
+
         }
 
         public async Task<User> GetByEmailAsync(string email)

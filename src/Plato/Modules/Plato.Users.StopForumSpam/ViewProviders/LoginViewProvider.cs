@@ -45,9 +45,18 @@ namespace Plato.Users.StopForumSpam.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(UserLogin userLogin, IUpdateModel updater)
         {
-            
+
+            // Build user to validate
+            var user = await BuildUserAsync(userLogin);
+
+            // Could not build user details from supplied username
+            if (user == null)
+            {
+                return true;
+            }
+
             // Validate model within registered spam operators
-            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Login, BuildSpamOperatorModel(userLogin));
+            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Login, user);
 
             // IF any operators failed ensure we display the operator error message
             var valid = true;
@@ -80,23 +89,39 @@ namespace Plato.Users.StopForumSpam.ViewProviders
             {
                 return await BuildIndexAsync(userLogin, context);
             }
+            
+            // Build user to validate
+            var user = await BuildUserAsync(userLogin);
+
+            // Could not build user details from supplied username
+            if (user == null)
+            {
+                return await BuildIndexAsync(userLogin, context);
+            }
 
             // Execute UpdateModel within registered spam operators
-            await _spamOperatorManager.UpdateModelAsync(SpamOperations.Login, BuildSpamOperatorModel(userLogin));
+            await _spamOperatorManager.UpdateModelAsync(SpamOperations.Login, user);
             
             return await BuildIndexAsync(userLogin, context);
 
         }
-
-
-        User BuildSpamOperatorModel(UserLogin userLogin)
+        
+        async Task<User> BuildUserAsync(UserLogin userLogin)
         {
+
+            var user = await _platoUserStore.GetByUserNameAsync(userLogin.UserName);
+            if (user == null)
+            {
+                return null;
+            }
+
             return new User()
             {
-                UserName = userLogin.UserName,
-                Email = userLogin.Email,
+                UserName = user.UserName,
+                Email = user.Email,
                 IpV4Address = _clientIpAddress.GetIpV4Address()
             };
+
         }
     }
 

@@ -49,33 +49,10 @@ namespace Plato.StopForumSpam.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An error occurred whilst invoking the ExecuteAsync method within a spam operation provider for type '{operation.Name}'.");
+                    _logger.LogError(e, $"An error occurred whilst invoking the ValidateModelAsync method within a spam operator provider for type '{operation.Name}'.");
                 }
             }
-
-            // Log results
-            foreach (var result in results)
-            {
-                if (result.Succeeded)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation($"Spam Operation '{operation.Name}' Success!");
-                    }
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        if (_logger.IsEnabled(LogLevel.Critical))
-                        {
-                            _logger.LogCritical($"Spam Operation of type '{operation.Name}' failed with the following error: {error.Description}");
-                        }
-                    }
-                }
-
-            }
-
+            
             return results;
             
         }
@@ -104,42 +81,18 @@ namespace Plato.StopForumSpam.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An error occurred whilst invoking the ExecuteAsync method within a spam operation provider for type '{operation.Name}'.");
+                    _logger.LogError(e, $"An error occurred whilst invoking the UpdateModelAsync method within a spam operator provider for type '{operation.Name}'.");
                 }
-            }
-
-            // Log results
-            foreach (var result in results)
-            {
-                if (result.Succeeded)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation($"Spam Operation '{operation.Name}' Success!");
-                    }
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        if (_logger.IsEnabled(LogLevel.Critical))
-                        {
-                            _logger.LogCritical($"Spam Operation of type '{operation.Name}' failed with the following error: {error.Description}");
-                        }
-                    }
-                }
-
             }
 
             return results;
 
         }
-
-
+        
         async Task<ISpamOperation> GetPersistedOperation(ISpamOperation operation)
         {
-            // If the spam operation has been updated within the database ensure
-            // we use the updated version from the database as opposed to the default
+            // If the spam operation has been persisted within the database ensure we use
+            // the persisted version from the database as opposed to the default operation
             var settings = await _spamSettingsStore.GetAsync();
             var existingOperation = settings?.SpamOperations?.FirstOrDefault(o => o.Name.Equals(operation.Name));
             if (existingOperation != null)
@@ -150,6 +103,7 @@ namespace Plato.StopForumSpam.Services
             return operation;
 
         }
+
     }
     
 }

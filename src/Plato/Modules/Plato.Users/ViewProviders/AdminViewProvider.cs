@@ -114,7 +114,7 @@ namespace Plato.Users.ViewProviders
 
             if (user.IsSpam && user.IsSpamUpdatedUserId > 0)
             {
-                isSpamBy = await _userStore.GetByIdAsync(user.IsVerifiedUpdatedUserId);
+                isSpamBy = await _userStore.GetByIdAsync(user.IsSpamUpdatedUserId);
             }
 
             if (user.IsBanned && user.IsBannedUpdatedUserId > 0)

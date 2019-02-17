@@ -62,8 +62,16 @@ namespace Plato.Users.StopForumSpam.SpamOperators
         public async Task<ISpamOperatorResult<User>> UpdateModelAsync(ISpamOperatorContext<User> context)
         {
 
-            // Ensure correct operation provider
-            if (!context.Operation.Name.Equals(SpamOperations.Login.Name, StringComparison.Ordinal))
+            var validation = await ValidateModelAsync(context);
+
+            // Not an operator of interest
+            if (validation == null)
+            {
+                return null;
+            }
+
+            // If validation succeeded no need to perform further actions
+            if (validation.Succeeded)
             {
                 return null;
             }
@@ -71,18 +79,11 @@ namespace Plato.Users.StopForumSpam.SpamOperators
             // Create result
             var result = new SpamOperatorResult<User>();
             
-            // User is OK
-            var spamResult = await _spamChecker.CheckAsync(context.Model);
-            if (spamResult.Succeeded)
-            {
-                return result.Success(context.Model);
-            }
-
             // Flag as SPAM?
             if (context.Operation.FlagAsSpam)
             {
                 var bot = await _platoUserStore.GetPlatoBotAsync();
-                var user = await _platoUserStore.GetByUserNameAsync(result.Response.UserName);
+                var user = await _platoUserStore.GetByUserNameAsync(context.Model.UserName);
                 if (user != null)
                 {
                     user.IsSpam = true;

@@ -6,8 +6,12 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
+using Plato.Users.StopForumSpam.Notifications;
+using Plato.Users.StopForumSpam.NotificationTypes;
 using Plato.Users.StopForumSpam.ViewProviders;
 using Plato.Users.StopForumSpam.SpamOperators;
 
@@ -26,7 +30,7 @@ namespace Plato.Users.StopForumSpam
         public override void ConfigureServices(IServiceCollection services)
         {
             
-            // Register spam operation type providers
+            // Register spam operations 
             services.AddScoped<ISpamOperationProvider<SpamOperation>, SpamOperations>();
             
             // Register spam operator manager for users
@@ -47,6 +51,17 @@ namespace Plato.Users.StopForumSpam
             // Admin view provider
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, AdminViewProvider>();
+
+            // Notification types
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
+
+            // Notification manager
+            services.AddScoped<INotificationManager<User>, NotificationManager<User>>();
+
+            // Notification providers
+            services.AddScoped<INotificationProvider<User>, NewSpamWeb>();
+            
 
         }
 
