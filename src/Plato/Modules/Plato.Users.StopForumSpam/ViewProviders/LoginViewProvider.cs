@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -93,33 +94,28 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                 Email = userLogin.Email,
                 IpV4Address = _clientIpAddress.GetIpV4Address()
             });
-
-            var flagAsSpam = false;
+            
             if (results != null)
             {
                 foreach (var result in results)
                 {
-                    if (!result.Succeeded)
+                    if (result.Response.IsSpam)
                     {
-                        if (result.Operation.FlagAsSpam)
+                        var bot = await _platoUserStore.GetPlatoBotAsync();
+                        var user = await _platoUserStore.GetByUserNameAsync(result.Response.UserName);
+                        if (user != null)
                         {
-                            flagAsSpam = true;
+                            user.IsSpam = true;
+                            user.IsSpamUpdatedUserId = bot?.Id ?? 0;
+                            user.IsSpamUpdatedDate = DateTimeOffset.UtcNow;
+                            user.IpV4Address = _clientIpAddress.GetIpV4Address();
+                            user.IpV6Address = _clientIpAddress.GetIpV6Address();
+                            await _platoUserStore.UpdateAsync(user);
                         }
                     }
                 }
             }
-
-            // Do we need to update the IsSpam flag?
-            if (flagAsSpam)
-            {
-                var user = await _platoUserStore.GetByUserNameAsync(userLogin.UserName);
-                if (user != null)
-                {
-                    user.IsSpam = true;
-                    await _platoUserStore.UpdateAsync(user);
-                }
-            }
-
+            
             return await BuildIndexAsync(userLogin, context);
 
         }

@@ -27,45 +27,47 @@
                           @T["Learn More"]
                       </a>
                   </p>
-                  <p>
-
-                  </p>
               </div>
           }
      }
     else
     {
         // The checker failed (the user will be flagged as SPAM)
-         <div class="alert alert-danger">
-             <p>
-                 <i class="fal fa-exclamation-triangle mr-2"></i>
-
-                 @if (Model.Checker.Errors.Any())
-                 {
-                     @T["This user will be flagged as SPAM as the "]
-                     foreach (var error in Model.Checker.Errors)
-                      {
-                          i++;
-                          @T[error.Description]
-                          @if (i < Model.Checker.Errors.Count())
-                           {
-                               <span>
-                                   ,
-                               </span>
-                           }
-                      }
-                     @T[" appears within the StopForumSpam database."]
-                 }
-             </p>
-             <p>
-                 <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id" class="btn btn-danger">
-                     @T["Whitelist User"]
-                 </a>
-             </p>
-             <p>
-
-             </p>
-         </div>
+        <div class="alert alert-danger">
+            <p>
+                <i class="fal fa-exclamation-triangle mr-2"></i>
+                <strong>@T["SPAM"]</strong>
+            </p>
+            <p>
+                @if (Model.Checker.Errors.Any())
+                {
+                    @T["Contributions from this user will be automatically flagged as SPAM as this users "]
+                    foreach (var error in Model.Checker.Errors)
+                    {
+                        i++;
+                        @T[error.Description]
+                        @if (i < Model.Checker.Errors.Count() - 1)
+                         {
+                             <span>
+                                 ,
+                             </span>
+                         }
+                         else if (i == Model.Checker.Errors.Count() - 1)
+                         {
+                             <span>
+                                 &amp;
+                             </span>
+                         }
+                    }
+                    @T[" appear within the StopForumSpam database."]
+                }
+            </p>
+            <p>
+                <a href="#" data-toggle="modal" data-target="#spamDetailsModal" class="btn btn-danger">
+                    @T["Learn More"]
+                </a>
+            </p>
+        </div>
      }
 }
 

@@ -412,7 +412,7 @@ namespace Plato.Discuss.Controllers
             
             opts.Params.EntityId = topic.Id;
 
-            // Build infinate scroll options
+            // Build infinite scroll options
             opts.Scroller = new ScrollerOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()

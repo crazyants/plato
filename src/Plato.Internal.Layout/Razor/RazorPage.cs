@@ -26,7 +26,7 @@ namespace Plato.Internal.Layout.Razor
                 if (_currentUser == null)
                 {
                     // Attempt to get user set via our AuthenticatedUserMiddleware
-                    var user = ViewContext.HttpContext.Items[typeof(User)];
+                    var user = ViewContext.HttpContext.Features[typeof(User)];
                     _currentUser = (User) user;
                 }
 

@@ -37,19 +37,19 @@ namespace Plato.Discuss.Moderation.Navigation
             {
                 return;
             }
+            
+            // Get authenticated user from features
+            var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
 
-            // Get model from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            if (topic == null)
+            // We always need to be authenticated as a moderator
+            if (user == null)
             {
                 return;
             }
             
-            // Get user from context
-            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
-
-            // We always need a user for the moderator
-            if (user == null)
+            // Get model from context
+            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (topic == null)
             {
                 return;
             }

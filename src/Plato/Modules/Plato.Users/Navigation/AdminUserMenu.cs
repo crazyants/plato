@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 
 namespace Plato.Users.Navigation
@@ -23,6 +25,13 @@ namespace Plato.Users.Navigation
                 return;
             }
 
+            // Get user we are editing from context
+            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+            if (user == null)
+            {
+                return;
+            }
+
             // Add topic options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
@@ -32,12 +41,18 @@ namespace Plato.Users.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Update Password"], int.MinValue, edit => edit
-                            .Action("Edit", "Home", "Plato.Discuss")
+                        .Add(T["Edit Password"], int.MinValue, edit => edit
+                            .Action("EditPassword", "Admin", "Plato.Users", new RouteValueDictionary()
+                            {
+                                ["Id"] = user.Id.ToString()
+                            })
                             .LocalNav()
                         )
-                        .Add(T["Mark As Verified"], int.MinValue, edit => edit
-                            .Action("Edit", "Home", "Plato.Discuss")
+                        .Add(T["Mark Verified"], int.MinValue, edit => edit
+                            .Action("ValidateUser", "Admin", "Plato.Users", new RouteValueDictionary()
+                            {
+                                ["Id"] = user.Id.ToString()
+                            })
                             .LocalNav()
                         )
 

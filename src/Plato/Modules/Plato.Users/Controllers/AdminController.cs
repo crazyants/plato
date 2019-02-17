@@ -107,7 +107,7 @@ namespace Plato.Users.Controllers
             //    return Unauthorized();
             //}
 
-            // Set breadcrumb
+            // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -192,17 +192,26 @@ namespace Plato.Users.Controllers
             //{
             //    return Unauthorized();
             //}
-
-
-            var currentUser = await _userManager.FindByIdAsync(id);
-            if (!(currentUser is User))
+            
+            // Ensure user exists
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            var result = await _viewProvider.ProvideDisplayAsync(currentUser, this);
+            // Add user we are editing to context
+            HttpContext.Items[typeof(User)] = user;
+
+            // Build view
+            var result = await _viewProvider.ProvideDisplayAsync(user, this);
             return View(result);
+
         }
+
+        // --------------
+        // Create User
+        // --------------
 
         public async Task<IActionResult> Create()
         {
@@ -212,7 +221,7 @@ namespace Plato.Users.Controllers
             //    return Unauthorized();
             //}
 
-
+            // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -227,9 +236,8 @@ namespace Plato.Users.Controllers
             var result = await _viewProvider.ProvideEditAsync(new User(), this);
             return View(result);
         }
-
-        [HttpPost]
-        [ActionName(nameof(Create))]
+        
+        [HttpPost, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditUserViewModel model)
         {
 
@@ -308,7 +316,11 @@ namespace Plato.Users.Controllers
             return await Create();
 
         }
-        
+
+        // --------------
+        // Edit User
+        // --------------
+
         public async Task<IActionResult> Edit(string id)
         {
 
@@ -316,8 +328,18 @@ namespace Plato.Users.Controllers
             //{
             //    return Unauthorized();
             //}
+       
+            // Ensure user exists
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
+            // Add user we are editing to context
+            HttpContext.Items[typeof(User)] = user;
 
+            // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -326,31 +348,25 @@ namespace Plato.Users.Controllers
                 ).Add(S["Users"], channels => channels
                     .Action("Index", "Admin", "Plato.Users")
                     .LocalNav()
-                ).Add(S["Edit User"]);
+                ).Add(S[user.DisplayName]);
             });
 
-            var currentUser = await _userManager.FindByIdAsync(id);
-            if (currentUser == null)
-            {
-                return NotFound();
-            }
-            
-            var result = await _viewProvider.ProvideEditAsync(currentUser, this);
+            var result = await _viewProvider.ProvideEditAsync(user, this);
             return View(result);
 
         }
         
-        [HttpPost]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(string id)
         {
-            var currentUser = await _userManager.FindByIdAsync(id);
-            if (currentUser == null)
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
             
-            var result = await _viewProvider.ProvideUpdateAsync((User)currentUser, this);
+            var result = await _viewProvider.ProvideUpdateAsync((User)user, this);
             if (ModelState.IsValid)
             {
 
@@ -359,7 +375,7 @@ namespace Plato.Users.Controllers
                 // Redirect back to edit user
                 return RedirectToAction(nameof(Edit), new RouteValueDictionary()
                 {
-                    ["id"] = currentUser.Id.ToString()
+                    ["id"] = user.Id.ToString()
                 });
 
             }
@@ -374,9 +390,109 @@ namespace Plato.Users.Controllers
                 }
             }
 
-            return await Edit(currentUser.Id.ToString());
+            return await Edit(user.Id.ToString());
 
         }
+
+        // --------------
+        // Edit Password
+        // --------------
+
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> EditPassword(string id)
+        {
+
+            // Ensure user exists
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Add user we are editing to context
+            HttpContext.Items[typeof(User)] = user;
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav()
+                    ).Add(S["Users"], channels => channels
+                        .Action("Index", "Admin", "Plato.Users")
+                        .LocalNav()
+                    ).Add(S[user.DisplayName], channels => channels
+                        .Action("Edit", "Admin", "Plato.Users", new RouteValueDictionary()
+                        {
+                            ["Id"] = user.Id.ToString()
+                        })
+                        .LocalNav()
+                    )
+                    .Add(S["Edit Password"]);
+            });
+
+            // Apply reset token
+            var resetToken = "";
+            var result = await _platoUserManager.GetForgotPasswordUserAsync(user.Email);
+            if (result.Succeeded)
+            {
+                if (result.Response != null)
+                {
+                    resetToken = result.Response.ResetToken;
+                }
+            }
+            
+            // Return view
+            return View(new EditPasswordViewModel
+            {
+                Id = user.Id.ToString(),
+                Email = user.Email,
+                ResetToken = resetToken
+            });
+
+        }
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPassword(EditPasswordViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(model.Id);
+                if (user != null)
+                {
+                    var result = await _platoUserManager.ResetPasswordAsync(
+                        model.Email,
+                        model.ResetToken,
+                        model.NewPassword);
+                    if (result.Succeeded)
+                    {
+
+                        _alerter.Success(T["Password updated successfully!"]);
+
+                        // Redirect back to edit user
+                        return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+                        {
+                            ["id"] = user.Id.ToString()
+                        });
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+            }
+
+            // If we reach this point the found user's reset token does not match the supplied reset token
+            return await EditPassword(model.Id);
+        }
+
+        // -------------------------
+        // Various helper actions 
+        // -------------------------
 
         public async Task<IActionResult> ResendConfirmationEmail(string id)
         {

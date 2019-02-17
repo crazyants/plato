@@ -6,6 +6,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Users.ViewModels
 {
+
     public class EditUserViewModel
     {
         public int Id { get; set; }
@@ -34,11 +35,11 @@ namespace Plato.Users.ViewModels
 
         [DataType(DataType.Url)]
         public string Url { get; set; }
-        
-        [DataType(DataType.Password)]
+
+        [StringLength(255), DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)]
+        [StringLength(255), DataType(DataType.Password)]
         public string PasswordConfirmation { get; set; }
 
         [DataType(DataType.Upload)]
@@ -77,8 +78,7 @@ namespace Plato.Users.ViewModels
         public SimpleUser IsBannedUpdatedUser { get; set; }
 
         public DateTimeOffset? IsBannedUpdatedDate { get; set; }
-
-
+        
     }
 
 }

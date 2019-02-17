@@ -48,8 +48,8 @@ namespace Plato.Discuss.Navigation
                 return;
             }
 
-            //// Get user from context
-            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+            //// Get authenticated user from features
+            var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
 
             // Get delete / restore permission
             Permission deletePermission = null;

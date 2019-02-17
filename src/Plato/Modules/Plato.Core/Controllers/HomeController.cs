@@ -75,8 +75,11 @@ namespace Plato.Core.Controllers
         // ---------------------
 
         [HttpGet, AllowAnonymous]
-        public Task<IActionResult> Denied()
+        public Task<IActionResult> Denied(string returnUrl = null)
         {
+
+            // Persist returnUrl
+            ViewData["ReturnUrl"] = returnUrl;
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>

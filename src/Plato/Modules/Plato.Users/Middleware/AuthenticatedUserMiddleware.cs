@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Reputations.Abstractions;
-using Plato.Internal.Security.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Middleware
@@ -102,8 +99,8 @@ namespace Plato.Users.Middleware
 
             lock (user)
             {
-                // Add user to httpContext for subsequent use
-                context.Items[typeof(User)] = user;
+                // Add authenticated user to features for subsequent use
+                context.Features[typeof(User)] = user;
             }
             
         }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
@@ -14,15 +15,18 @@ namespace Plato.Discuss.Navigation
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
-    
+        private readonly IContextFacade _contextFacade;
+
         public IStringLocalizer T { get; set; }
 
         public TopicMenu(
             IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+            IActionContextAccessor actionContextAccessor,
+            IContextFacade contextFacade)
         {
             T = localizer;
             _actionContextAccessor = actionContextAccessor;
+            _contextFacade = contextFacade;
         }
 
         public void BuildNavigation(string name, NavigationBuilder builder)
@@ -40,8 +44,8 @@ namespace Plato.Discuss.Navigation
                 return;
             }
             
-            // Get user from context
-            var user = builder.ActionContext.HttpContext.Items[typeof(User)] as User;
+            // Get authenticated user from context
+            var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
             
             Permission deletePermission = null;
             if (topic.IsDeleted)
