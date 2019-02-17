@@ -6,7 +6,11 @@ namespace Plato.StopForumSpam.Services
 
     public interface ISpamOperatorProvider<TModel> where TModel : class
     {
-        Task<ISpamOperatorResult<TModel>> OperateAsync(ISpamOperatorContext<TModel> context);
+
+        Task<ISpamOperatorResult<TModel>> ValidateModelAsync(ISpamOperatorContext<TModel> context);
+
+        Task<ISpamOperatorResult<TModel>> UpdateModelAsync(ISpamOperatorContext<TModel> context);
+
     }
     
 }

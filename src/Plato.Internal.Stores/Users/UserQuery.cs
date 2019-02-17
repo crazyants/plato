@@ -279,8 +279,7 @@ namespace Plato.Internal.Stores.Users
                     sb.Append(_query.Params.ShowSpam.Operator);
                 sb.Append("IsSpam = 1");
             }
-
-
+            
             // -----------------
             // IsBanned 
             // -----------------
@@ -366,16 +365,16 @@ namespace Plato.Internal.Stores.Users
 
         IDictionary<string, OrderBy> GetSafeSortColumns()
         {
-            var ourput = new Dictionary<string, OrderBy>();
+            var output = new Dictionary<string, OrderBy>();
             foreach (var sortColumn in _query.SortColumns)
             {
                 var columnName = GetSortColumn(sortColumn.Key);
                 if (!String.IsNullOrEmpty(columnName))
                 {
-                    ourput.Add(columnName, sortColumn.Value);
+                    output.Add(columnName, sortColumn.Value);
                 }
             }
-            return ourput;
+            return output;
         }
         
         string GetSortColumn(string columnName)

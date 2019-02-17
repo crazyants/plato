@@ -46,16 +46,10 @@ namespace Plato.Users.StopForumSpam.ViewProviders
         public override async Task<bool> ValidateModelAsync(UserLogin userLogin, IUpdateModel updater)
         {
             
-            var user = new User()
-            {
-                UserName = userLogin.UserName,
-                IpV4Address = _clientIpAddress.GetIpV4Address()
-            };
+            // Validate model within registered spam operators
+            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Login, BuildSpamOperatorModel(userLogin));
 
-            // Execute any registered spam operations
-            var results = await _spamOperatorManager.OperateAsync(SpamOperations.Login, user);
-
-            // IF any operations failed ensure we display the operation error message
+            // IF any operators failed ensure we display the operator error message
             var valid = true;
             if (results != null)
             {
@@ -79,47 +73,31 @@ namespace Plato.Users.StopForumSpam.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildUpdateAsync(UserLogin userLogin,
-            IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(UserLogin userLogin, IViewProviderContext context)
         {
+
             if (!context.Updater.ModelState.IsValid)
             {
                 return await BuildIndexAsync(userLogin, context);
             }
 
-            // Execute registered spam operators
-            var results = await _spamOperatorManager.OperateAsync(SpamOperations.Login, new User()
-            {
-                UserName = userLogin.UserName,
-                Email = userLogin.Email,
-                IpV4Address = _clientIpAddress.GetIpV4Address()
-            });
-            
-            if (results != null)
-            {
-                foreach (var result in results)
-                {
-                    if (result.Response.IsSpam)
-                    {
-                        var bot = await _platoUserStore.GetPlatoBotAsync();
-                        var user = await _platoUserStore.GetByUserNameAsync(result.Response.UserName);
-                        if (user != null)
-                        {
-                            user.IsSpam = true;
-                            user.IsSpamUpdatedUserId = bot?.Id ?? 0;
-                            user.IsSpamUpdatedDate = DateTimeOffset.UtcNow;
-                            user.IpV4Address = _clientIpAddress.GetIpV4Address();
-                            user.IpV6Address = _clientIpAddress.GetIpV6Address();
-                            await _platoUserStore.UpdateAsync(user);
-                        }
-                    }
-                }
-            }
+            // Execute UpdateModel within registered spam operators
+            await _spamOperatorManager.UpdateModelAsync(SpamOperations.Login, BuildSpamOperatorModel(userLogin));
             
             return await BuildIndexAsync(userLogin, context);
 
         }
-        
+
+
+        User BuildSpamOperatorModel(UserLogin userLogin)
+        {
+            return new User()
+            {
+                UserName = userLogin.UserName,
+                Email = userLogin.Email,
+                IpV4Address = _clientIpAddress.GetIpV4Address()
+            };
+        }
     }
 
 }

@@ -17,7 +17,32 @@ namespace Plato.Users.StopForumSpam.SpamOperators
             _spamChecker = spamChecker;
         }
 
-        public async Task<ISpamOperatorResult<User>> OperateAsync(ISpamOperatorContext<User> context)
+        public async Task<ISpamOperatorResult<User>> ValidateModelAsync(ISpamOperatorContext<User> context)
+        {
+
+            // Ensure correct operation provider
+            if (!context.Operation.Name.Equals(SpamOperations.Registration.Name, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            // Create result
+            var result = new SpamOperatorResult<User>();
+
+            // If our result is OK simply return
+            var spamResult = await _spamChecker.CheckAsync(context.Model);
+            if (spamResult.Succeeded)
+            {
+                return result.Success(context.Model);
+            }
+
+            // Return failed with our updated model and operation
+            // This provides the calling code with the operation error message
+            return result.Failed(context.Model, context.Operation);
+
+        }
+
+        public async Task<ISpamOperatorResult<User>> UpdateModelAsync(ISpamOperatorContext<User> context)
         {
 
             // Ensure correct operation provider

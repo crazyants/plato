@@ -44,7 +44,7 @@ namespace Plato.Users.StopForumSpam.ViewProviders
         {
             
             // Execute registered spam operators
-            var results = await _spamOperatorManager.OperateAsync(SpamOperations.Registration, new User()
+            var results = await _spamOperatorManager.UpdateModelAsync(SpamOperations.Registration, new User()
             {
                 UserName = registration.UserName,
                 Email = registration.Email,
@@ -85,7 +85,7 @@ namespace Plato.Users.StopForumSpam.ViewProviders
             }
             
             // Execute registered spam operators
-            var results = await _spamOperatorManager.OperateAsync(SpamOperations.Registration, new User()
+            var results = await _spamOperatorManager.UpdateModelAsync(SpamOperations.Registration, new User()
             {
                 UserName = registration.UserName,
                 Email = registration.Email,

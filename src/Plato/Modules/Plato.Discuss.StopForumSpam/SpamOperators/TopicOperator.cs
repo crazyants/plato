@@ -27,7 +27,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             _topicStore = topicStore;
         }
 
-        public async Task<ISpamOperatorResult<Topic>> OperateAsync(ISpamOperatorContext<Topic> context)
+        public async Task<ISpamOperatorResult<Topic>> UpdateModelAsync(ISpamOperatorContext<Topic> context)
         {
 
             // Ensure correct operation provider
@@ -58,13 +58,19 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             {
                 context.Model.IsSpam = true;
             }
-            
+
             // Notify administrators of SPAM
-            NotifyAdmins();
+            if (context.Operation.NotifyAdmin)
+            {
+                NotifyAdmins();
+            }
 
             // Notify staff of SPAM
-            NotifyStaff();
-
+            if (context.Operation.NotifyStaff)
+            {
+                NotifyStaff();
+            }
+            
             // Return failed with our updated model and operation
             // This provides the calling code with the operation error message
             return result.Failed(context.Model, context.Operation);
