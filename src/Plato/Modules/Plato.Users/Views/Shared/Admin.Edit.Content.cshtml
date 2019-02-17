@@ -10,9 +10,10 @@
         @if (Model.IsSpamUpdatedUser != null)
         {
             <span>
-                @T["This user was flagged as SPAM by"]
-                @Model.IsSpamUpdatedUser.DisplayName,
-                <date utc="Model.IsSpamUpdatedDate"></date>
+                @T["Added to SPAM by"]
+                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsSpamUpdatedUser.Id">
+                    @Model.IsSpamUpdatedUser.DisplayName
+                </a>, <date utc="Model.IsSpamUpdatedDate"></date>
             </span>
         }
         else
@@ -31,11 +32,12 @@
         <i class="fal fa-exclamation-triangle mr-2"></i>
         @if (Model.IsBannedUpdatedUser != null)
         {
-            <span>
-                @T["This user was banned by"]
-                @Model.IsBannedUpdatedUser.DisplayName,
-                <date utc="Model.IsBannedUpdatedDate"></date>
-            </span>
+        <span>
+            @T["Banned by"]
+            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsBannedUpdatedUser.Id">
+                    @Model.IsBannedUpdatedUser.DisplayName
+                </a>, <date utc="Model.IsBannedUpdatedDate"></date>
+        </span>
         }
         else
         {

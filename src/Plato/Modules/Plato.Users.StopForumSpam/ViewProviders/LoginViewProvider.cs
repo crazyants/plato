@@ -119,7 +119,7 @@ namespace Plato.Users.StopForumSpam.ViewProviders
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                IpV4Address = _clientIpAddress.GetIpV4Address()
+                IpV4Address = "77.247.181.163" // _clientIpAddress.GetIpV4Address()
             };
 
         }

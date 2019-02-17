@@ -29,11 +29,12 @@ else
                      <div class="modal-body">
                          @if (Model.IsVerifiedUpdatedUser != null)
                          {
-                             <p>
-                                 @T["This user was verified by"] 
-                                 @Model.IsVerifiedUpdatedUser.DisplayName,
-                                 <date utc="Model.IsVerifiedUpdatedDate"></date>
-                             </p>
+                         <p>
+                             @T["This user was verified by"]
+                             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsVerifiedUpdatedUser.Id">
+                                 @Model.IsVerifiedUpdatedUser.DisplayName
+                             </a>, <date utc="Model.IsVerifiedUpdatedDate"></date>
+                         </p>
                          }
                          <p>
                              <i class="fal fa-info-circle mr-1"></i> @T["A verified user is someone who has been manually identified as a genuine human by a site administrator or staff member. Verified users may skip some automated SPAM protection."]

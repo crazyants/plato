@@ -34,29 +34,51 @@ namespace Plato.Users.Navigation
 
             // Add topic options
             builder
-                .Add(T["Options"], int.MaxValue, options => options
+                .Add(T["Options"], options => options
                         .IconCss("fa fa-ellipsis-h")
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Edit Password"], int.MinValue, edit => edit
+                        .Add(user.IsVerified ? T["Remove Verified"] : T["Add to Verified"],  edit => edit
+                            .Action(user.IsVerified ? "InvalidateUser" : "ValidateUser", "Admin", "Plato.Users", new RouteValueDictionary()
+                            {
+                                ["Id"] = user.Id.ToString()
+                            })
+                            .LocalNav()
+                        )
+                        .Add(T["Divider"], divider => divider
+                            .DividerCss("dropdown-divider").LocalNav()
+                        )
+                        .Add(user.IsSpam ? T["Remove from SPAM"] : T["Add to SPAM"], edit => edit
+                            .Action(user.IsSpam ? "RemoveSpam" : "SpamUser", "Admin", "Plato.Users", new RouteValueDictionary()
+                            {
+                                ["Id"] = user.Id.ToString()
+                            })
+                            .LocalNav(), user.IsSpam
+                                ? new List<string>() { "dropdown-item", "dropdown-item-danger" }
+                                : new List<string>() { "dropdown-item" }
+                        )
+                        .Add(user.IsBanned ? T["Remove Ban"]  : T["Add to Banned"], edit => edit
+                            .Action(user.IsBanned  ? "RemoveBan" : "BanUser", "Admin", "Plato.Users", new RouteValueDictionary()
+                            {
+                                ["Id"] = user.Id.ToString()
+                            })
+                            .LocalNav(), user.IsBanned
+                                ? new List<string>() { "dropdown-item", "dropdown-item-danger" }
+                                : new List<string>() { "dropdown-item" }
+                        )
+                        .Add(T["Divider"], divider => divider
+                            .DividerCss("dropdown-divider").LocalNav()
+                        )
+                        .Add(T["Edit Password"], edit => edit
                             .Action("EditPassword", "Admin", "Plato.Users", new RouteValueDictionary()
                             {
                                 ["Id"] = user.Id.ToString()
                             })
                             .LocalNav()
                         )
-                        .Add(T["Mark Verified"], int.MinValue, edit => edit
-                            .Action("ValidateUser", "Admin", "Plato.Users", new RouteValueDictionary()
-                            {
-                                ["Id"] = user.Id.ToString()
-                            })
-                            .LocalNav()
-                        )
-
-
 
                     , new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
                 );

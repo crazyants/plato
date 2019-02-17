@@ -86,7 +86,8 @@ namespace Plato.Internal.Navigation
             // Set selected item based on matching Url
             menuItems = SetSelected(menuItems, actionContext);
 
-            // Keep only menu items with an Href, or that have child items with an Href
+            // Keep only menu items with an Href, View or DividerCss or
+            // that have child items with an Href, View or DividerCss
             menuItems = Reduce(menuItems);
 
             // Recursive sort
@@ -353,6 +354,11 @@ namespace Plato.Internal.Navigation
         bool HasHrefOrViewOrChildHrefOrView(MenuItem item)
         {
             if (item.Href != "" && item.Href != "#")
+            {
+                return true;
+            }
+
+            if (!String.IsNullOrEmpty(item.DividerCss))
             {
                 return true;
             }

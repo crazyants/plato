@@ -660,7 +660,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Verified status deleted successfully!"]);
+                _alerter.Success(T["Verified status removed successfully!"]);
             }
             else
             {
@@ -701,11 +701,6 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
 
-            // Reset spam status
-            currentUser.IsSpam = false;
-            currentUser.IsSpamUpdatedUserId = 0;
-            currentUser.IsSpamUpdatedDate = null;
-
             // Reset verified status
             currentUser.IsVerified = false;
             currentUser.IsVerifiedUpdatedUserId = 0;
@@ -720,7 +715,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["User banned successfully!"]);
+                _alerter.Success(T["User added to banned successfully!"]);
             }
             else
             {
@@ -769,7 +764,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Ban removed successfully!"]);
+                _alerter.Success(T["User removed from banned successfully!"]);
             }
             else
             {
@@ -818,7 +813,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Add to SPAM successfully!"]);
+                _alerter.Success(T["User added to SPAM successfully!"]);
             }
             else
             {
@@ -867,7 +862,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Removed from SPAM successfully!"]);
+                _alerter.Success(T["User removed from SPAM successfully!"]);
             }
             else
             {
