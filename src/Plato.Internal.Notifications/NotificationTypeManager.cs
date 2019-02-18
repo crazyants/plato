@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Notifications;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Internal.Notifications
 {
     public class NotificationTypeManager : INotificationTypeManager
     {
-
         
         private IEnumerable<DefaultNotificationTypes> _notificationTypes;
         private IEnumerable<DefaultNotificationTypes> _defaultNotificationTypes;
@@ -53,7 +51,7 @@ namespace Plato.Internal.Notifications
                 _notificationTypes = notificationTypes;
             }
 
-            // Return a distinct list of notification
+            // Collapse to a distinct list of notification
             // types matching the supplied roleNames
             return _notificationTypes
                 .Where(n => roleNames.Contains(n.RoleName))
@@ -89,6 +87,8 @@ namespace Plato.Internal.Notifications
                 _defaultNotificationTypes = notificationTypes;
             }
 
+            // Collapse to a distinct list of notification
+            // types matching the supplied roleNames
             return _defaultNotificationTypes
                 .Where(n => roleNames.Contains(n.RoleName))
                 .SelectMany(n => n.NotificationTypes)
@@ -99,9 +99,7 @@ namespace Plato.Internal.Notifications
         public IDictionary<string, IEnumerable<INotificationType>> GetCategorizedNotificationTypes(IEnumerable<string> roleNames)
         {
             var output = new Dictionary<string, IEnumerable<INotificationType>>();
-
             var notificationTypes = GetNotificationTypes(roleNames);
-
             foreach (var notificationType in notificationTypes)
             {
                 var name = notificationType.Title;
@@ -117,9 +115,9 @@ namespace Plato.Internal.Notifications
                     output.Add(title, new[] {notificationType});
                 }
             }
-
-
+            
             return output;
+
         }
 
     }

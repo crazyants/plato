@@ -107,16 +107,11 @@ namespace Plato.Users.Notifications.ViewProviders
                 }
             }
 
-            var roleNames = user?.RoleNames ?? new string[]
-            {
-                DefaultRoles.Anonymous
-            };
-
             // The notification type won't appear within request.Form.Keys
             // if the checkbox is not checked. If the notification type does
             // not exist within our request.Form.Keys collection ensures
             // it's still added but disabled by default
-            foreach (var notificationType in _notificationTypeManager.GetNotificationTypes(roleNames))
+            foreach (var notificationType in _notificationTypeManager.GetNotificationTypes(user.RoleNames))
             {
                 var existingType = notificationTypes.FirstOrDefault(n =>
                     n.Name.Equals(notificationType.Name, StringComparison.OrdinalIgnoreCase));

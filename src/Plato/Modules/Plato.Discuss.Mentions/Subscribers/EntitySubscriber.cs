@@ -11,10 +11,9 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Mentions.Models;
 using Plato.Discuss.Mentions.NotificationTypes;
+using Plato.Internal.Notifications.Extensions;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
-using Plato.Notifications.Extensions;
-using Plato.Notifications.Services;
 
 namespace Plato.Discuss.Mentions.Subscribers
 {

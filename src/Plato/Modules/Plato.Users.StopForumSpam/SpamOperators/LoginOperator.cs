@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
@@ -24,16 +25,19 @@ namespace Plato.Users.StopForumSpam.SpamOperators
         private readonly INotificationManager<User> _notificationManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public LoginOperator(ISpamChecker spamChecker,
             INotificationManager<User> notificationManager,
             IPlatoUserStore<User> platoUserStore, 
-            IDeferredTaskManager deferredTaskManager)
+            IDeferredTaskManager deferredTaskManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
             _spamChecker = spamChecker;
             _notificationManager = notificationManager;
             _platoUserStore = platoUserStore;
             _deferredTaskManager = deferredTaskManager;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
 
         public async Task<ISpamOperatorResult<User>> ValidateModelAsync(ISpamOperatorContext<User> context)
@@ -89,10 +93,13 @@ namespace Plato.Users.StopForumSpam.SpamOperators
                 var user = await _platoUserStore.GetByUserNameAsync(context.Model.UserName);
                 if (user != null)
                 {
-                    user.IsSpam = true;
-                    user.IsSpamUpdatedUserId = bot?.Id ?? 0;
-                    user.IsSpamUpdatedDate = DateTimeOffset.UtcNow;
-                    await _platoUserStore.UpdateAsync(user);
+                    if (!user.IsSpam)
+                    {
+                        user.IsSpam = true;
+                        user.IsSpamUpdatedUserId = bot?.Id ?? 0;
+                        user.IsSpamUpdatedDate = DateTimeOffset.UtcNow;
+                        await _platoUserStore.UpdateAsync(user);
+                    }
                 }
             }
 
@@ -126,18 +133,25 @@ namespace Plato.Users.StopForumSpam.SpamOperators
             // Send notifications
             foreach (var user in users)
             {
+                
                 // Web notification
-                await _notificationManager.SendAsync(new Notification(WebNotifications.UserSpam)
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.UserSpam))
                 {
-                    To = user,
-                    From = bot
-                }, context.Model);
-
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.UserSpam)
+                    {
+                        To = user,
+                        From = bot
+                    }, context.Model);
+                }
+                
                 // Email notification
-                await _notificationManager.SendAsync(new Notification(EmailNotifications.UserSpam)
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.UserSpam))
                 {
-                    To = user
-                }, context.Model);
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.UserSpam)
+                    {
+                        To = user
+                    }, context.Model);
+                }
 
             }
         
@@ -146,8 +160,8 @@ namespace Plato.Users.StopForumSpam.SpamOperators
         async Task<IEnumerable<User>> GetUsersAsync(ISpamOperation operation)
         {
 
-            List<User> output = null;
-
+            ConcurrentDictionary<string, User> output = null;
+         
             // Notify administrators 
             if (operation.NotifyAdmin)
             {
@@ -159,8 +173,15 @@ namespace Plato.Users.StopForumSpam.SpamOperators
                     .ToList();
                 if (users?.Data != null)
                 {
-                    output = new List<User>();
-                    output.AddRange(users.Data);
+                    output = new ConcurrentDictionary<string, User>();
+                    foreach (var user in users.Data)
+                    {
+                        if (!output.ContainsKey(user.Email))
+                        {
+                            output.TryAdd(user.Email, user);
+                        }
+                    }
+          
                 }
             }
 
@@ -177,13 +198,19 @@ namespace Plato.Users.StopForumSpam.SpamOperators
                 {
                     if (output == null)
                     {
-                        output = new List<User>();
+                        output = new ConcurrentDictionary<string, User>(); ;
                     }
-                    output.AddRange(users.Data);
+                    foreach (var user in users.Data)
+                    {
+                        if (!output.ContainsKey(user.Email))
+                        {
+                            output.TryAdd(user.Email, user);
+                        }
+                    }
                 }
             }
 
-            return output?.Distinct().ToList();
+            return output?.Values ?? null;
 
         }
         

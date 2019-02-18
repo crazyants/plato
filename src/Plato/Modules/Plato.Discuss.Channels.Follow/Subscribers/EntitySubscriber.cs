@@ -8,10 +8,9 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Notifications.Extensions;
-using Plato.Notifications.Services;
 
 namespace Plato.Discuss.Channels.Follow.Subscribers
 {

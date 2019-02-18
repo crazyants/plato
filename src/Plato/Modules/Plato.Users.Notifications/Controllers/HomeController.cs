@@ -13,10 +13,8 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Security.Abstractions;
-using Plato.Notifications.Extensions;
+using Plato.Internal.Notifications.Extensions;
 using Plato.Notifications.Models;
-using Plato.Notifications.Services;
 using Plato.Users.Notifications.ViewModels;
 
 namespace Plato.Users.Notifications.Controllers

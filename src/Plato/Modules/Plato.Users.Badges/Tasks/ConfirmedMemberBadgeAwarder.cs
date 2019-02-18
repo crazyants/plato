@@ -12,12 +12,11 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Notifications.Extensions;
 using Plato.Users.Badges.BadgeProviders;
 using Plato.Internal.Models.Badges;
+using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
-using Plato.Notifications.Services;
 
 namespace Plato.Users.Badges.Tasks
 {

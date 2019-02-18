@@ -115,13 +115,10 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                 return null;
             }
 
-            return new User()
-            {
-                UserName = user.UserName,
-                Email = user.Email,
-                IpV4Address = "77.247.181.163" // _clientIpAddress.GetIpV4Address()
-            };
-
+            user.IpV4Address = "77.247.181.163"; // _clientIpAddress.GetIpV4Address();
+            user.IpV6Address = "77.247.181.163"; // _clientIpAddress.GetIpV6Address();
+            return user;
+            
         }
     }
 

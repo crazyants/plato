@@ -17,23 +17,23 @@ namespace Plato.Notifications.Extensions
         /// <param name="userNotificationTypeDefaults"></param>
         /// <param name="notificationType"></param>
         /// <returns></returns>
-        public static bool NotificationEnabled(
-            this IUser user,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            INotificationType notificationType)
-        {
+        //public static bool NotificationEnabled(
+        //    this IUser user,
+        //    IUserNotificationTypeDefaults userNotificationTypeDefaults,
+        //    INotificationType notificationType)
+        //{
             
-            foreach (var userNotificationType in userNotificationTypeDefaults.GetUserNotificationTypesWithDefaults(user))
-            {
-                if (userNotificationType.Name.Equals(notificationType.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    return userNotificationType.Enabled;
-                }
-            }
+        //    foreach (var userNotificationType in userNotificationTypeDefaults.GetUserNotificationTypesWithDefaults(user))
+        //    {
+        //        if (userNotificationType.Name.Equals(notificationType.Name, StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            return userNotificationType.Enabled;
+        //        }
+        //    }
 
-            return false;
+        //    return false;
             
-        }
+        //}
 
     }
 

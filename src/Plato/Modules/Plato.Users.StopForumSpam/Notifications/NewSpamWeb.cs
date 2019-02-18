@@ -67,7 +67,7 @@ namespace Plato.Users.StopForumSpam.Notifications
             
             // Create result
             var result = new CommandResult<User>();
-
+            
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
