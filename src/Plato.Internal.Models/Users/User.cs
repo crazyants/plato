@@ -12,7 +12,6 @@ namespace Plato.Internal.Models.Users
     
     public class User : IdentityUser<int>,
         IUser,
-        IUserMetaData<UserData>,
         IModel<User>
     {
 

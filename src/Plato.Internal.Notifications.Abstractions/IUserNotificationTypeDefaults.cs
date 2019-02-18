@@ -6,7 +6,7 @@ namespace Plato.Internal.Notifications.Abstractions
 {
     public interface IUserNotificationTypeDefaults
     {
-        IEnumerable<UserNotificationType> GetUserNotificationTypesWithDefaults(IUserMetaData<UserData> user);
+        IEnumerable<UserNotificationType> GetUserNotificationTypesWithDefaults(IUser user);
 
     }
 }

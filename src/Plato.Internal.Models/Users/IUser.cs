@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Plato.Internal.Models.Users
 {
 
-    public interface IUser : ISimpleUser
+    public interface IUser : IUserMetaData<UserData>, ISimpleUser
     {
 
         string FirstName { get; set; }

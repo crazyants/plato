@@ -13,24 +13,8 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
             new WebNotification("NewTagWeb",
                 "New Tags",
                 "Show me a web notification for each new post associated with a tag I'm following.");
-
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                NewTag
-            };
-        }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                NewTag
-            };
-        }
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -62,7 +46,7 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {
@@ -94,8 +78,7 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
             };
 
         }
-
-
+        
     }
 
 }

@@ -12,6 +12,5 @@ namespace Plato.Internal.Notifications.Abstractions
         public IEnumerable<INotificationType> NotificationTypes { get; set; }
 
     }
-
-
+    
 }

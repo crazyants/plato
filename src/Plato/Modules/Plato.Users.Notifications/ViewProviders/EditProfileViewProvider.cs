@@ -8,6 +8,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
 using Plato.Notifications.Services;
@@ -61,12 +62,16 @@ namespace Plato.Users.Notifications.ViewProviders
             {
                 return await BuildIndexAsync(viewModel, context);
             }
-            
+
+            var roleNames = user.RoleNames ?? new string[]
+            {
+                DefaultRoles.Anonymous
+            };
             
             var editNotificationsViewModel = new EditNotificationsViewModel()
             {
                 Id = user.Id,
-                CategorizedNotificationTypes = _notificationTypeManager.GetCategorizedNotificationTypes(),
+                CategorizedNotificationTypes = _notificationTypeManager.GetCategorizedNotificationTypes(roleNames),
                 EnabledNotificationTypes = _userNotificationTypeDefaults.GetUserNotificationTypesWithDefaults(user)
             };
             
@@ -102,11 +107,16 @@ namespace Plato.Users.Notifications.ViewProviders
                 }
             }
 
+            var roleNames = user?.RoleNames ?? new string[]
+            {
+                DefaultRoles.Anonymous
+            };
+
             // The notification type won't appear within request.Form.Keys
             // if the checkbox is not checked. If the notification type does
             // not exist within our request.Form.Keys collection ensures
             // it's still added but disabled by default
-            foreach (var notificationType in _notificationTypeManager.GetNotificationTypes())
+            foreach (var notificationType in _notificationTypeManager.GetNotificationTypes(roleNames))
             {
                 var existingType = notificationTypes.FirstOrDefault(n =>
                     n.Name.Equals(notificationType.Name, StringComparison.OrdinalIgnoreCase));

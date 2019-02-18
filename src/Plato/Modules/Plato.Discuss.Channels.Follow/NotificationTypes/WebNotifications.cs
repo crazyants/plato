@@ -12,23 +12,7 @@ namespace Plato.Discuss.Channels.Follow.NotificationTypes
         public static readonly WebNotification NewTopic =
             new WebNotification("NewTopicWeb", "New Topics", "Show me a web notification for each new topic within channels I'm following.");
 
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                NewTopic
-            };
-        }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                NewTopic
-            };
-        }
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -60,7 +44,7 @@ namespace Plato.Discuss.Channels.Follow.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {

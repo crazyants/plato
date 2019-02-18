@@ -13,23 +13,7 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
             new WebNotification("UserSpamWeb", "New User SPAM",
                 "Show me a web notification for each user detected as SPAM.");
 
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                UserSpam
-            };
-        }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                UserSpam
-            };
-        }
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -53,7 +37,7 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {
@@ -73,7 +57,6 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
                         UserSpam
                     }
                 }
-
             };
         }
 

@@ -13,24 +13,8 @@ namespace Plato.Discuss.Labels.Follow.NotificationTypes
             new WebNotification("NewLabelWeb",
                 "New Labels",
                 "Show me a web notification for each new post associated with a label I'm following.");
-
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                NewLabel
-            };
-        }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                NewLabel
-            };
-        }
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -62,7 +46,7 @@ namespace Plato.Discuss.Labels.Follow.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {

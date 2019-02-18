@@ -13,25 +13,8 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
         public static readonly EmailNotification UserSpam =
             new EmailNotification("UserSpamEmail", "New User SPAM",
                 "Send me an email notification for each user detected as SPAM.");
-        
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                UserSpam
-            };
 
-        }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                UserSpam
-            };
-        }
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -55,7 +38,7 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {

@@ -12,24 +12,7 @@ namespace Plato.Discuss.Labels.Follow.NotificationTypes
         public static readonly EmailNotification NewLabel =
             new EmailNotification("NewLabelEmail", "New Labels", "Send me an email notification  for each new post associated with a label I'm following.");
 
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                NewLabel,
-            };
-        }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                NewLabel,
-            };
-        }
-
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -61,7 +44,7 @@ namespace Plato.Discuss.Labels.Follow.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {
@@ -93,8 +76,7 @@ namespace Plato.Discuss.Labels.Follow.NotificationTypes
             };
 
         }
-
-
+        
     }
 
 }

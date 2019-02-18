@@ -11,24 +11,8 @@ namespace Plato.Discuss.Channels.Follow.NotificationTypes
         
         public static readonly EmailNotification NewTopic =
             new EmailNotification("NewTopicEmail", "New Topic", "Send me an email notification for each new topic within channels I'm following.");
-
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                NewTopic,
-            };
-        }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                NewTopic,
-            };
-        }
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -60,7 +44,7 @@ namespace Plato.Discuss.Channels.Follow.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {
@@ -92,8 +76,7 @@ namespace Plato.Discuss.Channels.Follow.NotificationTypes
             };
 
         }
-
-
+        
     }
 
 }

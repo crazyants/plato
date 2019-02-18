@@ -12,24 +12,8 @@ namespace Plato.Discuss.Follow.NotificationTypes
         public static readonly WebNotification NewReply =
             new WebNotification("NewReplyWeb", "New Replies", "Show me a web notification for each new reply within topics I'm following.");
 
-        public IEnumerable<INotificationType> GetNotificationTypes()
-        {
-            return new[]
-            {
-                NewReply,
-            };
-        }
 
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
-        {
-            return new[]
-            {
-                NewReply,
-            };
-        }
-
-
-        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
             {
@@ -61,7 +45,7 @@ namespace Plato.Discuss.Follow.NotificationTypes
             };
         }
 
-        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes()
         {
             return new[]
             {
@@ -93,8 +77,7 @@ namespace Plato.Discuss.Follow.NotificationTypes
             };
 
         }
-
-
+        
     }
 
 }

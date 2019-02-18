@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Notifications;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Internal.Notifications
@@ -10,8 +11,9 @@ namespace Plato.Internal.Notifications
     public class NotificationTypeManager : INotificationTypeManager
     {
 
-        private IEnumerable<INotificationType> _notificationTypes;
-        private IEnumerable<INotificationType> _defaultNotificationTypes;
+        
+        private IEnumerable<DefaultNotificationTypes> _notificationTypes;
+        private IEnumerable<DefaultNotificationTypes> _defaultNotificationTypes;
 
         private readonly IEnumerable<INotificationTypeProvider> _providers;
         private readonly ILogger<NotificationTypeManager> _logger;
@@ -23,13 +25,13 @@ namespace Plato.Internal.Notifications
             _providers = providers;
             _logger = logger;
         }
-
-        public IEnumerable<INotificationType> GetNotificationTypes()
+        
+        public IEnumerable<INotificationType> GetNotificationTypes(IEnumerable<string> roleNames)
         {
 
             if (_notificationTypes == null)
             {
-                var notificationTypes = new List<INotificationType>();
+                var notificationTypes = new List<DefaultNotificationTypes>();
                 foreach (var provider in _providers)
                 {
                     try
@@ -51,15 +53,21 @@ namespace Plato.Internal.Notifications
                 _notificationTypes = notificationTypes;
             }
 
-            return _notificationTypes;
+            // Return a distinct list of notification
+            // types matching the supplied roleNames
+            return _notificationTypes
+                .Where(n => roleNames.Contains(n.RoleName))
+                .SelectMany(n => n.NotificationTypes)
+                .Distinct()
+                .ToList();
 
         }
-
-        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
+        
+        public IEnumerable<INotificationType> GetDefaultNotificationTypes(IEnumerable<string> roleNames)
         {
             if (_defaultNotificationTypes == null)
             {
-                var notificationTypes = new List<INotificationType>();
+                var notificationTypes = new List<DefaultNotificationTypes>();
                 foreach (var provider in _providers)
                 {
                     try
@@ -81,41 +89,39 @@ namespace Plato.Internal.Notifications
                 _defaultNotificationTypes = notificationTypes;
             }
 
-            return _defaultNotificationTypes;
-
+            return _defaultNotificationTypes
+                .Where(n => roleNames.Contains(n.RoleName))
+                .SelectMany(n => n.NotificationTypes)
+                .Distinct()
+                .ToList();
         }
         
-        public IDictionary<string, IEnumerable<INotificationType>> GetCategorizedNotificationTypes()
+        public IDictionary<string, IEnumerable<INotificationType>> GetCategorizedNotificationTypes(IEnumerable<string> roleNames)
         {
-
             var output = new Dictionary<string, IEnumerable<INotificationType>>();
 
-            foreach (var provider in _providers)
+            var notificationTypes = GetNotificationTypes(roleNames);
+
+            foreach (var notificationType in notificationTypes)
             {
+                var name = notificationType.Title;
+                var category = notificationType.Category;
+                var title = String.IsNullOrWhiteSpace(category) ? name : category;
 
-                var notificationTypes = provider.GetNotificationTypes();
-                foreach (var notificationType in notificationTypes)
+                if (output.ContainsKey(title))
                 {
-                    var name = notificationType.Title;
-                    var category = notificationType.Category;
-                    var title = String.IsNullOrWhiteSpace(category) ?
-                        name :
-                        category;
-
-                    if (output.ContainsKey(title))
-                    {
-                        output[title] = output[title].Concat(new[] { notificationType });
-                    }
-                    else
-                    {
-                        output.Add(title, new[] { notificationType });
-                    }
+                    output[title] = output[title].Concat(new[] {notificationType});
+                }
+                else
+                {
+                    output.Add(title, new[] {notificationType});
                 }
             }
+
 
             return output;
         }
 
     }
-    
+
 }

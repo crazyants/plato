@@ -8,7 +8,7 @@ namespace Plato.Internal.Notifications
     public class DummyUserNotificationTypeDefaults : IUserNotificationTypeDefaults
     {
 
-        public IEnumerable<UserNotificationType> GetUserNotificationTypesWithDefaults(IUserMetaData<UserData> user)
+        public IEnumerable<UserNotificationType> GetUserNotificationTypesWithDefaults(IUser user)
         {
             return new List<UserNotificationType>();
         }

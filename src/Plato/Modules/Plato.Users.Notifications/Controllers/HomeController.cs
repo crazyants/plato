@@ -13,6 +13,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Notifications.Models;
 using Plato.Notifications.Services;
@@ -65,14 +66,15 @@ namespace Plato.Users.Notifications.Controllers
             {
                 return NotFound();
             }
-            
+
             // -------------------
+            
 
             // Get saved notification types
             var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();
             
             // Get all notification types to enable by default
-            var defaultNotificationTypes = _notificationTypeManager.GetDefaultNotificationTypes();
+            var defaultNotificationTypes = _notificationTypeManager.GetDefaultNotificationTypes(user.RoleNames);
             var defaultUserNotificationTypes = new List<UserNotificationType>();
             foreach (var notificationType in defaultNotificationTypes)
             {
@@ -107,8 +109,9 @@ namespace Plato.Users.Notifications.Controllers
                 enabledNotificationTypes.AddRange(defaultUserNotificationTypes);
             }
 
+
             var types = "";
-            foreach (var type in _notificationTypeManager.GetNotificationTypes())
+            foreach (var type in _notificationTypeManager.GetNotificationTypes(user.RoleNames))
             {
                 types += type.Name + " - " + user.NotificationEnabled(_userNotificationTypeDefaults, new WebNotification(type.Name)) + " - " + "<br>";
             }
