@@ -49,6 +49,7 @@ using Plato.Internal.Assets.Extensions;
 using Plato.Internal.Badges.Extensions;
 using Plato.Internal.Drawing.Extensions;
 using Plato.Internal.Hosting.Web.Configuration;
+using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Net.Extensions;
 using Plato.Internal.Notifications.Extensions;
@@ -157,7 +158,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Configure antiForgery options
             services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<AntiforgeryOptions>, AntiForgeryOptionsConfiguration>());
 
-            // Configure authenticaiton services
+            // Configure authentication services
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
@@ -207,7 +208,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 .AddViews()
                 .AddRazorViewEngine();
 
-            // view adaptros
+            // view adapters
             services.AddPlatoViewAdaptors();
 
             // Add module mvc
@@ -225,19 +226,19 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoModuleMvc(this IServiceCollection services)
         {
-
-            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
             
+            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
+
             services.Configure<RazorViewEngineOptions>(options =>
             {
 
-                // optionally load matching views from any module
+                // Optionally load matching views from any module
                 foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
                 {
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
                 }
                 
-                // view location expanders for theme
+                // view location expander for theme
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
                 // ensure loaded modules are aware of current context

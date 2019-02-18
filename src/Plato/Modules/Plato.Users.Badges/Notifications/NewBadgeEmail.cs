@@ -50,9 +50,9 @@ namespace Plato.Users.Badges.Notifications
             var result = new CommandResult<Badge>();
             
             // Get email template
-            var templateid = "NewBadge";
+            var templateId = "NewBadge";
             var culture = await _contextFacade.GetCurrentCultureAsync();
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateid);
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
             {
 
@@ -88,7 +88,7 @@ namespace Plato.Users.Badges.Notifications
 
             }
 
-            return result.Failed($"No email template with the Id '{templateid}' exists within the 'locales/{culture}/emails.json' file!");
+            return result.Failed($"No email template with the Id '{templateId}' exists within the 'locales/{culture}/emails.json' file!");
 
         }
 

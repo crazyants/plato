@@ -119,12 +119,12 @@ namespace Plato.Internal.Hosting.Web
 
         }
 
-        public string GetCurrentCulture()
-        {
-            return GetCurrentCultureAsync()
-                .GetAwaiter()
-                .GetResult();
-        }
+        //public string GetCurrentCulture()
+        //{
+        //    return GetCurrentCultureAsync()
+        //        .GetAwaiter()
+        //        .GetResult();
+        //}
 
     }
 

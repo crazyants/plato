@@ -39,7 +39,7 @@ namespace Plato.Internal.Modules.Extensions
                 var contentPath = Path.Combine(
                     env.ContentRootPath,
                     moduleEntry.Descriptor.Location,
-                    moduleEntry.Descriptor.Id, 
+                    moduleEntry.Descriptor.Id,
                     "Content");
 
                 if (Directory.Exists(contentPath))
@@ -54,8 +54,6 @@ namespace Plato.Internal.Modules.Extensions
             }
 
         }
-
-
 
     }
 }

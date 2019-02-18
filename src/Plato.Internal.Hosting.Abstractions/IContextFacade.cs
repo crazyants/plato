@@ -21,7 +21,7 @@ namespace Plato.Internal.Hosting.Abstractions
 
         Task<string> GetCurrentCultureAsync();
 
-        string GetCurrentCulture();
+        //string GetCurrentCulture();
 
     }
 

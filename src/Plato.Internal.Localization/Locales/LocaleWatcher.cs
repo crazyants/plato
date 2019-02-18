@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Localization.Abstractions.Models;
 
 namespace Plato.Internal.Localization.Locales
 {
@@ -14,19 +16,27 @@ namespace Plato.Internal.Localization.Locales
         private readonly ILocaleProvider _localeProvider;
         private readonly ILocaleStore _localeStore;
         private readonly ILogger<LocaleWatcher> _logger;
+        private readonly IOptions<LocaleOptions> localeOptions;
 
         public LocaleWatcher(
             ILocaleProvider localeProvider,
             ILocaleStore localeStore,
-            ILogger<LocaleWatcher> logger)
+            ILogger<LocaleWatcher> logger,
+            IOptions<LocaleOptions> localeOptions)
         {
             _localeProvider = localeProvider;
             _localeStore = localeStore;
             _logger = logger;
+            this.localeOptions = localeOptions;
         }
 
         public async Task WatchForChanges()
         {
+
+            if (!localeOptions.Value.EnableWatch)
+            {
+                return;
+            }
 
             if (_watching == false)
             {

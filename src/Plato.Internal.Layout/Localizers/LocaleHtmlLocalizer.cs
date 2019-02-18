@@ -4,9 +4,11 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Localization.Abstractions.Models;
 
 namespace Plato.Internal.Layout.Localizers
 {
@@ -19,15 +21,18 @@ namespace Plato.Internal.Layout.Localizers
         private readonly ILocaleStore _localeStore;
         private readonly ICacheManager _cacheManager;
         private readonly IContextFacade _contextFacade;
+        private readonly IOptions<LocaleOptions> _localeOptions;
 
         public LocaleHtmlLocalizer(
             ILocaleStore localeStore,
             ICacheManager cacheManager,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IOptions<LocaleOptions> localeOptions)
         {
             _localeStore = localeStore;
             _cacheManager = cacheManager;
             _contextFacade = contextFacade;
+            _localeOptions = localeOptions;
         }
         
         public LocalizedString GetString(string name)
@@ -50,7 +55,7 @@ namespace Plato.Internal.Layout.Localizers
 
             if (String.IsNullOrEmpty(_cultureCode))
             {
-                _cultureCode = _contextFacade.GetCurrentCulture();
+                _cultureCode = _localeOptions.Value.Culture;
             }
 
             return _localeStore.GetAllStringsAsync(_cultureCode)

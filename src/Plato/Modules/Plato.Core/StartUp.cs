@@ -8,6 +8,7 @@ using Plato.Core.Middleware;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Localization.Abstractions.Models;
 
 namespace Plato.Core
 {
@@ -33,6 +34,14 @@ namespace Plato.Core
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
             
+            // Configure current culture
+            services.Configure<LocaleOptions>(options =>
+            {
+                var contextFacade = services.BuildServiceProvider().GetService<IContextFacade>();
+                options.EnableWatch = false;
+                options.Culture = contextFacade.GetCurrentCultureAsync().Result;
+            });
+
         }
 
         public override void Configure(

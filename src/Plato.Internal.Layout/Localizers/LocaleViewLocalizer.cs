@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Layout.Localizers
@@ -19,8 +21,9 @@ namespace Plato.Internal.Layout.Localizers
         public LocaleViewLocalizer(
             ILocaleStore localeStore,
             ICacheManager cacheManager,
-            IContextFacade contextFacade)
-            : base(localeStore, cacheManager, contextFacade)
+            IContextFacade contextFacade,
+            IOptions<LocaleOptions> localeOptions)
+            : base(localeStore, cacheManager, contextFacade, localeOptions)
         {
         }
 

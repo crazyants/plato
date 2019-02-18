@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Locales;
 
 namespace Plato.Internal.Localization.Extensions
@@ -23,7 +25,10 @@ namespace Plato.Internal.Localization.Extensions
             services.AddSingleton<ILocaleProvider, LocaleProvider>();
             services.AddSingleton<ILocaleWatcher, LocaleWatcher>();
             services.AddSingleton<ILocaleStore, LocaleStore>();
-         
+
+            // Configuration
+            //services.AddTransient<IConfigureOptions<LocaleOptions>, LocaleConfiguration>();
+
             return services;
 
         }
