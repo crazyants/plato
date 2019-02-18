@@ -42,8 +42,8 @@ namespace Plato.Internal.Stores.Users
                 PageSize,
                 populateSql,
                 countSql,
-                Params.Id.Value,
-                Params.Keywords.Value);
+                Params.Keywords.Value,
+                Params.RoleName.Value);
         }
 
     }
@@ -92,7 +92,7 @@ namespace Plato.Internal.Stores.Users
             get => _roleName ?? (_roleName = new WhereString());
             set => _roleName = value;
         }
-
+        
         public WhereBool HideSpam
         {
             get => _hideSpam ?? (_hideSpam = new WhereBool());
@@ -159,12 +159,16 @@ namespace Plato.Internal.Stores.Users
         #region "Constructor"
 
         private readonly string _usersTableName;
+        private readonly string _userRolesTableName;
+        private readonly string _rolesTableName;
         private readonly UserQuery _query;
 
         public UserQueryBuilder(UserQuery query)
         {
             _query = query;
             _usersTableName = GetTableNameWithPrefix("Users");
+            _userRolesTableName = GetTableNameWithPrefix("UserRoles");
+            _rolesTableName = GetTableNameWithPrefix("Roles");
         }
 
         #endregion
@@ -176,7 +180,7 @@ namespace Plato.Internal.Stores.Users
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT * FROM ").Append(_usersTableName);
+            sb.Append("SELECT * FROM ").Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             sb.Append(" ORDER BY ")
@@ -191,7 +195,7 @@ namespace Plato.Internal.Stores.Users
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(Id) FROM ").Append(_usersTableName);
+            sb.Append("SELECT COUNT(Id) FROM ").Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
@@ -201,6 +205,12 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Methods"
 
+        string BuildTables()
+        {
+            var sb=  new StringBuilder();
+            sb.Append(_usersTableName).Append(" u");
+            return sb.ToString();
+        }
         string GetTableNameWithPrefix(string tableName)
         {
             return !string.IsNullOrEmpty(_query.Options.TablePrefix)
@@ -237,6 +247,23 @@ namespace Plato.Internal.Stores.Users
             }
 
             // -----------------
+            // RoleName 
+            // -----------------
+
+            if (!String.IsNullOrEmpty(_query.Params.RoleName.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.RoleName.Operator);
+                sb.Append("u.Id IN (")
+                    .Append("SELECT ur.UserId FROM ")
+                    .Append(_userRolesTableName)
+                    .Append(" ur WHERE ur.RoleId = (SELECT r.Id FROM ")
+                    .Append(_rolesTableName).Append(" r WHERE ")
+                    .Append(_query.Params.RoleName.ToSqlString("r.[Name]", "RoleName"))
+                    .Append("))");
+            }
+            
+            // -----------------
             // UserType 
             // -----------------
 
@@ -246,18 +273,6 @@ namespace Plato.Internal.Stores.Users
                     sb.Append(_query.Params.UserType.Operator);
                 sb.Append(_query.Params.UserType.ToSqlString("UserType"));
 
-            }
-
-            // -----------------
-            // RoleName 
-            // -----------------
-
-            if (!String.IsNullOrEmpty(_query.Params.RoleName.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.RoleName.Operator);
-                sb.Append(_query.Params.RoleName.ToSqlString("RoleName", "Keywords"));
-                
             }
 
             // -----------------

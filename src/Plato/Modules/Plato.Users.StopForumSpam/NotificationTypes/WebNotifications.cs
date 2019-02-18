@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users.StopForumSpam.NotificationTypes
 {
@@ -9,8 +10,8 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
     {
 
         public static readonly WebNotification UserSpam =
-            new WebNotification("UserSpamWeb", "New User Spam",
-                "Show me a web notification for each new user detected as SPAM.");
+            new WebNotification("UserSpamWeb", "New User SPAM",
+                "Show me a web notification for each user detected as SPAM.");
 
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
@@ -25,6 +26,54 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
             return new[]
             {
                 UserSpam
+            };
+        }
+
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        {
+            return new[]
+            {
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Administrator,
+                    NotificationTypes = new[]
+                    {
+                        UserSpam
+                    }
+                },
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Staff,
+                    NotificationTypes = new[]
+                    {
+                        UserSpam
+                    }
+                }
+
+            };
+        }
+
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        {
+            return new[]
+            {
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Administrator,
+                    NotificationTypes = new[]
+                    {
+                        UserSpam
+                    }
+                },
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Staff,
+                    NotificationTypes = new[]
+                    {
+                        UserSpam
+                    }
+                }
+
             };
         }
 

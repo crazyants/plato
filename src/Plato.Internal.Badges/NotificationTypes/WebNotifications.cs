@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Badges.NotificationTypes
 {
@@ -28,6 +29,71 @@ namespace Plato.Internal.Badges.NotificationTypes
             };
         }
 
+        public IEnumerable<DefaultNotificationTypes> GetNotificationTypes2()
+        {
+            return new[]
+            {
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Administrator,
+                    NotificationTypes = new[]
+                    {
+                        NewBadge
+                    }
+                },
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Staff,
+                    NotificationTypes = new[]
+                    {
+                        NewBadge
+                    }
+                },
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Member,
+                    NotificationTypes = new[]
+                    {
+                        NewBadge
+                    }
+                }
+
+            };
+        }
+
+        public IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2()
+        {
+            return new[]
+            {
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Administrator,
+                    NotificationTypes = new[]
+                    {
+                        NewBadge
+                    }
+                },
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Staff,
+                    NotificationTypes = new[]
+                    {
+                        NewBadge
+                    }
+                },
+                new DefaultNotificationTypes
+                {
+                    RoleName = DefaultRoles.Member,
+                    NotificationTypes = new[]
+                    {
+                        NewBadge
+                    }
+                }
+
+            };
+
+        }
+        
     }
 
 }

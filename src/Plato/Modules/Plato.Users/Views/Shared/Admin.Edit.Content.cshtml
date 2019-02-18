@@ -11,9 +11,7 @@
         {
             <span>
                 @T["Added to SPAM by"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsSpamUpdatedUser.Id">
-                    @Model.IsSpamUpdatedUser.DisplayName
-                </a>, <date utc="Model.IsSpamUpdatedDate"></date>
+                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsSpamUpdatedUser.Id">@Model.IsSpamUpdatedUser.DisplayName</a>, <date utc="Model.IsSpamUpdatedDate"></date>
             </span>
         }
         else
@@ -34,9 +32,7 @@
         {
         <span>
             @T["Banned by"]
-            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsBannedUpdatedUser.Id">
-                    @Model.IsBannedUpdatedUser.DisplayName
-                </a>, <date utc="Model.IsBannedUpdatedDate"></date>
+            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsBannedUpdatedUser.Id">@Model.IsBannedUpdatedUser.DisplayName</a>, <date utc="Model.IsBannedUpdatedDate"></date>
         </span>
         }
         else

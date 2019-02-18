@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -7,7 +6,6 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Stores;
@@ -86,39 +84,39 @@ namespace Plato.StopForumSpam.Controllers
                 SpamOperations = settings?.SpamOperations ?? null
             }, this);
             
-            var user = new User()
-            {
-                UserName = "RobertUserm",
-                Email = "temptest953305220@gmail.com",
-                IpV4Address = "3.16.155.194"
-            };
+            //var user = new User()
+            //{
+            //    UserName = "RobertUserm",
+            //    Email = "temptest953305220@gmail.com",
+            //    IpV4Address = "3.16.155.194"
+            //};
 
-            // Configure checker
-            _spamProxy.Configure(o =>
-            {
-                o.ApiKey = settings?.ApiKey ?? "";
-            });
+            //// Configure checker
+            //_spamProxy.Configure(o =>
+            //{
+            //    o.ApiKey = settings?.ApiKey ?? "";
+            //});
 
-            // Get frequencies
-            var frequencies = await _spamProxy.GetAsync(user);
+            //// Get frequencies
+            //var frequencies = await _spamProxy.GetAsync(user);
             
-            var sb = new StringBuilder();
+            //var sb = new StringBuilder();
 
-            sb
-                .Append("Username: ")
-                .Append(frequencies.UserName.Count)
-                .Append(", ")
-                .Append("Email: ")
-                .Append(frequencies.Email.Count)
-                .Append(", ")
-                .Append("Ip: ")
-                .Append(frequencies.IpAddress.Count)
-                .Append(", ")
-                .Append("success: ")
-                .Append(frequencies.Success)
-                .Append(", ");
+            //sb
+            //    .Append("Username: ")
+            //    .Append(frequencies.UserName.Count)
+            //    .Append(", ")
+            //    .Append("Email: ")
+            //    .Append(frequencies.Email.Count)
+            //    .Append(", ")
+            //    .Append("Ip: ")
+            //    .Append(frequencies.IpAddress.Count)
+            //    .Append(", ")
+            //    .Append("success: ")
+            //    .Append(frequencies.Success)
+            //    .Append(", ");
 
-            ViewData["Test"] = sb.ToString();
+            //ViewData["Test"] = sb.ToString();
             
 
 

@@ -74,8 +74,8 @@ namespace Plato.Users.StopForumSpam.Notifications
                 ["Area"] = "Plato.Users",
                 ["Controller"] = "Home",
                 ["Action"] = "Display",
-                ["Id"] = context.Notification.To.Id,
-                ["Alias"] = context.Notification.To.Alias
+                ["Id"] = context.Model.Id,
+                ["Alias"] = context.Model.Alias
             });
 
             //// Build notification
@@ -83,8 +83,8 @@ namespace Plato.Users.StopForumSpam.Notifications
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = S["SPAM User Detected"].Value,
-                Message = S["A new SPAM user has been detected!"],
+                Title = S["Possible SPAM"].Value,
+                Message = S["A user has been detected as SPAM!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow

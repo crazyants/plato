@@ -10,6 +10,10 @@ namespace Plato.Internal.Notifications.Abstractions
 
         IEnumerable<INotificationType> GetDefaultNotificationTypes();
 
+        IEnumerable<DefaultNotificationTypes> GetNotificationTypes2();
+        
+        IEnumerable<DefaultNotificationTypes> GetDefaultNotificationTypes2();
+
     }
 
 }

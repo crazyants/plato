@@ -11,6 +11,7 @@
       <ProjectReference Include="..\Plato.Internal.Badges.Abstractions\Plato.Internal.Badges.Abstractions.csproj" />
       <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
       <ProjectReference Include="..\Plato.Internal.Notifications.Abstractions\Plato.Internal.Notifications.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Security.Abstractions\Plato.Internal.Security.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

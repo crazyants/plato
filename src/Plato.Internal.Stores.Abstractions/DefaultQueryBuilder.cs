@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Plato.Internal.Abstractions.Extensions;
 
@@ -29,9 +30,8 @@ namespace Plato.Internal.Stores.Abstractions
             _builder = new StringBuilder();
         }
 
-        public WhereString(int parameterIndex)
+        public WhereString(int parameterIndex) : this()
         {
-            _builder = new StringBuilder();
             ParameterIndex = parameterIndex;
         }
 
@@ -54,6 +54,13 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
+        public WhereString Operand(QueryOperator queryOperator)
+        {
+            _operator = queryOperator;
+            return this;
+        }
+
+
         public WhereString Equals(string value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
@@ -72,7 +79,7 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
-        public WhereString Endsith(string value)
+        public WhereString EndsWith(string value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(this.Operator);
@@ -84,7 +91,7 @@ namespace Plato.Internal.Stores.Abstractions
         public WhereString Like(string value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
-                _builder.Append(" OR ");
+                _builder.Append(this.Operator);
             Value = value;
             _builder.Append("{columnName} LIKE '%' + @{paramName} + '%'");
             return this;
@@ -98,6 +105,75 @@ namespace Plato.Internal.Stores.Abstractions
                 .Replace("{paramName}", paramName);
         }
 
+
+    }
+
+    #endregion
+
+    #region "WhereStringArray"
+
+    // TODO: Do we need to implement support for this?
+    public class WhereStringArray : List<WhereString>
+    {
+
+        private QueryOperator _operator = QueryOperator.And;
+
+        public WhereStringArray Or()
+        {
+            _operator = QueryOperator.Or;
+            return this;
+        }
+
+        public WhereStringArray And()
+        {
+            _operator = QueryOperator.And;
+            return this;
+        }
+
+
+        public WhereStringArray Equals(string value)
+        {
+            var whereString = new WhereString();
+            this.Add(whereString.Equals(value).Operand(_operator));
+            return this;
+        }
+
+        public WhereStringArray Like(string value)
+        {
+            var whereString = new WhereString();
+            this.Add(whereString.Like(value).Operand(_operator));
+            return this;
+        }
+
+        public WhereStringArray StartsWith(string value)
+        {
+            var whereString = new WhereString();
+            this.Add(whereString.StartsWith(value).Operand(_operator));
+            return this;
+        }
+
+        public WhereStringArray EndsWith(string value)
+        {
+            var whereString = new WhereString();
+            this.Add(whereString.EndsWith(value).Operand(_operator));
+            return this;
+        }
+
+        public string Values()
+        {
+            var i = 0;
+            var sb = new StringBuilder();
+            foreach (var whereString in this)
+            {
+                sb.Append(whereString.Value);
+                if (i < this.Count)
+                    sb.Append(",");
+                i++;
+            }
+
+            return sb.ToString();
+
+        }
 
     }
 
@@ -139,8 +215,7 @@ namespace Plato.Internal.Stores.Abstractions
             _builder.Append("{0} = ").Append(value.ToString());
             return this;
         }
-
-
+        
         public WhereInt Equals(int value, Action<StringBuilder> builder)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))

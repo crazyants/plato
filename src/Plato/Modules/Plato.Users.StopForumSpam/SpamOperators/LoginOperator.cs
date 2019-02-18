@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
@@ -62,24 +64,25 @@ namespace Plato.Users.StopForumSpam.SpamOperators
         public async Task<ISpamOperatorResult<User>> UpdateModelAsync(ISpamOperatorContext<User> context)
         {
 
+            // Perform validation
             var validation = await ValidateModelAsync(context);
 
+            // Create result
+            var result = new SpamOperatorResult<User>();
+            
             // Not an operator of interest
             if (validation == null)
             {
-                return null;
+                return result.Success(context.Model);
             }
 
             // If validation succeeded no need to perform further actions
             if (validation.Succeeded)
             {
-                return null;
+                return result.Success(context.Model);
             }
-
-            // Create result
-            var result = new SpamOperatorResult<User>();
             
-            // Flag as SPAM?
+            // Flag user as SPAM?
             if (context.Operation.FlagAsSpam)
             {
                 var bot = await _platoUserStore.GetPlatoBotAsync();
@@ -143,38 +146,44 @@ namespace Plato.Users.StopForumSpam.SpamOperators
         async Task<IEnumerable<User>> GetUsersAsync(ISpamOperation operation)
         {
 
-            List<User> usersToNotify = null;
+            List<User> output = null;
 
-            // Notify administrators of SPAM
+            // Notify administrators 
             if (operation.NotifyAdmin)
             {
                 var users = await _platoUserStore.QueryAsync()
-                    .Select<UserQueryParams>(q => { q.RoleName.Equals(DefaultRoles.Administrator); })
+                    .Select<UserQueryParams>(q =>
+                    {
+                        q.RoleName.Equals(DefaultRoles.Administrator);
+                    })
                     .ToList();
                 if (users?.Data != null)
                 {
-                    usersToNotify = new List<User>();
-                    usersToNotify.AddRange(users.Data);
+                    output = new List<User>();
+                    output.AddRange(users.Data);
                 }
             }
 
-            // Notify staff of SPAM
+            // Notify staff 
             if (operation.NotifyStaff)
             {
                 var users = await _platoUserStore.QueryAsync()
-                    .Select<UserQueryParams>(q => { q.RoleName.Equals(DefaultRoles.Staff); })
+                    .Select<UserQueryParams>(q =>
+                    {
+                        q.RoleName.Equals(DefaultRoles.Staff);
+                    })
                     .ToList();
                 if (users?.Data != null)
                 {
-                    if (usersToNotify == null)
+                    if (output == null)
                     {
-                        usersToNotify = new List<User>();
+                        output = new List<User>();
                     }
-                    usersToNotify.AddRange(users.Data);
+                    output.AddRange(users.Data);
                 }
             }
 
-            return usersToNotify;
+            return output?.Distinct().ToList();
 
         }
         

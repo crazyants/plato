@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
@@ -15,7 +17,9 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
@@ -84,7 +88,7 @@ namespace Plato.Users.Controllers
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            
+
             await CreateSampleUsers();
 
             // ----------------------------------------------------------------

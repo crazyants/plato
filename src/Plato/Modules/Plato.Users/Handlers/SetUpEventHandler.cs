@@ -466,14 +466,14 @@ namespace Plato.Users.Handlers
 
         void Users(ISchemaBuilder builder)
         {
-            
+
             builder
                 .CreateTable(_users)
                 .CreateDefaultProcedures(_users)
 
-            // Overwrite our SelectEntityById created via CreateDefaultProcedures
-            // above to also return all EntityData within a second result set
-            .CreateProcedure(
+                // Overwrite our SelectEntityById created via CreateDefaultProcedures
+                // above to also return all EntityData within a second result set
+                .CreateProcedure(
                     new SchemaProcedure(
                             $"SelectUserById",
                             @"
@@ -515,7 +515,8 @@ namespace Plato.Users.Handlers
                             ))
                             EXEC {prefix}_SelectUserById @id;")
                     .ForTable(_users)
-                    .WithParameter(new SchemaColumn() { Name = "NormalizedEmail", DbType = DbType.String, Length = "255" }))
+                    .WithParameter(
+                        new SchemaColumn() {Name = "NormalizedEmail", DbType = DbType.String, Length = "255"}))
 
 
                 .CreateProcedure(new SchemaProcedure("SelectUserByUserName", @"
@@ -527,7 +528,7 @@ namespace Plato.Users.Handlers
                             EXEC {prefix}_SelectUserById @id;")
                     .ForTable(_users)
                     .WithParameter(new SchemaColumn() {Name = "UserName", DbType = DbType.String, Length = "255"}))
-              
+
                 .CreateProcedure(
                     new SchemaProcedure("SelectUserByUserNameNormalized", @"
                             DECLARE @Id int;
@@ -553,7 +554,7 @@ namespace Plato.Users.Handlers
                             ))
                             EXEC {prefix}_SelectUserById @id;")
                     .ForTable(_users)
-                    .WithParameter(new SchemaColumn() { Name = "ApiKey", DbType = DbType.String, Length = "255" }))
+                    .WithParameter(new SchemaColumn() {Name = "ApiKey", DbType = DbType.String, Length = "255"}))
 
                 .CreateProcedure(
                     new SchemaProcedure("SelectUserByEmailAndPassword", @"
@@ -599,7 +600,7 @@ namespace Plato.Users.Handlers
                             }
                         }))
 
-                    .CreateProcedure(
+                .CreateProcedure(
                     new SchemaProcedure("SelectUserByConfirmationToken", @"
                             DECLARE @Id int;
                             SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
@@ -617,24 +618,24 @@ namespace Plato.Users.Handlers
                                 Length = "255"
                             }
                         }))
-                        
+
                 .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_users)
                     .WithParameters(new List<SchemaColumn>()
                     {
                         new SchemaColumn()
                         {
-                            Name = "Id",
-                            DbType = DbType.Int32
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
                         },
                         new SchemaColumn()
                         {
-                            Name = "Keywords",
+                            Name = "RoleName",
                             DbType = DbType.String,
                             Length = "255"
                         }
                     }));
-            
 
         }
 
