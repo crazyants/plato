@@ -164,7 +164,7 @@ namespace Plato.Internal.Layout.Alerts
                 });
             }
             
-            // We've displayed our alert so delete persistance
+            // We've displayed our alert so delete persistence
             // to ensure no further alerts are displayed
             DeleteCookies(context);
 
@@ -189,7 +189,7 @@ namespace Plato.Internal.Layout.Alerts
             {
                 // A problem occurring deserializing the alerts
                 // Return null to ensure _deleteCookie is set to true
-                // and persistance is deleted within OnResultExecutionAsync
+                // and persistence is deleted within OnResultExecutionAsync
                 _logger.LogError(e, e.Message);
                 alerts = null;
             }

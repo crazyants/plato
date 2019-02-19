@@ -26,9 +26,6 @@ namespace Plato.Internal.Localization.Extensions
             services.AddSingleton<ILocaleWatcher, LocaleWatcher>();
             services.AddSingleton<ILocaleStore, LocaleStore>();
 
-            // Configuration
-            //services.AddTransient<IConfigureOptions<LocaleOptions>, LocaleConfiguration>();
-
             return services;
 
         }

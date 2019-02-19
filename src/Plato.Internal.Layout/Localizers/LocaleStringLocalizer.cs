@@ -4,8 +4,6 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Cache.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using LocalizedString = Microsoft.Extensions.Localization.LocalizedString;
@@ -18,19 +16,13 @@ namespace Plato.Internal.Layout.Localizers
         private string _cultureCode;
 
         private readonly ILocaleStore _localeStore;
-        private readonly ICacheManager _cacheManager;
-        private readonly IContextFacade _contextFacade;
         private readonly IOptions<LocaleOptions> _localeOptions;
 
         public LocaleStringLocalizer(
             ILocaleStore localeStore,
-            ICacheManager cacheManager,
-            IContextFacade contextFacade1,
             IOptions<LocaleOptions> localeOptions)
         {
             _localeStore = localeStore;
-            _cacheManager = cacheManager;
-            _contextFacade = contextFacade1;
             _localeOptions = localeOptions;
         }
 
@@ -42,6 +34,7 @@ namespace Plato.Internal.Layout.Localizers
                 _cultureCode = _localeOptions.Value.Culture;
             }
 
+            // TODO: Remove GetAwaiter IStringLocalizer.GetAllStrings is not async
             return _localeStore.GetAllStringsAsync(_cultureCode)
                 .GetAwaiter()
                 .GetResult();

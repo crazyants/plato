@@ -16,7 +16,7 @@ namespace Plato.Internal.Localization.Locales
         private readonly ILocaleProvider _localeProvider;
         private readonly ILocaleStore _localeStore;
         private readonly ILogger<LocaleWatcher> _logger;
-        private readonly IOptions<LocaleOptions> localeOptions;
+        private readonly IOptions<LocaleOptions> _localeOptions;
 
         public LocaleWatcher(
             ILocaleProvider localeProvider,
@@ -27,13 +27,14 @@ namespace Plato.Internal.Localization.Locales
             _localeProvider = localeProvider;
             _localeStore = localeStore;
             _logger = logger;
-            this.localeOptions = localeOptions;
+            _localeOptions = localeOptions;
         }
 
         public async Task WatchForChanges()
         {
 
-            if (!localeOptions.Value.EnableWatch)
+            // Is watching enabled?
+            if (!_localeOptions.Value.WatchForChanges)
             {
                 return;
             }

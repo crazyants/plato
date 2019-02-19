@@ -23,6 +23,8 @@ namespace Plato.Internal.Hosting.Web
             foreach (var controller in context.Result.Controllers)
             {
                 var controllerType = controller.ControllerType.AsType();
+
+                // TODO: Can we remove GetAwaiter here?
                 var module = _typedModuleProvider.GetModuleForDependency(controllerType)
                     .GetAwaiter()
                     .GetResult();

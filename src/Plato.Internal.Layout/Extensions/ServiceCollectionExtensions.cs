@@ -25,10 +25,10 @@ namespace Plato.Internal.Layout.Extensions
 
         }
 
-        public static IServiceCollection AddPlatoViewAdaptors(
+        public static IServiceCollection AddPlatoViewAdapters(
             this IServiceCollection services)
         {
-            // view adaptors
+            // view adapters
             services.TryAddScoped<IViewAdapterManager, ViewAdapterManager>();
 
             return services;
@@ -48,7 +48,7 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
 
-            // Add theming conventions - configures theme layout based on controller type
+            // Add theming conventions - configures theme layout based on controller prefix
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
             // Action filters
@@ -67,6 +67,8 @@ namespace Plato.Internal.Layout.Extensions
             // Localization
             services.AddScoped<IStringLocalizer, LocaleStringLocalizer>();
             services.AddScoped<IHtmlLocalizer, LocaleHtmlLocalizer>();
+
+            // View localization
             services.AddScoped<IViewLocalizer, LocaleViewLocalizer>();
             
             return services;

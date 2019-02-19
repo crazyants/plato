@@ -114,17 +114,10 @@ namespace Plato.Internal.Hosting.Web
                 }
             }
        
-            // Return en-US default culture
+            // Return our default culture
             return DefaultCulture;
 
         }
-
-        //public string GetCurrentCulture()
-        //{
-        //    return GetCurrentCultureAsync()
-        //        .GetAwaiter()
-        //        .GetResult();
-        //}
 
     }
 

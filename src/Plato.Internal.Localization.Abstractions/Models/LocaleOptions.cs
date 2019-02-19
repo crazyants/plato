@@ -3,7 +3,7 @@
     public class LocaleOptions
     {
 
-        public bool EnableWatch { get; set; } = true;
+        public bool WatchForChanges { get; set; } = true;
 
         public string Culture { get; set; }
 

@@ -1,5 +1,5 @@
 Name: Plato Users StopForumSpam
-Description: Check against the StopForumSpam database for new user registrations.
+Description: Check user registrations & logins against the StopForumSpam database.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Spam

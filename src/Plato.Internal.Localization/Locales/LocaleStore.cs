@@ -22,7 +22,6 @@ namespace Plato.Internal.Localization.Locales
         public LocaleStore(
             ILocaleProvider localeProvider,
             ICacheManager cacheManager,
-            IPlatoFileSystem fileSystem,
             ILogger<LocaleStore> logger)
         {
             _localeProvider = localeProvider;
@@ -118,7 +117,7 @@ namespace Plato.Internal.Localization.Locales
         }
 
         /// <summary>
-        /// Froms all locale resources from in-memory cache.
+        /// Cancels all locale cache tokens.
         /// </summary>
         /// <returns></returns>
         public async Task DisposeAsync()

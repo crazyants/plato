@@ -38,7 +38,7 @@ namespace Plato.Core
             services.Configure<LocaleOptions>(options =>
             {
                 var contextFacade = services.BuildServiceProvider().GetService<IContextFacade>();
-                options.EnableWatch = false;
+                options.WatchForChanges = false;
                 options.Culture = contextFacade.GetCurrentCultureAsync().Result;
             });
 

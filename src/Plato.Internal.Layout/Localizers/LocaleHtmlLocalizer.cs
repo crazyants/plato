@@ -19,19 +19,13 @@ namespace Plato.Internal.Layout.Localizers
         private string _cultureCode;
 
         private readonly ILocaleStore _localeStore;
-        private readonly ICacheManager _cacheManager;
-        private readonly IContextFacade _contextFacade;
         private readonly IOptions<LocaleOptions> _localeOptions;
 
         public LocaleHtmlLocalizer(
             ILocaleStore localeStore,
-            ICacheManager cacheManager,
-            IContextFacade contextFacade,
             IOptions<LocaleOptions> localeOptions)
         {
             _localeStore = localeStore;
-            _cacheManager = cacheManager;
-            _contextFacade = contextFacade;
             _localeOptions = localeOptions;
         }
         
