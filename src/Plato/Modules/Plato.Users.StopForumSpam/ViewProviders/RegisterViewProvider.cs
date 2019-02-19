@@ -53,7 +53,7 @@ namespace Plato.Users.StopForumSpam.ViewProviders
             };
             
             // Validate model within registered spam operators
-            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Login, user);
+            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Registration, user);
 
             // IF any operators failed ensure we display the operator error message
             var valid = true;
@@ -88,8 +88,9 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                 return await BuildIndexAsync(registration, context);
             }
 
-            // Get user to validate
-             var user = await _platoUserStore.GetByUserNameAsync(registration.UserName);
+            // If we reach the BuildUpdateAsync method the user has
+            // been validated & created so retrieve full user from database
+            var user = await _platoUserStore.GetByUserNameAsync(registration.UserName);
 
             //  User not found
             if (user == null)
