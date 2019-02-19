@@ -12,7 +12,8 @@ namespace Plato.Internal.Net.Extensions
         {
 
             services.TryAddScoped<IClientIpAddress, ClientIpAddress>();
-            
+            services.TryAddScoped<IHttpClient, HttpClient>();
+
             return services;
 
         }

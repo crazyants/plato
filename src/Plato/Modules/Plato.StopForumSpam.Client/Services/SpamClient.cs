@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
+using Plato.Internal.Net.Abstractions;
 using Plato.StopForumSpam.Client.Models;
 
 namespace Plato.StopForumSpam.Client.Services
 {
     
-    public class SpamClient : HttpClient, ISpamClient
+    public class SpamClient : ISpamClient
     {
-        
-        private readonly string _format;
+        private const string ByFormat = "json";
 
         public ClientOptions Options { get; private set; } = new ClientOptions();
 
-        public SpamClient() 
+        private readonly IHttpClient _httpClient;
+
+        public SpamClient(IHttpClient httpClient)
         {
-            this._format = "json";
+            _httpClient = httpClient;
         }
 
         public void Configure(Action<ClientOptions> configure)
@@ -94,13 +96,13 @@ namespace Plato.StopForumSpam.Client.Services
                 }
             }
 
-            return await this.CheckAsync(parameters);
+            return await CheckAsync(parameters);
         }
 
         private async Task<Response> CheckAsync(Dictionary<string, string> parameters)
         {
-            parameters.Add("f", this._format);
-            return Response.Parse( await this.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters), this._format);
+            parameters.Add("f", ByFormat);
+            return Response.Parse(await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters), ByFormat);
         }
 
         public async Task<Response> AddSpammerAsync(string username, string emailAddress, string ipAddress)
@@ -144,7 +146,7 @@ namespace Plato.StopForumSpam.Client.Services
                 {"api_key", this.Options.ApiKey}
             };
 
-            return Response.Parse(await this.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters), this._format);
+            return Response.Parse(await _httpClient.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters), ByFormat);
 
         }
 
