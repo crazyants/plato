@@ -135,8 +135,7 @@ namespace Plato.Internal.Abstractions.Extensions
             output = new int[array.Length];
             for (var i = 0; i <= array.Length - 1; i++)
             {
-                var id = 0;
-                var ok = int.TryParse(array.GetValue(i).ToString(), out id);
+                var ok = int.TryParse(array.GetValue(i).ToString(), out var id);
                 if (ok)
                     output.SetValue(id, i);
             }
@@ -290,7 +289,7 @@ namespace Plato.Internal.Abstractions.Extensions
                 }
 
                 // find the word to highlight ensuring we search outside of HTML tags 
-                // if the word is 2 or fewer charactersensure we use word boundaries
+                // if the word is 2 or fewer characters ensure we use word boundaries
                 var searchPattern = term.Length <= 2
                     ? "(?!<.*?)\\b(" + Regex.Escape(term) + ")\\b(?![^<>]*?>)"
                     : "(?!<.*?)(" + Regex.Escape(term) + ")(?![^<>]*?>)";

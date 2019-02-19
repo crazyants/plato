@@ -102,7 +102,7 @@ namespace Plato.Users.StopForumSpam.SpamOperators
                 }
             }
 
-            // Defer notifications
+            // Defer notifications for execution after request completes
             _deferredTaskManager.AddTask(async ctx =>
             {
                 await NotifyAsync(context);
@@ -193,6 +193,11 @@ namespace Plato.Users.StopForumSpam.SpamOperators
                         q.RoleName.Equals(DefaultRoles.Staff);
                     })
                     .ToList();
+
+                if (users == null)
+                {
+                    return null;
+                }
                 if (users?.Data != null)
                 {
                     if (output == null)

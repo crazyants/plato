@@ -50,13 +50,13 @@ namespace Plato.Users.Badges.Notifications
             var result = new CommandResult<Badge>();
             
             // Get email template
-            var templateId = "NewBadge";
+            const string templateId = "NewBadge";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
             {
 
-                // Build topic url
+                // Build url
                 var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
                 var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {

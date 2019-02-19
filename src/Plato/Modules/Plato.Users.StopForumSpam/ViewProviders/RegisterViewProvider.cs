@@ -42,17 +42,20 @@ namespace Plato.Users.StopForumSpam.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(UserRegistration registration, IUpdateModel updater)
         {
-            
-            // Execute registered spam operators
-            var results = await _spamOperatorManager.UpdateModelAsync(SpamOperations.Registration, new User()
+
+            // Build user to validate
+            var user = new User()
             {
                 UserName = registration.UserName,
                 Email = registration.Email,
-                IpV4Address = _clientIpAddress.GetIpV4Address()
-            });
+                IpV4Address = _clientIpAddress.GetIpV4Address(),
+                IpV6Address = _clientIpAddress.GetIpV6Address()
+            };
+            
+            // Validate model within registered spam operators
+            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Login, user);
 
-            // IF any operators failed and have custom errors
-            // ensure we display the operator error message
+            // IF any operators failed ensure we display the operator error message
             var valid = true;
             if (results != null)
             {
@@ -71,56 +74,37 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                     }
                 }
             }
-            
+
             return valid;
 
         }
-        
+
         public override async Task<IViewProviderResult> BuildUpdateAsync(UserRegistration registration, IViewProviderContext context)
         {
 
+            // We need a valid view model
             if (!context.Updater.ModelState.IsValid)
             {
                 return await BuildIndexAsync(registration, context);
             }
-            
-            // Execute registered spam operators
-            var results = await _spamOperatorManager.UpdateModelAsync(SpamOperations.Registration, new User()
-            {
-                UserName = registration.UserName,
-                Email = registration.Email,
-                IpV4Address = _clientIpAddress.GetIpV4Address()
-            });
 
-            var flagAsSpam = false;
-            if (results != null)
+            // Get user to validate
+             var user = await _platoUserStore.GetByUserNameAsync(registration.UserName);
+
+            //  User not found
+            if (user == null)
             {
-                foreach (var result in results)
-                {
-                    if (!result.Succeeded)
-                    {
-                        if (result.Operation.FlagAsSpam)
-                        {
-                            flagAsSpam = true;
-                        }
-                    }
-                }
+                return await BuildIndexAsync(registration, context);
             }
 
-            // Do we need to update the IsSpam flag?
-            if (flagAsSpam)
-            {
-                var user = await _platoUserStore.GetByUserNameAsync(registration.UserName);
-                if (user != null)
-                {
-                    user.IsSpam = true;
-                    await _platoUserStore.UpdateAsync(user);
-                }
-            }
+            // Execute UpdateModel within registered spam operators
+            await _spamOperatorManager.UpdateModelAsync(SpamOperations.Login, user);
 
+            // Return view
             return await BuildIndexAsync(registration, context);
-        }
 
+        }
+        
     }
 
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -115,8 +114,9 @@ namespace Plato.Users.StopForumSpam.ViewProviders
                 return null;
             }
 
-            user.IpV4Address = "77.247.181.163"; // _clientIpAddress.GetIpV4Address();
-            user.IpV6Address = "77.247.181.163"; // _clientIpAddress.GetIpV6Address();
+            // Ensure we check against the IP address being used at the time of the login
+            user.IpV4Address = _clientIpAddress.GetIpV4Address();
+            user.IpV6Address = _clientIpAddress.GetIpV6Address();
             return user;
             
         }

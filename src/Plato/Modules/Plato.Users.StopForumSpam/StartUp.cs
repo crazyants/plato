@@ -61,7 +61,8 @@ namespace Plato.Users.StopForumSpam
 
             // Notification providers
             services.AddScoped<INotificationProvider<User>, NewSpamWeb>();
-            
+            services.AddScoped<INotificationProvider<User>, NewSpamEmail>();
+
         }
 
         public override void Configure(

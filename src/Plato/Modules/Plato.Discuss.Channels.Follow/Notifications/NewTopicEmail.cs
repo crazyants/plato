@@ -51,7 +51,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            var templateId = "NewTopic";
+            const string templateId = "NewTopic";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)

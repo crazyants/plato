@@ -7,7 +7,6 @@ using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
@@ -61,9 +60,9 @@ namespace Plato.Discuss.Follow.Notifications
             {
                 return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the topic follow notification '{EmailNotifications.NewReply.Name}'.");
             }
-            
+
             // Get email template
-            var templateId = "NewReply";
+            const string templateId = "NewReply";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)

@@ -47,7 +47,7 @@ namespace Plato.Discuss.Mentions.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            var templateId = "NewMention";
+            const string templateId = "NewMention";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)

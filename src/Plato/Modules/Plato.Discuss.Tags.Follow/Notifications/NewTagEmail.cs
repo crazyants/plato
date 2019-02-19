@@ -51,7 +51,7 @@ namespace Plato.Discuss.Tags.Follow.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            var templateId = "NewTag";
+            const string templateId = "NewTag";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)

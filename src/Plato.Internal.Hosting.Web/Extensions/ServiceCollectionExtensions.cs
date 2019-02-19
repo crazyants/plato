@@ -365,13 +365,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {
             var mvcTagHelpersAssembly = typeof(InputTagHelper).Assembly;
-            if (!partManager.ApplicationParts.OfType<AssemblyPart>().Any(p => p.Assembly == mvcTagHelpersAssembly))
+            if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcTagHelpersAssembly))
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcTagHelpersAssembly));
             }
 
             var mvcRazorAssembly = typeof(UrlResolutionTagHelper).Assembly;
-            if (!partManager.ApplicationParts.OfType<AssemblyPart>().Any(p => p.Assembly == mvcRazorAssembly))
+            if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcRazorAssembly))
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }

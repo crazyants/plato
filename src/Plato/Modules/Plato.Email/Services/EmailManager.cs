@@ -42,7 +42,11 @@ namespace Plato.Email.Services
             // Ensure we've configured required email settings
             if (_smtpSettings?.DefaultFrom == null)
             {
-                return result.Failed("Email settings must be configured before an email can be sent. No default 'From' address had been specified!");
+                if (_logger.IsEnabled(LogLevel.Critical))
+                {
+                    _logger.LogCritical($"Error sending email \"{message.Subject}\". Outbound email settings must be configured via the admin dashboard before an email can be sent. No default 'From' address had been specified!");
+                }
+                return result.Failed($"Error sending email \"{message.Subject}\". Outbound email settings must be configured via the admin dashboard  before an email can be sent. No default 'From' address had been specified!");
             }
 
             // Use application email if no from is specified

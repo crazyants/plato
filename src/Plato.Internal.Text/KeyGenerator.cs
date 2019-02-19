@@ -6,12 +6,16 @@ using Plato.Internal.Text.Abstractions;
 namespace Plato.Internal.Text
 {
 
+    /// <summary>
+    /// Generates a simple random alpha numeric string configurable via the Configure method.
+    /// This should NOT be used for any type of encryption or hashing operations.
+    /// </summary>
     public class KeyGenerator : IKeyGenerator
     {
 
         static readonly object SyncLock = new object();
-        readonly Random _rnd;
-        readonly KeyGeneratorOptions _options;
+        private readonly Random _rnd;
+        private readonly KeyGeneratorOptions _options;
 
         public KeyGenerator()
         {

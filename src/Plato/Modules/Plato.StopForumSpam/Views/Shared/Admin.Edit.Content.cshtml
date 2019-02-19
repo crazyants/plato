@@ -53,8 +53,8 @@
 
                     @if (Model.CategorizedSpamOperations.Any())
                     {
-                        <h6>@T["Operations"]</h6>
-                        @T["Operations are added by various features and allow you to customize how SPAM is managed for each feature."]
+                        <h6>@T["Operators"]</h6>
+                        @T["Operators allow you to customize how detected SPAM is handled on a per feature basis."]
                         <hr/>
                         @foreach (var category in Model.CategorizedSpamOperations.Keys)
                         {
