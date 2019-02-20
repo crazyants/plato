@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Security.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Handlers
@@ -15,6 +17,7 @@ namespace Plato.Users.Handlers
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly IUserColorProvider _userColorProvider;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
         private readonly SchemaTable _users = new SchemaTable()
         {
@@ -348,11 +351,13 @@ namespace Plato.Users.Handlers
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
             UserManager<User> userManager,
-            IUserColorProvider userColorProvider)
+            IUserColorProvider userColorProvider,
+            RoleManager<Role> roleManager)
         {
             _schemaBuilder = schemaBuilder;
             _userManager = userManager;
             _userColorProvider = userColorProvider;
+            _roleManager = roleManager;
         }
 
         #region "Implementation"
@@ -360,8 +365,7 @@ namespace Plato.Users.Handlers
         public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
 
-            // build schemas
-            
+            // Build schemas
             using (var builder = _schemaBuilder)
             {
 
@@ -391,58 +395,12 @@ namespace Plato.Users.Handlers
                 }
 
             }
-            
-            try
-            {
 
-                // create super user
-                var result1 =  await _userManager.CreateAsync(new User()
-                {
-                    Email = context.AdminEmail,
-                    UserName = context.AdminUsername,
-                    PhotoColor = _userColorProvider.GetColor(),
-                    EmailConfirmed = true,
-                    IsVerified = true,
-                    IsVerifiedUpdatedUserId = 1,
-                    IsVerifiedUpdatedDate = DateTimeOffset.UtcNow
-                }, context.AdminPassword);
-                if (!result1.Succeeded)
-                {
-                    foreach (var error in result1.Errors)
-                    {
-                        reportError(error.Code, error.Description);
-                    }
-                }
-                
-                // create default plato bot
-            
-                var result2 = await _userManager.CreateAsync(new User()
-                {
-                    Email = "bot@plato.com",
-                    UserName = "PlatoBot",
-                    DisplayName = "Plato Bot",
-                    EmailConfirmed = true,
-                    IsVerified = true,
-                    IsVerifiedUpdatedUserId = 1,
-                    IsVerifiedUpdatedDate = DateTimeOffset.UtcNow,
-                    PhotoUrl = "/images/bot.png",
-                    PhotoColor = _userColorProvider.GetColor(),
-                    UserType = UserType.Bot
-                }, context.AdminPassword);
-                if (!result2.Succeeded)
-                {
-                    foreach (var error in result2.Errors)
-                    {
-                        reportError(error.Code, error.Description);
-                    }
-                }
-                
+            // Configure default users
+            await ConfigureDefaultUsers(context, reportError);
 
-            }
-            catch (Exception ex)
-            {
-                reportError(ex.Message, ex.StackTrace);
-            }
+            // Configure administrator
+            await ConfigureSuperUser(context, reportError);
 
         }
 
@@ -794,8 +752,7 @@ namespace Plato.Users.Handlers
                     .WithParameter(new SchemaColumn() { Name = "UserId", DbType = DbType.Int32 }));
 
         }
-
-
+        
         void UserData(ISchemaBuilder builder)
         {
 
@@ -888,6 +845,92 @@ namespace Plato.Users.Handlers
 
 
         }
+
+        async Task ConfigureDefaultUsers(SetUpContext context, Action<string, string> reportError)
+        {
+
+            try
+            {
+
+                // create super user
+                var result1 = await _userManager.CreateAsync(new User()
+                {
+                    Email = context.AdminEmail,
+                    UserName = context.AdminUsername,
+                    PhotoColor = _userColorProvider.GetColor(),
+                    EmailConfirmed = true,
+                    IsVerified = true,
+                    IsVerifiedUpdatedUserId = 1,
+                    IsVerifiedUpdatedDate = DateTimeOffset.UtcNow
+                }, context.AdminPassword);
+                if (!result1.Succeeded)
+                {
+                    foreach (var error in result1.Errors)
+                    {
+                        reportError(error.Code, error.Description);
+                    }
+                }
+
+                // create default plato bot
+
+                var result2 = await _userManager.CreateAsync(new User()
+                {
+                    Email = "bot@plato.com",
+                    UserName = "PlatoBot",
+                    DisplayName = "Plato Bot",
+                    EmailConfirmed = true,
+                    IsVerified = true,
+                    IsVerifiedUpdatedUserId = 1,
+                    IsVerifiedUpdatedDate = DateTimeOffset.UtcNow,
+                    PhotoUrl = "/images/bot.png",
+                    PhotoColor = _userColorProvider.GetColor(),
+                    UserType = UserType.Bot
+                }, context.AdminPassword);
+                if (!result2.Succeeded)
+                {
+                    foreach (var error in result2.Errors)
+                    {
+                        reportError(error.Code, error.Description);
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                reportError(ex.Message, ex.StackTrace);
+            }
+
+        }
+
+        async Task ConfigureSuperUser(SetUpContext context, Action<string, string> reportError)
+        {
+
+            // Get newly installed administrator role
+            var role = await _roleManager.FindByNameAsync(DefaultRoles.Administrator);
+
+            // Get newly created administrator user
+            var user = await _userManager.FindByNameAsync(context.AdminUsername);
+
+            // Add our administrator user to the administrator role
+            var dirty = false;
+            if (role != null && user != null)
+            {
+                if (!await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    await _userManager.AddToRoleAsync(user, role.Name);
+                    dirty = true;
+                }
+
+            }
+
+            if (dirty)
+            {
+                await _userManager.UpdateAsync(user);
+            }
+
+        }
+
 
         #endregion
 

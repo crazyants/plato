@@ -116,7 +116,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<bool> DeleteUserRole(int userId, int roleId)
         {
-            var success = await _userRolesRepository.DeletetUserRole(userId, roleId);
+            var success = await _userRolesRepository.DeleteUserRole(userId, roleId);
             if (success)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -129,7 +129,7 @@ namespace Plato.Internal.Stores.Users
         
         public async Task<bool> DeleteUserRolesAsync(int userId)
         {
-            var success = await _userRolesRepository.DeletetUserRolesAsync(userId);
+            var success = await _userRolesRepository.DeleteUserRolesAsync(userId);
             if (success)
             {
                 _cacheManager.CancelTokens(this.GetType());

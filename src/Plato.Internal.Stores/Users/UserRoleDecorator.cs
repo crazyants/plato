@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
@@ -24,16 +25,53 @@ namespace Plato.Internal.Stores.Users
             _userRoleStore = userRoleStore;
         }
 
-        public Task<IEnumerable<User>> DecorateAsync(IEnumerable<User> users)
+        public async Task<IEnumerable<User>> DecorateAsync(IEnumerable<User> users)
         {
 
-            throw new NotImplementedException();
+            // Get all user data matching supplied users
+            var roles = await _userRoleStore.QueryAsync()
+                .Select<UserRoleQueryParams>(q =>
+                {
+                    q.UserId.IsIn(users.Select(u => u.Id).ToArray());
+                }).ToList();
+
+            if (users == null || roles?.Data == null)
+            {
+                return null;
+            }
+
+            var output = users.ToList();
+            foreach (var user in output)
+            {
+                user.UserRoles = roles.Data
+                    .Where(ur => ur.UserId == user.Id)
+                    .Select(ur => ur.Role)
+                    .ToList();
+                user.RoleNames = user.UserRoles.Select(r => r.Name).ToList();
+            }
+
+            return output;
 
         }
 
-        public Task<User> DecorateAsync(User user)
+        public async Task<User> DecorateAsync(User user)
         {
-            throw new NotImplementedException();
+            // Get all user data matching supplied users
+            var roles = await _userRoleStore.QueryAsync()
+                .Select<UserRoleQueryParams>(q => { q.UserId.Equals(user.Id); })
+                .ToList();
+
+            if (user == null || roles?.Data == null)
+            {
+                return null;
+            }
+            
+            user.UserRoles = roles.Data.Select(ur => ur.Role).ToList();
+            user.RoleNames = user.UserRoles.Select(r => r.Name).ToList();
+            
+            return user;
+
         }
+        
     }
 }

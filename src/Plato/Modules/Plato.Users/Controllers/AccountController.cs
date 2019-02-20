@@ -41,6 +41,8 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<UserLogin> _loginViewProvider;
         private readonly IViewProviderManager<UserRegistration> _registerViewProvider;
         private readonly IAlerter _alerter;
+        private readonly IUserRoleDecorator _userRoleDecorator;
+
 
         public IHtmlLocalizer T { get; }
 
@@ -58,7 +60,7 @@ namespace Plato.Users.Controllers
             IBreadCrumbManager breadCrumbManager, 
             IViewProviderManager<UserLogin> loginViewProvider,
             IViewProviderManager<UserRegistration> registerViewProvider,
-            IAlerter alerter, IUserEmails userEmails)
+            IAlerter alerter, IUserEmails userEmails, IUserRoleDecorator userRoleDecorator)
         {
             _userManager = userManager;
             _signInManager = signInManage;
@@ -71,6 +73,7 @@ namespace Plato.Users.Controllers
             _registerViewProvider = registerViewProvider;
             _alerter = alerter;
             _userEmails = userEmails;
+            _userRoleDecorator = userRoleDecorator;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -89,7 +92,28 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
-            await CreateSampleUsers();
+
+            var users = await _platoUserStore.QueryAsync()
+                .Select<UserQueryParams>(q =>
+                {
+                    q.RoleName.Equals(DefaultRoles.Administrator);
+                })
+                .ToList();
+
+            if (users?.Data != null)
+            {
+                var users2 = await _userRoleDecorator.DecorateAsync(users.Data);
+
+                var sb = new StringBuilder();
+                foreach (var user in users2)
+                {
+                    sb.Append(user.DisplayName + String.Join(",", user.RoleNames));
+                }
+
+                ViewData["users"] = sb.ToString();
+            }
+
+            //await CreateSampleUsers();
 
             // ----------------------------------------------------------------
 

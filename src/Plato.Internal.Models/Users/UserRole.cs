@@ -3,12 +3,15 @@ using System.Data;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Models.Users
 {
     public class UserRole : IdentityUserRole<int>, IModel<UserRole>
     {
         public int Id { get; set; }
+
+        public Role Role { get; private set; }
 
         public void PopulateModel(IDataReader dr)
         {
@@ -21,6 +24,11 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("RoleId"))
                 RoleId = Convert.ToInt32(dr["RoleId"]);
+
+            if (RoleId > 0)
+            {
+                Role = new Role(dr);
+            }
 
         }
 

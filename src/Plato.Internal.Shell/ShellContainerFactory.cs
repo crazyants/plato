@@ -51,7 +51,7 @@ namespace Plato.Internal.Shell
                 options.DatabaseProvider = settings.DatabaseProvider;
                 options.TablePrefix = settings.TablePrefix;
             });
-
+            
             // Add core tennet services
             AddCoreServices(tenantServiceCollection);
             

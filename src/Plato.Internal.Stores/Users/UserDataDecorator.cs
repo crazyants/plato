@@ -46,7 +46,7 @@ namespace Plato.Internal.Stores.Users
             }
 
             // Merge data into users
-            return await MergeUserData(users.ToList(), results.Data);
+            return await MergeData(users.ToList(), results.Data);
         }
         
         public async Task<User> DecorateAsync(User user)
@@ -76,7 +76,7 @@ namespace Plato.Internal.Stores.Users
 
         }
   
-        async Task<IList<User>> MergeUserData(IList<User> users, IList<UserData> data)
+        async Task<IList<User>> MergeData(IList<User> users, IList<UserData> data)
         {
 
             if (users == null || data == null)

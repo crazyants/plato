@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Locales;
@@ -12,6 +11,14 @@ namespace Plato.Internal.Localization.Extensions
 
         public static IServiceCollection AddPlatoLocalization(this IServiceCollection services)
         {
+            
+            // Configure current culture
+            services.Configure<LocaleOptions>(options =>
+            {
+                
+                options.WatchForChanges = false;
+                options.Culture = "en-US";
+            });
 
             // Available time zones provider
             services.AddSingleton<ITimeZoneProvider, TimeZoneProvider>();

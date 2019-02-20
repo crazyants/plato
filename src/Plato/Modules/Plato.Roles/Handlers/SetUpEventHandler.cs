@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
+using Plato.Internal.Models.Roles;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Roles.Handlers
@@ -105,13 +108,19 @@ namespace Plato.Roles.Handlers
         
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly IDefaultRolesManager _defaultRolesManager;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
 
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
-            IDefaultRolesManager defaultRolesManager)
+            IDefaultRolesManager defaultRolesManager,
+            UserManager<User> userManager, 
+            RoleManager<Role> roleManager)
         {
             _schemaBuilder = schemaBuilder;
             _defaultRolesManager = defaultRolesManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         #region "Implementation"
@@ -145,6 +154,9 @@ namespace Plato.Roles.Handlers
             
             // Install default roles & permissions on first set-up
             await _defaultRolesManager.InstallDefaultRolesAsync();
+
+            // Configure administrator on first set-up
+            //await ConfigureSuperUser(context, reportError);
             
         }
         
@@ -250,6 +262,24 @@ namespace Plato.Roles.Handlers
                             DbType = DbType.Int32
                         }))
 
+                .CreateProcedure(new SchemaProcedure("SelectUserRolesPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_userRoles)
+                    .WithParameters(new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "RoleName",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }))
+
                 .CreateProcedure(
                     new SchemaProcedure("DeleteUserRolesByUserId", StoredProcedureType.DeleteByKey)
                         .ForTable(_userRoles)
@@ -258,6 +288,7 @@ namespace Plato.Roles.Handlers
                             Name = "UserId",
                             DbType = DbType.Int32
                         }))
+
                 .CreateProcedure(
                     new SchemaProcedure("DeleteUserRoleByUserIdAndRoleId", StoredProcedureType.DeleteByKey)
                         .ForTable(_userRoles)
@@ -277,7 +308,36 @@ namespace Plato.Roles.Handlers
 
         }
 
+        async Task ConfigureSuperUser(SetUpContext context, Action<string, string> reportError)
+        {
+
+            // Get newly installed administrator role
+            var role = await _roleManager.FindByNameAsync(DefaultRoles.Administrator);
+
+            // Get newly created administrator user
+            var user = await _userManager.FindByNameAsync(context.AdminUsername);
+
+            // Add our administrator user to the administrator role
+            var dirty = false;
+            if (role != null && user != null)
+            {
+                if (!await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    await _userManager.AddToRoleAsync(user, role.Name);
+                    dirty = true;
+                }
+
+            }
+
+            if (dirty)
+            {
+                await _userManager.UpdateAsync(user);
+            }
+
+        }
+
         #endregion
 
     }
+
 }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
@@ -11,6 +9,7 @@ using Plato.Internal.Repositories.Roles;
 
 namespace Plato.Internal.Repositories.Users
 {
+
     public class UserRolesRepository : IUserRolesRepository<UserRole>
     {
         #region "Constructor"
@@ -147,7 +146,7 @@ namespace Plato.Internal.Repositories.Users
             return userRoles;
         }
         
-        public async Task<bool> DeletetUserRolesAsync(int userId)
+        public async Task<bool> DeleteUserRolesAsync(int userId)
         {
             bool success;
             using (var context = _dbContext)
@@ -159,7 +158,7 @@ namespace Plato.Internal.Repositories.Users
             return success;
         }
         
-        public async Task<bool> DeletetUserRole(int userId, int roleId)
+        public async Task<bool> DeleteUserRole(int userId, int roleId)
         {
 
             var success = 0;
@@ -176,17 +175,36 @@ namespace Plato.Internal.Repositories.Users
 
         }
         
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        public async Task<IPagedResults<UserRole>> SelectAsync(params object[] inputParams)
         {
-            throw new NotImplementedException();
+            PagedResults<UserRole> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUserRolesPaged",
+                    inputParams);
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<UserRole>();
+                    while (await reader.ReadAsync())
+                    {
+                        var userRole = new UserRole();
+                        userRole.PopulateModel(reader);
+                        output.Data.Add(userRole);
+                    }
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+                }
+            }
+
+            return output;
+
         }
-
-        public Task<IPagedResults<UserRole>> SelectAsync(params object[] inputParams)
-        {
-            throw new NotImplementedException();
-        }
-
-
+        
         #endregion
 
         #region "Private Methods"
@@ -207,8 +225,9 @@ namespace Plato.Internal.Repositories.Users
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
         }
-
-
+        
         #endregion
+
     }
+
 }

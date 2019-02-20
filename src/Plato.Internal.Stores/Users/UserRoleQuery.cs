@@ -42,7 +42,8 @@ namespace Plato.Internal.Stores.Users
                 PageSize,
                 populateSql,
                 countSql,
-                Params.Key.Value
+                Params.Keywords.Value,
+                Params.RoleName.Value
             );
 
             return data;
@@ -59,7 +60,8 @@ namespace Plato.Internal.Stores.Users
 
         private WhereInt _id;
         private WhereInt _userId;
-        private WhereString _key;
+        private WhereString _keywords;
+        private WhereString _roleName;
 
         public WhereInt Id
         {
@@ -73,11 +75,18 @@ namespace Plato.Internal.Stores.Users
             set => _userId = value;
         }
 
-        public WhereString Key
+        public WhereString Keywords
         {
-            get => _key ?? (_key = new WhereString());
-            set => _key = value;
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
         }
+
+        public WhereString RoleName
+        {
+            get => _roleName ?? (_roleName = new WhereString());
+            set => _roleName = value;
+        }
+
 
     }
 
@@ -89,6 +98,7 @@ namespace Plato.Internal.Stores.Users
     {
         #region "Constructor"
 
+        private readonly string _rolesTableName;
         private readonly string _userRolesTableName;
 
         private readonly UserRoleQuery _query;
@@ -96,6 +106,7 @@ namespace Plato.Internal.Stores.Users
         public UserRoleQueryBuilder(UserRoleQuery query)
         {
             _query = query;
+            _rolesTableName = GetTableNameWithPrefix("Roles");
             _userRolesTableName = GetTableNameWithPrefix("UserRoles");
         }
 
@@ -139,14 +150,18 @@ namespace Plato.Internal.Stores.Users
 
         string BuildPopulateSelect()
         {
-            return "*";
+            return "ur.*, r.*";
 
         }
 
         string BuildTables()
         {
             var sb = new StringBuilder();
-            sb.Append(_userRolesTableName).Append(" ur ");
+            sb.Append(_userRolesTableName)
+                .Append(" ur INNER JOIN ")
+                .Append(_rolesTableName)
+                .Append(" r ON ur.RoleId = r.Id")
+                .Append("");
             return sb.ToString();
         }
 
@@ -166,7 +181,7 @@ namespace Plato.Internal.Stores.Users
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("d.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("ur.Id"));
             }
 
             // UserId
@@ -174,17 +189,9 @@ namespace Plato.Internal.Stores.Users
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.UserId.Operator);
-                sb.Append(_query.Params.UserId.ToSqlString("UserId"));
+                sb.Append(_query.Params.UserId.ToSqlString("ur.UserId"));
             }
-
-            // Keywords
-            if (!string.IsNullOrEmpty(_query.Params.Key.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Key.Operator);
-                sb.Append(_query.Params.Key.ToSqlString("Key", "Key"));
-            }
-
+            
 
             return sb.ToString();
 

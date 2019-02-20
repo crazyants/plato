@@ -12,8 +12,8 @@ namespace Plato.Internal.Repositories.Users
 
         Task<IEnumerable<T>> InsertUserRolesAsync(int userId, IEnumerable<int> roleIds);
 
-        Task<bool> DeletetUserRolesAsync(int userId);
+        Task<bool> DeleteUserRolesAsync(int userId);
 
-        Task<bool> DeletetUserRole(int userId, int roleId);
+        Task<bool> DeleteUserRole(int userId, int roleId);
     }
 }
