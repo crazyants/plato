@@ -17,7 +17,6 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Models.Badges;
-using Plato.Notifications.Services;
 using Plato.Users.Badges.Handlers;
 using Plato.Users.Badges.Tasks;
 using Plato.Users.Badges.ViewProviders;
