@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Email.Stores;
 using Plato.Follows.Models;
 using Plato.Follows.Repositories;
 using Plato.Internal.Cache.Abstractions;

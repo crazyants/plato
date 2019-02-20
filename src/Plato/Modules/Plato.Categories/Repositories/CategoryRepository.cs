@@ -223,17 +223,6 @@ namespace Plato.Categories.Repositories
             var categoryId = 0;
             using (var context = _dbContext)
             {
-
-                context.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            id == 0
-                                ? $"Insert for category with name '{name}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for category with Id {id} failed with the following error {args.Exception.Message}");
-                    throw args.Exception;
-                };
-
                 categoryId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategory",

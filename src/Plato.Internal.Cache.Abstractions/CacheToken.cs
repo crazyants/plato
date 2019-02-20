@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Microsoft.Extensions.Primitives;
 
 namespace Plato.Internal.Cache.Abstractions
 {
@@ -16,7 +15,7 @@ namespace Plato.Internal.Cache.Abstractions
         {
 
             // This is not perfect but avoids the overhead of a real cryptographic hash
-            // Get hashcodes for primative types as opposed to varyBy object array complex type
+            // Get hash codes for primitive types as opposed to varyBy object array type
             var sb = new StringBuilder();
             if (varyBy != null)
             {
@@ -34,7 +33,7 @@ namespace Plato.Internal.Cache.Abstractions
             _typeHashCode = _type.GetHashCode();
         }
 
-        public static bool operator ==(CacheToken a, CacheToken b)
+        public static bool operator == (CacheToken a, CacheToken b)
         {
             var areEqual = ReferenceEquals(a, b);
             if ((object) a != null && (object) b != null)
@@ -45,7 +44,7 @@ namespace Plato.Internal.Cache.Abstractions
             return areEqual;
         }
 
-        public static bool operator !=(CacheToken a, CacheToken b) => !(a == b);
+        public static bool operator != (CacheToken a, CacheToken b) => !(a == b);
 
         public bool Equals(CacheToken other)
         {
@@ -76,8 +75,7 @@ namespace Plato.Internal.Cache.Abstractions
         {
             return $"{_type}_{GetHashCode()}";
         }
-
-  
+        
     }
 
 }

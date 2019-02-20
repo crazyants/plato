@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Media.Repositories;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
@@ -11,19 +10,20 @@ namespace Plato.Media.Stores
 
     public class MediaStore : IMediaStore<Models.Media>
     {
+        private const string ById = "ById";
 
-        private readonly IMediaRepository<Models.Media> _emailRepository;
+        private readonly IMediaRepository<Models.Media> _mediaRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<MediaStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public MediaStore(
-            IMediaRepository<Models.Media> emailRepository, 
+            IMediaRepository<Models.Media> mediaRepository, 
             ICacheManager cacheManager,
             ILogger<MediaStore> logger,
             IDbQueryConfiguration dbQuery)
         {
-            _emailRepository = emailRepository;
+            _mediaRepository = mediaRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
@@ -33,7 +33,7 @@ namespace Plato.Media.Stores
 
         public async Task<Models.Media> CreateAsync(Models.Media model)
         {
-            var result = await _emailRepository.InsertUpdateAsync(model);
+            var result = await _mediaRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -45,7 +45,7 @@ namespace Plato.Media.Stores
 
         public async Task<Models.Media> UpdateAsync(Models.Media model)
         {
-            var result = await _emailRepository.InsertUpdateAsync(model);
+            var result = await _mediaRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -58,12 +58,12 @@ namespace Plato.Media.Stores
         public async Task<bool> DeleteAsync(Models.Media model)
         {
 
-            var success = await _emailRepository.DeleteAsync(model.Id);
+            var success = await _mediaRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Deleted email '{0}' with id {1}",
+                    _logger.LogInformation("Deleted media '{0}' with id {1}",
                         model.Name, model.Id);
                 }
                 _cacheManager.CancelTokens(this.GetType());
@@ -75,7 +75,9 @@ namespace Plato.Media.Stores
 
         public async Task<Models.Media> GetByIdAsync(int id)
         {
-            return await _emailRepository.SelectByIdAsync(id);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
+            return await _cacheManager.GetOrCreateAsync(token,
+                async (cacheEntry) => await _mediaRepository.SelectByIdAsync(id));
         }
 
         public IQuery<Models.Media> QueryAsync()
@@ -96,7 +98,7 @@ namespace Plato.Media.Stores
                         token.ToString(), args.Select(a => a));
                 }
 
-                return await _emailRepository.SelectAsync(args);
+                return await _mediaRepository.SelectAsync(args);
               
             });
         }
@@ -104,4 +106,5 @@ namespace Plato.Media.Stores
         #endregion
         
     }
+
 }

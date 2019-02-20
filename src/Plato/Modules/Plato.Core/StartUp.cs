@@ -30,9 +30,6 @@ namespace Plato.Core
 
             // Set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-
-            // Feature installation event handler
-            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
             
             // Configure current culture
             services.Configure<LocaleOptions>(options =>
