@@ -26,11 +26,15 @@ namespace Plato.Notifications.Services
             // Build a list of all available default notification types
             // These should be enabled by default unless the user has explicitly disabled it
             var defaultUserNotificationTypes = new List<UserNotificationType>();
-            foreach (var notificationType in _notificationTypeManager.GetDefaultNotificationTypes(user.RoleNames))
+            var defaultNotificationTypes = _notificationTypeManager.GetDefaultNotificationTypes(user.RoleNames);
+            if (defaultNotificationTypes != null)
             {
-                defaultUserNotificationTypes.Add(new UserNotificationType(notificationType.Name));
+                foreach (var defaultNotificationType in defaultNotificationTypes)
+                {
+                    defaultUserNotificationTypes.Add(new UserNotificationType(defaultNotificationType.Name));
+                }
             }
-            
+
             // Get all saved notification types for the given user
             var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();
             

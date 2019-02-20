@@ -10,7 +10,7 @@ namespace Plato.Users.StopForumSpam.NotificationTypes
     {
 
         public static readonly WebNotification UserSpam =
-            new WebNotification("UserSpamWeb", "User SPAM",
+            new WebNotification("UserSpamWeb", "Spam Users",
                 "Show me a web notification for each user detected as SPAM.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

@@ -13,7 +13,7 @@ using Plato.Discuss.StopForumSpam.NotificationTypes;
 
 namespace Plato.Discuss.StopForumSpam.Notifications
 {
-    public class NewSpamWeb : INotificationProvider<Topic>
+    public class ReplySpamWeb : INotificationProvider<Reply>
     {
 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -23,7 +23,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
 
         public IStringLocalizer S { get; }
         
-        public NewSpamWeb(
+        public ReplySpamWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             ICapturedRouterUrlHelper urlHelper,
@@ -36,7 +36,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             S = stringLocalizer;
         }
 
-        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
+        public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
         {
             // Validate
             if (context == null)
@@ -60,22 +60,22 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             }
 
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(WebNotifications.TopicSpam.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(WebNotifications.ReplySpam.Name, StringComparison.Ordinal))
             {
                 return null;
             }
             
             // Create result
-            var result = new CommandResult<Topic>();
+            var result = new CommandResult<Reply>();
             
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
-                ["Id"] = context.Model.Id,
-                ["Alias"] = context.Model.Alias
+                ["Action"] = "Jump",
+                ["Id"] = context.Model.EntityId,
+                ["ReplyId"] = context.Model.Id
             });
 
             //// Build notification
@@ -84,7 +84,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = S["Possible SPAM"].Value,
-                Message = S["A topic has been detected as SPAM!"],
+                Message = S["A reply has been detected as SPAM!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow

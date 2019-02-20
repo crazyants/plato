@@ -34,13 +34,17 @@ namespace Plato.Discuss.StopForumSpam
 
             // Register spam operator manager for topics
             services.AddScoped<ISpamOperatorManager<Topic>, SpamOperatorManager<Topic>>();
+            services.AddScoped<ISpamOperatorManager<Reply>, SpamOperatorManager<Reply>>();
 
             // Register spam operators
             services.AddScoped<ISpamOperatorProvider<Topic>, TopicOperator>();
+            services.AddScoped<ISpamOperatorProvider<Reply>, ReplyOperator>();
 
             // Register view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
+            services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
+            services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
             
             // Notification types
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();
@@ -48,11 +52,14 @@ namespace Plato.Discuss.StopForumSpam
 
             // Notification manager
             services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+            services.AddScoped<INotificationManager<Reply>, NotificationManager<Reply>>();
 
             // Notification providers
-            services.AddScoped<INotificationProvider<Topic>, NewSpamWeb>();
-            services.AddScoped<INotificationProvider<Topic>, NewSpamEmail>();
-            
+            services.AddScoped<INotificationProvider<Topic>, TopicSpamWeb>();
+            services.AddScoped<INotificationProvider<Topic>, TopicSpamEmail>();
+            services.AddScoped<INotificationProvider<Reply>, ReplySpamWeb>();
+            services.AddScoped<INotificationProvider<Reply>, ReplySpamEmail>();
+
         }
 
         public override void Configure(

@@ -10,8 +10,13 @@ namespace Plato.Discuss.StopForumSpam.NotificationTypes
     {
 
         public static readonly EmailNotification TopicSpam =
-            new EmailNotification("TopicSpamEmail", "Topic SPAM",
+            new EmailNotification("TopicSpamEmail", "Spam Topics",
                 "Send me an email notification for each topic detected as SPAM.");
+
+        public static readonly EmailNotification ReplySpam =
+            new EmailNotification("ReplySpamEmail", "Spam Replies",
+                "Send me an email notification for each reply detected as SPAM.");
+
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
@@ -22,7 +27,8 @@ namespace Plato.Discuss.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        TopicSpam
+                        TopicSpam,
+                        ReplySpam
                     }
                 },
                 new DefaultNotificationTypes
@@ -30,7 +36,8 @@ namespace Plato.Discuss.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        TopicSpam
+                        TopicSpam,
+                        ReplySpam
                     }
                 }
 
@@ -46,7 +53,8 @@ namespace Plato.Discuss.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        TopicSpam
+                        TopicSpam,
+                        ReplySpam
                     }
                 },
                 new DefaultNotificationTypes
@@ -54,7 +62,8 @@ namespace Plato.Discuss.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        TopicSpam
+                        TopicSpam,
+                        ReplySpam
                     }
                 }
 

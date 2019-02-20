@@ -54,7 +54,7 @@ namespace Plato.Discuss.Services
                     if (!await _authorizationService.AuthorizeAsync(principal,
                         Permissions.ViewSpamReplies))
                     {
-                        q.HidePrivate.True();
+                        q.HideSpam.True();
                     }
 
 
@@ -62,7 +62,7 @@ namespace Plato.Discuss.Services
                     if (!await _authorizationService.AuthorizeAsync(principal,
                         Permissions.ViewDeletedReplies))
                     {
-                        q.HidePrivate.True();
+                        q.HideDeleted.True();
                     }
                     
 

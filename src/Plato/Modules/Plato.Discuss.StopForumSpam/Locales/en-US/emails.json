@@ -8,6 +8,15 @@
       "From": "",
       "Subject": "[SiteName] - New User Spam",
       "Message": "Hi {0},\n\nThe topic \"{1}\" has been detected as SPAM. You can review this user at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
+    },
+    {
+      "Id": "NewReplySpam",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New User Spam",
+      "Message": "Hi {0},\n\nA reply to the topic \"{1}\" has been detected as SPAM. You can review this user at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }
