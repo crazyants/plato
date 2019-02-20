@@ -370,7 +370,7 @@ namespace Plato.Internal.Stores.Users
             var role = await _platoRoleStore.GetByNameAsync(roleName);
             if (role != null)
             {
-                await _platoUserRoleStore.DeletetUserRole(user.Id, role.Id);
+                await _platoUserRoleStore.DeleteUserRole(user.Id, role.Id);
             }
                
         }

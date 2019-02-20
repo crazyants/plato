@@ -33,7 +33,7 @@ namespace Plato.Internal.Stores.Users
         private readonly ILogger<PlatoUserStore> _logger;
         private readonly IAliasCreator _aliasCreator;
         private readonly IKeyGenerator _keyGenerator;
-        private readonly IUserDataMerger _userDataMerger;
+        private readonly IUserDataDecorator _userDataDecorator;
 
         #endregion
 
@@ -47,14 +47,14 @@ namespace Plato.Internal.Stores.Users
             IUserDataStore<UserData> userDataStore,
             IAliasCreator aliasCreator,
             IKeyGenerator keyGenerator,
-            IUserDataMerger userDataMerger)
+            IUserDataDecorator userDataDecorator)
         {
             _userRepository = userRepository;
             _cacheManager = cacheManager;
             _userDataStore = userDataStore;
             _aliasCreator = aliasCreator;
             _keyGenerator = keyGenerator;
-            _userDataMerger = userDataMerger;
+            _userDataDecorator = userDataDecorator;
             _dbQuery = dbQuery;
             _logger = logger;
         }
@@ -156,7 +156,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByIdAsync(id);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
         }
 
@@ -166,7 +166,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByUserNameNormalizedAsync(userNameNormalized);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
         }
 
@@ -182,7 +182,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByUserNameAsync(userName);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
 
         }
@@ -193,7 +193,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByEmailAsync(email);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
         }
 
@@ -203,7 +203,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByEmailNormalizedAsync(emailNormalized);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
         }
 
@@ -213,7 +213,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByResetTokenAsync(resetToken);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
         }
 
@@ -223,7 +223,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByConfirmationTokenAsync(confirmationToken);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
         }
 
@@ -233,7 +233,7 @@ namespace Plato.Internal.Stores.Users
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByApiKeyAsync(apiKey);
-                return await _userDataMerger.MergeAsync(user);
+                return await _userDataDecorator.DecorateAsync(user);
             });
         }
         
@@ -258,7 +258,8 @@ namespace Plato.Internal.Stores.Users
                 var results = await _userRepository.SelectAsync(args);
                 if (results != null)
                 {
-                    results.Data = await _userDataMerger.MergeAsync(results.Data);
+                    var users = await _userDataDecorator.DecorateAsync(results.Data);
+                    results.Data = users.ToList();
                 }
                 return results;
             });

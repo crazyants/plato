@@ -11,13 +11,13 @@ using Plato.Internal.Stores.Abstractions.Users;
 namespace Plato.Internal.Stores.Users
 {
     
-    public class UserDataMerger : IUserDataMerger
+    public class UserDataDecorator : IUserDataDecorator
     {
 
         private readonly IUserDataStore<UserData> _userDataStore;
         private readonly ITypedModuleProvider _typedModuleProvider;
 
-        public UserDataMerger(
+        public UserDataDecorator(
             IUserDataStore<UserData> userDataStore,
             ITypedModuleProvider typedModuleProvider)
         {
@@ -25,14 +25,14 @@ namespace Plato.Internal.Stores.Users
             _typedModuleProvider = typedModuleProvider;
         }
 
-        public  async Task<IList<User>> MergeAsync(IList<User> users)
+        public  async Task<IEnumerable<User>> DecorateAsync(IEnumerable<User> users)
         {
             if (users == null)
             {
                 return null;
             }
 
-            // Get all user data matching supplied user ids
+            // Get all user data matching supplied users
             var results = await _userDataStore.QueryAsync()
                 .Select<UserDataQueryParams>(q =>
                 {
@@ -46,10 +46,10 @@ namespace Plato.Internal.Stores.Users
             }
 
             // Merge data into users
-            return await MergeUserData(users, results.Data);
+            return await MergeUserData(users.ToList(), results.Data);
         }
         
-        public async Task<User> MergeAsync(User user)
+        public async Task<User> DecorateAsync(User user)
         {
 
             if (user == null)
@@ -75,9 +75,7 @@ namespace Plato.Internal.Stores.Users
             return user;
 
         }
-        
-        // ------------------
-
+  
         async Task<IList<User>> MergeUserData(IList<User> users, IList<UserData> data)
         {
 
@@ -89,7 +87,7 @@ namespace Plato.Internal.Stores.Users
             for (var i = 0; i < users.Count; i++)
             {
                 users[i].Data = data.Where(d => d.UserId == users[i].Id).ToList();
-                users[i] = await MergeAsync(users[i]);
+                users[i] = await DecorateAsync(users[i]);
             }
 
             return users;

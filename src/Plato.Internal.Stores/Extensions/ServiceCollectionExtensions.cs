@@ -55,7 +55,10 @@ namespace Plato.Internal.Stores.Extensions
             services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();
             services.AddScoped<IUserDataItemStore<UserData>, UserDataItemStore>();
             services.AddScoped<IUserDataStore<UserData>, UserDataStore>();
-            services.AddScoped<IUserDataMerger, UserDataMerger>();
+
+            // Decorators
+            services.AddScoped<IUserDataDecorator, UserDataDecorator>();
+            services.AddScoped<IUserRoleDecorator, UserRoleDecorator>();
 
             // User Reputation
             services.AddScoped<IUserReputationsStore<UserReputation>, UserReputationsStore>();

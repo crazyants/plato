@@ -25,7 +25,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
-        private readonly IUserDataMerger _userDataMerger;
+        private readonly IUserDataDecorator _userDataDecorator;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
@@ -34,7 +34,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             IDeferredTaskManager deferredTaskManager,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
-            IUserDataMerger userDataMerger,
+            IUserDataDecorator userDataDecorator,
             IEntityLabelStore<EntityLabel> entityLabelStore,
             IEntityStore<TEntity> entityStore,
             IUserNotificationTypeDefaults userNotificationTypeDefaults)
@@ -43,7 +43,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
             _followStore = followStore;
-            _userDataMerger = userDataMerger;
+            _userDataDecorator = userDataDecorator;
             _entityLabelStore = entityLabelStore;
             _entityStore = entityStore;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -150,7 +150,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
 
                 // Merge user data so we know the opt-in status for notifications
                 // This is critical otherwise NotificationEnabled will always return false
-                var mergedUsers = await _userDataMerger.MergeAsync(users);
+                var mergedUsers = await _userDataDecorator.DecorateAsync(users);
 
                 // Send notifications
                 foreach (var user in mergedUsers)

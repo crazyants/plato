@@ -19,27 +19,30 @@ namespace Plato.Internal.Stores.Users
         private readonly IUserRolesRepository<UserRole> _userRolesRepository;
         private readonly ILogger<PlatoUserRolesStore> _logger;
         private readonly ICacheManager _cacheManager;
+        private readonly IDbQueryConfiguration _dbQuery;
 
         public PlatoUserRolesStore(
             IPlatoRoleStore platoRoleStore,
             IUserRolesRepository<UserRole> userRolesRepository,
             ILogger<PlatoUserRolesStore> logger,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager, 
+            IDbQueryConfiguration dbQuery)
         {
             _platoRoleStore = platoRoleStore;
             _userRolesRepository = userRolesRepository;
             _logger = logger;
             _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
         }
 
-        public async Task<IEnumerable<UserRole>> AddtUserRolesAsync(int userId, IEnumerable<string> roleNames)
+        public async Task<IEnumerable<UserRole>> AddUserRolesAsync(int userId, IEnumerable<string> roleNames)
         {
             var result = await _userRolesRepository.InsertUserRolesAsync(userId, roleNames);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
                 // Expire GetRolesByUserIdAsync in PlatoRoleStore
-                _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userId);
+                _cacheManager.CancelTokens(typeof(PlatoRoleStore), PlatoRoleStore.UserId, userId);
             }
 
             return result;
@@ -53,7 +56,7 @@ namespace Plato.Internal.Stores.Users
             {
                 _cacheManager.CancelTokens(this.GetType());
                 // Expire GetRolesByUserIdAsync in PlatoRoleStore
-                _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userId);
+                _cacheManager.CancelTokens(typeof(PlatoRoleStore), PlatoRoleStore.UserId, userId);
             }
 
             return result;
@@ -68,7 +71,7 @@ namespace Plato.Internal.Stores.Users
             {
                 _cacheManager.CancelTokens(this.GetType());
                 // Expire GetRolesByUserIdAsync in PlatoRoleStore
-                _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userRole.UserId);
+                _cacheManager.CancelTokens(typeof(PlatoRoleStore), PlatoRoleStore.UserId, userRole.UserId);
             }
 
             return userRole;
@@ -82,7 +85,7 @@ namespace Plato.Internal.Stores.Users
             {
                 _cacheManager.CancelTokens(this.GetType());
                 // Expire GetRolesByUserIdAsync in PlatoRoleStore
-                _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userRole.UserId);
+                _cacheManager.CancelTokens(typeof(PlatoRoleStore), PlatoRoleStore.UserId, userRole.UserId);
             }
 
             return userRole;
@@ -105,33 +108,33 @@ namespace Plato.Internal.Stores.Users
             {
                 _cacheManager.CancelTokens(this.GetType());
                 // Expire GetRolesByUserIdAsync in PlatoRoleStore
-                _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userRole.UserId);
+                _cacheManager.CancelTokens(typeof(PlatoRoleStore), PlatoRoleStore.UserId, userRole.UserId);
             }
             return success;
 
         }
 
-        public async Task<bool> DeletetUserRole(int userId, int roleId)
+        public async Task<bool> DeleteUserRole(int userId, int roleId)
         {
             var success = await _userRolesRepository.DeletetUserRole(userId, roleId);
             if (success)
             {
                 _cacheManager.CancelTokens(this.GetType());
                 // Expire GetRolesByUserIdAsync in PlatoRoleStore
-                _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userId);
+                _cacheManager.CancelTokens(typeof(PlatoRoleStore), PlatoRoleStore.UserId, userId);
             }
 
             return success;
         }
         
-        public async Task<bool> DeletetUserRolesAsync(int userId)
+        public async Task<bool> DeleteUserRolesAsync(int userId)
         {
             var success = await _userRolesRepository.DeletetUserRolesAsync(userId);
             if (success)
             {
                 _cacheManager.CancelTokens(this.GetType());
                 // Expire GetRolesByUserIdAsync in PlatoRoleStore
-                _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userId);
+                _cacheManager.CancelTokens(typeof(PlatoRoleStore), PlatoRoleStore.UserId, userId);
             }
 
             return success;
@@ -152,14 +155,14 @@ namespace Plato.Internal.Stores.Users
         
         public IQuery<UserRole> QueryAsync()
         {
-            //var query = new EntityReplyQuery(this);
-            //return _dbQuery.ConfigureQuery<EntityReply>(query); ;
-            throw new NotImplementedException();
+            var query = new UserRoleQuery(this);
+            return _dbQuery.ConfigureQuery<UserRole>(query); ;
         }
         
-        public Task<IPagedResults<UserRole>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<UserRole>> SelectAsync(params object[] args)
         {
-            throw new NotImplementedException();
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRolesRepository.SelectAsync(args));
         }
 
         

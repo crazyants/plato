@@ -27,6 +27,12 @@ namespace Plato.Internal.Notifications
         public IEnumerable<INotificationType> GetNotificationTypes(IEnumerable<string> roleNames)
         {
 
+            if (roleNames == null)
+            {
+                throw new ArgumentNullException(nameof(roleNames));
+            }
+
+
             if (_notificationTypes == null)
             {
                 var notificationTypes = new List<DefaultNotificationTypes>();
@@ -63,6 +69,12 @@ namespace Plato.Internal.Notifications
         
         public IEnumerable<INotificationType> GetDefaultNotificationTypes(IEnumerable<string> roleNames)
         {
+
+            if (roleNames == null)
+            {
+                throw new ArgumentNullException(nameof(roleNames));
+            }
+
             if (_defaultNotificationTypes == null)
             {
                 var notificationTypes = new List<DefaultNotificationTypes>();
@@ -98,6 +110,12 @@ namespace Plato.Internal.Notifications
         
         public IDictionary<string, IEnumerable<INotificationType>> GetCategorizedNotificationTypes(IEnumerable<string> roleNames)
         {
+
+            if (roleNames == null)
+            {
+                throw new ArgumentNullException(nameof(roleNames));
+            }
+            
             var output = new Dictionary<string, IEnumerable<INotificationType>>();
             var notificationTypes = GetNotificationTypes(roleNames);
             foreach (var notificationType in notificationTypes)

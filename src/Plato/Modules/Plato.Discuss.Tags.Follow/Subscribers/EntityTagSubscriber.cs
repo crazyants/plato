@@ -24,7 +24,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
-        private readonly IUserDataMerger _userDataMerger;
+        private readonly IUserDataDecorator _userDataDecorator;
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
         public EntityTagSubscriber(
@@ -32,7 +32,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             IDeferredTaskManager deferredTaskManager,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
-            IUserDataMerger userDataMerger,
+            IUserDataDecorator userDataDecorator,
             IEntityStore<TEntity> entityStore, 
             IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
@@ -40,7 +40,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
             _followStore = followStore;
-            _userDataMerger = userDataMerger;
+            _userDataDecorator = userDataDecorator;
             _entityStore = entityStore;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
         }
@@ -146,7 +146,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
                 // Merge user data so we know the opt-in status for notifications
                 // This is critical otherwise NotificationEnabled will always return false
-                var mergedUsers = await _userDataMerger.MergeAsync(users);
+                var mergedUsers = await _userDataDecorator.DecorateAsync(users);
 
                 // Send notifications
                 foreach (var user in mergedUsers)

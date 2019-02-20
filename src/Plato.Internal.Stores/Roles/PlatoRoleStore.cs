@@ -13,7 +13,9 @@ namespace Plato.Internal.Stores.Roles
 {
     public class PlatoRoleStore : IPlatoRoleStore
     {
-  
+
+        public const string UserId = "ByUserId";
+
         #region "Constructor"
         
         private readonly IRoleRepository<Role> _roleRepository;
@@ -130,7 +132,7 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<IList<Role>> GetRolesByUserIdAsync(int userId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), "ByUser", userId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), UserId, userId);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _roleRepository.SelectByUserIdAsync(userId));
         }
@@ -155,7 +157,7 @@ namespace Plato.Internal.Stores.Roles
 
         void ClearCache(User user)
         {
-            _cacheManager.CancelTokens(this.GetType(), "ByUser", user.Id);
+            _cacheManager.CancelTokens(this.GetType(), UserId, user.Id);
         }
         
         void ClearCache(Role role)
