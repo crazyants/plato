@@ -67,7 +67,7 @@ namespace Plato.Internal.Localization.Locales
 
                         if (_logger.IsEnabled(LogLevel.Information))
                         {
-                            _logger.LogInformation("Successfully watchjing for changes to locale directory at '{0}'.", watcher.Path);
+                            _logger.LogInformation("Successfully watching for changes to locale directory at '{0}'.", watcher.Path);
                         }
 
                     }

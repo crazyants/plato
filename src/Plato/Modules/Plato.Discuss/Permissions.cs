@@ -11,8 +11,7 @@ namespace Plato.Discuss
 
         public static readonly Permission PostReplies =
             new Permission("PostReplies", "Post Replies");
-
-
+        
         public static readonly Permission EditOwnTopics =
             new Permission("EditOwnTopics", "Edit own topics");
 
@@ -73,8 +72,7 @@ namespace Plato.Discuss
 
         public static readonly Permission ViewDeletedReplies =
             new Permission("ViewDeletedReplies", "View deleted replies");
-
-
+        
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
@@ -185,7 +183,6 @@ namespace Plato.Discuss
                     }
                 }
             };
-
         }
 
     }

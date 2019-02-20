@@ -16,7 +16,7 @@ namespace Plato.Discuss.StopForumSpam
             NotifyAdmin = true,
             NotifyStaff = true,
             CustomMessage = true,
-            Message = "Sorry but we've identified your details have been used by known spammers. Your account has been temporarily locked. You can login and continue to participate however your content won't appear until your account has been manually approved by an administrator or staff member."
+            Message = "Sorry but we've identified your details have been used by known spammers. You cannot post at this time. Please try updating your email address or username. If the problem persists please contact us and request we verify your account."
         };
 
         public static readonly SpamOperation Reply = new SpamOperation(
@@ -27,7 +27,7 @@ namespace Plato.Discuss.StopForumSpam
             NotifyAdmin = true,
             NotifyStaff = true,
             CustomMessage = true,
-            Message = "Sorry but we've identified your details have been used by known spammers. Your account has been temporarily locked. You will receive an email notification once an administrator or staff member has manually reviewed and white listed your account."
+            Message = "Sorry but we've identified your details have been used by known spammers. You cannot post at this time. Please try updating your email address or username. If the problem persists please contact us and request we verify your account."
         };
 
         public IEnumerable<SpamOperation> GetSpamOperations()

@@ -122,7 +122,7 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Discuss"]);
             });
 
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new TopicIndexOptions();
@@ -240,19 +240,23 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> CreatePost(EditTopicViewModel model)
         {
 
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
             // Validate model state within all view providers
             if (await _topicViewProvider.IsModelStateValid(new Topic()
             {
                 Title = model.Title,
-                Message = model.Message
+                Message = model.Message,
+                CreatedUserId = user?.Id ?? 0,
+                CreatedDate = DateTimeOffset.UtcNow
             }, this))
             {
 
                 // Get composed type from all involved view providers
                 var topic = await _topicViewProvider.GetComposedType(this);
-
+                
                 // Populated created by
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
                 topic.CreatedUserId = user?.Id ?? 0;
                 topic.CreatedDate = DateTimeOffset.UtcNow;
 
@@ -296,7 +300,7 @@ namespace Plato.Discuss.Controllers
             {
                 foreach (var error in modelState.Errors)
                 {
-                    _alerter.Danger(T[error.ErrorMessage]);
+                    // _alerter.Danger(T[error.ErrorMessage]);
                 }
             }
 

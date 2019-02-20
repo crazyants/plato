@@ -33,8 +33,14 @@ namespace Plato.Users.StopForumSpam.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
-            
-            // Build view model
+
+            // No need to perform spam checking when creating new users
+            if (user.Id == 0)
+            {
+                return default(IViewProviderResult);
+            }
+
+            // Build edit view model
             var viewModel = new StopForumSpamViewModel()
             {
                 Id = user.Id,

@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Users;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 using Plato.Discuss.Models;
+using Plato.Discuss.StopForumSpam.NotificationTypes;
 using Plato.Entities.Stores;
+using Plato.Internal.Models.Notifications;
+using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Extensions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss.StopForumSpam.SpamOperators
 {
@@ -16,15 +25,24 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
         private readonly ISpamChecker _spamChecker;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<Topic> _topicStore;
+        private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly INotificationManager<Topic> _notificationManager;
 
         public TopicOperator(
             ISpamChecker spamChecker,
             IPlatoUserStore<User> platoUserStore,
-            IEntityStore<Topic> topicStore)
+            IEntityStore<Topic> topicStore,
+            IDeferredTaskManager deferredTaskManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            INotificationManager<Topic> notificationManager)
         {
             _spamChecker = spamChecker;
             _platoUserStore = platoUserStore;
             _topicStore = topicStore;
+            _deferredTaskManager = deferredTaskManager;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _notificationManager = notificationManager;
         }
 
         public async Task<ISpamOperatorResult<Topic>> ValidateModelAsync(ISpamOperatorContext<Topic> context)
@@ -62,61 +80,173 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
 
         public async Task<ISpamOperatorResult<Topic>> UpdateModelAsync(ISpamOperatorContext<Topic> context)
         {
-            
+
+            // Perform validation
             var validation = await ValidateModelAsync(context);
 
+            // Create result
+            var result = new SpamOperatorResult<Topic>();
+            
             // Not an operator of interest
             if (validation == null)
             {
-                return null;
+                return result.Success(context.Model);
             }
 
             // If validation succeeded no need to perform further actions
             if (validation.Succeeded)
             {
+                return result.Success(context.Model);
+            }
+            
+            // Get topic author
+            var user = await _platoUserStore.GetByIdAsync(context.Model.CreatedUserId);
+            if (user == null)
+            {
                 return null;
             }
             
-            // Create result
-            var result = new SpamOperatorResult<Topic>();
-            
-            // Flag as SPAM?
+            // Flag user as SPAM?
             if (context.Operation.FlagAsSpam)
             {
-                context.Model.IsSpam = true;
+                var bot = await _platoUserStore.GetPlatoBotAsync();
+
+                // Mark user as SPAM
+                if (!user.IsSpam)
+                {
+                    user.IsSpam = true;
+                    user.IsSpamUpdatedUserId = bot?.Id ?? 0;
+                    user.IsSpamUpdatedDate = DateTimeOffset.UtcNow;
+                    await _platoUserStore.UpdateAsync(user);
+                }
+
+                // Mark topic as SPAM
+                if (!context.Model.IsSpam)
+                {
+                    context.Model.IsSpam = true;
+                    await _topicStore.UpdateAsync(context.Model);
+                }
+
             }
 
-            // Notify administrators of SPAM
-            if (context.Operation.NotifyAdmin)
+            // Defer notifications for execution after request completes
+            _deferredTaskManager.AddTask(async ctx =>
             {
-                NotifyAdmins();
-            }
+                await NotifyAsync(context);
+            });
 
-            // Notify staff of SPAM
-            if (context.Operation.NotifyStaff)
-            {
-                NotifyStaff();
-            }
-            
             // Return failed with our updated model and operation
             // This provides the calling code with the operation error message
             return result.Failed(context.Model, context.Operation);
-            
+
         }
 
-
-        void NotifyAdmins()
+        async Task NotifyAsync(ISpamOperatorContext<Topic> context)
         {
 
+            // Get users to notify
+            var users = await GetUsersAsync(context.Operation);
+
+            // No users to notify
+            if (users == null)
+            {
+                return;
+            }
+
+            // Get bot
+            var bot = await _platoUserStore.GetPlatoBotAsync();
+
+            // Send notifications
+            foreach (var user in users)
+            {
+
+                // Web notification
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.TopicSpam))
+                {
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.TopicSpam)
+                    {
+                        To = user,
+                        From = bot
+                    }, context.Model);
+                }
+
+                // Email notification
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.TopicSpam))
+                {
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.TopicSpam)
+                    {
+                        To = user
+                    }, context.Model);
+                }
+
+            }
+
         }
 
-        void NotifyStaff()
+        async Task<IEnumerable<User>> GetUsersAsync(ISpamOperation operation)
         {
 
-        }
+            ConcurrentDictionary<string, User> output = null;
 
+            // Notify administrators 
+            if (operation.NotifyAdmin)
+            {
+                var users = await _platoUserStore.QueryAsync()
+                    .Select<UserQueryParams>(q =>
+                    {
+                        q.RoleName.Equals(DefaultRoles.Administrator);
+                    })
+                    .ToList();
+                if (users?.Data != null)
+                {
+                    output = new ConcurrentDictionary<string, User>();
+                    foreach (var user in users.Data)
+                    {
+                        if (!output.ContainsKey(user.Email))
+                        {
+                            output.TryAdd(user.Email, user);
+                        }
+                    }
+
+                }
+            }
+
+            // Notify staff 
+            if (operation.NotifyStaff)
+            {
+                var users = await _platoUserStore.QueryAsync()
+                    .Select<UserQueryParams>(q =>
+                    {
+                        q.RoleName.Equals(DefaultRoles.Staff);
+                    })
+                    .ToList();
+
+                if (users == null)
+                {
+                    return null;
+                }
+                if (users?.Data != null)
+                {
+                    if (output == null)
+                    {
+                        output = new ConcurrentDictionary<string, User>(); ;
+                    }
+                    foreach (var user in users.Data)
+                    {
+                        if (!output.ContainsKey(user.Email))
+                        {
+                            output.TryAdd(user.Email, user);
+                        }
+                    }
+                }
+            }
+
+            return output?.Values ?? null;
+
+        }
+        
     }
-
+    
 }
 
 

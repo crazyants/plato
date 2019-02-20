@@ -67,6 +67,15 @@ namespace Plato.StopForumSpam.Services
             // The result we'll return
             var result = new SpamCheckerResult();
 
+            // Ensure we have some details to check
+            var noUserName = string.IsNullOrEmpty(user.UserName);
+            var noEmail = string.IsNullOrEmpty(user.Email);
+            var noIp = string.IsNullOrEmpty(user.IpV4Address);
+            if (noUserName && noEmail && noIp)
+            {
+                return result.Success();
+            }
+
             // We always need an API key to perform checks
             if (string.IsNullOrEmpty(apiKey))
             {
