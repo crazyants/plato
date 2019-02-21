@@ -154,9 +154,6 @@ namespace Plato.Roles.Handlers
             
             // Install default roles & permissions on first set-up
             await _defaultRolesManager.InstallDefaultRolesAsync();
-
-            // Configure administrator on first set-up
-            //await ConfigureSuperUser(context, reportError);
             
         }
         
@@ -235,9 +232,34 @@ namespace Plato.Roles.Handlers
                 // Create tables
                 .CreateTable(_userRoles)
                 // Create basic default CRUD procedures
-                .CreateDefaultProcedures(_userRoles);
+                .CreateDefaultProcedures(_userRoles)
 
-            builder
+                // Overwrite our SelectUserRoleById created via CreateDefaultProcedures
+                // above to also join and return all role data
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectUserRoleById",
+                            @"
+                                /* user */
+                                SELECT ur.Id, ur.UserId, 
+                                r.Id AS RoleId, 
+                                r.[Name], 
+                                r.NormalizedName, 
+                                r.Description, 
+                                r.Claims, 
+                                r.CreatedDate, 
+                                r.CreatedUserId, 
+                                r.ModifiedDate, 
+                                r.ModifiedUserId, 
+                                r.ConcurrencyStamp 
+                                FROM {prefix}_UserRoles ur WITH (nolock) 
+                                INNER JOIN {prefix}_Roles r ON ur.RoleId = r.Id 
+                                WHERE (
+                                    ur.Id = @Id
+                                )")
+                        .ForTable(_userRoles)
+                        .WithParameter(_userRoles.PrimaryKeyColumn))
+
                 .CreateProcedure(
                     new SchemaProcedure("SelectRolesByUserId", @"
                             SELECT * FROM {prefix}_Roles WITH (nolock) WHERE Id IN (
@@ -307,35 +329,7 @@ namespace Plato.Roles.Handlers
                         }));
 
         }
-
-        async Task ConfigureSuperUser(SetUpContext context, Action<string, string> reportError)
-        {
-
-            // Get newly installed administrator role
-            var role = await _roleManager.FindByNameAsync(DefaultRoles.Administrator);
-
-            // Get newly created administrator user
-            var user = await _userManager.FindByNameAsync(context.AdminUsername);
-
-            // Add our administrator user to the administrator role
-            var dirty = false;
-            if (role != null && user != null)
-            {
-                if (!await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    await _userManager.AddToRoleAsync(user, role.Name);
-                    dirty = true;
-                }
-
-            }
-
-            if (dirty)
-            {
-                await _userManager.UpdateAsync(user);
-            }
-
-        }
-
+        
         #endregion
 
     }
