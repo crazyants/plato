@@ -5,21 +5,16 @@ using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
-using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Stores.Users
 {
-    public interface IUserDataStore<T> : IStore<T> where T : class
-    {
-
-        Task<T> GetByKeyAndUserIdAsync(string key, int userId);
-
-        Task<IEnumerable<T>> GetByUserIdAsync(int userId);
-
-    }
 
     public class UserDataStore : IUserDataStore<UserData>
     {
+
+        public const string ByUser = "ByUser";
+
         private readonly ICacheManager _cacheManager;
         private readonly IUserDataRepository<UserData> _userDataRepository;
         private readonly ILogger<UserDataStore> _logger;
@@ -106,7 +101,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<IEnumerable<UserData>> GetByUserIdAsync(int userId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), "ByUser", userId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByUser, userId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userDataRepository.SelectByUserIdAsync(userId));
         }
     }

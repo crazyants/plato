@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
@@ -42,7 +40,6 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<UserRegistration> _registerViewProvider;
         private readonly IAlerter _alerter;
  
-
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -110,7 +107,7 @@ namespace Plato.Users.Controllers
                 ViewData["users"] = sb.ToString();
             }
 
-            //await CreateSampleUsers();
+            await CreateSampleUsers();
 
             // ----------------------------------------------------------------
 

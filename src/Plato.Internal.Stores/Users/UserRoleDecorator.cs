@@ -30,11 +30,17 @@ namespace Plato.Internal.Stores.Users
                     q.UserId.IsIn(users.Select(u => u.Id).ToArray());
                 }).ToList();
 
-            if (users == null || userRoles?.Data == null)
+            if (users == null)
             {
                 return null;
             }
-            
+
+            // No roles to decorate
+            if (userRoles == null)
+            {
+                return users;
+            }
+
             // Hot code path - avoid linq queries
             var output = users.ToList();
 
@@ -55,8 +61,11 @@ namespace Plato.Internal.Stores.Users
             // Decorate the user object with role data
             foreach (var user in output)
             {
-                user.UserRoles = kvp[user.Id];
-                user.RoleNames = kvp[user.Id].Select(r => r.Name).ToList();
+                if (kvp.ContainsKey(user.Id))
+                {
+                    user.UserRoles = kvp[user.Id];
+                    user.RoleNames = kvp[user.Id].Select(r => r.Name).ToList();
+                }
             }
 
             // Clean up

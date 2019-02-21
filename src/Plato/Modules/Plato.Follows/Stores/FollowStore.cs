@@ -7,6 +7,7 @@ using Plato.Follows.Models;
 using Plato.Follows.Repositories;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Follows.Stores
@@ -20,7 +21,7 @@ namespace Plato.Follows.Stores
         private readonly ILogger<FollowStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly IKeyGenerator _keyGenerator;
-
+        
         public FollowStore(
             IFollowRepository<Follow> followRepository,
             ICacheManager cacheManager,

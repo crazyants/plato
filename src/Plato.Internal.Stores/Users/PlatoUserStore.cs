@@ -17,14 +17,14 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Variables"
         
-        private const string ByUsername = "ByUsername";
-        private const string ByUsernameNormalized = "ByUsernameNormalized";
-        private const string ByEmail = "ByEmail";
-        private const string ByEmailNormalized = "ByEmailNormalized";
-        private const string ByResetToken = "ByResetToken";
-        private const string ByConfirmationToken = "ByConfirmationToken";
-        private const string ByApiKey = "ByApiKey";
-        private const string PlatoBot = "PlatoBot";
+        public const string ByUsername = "ByUsername";
+        public const string ByUsernameNormalized = "ByUsernameNormalized";
+        public const string ByEmail = "ByEmail";
+        public const string ByEmailNormalized = "ByEmailNormalized";
+        public const string ByResetToken = "ByResetToken";
+        public const string ByConfirmationToken = "ByConfirmationToken";
+        public const string ByApiKey = "ByApiKey";
+        public const string ByPlatoBot = "PlatoBot";
 
         private readonly IUserDataStore<UserData> _userDataStore;
         private readonly ICacheManager _cacheManager;
@@ -261,11 +261,12 @@ namespace Plato.Internal.Stores.Users
                 var results = await _userRepository.SelectAsync(args);
                 if (results != null)
                 {
-                    // Decorate users with strongly typed data objects
+                    // Decorate users with strongly typed meta data objects
                     var users = await _userDataDecorator.DecorateAsync(results.Data);
                     // Decorate users with roles they belong to
                     users = await _userRoleDecorator.DecorateAsync(users);
-                    results.Data = users.ToList();
+                    // Add decorated users
+                    results.Data = users?.ToList();
                 }
                 return results;
             });
@@ -273,7 +274,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetPlatoBotAsync()
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), PlatoBot);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByPlatoBot);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var results = await QueryAsync().Take(1)
@@ -331,7 +332,7 @@ namespace Plato.Internal.Stores.Users
         void CancelTokens(User user)
         {
 
-            // Expire user cache
+            // Expire user cache tokens
             _cacheManager.CancelTokens(this.GetType());
             _cacheManager.CancelTokens(this.GetType(), user.Id);
             _cacheManager.CancelTokens(this.GetType(), ByUsernameNormalized, user.NormalizedUserName);
@@ -342,9 +343,9 @@ namespace Plato.Internal.Stores.Users
             _cacheManager.CancelTokens(this.GetType(), ByConfirmationToken, user.ConfirmationToken);
             _cacheManager.CancelTokens(this.GetType(), ByApiKey, user.ApiKey);
 
-            // Expire user data cache
+            // Expire user data cache tokens
             _cacheManager.CancelTokens(typeof(UserDataStore));
-            _cacheManager.CancelTokens(typeof(UserDataStore), "ByUser", user.Id);
+            _cacheManager.CancelTokens(typeof(UserDataStore), UserDataStore.ByUser, user.Id);
 
         }
 

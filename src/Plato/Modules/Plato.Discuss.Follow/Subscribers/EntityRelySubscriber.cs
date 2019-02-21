@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Entities.Models;
@@ -10,6 +10,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss.Follow.Subscribers
@@ -25,24 +26,25 @@ namespace Plato.Discuss.Follow.Subscribers
         private readonly IBroker _broker;
         private readonly INotificationManager<TEntityReply> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
-        private readonly IUserDataDecorator _userDataDecorator;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
         public EntityReplySubscriber(
             IBroker broker,
             INotificationManager<TEntityReply> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
-            IUserDataDecorator userDataDecorator,
             IDeferredTaskManager deferredTaskManager,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults)
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            IPlatoUserStore<User> platoUserStore)
         {
             _broker = broker;
             _notificationManager = notificationManager;
             _followStore = followStore;
-            _userDataDecorator = userDataDecorator;
+      
             _deferredTaskManager = deferredTaskManager;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _platoUserStore = platoUserStore;
         }
         
         #region "Implementation"
@@ -127,24 +129,26 @@ namespace Plato.Discuss.Follow.Subscribers
                     return;
                 }
 
-                // Build a collection of all users to notify
+                // Get a collection of all users to notify
                 // Exclude the author so they are not notified of there own posts
-                var users = new List<User>(follows.Data.Count);
-                foreach (var follow in follows.Data)
-                {
-                    var isMotAuthor = follow.CreatedUserId != reply.CreatedUserId;
-                    if (isMotAuthor)
+                var users = await _platoUserStore.QueryAsync()
+                    .Select<UserQueryParams>(q =>
                     {
-                        users.Add((User)follow.CreatedBy);
-                    }
+                        q.Id.IsIn(follows.Data
+                            .Where(f => f.CreatedUserId != reply.CreatedUserId)
+                            .Select(f => f.CreatedUserId)
+                            .ToArray());
+                    })
+                    .ToList();
+
+                // No follows simply return
+                if (users?.Data == null)
+                {
+                    return;
                 }
 
-                // Merge user data so we know the opt-in status for notifications
-                // This is critical otherwise NotificationEnabled will always return false
-                var mergedUsers = await _userDataDecorator.DecorateAsync(users);
-
                 // Send mention notifications
-                foreach (var user in mergedUsers)
+                foreach (var user in users.Data)
                 {
 
                     // Email notifications
