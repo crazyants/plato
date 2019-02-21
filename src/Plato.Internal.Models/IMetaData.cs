@@ -4,7 +4,11 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models
 {
-
+    
+    /// <summary>
+    /// Represents some abstract meta data that can be stored on types.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
     public interface IMetaData<TModel> where TModel : class
     {
         IDictionary<Type, ISerializable> MetaData { get; }

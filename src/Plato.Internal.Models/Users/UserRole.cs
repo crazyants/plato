@@ -27,7 +27,8 @@ namespace Plato.Internal.Models.Users
 
             if (RoleId > 0)
             {
-                Role = new Role(dr);
+                Role = new Role();
+                Role.PopulateModel(dr);
             }
 
         }

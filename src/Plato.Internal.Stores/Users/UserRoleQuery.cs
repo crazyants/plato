@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -150,7 +149,20 @@ namespace Plato.Internal.Stores.Users
 
         string BuildPopulateSelect()
         {
-            return "ur.*, r.*";
+            var sb = new StringBuilder();
+            sb.Append("ur.Id, ur.UserId, ")
+                .Append("r.Id AS RoleId, ")
+                .Append("r.[Name], ")
+                .Append("r.NormalizedName, ")
+                .Append("r.Description, ")
+                .Append("r.Claims, ")
+                .Append("r.CreatedDate, ")
+                .Append("r.CreatedUserId, ")
+                .Append("r.ModifiedDate, ")
+                .Append("r.ModifiedUserId, ")
+                .Append("r.ConcurrencyStamp");
+
+            return sb.ToString();
 
         }
 

@@ -918,7 +918,14 @@ namespace Plato.Users.Handlers
             {
                 if (!await _userManager.IsInRoleAsync(user, role.Name))
                 {
-                    await _userManager.AddToRoleAsync(user, role.Name);
+                    var result = await _userManager.AddToRoleAsync(user, role.Name);
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            reportError(error.Code, error.Description);
+                        }
+                    }
                     dirty = true;
                 }
 
@@ -926,12 +933,18 @@ namespace Plato.Users.Handlers
 
             if (dirty)
             {
-                await _userManager.UpdateAsync(user);
+               var result = await _userManager.UpdateAsync(user);
+               if (!result.Succeeded)
+               {
+                   foreach (var error in result.Errors)
+                   {
+                       reportError(error.Code, error.Description);
+                   }
+               }
             }
 
         }
-
-
+        
         #endregion
 
     }

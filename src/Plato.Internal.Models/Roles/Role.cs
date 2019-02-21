@@ -12,11 +12,7 @@ namespace Plato.Internal.Models.Roles
     {
 
         #region "Public Properties"
-
-        public sealed override int Id { get; set; }
-
-        public sealed override string Name { get; set; }
-
+        
         public string Description { get; set;  }
 
         public List<RoleClaim> RoleClaims { get; } = new List<RoleClaim>();
@@ -31,34 +27,28 @@ namespace Plato.Internal.Models.Roles
 
         #endregion
 
-        #region "Constructor"
+        #region "Constructors"
+
         public Role()
         {
-
         }
 
         public Role(string name)
-            :this(0, name)
+            : base(name)
         {
             
         }
 
-        public Role(int id, string name)
+        public Role(int id, string name) : this(name)
         {
-            this.Id = id;
-            this.Name = name;
+            base.Id = id;
         }
-
-        public Role(IDataReader reader)
-        {
-           PopulateModel(reader);
-        }
-
+        
         #endregion
 
         #region "Implementation"
 
-        public void PopulateModel(IDataReader dr)
+        public virtual void PopulateModel(IDataReader dr)
         {
 
             if (dr.ColumnIsNotNull("Id"))
@@ -102,16 +92,6 @@ namespace Plato.Internal.Models.Roles
             
         }
 
-        public void PopulateModel(Action<Role> action)
-        {
-            action(this);
-        }
-        
-        public override string ToString()
-        {
-            return this.Name;
-        }
-        
         #endregion
 
     }

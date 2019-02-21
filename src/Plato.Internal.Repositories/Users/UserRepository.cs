@@ -423,7 +423,9 @@ namespace Plato.Internal.Repositories.Users
                         var data = new List<Role>();
                         while (await reader.ReadAsync())
                         {
-                            data.Add(new Role(reader));
+                            var role = new Role();
+                            role.PopulateModel(reader);
+                            data.Add(role);
                         }
                         user.UserRoles = data;
                     }
