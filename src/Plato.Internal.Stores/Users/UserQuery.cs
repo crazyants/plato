@@ -257,7 +257,7 @@ namespace Plato.Internal.Stores.Users
                 sb.Append("u.Id IN (")
                     .Append("SELECT ur.UserId FROM ")
                     .Append(_userRolesTableName)
-                    .Append(" ur WHERE ur.RoleId = (SELECT r.Id FROM ")
+                    .Append(" ur WHERE ur.RoleId IN (SELECT r.Id FROM ")
                     .Append(_rolesTableName).Append(" r WHERE ")
                     .Append(_query.Params.RoleName.ToSqlString("r.[Name]", "RoleName"))
                     .Append("))");

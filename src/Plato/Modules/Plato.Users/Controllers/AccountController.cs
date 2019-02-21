@@ -91,10 +91,13 @@ namespace Plato.Users.Controllers
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {
-                    q.RoleName.Equals(DefaultRoles.Administrator);
+                    q.RoleName.IsIn(new[]
+                    {
+                        DefaultRoles.Administrator,
+                        DefaultRoles.Staff
+                    });
                 })
                 .ToList();
-
             if (users?.Data != null)
             {
           

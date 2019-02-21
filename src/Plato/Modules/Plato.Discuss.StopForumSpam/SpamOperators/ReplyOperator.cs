@@ -184,58 +184,18 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
         async Task<IEnumerable<User>> GetUsersAsync(ISpamOperation operation)
         {
 
-            ConcurrentDictionary<string, User> output = null;
-
-            // Notify administrators 
+            var roleNames = new List<string>();
             if (operation.NotifyAdmin)
-            {
-                var users = await _platoUserStore.QueryAsync()
-                    .Select<UserQueryParams>(q =>
-                    {
-                        q.RoleName.Equals(DefaultRoles.Administrator);
-                    })
-                    .ToList();
-                if (users?.Data != null)
-                {
-                    output = new ConcurrentDictionary<string, User>();
-                    foreach (var user in users.Data)
-                    {
-                        if (!output.ContainsKey(user.Email))
-                        {
-                            output.TryAdd(user.Email, user);
-                        }
-                    }
-
-                }
-            }
-
-            // Notify staff 
+                roleNames.Add(DefaultRoles.Administrator);
             if (operation.NotifyStaff)
-            {
-                var users = await _platoUserStore.QueryAsync()
-                    .Select<UserQueryParams>(q =>
-                    {
-                        q.RoleName.Equals(DefaultRoles.Staff);
-                    })
-                    .ToList();
-                
-                if (users?.Data != null)
+                roleNames.Add(DefaultRoles.Staff);
+            var users = await _platoUserStore.QueryAsync()
+                .Select<UserQueryParams>(q =>
                 {
-                    if (output == null)
-                    {
-                        output = new ConcurrentDictionary<string, User>(); ;
-                    }
-                    foreach (var user in users.Data)
-                    {
-                        if (!output.ContainsKey(user.Email))
-                        {
-                            output.TryAdd(user.Email, user);
-                        }
-                    }
-                }
-            }
-
-            return output?.Values ?? null;
+                    q.RoleName.IsIn(roleNames.ToArray());
+                })
+                .ToList();
+            return users?.Data;
 
         }
 
