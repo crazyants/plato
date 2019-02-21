@@ -218,11 +218,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
                         q.RoleName.Equals(DefaultRoles.Staff);
                     })
                     .ToList();
-
-                if (users == null)
-                {
-                    return null;
-                }
+                
                 if (users?.Data != null)
                 {
                     if (output == null)

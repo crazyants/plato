@@ -15,7 +15,7 @@ namespace Plato.Discuss.StopForumSpam
             FlagAsSpam = true,
             NotifyAdmin = true,
             NotifyStaff = true,
-            CustomMessage = true,
+            CustomMessage = false,
             Message = "Sorry but we've identified your details have been used by known spammers. You cannot post at this time. Please try updating your email address or username. If the problem persists please contact us and request we verify your account."
         };
 
@@ -26,7 +26,7 @@ namespace Plato.Discuss.StopForumSpam
             FlagAsSpam = true,
             NotifyAdmin = true,
             NotifyStaff = true,
-            CustomMessage = true,
+            CustomMessage = false,
             Message = "Sorry but we've identified your details have been used by known spammers. You cannot post at this time. Please try updating your email address or username. If the problem persists please contact us and request we verify your account."
         };
 

@@ -180,7 +180,6 @@ namespace Plato.Users.StopForumSpam.SpamOperators
                             output.TryAdd(user.Email, user);
                         }
                     }
-          
                 }
             }
 
@@ -193,11 +192,6 @@ namespace Plato.Users.StopForumSpam.SpamOperators
                         q.RoleName.Equals(DefaultRoles.Staff);
                     })
                     .ToList();
-
-                if (users == null)
-                {
-                    return null;
-                }
                 if (users?.Data != null)
                 {
                     if (output == null)

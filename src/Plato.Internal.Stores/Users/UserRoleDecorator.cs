@@ -23,18 +23,18 @@ namespace Plato.Internal.Stores.Users
         public async Task<IEnumerable<User>> DecorateAsync(IEnumerable<User> users)
         {
 
+            if (users == null)
+            {
+                return null;
+            }
+
             // Get all user roles matching supplied users
             var userRoles = await _userRoleStore.QueryAsync()
                 .Select<UserRoleQueryParams>(q =>
                 {
                     q.UserId.IsIn(users.Select(u => u.Id).ToArray());
                 }).ToList();
-
-            if (users == null)
-            {
-                return null;
-            }
-
+            
             // No roles to decorate
             if (userRoles == null)
             {
