@@ -34,6 +34,7 @@ namespace Plato.Internal.Stores.Users
         private readonly IAliasCreator _aliasCreator;
         private readonly IKeyGenerator _keyGenerator;
         private readonly IUserDataDecorator _userDataDecorator;
+        private readonly IUserRoleDecorator _userRoleDecorator;
 
         #endregion
 
@@ -47,7 +48,8 @@ namespace Plato.Internal.Stores.Users
             IUserDataStore<UserData> userDataStore,
             IAliasCreator aliasCreator,
             IKeyGenerator keyGenerator,
-            IUserDataDecorator userDataDecorator)
+            IUserDataDecorator userDataDecorator,
+            IUserRoleDecorator userRoleDecorator)
         {
             _userRepository = userRepository;
             _cacheManager = cacheManager;
@@ -55,6 +57,7 @@ namespace Plato.Internal.Stores.Users
             _aliasCreator = aliasCreator;
             _keyGenerator = keyGenerator;
             _userDataDecorator = userDataDecorator;
+            _userRoleDecorator = userRoleDecorator;
             _dbQuery = dbQuery;
             _logger = logger;
         }
@@ -258,7 +261,10 @@ namespace Plato.Internal.Stores.Users
                 var results = await _userRepository.SelectAsync(args);
                 if (results != null)
                 {
+                    // Decorate users with strongly typed data objects
                     var users = await _userDataDecorator.DecorateAsync(results.Data);
+                    // Decorate users with roles they belong to
+                    users = await _userRoleDecorator.DecorateAsync(users);
                     results.Data = users.ToList();
                 }
                 return results;

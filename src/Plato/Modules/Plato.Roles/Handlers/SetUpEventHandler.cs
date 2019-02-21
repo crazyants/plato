@@ -196,6 +196,7 @@ namespace Plato.Roles.Handlers
                             DbType = DbType.String,
                             Length = "255"
                         }))
+
                 .CreateProcedure(
                     new SchemaProcedure("SelectRoleByNameNormalized", StoredProcedureType.SelectByKey)
                         .ForTable(_roles)
@@ -205,6 +206,7 @@ namespace Plato.Roles.Handlers
                             DbType = DbType.String,
                             Length = "255"
                         }))
+
                 .CreateProcedure(new SchemaProcedure("SelectRolesPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_roles)
                     .WithParameters(new List<SchemaColumn>()
@@ -240,18 +242,19 @@ namespace Plato.Roles.Handlers
                     new SchemaProcedure(
                             $"SelectUserRoleById",
                             @"
-                                /* user */
-                                SELECT ur.Id, ur.UserId, 
-                                r.Id AS RoleId, 
-                                r.[Name], 
-                                r.NormalizedName, 
-                                r.Description, 
-                                r.Claims, 
-                                r.CreatedDate, 
-                                r.CreatedUserId, 
-                                r.ModifiedDate, 
-                                r.ModifiedUserId, 
-                                r.ConcurrencyStamp 
+                                SELECT 
+                                    ur.Id, 
+                                    ur.UserId, 
+                                    r.Id AS RoleId, 
+                                    r.[Name], 
+                                    r.NormalizedName, 
+                                    r.Description, 
+                                    r.Claims, 
+                                    r.CreatedDate, 
+                                    r.CreatedUserId, 
+                                    r.ModifiedDate, 
+                                    r.ModifiedUserId, 
+                                    r.ConcurrencyStamp 
                                 FROM {prefix}_UserRoles ur WITH (nolock) 
                                 INNER JOIN {prefix}_Roles r ON ur.RoleId = r.Id 
                                 WHERE (
