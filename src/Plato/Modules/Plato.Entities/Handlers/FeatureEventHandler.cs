@@ -472,23 +472,26 @@ namespace Plato.Entities.Handlers
             {
                 
                 // drop entities
-                builder
-                    .DropTable(_entities)
+                builder.TableBuilder.DropTable(_entities);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entities)
                     .DropProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectByKey))
                     .DropProcedure(new SchemaProcedure("SelectEntityUsersPaged", StoredProcedureType.SelectByKey));
 
 
                 // drop entity data
-                builder
-                    .DropTable(_entityData)
+                builder.TableBuilder.DropTable(_entityData);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityData)
                     .DropProcedure(new SchemaProcedure("SelectEntityDatumByEntityId"))
                     .DropProcedure(new SchemaProcedure("SelectEntityDatumPaged"));
                 
                 // drop entity replies
-                builder
-                    .DropTable(_entityReplies)
+                builder.TableBuilder.DropTable(_entityReplies);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityReplies)
                     .DropProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectByKey));
                 
@@ -509,9 +512,7 @@ namespace Plato.Entities.Handlers
                     context.Logger.LogCritical(error, $"An error occurred within the UninstallingAsync method within {this.GetType().FullName}");
                     context.Errors.Add(error, $"UninstallingAsync within {this.GetType().FullName}");
                 }
-
-           
-
+                
             }
             
         }
@@ -543,16 +544,17 @@ namespace Plato.Entities.Handlers
         {
 
 
-            builder
-                .CreateTable(_entities)
-                .CreateDefaultProcedures(_entities);
+            builder.TableBuilder.CreateTable(_entities);
 
-            // Overwrite our SelectEntityById created via CreateDefaultProcedures
-            // above to also return all EntityData within a second result set
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityById",
-                        @" SELECT e.*, 0 AS Rank, 0 AS MaxRank,
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entities)
+
+                // Overwrite our SelectEntityById created via CreateDefaultProcedures
+                // above to also return all EntityData within a second result set
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityById",
+                            @" SELECT e.*, 0 AS Rank, 0 AS MaxRank,
                                     c.UserName AS CreatedUserName,                              
                                     c.DisplayName AS CreatedDisplayName,                                  
                                     c.Alias AS CreatedAlias,
@@ -579,75 +581,75 @@ namespace Plato.Entities.Handlers
                                 WHERE (
                                    EntityId = @Id
                                 )")
+                        .ForTable(_entities)
+                        .WithParameter(_entities.PrimaryKeyColumn))
+                        
+                .CreateProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_entities)
-                    .WithParameter(_entities.PrimaryKeyColumn));
-            
-
-            builder.CreateProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entities)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }))
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityUsersPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entities)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                .CreateProcedure(new SchemaProcedure("SelectEntityUsersPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entities)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
 
         void EntityData(ISchemaBuilder builder)
         {
-            
-            builder
-                // Create tables
-                .CreateTable(_entityData)
-                // Create basic default CRUD procedures
+
+            builder.TableBuilder.CreateTable(_entityData);
+
+            builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityData)
+
                 .CreateProcedure(new SchemaProcedure("SelectEntityDatumByEntityId", StoredProcedureType.SelectByKey)
                     .ForTable(_entityData)
-                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+                    .WithParameter(new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32}))
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityDatumPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityData)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                .CreateProcedure(new SchemaProcedure("SelectEntityDatumPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entityData)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "[Key]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "[Key]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
         
         void EntityReplies(ISchemaBuilder builder)
         {
             
-            builder
-                .CreateTable(_entityReplies)
-                .CreateDefaultProcedures(_entityReplies);
+            builder.TableBuilder.CreateTable(_entityReplies);
 
-            // Overwrite our SelectEntityReplyById created via CreateDefaultProcedures
-            // above to also return basic user data
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        "SelectEntityReplyById",
-                        @" SELECT r.*, 
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entityReplies)
+
+                // Overwrite our SelectEntityReplyById created via CreateDefaultProcedures
+                // above to also return basic user data
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            "SelectEntityReplyById",
+                            @" SELECT r.*, 
                                     c.UserName AS CreatedUserName,                                   
                                     c.DisplayName AS CreatedDisplayName,                                 
                                     c.Alias AS CreatedAlias,
@@ -664,21 +666,20 @@ namespace Plato.Entities.Handlers
                                 WHERE (
                                    r.Id = @Id
                                 )")
-                    .ForTable(_entities)
-                    .WithParameter(_entities.PrimaryKeyColumn));
-            
+                        .ForTable(_entities)
+                        .WithParameter(_entities.PrimaryKeyColumn))
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entities)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                .CreateProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entities)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
 

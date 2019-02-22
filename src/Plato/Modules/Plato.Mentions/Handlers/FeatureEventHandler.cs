@@ -112,8 +112,9 @@ namespace Plato.Mentions.Handlers
             {
 
                 // drop EntityMentions
-                builder
-                    .DropTable(_entityMentions)
+                builder.TableBuilder.DropTable(_entityMentions);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityMentions)
                     .DropProcedure(new SchemaProcedure("SelectEntityMentionsPaged"))
                     .DropProcedure(new SchemaProcedure("DeleteEntityMentionsByEntityId"))
@@ -163,31 +164,31 @@ namespace Plato.Mentions.Handlers
         void EntityMentions(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_entityMentions)
-                .CreateDefaultProcedures(_entityMentions);
+            builder.TableBuilder.CreateTable(_entityMentions);
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityMentionsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityMentions)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entityMentions)
+
+                .CreateProcedure(new SchemaProcedure("SelectEntityMentionsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entityMentions)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "[Username]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "[Username]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }))
 
-            builder
                 .CreateProcedure(new SchemaProcedure("DeleteEntityMentionsByEntityId", StoredProcedureType.DeleteByKey)
                     .ForTable(_entityMentions)
-                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+                    .WithParameter(new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32}))
 
-            builder
-                .CreateProcedure(new SchemaProcedure("DeleteEntityMentionsByEntityReplyId", StoredProcedureType.DeleteByKey)
-                    .ForTable(_entityMentions)
-                    .WithParameter(new SchemaColumn() { Name = "EntityReplyId", DbType = DbType.Int32 }));
+                .CreateProcedure(
+                    new SchemaProcedure("DeleteEntityMentionsByEntityReplyId", StoredProcedureType.DeleteByKey)
+                        .ForTable(_entityMentions)
+                        .WithParameter(new SchemaColumn() {Name = "EntityReplyId", DbType = DbType.Int32}));
 
 
         }

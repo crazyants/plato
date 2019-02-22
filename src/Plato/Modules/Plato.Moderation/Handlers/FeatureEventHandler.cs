@@ -130,8 +130,9 @@ namespace Plato.Moderation.Handlers
             {
 
                 // drop emails
-                builder
-                    .DropTable(_moderators)
+                builder.TableBuilder.DropTable(_moderators);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_moderators)
                     .DropProcedure(new SchemaProcedure("SelectModeratorsPaged", StoredProcedureType.SelectByKey));
                 
@@ -184,16 +185,17 @@ namespace Plato.Moderation.Handlers
         void Moderators(ISchemaBuilder builder)
         {
             
-            builder
-                .CreateTable(_moderators)
-                .CreateDefaultProcedures(_moderators);
+            builder.TableBuilder.CreateTable(_moderators);
 
-            // Overwrite our SelectModeratorById created via CreateDefaultProcedures
-            // above to also return simple user data representing the moderator
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectModeratorById",
-                        @" SELECT m.*,                                    
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_moderators)
+
+                // Overwrite our SelectModeratorById created via CreateDefaultProcedures
+                // above to also return simple user data representing the moderator
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectModeratorById",
+                            @" SELECT m.*,                                    
                                     u.UserName,                                
                                     u.DisplayName,                                 
                                     u.Alias,
@@ -204,20 +206,20 @@ namespace Plato.Moderation.Handlers
                                 WHERE (
                                    m.Id = @Id
                                 )")
-                    .ForTable(_moderators)
-                    .WithParameter(_moderators.PrimaryKeyColumn));
+                        .ForTable(_moderators)
+                        .WithParameter(_moderators.PrimaryKeyColumn))
 
-            builder.CreateProcedure(new SchemaProcedure("SelectModeratorsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_moderators)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                .CreateProcedure(new SchemaProcedure("SelectModeratorsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_moderators)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
         

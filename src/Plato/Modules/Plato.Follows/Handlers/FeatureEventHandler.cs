@@ -116,10 +116,10 @@ namespace Plato.Follows.Handlers
 
             using (var builder = _schemaBuilder)
             {
+                
+                builder.TableBuilder.DropTable(_follows);
 
-                // drop entity follows
-                builder
-                    .DropTable(_follows)
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_follows)
                     .DropProcedure(new SchemaProcedure("SelectFollowsPaged"))
                     .DropProcedure(new SchemaProcedure("SelectFollowsByNameAndThingId"))
@@ -172,17 +172,18 @@ namespace Plato.Follows.Handlers
 
         void Follows(ISchemaBuilder builder)
         {
-            
-            builder
-                .CreateTable(_follows)
-                .CreateDefaultProcedures(_follows);
-            
-            // Overwrite our SelectFollowById created via CreateDefaultProcedures
-            // above to also return basic user data with follow
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectFollowById",
-                        @"SELECT f.*, 
+
+            builder.TableBuilder.CreateTable(_follows);
+
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_follows)
+
+                // Overwrite our SelectFollowById created via CreateDefaultProcedures
+                // above to also return basic user data with follow
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectFollowById",
+                            @"SELECT f.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
@@ -192,10 +193,9 @@ namespace Plato.Follows.Handlers
                                 WHERE (
                                     f.Id = @Id 
                                 )")
-                    .ForTable(_follows)
-                    .WithParameter(_follows.PrimaryKeyColumn));
-                    
-            builder
+                        .ForTable(_follows)
+                        .WithParameter(_follows.PrimaryKeyColumn))
+
                 .CreateProcedure(
                     new SchemaProcedure("SelectFollowsByNameAndThingId",
                             @"SELECT f.*, 
@@ -223,9 +223,8 @@ namespace Plato.Follows.Handlers
                                 Name = "ThingId",
                                 DbType = DbType.Int32,
                             }
-                        }));
-            
-            builder
+                        }))
+
                 .CreateProcedure(
                     new SchemaProcedure("SelectFollowByNameThingIdAndCreatedUserId",
                             @"SELECT f.*, 
@@ -257,22 +256,22 @@ namespace Plato.Follows.Handlers
                                 Name = "CreatedUserId",
                                 DbType = DbType.Int32,
                             }
-                        }));
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectFollowsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_follows)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                        }))
+
+                .CreateProcedure(new SchemaProcedure("SelectFollowsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_follows)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "[Name]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "[Name]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
-        
+
         #endregion
         
     }

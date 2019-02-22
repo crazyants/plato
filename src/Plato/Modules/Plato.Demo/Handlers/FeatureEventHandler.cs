@@ -62,11 +62,10 @@ namespace Plato.Demo.Handlers
                         options.Version = "1.0.0";
                         options.DropTablesBeforeCreate = true;
                         options.DropProceduresBeforeCreate = true;
-                    })
-                    // Create tables
-                    .CreateTable(demo)
-                    // Create basic default CRUD procedures
-                    .CreateDefaultProcedures(demo);
+                    });
+
+                    builder.TableBuilder.CreateTable(demo);
+                    builder.ProcedureBuilder.CreateDefaultProcedures(demo);
 
                 var errors = await _schemaManager.ExecuteAsync(builder.Statements);
                 foreach (var error in errors)

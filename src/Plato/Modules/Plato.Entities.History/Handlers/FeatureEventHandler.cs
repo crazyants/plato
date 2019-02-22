@@ -136,8 +136,9 @@ namespace Plato.Entities.History.Handlers
             {
 
                 // drop entity history
-                builder
-                    .DropTable(_entityHistory)
+                builder.TableBuilder.DropTable(_entityHistory);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityHistory)
                     .DropProcedure(new SchemaProcedure("SelectEntityHistoryPaged"));
 
@@ -189,16 +190,17 @@ namespace Plato.Entities.History.Handlers
         void EntityHistory(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_entityHistory)
-                .CreateDefaultProcedures(_entityHistory);
+            builder.TableBuilder.CreateTable(_entityHistory);
 
-            // Overwrite our SelectFollowById created via CreateDefaultProcedures
-            // above to also return basic user data with follow
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityHistoryById",
-                        @"SELECT h.*, 
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entityHistory)
+
+                // Overwrite our SelectFollowById created via CreateDefaultProcedures
+                // above to also return basic user data with follow
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityHistoryById",
+                            @"SELECT h.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
@@ -210,15 +212,14 @@ namespace Plato.Entities.History.Handlers
                                 WHERE (
                                     h.Id = @Id 
                                 )")
-                    .ForTable(_entityHistory)
-                    .WithParameter(_entityHistory.PrimaryKeyColumn));
+                        .ForTable(_entityHistory)
+                        .WithParameter(_entityHistory.PrimaryKeyColumn))
 
-
-            // Overwrite InsertUpdateEntityHistory to calculate version numbers
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"InsertUpdateEntityHistory",
-                        @"IF EXISTS (SELECT Id FROM {prefix}_EntityHistory WHERE (Id = @Id))
+                // Overwrite InsertUpdateEntityHistory to calculate version numbers
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"InsertUpdateEntityHistory",
+                            @"IF EXISTS (SELECT Id FROM {prefix}_EntityHistory WHERE (Id = @Id))
                         BEGIN
 
                            UPDATE {prefix}_EntityHistory SET 
@@ -295,76 +296,75 @@ namespace Plato.Entities.History.Handlers
                              SET @UniqueId = SCOPE_IDENTITY();
 
                         END")
+                        .ForTable(_entityHistory)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "Id",
+                                DbType = DbType.Int32,
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "EntityId",
+                                DbType = DbType.Int32,
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "EntityReplyId",
+                                DbType = DbType.Int32,
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "[Message]",
+                                DbType = DbType.String,
+                                Length = "max"
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "Html",
+                                DbType = DbType.String,
+                                Length = "max"
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "MajorVersion",
+                                DbType = DbType.Int16
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "MinorVersion",
+                                DbType = DbType.Int16
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "CreatedUserId",
+                                DbType = DbType.Int32
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "CreatedDate",
+                                DbType = DbType.DateTimeOffset
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "UniqueId",
+                                DbType = DbType.Int32,
+                                Direction = Direction.Out
+                            }
+                        }))
+
+                .CreateProcedure(new SchemaProcedure("SelectEntityHistoryPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_entityHistory)
                     .WithParameters(new List<SchemaColumn>()
                     {
                         new SchemaColumn()
                         {
-                            Name = "Id",
-                            DbType = DbType.Int32,
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "EntityId",
-                            DbType = DbType.Int32,
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "EntityReplyId",
-                            DbType = DbType.Int32,
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "[Message]",
+                            Name = "Keywords",
                             DbType = DbType.String,
-                            Length = "max"
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "Html",
-                            DbType = DbType.String,
-                            Length = "max"
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "MajorVersion",
-                            DbType = DbType.Int16
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "MinorVersion",
-                            DbType = DbType.Int16
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "CreatedUserId",
-                            DbType = DbType.Int32
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "CreatedDate",
-                            DbType = DbType.DateTimeOffset
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "UniqueId",
-                            DbType = DbType.Int32,
-                            Direction = Direction.Out
+                            Length = "255"
                         }
                     }));
-
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityHistoryPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityHistory)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
 
         }
 

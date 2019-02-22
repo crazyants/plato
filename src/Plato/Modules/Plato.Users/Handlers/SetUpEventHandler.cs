@@ -14,12 +14,70 @@ namespace Plato.Users.Handlers
 {
     public class SetUpEventHandler : BaseSetUpEventHandler
     {
-        private readonly ISchemaBuilder _schemaBuilder;
-        private readonly ISchemaManager _schemaManager;
 
-        private readonly IUserColorProvider _userColorProvider;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
+        private readonly SchemaTable _userPhoto = new SchemaTable()
+        {
+            Name = "UserPhoto",
+            Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Name]",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentBlob",
+                        Nullable = true,
+                        DbType = DbType.Binary
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentType",
+                        Length = "75",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentLength",
+                        DbType = DbType.Int64
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    }
+
+                }
+        };
 
         private readonly SchemaTable _users = new SchemaTable()
         {
@@ -350,6 +408,130 @@ namespace Plato.Users.Handlers
                 }
         };
 
+        private readonly SchemaTable _userBanner = new SchemaTable()
+        {
+            Name = "UserBanner",
+            Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Name]",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentBlob",
+                        Nullable = true,
+                        DbType = DbType.Binary
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentType",
+                        Length = "75",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentLength",
+                        DbType = DbType.Int64
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    }
+
+                }
+        };
+
+        private readonly SchemaTable _userData = new SchemaTable()
+        {
+            Name = "UserData",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "UserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Key]",
+                    Length = "255",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Value]",
+                    Length = "max",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedDate",
+                    DbType = DbType.DateTimeOffset
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTimeOffset,
+                    Nullable = true
+                }
+            }
+        };
+        
+        private readonly ISchemaBuilder _schemaBuilder;
+        private readonly ISchemaManager _schemaManager;
+
+        private readonly IUserColorProvider _userColorProvider;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
+
+
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
             UserManager<User> userManager,
@@ -426,9 +608,8 @@ namespace Plato.Users.Handlers
         void Users(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_users)
-                .CreateDefaultProcedures(_users)
+            builder.TableBuilder.CreateTable(_users);
+            builder.ProcedureBuilder.CreateDefaultProcedures(_users)
 
                 // Overwrite our SelectEntityById created via CreateDefaultProcedures
                 // above to also return all EntityData within a second result set
@@ -600,223 +781,42 @@ namespace Plato.Users.Handlers
 
         void UserPhoto(ISchemaBuilder builder)
         {
+            
+            builder.TableBuilder.CreateTable(_userPhoto);
 
-            var userPhoto = new SchemaTable()
-            {
-                Name = "UserPhoto",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "UserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Name]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ContentBlob",
-                        Nullable = true,
-                        DbType = DbType.Binary
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ContentType",
-                        Length = "75",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ContentLength",
-                        DbType = DbType.Int64
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTimeOffset
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset,
-                        Nullable = true
-                    }
-                   
-                }
-            };
-
-            builder
-                // Create tables
-                .CreateTable(userPhoto)
-                // Create basic default CRUD procedures
-                .CreateDefaultProcedures(userPhoto)
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_userPhoto)
                 .CreateProcedure(new SchemaProcedure("SelectUserPhotoByUserId", StoredProcedureType.SelectByKey)
-                    .ForTable(userPhoto)
+                    .ForTable(_userPhoto)
                     .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
 
         }
 
         void UserBanner(ISchemaBuilder builder)
         {
+            
+            builder.TableBuilder.CreateTable(_userBanner);
 
-            var userBanner = new SchemaTable()
-            {
-                Name = "UserBanner",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "UserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Name]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ContentBlob",
-                        Nullable = true,
-                        DbType = DbType.Binary
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ContentType",
-                        Length = "75",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ContentLength",
-                        DbType = DbType.Int64
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTimeOffset
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset,
-                        Nullable = true
-                    }
-
-                }
-            };
-
-            builder
-                // Create tables
-                .CreateTable(userBanner)
-                // Create basic default CRUD procedures
-                .CreateDefaultProcedures(userBanner)
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_userBanner)
                 .CreateProcedure(new SchemaProcedure("SelectUserBannerByUserId", StoredProcedureType.SelectByKey)
-                    .ForTable(userBanner)
-                    .WithParameter(new SchemaColumn() { Name = "UserId", DbType = DbType.Int32 }));
+                    .ForTable(_userBanner)
+                    .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
 
         }
-        
+
         void UserData(ISchemaBuilder builder)
         {
+            
+            builder.TableBuilder.CreateTable(_userData);
 
-            var userData = new SchemaTable()
-            {
-                Name = "UserData",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "UserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Key]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Value]",
-                        Length = "max",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTimeOffset
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset,
-                        Nullable = true
-                    }
-                }
-            };
-
-            builder
-                .CreateTable(userData)
-                .CreateDefaultProcedures(userData)
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_userData)
                 .CreateProcedure(new SchemaProcedure("SelectUserDatumByUserId", StoredProcedureType.SelectByKey)
-                    .ForTable(userData)
+                    .ForTable(_userData)
                     .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}))
                 .CreateProcedure(new SchemaProcedure("SelectUserDatumByKeyAndUserId", StoredProcedureType.SelectByKey)
-                    .ForTable(userData)
+                    .ForTable(_userData)
                     .WithParameters(new List<SchemaColumn>()
                     {
                         new SchemaColumn()
@@ -830,21 +830,20 @@ namespace Plato.Users.Handlers
                             Name = "UserId",
                             DbType = DbType.Int32
                         }
+                    }))
+
+                .CreateProcedure(new SchemaProcedure("SelectUserDatumPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_userData)
+                    .WithParameters(new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            Name = "[Key]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
                     }));
             
-            builder.CreateProcedure(new SchemaProcedure("SelectUserDatumPaged", StoredProcedureType.SelectPaged)
-                .ForTable(userData)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        Name = "[Key]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
-
-
         }
 
         async Task ConfigureDefaultUsers(SetUpContext context, Action<string, string> reportError)

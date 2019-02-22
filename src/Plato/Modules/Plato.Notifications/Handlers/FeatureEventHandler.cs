@@ -139,8 +139,9 @@ namespace Plato.Notifications.Handlers
             {
 
                 // drop EntityMentions
-                builder
-                    .DropTable(_userNotifications)
+                builder.TableBuilder.DropTable(_userNotifications);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_userNotifications)
                     .DropProcedure(new SchemaProcedure("SelectUserNotificationsPaged"));
                 
@@ -191,14 +192,15 @@ namespace Plato.Notifications.Handlers
         void UserNotifications(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_userNotifications)
-                .CreateDefaultProcedures(_userNotifications);
+            builder.TableBuilder.CreateTable(_userNotifications);
 
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectUserNotificationById",
-                        @" SELECT un.*, 
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_userNotifications)
+
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectUserNotificationById",
+                            @" SELECT un.*, 
                                     u.UserName,
                                     u.DisplayName,
                                     u.Alias,
@@ -215,52 +217,49 @@ namespace Plato.Notifications.Handlers
                                 WHERE (
                                    un.Id = @Id
                                 )")
+                        .ForTable(_userNotifications)
+                        .WithParameter(_userNotifications.PrimaryKeyColumn))
+
+                .CreateProcedure(new SchemaProcedure("SelectUserNotificationsPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_userNotifications)
-                    .WithParameter(_userNotifications.PrimaryKeyColumn));
-
-            builder.CreateProcedure(new SchemaProcedure("SelectUserNotificationsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_userNotifications)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }))
 
-
-            builder.CreateProcedure(
-           new SchemaProcedure(
-                $"UpdateUserNotificationsReadDate",
-                @"UPDATE {prefix}_UserNotifications
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"UpdateUserNotificationsReadDate",
+                            @"UPDATE {prefix}_UserNotifications
                     SET ReadDate = @ReadDate
                     WHERE (
                         UserId = @UserId
                     ); SELECT 1;")
-               .ForTable(_userNotifications)
-               .WithParameters(new List<SchemaColumn>()
-               {
-                   new SchemaColumn()
-                   {
-                       Name = "UserId",
-                       DbType = DbType.Int32
-                   },
-                   new SchemaColumn()
-                   {
-                       Name = "ReadDate",
-                       DbType = DbType.DateTimeOffset,
-                       Nullable = true
-                   }
-               }));
-
-
-
+                        .ForTable(_userNotifications)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "UserId",
+                                DbType = DbType.Int32
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "ReadDate",
+                                DbType = DbType.DateTimeOffset,
+                                Nullable = true
+                            }
+                        }));
+            
         }
 
         #endregion
-
-
+        
     }
+
 }

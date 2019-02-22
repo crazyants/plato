@@ -12,16 +12,15 @@ namespace Plato.Settings.Handlers
     public class SetUpEventHandler : BaseSetUpEventHandler
     {
 
-        private readonly ISchemaBuilder _schemaBuilder;
+
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IKeyGenerator _keyGenerator;
 
         public SetUpEventHandler(
-            ISchemaBuilder schemaBuilder,
             ISiteSettingsStore siteSettingsService, 
             IKeyGenerator keyGenerator)
         {
-            _schemaBuilder = schemaBuilder;
+      
             _siteSettingsStore = siteSettingsService;
             _keyGenerator = keyGenerator;
         }

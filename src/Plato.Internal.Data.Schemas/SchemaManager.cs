@@ -14,11 +14,11 @@ namespace Plato.Internal.Data.Schemas
     {
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<SchemaBuilder> _logger;
+        private readonly ILogger<SchemaManager> _logger;
 
         public SchemaManager(
             IDbContext dbContext, 
-            ILogger<SchemaBuilder> logger)
+            ILogger<SchemaManager> logger)
         {
             _dbContext = dbContext;
             _logger = logger;

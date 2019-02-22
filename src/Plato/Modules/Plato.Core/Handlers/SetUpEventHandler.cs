@@ -132,11 +132,14 @@ namespace Plato.Core.Handlers
                     {
                         options.ModuleName = "Plato.Core";
                         options.Version = "1.0.0";
-                    })
-                    .CreateTable(dictionaryTable)
-                    .CreateDefaultProcedures(dictionaryTable)
-                    .CreateProcedure(new SchemaProcedure("SelectDictionaryEntryByKey", StoredProcedureType.SelectByKey)
-                        .ForTable(dictionaryTable).WithParameter(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
+                    });
+                   builder.TableBuilder.CreateTable(dictionaryTable);
+
+                   builder.ProcedureBuilder.CreateDefaultProcedures(dictionaryTable)
+                       .CreateProcedure(
+                           new SchemaProcedure("SelectDictionaryEntryByKey", StoredProcedureType.SelectByKey)
+                               .ForTable(dictionaryTable).WithParameter(new SchemaColumn()
+                                   {Name = "[Key]", DbType = DbType.Int32}));
 
                 // build document store
 
@@ -145,12 +148,17 @@ namespace Plato.Core.Handlers
                     {
                         options.ModuleName = "Plato.Core";
                         options.Version = "1.0.0";
-                    })
-                    .CreateTable(documentTable)
-                    .CreateDefaultProcedures(documentTable)
-                    .CreateProcedure(new SchemaProcedure("SelectDocumentEntryByType", StoredProcedureType.SelectByKey)
-                        .ForTable(documentTable)
-                        .WithParameter(new SchemaColumn() {Name = "[Type]", Length = "500", DbType = DbType.String}));
+                    });
+
+                    builder.TableBuilder.CreateTable(documentTable);
+
+                    builder.ProcedureBuilder
+                        .CreateDefaultProcedures(documentTable)
+                        .CreateProcedure(
+                            new SchemaProcedure("SelectDocumentEntryByType", StoredProcedureType.SelectByKey)
+                                .ForTable(documentTable)
+                                .WithParameter(new SchemaColumn()
+                                    {Name = "[Type]", Length = "500", DbType = DbType.String}));
 
                 // Did any errors occur?
 

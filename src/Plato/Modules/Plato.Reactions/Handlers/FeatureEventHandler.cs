@@ -63,18 +63,16 @@ namespace Plato.Reactions.Handlers
                 }
         };
 
-        private readonly ISchemaBuilderFacade _schemaBuilderFacade;
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly ISchemaManager _schemaManager;
 
         public FeatureEventHandler(
-            ISchemaBuilder schemaBuilder,
             ISchemaManager schemaManager,
-            ISchemaBuilderFacade schemaBuilderFacade)
+            ISchemaBuilder schemaBuilder)
         {
-            _schemaBuilder = schemaBuilder;
+    
             _schemaManager = schemaManager;
-            _schemaBuilderFacade = schemaBuilderFacade;
+            _schemaBuilder = schemaBuilder;
         }
         
         public override async Task InstallingAsync(IFeatureEventContext context)
@@ -83,7 +81,7 @@ namespace Plato.Reactions.Handlers
             if (context.Logger.IsEnabled(LogLevel.Information))
                 context.Logger.LogInformation($"InstallingAsync called within {ModuleId}");
 
-            using (var builder = _schemaBuilderFacade)
+            using (var builder = _schemaBuilder)
             {
 
                 // configure
@@ -154,10 +152,10 @@ namespace Plato.Reactions.Handlers
 
             using (var builder = _schemaBuilder)
             {
-
                 // drop emails
-                builder
-                    .DropTable(_entityReactions)
+                builder.TableBuilder
+                    .DropTable(_entityReactions);
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityReactions)
                     .DropProcedure(new SchemaProcedure("SelectEntityReactionsByEntityId"))
                     .DropProcedure(new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId"))
@@ -183,27 +181,44 @@ namespace Plato.Reactions.Handlers
 
             }
 
+
+            //using (var builder = _schemaBuilder)
+            //{
+
+            //    // drop emails
+            //    builder
+            //        .DropTable(_entityReactions)
+            //        .DropDefaultProcedures(_entityReactions)
+            //        .DropProcedure(new SchemaProcedure("SelectEntityReactionsByEntityId"))
+            //        .DropProcedure(new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId"))
+            //        .DropProcedure(new SchemaProcedure("SelectEntityReactionsPaged"));
+
+            //    // Log statements to execute
+            //    if (context.Logger.IsEnabled(LogLevel.Information))
+            //    {
+            //        context.Logger.LogInformation($"The following SQL statements will be executed...");
+            //        foreach (var statement in builder.Statements)
+            //        {
+            //            context.Logger.LogInformation(statement);
+            //        }
+            //    }
+
+            //    // Execute statements
+            //    var errors = await _schemaManager.ExecuteAsync(builder.Statements);
+            //    foreach (var error in errors)
+            //    {
+            //        context.Logger.LogCritical(error, $"An error occurred within the UninstallingAsync method within {this.GetType().FullName}");
+            //        context.Errors.Add(error, $"UninstallingAsync within {this.GetType().FullName}");
+            //    }
+
+            //}
+
         }
 
         public override Task UninstalledAsync(IFeatureEventContext context)
         {
             return Task.CompletedTask;
         }
-
-        void Configure(ISchemaBuilderFacade builder)
-        {
-
-            builder
-                .Configure(options =>
-                {
-                    options.ModuleName = ModuleId;
-                    options.Version = Version;
-                    options.DropTablesBeforeCreate = true;
-                    options.DropProceduresBeforeCreate = true;
-                });
-
-        }
-
 
         void Configure(ISchemaBuilder builder)
         {
@@ -218,8 +233,9 @@ namespace Plato.Reactions.Handlers
                 });
 
         }
+        
 
-        void Reactions(ISchemaBuilderFacade builder)
+        void Reactions(ISchemaBuilder builder)
         {
 
             builder.TableBuilder.CreateTable(_entityReactions);
@@ -267,7 +283,7 @@ namespace Plato.Reactions.Handlers
                         }))
 
             // Returns all reactions for the supplied UserId and EntityId
-                .CreateProcedure(
+            .CreateProcedure(
                     new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId",
                             @"SELECT er.*, 
                                     u.UserName, 
@@ -295,106 +311,9 @@ namespace Plato.Reactions.Handlers
                                 Name = "EntityId",
                                 DbType = DbType.Int32,
                             }
-                        }));
-
-
-            builder.ProcedureBuilder.CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityReactions)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
-
-        }
-
-
-        void Reactions(ISchemaBuilder builder)
-        {
-
-            builder
-                .CreateTable(_entityReactions)
-                .CreateDefaultProcedures(_entityReactions);
-
-            // Overwrite our SelectEntityReactionById created via CreateDefaultProcedures
-            // above to also return simple user data with the reaction
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityReactionById",
-                        @" SELECT er.*, 
-                                    u.UserName,                              
-                                    u.DisplayName,                                  
-                                    u.Alias,
-                                    u.PhotoUrl,
-                                    u.PhotoColor
-                                FROM {prefix}_EntityReactions er WITH (nolock) 
-                                    LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
-                                WHERE (
-                                   er.Id = @Id
-                                )")
-                    .ForTable(_entityReactions)
-                    .WithParameter(_entityReactions.PrimaryKeyColumn));
-
-            // Returns all reactions for a specific entity
-            builder
-                .CreateProcedure(
-                    new SchemaProcedure("SelectEntityReactionsByEntityId",
-                            @"SELECT er.*, 
-                                    u.UserName,                               
-                                    u.DisplayName,                                 
-                                    u.Alias,
-                                    u.PhotoUrl,
-                                    u.PhotoColor
-                                FROM {prefix}_EntityReactions er WITH (nolock) 
-                                    LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
-                                WHERE (
-                                   er.EntityId = @EntityId
-                                )")
-                        .ForTable(_entityReactions)
-                        .WithParameter(new SchemaColumn()
-                        {
-                            Name = "EntityId",
-                            DbType = DbType.Int32
-                        }));
-
-            // Returns all reactions for the supplied UserId and EntityId
-            builder
-                .CreateProcedure(
-                    new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId",
-                            @"SELECT er.*, 
-                                    u.UserName, 
-                                    u.NormalizedUserName,
-                                    u.DisplayName,                                    
-                                    u.Alias,
-                                    u.PhotoUrl,
-                                    u.PhotoColor
-                                FROM {prefix}_EntityReactions er WITH (nolock) 
-                                    LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
-                                WHERE (
-                                    er.CreatedUserId = @UserId AND
-                                    er.EntityId = @EntityId                                    
-                                )")
-                        .ForTable(_entityReactions)
-                        .WithParameters(new List<SchemaColumn>()
-                        {
-                            new SchemaColumn()
-                            {
-                                Name = "UserId",
-                                DbType = DbType.Int32,
-                            },
-                            new SchemaColumn()
-                            {
-                                Name = "EntityId",
-                                DbType = DbType.Int32,
-                            }
-                        }));
-
-
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
+                        }))
+                        
+            .CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entityReactions)
                 .WithParameters(new List<SchemaColumn>()
                 {

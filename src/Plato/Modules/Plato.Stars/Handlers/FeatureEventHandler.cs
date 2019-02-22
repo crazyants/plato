@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -118,8 +119,9 @@ namespace Plato.Stars.Handlers
             {
 
                 // drop entity follows
-                builder
-                    .DropTable(_stars)
+                builder.TableBuilder.DropTable(_stars);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_stars)
                     .DropProcedure(new SchemaProcedure("SelectFollowsPaged"))
                     .DropProcedure(new SchemaProcedure("SelectFollowsByNameAndThingId"))
@@ -173,16 +175,17 @@ namespace Plato.Stars.Handlers
         void Follows(ISchemaBuilder builder)
         {
             
-            builder
-                .CreateTable(_stars)
-                .CreateDefaultProcedures(_stars);
-            
-            // Overwrite our SelectFollowById created via CreateDefaultProcedures
-            // above to also return basic user data with follow
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectStarById",
-                        @"SELECT s.*, 
+            builder.TableBuilder.CreateTable(_stars);
+
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_stars)
+
+                // Overwrite our SelectFollowById created via CreateDefaultProcedures
+                // above to also return basic user data with follow
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectStarById",
+                            @"SELECT s.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
@@ -192,10 +195,10 @@ namespace Plato.Stars.Handlers
                                 WHERE (
                                     s.Id = @Id 
                                 )")
-                    .ForTable(_stars)
-                    .WithParameter(_stars.PrimaryKeyColumn));
-                    
-            builder
+                        .ForTable(_stars)
+                        .WithParameter(_stars.PrimaryKeyColumn))
+
+
                 .CreateProcedure(
                     new SchemaProcedure("SelectStarsByNameAndThingId",
                             @"SELECT s.*, 
@@ -223,9 +226,8 @@ namespace Plato.Stars.Handlers
                                 Name = "ThingId",
                                 DbType = DbType.Int32,
                             }
-                        }));
-            
-            builder
+                        }))
+
                 .CreateProcedure(
                     new SchemaProcedure("SelectStarByNameThingIdAndCreatedUserId",
                             @"SELECT s.*, 
@@ -257,19 +259,19 @@ namespace Plato.Stars.Handlers
                                 Name = "CreatedUserId",
                                 DbType = DbType.Int32,
                             }
-                        }));
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectStarsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_stars)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                        }))
+
+                .CreateProcedure(new SchemaProcedure("SelectStarsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_stars)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "[Name]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "[Name]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
         

@@ -95,11 +95,10 @@ namespace Plato.Users.Badges.Handlers
         void UserBadges(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_userBadges)
-                .CreateDefaultProcedures(_userBadges);
-
-            builder.CreateProcedure(new SchemaProcedure("SelectUserBadgesPaged", StoredProcedureType.SelectPaged)
+            builder.TableBuilder.CreateTable(_userBadges);
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_userBadges)
+                .CreateProcedure(new SchemaProcedure("SelectUserBadgesPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_userBadges)
                 .WithParameters(new List<SchemaColumn>()
                 {

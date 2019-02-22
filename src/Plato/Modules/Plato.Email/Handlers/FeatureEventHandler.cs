@@ -148,8 +148,9 @@ namespace Plato.Email.Handlers
             {
 
                 // drop emails
-                builder
-                    .DropTable(_emails)
+                builder.TableBuilder.DropTable(_emails);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_emails)
                     .DropProcedure(new SchemaProcedure("SelectEmailsPaged", StoredProcedureType.SelectByKey));
                 
@@ -201,21 +202,22 @@ namespace Plato.Email.Handlers
         void Emails(ISchemaBuilder builder)
         {
             
-            builder
-                .CreateTable(_emails)
-                .CreateDefaultProcedures(_emails);
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectEmailsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_emails)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+            builder.TableBuilder.CreateTable(_emails);
+
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_emails)
+
+                .CreateProcedure(new SchemaProcedure("SelectEmailsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_emails)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
         

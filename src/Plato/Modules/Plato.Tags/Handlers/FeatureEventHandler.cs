@@ -190,8 +190,9 @@ namespace Plato.Tags.Handlers
             {
                 
                 // drop tags
-                builder
-                    .DropTable(_tags)
+                builder.TableBuilder.DropTable(_tags);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_tags)
                     .DropProcedure(new SchemaProcedure("SelectTagsPaged", StoredProcedureType.SelectByKey))
                     .DropProcedure(new SchemaProcedure("SelectTagsByFeatureId", StoredProcedureType.SelectByKey))
@@ -199,8 +200,9 @@ namespace Plato.Tags.Handlers
                     .DropProcedure(new SchemaProcedure("SelectTagByNameNormalized", StoredProcedureType.SelectByKey));
                 
                 // drop entity tags
-                builder
-                    .DropTable(_entityTags)
+                builder.TableBuilder.DropTable(_entityTags);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityTags)
                     .DropProcedure(new SchemaProcedure("SelectEntityTagsByEntityId"))
                     .DropProcedure(new SchemaProcedure("SelectEntityTagsByEntityReplyId"))
@@ -258,27 +260,24 @@ namespace Plato.Tags.Handlers
         void Tags(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_tags)
-                .CreateDefaultProcedures(_tags);
+            builder.TableBuilder.CreateTable(_tags);
 
-            builder
-                .CreateProcedure(new SchemaProcedure("SelectTagsByFeatureId", StoredProcedureType.SelectByKey)
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_tags)
+
+            .CreateProcedure(new SchemaProcedure("SelectTagsByFeatureId", StoredProcedureType.SelectByKey)
                     .ForTable(_tags)
-                    .WithParameter(new SchemaColumn() {Name = "FeatureId", DbType = DbType.Int32}));
+                    .WithParameter(new SchemaColumn() {Name = "FeatureId", DbType = DbType.Int32}))
 
-            builder
-                .CreateProcedure(new SchemaProcedure("SelectTagByName", StoredProcedureType.SelectByKey)
+            .CreateProcedure(new SchemaProcedure("SelectTagByName", StoredProcedureType.SelectByKey)
                     .ForTable(_tags)
-                    .WithParameter(new SchemaColumn() { Name = "[Name]", DbType = DbType.String, Length = "255" }));
+                    .WithParameter(new SchemaColumn() { Name = "[Name]", DbType = DbType.String, Length = "255" }))
 
-            builder
-                .CreateProcedure(new SchemaProcedure("SelectTagByNameNormalized", StoredProcedureType.SelectByKey)
+            .CreateProcedure(new SchemaProcedure("SelectTagByNameNormalized", StoredProcedureType.SelectByKey)
                     .ForTable(_tags)
-                    .WithParameter(new SchemaColumn() { Name = "NameNormalized", DbType = DbType.String, Length = "255" }));
-
-
-            builder.CreateProcedure(new SchemaProcedure("SelectTagsPaged", StoredProcedureType.SelectPaged)
+                    .WithParameter(new SchemaColumn() { Name = "NameNormalized", DbType = DbType.String, Length = "255" }))
+            
+            .CreateProcedure(new SchemaProcedure("SelectTagsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_tags)
                 .WithParameters(new List<SchemaColumn>()
                 {
@@ -295,15 +294,16 @@ namespace Plato.Tags.Handlers
         void EntityTags(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_entityTags)
-                .CreateDefaultProcedures(_entityTags);
+            builder.TableBuilder.CreateTable(_entityTags);
 
-            // Overwrite default SelectEntityTagById
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityTagById",
-                        @"SELECT et.*, 
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entityTags)
+
+                // Overwrite default SelectEntityTagById
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityTagById",
+                            @"SELECT et.*, 
                                 t.FeatureId,
                                 t.[Name],
                                 t.NameNormalized,    
@@ -317,13 +317,13 @@ namespace Plato.Tags.Handlers
                                 WHERE (
                                    et.Id = @Id
                                 )")
-                    .ForTable(_entityTags)
-                    .WithParameter(_entityTags.PrimaryKeyColumn));
+                        .ForTable(_entityTags)
+                        .WithParameter(_entityTags.PrimaryKeyColumn))
 
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityTagsByEntityId",
-                        @"SELECT et.*, 
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityTagsByEntityId",
+                            @"SELECT et.*, 
                                 t.FeatureId,
                                 t.[Name],
                                 t.NameNormalized,
@@ -337,13 +337,13 @@ namespace Plato.Tags.Handlers
                                 WHERE (
                                    et.EntityId = @EntityId
                                 )")
-                    .ForTable(_entityTags)
-                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+                        .ForTable(_entityTags)
+                        .WithParameter(new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32}))
 
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityTagsByEntityReplyId",
-                        @"SELECT et.*, 
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityTagsByEntityReplyId",
+                            @"SELECT et.*, 
                                 t.FeatureId,
                                 t.[Name],
                                 t.NameNormalized,
@@ -357,15 +357,13 @@ namespace Plato.Tags.Handlers
                                 WHERE (
                                    et.EntityReplyId = @EntityReplyId
                                 )")
-                    .ForTable(_entityTags)
-                    .WithParameter(new SchemaColumn() { Name = "EntityReplyId", DbType = DbType.Int32 }));
-            
-            builder
+                        .ForTable(_entityTags)
+                        .WithParameter(new SchemaColumn() {Name = "EntityReplyId", DbType = DbType.Int32}))
+
                 .CreateProcedure(new SchemaProcedure("DeleteEntityTagsByEntityId", StoredProcedureType.DeleteByKey)
                     .ForTable(_entityTags)
-                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+                    .WithParameter(new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32}))
 
-            builder
                 .CreateProcedure(new SchemaProcedure("DeleteEntityTagByEntityIdAndTagId",
                         StoredProcedureType.DeleteByKey)
                     .ForTable(_entityTags)
@@ -374,19 +372,19 @@ namespace Plato.Tags.Handlers
                             new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32},
                             new SchemaColumn() {Name = "TagId", DbType = DbType.Int32}
                         }
-                    ));
+                    ))
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityTagsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityTags)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                .CreateProcedure(new SchemaProcedure("SelectEntityTagsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entityTags)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
         

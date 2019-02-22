@@ -99,11 +99,11 @@ namespace Plato.Reputations.Handlers
         void UserReputations(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_userReputations)
-                .CreateDefaultProcedures(_userReputations);
+            builder.TableBuilder.CreateTable(_userReputations);
 
-            builder.CreateProcedure(new SchemaProcedure("SelectUserReputationsPaged", StoredProcedureType.SelectPaged)
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_userReputations)
+                .CreateProcedure(new SchemaProcedure("SelectUserReputationsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_userReputations)
                 .WithParameters(new List<SchemaColumn>()
                 {

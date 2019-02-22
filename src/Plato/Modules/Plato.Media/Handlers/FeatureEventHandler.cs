@@ -145,9 +145,9 @@ namespace Plato.Media.Handlers
             using (var builder = _schemaBuilder)
             {
 
-                // drop media
-                builder
-                    .DropTable(_media)
+                builder.TableBuilder.DropTable(_media);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_media)
                     .DropProcedure(new SchemaProcedure("SelectMediaPaged", StoredProcedureType.SelectByKey));
                 
@@ -195,11 +195,11 @@ namespace Plato.Media.Handlers
         void Media(ISchemaBuilder builder)
         {
             
-            builder
-                .CreateTable(_media)
-                .CreateDefaultProcedures(_media);
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectMediaPaged", StoredProcedureType.SelectPaged)
+            builder.TableBuilder.CreateTable(_media);
+
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_media)
+                .CreateProcedure(new SchemaProcedure("SelectMediaPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_media)
                 .WithParameters(new List<SchemaColumn>()
                 {

@@ -18,7 +18,8 @@ namespace Plato.Discuss.Handlers
         private readonly IShellFeatureStore<ShellFeature> _shellFeatureStore;
         private readonly IDefaultRolesManager _defaultRolesManager;
 
-        public FeatureEventHandler(ISchemaBuilder schemaBuilder,
+        public FeatureEventHandler(
+            ISchemaBuilder schemaBuilder,
             IShellFeatureStore<ShellFeature> shellFeatureStore,
             IDefaultRolesManager defaultRolesManager)
         {

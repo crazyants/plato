@@ -100,10 +100,10 @@ namespace Plato.Features.Handlers
         void Features(ISchemaBuilder builder)
         {
          
-            builder
-                .CreateTable(_shellFeatures)
-                .CreateDefaultProcedures(_shellFeatures)
+            builder.TableBuilder.CreateTable(_shellFeatures);
 
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_shellFeatures)
                 .CreateProcedure(new SchemaProcedure("SelectShellFeaturesPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_shellFeatures)
                     .WithParameters(new List<SchemaColumn>()
@@ -120,7 +120,7 @@ namespace Plato.Features.Handlers
                             Length = "255"
                         }
                     }));
-            
+
         }
         
     }

@@ -138,28 +138,25 @@ namespace Plato.Email.Handlers
         void Emails(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_emails)
-                .CreateDefaultProcedures(_emails);
+            builder.TableBuilder.CreateTable(_emails);
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEmailsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_emails)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_emails)
+                .CreateProcedure(new SchemaProcedure("SelectEmailsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_emails)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
 
         #endregion
-
-
-
 
     }
 }

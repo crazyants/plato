@@ -172,14 +172,12 @@ namespace Plato.Roles.Handlers
         {
 
             // create tables and default procedures
-            builder
-                // Create tables
-                .CreateTable(_roles)
-                // Create basic default CRUD procedures
-                .CreateDefaultProcedures(_roles)
+            builder.TableBuilder.CreateTable(_roles);
+            builder.ProcedureBuilder.CreateDefaultProcedures(_roles)
 
                 // create unique stored procedures
 
+            
                 .CreateProcedure(
                     new SchemaProcedure("SelectRoleByName", StoredProcedureType.SelectByKey)
                         .ForTable(_roles)
@@ -222,12 +220,11 @@ namespace Plato.Roles.Handlers
         void UserRoles(ISchemaBuilder builder)
         {
 
-            // create tables and default procedures
-            builder
-                // Create tables
-                .CreateTable(_userRoles)
-                // Create basic default CRUD procedures
-                .CreateDefaultProcedures(_userRoles)
+            // create tables 
+            builder.TableBuilder.CreateTable(_userRoles);
+
+            // Create procedures
+            builder.ProcedureBuilder.CreateDefaultProcedures(_userRoles)
 
                 // Overwrite our SelectUserRoleById created via CreateDefaultProcedures
                 // above to also join and return all role data
@@ -325,7 +322,7 @@ namespace Plato.Roles.Handlers
                         }));
 
         }
-        
+
     }
 
 }

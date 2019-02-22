@@ -317,22 +317,25 @@ namespace Plato.Categories.Handlers
             {
                 
                 // drop categories
-                builder
-                    .DropTable(_categories)
+                builder.TableBuilder.DropTable(_categories);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_categories)
                     .DropProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectByKey))
                     .DropProcedure(new SchemaProcedure("SelectCategoriesByFeatureId", StoredProcedureType.SelectByKey));
                 
                 // drop category data
-                builder
-                    .DropTable(_categoryData)
+                builder.TableBuilder.DropTable(_categoryData);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_categoryData)
                     .DropProcedure(new SchemaProcedure("SelectCategoryDatumByCategoryId"))
                     .DropProcedure(new SchemaProcedure("SelectCategoryDatumPaged"));
                 
                 // drop category roles
-                builder
-                    .DropTable(_categoryRoles)
+                builder.TableBuilder.DropTable(_categoryRoles);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_categoryRoles)
                     .DropProcedure(new SchemaProcedure("SelectCategoryRolesByCategoryId"))
                     .DropProcedure(new SchemaProcedure("SelectCategoryRolesPaged"))
@@ -340,8 +343,9 @@ namespace Plato.Categories.Handlers
                     .DropProcedure(new SchemaProcedure("DeleteCategoryRolesByRoleIdAndCategoryId"));
                 
                 // drop entity categories
-                builder
-                    .DropTable(_entityCategories)
+                builder.TableBuilder.DropTable(_entityCategories);
+
+                builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityCategories)
                     .DropProcedure(new SchemaProcedure("SelectEntityCategoriesByEntityId"))
                     .DropProcedure(new SchemaProcedure("DeleteEntityCategoriesByEntityId"))
@@ -397,16 +401,17 @@ namespace Plato.Categories.Handlers
         void Categories(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_categories)
-                .CreateDefaultProcedures(_categories);
+            builder.TableBuilder.CreateTable(_categories);
 
-            // Overwrite our SelectCategoryById created via CreateDefaultProcedures
-            // above to also return all CategoryData within a second result set
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectCategoryById",
-                        @"SELECT * FROM {prefix}_Categories WITH (nolock) 
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_categories)
+
+                // Overwrite our SelectCategoryById created via CreateDefaultProcedures
+                // above to also return all CategoryData within a second result set
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectCategoryById",
+                            @"SELECT * FROM {prefix}_Categories WITH (nolock) 
                                 WHERE (
                                    Id = @Id
                                 )
@@ -414,91 +419,88 @@ namespace Plato.Categories.Handlers
                                 WHERE (
                                    CategoryId = @Id
                                 )")
-                    .ForTable(_categories)
-                    .WithParameter(_categories.PrimaryKeyColumn));
+                        .ForTable(_categories)
+                        .WithParameter(_categories.PrimaryKeyColumn))
 
-            builder
                 .CreateProcedure(new SchemaProcedure("SelectCategoriesByFeatureId", StoredProcedureType.SelectByKey)
                     .ForTable(_categories)
-                    .WithParameter(new SchemaColumn() {Name = "FeatureId", DbType = DbType.Int32}));
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_categories)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                    .WithParameter(new SchemaColumn() {Name = "FeatureId", DbType = DbType.Int32}))
+
+                .CreateProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_categories)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
 
         void CategoryData(ISchemaBuilder builder)
         {
 
-            builder
-                // Create tables
-                .CreateTable(_categoryData)
-                // Create basic default CRUD procedures
+            builder.TableBuilder.CreateTable(_categoryData);
+
+            builder.ProcedureBuilder
                 .CreateDefaultProcedures(_categoryData)
                 .CreateProcedure(new SchemaProcedure("SelectCategoryDatumBycategoryId", StoredProcedureType.SelectByKey)
                     .ForTable(_categoryData)
-                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+                    .WithParameter(new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}))
 
-            builder.CreateProcedure(new SchemaProcedure("SelectCategoryDatumPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_categoryData)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                .CreateProcedure(new SchemaProcedure("SelectCategoryDatumPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_categoryData)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "[Key]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "[Key]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
         
         void CategoryRoles(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_categoryRoles)
-                .CreateDefaultProcedures(_categoryRoles);
-            
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectCategoryRoleById",
-                        @" SELECT cr.*, r.[Name] AS RoleName
+            builder.TableBuilder.CreateTable(_categoryRoles);
+
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_categoryRoles)
+
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectCategoryRoleById",
+                            @" SELECT cr.*, r.[Name] AS RoleName
                                 FROM {prefix}_CategoryRoles cr WITH (nolock) 
                                     INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
                                 WHERE (
                                    cr.Id = @Id
                                 )")
-                    .ForTable(_categoryRoles)
-                    .WithParameter(_categoryRoles.PrimaryKeyColumn));
-            
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectCategoryRolesByCategoryId",
-                        @" SELECT cr.*, r.[Name] AS RoleName
+                        .ForTable(_categoryRoles)
+                        .WithParameter(_categoryRoles.PrimaryKeyColumn))
+
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectCategoryRolesByCategoryId",
+                            @" SELECT cr.*, r.[Name] AS RoleName
                                 FROM {prefix}_CategoryRoles cr WITH (nolock) 
                                     INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
                                 WHERE (
                                    cr.CategoryId = @CategoryId
                                 )")
-                    .ForTable(_categoryRoles)
-                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
-            
-            builder
+                        .ForTable(_categoryRoles)
+                        .WithParameter(new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}))
+
                 .CreateProcedure(new SchemaProcedure("DeleteCategoryRolesByCategoryId", StoredProcedureType.DeleteByKey)
                     .ForTable(_categoryRoles)
-                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+                    .WithParameter(new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}))
 
-            builder
                 .CreateProcedure(new SchemaProcedure("DeleteCategoryRolesByRoleIdAndCategoryId",
                         StoredProcedureType.DeleteByKey)
                     .ForTable(_categoryRoles)
@@ -507,59 +509,59 @@ namespace Plato.Categories.Handlers
                             new SchemaColumn() {Name = "RoleId", DbType = DbType.Int32},
                             new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}
                         }
-                    ));
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectCategoryRolesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_categoryRoles)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                    ))
+
+                .CreateProcedure(new SchemaProcedure("SelectCategoryRolesPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_categoryRoles)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
-            
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
+
         }
 
         void EntityCategories(ISchemaBuilder builder)
         {
 
-            builder
-                .CreateTable(_entityCategories)
-                .CreateDefaultProcedures(_entityCategories);
+            builder.TableBuilder.CreateTable(_entityCategories);
 
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityCategoryById",
-                        @" SELECT ec.*, c.[Name] AS CategoryName
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entityCategories)
+
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityCategoryById",
+                            @" SELECT ec.*, c.[Name] AS CategoryName
                                 FROM {prefix}_Categories c WITH (nolock) 
                                     INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
                                 WHERE (
                                    ec.Id = @Id
                                 )")
-                    .ForTable(_categoryRoles)
-                    .WithParameter(_categoryRoles.PrimaryKeyColumn));
+                        .ForTable(_categoryRoles)
+                        .WithParameter(_categoryRoles.PrimaryKeyColumn))
 
-            builder.CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityCategoriesByEntityId",
-                        @" SELECT ec.*, c.[Name] AS CategoryName
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityCategoriesByEntityId",
+                            @" SELECT ec.*, c.[Name] AS CategoryName
                                 FROM {prefix}_Categories c WITH (nolock) 
                                     INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
                                 WHERE (
                                    ec.EntityId = @EntityId
                                 )")
-                    .ForTable(_entityCategories)
-                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+                        .ForTable(_entityCategories)
+                        .WithParameter(new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32}))
 
-            builder
-                .CreateProcedure(new SchemaProcedure("DeleteEntityCategoriesByEntityId", StoredProcedureType.DeleteByKey)
-                    .ForTable(_entityCategories)
-                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+                .CreateProcedure(
+                    new SchemaProcedure("DeleteEntityCategoriesByEntityId", StoredProcedureType.DeleteByKey)
+                        .ForTable(_entityCategories)
+                        .WithParameter(new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32}))
 
-            builder
                 .CreateProcedure(new SchemaProcedure("DeleteEntityCategoryByEntityIdAndCategoryId",
                         StoredProcedureType.DeleteByKey)
                     .ForTable(_entityCategories)
@@ -568,20 +570,20 @@ namespace Plato.Categories.Handlers
                             new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32},
                             new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}
                         }
-                    ));
+                    ))
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityCategoriesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityCategories)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+                .CreateProcedure(new SchemaProcedure("SelectEntityCategoriesPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entityCategories)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
-            
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
+
         }
         
         #endregion
