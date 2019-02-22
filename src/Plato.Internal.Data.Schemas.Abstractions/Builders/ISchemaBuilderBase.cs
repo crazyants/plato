@@ -7,9 +7,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions.Builders
     {
 
         ICollection<string> Statements { get; }
-
-        SchemaBuilderOptions Options { get; }
-
+        
         ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure);
 
     }

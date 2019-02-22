@@ -591,7 +591,7 @@ namespace Plato.Internal.Data.Schemas.Builders
                 .Append(NewLine)
                 .Append(NewLine);
 
-            sb.Append(ParseExplicitTSql(procedure.Sql));
+            sb.Append(ParseExplicitSql(procedure.Sql));
 
             return sb.ToString();
 

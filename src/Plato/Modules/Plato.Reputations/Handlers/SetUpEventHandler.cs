@@ -61,8 +61,6 @@ namespace Plato.Reputations.Handlers
         public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
 
-            // build schemas
-            
             using (var builder = _schemaBuilder)
             {
 
@@ -84,7 +82,6 @@ namespace Plato.Reputations.Handlers
 
         void Configure(ISchemaBuilder builder)
         {
-
             builder
                 .Configure(options =>
                 {
@@ -93,7 +90,6 @@ namespace Plato.Reputations.Handlers
                     options.DropTablesBeforeCreate = true;
                     options.DropProceduresBeforeCreate = true;
                 });
-
         }
 
         void UserReputations(ISchemaBuilder builder)

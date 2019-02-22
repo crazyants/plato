@@ -18,7 +18,7 @@ namespace Plato.Internal.Data.Schemas.Builders
         
         public ICollection<string> Statements { get; }
 
-        public SchemaBuilderOptions Options { get; set; }
+        public SchemaBuilderOptions Options { get; private set; }
 
         private readonly string _tablePrefix;
 
@@ -66,7 +66,7 @@ namespace Plato.Internal.Data.Schemas.Builders
             return this;
         }
 
-        public string ParseExplicitTSql(string input)
+        public string ParseExplicitSql(string input)
         {
             return input
                 .Replace("{prefix}_", _tablePrefix)

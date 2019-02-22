@@ -28,12 +28,15 @@ namespace Plato.Internal.Data.Schemas
                     statements.Add(statement);
                 }
 
+                foreach (var statement in FullTextBuilder.Statements)
+                {
+                    statements.Add(statement);
+                }
+
                 return statements;
 
             }
         }
-
-        public SchemaBuilderOptions Options { get; private set; }
 
         public ITableBuilder TableBuilder { get; }
 
@@ -41,9 +44,7 @@ namespace Plato.Internal.Data.Schemas
 
         public IFullTextBuilder FullTextBuilder { get; }
 
-        public SchemaBuilder(
-            IDbContext dbContext,
-            IPluralize pluralize) 
+        public SchemaBuilder(IDbContext dbContext, IPluralize pluralize) 
         {
             ProcedureBuilder = new ProcedureBuilder(dbContext, pluralize);
             TableBuilder = new TableBuilder(dbContext, pluralize);
@@ -52,15 +53,9 @@ namespace Plato.Internal.Data.Schemas
         
         public ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure)
         {
-
-            Options = new SchemaBuilderOptions();
-            configure(Options);
-
-            // Configure builders
             TableBuilder.Configure(configure);
             ProcedureBuilder.Configure(configure);
             FullTextBuilder.Configure(configure);
-
             return this;
         }
         
