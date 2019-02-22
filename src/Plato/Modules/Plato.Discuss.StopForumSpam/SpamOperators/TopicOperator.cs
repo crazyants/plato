@@ -3,11 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Users;
-using Plato.StopForumSpam.Models;
-using Plato.StopForumSpam.Services;
-using Plato.Discuss.Models;
-using Plato.Discuss.StopForumSpam.NotificationTypes;
-using Plato.Entities.Stores;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Extensions;
@@ -15,6 +10,11 @@ using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.StopForumSpam.Models;
+using Plato.StopForumSpam.Services;
+using Plato.Discuss.Models;
+using Plato.Discuss.StopForumSpam.NotificationTypes;
+using Plato.Entities.Stores;
 
 namespace Plato.Discuss.StopForumSpam.SpamOperators
 {
@@ -186,11 +186,13 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
         async Task<IEnumerable<User>> GetUsersAsync(ISpamOperation operation)
         {
 
-            var roleNames = new List<string>();
+            var roleNames = new List<string>(2);
             if (operation.NotifyAdmin)
                 roleNames.Add(DefaultRoles.Administrator);
             if (operation.NotifyStaff)
                 roleNames.Add(DefaultRoles.Staff);
+            if (roleNames.Count == 0)
+                return null;
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {

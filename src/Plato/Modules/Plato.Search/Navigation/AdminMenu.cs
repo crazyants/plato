@@ -21,9 +21,9 @@ namespace Plato.Search.Navigation
             }
 
             builder
-                .Add(T["Settings"], 9999, configuration => configuration
+                .Add(T["Settings"], int.MaxValue, configuration => configuration
                     .IconCss("fal fa-cog")
-                    .Add(T["Search Settings"], 4, installed => installed
+                    .Add(T["Search"], int.MaxValue - 6, installed => installed
                         .Action("Index", "Admin", "Plato.Search")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()

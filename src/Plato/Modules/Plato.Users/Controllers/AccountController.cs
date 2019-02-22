@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
@@ -87,15 +88,16 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
+            var roleNames = new List<string>(2)
+            {
+                DefaultRoles.Administrator,
+                DefaultRoles.Staff
+            };
 
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {
-                    q.RoleName.IsIn(new[]
-                    {
-                        DefaultRoles.Administrator,
-                        DefaultRoles.Staff
-                    });
+                    q.RoleName.IsIn(roleNames.ToArray());
                 })
                 .ToList();
             if (users?.Data != null)
@@ -110,7 +112,7 @@ namespace Plato.Users.Controllers
                 ViewData["users"] = sb.ToString();
             }
 
-            await CreateSampleUsers();
+            //await CreateSampleUsers();
 
             // ----------------------------------------------------------------
 

@@ -42,10 +42,14 @@ namespace Plato.Search
             services.AddScoped<INavigationProvider, SearchMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
-            // Search Discuss view providers
+            // View providers
             services.AddScoped<IViewProviderManager<SearchResult>, ViewProviderManager<SearchResult>>();
             services.AddScoped<IViewProvider<SearchResult>, SearchViewProvider>();
             services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // Admin view providers
+            services.AddScoped<IViewProviderManager<SearchSettings>, ViewProviderManager<SearchSettings>>();
+            services.AddScoped<IViewProvider<SearchSettings>, AdminViewProvider>();
 
             // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();

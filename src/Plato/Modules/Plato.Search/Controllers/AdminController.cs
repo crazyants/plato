@@ -9,6 +9,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Search.Models;
 using Plato.Search.Stores;
@@ -19,15 +20,15 @@ namespace Plato.Search.Controllers
 
     public class AdminController : Controller, IUpdateModel
     {
-
-        #region "Constructor"
-
+        
+        
+    
+        private readonly IViewProviderManager<SearchSettings> _viewProvider;
         private readonly IAuthorizationService _authorizationService;
-        private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
-        private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IShellSettings _shellSettings;
+  
         private readonly IPlatoHost _platoHost;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -37,24 +38,25 @@ namespace Plato.Search.Controllers
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
             IAuthorizationService authorizationService,
-            ISearchSettingsStore<SearchSettings> searchSettingsStore,
+            IViewProviderManager<SearchSettings> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IAlerter alerter, IShellSettings shellSettings, IPlatoHost platoHost)
+            IAlerter alerter,
+            IPlatoHost platoHost)
         {
        
             _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
-            _searchSettingsStore = searchSettingsStore;
-            _alerter = alerter;
-            _shellSettings = shellSettings;
+   
+            _viewProvider = viewProvider;
+   
             _platoHost = platoHost;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
 
         }
-
-        #endregion
+        
 
         #region "Actions"
 
@@ -74,10 +76,14 @@ namespace Plato.Search.Controllers
                 ).Add(S["Settings"], settings => settings
                     .Action("Index", "Admin", "Plato.Settings")
                     .LocalNav()
-                ).Add(S["Search Settings"]);
+                ).Add(S["Search"]);
             });
-            
-            return View(await GetModel());
+
+            // Build view
+            var result = await _viewProvider.ProvideEditAsync(new SearchSettings(), this);
+
+            // Return view
+            return View(result);
 
         }
         
@@ -87,81 +93,18 @@ namespace Plato.Search.Controllers
         public async Task<IActionResult> IndexPost(SearchSettingsViewModel viewModel)
         {
 
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
-            
-            if (!ModelState.IsValid)
-            {
-                return View(await GetModel());
-            }
+            // Execute view providers ProvideUpdateAsync method
+            await _viewProvider.ProvideUpdateAsync(new SearchSettings(), this);
 
-            var settings = new SearchSettings()
-            {
-                SearchType = viewModel.SearchType
-            };
-            
-            var result = await _searchSettingsStore.SaveAsync(settings);
-            if (result != null)
-            {
-                // Recycle shell context to ensure changes take effect
-                _platoHost.RecycleShellContext(_shellSettings);
-                _alerter.Success(T["Settings Updated Successfully!"]);
-            }
-            else
-            {
-                _alerter.Danger(T["A problem occurred updating the settings. Please try again!"]);
-            }
-            
+            // Add alert
+            _alerter.Success(T["Settings Updated Successfully!"]);
+
             return RedirectToAction(nameof(Index));
-            
+
         }
         
         #endregion
-
-        #region "Private Methods"
-
-        async Task<SearchSettingsViewModel> GetModel()
-        {
-
-            var settings = await _searchSettingsStore.GetAsync();
-            if (settings != null)
-            {
-                return new SearchSettingsViewModel()
-                {
-                    SearchType = settings.SearchType,
-                    AvailableSearchTypes = GetAvailableSearchTypes()
-                };
-            }
-
-            // return default settings
-            return new SearchSettingsViewModel()
-            {
-                AvailableSearchTypes = GetAvailableSearchTypes()
-            };
-
-        }
-
-        IEnumerable<SelectListItem> GetAvailableSearchTypes()
-        {
-
-            var output = new List<SelectListItem>();
-            foreach (var searchType in SearchDefaults.AvailableSearchTypes)
-            {
-                output.Add(new SelectListItem
-                {
-                    Text = searchType.Name,
-                    Value = System.Convert.ToString((int)searchType.Type)
-                });
-            }
-
-            return output;
-
-        }
-
-        #endregion
-
-
+        
     }
+
 }

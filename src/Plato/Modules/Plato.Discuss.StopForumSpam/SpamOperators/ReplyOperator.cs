@@ -184,11 +184,13 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
         async Task<IEnumerable<User>> GetUsersAsync(ISpamOperation operation)
         {
 
-            var roleNames = new List<string>();
+            var roleNames = new List<string>(2);
             if (operation.NotifyAdmin)
                 roleNames.Add(DefaultRoles.Administrator);
             if (operation.NotifyStaff)
                 roleNames.Add(DefaultRoles.Staff);
+            if (roleNames.Count == 0)
+                return null;
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {

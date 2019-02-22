@@ -1,0 +1,22 @@
+﻿@model SearchSettingsViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["General"]</h6>
+    </card-title>
+    <card-body>
+
+        <label asp-for="SearchType" class="col-form-label font-weight-bold">@T["Search Type"]</label>
+        <span asp-validation-for="SearchType" class="text-danger"></span>
+        <select class="form-control"
+                asp-for="SearchType"
+                asp-items="@Model.AvailableSearchTypes"></select>
+
+    </card-body>
+</card>
+
+<card class="card mt-4">
+    <card-footer>
+        <button class="btn btn-primary" type="submit">@T["Save"]</button>
+    </card-footer>
+</card>

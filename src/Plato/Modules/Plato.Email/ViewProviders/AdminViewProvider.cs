@@ -90,7 +90,7 @@ namespace Plato.Email.ViewProviders
 
         }
         
-        private async Task<EmailSettingsViewModel> GetModel()
+        async Task<EmailSettingsViewModel> GetModel()
         {
 
             var settings = await _emailSettingsStore.GetAsync();

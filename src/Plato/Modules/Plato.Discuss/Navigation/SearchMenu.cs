@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -33,7 +34,6 @@ namespace Plato.Discuss.Navigation
             var feature = _featureFacade.GetFeatureByIdAsync("Plato.Discuss")
                 .GetAwaiter()
                 .GetResult();
-
             if (feature == null)
             {
                 return;
@@ -42,20 +42,30 @@ namespace Plato.Discuss.Navigation
             builder
                 .Add(T["Discuss"], 2, discuss => discuss
                     .Add(T["Topics"], 1, topics => topics
+                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                        {
+                            ["FeatureId"] = feature.Id,
+                            ["Within"] = "Topics"
+                        })
                         .Attributes(new Dictionary<string, object>()
                         {
-                            { "data-feature-id", feature.Id }
+                            {"data-feature-id", feature.Id}
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Replies"], 2, favourites => favourites
+                    ).Add(T["Replies"], 2, f => f
+                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                        {
+                            ["FeatureId"] = feature.Id,
+                            ["Within"] = "Replies"
+                        })
                         .Attributes(new Dictionary<string, object>()
                         {
-                            { "data-feature-id", feature.Id }
+                            {"data-feature-id", feature.Id}
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ), new List<string>() { "discuss", "font-weight-bold" });
+                    ), new List<string>() {"discuss", "font-weight-bold"});
         }
     }
 
