@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
+using Plato.Internal.Data.Schemas.Abstractions.Builders;
 using Plato.Internal.Data.Schemas.Builders;
 using Plato.Internal.Text.Abstractions;
 
@@ -39,13 +38,16 @@ namespace Plato.Internal.Data.Schemas
         public ITableBuilder TableBuilder { get; }
 
         public IProcedureBuilder ProcedureBuilder { get; }
-        
+
+        public IFullTextBuilder FullTextBuilder { get; }
+
         public SchemaBuilder(
             IDbContext dbContext,
             IPluralize pluralize) 
         {
             ProcedureBuilder = new ProcedureBuilder(dbContext, pluralize);
             TableBuilder = new TableBuilder(dbContext, pluralize);
+            FullTextBuilder = new FullTextBuilder(dbContext, pluralize);
         }
         
         public ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure)
@@ -57,6 +59,7 @@ namespace Plato.Internal.Data.Schemas
             // Configure builders
             TableBuilder.Configure(configure);
             ProcedureBuilder.Configure(configure);
+            FullTextBuilder.Configure(configure);
 
             return this;
         }

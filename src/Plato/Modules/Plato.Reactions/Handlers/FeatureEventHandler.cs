@@ -70,7 +70,6 @@ namespace Plato.Reactions.Handlers
             ISchemaManager schemaManager,
             ISchemaBuilder schemaBuilder)
         {
-    
             _schemaManager = schemaManager;
             _schemaBuilder = schemaBuilder;
         }
@@ -109,35 +108,6 @@ namespace Plato.Reactions.Handlers
                 
             }
 
-            //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
-            //using (var builder = _schemaBuilder)
-            //{
-
-            //    // configure
-            //    Configure(builder);
-
-            //    // Reactions schema
-            //    Reactions(builder);
-
-            //    // Log statements to execute
-            //    if (context.Logger.IsEnabled(LogLevel.Information))
-            //    {
-            //        context.Logger.LogInformation($"The following SQL statements will be executed...");
-            //        foreach (var statement in builder.Statements)
-            //        {
-            //            context.Logger.LogInformation(statement);
-            //        }
-            //    }
-
-            //    // Execute statements
-            //    var errors = await _schemaManager.ExecuteAsync(builder.Statements);
-            //    foreach (var error in errors)
-            //    {
-            //        context.Errors.Add(error, $"InstallingAsync within {this.GetType().FullName}");
-            //    }
-                
-            //}
-            
         }
 
         public override Task InstalledAsync(IFeatureEventContext context)
@@ -153,8 +123,8 @@ namespace Plato.Reactions.Handlers
             using (var builder = _schemaBuilder)
             {
                 // drop emails
-                builder.TableBuilder
-                    .DropTable(_entityReactions);
+                builder.TableBuilder.DropTable(_entityReactions);
+
                 builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityReactions)
                     .DropProcedure(new SchemaProcedure("SelectEntityReactionsByEntityId"))
@@ -180,39 +150,7 @@ namespace Plato.Reactions.Handlers
                 }
 
             }
-
-
-            //using (var builder = _schemaBuilder)
-            //{
-
-            //    // drop emails
-            //    builder
-            //        .DropTable(_entityReactions)
-            //        .DropDefaultProcedures(_entityReactions)
-            //        .DropProcedure(new SchemaProcedure("SelectEntityReactionsByEntityId"))
-            //        .DropProcedure(new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId"))
-            //        .DropProcedure(new SchemaProcedure("SelectEntityReactionsPaged"));
-
-            //    // Log statements to execute
-            //    if (context.Logger.IsEnabled(LogLevel.Information))
-            //    {
-            //        context.Logger.LogInformation($"The following SQL statements will be executed...");
-            //        foreach (var statement in builder.Statements)
-            //        {
-            //            context.Logger.LogInformation(statement);
-            //        }
-            //    }
-
-            //    // Execute statements
-            //    var errors = await _schemaManager.ExecuteAsync(builder.Statements);
-            //    foreach (var error in errors)
-            //    {
-            //        context.Logger.LogCritical(error, $"An error occurred within the UninstallingAsync method within {this.GetType().FullName}");
-            //        context.Errors.Add(error, $"UninstallingAsync within {this.GetType().FullName}");
-            //    }
-
-            //}
-
+            
         }
 
         public override Task UninstalledAsync(IFeatureEventContext context)
@@ -222,7 +160,6 @@ namespace Plato.Reactions.Handlers
 
         void Configure(ISchemaBuilder builder)
         {
-
             builder
                 .Configure(options =>
                 {
@@ -231,23 +168,22 @@ namespace Plato.Reactions.Handlers
                     options.DropTablesBeforeCreate = true;
                     options.DropProceduresBeforeCreate = true;
                 });
-
         }
         
-
         void Reactions(ISchemaBuilder builder)
         {
-
+            
             builder.TableBuilder.CreateTable(_entityReactions);
-            builder.ProcedureBuilder.CreateDefaultProcedures(_entityReactions);
 
-            // Overwrite our SelectEntityReactionById created via CreateDefaultProcedures
-            // above to also return simple user data with the reaction
             builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entityReactions)
+
+                // Overwrite our SelectEntityReactionById created via CreateDefaultProcedures
+                // above to also return simple user data with the reaction
                 .CreateProcedure(
-                new SchemaProcedure(
-                        $"SelectEntityReactionById",
-                        @" SELECT er.*, 
+                    new SchemaProcedure(
+                            $"SelectEntityReactionById",
+                            @" SELECT er.*, 
                                     u.UserName,                              
                                     u.DisplayName,                                  
                                     u.Alias,
@@ -258,11 +194,11 @@ namespace Plato.Reactions.Handlers
                                 WHERE (
                                    er.Id = @Id
                                 )")
-                    .ForTable(_entityReactions)
-                    .WithParameter(_entityReactions.PrimaryKeyColumn))
+                        .ForTable(_entityReactions)
+                        .WithParameter(_entityReactions.PrimaryKeyColumn))
 
-            // Returns all reactions for a specific entity
-            .CreateProcedure(
+                // Returns all reactions for a specific entity
+                .CreateProcedure(
                     new SchemaProcedure("SelectEntityReactionsByEntityId",
                             @"SELECT er.*, 
                                     u.UserName,                               
@@ -282,8 +218,8 @@ namespace Plato.Reactions.Handlers
                             DbType = DbType.Int32
                         }))
 
-            // Returns all reactions for the supplied UserId and EntityId
-            .CreateProcedure(
+                // Returns all reactions for the supplied UserId and EntityId
+                .CreateProcedure(
                     new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId",
                             @"SELECT er.*, 
                                     u.UserName, 
@@ -312,18 +248,18 @@ namespace Plato.Reactions.Handlers
                                 DbType = DbType.Int32,
                             }
                         }))
-                        
-            .CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityReactions)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
+
+                .CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entityReactions)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                        new SchemaColumn()
+                        {
+                            Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
         }
         

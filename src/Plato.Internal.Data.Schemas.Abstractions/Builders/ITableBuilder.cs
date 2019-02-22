@@ -1,4 +1,4 @@
-﻿namespace Plato.Internal.Data.Schemas.Abstractions
+﻿namespace Plato.Internal.Data.Schemas.Abstractions.Builders
 {
     public interface ITableBuilder : ISchemaBuilderBase
     {

@@ -2,6 +2,7 @@
 using System.Text;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
+using Plato.Internal.Data.Schemas.Abstractions.Builders;
 using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Internal.Data.Schemas.Builders

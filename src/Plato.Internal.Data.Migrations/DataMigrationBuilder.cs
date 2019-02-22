@@ -1,25 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Internal.Data.Migrations
 {
     public class DataMigrationBuilder : IDataMigrationBuilder
     {
     
-        private List<PreparedSchema> _schemas;
+        private List<PreparedMigration> _schemas;
         private MigrationType _migrationType;
 
-        private readonly ISchemaProvider _schemaProvider;
+        private readonly IMigrationProvider _migrationProvider;
         private readonly IDataMigrationManager _dataMigrationManager;
 
         public MigrationType DataMigrationType => _migrationType;
 
         public DataMigrationBuilder(
-            ISchemaProvider schemaProvider,
+            IMigrationProvider migrationProvider,
             IDataMigrationManager dataMigrationManager)
         {
-            _schemaProvider = schemaProvider;
+            _migrationProvider = migrationProvider;
             _dataMigrationManager = dataMigrationManager;
         }
 
@@ -27,7 +26,7 @@ namespace Plato.Internal.Data.Migrations
 
         public IDataMigrationBuilder BuildMigrations(List<string> versions)
         {
-            _schemas = _schemaProvider.LoadSchemas(versions).Schemas;
+            _schemas = _migrationProvider.LoadSchemas(versions).Schemas;
             if (_schemas?.Count > 0)
             {
                 DetectMigrationType();

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace Plato.Internal.Data.Schemas.Abstractions
+namespace Plato.Internal.Data.Schemas.Abstractions.Builders
 {
-
     public interface ISchemaBuilderBase
     {
+
         ICollection<string> Statements { get; }
 
         SchemaBuilderOptions Options { get; }
@@ -15,13 +14,4 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
     }
 
-    public interface ISchemaBuilder : ISchemaBuilderBase, IDisposable
-    {
-       
-        ITableBuilder TableBuilder { get; }
-
-        IProcedureBuilder ProcedureBuilder { get; }
-        
-    }
-    
 }

@@ -2,29 +2,27 @@
 using System.Collections.Generic;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
+using Plato.Internal.Data.Schemas.Abstractions.Builders;
 using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Internal.Data.Schemas.Builders
 {
+
+    /// <summary>
+    /// A common base class to assist various schema builders.
+    /// </summary>
     public class SchemaBuilderBase : ISchemaBuilderBase
     {
 
         public string NewLine => Environment.NewLine;
-
-        private readonly string _tablePrefix;
-        private readonly IPluralize _pluralize;
-
-        public string TablePrefix => _tablePrefix;
-
+        
         public ICollection<string> Statements { get; }
 
         public SchemaBuilderOptions Options { get; set; }
-        public ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure)
-        {
-            Options = new SchemaBuilderOptions();
-            configure(Options);
-            return this;
-        }
+
+        private readonly string _tablePrefix;
+
+        private readonly IPluralize _pluralize;
 
         public SchemaBuilderBase(
             IDbContext dbContext,
@@ -34,7 +32,14 @@ namespace Plato.Internal.Data.Schemas.Builders
             _tablePrefix = dbContext.Configuration.TablePrefix;
             Statements = new List<string>();
         }
-        
+
+        public ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure)
+        {
+            Options = new SchemaBuilderOptions();
+            configure(Options);
+            return this;
+        }
+
         public string GetTableName(string tableName)
         {
             return !string.IsNullOrEmpty(_tablePrefix)

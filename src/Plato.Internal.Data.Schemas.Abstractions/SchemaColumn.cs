@@ -12,7 +12,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions
         public string Name { get; set; }
 
         /// <summary>
-        /// Returns a version of the column Name safe for inclusion within @paramter arguments. 
+        /// Returns a version of the column Name safe for inclusion within @parameter arguments. 
         /// </summary>
         public string NameNormalized => this.Name.Replace("[", "").Replace("]", "");
 

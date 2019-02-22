@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 
-namespace Plato.Internal.Data.Schemas.Abstractions
+namespace Plato.Internal.Data.Migrations
 {
-    public class PreparedSchema
+    public class PreparedMigration
     {
         public string Version { get; set; }
 
