@@ -4,54 +4,124 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Text;
 using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Internal.Data.Schemas
 {
-    
 
-    public class SchemaBuilder : ISchemaBuilder
+    public interface ISchemaBuilderBase : IDisposable
     {
         
+        SchemaBuilderOptions Options { get; }
+
+        ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure);
+
+        ICollection<string> Statements { get; }
+
+        ISchemaBuilderBase AddStatement(string statement);
+
+        Task<string> Build();
+        
+        string ToString();
+        
+    }
+
+    public class SchemaBuilderBase : ISchemaBuilderBase
+    {
+
+        private readonly string _tablePrefix;
+        private readonly IPluralize _pluralize;
+        
+        public string TablePrefix => _tablePrefix;
+
         public ICollection<string> Statements { get; }
+
+        public SchemaBuilderOptions Options { get; private set; }
+        
+        public SchemaBuilderBase(
+            IDbContext dbContext,
+            IPluralize pluralize)
+        {
+            _pluralize = pluralize;
+            _tablePrefix = dbContext.Configuration.TablePrefix;
+            Statements = new List<string>();
+        }
+
+        public string GetTableName(string tableName)
+        {
+            return !string.IsNullOrEmpty(_tablePrefix)
+                ? _tablePrefix + tableName
+                : tableName;
+        }
+        
+        public string GetSingularTableName(string tableName)
+        {
+            return _pluralize.Singular(tableName);
+        }
+        
+        public string GetProcedureName(string procedureName)
+        {
+            return !string.IsNullOrEmpty(_tablePrefix)
+                ? _tablePrefix + procedureName
+                : procedureName;
+        }
+
+        public ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure)
+        {
+            Options = new SchemaBuilderOptions();
+            configure(Options);
+            return this;
+        }
+
+        public ISchemaBuilderBase AddStatement(string statement)
+        {
+            if (!string.IsNullOrEmpty(statement))
+                Statements.Add(statement);
+            return this;
+        }
+
         public Task<string> Build()
         {
             throw new NotImplementedException();
         }
-
-        private readonly string _tablePrefix;
-        private readonly IPluralize _pluralize;
-
-        public SchemaBuilder(
-            IDbContext dbContext,
-            IPluralize pluralize)
+        
+        public void Dispose()
         {
-            
-            _pluralize = pluralize;
-            _tablePrefix = dbContext.Configuration.TablePrefix;
-            
-            Statements = new List<string>();
+
+        }
+
+    }
+
+    // -------------
+
+    public interface ITableBuilder : ISchemaBuilderBase
+    {
+        ITableBuilder CreateTable(SchemaTable table);
+
+        ITableBuilder AlterTableColumns(SchemaTable table);
+
+        ITableBuilder DropTableColumns(SchemaTable table);
+
+        ITableBuilder DropTable(SchemaTable table);
+
+    }
+    
+    public class TableBuilder : SchemaBuilderBase, ITableBuilder
+    {
+
+        public TableBuilder(IDbContext dbContext,
+            IPluralize pluralize) : base(dbContext, pluralize)
+        {
 
         }
 
         private readonly string _newLine = Environment.NewLine;
-        
-        private SchemaBuilderOptions _options;
 
-        public ISchemaBuilder Configure(Action<SchemaBuilderOptions> configure)
+        public ITableBuilder CreateTable(SchemaTable table)
         {
-            _options = new SchemaBuilderOptions();
-            configure(_options);
-            return this;
-        }
-        
-        public ISchemaBuilder CreateTable(SchemaTable table)
-        {
-
             var tableName = GetTableName(table.Name);
-            
-            if (_options.DropTablesBeforeCreate)
+
+            if (Options.DropTablesBeforeCreate)
             {
                 DropTable(table);
             }
@@ -59,7 +129,7 @@ namespace Plato.Internal.Data.Schemas
             var sb = new StringBuilder();
             sb.Append("CREATE TABLE ")
                 .Append(tableName);
-            
+
             if (table.Columns.Count > 0)
             {
                 sb.Append("(");
@@ -98,7 +168,7 @@ namespace Plato.Internal.Data.Schemas
 
                 sb.Append(System.Environment.NewLine);
                 sb.Append(");");
-            
+
             }
 
             sb.Append("SELECT 1 AS MigrationId;");
@@ -107,8 +177,55 @@ namespace Plato.Internal.Data.Schemas
 
             return this;
         }
-        
-        public ISchemaBuilder DropTable(SchemaTable table)
+
+        public ITableBuilder AlterTableColumns(SchemaTable table)
+        {
+
+            var tableName = GetTableName(table.Name);
+            var sb = new StringBuilder();
+            if (table.Columns.Count > 0)
+            {
+                foreach (var column in table.Columns)
+                {
+                    sb.Append("ALTER TABLE ")
+                        .Append(tableName)
+                        .Append(" ADD ")
+                        .Append(DescribeTableColumn(column))
+                        .Append(";")
+                        .Append(System.Environment.NewLine);
+                }
+
+                sb.Append("SELECT 1 AS MigrationId;");
+
+                AddStatement(sb.ToString());
+
+            }
+            return this;
+
+        }
+
+        public ITableBuilder DropTableColumns(SchemaTable table)
+        {
+            var tableName = GetTableName(table.Name);
+            var sb = new StringBuilder();
+            if (table.Columns.Count > 0)
+            {
+                foreach (var column in table.Columns)
+                {
+                    sb.Append("ALTER TABLE ")
+                        .Append(tableName)
+                        .Append(" DROP ")
+                        .Append(column.Name)
+                        .Append(";");
+                }
+
+                AddStatement(sb.ToString());
+
+            }
+            return this;
+        }
+
+        public ITableBuilder DropTable(SchemaTable table)
         {
             var tableName = GetTableName(table.Name);
 
@@ -129,117 +246,74 @@ namespace Plato.Internal.Data.Schemas
             return this;
         }
         
-        public ISchemaBuilder AlterTableColumns(SchemaTable table)
+        private string GetProcedureName(string procedureName)
         {
+            return !string.IsNullOrEmpty(TablePrefix)
+                ? TablePrefix + procedureName
+                : procedureName;
+        }
 
-            var tableName = GetTableName(table.Name);
+        private string DescribeTableColumn(SchemaColumn column)
+        {
             var sb = new StringBuilder();
-            if (table.Columns.Count > 0)
+            sb.Append(column.Name).Append(" ").Append(column.DbTypeNormalized);
+
+            if (column.PrimaryKey)
             {
-                foreach (var column in table.Columns)
-                {
-                    sb.Append("ALTER TABLE ")
-                        .Append(tableName)
-                        .Append(" ADD ")
-                        .Append(DescribeTableColumn(column))
-                        .Append(";")
-                        .Append(System.Environment.NewLine);
-                }
-              
-                sb.Append("SELECT 1 AS MigrationId;");
-
-                AddStatement(sb.ToString());
-
+                sb.Append(" IDENTITY(1,1)");
             }
-            return this;
-        }
-        
-        public ISchemaBuilder DropTableColumns(SchemaTable table)
-        {
-            var tableName = GetTableName(table.Name);
-            var sb = new StringBuilder();
-            if (table.Columns.Count > 0)
+            else
             {
-                foreach (var column in table.Columns)
-                {
-                    sb.Append("ALTER TABLE ")
-                        .Append(tableName)
-                        .Append(" DROP ")
-                        .Append(column.Name)
-                        .Append(";");
-                }
-
-                AddStatement(sb.ToString());
-
+                if (!string.IsNullOrEmpty(column.DefaultValueNormalizsed))
+                    sb.Append(" DEFAULT (").Append(column.DefaultValueNormalizsed).Append(")");
             }
-            return this;
+
+            sb.Append(column.Nullable ? " NULL" : " NOT NULL");
+            return sb.ToString();
         }
-        
-        public ISchemaBuilder CreateDefaultProcedures(SchemaTable table)
+
+
+    }
+
+    // -------------
+
+    public interface IProcedureBuilder : ISchemaBuilderBase
+    {
+
+        IProcedureBuilder CreateProcedure(SchemaProcedure procedure);
+
+        IProcedureBuilder DropProcedure(SchemaProcedure procedure);
+
+        IProcedureBuilder AlterProcedure(SchemaProcedure procedure);
+
+        IProcedureBuilder CreateDefaultProcedures(SchemaTable table);
+
+        IProcedureBuilder DropDefaultProcedures(SchemaTable table);
+
+    }
+    
+    public class ProcedureBuilder : SchemaBuilderBase, IProcedureBuilder
+    {
+
+        private readonly string _newLine = Environment.NewLine;
+
+        public ProcedureBuilder(IDbContext dbContext,
+            IPluralize pluralize) : base(dbContext, pluralize)
         {
-            
-            // select * from table
-            CreateProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
-                .ForTable(table));
-
-            // select * from table where primaryKey = @primaryKey
-            CreateProcedure(
-                new SchemaProcedure(
-                        $"Select{GetSingularTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
-                        StoredProcedureType.SelectByKey)
-                    .ForTable(table)
-                    .WithParameter(table.PrimaryKeyColumn));
-
-            // delete from table where primaryKey = @primaryKey
-            CreateProcedure(
-                new SchemaProcedure(
-                        $"Delete{GetSingularTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
-                        StoredProcedureType.DeleteByKey)
-                    .ForTable(table)
-                    .WithParameter(table.PrimaryKeyColumn));
-
-            // insert / update by primary key
-            CreateProcedure(
-                new SchemaProcedure($"InsertUpdate{GetSingularTableName(table)}",
-                        StoredProcedureType.InsertUpdate)
-                    .ForTable(table));
-
-            return this;
-
         }
 
-        public ISchemaBuilder DropDefaultProcedures(SchemaTable table)
+        public IProcedureBuilder CreateProcedure(SchemaProcedure procedure)
         {
+            if (Options.DropProceduresBeforeCreate)
+            {
+                DropProcedure(procedure);
+            }
 
-            DropProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
-                .ForTable(table));
-
-            DropProcedure(
-                new SchemaProcedure(
-                        $"Select{GetSingularTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
-                        StoredProcedureType.SelectByKey)
-                    .ForTable(table)
-                    .WithParameter(table.PrimaryKeyColumn));
-
-            // delete from table where primaryKey = @primaryKey
-            DropProcedure(
-                new SchemaProcedure(
-                        $"Delete{GetSingularTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
-                        StoredProcedureType.DeleteByKey)
-                    .ForTable(table)
-                    .WithParameter(table.PrimaryKeyColumn));
-
-            // insert / update by primary key
-            DropProcedure(
-                new SchemaProcedure($"InsertUpdate{GetSingularTableName(table)}",
-                        StoredProcedureType.InsertUpdate)
-                    .ForTable(table));
-
+            AddStatement(GetProcedureStatement(procedure, false));
             return this;
-
         }
-        
-        public ISchemaBuilder DropProcedure(SchemaProcedure procedure)
+
+        public IProcedureBuilder DropProcedure(SchemaProcedure procedure)
         {
             var sb = new StringBuilder();
 
@@ -254,46 +328,56 @@ namespace Plato.Internal.Data.Schemas
                 .Append(";")
                 .Append(_newLine)
                 .Append("END");
-            
+
             AddStatement(sb.ToString());
             return this;
 
         }
 
-        public ISchemaBuilder CreateProcedure(SchemaProcedure procedure)
+        public IProcedureBuilder AlterProcedure(SchemaProcedure procedure)
         {
-            
-            if (_options.DropProceduresBeforeCreate)
-            {
-                DropProcedure(procedure);
-            }
-            
-            AddStatement(GetProcedureStatement(procedure, false));
+            throw new NotImplementedException();
+        }
+
+        public IProcedureBuilder CreateDefaultProcedures(SchemaTable table)
+        {
+            // select * from table
+            CreateProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
+                .ForTable(table));
+
+            // select * from table where primaryKey = @primaryKey
+            CreateProcedure(
+                new SchemaProcedure(
+                        $"Select{GetSingularTableName(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        StoredProcedureType.SelectByKey)
+                    .ForTable(table)
+                    .WithParameter(table.PrimaryKeyColumn));
+
+            // delete from table where primaryKey = @primaryKey
+            CreateProcedure(
+                new SchemaProcedure(
+                        $"Delete{GetSingularTableName(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        StoredProcedureType.DeleteByKey)
+                    .ForTable(table)
+                    .WithParameter(table.PrimaryKeyColumn));
+
+            // insert / update by primary key
+            CreateProcedure(
+                new SchemaProcedure($"InsertUpdate{GetSingularTableName(table.Name)}",
+                        StoredProcedureType.InsertUpdate)
+                    .ForTable(table));
+
             return this;
 
         }
 
-        public ISchemaBuilder AlterProcedure(SchemaProcedure procedure)
+        public IProcedureBuilder DropDefaultProcedures(SchemaTable table)
         {
-            AddStatement(GetProcedureStatement(procedure, true));
-            return this;
-        }
-     
-        public ISchemaBuilder AddStatement(string statement)
-        {
-            if (!string.IsNullOrEmpty(statement))
-                Statements.Add(statement);
-            return this;
+            throw new NotImplementedException();
         }
         
-        public void Dispose()
-        {
-            this.Statements.Clear();
-        }
 
-        // ------------------------------------------
-
-        private string GetProcedureStatement(SchemaProcedure procedure,bool alter)
+        private string GetProcedureStatement(SchemaProcedure procedure, bool alter)
         {
 
             // Always return explicit SQL first
@@ -322,7 +406,7 @@ namespace Plato.Internal.Data.Schemas
                 case StoredProcedureType.DeleteByKey:
                     return BuildDeleteByKeyProcedure(procedure, alter);
             }
-            
+
             return string.Empty;
 
         }
@@ -343,7 +427,7 @@ namespace Plato.Internal.Data.Schemas
             sb.Append("SET NOCOUNT ON")
                 .Append(_newLine)
                 .Append(_newLine);
-            
+
             sb.Append(GetProcedurePlaceHolderComment())
                 .Append(_newLine)
                 .Append(_newLine);
@@ -389,7 +473,7 @@ namespace Plato.Internal.Data.Schemas
                 .Append("SET NOCOUNT ON")
                 .Append(_newLine)
                 .Append(_newLine);
-            
+
             sb.Append(GetProcedurePlaceHolderComment())
                 .Append(_newLine)
                 .Append(_newLine);
@@ -413,7 +497,7 @@ namespace Plato.Internal.Data.Schemas
                     .Append(_newLine);
                 i += 1;
             }
-            
+
             sb.Append(")");
 
             return sb.ToString();
@@ -464,7 +548,7 @@ namespace Plato.Internal.Data.Schemas
             {
                 throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
             }
-                
+
             var sb = new StringBuilder();
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE ")
@@ -504,7 +588,7 @@ namespace Plato.Internal.Data.Schemas
                 .Append("SET NOCOUNT ON")
                 .Append(_newLine)
                 .Append(_newLine);
-            
+
             sb.Append(GetProcedurePlaceHolderComment())
                 .Append(_newLine)
                 .Append(_newLine);
@@ -541,7 +625,7 @@ namespace Plato.Internal.Data.Schemas
             sb.Append("';")
                 .Append(_newLine)
                 .Append(_newLine);
-            
+
             sb
                 .Append("-- get paged data")
                 .Append(_newLine)
@@ -566,7 +650,7 @@ namespace Plato.Internal.Data.Schemas
                     .Append(_newLine);
                 i += 1;
             }
-            
+
             sb
                 .Append(_newLine)
                 .Append("-- get total count")
@@ -690,7 +774,7 @@ namespace Plato.Internal.Data.Schemas
                     .Append(_newLine);
                 i += 1;
             }
-            
+
             sb
                 .Append("   ")
                 .Append(")")
@@ -764,11 +848,19 @@ namespace Plato.Internal.Data.Schemas
             sb.Append(GetProcedurePlaceHolderComment())
                 .Append(_newLine)
                 .Append(_newLine);
-            
-            sb.Append(ParseExplicitSql(procedure.Sql));
+
+            sb.Append(ParseExpliciTSql(procedure.Sql));
 
             return sb.ToString();
 
+        }
+
+        private string ParseExpliciTSql(string input)
+        {
+            return input
+                .Replace("{prefix}_", TablePrefix)
+                .Replace("  ", "")
+                .Replace("      ", "");
         }
 
         private string BuildInsertUpdateProcedure(SchemaProcedure procedure, bool alter)
@@ -782,7 +874,7 @@ namespace Plato.Internal.Data.Schemas
 
             if (procedure.Table.PrimaryKeyColumn == null)
                 throw new Exception($"A primary key column is required for table '{procedure.Table.Name}' when creating procedure of type '{procedure.ProcedureType}'");
-            
+
             var tableName = GetTableName(procedure.Table.Name);
             var columns = procedure.Table.Columns;
 
@@ -801,9 +893,9 @@ namespace Plato.Internal.Data.Schemas
             {
                 return string.Empty;
             }
-            
+
             var sb = new StringBuilder();
-            
+
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE [")
                 .Append(GetProcedureName(procedure.Name))
@@ -867,7 +959,7 @@ namespace Plato.Internal.Data.Schemas
             sb.Append("BEGIN")
                 .Append(_newLine)
                 .Append(_newLine);
-            
+
             if (columns.Count > 0)
             {
                 sb
@@ -977,65 +1069,69 @@ namespace Plato.Internal.Data.Schemas
             }
 
             sb.Append("END");
-            
+
             return sb.ToString();
 
-        }
-
-        private string GetSingularTableName(SchemaTable table)
-        {
-            return _pluralize.Singular(table.Name);
-        }
-
-        private string GetTableName(string tableName)
-        {
-            return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + tableName
-                : tableName;
-        }
-
-        private string GetProcedureName(string procedureName)
-        {
-            return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + procedureName
-                : procedureName;
-        }
-
-        private string DescribeTableColumn(SchemaColumn column)
-        {
-            var sb = new StringBuilder();
-            sb.Append(column.Name).Append(" ").Append(column.DbTypeNormalized);
-
-            if (column.PrimaryKey)
-            {
-                sb.Append(" IDENTITY(1,1)");
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(column.DefaultValueNormalizsed))
-                    sb.Append(" DEFAULT (").Append(column.DefaultValueNormalizsed).Append(")");
-            }
-
-            sb.Append(column.Nullable ? " NULL" : " NOT NULL");
-            return sb.ToString();
         }
 
         private string GetProcedurePlaceHolderComment()
         {
-            var moduleName = !string.IsNullOrEmpty(this._options.ModuleName) ?
-                this._options.ModuleName :
+            var moduleName = !string.IsNullOrEmpty(Options.ModuleName) ?
+                Options.ModuleName :
                 "N/A";
-            return $"/******{_newLine}Module: {moduleName}{_newLine}Version: {this._options.Version}{_newLine}This stored procedure was generated programmatically by Plato on {DateTime.Now}. Changes made by hand may be lost.{_newLine}******/";
+            return $"/******{_newLine}Module: {moduleName}{_newLine}Version: {Options.Version}{_newLine}This stored procedure was generated programmatically by Plato on {DateTime.Now}. Changes made by hand may be lost.{_newLine}******/";
         }
 
-        private string ParseExplicitSql(string input)
-        {
-            return input
-                .Replace("{prefix}_", _tablePrefix)
-                .Replace("  ", "")
-                .Replace("      ", "");
-        }
-        
     }
 
+    // -------------
+
+    public interface ISchemaFacade
+    {
+        ITableBuilder TableBuilder { get; }
+
+        IProcedureBuilder ProcedureBuilder { get; }
+
+        IEnumerable<string> Build();
+    }
+
+    public class SchemaFacade : ISchemaFacade
+    {
+
+        private readonly string _newLine = Environment.NewLine;
+
+        public ITableBuilder TableBuilder { get; }
+
+        public IProcedureBuilder ProcedureBuilder { get; }
+
+
+        public SchemaFacade(
+            IDbContext dbContext,
+            IPluralize pluralize) 
+        {
+            ProcedureBuilder = new ProcedureBuilder(dbContext, pluralize);
+            TableBuilder = new TableBuilder(dbContext, pluralize);
+        }
+
+        public IEnumerable<string> Build()
+        {
+           
+            var statements = new List<string>();
+            var sb = new StringBuilder();
+
+            foreach (var statement in TableBuilder.Statements)
+            {
+                statements.Add(statement);
+            }
+
+            foreach (var statement in ProcedureBuilder.Statements)
+            {
+                statements.Add(statement);
+            }
+
+            return statements;
+        }
+
+    }
+    
 }

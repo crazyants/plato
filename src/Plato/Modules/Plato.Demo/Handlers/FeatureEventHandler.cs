@@ -21,20 +21,18 @@ namespace Plato.Demo.Handlers
 
     public class FeatureEventHandler : BaseFeatureEventHandler
     {
-
-        #region "Constructor"
-
+        
         private readonly ISchemaBuilder _schemaBuilder;
+        private readonly ISchemaManager _schemaManager;
 
-        public FeatureEventHandler(ISchemaBuilder schemaBuilder)
+        public FeatureEventHandler(
+            ISchemaBuilder schemaBuilder,
+            ISchemaManager schemaManager)
         {
             _schemaBuilder = schemaBuilder;
+            _schemaManager = schemaManager;
         }
-
-        #endregion
-
-        #region "Implementation"
-
+        
         public override async Task InstallingAsync(IFeatureEventContext context)
         {
       
@@ -70,15 +68,10 @@ namespace Plato.Demo.Handlers
                     // Create basic default CRUD procedures
                     .CreateDefaultProcedures(demo);
 
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
+                var errors = await _schemaManager.ExecuteAsync(builder.Statements);
+                foreach (var error in errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
-                    ;
-                }
-
+                    context.Errors.Add(error, $"InstallingAsync within {this.GetType().FullName}");
                 }
 
             }
@@ -135,9 +128,7 @@ namespace Plato.Demo.Handlers
 
             return Task.CompletedTask;
         }
-
-        #endregion
-
-
+        
     }
+
 }

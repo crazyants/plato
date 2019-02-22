@@ -10,7 +10,6 @@
     <ProjectReference Include="..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Shell.Abstractions\Plato.Internal.Shell.Abstractions.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Text\Plato.Internal.Text.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,32 +9,20 @@ using Plato.Internal.Features.Abstractions;
 namespace Plato.Demo.Handlers
 {
 
-    // Feature event handlers are executed in a temporary shell context 
-    // This is necessary as the feature may not be enabled and as 
-    // such the event handlers for the feature won't be registered with DI
-    // For example we can't invoke the Installing or Installed events within
-    // the main context as the feature is currently disabled within this context
-    // so the IFeatureEventHandler provider for the feature has not been registered within DI.
-    // ShellFeatureManager instead creates a temporary context consisting of a shell descriptor
-    // with the features we want to enable or disable. The necessary IFeatureEventHandler can
-    // then be registered within DI for the features we are enabling or disabling and the events can be invoked.
-
     public class FeatureEventHandler : BaseFeatureEventHandler
     {
 
-        #region "Constructor"
-
         private readonly ISchemaBuilder _schemaBuilder;
+        private readonly ISchemaManager _schemaManager;
 
-        public FeatureEventHandler(ISchemaBuilder schemaBuilder)
+        public FeatureEventHandler(
+            ISchemaBuilder schemaBuilder,
+            ISchemaManager schemaManager)
         {
             _schemaBuilder = schemaBuilder;
+            _schemaManager = schemaManager;
         }
-
-        #endregion
-
-        #region "Implementation"
-
+        
         public override async Task InstallingAsync(IFeatureEventContext context)
         {
       
@@ -70,15 +58,10 @@ namespace Plato.Demo.Handlers
                     // Create basic default CRUD procedures
                     .CreateDefaultProcedures(demo);
 
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
+                var errors = await _schemaManager.ExecuteAsync(builder.Statements);
+                foreach (var error in errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
-                    ;
-                }
-
+                    context.Errors.Add(error, $"InstallingAsync within {this.GetType().FullName}");
                 }
 
             }
@@ -135,9 +118,7 @@ namespace Plato.Demo.Handlers
 
             return Task.CompletedTask;
         }
-
-        #endregion
-
-
+        
     }
+
 }

@@ -55,10 +55,14 @@ namespace Plato.Stars.Handlers
         };
         
         private readonly ISchemaBuilder _schemaBuilder;
+        private readonly ISchemaManager _schemaManager;
 
-        public FeatureEventHandler(ISchemaBuilder schemaBuilder)
+        public FeatureEventHandler(
+            ISchemaBuilder schemaBuilder, 
+            ISchemaManager schemaManager)
         {
             _schemaBuilder = schemaBuilder;
+            _schemaManager = schemaManager;
         }
 
         #region "Implementation"
@@ -90,18 +94,13 @@ namespace Plato.Stars.Handlers
                 }
 
                 // Execute statements
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
+                var errors = await _schemaManager.ExecuteAsync(builder.Statements);
+                foreach (var error in errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
-                    }
-
+                    context.Errors.Add(error, $"InstallingAsync within {this.GetType().FullName}");
                 }
 
             }
-
 
         }
 
@@ -137,17 +136,13 @@ namespace Plato.Stars.Handlers
                 }
 
                 // Execute statements
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
+                var errors = await _schemaManager.ExecuteAsync(builder.Statements);
+                foreach (var error in errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Logger.LogCritical(error.Message, $"An error occurred within the UninstallingAsync method within {this.GetType().FullName}");
-                        context.Errors.Add(error.Message, $"UninstallingAsync within {this.GetType().FullName}");
-                    }
-
+                    context.Logger.LogCritical(error, $"An error occurred within the UninstallingAsync method within {this.GetType().FullName}");
+                    context.Errors.Add(error, $"UninstallingAsync within {this.GetType().FullName}");
                 }
-
+                
             }
 
         }

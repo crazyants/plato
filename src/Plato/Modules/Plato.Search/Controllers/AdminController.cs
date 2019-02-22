@@ -1,18 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Shell;
 using Plato.Search.Models;
-using Plato.Search.Stores;
 using Plato.Search.ViewModels;
 
 namespace Plato.Search.Controllers
@@ -21,13 +16,9 @@ namespace Plato.Search.Controllers
     public class AdminController : Controller, IUpdateModel
     {
         
-        
-    
         private readonly IViewProviderManager<SearchSettings> _viewProvider;
         private readonly IAuthorizationService _authorizationService;
         private readonly IBreadCrumbManager _breadCrumbManager;
-  
-        private readonly IPlatoHost _platoHost;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -40,16 +31,12 @@ namespace Plato.Search.Controllers
             IAuthorizationService authorizationService,
             IViewProviderManager<SearchSettings> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IAlerter alerter,
-            IPlatoHost platoHost)
+            IAlerter alerter)
         {
        
             _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
-   
             _viewProvider = viewProvider;
-   
-            _platoHost = platoHost;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -57,9 +44,6 @@ namespace Plato.Search.Controllers
 
         }
         
-
-        #region "Actions"
-
         public async Task<IActionResult> Index()
         {
 
@@ -87,9 +71,7 @@ namespace Plato.Search.Controllers
 
         }
         
-
-        [HttpPost]
-        [ActionName(nameof(Index))]
+        [HttpPost, ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(SearchSettingsViewModel viewModel)
         {
 
@@ -102,8 +84,6 @@ namespace Plato.Search.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        
-        #endregion
         
     }
 

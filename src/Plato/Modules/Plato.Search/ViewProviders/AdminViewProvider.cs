@@ -31,12 +31,14 @@ namespace Plato.Search.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(SearchSettings settings, IViewProviderContext context)
         {
+
             var viewModel = await GetModel();
             return Views(
                 View<SearchSettingsViewModel>("Admin.Edit.Header", model => viewModel).Zone("header").Order(1),
                 View<SearchSettingsViewModel>("Admin.Edit.Tools", model => viewModel).Zone("tools").Order(1),
                 View<SearchSettingsViewModel>("Admin.Edit.Content", model => viewModel).Zone("content").Order(1)
             );
+
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(SearchSettings settings,
@@ -53,14 +55,10 @@ namespace Plato.Search.ViewProviders
             // Update settings
             if (context.Updater.ModelState.IsValid)
             {
-
-                var searchSettings = new SearchSettings()
+                var result = await _searchSettingsStore.SaveAsync(new SearchSettings()
                 {
                     SearchType = model.SearchType
-                };
-
-                var result = await _searchSettingsStore.SaveAsync(settings);
-
+                });
             }
 
             return await BuildEditAsync(settings, context);
@@ -69,6 +67,7 @@ namespace Plato.Search.ViewProviders
 
         async Task<SearchSettingsViewModel> GetModel()
         {
+
             var settings = await _searchSettingsStore.GetAsync();
             if (settings != null)
             {
@@ -79,7 +78,7 @@ namespace Plato.Search.ViewProviders
                 };
             }
 
-            // return default settings
+            // return settings
             return new SearchSettingsViewModel()
             {
                 AvailableSearchTypes = GetAvailableSearchTypes()
@@ -105,4 +104,5 @@ namespace Plato.Search.ViewProviders
         }
 
     }
+
 }

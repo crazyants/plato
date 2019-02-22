@@ -23,7 +23,8 @@ namespace Plato.Internal.Text.Extensions
             services.TryAddSingleton<IKeyGenerator, KeyGenerator>();
             services.TryAddSingleton<IDefaultHtmlEncoder, DefaultHtmlEncoder>();
             services.TryAddSingleton<ITextParser, TextParser>();
-            
+            services.TryAddTransient<IPluralize, Pluralize>();
+
             services.TryAddSingleton<IDiffer, Differ>();
             services.TryAddSingleton<IInlineDiffBuilder, InlineDiffBuilder>();
             services.TryAddSingleton<ISideBySideDiffBuilder, SideBySideDiffBuilder>();

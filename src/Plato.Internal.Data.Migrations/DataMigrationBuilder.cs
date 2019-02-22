@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Internal.Data.Migrations
@@ -63,30 +60,13 @@ namespace Plato.Internal.Data.Migrations
                 migrations.Migrations.Add(new DataMigration()
                 {
                     Version = schema.Version,
-                    Statements = PrepareStatements(schema)
+                    Statements = schema.Statements
                 });
             }
             return migrations;
         }
 
-        List<string> PrepareStatements(PreparedSchema schema)
-        {
-            var statements = new List<string>();
-            switch (this.DataMigrationType)
-            {
-                case MigrationType.Install:
-                    statements = schema.InstallStatements;
-                    break;
-                case MigrationType.Upgrade:
-                    statements = schema.UpgradeStatements;
-                    break;
-                case MigrationType.Rollback:
-                    statements = schema.RollbackStatements;
-                    break;
-            }
-            return statements;
-        }
-
+     
         void DetectMigrationType()
         {
             var first = _schemas[0];
@@ -95,12 +75,12 @@ namespace Plato.Internal.Data.Migrations
             // we have more than one version
             if (first.Version != last.Version)
             {
-                // get higer versions
+                // get higher versions
                 var higherVersions =
                     (from s in _schemas
                      where s.TypedVersion > first.TypedVersion
                         select s).ToList();
-                // get lower versins
+                // get lower versions
                 var lowerVersions =
                     (from s in _schemas
                      where s.TypedVersion < first.TypedVersion
@@ -120,7 +100,7 @@ namespace Plato.Internal.Data.Migrations
         }
 
         #endregion
-
-
+        
     }
+
 }

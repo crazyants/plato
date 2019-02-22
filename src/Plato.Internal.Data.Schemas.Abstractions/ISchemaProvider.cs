@@ -10,9 +10,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions
         PreparedSchema GetSchema(string version);
 
         List<PreparedSchema> Schemas { get; }
-
-        ISchemaProvider LoadSchemas();
-
+        
         ISchemaProvider LoadSchemas(List<string> versions);
 
     }

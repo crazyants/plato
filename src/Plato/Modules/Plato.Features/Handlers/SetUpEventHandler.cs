@@ -44,18 +44,18 @@ namespace Plato.Features.Handlers
             }
         };
 
-
         private readonly ISchemaBuilder _schemaBuilder;
-    
+        private readonly ISchemaManager _schemaManager;
+
         public SetUpEventHandler(
-            ISchemaBuilder schemaBuilder)
+            ISchemaBuilder schemaBuilder,
+            ISchemaManager schemaManager)
         {
             _schemaBuilder = schemaBuilder;
+            _schemaManager = schemaManager;
         }
 
-        public override async Task SetUp(
-            SetUpContext context,
-            Action<string, string> reportError)
+        public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
             
             // --------------------------
@@ -73,22 +73,16 @@ namespace Plato.Features.Handlers
 
                 // Did any errors occur?
 
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
+                var errors = await _schemaManager.ExecuteAsync(builder.Statements);
+                foreach (var error in errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        reportError(error.Message, error.StackTrace);
-                    }
-                 
+                    reportError(error, $"SetUp within {this.GetType().FullName} - {error}");
                 }
+
             }
             
         }
-
-
-        #region "Private Methods"
-
+    
         void Configure(ISchemaBuilder builder)
         {
 
@@ -128,10 +122,7 @@ namespace Plato.Features.Handlers
                     }));
             
         }
-
-        #endregion
-
-
+        
     }
 
 }

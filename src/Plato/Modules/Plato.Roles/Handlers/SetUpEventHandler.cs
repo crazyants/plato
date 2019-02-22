@@ -107,6 +107,7 @@ namespace Plato.Roles.Handlers
         };
         
         private readonly ISchemaBuilder _schemaBuilder;
+        private readonly ISchemaManager _schemaManager;
         private readonly IDefaultRolesManager _defaultRolesManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
@@ -115,16 +116,16 @@ namespace Plato.Roles.Handlers
             ISchemaBuilder schemaBuilder,
             IDefaultRolesManager defaultRolesManager,
             UserManager<User> userManager, 
-            RoleManager<Role> roleManager)
+            RoleManager<Role> roleManager,
+            ISchemaManager schemaManager)
         {
             _schemaBuilder = schemaBuilder;
             _defaultRolesManager = defaultRolesManager;
             _userManager = userManager;
             _roleManager = roleManager;
+            _schemaManager = schemaManager;
         }
-
-        #region "Implementation"
-
+        
         public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
             
@@ -140,14 +141,10 @@ namespace Plato.Roles.Handlers
                 // user roles 
                 UserRoles(builder);
                 
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
+                var errors = await _schemaManager.ExecuteAsync(builder.Statements);
+                foreach (var error in errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        reportError(error.Message, error.StackTrace);
-                    }
-
+                    reportError(error, $"SetUp within {this.GetType().FullName} - {error}");
                 }
                 
             }
@@ -156,11 +153,7 @@ namespace Plato.Roles.Handlers
             await _defaultRolesManager.InstallDefaultRolesAsync();
             
         }
-        
-        #endregion
-
-        #region "Private Methods"
-
+ 
         void Configure(ISchemaBuilder builder)
         {
 
@@ -333,8 +326,6 @@ namespace Plato.Roles.Handlers
 
         }
         
-        #endregion
-
     }
 
 }

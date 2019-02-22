@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Plato.Internal.Text.Abstractions;
 using Plato.Internal.Text.PluralizerRules;
 
 namespace Plato.Internal.Text
 {
-    public class Pluralizer
+    
+    public class Pluralize : IPluralize
     {
+
         private readonly Dictionary<Regex, string> _pluralRules = PluralRules.GetRules();
         private readonly Dictionary<Regex, string> _singularRules = SingularRules.GetRules();
         private readonly List<string> _uncountables = Uncountables.GetUncountables();
@@ -15,12 +18,12 @@ namespace Plato.Internal.Text
         private readonly Dictionary<string, string> _irregularSingles = IrregularRules.GetIrregularSingulars();
         private readonly Regex _replacementRegex = new Regex("\\$(\\d{1,2})");
 
-        public string Pluralize(string word)
+        public string Plural(string word)
         {
             return Transform(word, _irregularSingles, _irregularPlurals, _pluralRules);
         }
 
-        public string Singularize(string word)
+        public string Singular(string word)
         {
             return Transform(word, _irregularPlurals, _irregularSingles, _singularRules);
         }
@@ -89,6 +92,7 @@ namespace Plato.Internal.Text
             if (replacables.ContainsKey(token)) return RestoreCase(word, replacables[token]);
             return ApplyRules(token, word, rules);
         }
+
     }
 
 }

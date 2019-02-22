@@ -11,11 +11,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
         public Version TypedVersion { get; set; }
 
-        public List<string> InstallStatements { get; set; }
-
-        public List<string> UpgradeStatements { get; set; }
-
-        public List<string> RollbackStatements { get; set; }
-
+        public List<string> Statements { get; set; }
+        
     }
 }
