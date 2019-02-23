@@ -4,10 +4,10 @@ using Plato.Search.Models;
 
 namespace Plato.Search.Repositories
 {
-    public interface ICatalogRepository
+    public interface IFullTextIndexRepository
     {
-        Task<IEnumerable<Catalog>> SelectCatalogs();
-
+        Task<IEnumerable<FullTextIndex>> SelectIndexesAsync();
     }
+
 
 }

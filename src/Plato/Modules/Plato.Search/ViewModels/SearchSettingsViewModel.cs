@@ -15,7 +15,10 @@ namespace Plato.Search.ViewModels
 
         public IEnumerable<SelectListItem> AvailableSearchTypes { get; set; }
 
-        public IEnumerable<Catalog> Catalogs { get; set; }
+        public IEnumerable<FullTextCatalog> Catalogs { get; set; }
+
+        public IEnumerable<FullTextIndex> Indexes { get; set; }
+
     }
 
 }

@@ -84,7 +84,16 @@ namespace Plato.Search.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        
+
+        // ------------
+
+        public Task<IActionResult> DropCatalog()
+        {
+            return Task.FromResult(default(IActionResult));
+        }
+
+
+
     }
 
 }

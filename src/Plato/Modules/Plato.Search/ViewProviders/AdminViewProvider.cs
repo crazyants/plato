@@ -13,14 +13,17 @@ namespace Plato.Search.ViewProviders
     {
 
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
-        private readonly ICatalogRepository _catalogRepository;
+        private readonly IFullTextCatalogStore _fullTextCatalogStore;
+        private readonly IFullTextIndexStore _fullTextIndexStore;
 
         public AdminViewProvider(
             ISearchSettingsStore<SearchSettings> searchSettingsStore,
-            ICatalogRepository catalogRepository)
+            IFullTextCatalogStore fullTextCatalogStore,
+            IFullTextIndexStore fullTextIndexStore)
         {
             _searchSettingsStore = searchSettingsStore;
-            _catalogRepository = catalogRepository;
+            _fullTextCatalogStore = fullTextCatalogStore;
+            _fullTextIndexStore = fullTextIndexStore;
         }
 
         public override Task<IViewProviderResult> BuildDisplayAsync(SearchSettings settings, IViewProviderContext context)
@@ -75,7 +78,8 @@ namespace Plato.Search.ViewProviders
             var model = new SearchSettingsViewModel
             {
                 AvailableSearchTypes = GetAvailableSearchTypes(),
-                Catalogs = await _catalogRepository.SelectCatalogs()
+                Catalogs = await _fullTextCatalogStore.SelectCatalogsAsync(),
+                Indexes = await _fullTextIndexStore.SelectIndexesAsync()
             };
 
             var settings = await _searchSettingsStore.GetAsync();
@@ -88,8 +92,7 @@ namespace Plato.Search.ViewProviders
             return model;
 
         }
-
-
+        
         IEnumerable<SelectListItem> GetAvailableSearchTypes()
         {
 

@@ -15,20 +15,20 @@ using Plato.Internal.Modules.Abstractions;
 namespace Plato.Entities.Stores
 {
 
-    public class EntityStore<TEntitty> : IEntityStore<TEntitty> where TEntitty : class, IEntity
+    public class EntityStore<TEntity> : IEntityStore<TEntity> where TEntity : class, IEntity
     {
 
         private readonly ICacheManager _cacheManager;
-        private readonly IEntityRepository<TEntitty> _entityRepository;
+        private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
-        private readonly ILogger<EntityStore<TEntitty>> _logger;
+        private readonly ILogger<EntityStore<TEntity>> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
 
         public EntityStore(
             ITypedModuleProvider typedModuleProvider,
-            IEntityRepository<TEntitty> entityRepository,
-            ILogger<EntityStore<TEntitty>> logger,
+            IEntityRepository<TEntity> entityRepository,
+            ILogger<EntityStore<TEntity>> logger,
             IDbQueryConfiguration dbQuery,
             ICacheManager cacheManager,
             IEntityDataStore<IEntityData> entityDataStore)
@@ -43,7 +43,7 @@ namespace Plato.Entities.Stores
 
         #region "Implementation"
 
-        public async Task<TEntitty> CreateAsync(TEntitty model)
+        public async Task<TEntity> CreateAsync(TEntity model)
         {
 
             if (model == null)
@@ -69,7 +69,7 @@ namespace Plato.Entities.Stores
             return newEntity;
         }
 
-        public async Task<TEntitty> UpdateAsync(TEntitty model)
+        public async Task<TEntity> UpdateAsync(TEntity model)
         {
 
             if (model == null)
@@ -97,7 +97,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        public async Task<bool> DeleteAsync(TEntitty model)
+        public async Task<bool> DeleteAsync(TEntity model)
         {
 
             if (model == null)
@@ -121,7 +121,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        public async Task<TEntitty> GetByIdAsync(int id)
+        public async Task<TEntity> GetByIdAsync(int id)
         {
 
             if (id <= 0)
@@ -138,13 +138,13 @@ namespace Plato.Entities.Stores
 
         }
 
-        public IQuery<TEntitty> QueryAsync()
+        public IQuery<TEntity> QueryAsync()
         {
-            var query = new EntityQuery<TEntitty>(this);
-            return _dbQuery.ConfigureQuery<TEntitty>(query); ;
+            var query = new EntityQuery<TEntity>(this);
+            return _dbQuery.ConfigureQuery<TEntity>(query); ;
         }
 
-        public async Task<IPagedResults<TEntitty>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<TEntity>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -170,7 +170,7 @@ namespace Plato.Entities.Stores
 
         #region "Private Methods"
 
-        async Task<IEnumerable<IEntityData>> SerializeMetaDataAsync(TEntitty entity)
+        async Task<IEnumerable<IEntityData>> SerializeMetaDataAsync(TEntity entity)
         {
 
             // Get all existing entity data
@@ -206,7 +206,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        async Task<IList<TEntitty>> MergeEntityData(IList<TEntitty> entities)
+        async Task<IList<TEntity>> MergeEntityData(IList<TEntity> entities)
         {
 
             if (entities == null)
@@ -229,7 +229,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        async Task<IList<TEntitty>> MergeEntityData(IList<TEntitty> entities, IList<IEntityData> data)
+        async Task<IList<TEntity>> MergeEntityData(IList<TEntity> entities, IList<IEntityData> data)
         {
 
             if (entities == null || data == null)
@@ -247,7 +247,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        async Task<TEntitty> MergeEntityData(TEntitty entity)
+        async Task<TEntity> MergeEntityData(TEntity entity)
         {
 
             if (entity == null)
@@ -279,7 +279,7 @@ namespace Plato.Entities.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        void CancelTokens(TEntitty model)
+        void CancelTokens(TEntity model)
         {
 
             // Clear cache for current type, EntityStore<Entity>,

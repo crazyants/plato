@@ -1,5 +1,4 @@
-﻿@using System.Data.SqlTypes
-@using Plato.Internal.Data.Abstractions
+﻿@using Plato.Internal.Data.Abstractions
 @model SearchSettingsViewModel
 
 <card>
@@ -7,48 +6,60 @@
         <h6 class="card-title">@T["General"]</h6>
     </card-title>
     <card-body>
-        
+
         <div class="form-group">
-        
+
             <label asp-for="SearchType" class="col-form-label font-weight-bold">@T["Search Type"]</label>
             <span asp-validation-for="SearchType" class="text-danger"></span>
             <select class="form-control"
                     asp-for="SearchType"
                     asp-items="@Model.AvailableSearchTypes"></select>
-      
+
         </div>
+
+
+    </card-body>
+</card>
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Catalog"]</h6>
+    </card-title>
+    <card-body>
         
-        @if (Model.SearchType != SearchTypes.Tsql)
-        {
-
-            <div class="form-group">
-
-                <strong>@T["Catalog Settings"]</strong><br/>
+        <p class="text-muted">
+            @T["Manage the full text catalogs associated with your database."]
+        </p>
+        <p>
+            @if (Model.SearchType != SearchTypes.Tsql)
+            {
 
                 @if (Model.Catalogs != null)
-                {
-                    
-                    @foreach (var catalog in Model.Catalogs)
-                     {
-                         <span>
-                             @catalog.Name
-                         </span>
-                     }
-                }
-                else
-                {
-                    <spam>
-                        @T["No catalog has yet."]]
-                        <a href="#" class="btn btn-primary">
-                            @T["Create Catalog"]
-                        </a>
-                    </spam>
-                }
+                 {
+                     <ul class="list-group">
+                         @foreach (var catalog in Model.Catalogs)
+                         {
+                             <li class="list-group-item">
+                                 <a href="#" class="btn btn-danger float-right">
+                                     @T["Drop Catalog"]
+                                 </a>
+                                 <strong>@catalog.Name</strong>
+                             </li>
+                         }
+                     </ul>
+                 }
+                 else
+                 {
+                     <spam>
+                         @T["No catalog has yet."]]
+                         <a href="#" class="btn btn-primary">
+                             @T["Create Catalog"]
+                         </a>
+                     </spam>
+                 }
 
-            </div>
-        }
-
-      
+            }
+        </p>
 
     </card-body>
 </card>
