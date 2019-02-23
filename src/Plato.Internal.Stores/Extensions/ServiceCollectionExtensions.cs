@@ -7,6 +7,7 @@ using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Repositories.Schema;
 using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Internal.Stores.Abstractions.Files;
@@ -18,6 +19,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Badges;
 using Plato.Internal.Stores.Files;
 using Plato.Internal.Stores.Reputations;
+using Plato.Internal.Stores.Schema;
 using Plato.Internal.Stores.Shell;
 
 namespace Plato.Internal.Stores.Extensions
@@ -65,6 +67,9 @@ namespace Plato.Internal.Stores.Extensions
 
             // User badges
             services.AddScoped<IUserBadgeStore<UserBadge>, UserBadgeStore>();
+        
+            // Schema
+            services.AddScoped<IConstraintStore, ConstraintStore>();
 
             return services;
             
