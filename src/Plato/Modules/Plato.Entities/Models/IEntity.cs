@@ -6,12 +6,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
-
-    public interface IEntityMetaData<TNodel> : IMetaData<TNodel> where TNodel : class
-    {
-
-    }
-
+    
     public interface IEntity  : IEntityMetaData<IEntityData>
     {
 

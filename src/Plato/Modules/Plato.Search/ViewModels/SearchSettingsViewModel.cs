@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Plato.Internal.Data.Abstractions;
+using Plato.Search.Models;
 
 namespace Plato.Search.ViewModels
 {
@@ -14,6 +15,7 @@ namespace Plato.Search.ViewModels
 
         public IEnumerable<SelectListItem> AvailableSearchTypes { get; set; }
 
+        public IEnumerable<Catalog> Catalogs { get; set; }
     }
 
 }

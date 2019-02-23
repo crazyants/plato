@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Search.Models;
+using Plato.Search.Repositories;
 using Plato.Search.Stores;
 using Plato.Search.ViewModels;
 
@@ -12,11 +13,14 @@ namespace Plato.Search.ViewProviders
     {
 
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+        private readonly ICatalogRepository _catalogRepository;
 
         public AdminViewProvider(
-            ISearchSettingsStore<SearchSettings> searchSettingsStore)
+            ISearchSettingsStore<SearchSettings> searchSettingsStore,
+            ICatalogRepository catalogRepository)
         {
             _searchSettingsStore = searchSettingsStore;
+            _catalogRepository = catalogRepository;
         }
 
         public override Task<IViewProviderResult> BuildDisplayAsync(SearchSettings settings, IViewProviderContext context)
@@ -68,21 +72,21 @@ namespace Plato.Search.ViewProviders
         async Task<SearchSettingsViewModel> GetModel()
         {
 
+            var model = new SearchSettingsViewModel
+            {
+                AvailableSearchTypes = GetAvailableSearchTypes(),
+                Catalogs = await _catalogRepository.SelectCatalogs()
+            };
+
             var settings = await _searchSettingsStore.GetAsync();
             if (settings != null)
             {
-                return new SearchSettingsViewModel()
-                {
-                    SearchType = settings.SearchType,
-                    AvailableSearchTypes = GetAvailableSearchTypes()
-                };
+                model.SearchType = settings.SearchType;
+
             }
 
-            // return settings
-            return new SearchSettingsViewModel()
-            {
-                AvailableSearchTypes = GetAvailableSearchTypes()
-            };
+            return model;
+
         }
 
 
