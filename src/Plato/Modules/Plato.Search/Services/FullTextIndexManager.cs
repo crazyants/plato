@@ -40,7 +40,7 @@ namespace Plato.Search.Services
             using (var builder = _schemaBuilder)
             {
 
-                builder.FullTextBuilder.DropIndex("");
+                builder.FullTextBuilder.DropIndex(model.TableName, model.ColumnName);
 
                 var errors = (ICollection<string>)await _schemaManager.ExecuteAsync(builder.Statements);
                 if (errors.Any())

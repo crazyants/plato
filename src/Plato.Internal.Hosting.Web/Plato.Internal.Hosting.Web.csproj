@@ -31,6 +31,7 @@
     <ProjectReference Include="..\Plato.Internal.Notifications\Plato.Internal.Notifications.csproj" />
     <ProjectReference Include="..\Plato.Internal.Reputations\Plato.Internal.Reputations.csproj" />
     <ProjectReference Include="..\Plato.Internal.Scripting\Plato.Internal.Scripting.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Search\Plato.Internal.Search.csproj" />
     <ProjectReference Include="..\Plato.Internal.Security\Plato.Internal.Security.csproj" />
     <ProjectReference Include="..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\Plato.Internal.Tasks\Plato.Internal.Tasks.csproj" />

@@ -9,7 +9,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
         public string PrimaryKeyName { get; set; }
 
-        public IEnumerable<string> ColumnNames { get; set; }
+        public string[] ColumnNames { get; set; }
 
         public short FillFactor { get; set; } = 30;
 

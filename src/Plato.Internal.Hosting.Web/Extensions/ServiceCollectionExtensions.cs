@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -17,9 +15,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -49,12 +45,12 @@ using Plato.Internal.Assets.Extensions;
 using Plato.Internal.Badges.Extensions;
 using Plato.Internal.Drawing.Extensions;
 using Plato.Internal.Hosting.Web.Configuration;
-using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Net.Extensions;
 using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Reputations.Extensions;
 using Plato.Internal.Scripting.Extensions;
+using Plato.Internal.Search.Extensions;
 using Plato.Internal.Tasks.Extensions;
 using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
@@ -127,6 +123,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoBadges();
                 internalServices.AddPlatoDrawing();
                 internalServices.AddPlatoTasks();
+                internalServices.AddPlatoSearch();
             });
 
         }

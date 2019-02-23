@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Search.Models;
@@ -9,7 +7,6 @@ using Plato.Search.Repositories;
 namespace Plato.Search.Stores
 {
     
-
     public class FullTextCatalogStore : IFullTextCatalogStore
     {
 

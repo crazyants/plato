@@ -126,12 +126,13 @@ namespace Plato.Search.Controllers
 
             var result = await _fullTextIndexManager.DeleteAsync(new FullTextIndex()
             {
-                TableName = "PlatoCatalog"
+                TableName = "Entities",
+                ColumnName = "Title"
             });
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Settings Updated Successfully!"]);
+                _alerter.Success(T["Index Deleted Successfully!"]);
             }
             else
             {

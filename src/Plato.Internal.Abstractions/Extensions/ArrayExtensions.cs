@@ -15,8 +15,7 @@ namespace Plato.Internal.Abstractions.Extensions
             {
                 for (var i = 0; i <= input.Length - 1; i++)
                 {
-                    sb.Append(input.GetValue(i).ToString())
-                        .Append(delimiter);
+                    sb.Append(input.GetValue(i)).Append(delimiter);
                 }
             }
 

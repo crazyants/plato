@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions.Builders;
@@ -74,43 +74,36 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         public IFullTextBuilder CreateIndex(SchemaFullTextIndex index)
         {
-     
+            AddStatement(CreateOrAlterIndex(index, false));
+            return this;
+        }
+
+        public IFullTextBuilder AlterIndex(SchemaFullTextIndex index)
+        {
+            AddStatement(CreateOrAlterIndex(index, true));
+            return this;
+        }
+
+        public IFullTextBuilder DropIndex(string tableName, string columnName)
+        {
+            return DropIndexes(tableName, new string[]
+            {
+                columnName
+            });
+        }
+
+        public IFullTextBuilder DropIndexes(string tableName, string[] columnNames)
+        {
             var sb = new StringBuilder();
 
-            sb.Append("CREATE FULLTEXT INDEX ON ")
-                .Append(index.TableName)
-                .Append("(");
-
-            var i = 0;
-            var len = index.ColumnNames.Count();
-            foreach (var name in index.ColumnNames)
-            {
-                sb.Append(name);
-                i++;
-                if (i < len)
-                {
-                    sb.Append(",");
-                }
-            }
-            
-            sb.Append(" LANGUAGE ")
-                .Append(index.LanguageCode)
-                .Append(")")
-                .Append("KEY INDEX ")
-                .Append(index.PrimaryKeyName)
-                .Append("ON ")
-                .Append(index.CatalogName)
-                .Append("WITH STOPLIST = SYSTEM");
+            sb.Append("ALTER FULLTEXT INDEX ON ")
+                .Append(GetTableName(tableName))
+                .Append(" DROP (");
+            sb.Append(columnNames.ToDelimitedString(','));
+            sb.Append(")");
 
             AddStatement(sb.ToString());
             return this;
-
-        }
-
-        public IFullTextBuilder DropIndex(string column)
-        {
-            // TODO
-            throw new NotImplementedException();
         }
 
         public IFullTextBuilder DropIndexes(string tableName)
@@ -123,11 +116,33 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             var sb = new StringBuilder();
             sb.Append("DROP FULLTEXT INDEX ON ")
-                .Append(tableName)
+                .Append(GetTableName(tableName))
                 .Append(";");
 
             AddStatement(sb.ToString());
             return this;
+
+        }
+        
+        string CreateOrAlterIndex(SchemaFullTextIndex index, bool alter = false)
+        {
+            
+            var sb = new StringBuilder();
+
+            sb.Append(alter ? "ALTER" : "CREATE")
+                .Append(" FULLTEXT INDEX ON ")
+                .Append(GetTableName(index.TableName))
+                .Append(" (");
+            sb.Append(index.ColumnNames.ToDelimitedString('.'));
+            sb.Append(" LANGUAGE ")
+                .Append(index.LanguageCode)
+                .Append(") KEY INDEX ")
+                .Append(index.PrimaryKeyName)
+                .Append(" ON ")
+                .Append(index.CatalogName)
+                .Append("WITH STOPLIST = SYSTEM");
+
+            return sb.ToString();
 
         }
 

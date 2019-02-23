@@ -13,6 +13,7 @@ using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Reputations;
 using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Internal.Stores.Abstractions.Schema;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Stores.Abstractions.Users;
