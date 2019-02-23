@@ -9,6 +9,8 @@
 
         IFullTextBuilder CreateIndex(SchemaFullTextIndex index);
 
+        IFullTextBuilder DropIndex(string column);
+
         IFullTextBuilder DropIndexes(string tableName);
         
     }

@@ -3,13 +3,12 @@
 
 <card>
     <card-title>
-        <h6 class="card-title">@T["General"]</h6>
+        <h6 class="card-title">@T["Search Method"]</h6>
     </card-title>
     <card-body>
 
         <div class="form-group">
-
-            <label asp-for="SearchType" class="col-form-label font-weight-bold">@T["Search Type"]</label>
+            
             <span asp-validation-for="SearchType" class="text-danger"></span>
             <select class="form-control"
                     asp-for="SearchType"
@@ -21,48 +20,82 @@
     </card-body>
 </card>
 
-<card>
-    <card-title>
-        <h6 class="card-title">@T["Catalog"]</h6>
-    </card-title>
-    <card-body>
-        
-        <p class="text-muted">
-            @T["Manage the full text catalogs associated with your database."]
-        </p>
-        <p>
-            @if (Model.SearchType != SearchTypes.Tsql)
+@if (Model.SearchType != SearchTypes.Tsql)
+{
+
+    <card class="card card-body-flush">
+        <card-title>
+            <h6 class="card-title">@T["Full Text Catalog"]</h6>
+        </card-title>
+        <card-body>
+            
+            @if (Model.Catalogs != null)
             {
-
-                @if (Model.Catalogs != null)
-                 {
-                     <ul class="list-group">
-                         @foreach (var catalog in Model.Catalogs)
-                         {
-                             <li class="list-group-item">
-                                 <a href="#" class="btn btn-danger float-right">
-                                     @T["Drop Catalog"]
-                                 </a>
-                                 <strong>@catalog.Name</strong>
-                             </li>
-                         }
-                     </ul>
-                 }
-                 else
-                 {
-                     <spam>
-                         @T["No catalog has yet."]]
-                         <a href="#" class="btn btn-primary">
-                             @T["Create Catalog"]
-                         </a>
-                     </spam>
-                 }
-
+                <ul class="list-group list-group-flush list-group-hover">
+                    @foreach (var catalog in Model.Catalogs)
+                    {
+                        <li class="list-group-item list-group-item-action">
+                            <a asp-route-action="DeleteCatalog" class="btn btn-danger float-right ml-2">
+                                @T["Delete"]
+                            </a>
+                            <a href="#" class="btn btn-primary float-right">
+                                @T["Rebuild"]
+                            </a>
+                            <strong>@catalog.Name</strong>
+                        </li>
+                    }
+                </ul>
             }
-        </p>
+            else
+            {
+                <spam>
+                    @T["No catalog has been created yet."]]
+                    <a href="#" class="btn btn-primary">
+                        @T["Create Catalog"]
+                    </a>
+                </spam>
+            }
+            
+        </card-body>
+    </card>
 
-    </card-body>
-</card>
+    <card class="card card-body-flush">
+        <card-title>
+            <h6 class="card-title">@T["Full Text Indexes"]</h6>
+        </card-title>
+        <card-body>
+            
+            @if (Model.Catalogs != null)
+            {
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var index in Model.Indexes)
+                {
+                    <li class="list-group-item list-group-item-action">
+                        <a asp-route-action="DeleteIndex" class="btn btn-danger float-right ml-2">
+                            @T["Delete"]
+                        </a>
+                        <a href="#" class="btn btn-primary float-right">
+                            @T["Rebuild"]
+                        </a>
+                        <span class="text-muted">@index.TableName</span>.<strong>@index.ColumnName</strong><br />
+                    </li>
+                }
+            </ul>
+            }
+            else
+            {
+                <spam>
+                    @T["No indexes have been created yet."]]
+                    <a href="#" class="btn btn-primary">
+                        @T["Create Indexes"]
+                    </a>
+                </spam>
+            }
+        
+        </card-body>
+    </card>
+
+}
 
 <card class="card mt-4">
     <card-footer>

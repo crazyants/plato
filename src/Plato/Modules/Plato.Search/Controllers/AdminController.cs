@@ -8,6 +8,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Search.Models;
+using Plato.Search.Services;
 using Plato.Search.ViewModels;
 
 namespace Plato.Search.Controllers
@@ -19,6 +20,9 @@ namespace Plato.Search.Controllers
         private readonly IViewProviderManager<SearchSettings> _viewProvider;
         private readonly IAuthorizationService _authorizationService;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IFullTextCatalogManager<FullTextCatalog> _fullTextCatalogManager;
+        private readonly IFullTextIndexManager<FullTextIndex> _fullTextIndexManager;
+
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -31,12 +35,16 @@ namespace Plato.Search.Controllers
             IAuthorizationService authorizationService,
             IViewProviderManager<SearchSettings> viewProvider,
             IBreadCrumbManager breadCrumbManager,
+            IFullTextCatalogManager<FullTextCatalog> fullTextCatalogManager,
+            IFullTextIndexManager<FullTextIndex> fullTextIndexManager,
             IAlerter alerter)
         {
        
             _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
             _viewProvider = viewProvider;
+            _fullTextCatalogManager = fullTextCatalogManager;
+            _fullTextIndexManager = fullTextIndexManager;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -87,11 +95,57 @@ namespace Plato.Search.Controllers
 
         // ------------
 
-        public Task<IActionResult> DropCatalog()
+        public async Task<IActionResult> DeleteCatalog()
         {
-            return Task.FromResult(default(IActionResult));
+
+            var result = await _fullTextCatalogManager.DeleteAsync(new FullTextCatalog()
+            {
+                Name = "PlatoCatalog"
+            });
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Settings Updated Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+              
+            }
+            
+
+            return RedirectToAction(nameof(Index));
+
         }
 
+        public async Task<IActionResult> DeleteIndex()
+        {
+
+            var result = await _fullTextIndexManager.DeleteAsync(new FullTextIndex()
+            {
+                TableName = "PlatoCatalog"
+            });
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Settings Updated Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+
+            }
+
+
+            return RedirectToAction(nameof(Index));
+
+        }
 
 
     }

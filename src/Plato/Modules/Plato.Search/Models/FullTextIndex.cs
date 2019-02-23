@@ -21,6 +21,8 @@ namespace Plato.Search.Models
 
         public string ColumnName { get; set; }
         
+        public int ColumnId { get; set; }
+
         public void PopulateModel(IDataReader dr)
         {
             if (dr.ColumnIsNotNull("Id"))
@@ -40,7 +42,10 @@ namespace Plato.Search.Models
 
             if (dr.ColumnIsNotNull("ColumnName"))
                 ColumnName = Convert.ToString(dr["ColumnName"]);
-            
+
+            if (dr.ColumnIsNotNull("ColumnId"))
+                ColumnId = Convert.ToInt32(dr["ColumnId"]);
+
         }
 
     }

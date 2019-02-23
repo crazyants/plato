@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Search.Models;
@@ -19,7 +17,8 @@ namespace Plato.Search.Repositories
                 t.name AS TableName, 
                 c.name AS CatalogName ,
                 i.name AS UniqueIndexName,
-                cl.name AS ColumnName
+                cl.name AS ColumnName,
+                ic.column_id AS ColumnId
             FROM 
                 sys.tables t 
             INNER JOIN 

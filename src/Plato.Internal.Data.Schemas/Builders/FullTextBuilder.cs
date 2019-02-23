@@ -24,27 +24,23 @@ namespace Plato.Internal.Data.Schemas.Builders
             {
                 throw new ArgumentNullException(nameof(catalogName));
             }
-
-            var sb = new StringBuilder();
-
+            
             if (Options.DropCatalogBeforeCreate)
             {
-                sb.Append("IF NOT EXISTS(SELECT name FROM sys.fulltext_catalogs WHERE name = '")
-                    .Append(catalogName)
-                    .Append("'))")
-                    .Append("BEGIN")
-                    .Append(NewLine);
+                DropCatalog(catalogName);
             }
-      
+
+            var sb = new StringBuilder();
+            sb.Append("IF NOT EXISTS(SELECT name FROM sys.fulltext_catalogs WHERE name = '")
+                .Append(catalogName)
+                .Append("'))")
+                .Append("BEGIN")
+                .Append(NewLine);
             sb.Append("CREATE FULLTEXT CATALOG ")
                 .Append(catalogName)
                 .Append(" AS DEFAULT;");
-
-            if (Options.DropCatalogBeforeCreate)
-            {
-                sb.Append(NewLine)
-                    .Append("END");
-            }
+            sb.Append(NewLine)
+                .Append("END");
 
             AddStatement(sb.ToString());
             return this;
@@ -62,7 +58,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             sb.Append("IF EXISTS(SELECT name FROM sys.fulltext_catalogs WHERE name = '")
                 .Append(catalogName)
-                .Append("'))")
+                .Append("')")
                 .Append("BEGIN")
                 .Append(NewLine);
             sb.Append("DROP FULLTEXT CATALOG ")
@@ -109,6 +105,12 @@ namespace Plato.Internal.Data.Schemas.Builders
             AddStatement(sb.ToString());
             return this;
 
+        }
+
+        public IFullTextBuilder DropIndex(string column)
+        {
+            // TODO
+            throw new NotImplementedException();
         }
 
         public IFullTextBuilder DropIndexes(string tableName)

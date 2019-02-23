@@ -50,10 +50,12 @@
         }
         else
         {
-            @if (Model.Content != null)
-            {
-                <view model="@Model.Content"></view>
-            }
+            <div class="layout-content">
+                @if (Model.Content != null)
+                {
+                    <view model="@Model.Content"></view>
+                }
+            </div>
         }
         <div class="layout-footer">
             @if (Model.Actions != null)
