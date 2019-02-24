@@ -132,7 +132,12 @@ namespace Plato.Search.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Add view options to context for use within view adaptors
+            if (opts.FeatureId != 0)
+                this.RouteData.Values.Add("opts..featureId", opts.FeatureId);
+            if (!string.IsNullOrEmpty(opts.Within))
+                this.RouteData.Values.Add("opts..within", opts.Within);
+
+            // Add view options to context for use within view adapters
             this.HttpContext.Items[typeof(SearchIndexViewModel)] = new SearchIndexViewModel()
             {
                 Options = opts,

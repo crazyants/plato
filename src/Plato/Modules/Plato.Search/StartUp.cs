@@ -81,12 +81,19 @@ namespace Plato.Search
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-       
+            
+            routes.MapAreaRoute(
+                name: "PlatoSearch",
+                areaName: "Plato.Search",
+                template: "search/{opts.FeatureId:int?}/{opts.Within?}",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+            
             routes.MapAreaRoute(
                 name: "PlatoSearchWebApi",
                 areaName: "Plato.Search",
                 template: "api/{controller}/{action}/{id?}",
-                defaults: new { controller = "Users", action = "Get" }
+                defaults: new { controller = "Search", action = "Get" }
             );
 
         }

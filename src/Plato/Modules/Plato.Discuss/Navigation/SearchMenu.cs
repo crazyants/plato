@@ -40,32 +40,31 @@ namespace Plato.Discuss.Navigation
             }
 
             builder
-                .Add(T["Discuss"], 2, discuss => discuss
-                    .Add(T["Topics"], 1, topics => topics
-                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
-                        {
-                            ["FeatureId"] = feature.Id,
-                            ["Within"] = "Topics"
-                        })
-                        .Attributes(new Dictionary<string, object>()
-                        {
-                            {"data-feature-id", feature.Id}
-                        })
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ).Add(T["Replies"], 2, f => f
-                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
-                        {
-                            ["FeatureId"] = feature.Id,
-                            ["Within"] = "Replies"
-                        })
-                        .Attributes(new Dictionary<string, object>()
-                        {
-                            {"data-feature-id", feature.Id}
-                        })
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ), new List<string>() {"discuss", "font-weight-bold"});
+                .Add(T["Topics"], 1, topics => topics
+                    .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                    {
+                        ["opts.FeatureId"] = feature.Id,
+                        ["opts.Within"] = "Topics"
+                    })
+                    .Attributes(new Dictionary<string, object>()
+                    {
+                        {"data-feature-id", feature.Id}
+                    })
+                    //.Permission(Permissions.ManageRoles)
+                    .LocalNav()
+                ).Add(T["Replies"], 2, f => f
+                    .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                    {
+                        ["opts.FeatureId"] = feature.Id,
+                        ["opts.Within"] = "Replies"
+                    })
+                    .Attributes(new Dictionary<string, object>()
+                    {
+                        {"data-feature-id", feature.Id}
+                    })
+                    //.Permission(Permissions.ManageRoles)
+                    .LocalNav()
+                );
         }
     }
 

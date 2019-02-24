@@ -14,7 +14,96 @@ if (typeof $.Plato.Http === "undefined") {
 $(function (win, doc, $) {
 
     'use strict';
-    
+
+    /* searchDropDown */
+    var searchDropDown = function () {
+        
+        var dataKey = "searchDropDown",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {};
+
+        var methods = {
+            init: function($caller, methodName) {
+                
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                methods.bind($caller);
+
+            },
+            bind: function($caller) {
+
+                // On dropdown shown 
+                $caller.on('shown.bs.dropdown',
+                    function() {
+                        $(this).find(".form-control").focus();
+                    });
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).searchDropDown()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().searchDropDown()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
     /* searchAutoComplete */
     var searchAutoComplete = function () {
 
@@ -110,10 +199,14 @@ $(function (win, doc, $) {
             onKeyDown: function($caller, e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
+                    var $btn = $caller.parent().find(".btn");
+                    if ($btn.length > 0) {
+                        $btn[0].click();
+                    }
                 }
             },
             onItemClick: function($caller, result, e) {
-                //e.preventDefault();
+                return;
             }
         };
 
@@ -198,12 +291,17 @@ $(function (win, doc, $) {
     }();
 
     $.fn.extend({
-        searchAutoComplete: searchAutoComplete.init
+        searchAutoComplete: searchAutoComplete.init,
+        searchDropDown: searchDropDown.init
     });
 
     $(doc).ready(function () {
 
+        // Search auto complete
         $('[data-provide="searchAutoComplete"]').searchAutoComplete();
+
+        // Search drop down menu
+        $('[data-provide="searchDropDown"]').searchDropDown();
         
     });
 

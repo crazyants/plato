@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
@@ -23,13 +24,17 @@ namespace Plato.Search.Navigation
             }
 
             builder
-                .Add(T["Everything"], int.MinValue, favourites => favourites
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        { "data-feature-id", 0 }
-                    })
-                    .LocalNav()
-                    , new List<string>() { "active" });
+                .Add(T["All"], int.MinValue, f => f
+                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                        {
+                            ["FeatureId"] = null,
+                            ["Within"] = null
+                        })
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-feature-id", 0}
+                        })
+                        .LocalNav());
         }
     }
 

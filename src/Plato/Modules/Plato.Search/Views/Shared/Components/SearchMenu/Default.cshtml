@@ -1,15 +1,20 @@
 ﻿@model SearchIndexOptions
 
-<div class="dropdown">
+<div class="dropdown" data-provide="searchDropDown">
     <a class="nav-link dropdown-toggle text-hidden" href="#" id="siteSearchDropdown" role="button" data-toggle="dropdown" title="@T["Search"]" data-provide="tooltip" aria-haspopup="true" aria-expanded="false">
         <i class="fal fa-search"></i>
     </a>
-    <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="siteSearchDropdown">
-        <div class="py-1 px-2" style="min-width: 600px;">
-            @await DisplayAsync(new View("Search", new
-            {
-                options = Model
-            }))
-        </div>
-    </div>
+    <ul class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" style="min-width: 600px;" aria-labelledby="siteSearchDropdown">
+        <li>
+            <div class="px-2">
+                <form asp-route-area="Plato.Search" asp-route-controller="Home" asp-route-action="Index" method="get" role="form">
+                    @await DisplayAsync(new View("Search", new
+                    {
+                        options = Model
+                    }))
+                </form>
+            </div>
+        </li>
+      
+    </ul>
 </div>

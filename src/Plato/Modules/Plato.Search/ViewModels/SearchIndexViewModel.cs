@@ -29,8 +29,11 @@ namespace Plato.Search.ViewModels
         [DataMember(Name = "search")]
         public string Search { get; set; }
 
-        [DataMember(Name = "channel")]
-        public int ChannelId { get; set; }
+        [DataMember(Name = "feature")]
+        public int FeatureId { get; set; }
+
+        [DataMember(Name = "within")]
+        public string Within { get; set; }
         
         [DataMember(Name = "filter")]
         public FilterBy Filter { get; set; } = FilterBy.All;

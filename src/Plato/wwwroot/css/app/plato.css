@@ -71,11 +71,11 @@
 #search > input { width: 300px; }
 #search .dropdown-menu { width: 600px; }
 
-
+/* input + button */
 .search-input-group {
     position: relative;
     width: 100%;
-    height: 42px;
+    height: 38px;
 }
 
 .search-input-group .form-control {

@@ -164,7 +164,7 @@ namespace Plato.Search.ViewComponents
                 {
                     model.SortColumns.Insert(0, new SortColumn()
                     {
-                        Text = "Relevency",
+                        Text = "Relevancy",
                         Value = SortBy.Rank
                     });
                 }
@@ -208,19 +208,19 @@ namespace Plato.Search.ViewComponents
    
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Configure(opts =>
+                .Configure(o =>
                 {
                     if (_searchSettings != null)
                     {
-                        opts.SearchType = _searchSettings.SearchType;
+                        o.SearchType = _searchSettings.SearchType;
                     }
                 })
                 .Select<EntityQueryParams>(q =>
                 {
                
-                    if (options.ChannelId > 0)
+                    if (options.FeatureId > 0)
                     {
-                        q.CategoryId.Equals(options.ChannelId);
+                        q.FeatureId.Equals(options.FeatureId);
                     }
 
                     if (!string.IsNullOrEmpty(options.Search))
