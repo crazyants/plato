@@ -17,7 +17,7 @@ namespace Plato.WebApi.Controllers
     public class UsersController : BaseWebApiController
     {
         
-        private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IContextFacade _contextFacade;
    
         public UsersController(
@@ -25,7 +25,7 @@ namespace Plato.WebApi.Controllers
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade)
         {
-            _ploatUserStore = platoUserStore;
+            _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
         }
 
@@ -111,7 +111,7 @@ namespace Plato.WebApi.Controllers
             OrderBy sortOrder)
         {
 
-            return await _ploatUserStore.QueryAsync()
+            return await _platoUserStore.QueryAsync()
                 .Take(page, pageSize)
                 .Select<UserQueryParams>(q =>
                 {

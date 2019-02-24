@@ -24,7 +24,7 @@
                     <strong>@T["You need to create a catalog"]</strong>
                 </p>
                 <p>
-                    @T["Full text search is selected but no catalog has been created yet. If you have full text search installed & enabled within your SQL Server database use the link below to create your catalog and all necessary indexes..."]
+                    @T["Full text search has been enabled but no catalog has been created yet. You will likely see errors when searching. If you have full text search installed & enabled within your SQL Server database use the link below to create your catalog and all necessary indexes..."]
                 </p>
                 <p>
                     <a asp-route-action="CreateCatalog" class="btn btn-sm btn-primary">@T["Create catalog & indexes"]</a>
@@ -67,10 +67,10 @@
                 <h6 class="card-title">@T["Installed Indexes"]</h6>
             </card-title>
             <card-body>
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush list-group-hover">
                     @foreach (var index in Model.Indexes)
                     {
-                        <li class="list-group-item">
+                        <li class="list-group-item list-group-item-action">
                             <span class="text-muted">@index.TableName</span>.<strong>@index.ColumnName</strong><br />
                         </li>
                     }

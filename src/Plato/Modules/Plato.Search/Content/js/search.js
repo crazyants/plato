@@ -31,8 +31,9 @@ $(function (win, doc, $) {
                     order: "Desc"
                 }
             },
-            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{title}{relevance}</a>',
-            parseItemTemplate: function (html, result) {
+            itemTemplate:
+                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url({createdBy.avatar.url});"></span></span>{title}{relevance}</a>',
+            parseItemTemplate: function(html, result) {
 
                 if (result.id) {
                     html = html.replace(/\{id}/g, result.id);
@@ -40,7 +41,6 @@ $(function (win, doc, $) {
                     html = html.replace(/\{id}/g, "0");
                 }
 
-                
                 if (result.title) {
                     html = html.replace(/\{title}/g, result.title);
                 } else {
@@ -65,26 +65,60 @@ $(function (win, doc, $) {
                     } else {
                         html = html.replace(/\{relevance}/g, "");
                     }
-                    
+
                 } else {
                     html = html.replace(/\{relevance}/g, "");
                 }
+                
+                if (result.createdBy) {
+
+                    if (result.createdBy.avatar) {
+                        if (result.createdBy.avatar.url) {
+                            html = html.replace(/\{createdBy.avatar.url}/g, result.createdBy.avatar.url);
+                        } else {
+                            html = html.replace(/\{createdBy.avatar.url}/g, "#");
+                        }
+                    }
+                }
+                
+                if (result.modifiedBy) {
+
+                    if (result.modifiedBy.avatar) {
+                        if (result.modifiedBy.avatar.url) {
+                            html = html.replace(/\{modifiedBy.avatar.url}/g, result.modifiedBy.avatar.url);
+                        } else {
+                            html = html.replace(/\{modifiedBy.avatar.url}/g, "#");
+                        }
+                    }
+                }
+                
+                if (result.lastReplyBy) {
+
+                    if (result.lastReplyBy.avatar) {
+                        if (result.lastReplyBy.avatar.url) {
+                            html = html.replace(/\{lastReplyBy.avatar.url}/g, result.lastReplyBy.avatar.url);
+                        } else {
+                            html = html.replace(/\{lastReplyBy.avatar.url}/g, "#");
+                        }
+                    }
+                }
+
 
                 return html;
 
             },
-            onKeyDown: function ($caller, e) {
+            onKeyDown: function($caller, e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
                 }
             },
-            onItemClick: function ($caller, result, e) {
-                e.preventDefault();
+            onItemClick: function($caller, result, e) {
+                //e.preventDefault();
             }
-        }
+        };
 
         var methods = {
-            init: function ($caller, methodName, func) {
+            init: function($caller, methodName, func) {
 
                 if (func) {
                     return func(this);
@@ -102,10 +136,10 @@ $(function (win, doc, $) {
                 $caller.autoComplete($caller.data(dataKey), methodName);
 
             },
-            show: function ($caller) {
+            show: function($caller) {
                 $caller.autoComplete("show");
             }
-        }
+        };
 
         return {
             init: function () {

@@ -116,7 +116,6 @@ namespace Plato.Search.Controllers
         {
 
             var result = await _fullTextCatalogManager.DropCatalogAsync();
-
             if (result.Succeeded)
             {
                 _alerter.Success(T["Catalog Deleted Successfully!"]);
@@ -137,10 +136,9 @@ namespace Plato.Search.Controllers
         {
 
             var result = await _fullTextCatalogManager.RebuildCatalogAsync();
-
             if (result.Succeeded)
             {
-                _alerter.Success(T["Catalog & Indexes Rebuilt Successfully!"]);
+                _alerter.Success(T["Catalog Rebuilt Successfully!"]);
             }
             else
             {

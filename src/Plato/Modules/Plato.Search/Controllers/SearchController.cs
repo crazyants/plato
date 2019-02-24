@@ -47,7 +47,7 @@ namespace Plato.Search.Controllers
             OrderBy order = OrderBy.Desc)
         {
 
-            // Get notificaitons
+            // Get entities
             var entities = await GetEntities(
                 page,
                 size,
@@ -84,6 +84,7 @@ namespace Plato.Search.Controllers
                             Id = entity.CreatedBy.Id,
                             DisplayName = entity.CreatedBy.DisplayName,
                             UserName = entity.CreatedBy.UserName,
+                            Avatar = entity.CreatedBy.Avatar,
                             Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                             {
                                 ["Area"] = "Plato.Users",
@@ -98,6 +99,7 @@ namespace Plato.Search.Controllers
                             Id = entity.ModifiedBy.Id,
                             DisplayName = entity.ModifiedBy.DisplayName,
                             UserName = entity.ModifiedBy.UserName,
+                            Avatar = entity.ModifiedBy.Avatar,
                             Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                             {
                                 ["Area"] = "Plato.Users",
@@ -112,6 +114,7 @@ namespace Plato.Search.Controllers
                             Id = entity.LastReplyBy.Id,
                             DisplayName = entity.LastReplyBy.DisplayName,
                             UserName = entity.LastReplyBy.UserName,
+                            Avatar = entity.LastReplyBy.Avatar,
                             Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                             {
                                 ["Area"] = "Plato.Users",
@@ -163,14 +166,6 @@ namespace Plato.Search.Controllers
                 ? base.Result(output)
                 : base.NoResults();
 
-        }
-
-
-        [HttpDelete]
-        [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Delete(int id)
-        {
-            throw new NotImplementedException();
         }
         
         #endregion

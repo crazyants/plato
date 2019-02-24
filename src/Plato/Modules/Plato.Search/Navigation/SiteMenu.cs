@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
+using Plato.Search.ViewModels;
 
 namespace Plato.Search.Navigation
 {
@@ -21,18 +22,31 @@ namespace Plato.Search.Navigation
                 return;
             }
             
+            //builder
+            //    .Add(T["Search"], 3, search => search
+            //        .Action("Index", "Home", "Plato.Search")
+            //        //.Permission(Permissions.ManageRoles)
+            //            .IconCss("fal fa-search")
+            //            .Attributes(new Dictionary<string, object>()
+            //            {
+            //                {"data-provide", "tooltip"},
+            //                {"title", T["Search"]}
+            //            })
+            //        .LocalNav()
+            //    , new List<string>() { "search", "text-hidden"});
+
+
+            // Add reaction menu view to navigation
             builder
-                .Add(T["Search"], 3, search => search
-                    .Action("Index", "Home", "Plato.Search")
-                    //.Permission(Permissions.ManageRoles)
-                        .IconCss("fal fa-search")
-                        .Attributes(new Dictionary<string, object>()
-                        {
-                            {"data-provide", "tooltip"},
-                            {"title", T["Search"]}
-                        })
-                    .LocalNav()
-                , new List<string>() { "search", "text-hidden"});
+                .Add(T["SearchMenu"], 3, react => react
+                    .View("SearchMenu", new
+                    {
+                        options = new SearchIndexOptions()
+                    })
+                    //.Permission(Permissions.ReactToTopics)
+                );
+
+
 
         }
     }
