@@ -59,19 +59,19 @@
         </card-body>
     </card>
 
-    <card class="card card-body-flush">
+    <card>
         <card-title>
             <h6 class="card-title">@T["Full Text Indexes"]</h6>
         </card-title>
         <card-body>
             
-            @if (Model.Catalogs != null)
+            @if (Model.Indexes != null)
             {
             <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var index in Model.Indexes)
                 {
                     <li class="list-group-item list-group-item-action">
-                        <a asp-route-action="DeleteIndex" class="btn btn-danger float-right ml-2">
+                        <a asp-route-action="DeleteIndex" asp-route-tableName="@index.TableName" asp-route-columnName="@index.ColumnName" class="btn btn-danger float-right ml-2">
                             @T["Delete"]
                         </a>
                         <a href="#" class="btn btn-primary float-right">
@@ -84,12 +84,11 @@
             }
             else
             {
-                <spam>
-                    @T["No indexes have been created yet."]]
+                <p>
                     <a href="#" class="btn btn-primary">
                         @T["Create Indexes"]
                     </a>
-                </spam>
+                </p>
             }
         
         </card-body>

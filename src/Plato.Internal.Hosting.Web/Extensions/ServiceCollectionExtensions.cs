@@ -55,7 +55,6 @@ using Plato.Internal.Tasks.Extensions;
 using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
 
-
 namespace Plato.Internal.Hosting.Web.Extensions
 
 {

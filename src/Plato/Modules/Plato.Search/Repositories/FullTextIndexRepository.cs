@@ -69,9 +69,20 @@ namespace Plato.Search.Repositories
                     }
 
                 }
-            }
 
+                // Remove table prefix from table names
+                if (output != null)
+                {
+                    foreach (var index in output)
+                    {
+                        index.TableName = index.TableName.Replace(context.Configuration.TablePrefix, "");
+                    }
+                }
+
+            }
+            
             return output;
+
         }
 
     }
