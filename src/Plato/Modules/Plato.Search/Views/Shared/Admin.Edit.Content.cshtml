@@ -8,14 +8,14 @@
     <card-body>
 
         <div class="form-group">
-            
+
             <span asp-validation-for="SearchType" class="text-danger"></span>
             <select class="form-control"
                     asp-for="SearchType"
                     asp-items="@Model.AvailableSearchTypes"></select>
 
         </div>
-        
+
         @if (Model.SearchType != SearchTypes.Tsql && Model.Catalogs == null)
         {
             <div class="alert alert-secondary">
@@ -31,7 +31,7 @@
                 </p>
             </div>
         }
-        
+
     </card-body>
 </card>
 
@@ -59,35 +59,39 @@
             </ul>
         </card-body>
     </card>
-
-    <card class="card card-body-flush">
-        <card-title>
-            <h6 class="card-title">@T["Installed Indexes"]</h6>
-        </card-title>
-        <card-body>
-
-            @if (Model.Indexes != null)
-            {
+    
+    @if (Model.Indexes != null)
+    {
+        <card class="card card-body-flush">
+            <card-title>
+                <h6 class="card-title">@T["Installed Indexes"]</h6>
+            </card-title>
+            <card-body>
                 <ul class="list-group list-group-flush">
                     @foreach (var index in Model.Indexes)
                     {
                         <li class="list-group-item">
-                            <span class="text-muted">@index.TableName</span>.<strong>@index.ColumnName</strong><br/>
+                            <span class="text-muted">@index.TableName</span>.<strong>@index.ColumnName</strong><br />
                         </li>
                     }
                 </ul>
-            }
-            else
-            {
-                <p>
-                    <a href="#" class="btn btn-primary">
-                        @T["Create Indexes"]
-                    </a>
-                </p>
-            }
+            </card-body>
+        </card>
+    }
+    else
+    {
+        <card>
+            <card-title>
+                <h6 class="card-title">@T["No Indexes"]</h6>
+            </card-title>
+            <card-body>
+                <span class="text-muted">
+                    @T["No full text indexes are installed. It could be features have been removed or you've not installed any features that create indexes yet. Use the \"Rebuild\" button above to the right of your catalog name to check for new indexes."]
+                </span>
 
-        </card-body>
-    </card>
+            </card-body>
+        </card>
+    }
     
 }
 

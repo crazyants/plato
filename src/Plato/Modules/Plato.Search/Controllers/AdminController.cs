@@ -140,7 +140,7 @@ namespace Plato.Search.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Started Rebuild Successfully!"]);
+                _alerter.Success(T["Catalog & Indexes Rebuilt Successfully!"]);
             }
             else
             {

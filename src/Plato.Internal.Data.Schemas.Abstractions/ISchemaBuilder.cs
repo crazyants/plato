@@ -1,5 +1,4 @@
-﻿using System;
-using Plato.Internal.Data.Schemas.Abstractions.Builders;
+﻿using Plato.Internal.Data.Schemas.Abstractions.Builders;
 
 namespace Plato.Internal.Data.Schemas.Abstractions
 {

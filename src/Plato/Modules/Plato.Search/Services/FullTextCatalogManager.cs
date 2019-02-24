@@ -8,6 +8,7 @@ using Plato.Internal.Search.Abstractions;
 using Plato.Internal.Stores.Abstractions.Schema;
 using Plato.Internal.Stores.Extensions;
 using Plato.Search.Commands;
+using Plato.Search.Stores;
 
 namespace Plato.Search.Services
 {
@@ -19,6 +20,7 @@ namespace Plato.Search.Services
         private readonly IFullTextCatalogCommand<SchemaFullTextCatalog> _fullTextCatalogCommand;
         private readonly IFullTextIndexCommand<SchemaFullTextIndex> _fullTextIndexCommand;
         private readonly IFullTextIndexManager _fullTextIndexManager;
+        private readonly IFullTextIndexStore _fullTextIndexStore;
         private readonly IShellSettings _shellSettings;
 
         public FullTextCatalogManager(
@@ -26,64 +28,35 @@ namespace Plato.Search.Services
             IFullTextIndexCommand<SchemaFullTextIndex> fullTextIndexCommand, 
             IFullTextIndexManager fullTextIndexManager,
             IShellSettings shellSettings,
+            IFullTextIndexStore fullTextIndexStore,
             IConstraintStore constraintStore)
         {
             _fullTextCatalogCommand = fullTextCatalogCommand;
             _fullTextIndexCommand = fullTextIndexCommand;
             _fullTextIndexManager = fullTextIndexManager;
             _shellSettings = shellSettings;
+            _fullTextIndexStore = fullTextIndexStore;
             _constraintStore = constraintStore;
         }
 
         public async Task<ICommandResultBase> CreateCatalogAsync()
         {
 
+            // Build result
             var result = new CommandResultBase();
             
-            // First create the catalog
-            var catalogName = GetCatalogName();
-            var createCatalog = await _fullTextCatalogCommand.CreateAsync(new SchemaFullTextCatalog()
-            {
-                Name = catalogName
-            });
-
+            // Create catalog
+            var createCatalog = await CreateCatalogInternalAsync();
             if (!createCatalog.Succeeded)
             {
                 return result.Failed(createCatalog.Errors.ToArray());
             }
-
-            // Next create the indexes from all provided indexes
-            var indexes = _fullTextIndexManager.GetIndexes();
-            foreach (var index in indexes)
+            
+            // Create indexes
+            var createIndexes = await CreateIndexesInternalAsync(GetCatalogName());
+            if (!createIndexes.Succeeded)
             {
-
-                // Get table name with prefix
-                var tableName = GetTableName(index.TableName);
-
-                // Get primary key constraint for table
-                var primaryKey = await _constraintStore.GetPrimaryKeyConstraint(tableName);
-                if (primaryKey == null)
-                {
-                    return result.Failed($"Could not find a primary key constraint for table {tableName}");
-                }
-
-                var schemaIndex = new SchemaFullTextIndex()
-                {
-                    PrimaryKeyName = primaryKey.ConstraintName,
-                    TableName = index.TableName,
-                    ColumnNames = index.ColumnNames,
-                    LanguageCode = index.LanguageCode,
-                    FillFactor = index.FillFactor,
-                    CatalogName = catalogName
-                };
-
-                // Create the index
-                var createIndex = await _fullTextIndexCommand.CreateAsync(schemaIndex);
-
-                if (!createIndex.Succeeded)
-                {
-                    return result.Failed(createIndex.Errors.ToArray());
-                }
+                return result.Failed(createIndexes.Errors.ToArray());
             }
 
             return result.Success();
@@ -93,23 +66,80 @@ namespace Plato.Search.Services
         public async Task<ICommandResultBase> DropCatalogAsync()
         {
 
+            // Build result
             var result = new CommandResultBase();
 
-            // First drop all indexes on registered tables
-            var indexes = _fullTextIndexManager.GetIndexes();
-            foreach (var index in indexes)
+            // Drop indexes
+            var dropIndexes = await DropIndexesInternalAsync();
+            if (!dropIndexes.Succeeded)
             {
-                var deleteIndex = await _fullTextIndexCommand.DeleteAsync(new SchemaFullTextIndex()
-                {
-                    TableName = index.TableName
-                });
-                if (!deleteIndex.Succeeded)
-                {
-                    return result.Failed(deleteIndex.Errors.ToArray());
-                }
+                return result.Failed(dropIndexes.Errors.ToArray());
             }
 
-            // Next attempt to drop the catalog
+            // Drop catalog
+            var dropCatalog = await DropCatalogInternalAsync();
+            if (!dropCatalog.Succeeded)
+            {
+                return result.Failed(dropCatalog.Errors.ToArray());
+            }
+
+            return result.Success();
+
+        }
+
+        public async Task<ICommandResultBase> RebuildCatalogAsync()
+        {
+            
+            // Build result
+            var result = new CommandResultBase();
+            
+            // Create indexes
+            var createIndexes = await CreateIndexesInternalAsync(GetCatalogName());
+            if (!createIndexes.Succeeded)
+            {
+                return result.Failed(createIndexes.Errors.ToArray());
+            }
+
+            // Rebuild the catalog
+            var rebuildCatalog = await RebuildCatalogInternalAsync();
+            if (!rebuildCatalog.Succeeded)
+            {
+                return result.Failed(rebuildCatalog.Errors.ToArray());
+            }
+
+            return result.Success();
+            
+        }
+
+        // -----------
+
+        async Task<ICommandResultBase> CreateCatalogInternalAsync()
+        {
+
+            // Build result
+            var result = new CommandResultBase();
+
+            // Create catalog
+            var createCatalog = await _fullTextCatalogCommand.CreateAsync(new SchemaFullTextCatalog()
+            {
+                Name = GetCatalogName()
+            });
+            if (!createCatalog.Succeeded)
+            {
+                return result.Failed(createCatalog.Errors.ToArray());
+            }
+
+            return result.Success();
+
+        }
+
+        async Task<ICommandResultBase> DropCatalogInternalAsync()
+        {
+
+            // Build result
+            var result = new CommandResultBase();
+
+            // Drop catalog
             var deleteCatalog = await _fullTextCatalogCommand.DeleteAsync(new SchemaFullTextCatalog()
             {
                 Name = GetCatalogName()
@@ -124,11 +154,13 @@ namespace Plato.Search.Services
 
         }
 
-        public async Task<ICommandResultBase> RebuildCatalogAsync()
+        async Task<ICommandResultBase> RebuildCatalogInternalAsync()
         {
-            var result = new CommandResultBase();
 
-            // Next attempt to drop the catalog
+            // Build result
+            var result = new CommandResultBase();
+        
+            // Rebuild the catalog
             var rebuildCatalog = await _fullTextCatalogCommand.UpdateAsync(new SchemaFullTextCatalog()
             {
                 Name = GetCatalogName()
@@ -139,11 +171,94 @@ namespace Plato.Search.Services
                 return result.Failed(rebuildCatalog.Errors.ToArray());
             }
 
+
             return result.Success();
-            
+
         }
-    
-        // -----------
+        
+        async Task<ICommandResultBase> CreateIndexesInternalAsync(string catalogName)
+        {
+
+            // Build result
+            var result = new CommandResultBase();
+
+            // Get installed indexes from database
+            var installedIndexes = await _fullTextIndexStore.SelectIndexesAsync();
+            
+            // Get all provided indexes
+            var providedIndexes = _fullTextIndexManager.GetIndexes();
+
+            // Interate provided indexes
+            foreach (var providedIndex in providedIndexes)
+            {
+
+                // Attempt to get existing index within database
+                var existingIndex = installedIndexes?.FirstOrDefault(i =>
+                    i.TableName == providedIndex.TableName && providedIndex.ColumnNames.Contains(i.ColumnName));
+
+                // Index does not already exist within the database
+                if (existingIndex == null)
+                {
+
+                    // Get table name with prefix
+                    var tableName = GetTableName(providedIndex.TableName);
+
+                    // Get primary key constraint for table
+                    var primaryKey = await _constraintStore.GetPrimaryKeyConstraint(tableName);
+                    if (primaryKey == null)
+                    {
+                        return result.Failed($"Could not find a primary key constraint for table {tableName}");
+                    }
+               
+                    // Create the index
+                    var createIndex = await _fullTextIndexCommand.CreateAsync(new SchemaFullTextIndex()
+                    {
+                        PrimaryKeyName = primaryKey.ConstraintName,
+                        TableName = providedIndex.TableName,
+                        ColumnNames = providedIndex.ColumnNames,
+                        LanguageCode = providedIndex.LanguageCode,
+                        FillFactor = providedIndex.FillFactor,
+                        CatalogName = catalogName
+                    });
+
+                    if (!createIndex.Succeeded)
+                    {
+                        return result.Failed(createIndex.Errors.ToArray());
+                    }
+
+                }
+              
+            }
+
+            return result.Success();
+
+        }
+
+        async Task<ICommandResultBase> DropIndexesInternalAsync()
+        {
+
+            // Build result
+            var result = new CommandResultBase();
+
+            // Get provided indexes
+            var providedIndexes = _fullTextIndexManager.GetIndexes();
+
+            // Drop all provided indexes
+            foreach (var providedIndex in providedIndexes)
+            {
+                var deleteIndex = await _fullTextIndexCommand.DeleteAsync(new SchemaFullTextIndex()
+                {
+                    TableName = providedIndex.TableName
+                });
+                if (!deleteIndex.Succeeded)
+                {
+                    return result.Failed(deleteIndex.Errors.ToArray());
+                }
+            }
+
+            return result.Success();
+
+        }
 
         string GetCatalogName()
         {
