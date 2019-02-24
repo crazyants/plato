@@ -12,6 +12,7 @@ using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Search.Abstractions;
 
 namespace Plato.Entities
 {
@@ -52,6 +53,9 @@ namespace Plato.Entities
             services.AddScoped<IBrokerSubscriber, ParseEntityUrlsSubscriber>();
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
 
+            // Full text index providers
+            services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
+            
         }
 
         public override void Configure(

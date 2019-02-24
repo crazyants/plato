@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
 using Plato.Search.Assets;
+using Plato.Search.Commands;
 using Plato.Search.Models;
 using Plato.Search.Navigation;
 using Plato.Search.Stores;
@@ -64,9 +66,13 @@ namespace Plato.Search
             services.AddScoped<IFullTextCatalogStore, FullTextCatalogStore>();
             services.AddScoped<IFullTextIndexStore, FullTextIndexStore>();
             
-            // Managers
-            services.AddScoped<IFullTextCatalogManager<FullTextCatalog>, FullTextCatalogManager>();
-            services.AddScoped<IFullTextIndexManager<FullTextIndex>, FullTextIndexManager>();
+            // Commands
+            services.AddScoped<IFullTextCatalogCommand<SchemaFullTextCatalog>, FullTextCatalogCommand>();
+            services.AddScoped<IFullTextIndexCommand<SchemaFullTextIndex>, FullTextIndexCommand>();
+
+            // Services
+            services.AddScoped<IFullTextCatalogManager, FullTextCatalogManager>();
+            
 
         }
 

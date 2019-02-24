@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Search.Abstractions;
 
@@ -54,25 +53,20 @@ namespace Plato.Internal.Search
         {
 
             var output = new Dictionary<string, IEnumerable<FullTextIndex>>();
-
             foreach (var provider in _providers)
             {
                 
-                var permissions = provider.GetIndexes();
-                foreach (var permission in permissions)
+                var indexes = provider.GetIndexes();
+                foreach (var index in indexes)
                 {
-                    var category = permission.TableName;
-                    var title = String.IsNullOrWhiteSpace(category) ?
-                        "" :
-                        category;
-
-                    if (output.ContainsKey(title))
+                 
+                    if (output.ContainsKey(index.TableName))
                     {
-                        output[title] = output[title].Concat(new[] { permission });
+                        output[index.TableName] = output[index.TableName].Concat(new[] { index });
                     }
                     else
                     {
-                        output.Add(title, new[] { permission });
+                        output.Add(index.TableName, new[] { index });
                     }
                 }
             }

@@ -1,48 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plato.Internal.Models.Schema;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Repositories.Schema;
+﻿using System.Collections.Generic;
 using Plato.Internal.Search.Abstractions;
-using Plato.Internal.Stores.Abstractions.Schema;
-using Plato.Internal.Stores.Extensions;
 
 namespace Plato.Entities
 {
     public class FullTextIndexes : IFullTextIndexProvider
     {
 
-        public readonly static FullTextIndex Title = 
-            new FullTextIndex("Entities", "Title", 1033, 30);
+        public static readonly FullTextIndex Entities =
+            new FullTextIndex("Entities", new string[] {"Title", "Message", "Html", "Abstract"});
 
-        public readonly static FullTextIndex Message =
-            new FullTextIndex("Entities", "Message", 1033, 30);
-
+        public static readonly FullTextIndex EntityReplies =
+            new FullTextIndex("EntityReplies", new string[] {"Message", "Html", "Abstract"});
+        
         public IEnumerable<FullTextIndex> GetIndexes()
         {
             return new[]
             {
-                Title,
-                Message
+                Entities,
+                EntityReplies
             };
         }
 
-        //public async Task<IEnumerable<string>> CreateIndexAsync()
-        //{
-
-        //    var errors = new List<string>();
-        //    var tableName = _shellSettings.TablePrefix + TableName;
-        //    var pkConstraint = await _constraintStore.GetPrimaryKeyConstraint(tableName);
-        //    if (pkConstraint == null)
-        //    {
-        //        errors.Add($"Could not find a primary key constraint for table {tableName}");
-        //    }
-
-        //    return errors;
-
-        //}
-
     }
+
 }

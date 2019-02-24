@@ -24,16 +24,19 @@ namespace Plato.Internal.Data.Schemas.Builders
             {
                 throw new ArgumentNullException(nameof(catalogName));
             }
-            
-            if (Options.DropCatalogBeforeCreate)
-            {
-                DropCatalog(catalogName);
-            }
 
+            if (Options != null)
+            {
+                if (Options.DropCatalogBeforeCreate)
+                {
+                    DropCatalog(catalogName);
+                }
+            }
+       
             var sb = new StringBuilder();
             sb.Append("IF NOT EXISTS(SELECT name FROM sys.fulltext_catalogs WHERE name = '")
                 .Append(catalogName)
-                .Append("'))")
+                .Append("')")
                 .Append("BEGIN")
                 .Append(NewLine);
             sb.Append("CREATE FULLTEXT CATALOG ")
@@ -72,9 +75,39 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         }
 
+        public IFullTextBuilder RebuildCatalog(string catalogName)
+        {
+
+            if (string.IsNullOrEmpty(catalogName))
+            {
+                throw new ArgumentNullException(nameof(catalogName));
+            }
+
+            var sb = new StringBuilder();
+
+            // Ensure catalog exists
+            sb.Append("IF EXISTS(SELECT name FROM sys.fulltext_catalogs WHERE name = '")
+                .Append(catalogName)
+                .Append("')")
+                .Append("BEGIN")
+                .Append(NewLine);
+
+            // Rebuild
+            sb.Append("ALTER FULLTEXT CATALOG ")
+                .Append(catalogName)
+                .Append(" REBUILD WITH ACCENT_SENSITIVITY=OFF;");
+
+            sb.Append(NewLine)
+                .Append("END");
+
+            AddStatement(sb.ToString());
+            return this;
+
+        }
+        
         public IFullTextBuilder CreateIndex(SchemaFullTextIndex index)
         {
-            AddStatement(CreateOrAlterIndex(index, false));
+            AddStatement(CreateOrAlterIndex(index));
             return this;
         }
 
@@ -94,13 +127,29 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         public IFullTextBuilder DropIndexes(string tableName, string[] columnNames)
         {
-            var sb = new StringBuilder();
 
+            // Disable index
+            DisableIndex(tableName);
+
+            var sb = new StringBuilder();
+      
+            // Check index exists
+            sb.Append("IF EXISTS (SELECT * FROM sys.fulltext_indexes fti WHERE fti.object_id = OBJECT_ID(N'")
+                .Append(GetTableName(tableName))
+                .Append("'))")
+                .Append(NewLine)
+                .Append("BEGIN")
+                .Append(NewLine);
+
+            // Drop columns
             sb.Append("ALTER FULLTEXT INDEX ON ")
                 .Append(GetTableName(tableName))
-                .Append(" DROP (");
-            sb.Append(columnNames.ToDelimitedString(','));
-            sb.Append(")");
+                .Append(" DROP (")
+                .Append(columnNames.ToDelimitedString())
+                .Append(");")
+                .Append(NewLine);
+
+            sb.Append("END");
 
             AddStatement(sb.ToString());
             return this;
@@ -114,16 +163,62 @@ namespace Plato.Internal.Data.Schemas.Builders
                 throw new ArgumentNullException(nameof(tableName));
             }
 
+            // Disable index
+            DisableIndex(tableName);
+
             var sb = new StringBuilder();
+
+            // Check index exists
+            sb.Append("IF EXISTS (SELECT * FROM sys.fulltext_indexes fti WHERE fti.object_id = OBJECT_ID(N'")
+                .Append(GetTableName(tableName))
+                .Append("'))")
+                .Append(NewLine)
+                .Append("BEGIN")
+                .Append(NewLine);
+
+            // Drop the index
             sb.Append("DROP FULLTEXT INDEX ON ")
                 .Append(GetTableName(tableName))
-                .Append(";");
+                .Append(";")
+                .Append(NewLine);
+
+            sb.Append("END");
 
             AddStatement(sb.ToString());
             return this;
 
         }
-        
+
+        public IFullTextBuilder DisableIndex(string tableName)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new ArgumentNullException(nameof(tableName));
+            }
+
+            var sb = new StringBuilder();
+
+            // Check index exists
+            sb.Append("IF EXISTS (SELECT * FROM sys.fulltext_indexes fti WHERE fti.object_id = OBJECT_ID(N'")
+                .Append(GetTableName(tableName))
+                .Append("'))")
+                .Append(NewLine)
+                .Append("BEGIN")
+                .Append(NewLine);
+
+            // Drop the index
+            sb.Append("ALTER FULLTEXT INDEX ON ")
+                .Append(GetTableName(tableName))
+                .Append(" DISABLE;")
+                .Append(NewLine);
+
+            sb.Append("END");
+
+            AddStatement(sb.ToString());
+            return this;
+
+        }
+
         string CreateOrAlterIndex(SchemaFullTextIndex index, bool alter = false)
         {
             
@@ -132,15 +227,15 @@ namespace Plato.Internal.Data.Schemas.Builders
             sb.Append(alter ? "ALTER" : "CREATE")
                 .Append(" FULLTEXT INDEX ON ")
                 .Append(GetTableName(index.TableName))
-                .Append(" (");
-            sb.Append(index.ColumnNames.ToDelimitedString('.'));
-            sb.Append(" LANGUAGE ")
+                .Append(" (")
+                .Append(index.ColumnNames.ToDelimitedString())
+                .Append(" LANGUAGE ")
                 .Append(index.LanguageCode)
                 .Append(") KEY INDEX ")
                 .Append(index.PrimaryKeyName)
                 .Append(" ON ")
                 .Append(index.CatalogName)
-                .Append("WITH STOPLIST = SYSTEM");
+                .Append(" WITH STOPLIST = SYSTEM;");
 
             return sb.ToString();
 

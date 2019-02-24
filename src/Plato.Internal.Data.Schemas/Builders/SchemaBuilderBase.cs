@@ -74,6 +74,11 @@ namespace Plato.Internal.Data.Schemas.Builders
                 .Replace("      ", "");
         }
 
+        public void Dispose()
+        {
+            this.Statements.Clear();
+        }
+
     }
     
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Plato.Internal.Data.Schemas.Abstractions.Builders
 {
-    public interface ISchemaBuilderBase
+    public interface ISchemaBuilderBase : IDisposable
     {
 
         ICollection<string> Statements { get; }

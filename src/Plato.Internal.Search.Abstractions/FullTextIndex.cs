@@ -5,38 +5,38 @@
 
         public string TableName { get; set; }
 
-        public string ColumnName { get; set; }
+        public string[] ColumnNames { get; set; }
 
-        public int LanguageCode { get; set; }
+        public int LanguageCode { get; set; } = 1033;
 
-        public int FillFactor { get; set; }
+        public short FillFactor { get; set; } = 30;
 
         protected FullTextIndex(string tableName)
         {
             TableName = tableName;
         }
 
-        public FullTextIndex(string tableName, string columnName) : this(tableName)
+        public FullTextIndex(string tableName, string[] columnNames) : this(tableName)
         {
-            ColumnName = columnName;
+            ColumnNames = columnNames;
         }
 
         public FullTextIndex(
             string tableName,
-            string columnName,
-            int languageCode) : this(tableName, columnName)
+            string[] columnNames,
+            int languageCode) : this(tableName, columnNames)
         {
             LanguageCode = languageCode;
         }
         public FullTextIndex(
             string tableName,
-            string columnName,
+            string[] columnNames,
             int languageCode,
-            int fillFactor) : this(tableName, columnName, languageCode)
+            short fillFactor) : this(tableName, columnNames, languageCode)
         {
             FillFactor = fillFactor;
         }
-
-
+        
     }
+
 }

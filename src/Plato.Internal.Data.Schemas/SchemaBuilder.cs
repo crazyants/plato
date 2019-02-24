@@ -61,6 +61,9 @@ namespace Plato.Internal.Data.Schemas
         
         public void Dispose()
         {
+            TableBuilder.Dispose();
+            ProcedureBuilder.Dispose();
+            FullTextBuilder.Dispose();
         }
 
     }

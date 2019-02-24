@@ -20,9 +20,7 @@ namespace Plato.Search.Controllers
         private readonly IViewProviderManager<SearchSettings> _viewProvider;
         private readonly IAuthorizationService _authorizationService;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IFullTextCatalogManager<FullTextCatalog> _fullTextCatalogManager;
-        private readonly IFullTextIndexManager<FullTextIndex> _fullTextIndexManager;
-
+        private readonly IFullTextCatalogManager _fullTextCatalogManager;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -35,16 +33,14 @@ namespace Plato.Search.Controllers
             IAuthorizationService authorizationService,
             IViewProviderManager<SearchSettings> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IFullTextCatalogManager<FullTextCatalog> fullTextCatalogManager,
-            IFullTextIndexManager<FullTextIndex> fullTextIndexManager,
+            IFullTextCatalogManager fullTextCatalogManager,
             IAlerter alerter)
         {
        
             _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
-            _viewProvider = viewProvider;
             _fullTextCatalogManager = fullTextCatalogManager;
-            _fullTextIndexManager = fullTextIndexManager;
+            _viewProvider = viewProvider;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -95,17 +91,35 @@ namespace Plato.Search.Controllers
 
         // ------------
 
+        public async Task<IActionResult> CreateCatalog()
+        {
+
+            var result = await _fullTextCatalogManager.CreateCatalogAsync();
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Catalog Created Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+            
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
         public async Task<IActionResult> DeleteCatalog()
         {
 
-            var result = await _fullTextCatalogManager.DeleteAsync(new FullTextCatalog()
-            {
-                Name = "PlatoCatalog"
-            });
+            var result = await _fullTextCatalogManager.DropCatalogAsync();
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Settings Updated Successfully!"]);
+                _alerter.Success(T["Catalog Deleted Successfully!"]);
             }
             else
             {
@@ -113,26 +127,20 @@ namespace Plato.Search.Controllers
                 {
                     _alerter.Danger(T[error.Description]);
                 }
-              
             }
             
-
             return RedirectToAction(nameof(Index));
 
         }
 
-        public async Task<IActionResult> DeleteIndex(string tableName, string columnNAme)
+        public async Task<IActionResult> RebuildCatalog()
         {
 
-            var result = await _fullTextIndexManager.DeleteAsync(new FullTextIndex()
-            {
-                TableName = tableName,
-                ColumnName = columnNAme
-            });
+            var result = await _fullTextCatalogManager.RebuildCatalogAsync();
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Index Deleted Successfully!"]);
+                _alerter.Success(T["Started Rebuild Successfully!"]);
             }
             else
             {
@@ -140,15 +148,12 @@ namespace Plato.Search.Controllers
                 {
                     _alerter.Danger(T[error.Description]);
                 }
-
             }
-
-
+            
             return RedirectToAction(nameof(Index));
 
         }
-
-
+        
     }
 
 }
