@@ -13,11 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Assets.Abstractions\Plato.Internal.Assets.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Localization\Plato.Internal.Localization.csproj" />
     <ProjectReference Include="..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Navigation\Plato.Internal.Navigation.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Assets\Plato.Internal.Assets.csproj" />
     <ProjectReference Include="..\Plato.Internal.Scripting.Abstractions\Plato.Internal.Scripting.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
   </ItemGroup>

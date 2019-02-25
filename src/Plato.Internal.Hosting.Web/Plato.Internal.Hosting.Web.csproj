@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Assets\Plato.Internal.Assets.csproj" />
     <ProjectReference Include="..\Plato.Internal.Badges\Plato.Internal.Badges.csproj" />
     <ProjectReference Include="..\Plato.Internal.Cache\Plato.Internal.Cache.csproj" />
     <ProjectReference Include="..\Plato.Internal.Data\Plato.Internal.Data.csproj" />

@@ -30,7 +30,14 @@ namespace Plato.Discuss.Navigation
             {
                 return;
             }
-
+            
+            // Get view model from context
+            //var searchIndexViewModel = builder.ActionContext.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
+            //if (searchIndexViewModel == null)
+            //{
+            //    return;
+            //}
+            
             var feature = _featureFacade.GetFeatureByIdAsync("Plato.Discuss")
                 .GetAwaiter()
                 .GetResult();
