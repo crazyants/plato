@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -50,14 +51,14 @@ namespace Plato.Search.Controllers
 
         [AllowAnonymous]
         public async Task<IActionResult> Index(
-            SearchIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
             // default options
             if (opts == null)
             {
-                opts = new SearchIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             // Set default sort column if auto is specified
@@ -109,7 +110,7 @@ namespace Plato.Search.Controllers
             }
             
             // Get default options
-            var defaultViewOptions = new SearchIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
             
             // Add non default route data for pagination purposes
@@ -132,7 +133,7 @@ namespace Plato.Search.Controllers
                 this.RouteData.Values.Add("opts..within", opts.Within);
 
             // Add view options to context for use within view adapters
-            this.HttpContext.Items[typeof(SearchIndexViewModel)] = new SearchIndexViewModel()
+            this.HttpContext.Items[typeof(EntityIndexViewModel)] = new EntityIndexViewModel()
             {
                 Options = opts,
                 Pager = pager

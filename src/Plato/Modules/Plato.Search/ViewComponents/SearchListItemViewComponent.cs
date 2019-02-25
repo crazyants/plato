@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
+using Plato.Entities.ViewModels;
 using Plato.Search.ViewModels;
 
 namespace Plato.Search.ViewComponents
@@ -15,12 +16,12 @@ namespace Plato.Search.ViewComponents
 
         public Task<IViewComponentResult> InvokeAsync(
             Entity entity,
-            SearchIndexOptions options)
+            EntityIndexOptions options)
         {
 
             if (options == null)
             {
-                options = new SearchIndexOptions();
+                options = new EntityIndexOptions();
             }
 
             var model = new SearchListItemViewModel()

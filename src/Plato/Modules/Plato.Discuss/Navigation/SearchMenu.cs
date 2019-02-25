@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
@@ -30,17 +29,19 @@ namespace Plato.Discuss.Navigation
             {
                 return;
             }
-            
+
             // Get view model from context
-            //var searchIndexViewModel = builder.ActionContext.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
-            //if (searchIndexViewModel == null)
-            //{
-            //    return;
-            //}
-            
+            var indexViewModel =
+                builder.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel)] as EntityIndexViewModel;
+            if (indexViewModel == null)
+            {
+                return;
+            }
+
             var feature = _featureFacade.GetFeatureByIdAsync("Plato.Discuss")
                 .GetAwaiter()
                 .GetResult();
+
             if (feature == null)
             {
                 return;
@@ -48,31 +49,40 @@ namespace Plato.Discuss.Navigation
 
             builder
                 .Add(T["Topics"], 1, topics => topics
-                    .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
-                    {
-                        ["opts.FeatureId"] = feature.Id,
-                        ["opts.Within"] = "Topics"
-                    })
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-feature-id", feature.Id}
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                ).Add(T["Replies"], 2, f => f
-                    .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
-                    {
-                        ["opts.FeatureId"] = feature.Id,
-                        ["opts.Within"] = "Replies"
-                    })
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-feature-id", feature.Id}
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
+                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                        {
+                            ["opts.FeatureId"] = feature.Id,
+                            ["opts.Within"] = "topics",
+                            ["opts.Search"] = indexViewModel.Options.Search
+                        })
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-feature-id", feature.Id}
+                        })
+                        //.Permission(Permissions.ManageRoles)
+                        .LocalNav(),
+                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "topics"
+                        ? new string[] {"active"}
+                        : null
+                ).Add(T["Replies"], 3, f => f
+                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                        {
+                            ["opts.FeatureId"] = feature.Id,
+                            ["opts.Within"] = "replies",
+                            ["opts.Search"] = indexViewModel.Options.Search
+                        })
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-feature-id", feature.Id}
+                        })
+                        //.Permission(Permissions.ManageRoles)
+                        .LocalNav(),
+                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "replies"
+                        ? new string[] {"active"}
+                        : null
                 );
         }
+
     }
 
 }

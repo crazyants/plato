@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Search.Models;
 using Plato.Search.Stores;
-using Plato.Search.ViewModels;
 
 namespace Plato.Search.Services
 {
     
     public class SearchService : ISearchService
     {
+
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IFeatureFacade _featureFacade;
@@ -47,12 +44,12 @@ namespace Plato.Search.Services
             _roleStore = roleStore;
         }
 
-        public async Task<IPagedResults<Entity>> GetResultsAsync(SearchIndexOptions options, PagerOptions pager)
+        public async Task<IPagedResults<Entity>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager)
         {
             
             if (options == null)
             {
-                options = new SearchIndexOptions();
+                options = new EntityIndexOptions();
             }
 
             if (pager == null)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.ViewModels;
@@ -27,20 +28,25 @@ namespace Plato.Search.Navigation
             }
 
             // Get view model from context
-            var searchIndexViewModel = builder.ActionContext.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
-            if (searchIndexViewModel == null)
+            var indexViewModel = builder.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel)] as EntityIndexViewModel;
+            if (indexViewModel == null)
             {
                 return;
             }
 
             builder
-                .Add(T["All"], int.MinValue, f => f
-                        .Action("Index", "Home", "Plato.Search")
+                .Add(T["All"], 0, f => f
+                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
+                        {
+                            ["opts.FeatureId"] = null,
+                            ["opts.Within"] =string.Empty,
+                            ["opts.Search"] = indexViewModel.Options.Search
+                        })
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-feature-id", 0}
                         })
-                        .LocalNav(), searchIndexViewModel.Options.FeatureId == 0
+                        .LocalNav(), indexViewModel.Options.FeatureId == 0
                         ? new string[] {"active"}
                         : null);
         }

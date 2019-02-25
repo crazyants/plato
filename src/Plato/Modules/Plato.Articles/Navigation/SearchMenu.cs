@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
@@ -28,15 +29,15 @@ namespace Plato.Articles.Navigation
             {
                 return;
             }
-            
+
             // Get view model from context
-            //var searchIndexViewModel = builder.ActionContext.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
-            //if (searchIndexViewModel == null)
-            //{
-            //    return;
-            //}
-            
-            var feature = _featureFacade.GetFeatureByIdAsync("Plato.Articles")
+           var indexViewModel = builder.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel)] as EntityIndexViewModel;
+           if (indexViewModel == null)
+           {
+               return;
+           }
+
+           var feature = _featureFacade.GetFeatureByIdAsync("Plato.Articles")
                 .GetAwaiter()
                 .GetResult();
 
@@ -50,26 +51,34 @@ namespace Plato.Articles.Navigation
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
                         ["opts.FeatureId"] = feature.Id,
-                        ["opts.Within"] = "Topics"
+                        ["opts.Within"] = "articles",
+                        ["opts.Search"] = indexViewModel.Options.Search
                     })
                     .Attributes(new Dictionary<string, object>()
                     {
                         {"data-feature-id", feature.Id}
                     })
                     //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                ).Add(T["Article Comments"], 2, f => f
+                    .LocalNav(),
+                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "articles"
+                        ? new string[] { "active" }
+                        : null
+                ).Add(T["Comments"], 4, f => f
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
                         ["opts.FeatureId"] = feature.Id,
-                        ["opts.Within"] = "Comments"
+                        ["opts.Within"] = "comments",
+                        ["opts.Search"] = indexViewModel.Options.Search
                     })
                     .Attributes(new Dictionary<string, object>()
                     {
                         {"data-feature-id", feature.Id}
                     })
                     //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
+                    .LocalNav(),
+                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "comments"
+                        ? new string[] { "active" }
+                        : null
                 );
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Search.Models;
 using Plato.Search.ViewModels;
@@ -11,13 +12,13 @@ namespace Plato.Search.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(SearchResult searchResult, IViewProviderContext context)
         {
             
-            var viewModel = context.Controller.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel)] as EntityIndexViewModel;
             
             return Task.FromResult(Views(
-                View<SearchIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
-                View<SearchIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<SearchIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar").Order(3),
-                View<SearchIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
+                View<EntityIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
+                View<EntityIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
+                View<EntityIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar").Order(3),
+                View<EntityIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
             ));
 
         }

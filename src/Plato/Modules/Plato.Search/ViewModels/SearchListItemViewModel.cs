@@ -1,4 +1,5 @@
 ﻿using Plato.Entities.Models;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Search.ViewModels
 {
@@ -7,7 +8,7 @@ namespace Plato.Search.ViewModels
 
         public Entity Entity { get; set; }
 
-        public SearchIndexOptions SearchIndexOptions { get; set; }
+        public EntityIndexOptions SearchIndexOptions { get; set; }
         
     }
 }

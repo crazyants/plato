@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
@@ -124,13 +125,13 @@ namespace Plato.Search.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            SearchIndexOptions options,
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new SearchIndexOptions();
+                options = new EntityIndexOptions();
             }
 
             if (pager == null)
@@ -156,8 +157,8 @@ namespace Plato.Search.ViewComponents
 
         }
         
-        async Task<SearchIndexViewModel> GetIndexViewModel(
-            SearchIndexOptions options,
+        async Task<EntityIndexViewModel> GetIndexViewModel(
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
@@ -168,7 +169,7 @@ namespace Plato.Search.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new SearchIndexViewModel
+            return new EntityIndexViewModel
             {
                 Results = results,
                 Options = options,

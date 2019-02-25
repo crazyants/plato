@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -51,7 +52,7 @@ namespace Plato.Search.Controllers
         {
 
             // Get results
-            var entities = await _searchService.GetResultsAsync(new SearchIndexOptions()
+            var entities = await _searchService.GetResultsAsync(new EntityIndexOptions()
             {
                 Search = keywords,
                 Sort = sort,
