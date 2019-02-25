@@ -10,6 +10,7 @@ using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {

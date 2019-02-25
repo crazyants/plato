@@ -8,7 +8,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Features.Controllers
 {
@@ -31,7 +31,9 @@ namespace Plato.Features.Controllers
             IStringLocalizer<AdminController> stringLocalizer,
             IShellFeatureManager shellFeatureManager,
             IShellDescriptorManager shellDescriptorManager,
-            IAlerter alerter, IViewProviderManager<FeaturesViewModel> featuresIndexViewProvider, IBreadCrumbManager breadCrumbManager)
+            IAlerter alerter,
+            IViewProviderManager<FeaturesViewModel> featuresIndexViewProvider, 
+            IBreadCrumbManager breadCrumbManager)
         {
             _shellFeatureManager = shellFeatureManager;
             _shellDescriptorManager = shellDescriptorManager;

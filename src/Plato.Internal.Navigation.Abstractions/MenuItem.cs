@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Internal.Navigation
+namespace Plato.Internal.Navigation.Abstractions
 {
 
     public class MenuItemView

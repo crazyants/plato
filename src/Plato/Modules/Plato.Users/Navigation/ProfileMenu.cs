@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Navigation
 {
@@ -23,7 +24,7 @@ namespace Plato.Users.Navigation
             _actionContextAccessor = actionContextAccessor;
         }
         
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
             if (!String.Equals(name, "profile", StringComparison.OrdinalIgnoreCase))
             {

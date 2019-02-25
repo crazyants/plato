@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Navigation
 {
@@ -23,7 +23,7 @@ namespace Plato.Discuss.Navigation
             _featureFacade = featureFacade;
         }
 
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
             if (!String.Equals(name, "search", StringComparison.OrdinalIgnoreCase))

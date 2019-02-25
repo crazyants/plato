@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
-using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Tags.Navigation
 {
@@ -21,7 +21,7 @@ namespace Plato.Discuss.Tags.Navigation
             _actionContextAccessor = actionContextAccessor;
         }
 
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
             if (!String.Equals(name, "topic-footer", StringComparison.OrdinalIgnoreCase))

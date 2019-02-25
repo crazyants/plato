@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Navigation
 {
@@ -18,7 +19,7 @@ namespace Plato.Users.Navigation
             T = localizer;
         }
         
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
             if (!String.Equals(name, "admin-user", StringComparison.OrdinalIgnoreCase))
             {

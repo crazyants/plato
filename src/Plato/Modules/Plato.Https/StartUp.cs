@@ -10,6 +10,7 @@ using Plato.Https.Models;
 using Plato.Https.Stores;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Https
 {

@@ -25,6 +25,7 @@ using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 

@@ -7,6 +7,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Users.reCAPTCHA2.Models;
 using Plato.Users.reCAPTCHA2.Services;
 using Plato.Users.reCAPTCHA2.Navigation;

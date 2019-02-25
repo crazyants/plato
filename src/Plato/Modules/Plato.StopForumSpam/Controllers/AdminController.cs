@@ -7,6 +7,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Stores;
 using Plato.StopForumSpam.ViewModels;

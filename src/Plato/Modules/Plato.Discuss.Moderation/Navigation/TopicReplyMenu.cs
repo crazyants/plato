@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.Navigation
@@ -24,7 +25,7 @@ namespace Plato.Discuss.Moderation.Navigation
             _actionContextAccessor = actionContextAccessor;
         }
 
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
             if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))

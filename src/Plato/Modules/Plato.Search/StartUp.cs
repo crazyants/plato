@@ -9,6 +9,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Assets;
 using Plato.Search.Commands;
 using Plato.Search.Models;
@@ -45,12 +46,12 @@ namespace Plato.Search
             // Navigation
             services.AddScoped<INavigationProvider, SearchMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
+            services.AddScoped<INavigationProvider, AdminMenu>();
 
             // View providers
             services.AddScoped<IViewProviderManager<SearchResult>, ViewProviderManager<SearchResult>>();
             services.AddScoped<IViewProvider<SearchResult>, SearchViewProvider>();
-            services.AddScoped<INavigationProvider, AdminMenu>();
-
+            
             // Admin view providers
             services.AddScoped<IViewProviderManager<SearchSettings>, ViewProviderManager<SearchSettings>>();
             services.AddScoped<IViewProvider<SearchSettings>, AdminViewProvider>();

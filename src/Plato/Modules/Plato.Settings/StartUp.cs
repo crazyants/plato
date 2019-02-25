@@ -6,6 +6,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Settings.Handlers;
 using Plato.Settings.Navigation;
 

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Navigation
 {
-    public class NavigationItemBuilder : NavigationBuilder
+    public class NavigationItemBuilder : NavigationBuilder, INavigationItemBuilder
     {
         private readonly MenuItem _item;
 
@@ -20,99 +21,99 @@ namespace Plato.Internal.Navigation
             _item = existingItem ?? throw new ArgumentNullException(nameof(existingItem));
         }
 
-        public NavigationItemBuilder Caption(LocalizedString caption)
+        public INavigationItemBuilder Caption(LocalizedString caption)
         {
             _item.Text = caption;
             return this;
         }
 
-        public NavigationItemBuilder Authority(string authority)
+        public INavigationItemBuilder Authority(string authority)
         {
             _item.Authority = authority;
             return this;
         }
 
-        public NavigationItemBuilder Attributes(IDictionary<string, object> attributes)
+        public INavigationItemBuilder Attributes(IDictionary<string, object> attributes)
         {
             _item.Attributes = attributes;
             return this;
         }
 
-        public NavigationItemBuilder IconCss(string css)
+        public INavigationItemBuilder IconCss(string css)
         {
             _item.IconCss = css;
             return this;
         }
 
-        public NavigationItemBuilder Order(int order)
+        public INavigationItemBuilder Order(int order)
         {
             _item.Order = order;
             return this;
         }
         
-        public NavigationItemBuilder Url(string url)
+        public INavigationItemBuilder Url(string url)
         {
             _item.Url = url;
             return this;
         }
 
-        public NavigationItemBuilder Culture(string culture)
+        public INavigationItemBuilder Culture(string culture)
         {
             _item.Culture = culture;
             return this;
         }
 
-        public NavigationItemBuilder Id(string id)
+        public INavigationItemBuilder Id(string id)
         {
             _item.Id = id;
             return this;
         }
 
-        public NavigationItemBuilder AddClass(string className)
+        public INavigationItemBuilder AddClass(string className)
         {
             if (!_item.Classes.Contains(className))
                 _item.Classes.Add(className);
             return this;
         }
 
-        public NavigationItemBuilder RemoveClass(string className)
+        public INavigationItemBuilder RemoveClass(string className)
         {
             if (_item.Classes.Contains(className))
                 _item.Classes.Remove(className);
             return this;
         }
 
-        public NavigationItemBuilder LinkToFirstChild(bool value)
+        public INavigationItemBuilder LinkToFirstChild(bool value)
         {
             _item.LinkToFirstChild = value;
             return this;
         }
 
-        public NavigationItemBuilder LocalNav()
+        public INavigationItemBuilder LocalNav()
         {
             _item.LocalNav = true;
             return this;
         }
 
-        public NavigationItemBuilder Local(bool value)
+        public INavigationItemBuilder Local(bool value)
         {
             _item.LocalNav = value;
             return this;
         }
 
-        public NavigationItemBuilder Permission(IPermission permission)
+        public INavigationItemBuilder Permission(IPermission permission)
         {
             _item.Permissions.Add(permission);
             return this;
         }
 
-        public NavigationItemBuilder DividerCss(string css)
+        public INavigationItemBuilder DividerCss(string css)
         {
             _item.DividerCss = css;
             return this;
         }
         
-        public NavigationItemBuilder View(string viewName, object model = null)
+        public INavigationItemBuilder View(string viewName, object model = null)
         {
             _item.View = new MenuItemView()
             {
@@ -122,7 +123,7 @@ namespace Plato.Internal.Navigation
             return this;
         }
         
-        public NavigationItemBuilder Resource(object resource)
+        public INavigationItemBuilder Resource(object resource)
         {
             _item.Resource = resource;
             return this;
@@ -134,39 +135,39 @@ namespace Plato.Internal.Navigation
             return new List<MenuItem> { _item };
         }
 
-        public NavigationItemBuilder Action(RouteValueDictionary values)
+        public INavigationItemBuilder Action(RouteValueDictionary values)
         {
             return values != null
                        ? Action(values["action"] as string, values["controller"] as string, values)
                        : Action(null, null, new RouteValueDictionary());
         }
 
-        public NavigationItemBuilder Action(string actionName)
+        public INavigationItemBuilder Action(string actionName)
         {
             return Action(actionName, null, new RouteValueDictionary());
         }
 
-        public NavigationItemBuilder Action(string actionName, string controllerName)
+        public INavigationItemBuilder Action(string actionName, string controllerName)
         {
             return Action(actionName, controllerName, new RouteValueDictionary());
         }
 
-        public NavigationItemBuilder Action(string actionName, string controllerName, object values)
+        public INavigationItemBuilder Action(string actionName, string controllerName, object values)
         {
             return Action(actionName, controllerName, new RouteValueDictionary(values));
         }
 
-        public NavigationItemBuilder Action(string actionName, string controllerName, RouteValueDictionary values)
+        public INavigationItemBuilder Action(string actionName, string controllerName, RouteValueDictionary values)
         {
             return Action(actionName, controllerName, null, values);
         }
 
-        public NavigationItemBuilder Action(string actionName, string controllerName, string areaName)
+        public INavigationItemBuilder Action(string actionName, string controllerName, string areaName)
         {
             return Action(actionName, controllerName, areaName, new RouteValueDictionary());
         }
 
-        public NavigationItemBuilder Action(string actionName, string controllerName, string areaName, RouteValueDictionary values)
+        public INavigationItemBuilder Action(string actionName, string controllerName, string areaName, RouteValueDictionary values)
         {
             _item.RouteValues = new RouteValueDictionary(values);
             if (!string.IsNullOrEmpty(actionName))

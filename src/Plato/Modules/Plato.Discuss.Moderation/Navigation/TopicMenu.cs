@@ -8,6 +8,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
@@ -30,7 +31,7 @@ namespace Plato.Discuss.Moderation.Navigation
             _moderatorStore = moderatorStore;
         }
 
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
             if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))

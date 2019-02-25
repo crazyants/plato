@@ -7,6 +7,7 @@ using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Navigation
@@ -29,7 +30,7 @@ namespace Plato.Discuss.Navigation
             _contextFacade = contextFacade;
         }
 
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
             if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))

@@ -8,8 +8,8 @@ using Plato.Features.ViewModels;
 using Plato.Features.ViewProviders;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Features
 {

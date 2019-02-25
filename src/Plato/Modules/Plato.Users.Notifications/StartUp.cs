@@ -7,6 +7,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Users.Notifications.Assets;
 using Plato.Users.Notifications.Navigation;
 using Plato.Users.Notifications.ViewModels;

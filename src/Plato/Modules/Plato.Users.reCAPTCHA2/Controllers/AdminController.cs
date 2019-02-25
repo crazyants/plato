@@ -6,7 +6,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Users.reCAPTCHA2.Models;
 using Plato.Users.reCAPTCHA2.Stores;
 using Plato.Users.reCAPTCHA2.ViewModels;

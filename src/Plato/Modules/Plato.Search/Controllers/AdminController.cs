@@ -7,6 +7,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
 using Plato.Search.Services;
 using Plato.Search.ViewModels;

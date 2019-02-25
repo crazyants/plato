@@ -13,6 +13,7 @@ using Plato.Tags.Stores;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Tags.Controllers
 {

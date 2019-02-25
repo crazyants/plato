@@ -16,6 +16,7 @@ using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Users.Services;
 
@@ -46,7 +47,9 @@ namespace Plato.Users.Controllers
             UserManager<User> userManager,
             IAlerter alerter,
             IPlatoUserManager<User> platoUserManager,
-            IContextFacade contextFacade, IAuthorizationService authorizationService, IUserEmails userEmails)
+            IContextFacade contextFacade,
+            IAuthorizationService authorizationService,
+            IUserEmails userEmails)
         {
             _viewProvider = viewProvider;
             _userManager = userManager;

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Notifications.Navigation
 {
@@ -14,7 +15,7 @@ namespace Plato.Users.Notifications.Navigation
 
         public IStringLocalizer T { get; set; }
 
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
             if (!String.Equals(name, "site", StringComparison.OrdinalIgnoreCase))

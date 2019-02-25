@@ -13,6 +13,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Discuss.Moderation.Handlers;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Moderation
 {

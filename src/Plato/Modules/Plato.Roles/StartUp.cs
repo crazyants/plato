@@ -15,6 +15,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Roles.ViewProviders;
 using Plato.Roles.Handlers;
 using Plato.Roles.Navigation;

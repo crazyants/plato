@@ -9,6 +9,7 @@ using Plato.Discuss.Share.Navigation;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Discuss.Share.Handlers;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Share
 {

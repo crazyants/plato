@@ -17,6 +17,7 @@ using Plato.Discuss.Labels.Services;
 using Plato.Discuss.Labels.ViewAdapters;
 using Plato.Discuss.Labels.ViewProviders;
 using Plato.Internal.Layout.ViewAdapters;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Labels
 {

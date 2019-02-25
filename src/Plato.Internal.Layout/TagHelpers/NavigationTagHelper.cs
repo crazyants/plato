@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {

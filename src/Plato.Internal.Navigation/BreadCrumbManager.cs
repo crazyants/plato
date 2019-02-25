@@ -5,19 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Internal.Navigation
 {
-
-    public interface IBreadCrumbManager
-    {
-
-        void Configure(Action<NavigationBuilder> configureBuilder);
-
-        IEnumerable<MenuItem> BuildMenu(ActionContext actionContext);
-
-    }
-
+    
     public class BreadCrumbManager : IBreadCrumbManager
     {
 
@@ -39,7 +31,7 @@ namespace Plato.Internal.Navigation
 
         #region "Implementation"
 
-        public void Configure(Action<NavigationBuilder> configureBuilder)
+        public void Configure(Action<INavigationBuilder> configureBuilder)
         {
             var builder = new NavigationBuilder();
             configureBuilder(builder);

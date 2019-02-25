@@ -20,6 +20,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Email
 {

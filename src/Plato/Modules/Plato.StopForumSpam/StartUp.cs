@@ -6,6 +6,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 using Plato.StopForumSpam.Stores;

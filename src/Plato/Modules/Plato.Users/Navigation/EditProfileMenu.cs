@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Navigation
 {
@@ -14,7 +15,7 @@ namespace Plato.Users.Navigation
             T = localizer;
         }
         
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
             if (!String.Equals(name, "editprofile", StringComparison.OrdinalIgnoreCase))
             {

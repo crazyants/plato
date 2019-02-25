@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Reactions.Navigation
 {
@@ -24,7 +25,7 @@ namespace Plato.Discuss.Reactions.Navigation
             _entityStore = entityStore;
         }
         
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
             if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))

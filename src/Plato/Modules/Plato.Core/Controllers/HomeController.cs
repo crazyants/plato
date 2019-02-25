@@ -9,6 +9,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Core.Controllers
 {
@@ -29,7 +30,8 @@ namespace Plato.Core.Controllers
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
             IContextFacade contextFacade,
-            IAlerter alerter, IBreadCrumbManager breadCrumbManager)
+            IAlerter alerter,
+            IBreadCrumbManager breadCrumbManager)
         {
          
             _alerter = alerter;

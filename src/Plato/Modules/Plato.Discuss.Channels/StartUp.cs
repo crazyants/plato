@@ -20,6 +20,7 @@ using Plato.Discuss.Channels.ViewAdaptors;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Channels.Services;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Channels
 {

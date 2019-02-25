@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Roles.Navigation
 {
@@ -14,7 +15,7 @@ namespace Plato.Roles.Navigation
 
         public IStringLocalizer T { get; set; }
 
-        public void BuildNavigation(string name, NavigationBuilder builder)
+        public void BuildNavigation(string name, INavigationBuilder builder)
         {
             if (!String.Equals(name, "site", StringComparison.OrdinalIgnoreCase))
             {

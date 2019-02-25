@@ -14,6 +14,7 @@ using Plato.Discuss.Reactions.Badges;
 using Plato.Discuss.Reactions.Tasks;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 

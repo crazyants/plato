@@ -13,6 +13,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
@@ -45,7 +46,11 @@ namespace Plato.Users.Controllers
             IContextFacade contextFacade, 
             UserManager<User> userManager, 
             IAlerter alerter,
-            ITimeZoneProvider timeZoneProvider, IViewProviderManager<EditProfileViewModel> editProfileViewProvider, IViewProviderManager<EditAccountViewModel> editAccountViewProvider, IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider, IBreadCrumbManager breadCrumbManager)
+            ITimeZoneProvider timeZoneProvider,
+            IViewProviderManager<EditProfileViewModel> editProfileViewProvider,
+            IViewProviderManager<EditAccountViewModel> editAccountViewProvider,
+            IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
+            IBreadCrumbManager breadCrumbManager)
         {
             _viewProvider = viewProvider;
             _platoUserStore = platoUserStore;

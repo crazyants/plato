@@ -13,6 +13,7 @@ using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Labels.Controllers
