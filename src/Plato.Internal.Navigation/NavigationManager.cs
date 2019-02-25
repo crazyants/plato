@@ -203,7 +203,7 @@ namespace Plato.Internal.Navigation
             }
             else
             {
-
+                
                 var routeValues = actionContext.RouteData.Values;
                 var currentArea = routeValues["area"].ToString();
                 var currentAction = routeValues["action"].ToString();
@@ -220,10 +220,11 @@ namespace Plato.Internal.Navigation
                 {
                     return true;
                 }
+
             }
 
-
             return false;
+
         }
 
         string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary, ActionContext actionContext)

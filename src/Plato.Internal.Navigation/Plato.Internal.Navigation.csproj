@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.Security\Plato.Internal.Security.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Shell\Plato.Internal.Shell.csproj" />
   </ItemGroup>
 
 </Project>

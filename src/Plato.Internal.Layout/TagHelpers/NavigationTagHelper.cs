@@ -45,7 +45,10 @@ namespace Plato.Internal.Layout.TagHelpers
 
         [HtmlAttributeName("child-ul-css-class")]
         public string ChildUlCssClass { get; set; } = "nav flex-column";
-        
+
+        [HtmlAttributeName("selected-css-class")]
+        public string SelectedCssClass { get; set; } = "active";
+
         private static readonly string NewLine = Environment.NewLine;
         private int _level;
         private int _index;
@@ -257,7 +260,11 @@ namespace Plato.Internal.Layout.TagHelpers
 
             if (item.Selected)
             {
-                linkClass += " active";
+                if (!string.IsNullOrEmpty(SelectedCssClass))
+                {
+                    linkClass += " " + SelectedCssClass;
+                }
+
             }
 
             var targetEvent = "";

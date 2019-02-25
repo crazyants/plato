@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
+using Plato.Search.ViewModels;
 
 namespace Plato.Search.Navigation
 {
@@ -18,23 +19,29 @@ namespace Plato.Search.Navigation
 
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
+
             if (!String.Equals(name, "search", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // Get view model from context
+            var searchIndexViewModel = builder.ActionContext.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
+            if (searchIndexViewModel == null)
             {
                 return;
             }
 
             builder
                 .Add(T["All"], int.MinValue, f => f
-                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
-                        {
-                            ["FeatureId"] = null,
-                            ["Within"] = null
-                        })
+                        .Action("Index", "Home", "Plato.Search")
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-feature-id", 0}
                         })
-                        .LocalNav());
+                        .LocalNav(), searchIndexViewModel.Options.FeatureId == 0
+                        ? new string[] {"active"}
+                        : null);
         }
     }
 
