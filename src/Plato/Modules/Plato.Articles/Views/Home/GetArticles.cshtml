@@ -1,9 +1,9 @@
-﻿@model TopicViewModel
+﻿@model ArticleIndexViewModel
 @{
     Layout = null;
 }
 
-@await DisplayAsync(new View("GetTopicReplyList", new
+@await DisplayAsync(new View("GetArticleList", new
 {
     options = @Model.Options,
     pager = @Model.Pager

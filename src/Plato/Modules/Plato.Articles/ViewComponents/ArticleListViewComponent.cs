@@ -10,7 +10,7 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Articles.ViewComponents
 {
 
-    public class TopicListViewComponent : ViewComponent
+    public class ArticleListViewComponent : ViewComponent
     {
 
         private readonly IEnumerable<Filter> _defaultFilters = new List<Filter>()
@@ -125,7 +125,7 @@ namespace Plato.Articles.ViewComponents
 
         private readonly ITopicService _topicService;
 
-        public TopicListViewComponent(ITopicService topicService)
+        public ArticleListViewComponent(ITopicService topicService)
         {
             _topicService = topicService;
         }
@@ -149,7 +149,7 @@ namespace Plato.Articles.ViewComponents
 
         }
         
-        async Task<TopicIndexViewModel> GetViewModel(
+        async Task<ArticleIndexViewModel> GetViewModel(
             TopicIndexOptions options,
             PagerOptions pager)
         {
@@ -161,7 +161,7 @@ namespace Plato.Articles.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new TopicIndexViewModel
+            return new ArticleIndexViewModel
             {
                 SortColumns = _defaultSortColumns,
                 SortOrder = _defaultSortOrder,

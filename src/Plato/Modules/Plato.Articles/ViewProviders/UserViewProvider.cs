@@ -34,7 +34,7 @@ namespace Plato.Articles.ViewProviders
             //    User = user
             //};
             
-            var topicIndexViewModel = new TopicIndexViewModel()
+            var topicIndexViewModel = new ArticleIndexViewModel()
             {
                 Options = new TopicIndexOptions()
                 { 
@@ -53,7 +53,7 @@ namespace Plato.Articles.ViewProviders
             };
 
             return Views(
-                    View<TopicIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
+                    View<ArticleIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
                 );
 
         }

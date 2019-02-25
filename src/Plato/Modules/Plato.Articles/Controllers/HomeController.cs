@@ -118,7 +118,7 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"]);
+                ).Add(S["Articles"]);
             });
 
             await CreateSampleData();
@@ -148,20 +148,20 @@ namespace Plato.Articles.Controllers
             };
 
             // Build view model
-            var viewModel = new TopicIndexViewModel()
+            var viewModel = new ArticleIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
             // Add view options to context for use within view adapters
-            HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+            HttpContext.Items[typeof(ArticleIndexViewModel)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
-                    return View("GetTopics", viewModel);
+                    return View("GetArticles", viewModel);
             }
 
             // Return view
@@ -403,7 +403,7 @@ namespace Plato.Articles.Controllers
 
             // Maintain previous route data when generating page links
             // Get default options
-            var defaultViewOptions = new TopicViewModel();
+            var defaultViewOptions = new ArticleViewModel();
             var defaultPagerOptions = new PagerOptions();
 
             if (offset > 0 && !this.RouteData.Values.ContainsKey("offset"))
@@ -422,14 +422,14 @@ namespace Plato.Articles.Controllers
             };
 
             // Build view model
-            var viewModel = new TopicViewModel()
+            var viewModel = new ArticleViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
 
             // Add models to context for use within view adaptors
-            HttpContext.Items[typeof(TopicViewModel)] = viewModel;
+            HttpContext.Items[typeof(ArticleViewModel)] = viewModel;
             HttpContext.Items[typeof(Article)] = topic;
             
             // If we have a pager.page querystring value return paged results

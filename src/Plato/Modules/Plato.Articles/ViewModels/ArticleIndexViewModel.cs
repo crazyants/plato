@@ -2,13 +2,12 @@
 using System.Runtime.Serialization;
 using Plato.Articles.Models;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.ViewModels
 {
     
-    public class TopicIndexViewModel
+    public class ArticleIndexViewModel
     {
 
         public IPagedResults<Article> Results { get; set; }
@@ -23,7 +22,7 @@ namespace Plato.Articles.ViewModels
 
         public IEnumerable<Filter> Filters { get; set; }
 
-        public TopicIndexViewModel()
+        public ArticleIndexViewModel()
         {
         }
         

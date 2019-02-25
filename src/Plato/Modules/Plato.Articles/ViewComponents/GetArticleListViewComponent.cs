@@ -7,12 +7,12 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.ViewComponents
 {
-    public class GetTopicListViewComponent : ViewComponent
+    public class GetArticleListViewComponent : ViewComponent
     {
         
         private readonly ITopicService _topicService;
 
-        public GetTopicListViewComponent(
+        public GetArticleListViewComponent(
             ITopicService topicService)
         {
             _topicService = topicService;
@@ -37,7 +37,7 @@ namespace Plato.Articles.ViewComponents
 
         }
         
-        async Task<TopicIndexViewModel> GetViewModel(
+        async Task<ArticleIndexViewModel> GetViewModel(
             TopicIndexOptions options,
             PagerOptions pager)
         {
@@ -49,7 +49,7 @@ namespace Plato.Articles.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new TopicIndexViewModel
+            return new ArticleIndexViewModel
             {
                 Results = results,
                 Options = options,

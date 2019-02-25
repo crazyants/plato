@@ -1,4 +1,4 @@
-﻿@model TopicIndexViewModel
+﻿@model ArticleIndexViewModel
 
 @if (Model.Results != null)
 {
@@ -13,7 +13,7 @@
              <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
                  @await DisplayAsync(new View("TopicListItem", new
                  {
-                     model = new TopicListItemViewModel()
+                     model = new ArticleListItemViewModel()
                      {
                          Topic = topic
                      }

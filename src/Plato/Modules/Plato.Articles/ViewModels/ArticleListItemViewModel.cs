@@ -4,7 +4,7 @@ using Plato.Internal.Models;
 
 namespace Plato.Articles.ViewModels
 {
-    public class TopicListItemViewModel
+    public class ArticleListItemViewModel
     {
         
         public Article Article { get; set; }

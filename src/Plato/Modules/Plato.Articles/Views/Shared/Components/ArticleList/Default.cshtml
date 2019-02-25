@@ -1,10 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Routing
 @using Plato.Internal.Data.Abstractions
-@model TopicIndexViewModel
+@model ArticleIndexViewModel
 
 <card enabled="@Model.Options.EnableCard" class="card card-body-flush">
     <card-title>
-        <h6 class="card-title float-left">@T["Topics"]</h6>
+        <h6 class="card-title float-left">@T["Articles"]</h6>
         <ul class="nav navbar p-0 float-right">
             <li class="nav-item dropdown">
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="filterDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -91,18 +91,18 @@
                 data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
                 class="list-group list-group-flush list-group-hover">
                 <li class="infinite-scroll-loader" data-type="previous"></li>
-                @foreach (var topic in Model.Results.Data)
+                @foreach (var article in Model.Results.Data)
                 {
                     var css = offset == selectedOffset
                         ? "p-3 infinite-scroll-item infinite-scroll-item-active"
                         : "p-3 infinite-scroll-item";
                     <li class="list-group-item list-group-item-action p-0">
                         <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
-                            @await DisplayAsync(new View("TopicListItem", new
+                            @await DisplayAsync(new View("ArticleListItem", new
                             {
-                                model = new TopicListItemViewModel()
+                                model = new ArticleListItemViewModel()
                                 {
-                                    Topic = topic
+                                    Article = article
                                 }
                             }))
                         </div>
@@ -118,7 +118,7 @@
         {
             <ul class="list-group list-group-flush list-group-hover">
                 <li class="list-group-item">
-                    @T["No topics found"]
+                    @T["No articles found"]
                 </li>
             </ul>
         }

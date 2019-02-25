@@ -11,22 +11,18 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Articles.ViewComponents
 {
 
-    public class TopicReplyListViewComponent : ViewComponent
+    public class GetArticleCommentListViewComponent : ViewComponent
     {
-
-        private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
-
+        
         private readonly IReplyService _replyService;
+        private readonly IEntityStore<Article> _entityStore;
 
-        public TopicReplyListViewComponent(
-            IEntityReplyStore<ArticleComment> entityReplyStore,
-            IEntityStore<Article> entityStore,
-            IReplyService replyService)
+        public GetArticleCommentListViewComponent(
+            IReplyService replyService,
+            IEntityStore<Article> entityStore)
         {
-            _entityReplyStore = entityReplyStore;
-            _entityStore = entityStore;
             _replyService = replyService;
+            _entityStore = entityStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -48,11 +44,12 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<TopicViewModel> GetViewModel(
+        async Task<ArticleViewModel> GetViewModel(
             TopicOptions options,
             PagerOptions pager)
         {
-
+            
+          
             var topic = await _entityStore.GetByIdAsync(options.Params.EntityId);
             if (topic == null)
             {
@@ -60,18 +57,18 @@ namespace Plato.Articles.ViewComponents
             }
 
             var results = await _replyService.GetRepliesAsync(options, pager);
-            
+
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
 
             // Return view model
-            return new TopicViewModel
+            return new ArticleViewModel
             {
                 Options = options,
                 Pager = pager,
                 Article = topic,
                 Replies = results
-        };
+            };
 
         }
 

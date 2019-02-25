@@ -19,7 +19,7 @@ namespace Plato.Articles.ViewProviders
  
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
-        private readonly IPostManager<Article> _topicManager;
+        private readonly IPostManager<Article> _articleManager;
   
         private readonly HttpRequest _request;
         
@@ -27,12 +27,12 @@ namespace Plato.Articles.ViewProviders
             IHttpContextAccessor httpContextAccessor,
             IEntityReplyStore<ArticleComment> entityReplyStore,
             IEntityStore<Article> entityStore,
-            IPostManager<Article> topicManager)
+            IPostManager<Article> articleManager)
         {
     
             _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
-            _topicManager = topicManager;
+            _articleManager = articleManager;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -41,12 +41,12 @@ namespace Plato.Articles.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Article article, IViewProviderContext context)
         {
 
-            var viewModel = context.Controller.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(ArticleIndexViewModel)] as ArticleIndexViewModel;
             
             return Task.FromResult(Views(
-                View<TopicIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
-                View<TopicIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<TopicIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
+                View<ArticleIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
+                View<ArticleIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
+                View<ArticleIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
             ));
 
         }
@@ -54,17 +54,17 @@ namespace Plato.Articles.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Article article, IViewProviderContext context)
         {
             
-            var viewModel = context.Controller.HttpContext.Items[typeof(TopicViewModel)] as TopicViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(ArticleViewModel)] as ArticleViewModel;
             
             // Increment entity view count
             await IncrementTopicViewCount(article);
         
             return Views(
-                View<Article>("Home.Topic.Header", model => article).Zone("header"),
-                View<Article>("Home.Topic.Tools", model => article).Zone("tools"),
-                View<Article>("Home.Topic.Sidebar", model => article).Zone("sidebar"),
-                View<TopicViewModel>("Home.Topic.Content", model => viewModel).Zone("content"),
-                View<EditReplyViewModel>("Home.Topic.Footer", model => new EditReplyViewModel()
+                View<Article>("Home.Article.Header", model => article).Zone("header"),
+                View<Article>("Home.Article.Tools", model => article).Zone("tools"),
+                View<Article>("Home.Article.Sidebar", model => article).Zone("sidebar"),
+                View<ArticleViewModel>("Home.Article.Content", model => viewModel).Zone("content"),
+                View<EditReplyViewModel>("Home.Article.Footer", model => new EditReplyViewModel()
                 {
                     EntityId = article.Id,
                     EditorHtmlName = EditorHtmlName
@@ -153,7 +153,7 @@ namespace Plato.Articles.ViewProviders
             if (await ValidateModelAsync(article, context.Updater))
             {
                 // Update
-                var result = await _topicManager.UpdateAsync(article);
+                var result = await _articleManager.UpdateAsync(article);
 
                 // Was there a problem updating the entity?
                 if (!result.Succeeded)

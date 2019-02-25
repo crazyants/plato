@@ -4,7 +4,7 @@ using Plato.Articles.ViewModels;
 
 namespace Plato.Articles.ViewComponents
 {
-    public class TopicReplyListItemViewComponent : ViewComponent
+    public class ArticleCommentListItemViewComponent : ViewComponent
     {
         
         public Task<IViewComponentResult> InvokeAsync(

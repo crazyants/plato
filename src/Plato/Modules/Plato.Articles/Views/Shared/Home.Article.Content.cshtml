@@ -1,0 +1,14 @@
+﻿@model ArticleViewModel
+
+@await DisplayAsync(new View("Article", new
+{
+    options = @Model.Options
+}))
+
+@await DisplayAsync(new View("ArticleCommentList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
+
+

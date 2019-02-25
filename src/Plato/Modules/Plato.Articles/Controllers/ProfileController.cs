@@ -76,7 +76,7 @@ namespace Plato.Articles.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            this.HttpContext.Items[typeof(ArticleIndexViewModel)] = new ArticleIndexViewModel()
             {
                 Options = opts,
                 Pager = pager

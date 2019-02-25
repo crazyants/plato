@@ -35,11 +35,11 @@ namespace Plato.Articles.ViewProviders
                 User = user
             };
 
-            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(ArticleIndexViewModel)] as ArticleIndexViewModel;
 
             return Views(
                 View<UserDisplayViewModel>("Profile.Display.Header", model => viewModel).Zone("header"),
-                View<TopicIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
+                View<ArticleIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
             );
 
 

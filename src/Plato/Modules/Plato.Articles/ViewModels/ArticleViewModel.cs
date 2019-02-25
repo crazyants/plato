@@ -6,7 +6,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.ViewModels
 {
-    public class TopicViewModel
+    public class ArticleViewModel
     {
         
         public PagerOptions Pager { get; set; }

@@ -54,10 +54,10 @@ namespace Plato.Articles.Services
             }
 
             // Get discuss features
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
             var channelFeature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
 
-            // Get authenticated user for use within view adaptor below
+            // Get authenticated user for use within view adapter below
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Get principal

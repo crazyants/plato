@@ -9,13 +9,13 @@ using Plato.Internal.Navigation;
 namespace Plato.Articles.ViewComponents
 {
 
-    public class TopicViewComponent : ViewComponent
+    public class ArticleViewComponent : ViewComponent
     {
 
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
 
-        public TopicViewComponent(
+        public ArticleViewComponent(
             IEntityReplyStore<ArticleComment> entityReplyStore,
             IEntityStore<Article> entityStore)
         {
@@ -37,7 +37,7 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<TopicViewModel> GetViewModel(
+        async Task<ArticleViewModel> GetViewModel(
             TopicOptions options)
         {
 
@@ -53,7 +53,7 @@ namespace Plato.Articles.ViewComponents
             }
             
             // Return view model
-            return new TopicViewModel
+            return new ArticleViewModel
             {
                 Options = options,
                 Article = topic

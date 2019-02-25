@@ -9,14 +9,14 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Articles.ViewComponents
 {
 
-    public class TopPostersViewComponent : ViewComponent
+    public class ArticlePostersViewComponent : ViewComponent
     {
 
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
 
-        public TopPostersViewComponent(
+        public ArticlePostersViewComponent(
             IEntityReplyStore<ArticleComment> entityReplyStore,
             IEntityStore<Article> entityStore,
             IEntityUsersStore entityUsersStore)

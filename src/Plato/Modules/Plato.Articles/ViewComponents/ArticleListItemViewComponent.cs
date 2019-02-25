@@ -7,18 +7,18 @@ using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Articles.ViewComponents
 {
-    public class TopicListItemViewComponent : ViewComponent
+    public class ArticleListItemViewComponent : ViewComponent
     {
 
         private readonly IContextFacade _contextFacade;
    
-        public TopicListItemViewComponent(IContextFacade contextFacade, IEntityStore<Article> entityStore)
+        public ArticleListItemViewComponent(IContextFacade contextFacade, IEntityStore<Article> entityStore)
         {
             _contextFacade = contextFacade;
         }
 
         public Task<IViewComponentResult> InvokeAsync(
-            TopicListItemViewModel model)
+            ArticleListItemViewModel model)
         {
             return Task.FromResult((IViewComponentResult)View(model));
         }
