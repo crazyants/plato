@@ -5,6 +5,7 @@ using Plato.Discuss.Labels.Services;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Labels.ViewComponents
 {

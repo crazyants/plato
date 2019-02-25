@@ -11,19 +11,11 @@ using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Theming;
 using Plato.Internal.Layout.Views;
-using Plato.Internal.Navigation.Extensions;
 
 namespace Plato.Internal.Layout.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPlatoTagHelpers(
-            this IServiceCollection services)
-        {
-            services.AddPlatoNavigation();
-            return services;
-
-        }
 
         public static IServiceCollection AddPlatoViewAdapters(
             this IServiceCollection services)
@@ -63,6 +55,14 @@ namespace Plato.Internal.Layout.Extensions
 
             // Alerter - scoped to ensure alerter is only alive for each request
             services.AddScoped<IAlerter, Alerter>();
+            
+            return services;
+
+        }
+
+        public static IServiceCollection AddPlatoViewLocalization(
+            this IServiceCollection services)
+        {
 
             // Localization
             services.AddScoped<IStringLocalizer, LocaleStringLocalizer>();
@@ -70,9 +70,10 @@ namespace Plato.Internal.Layout.Extensions
 
             // View localization
             services.AddScoped<IViewLocalizer, LocaleViewLocalizer>();
-            
+
             return services;
 
         }
+
     }
 }

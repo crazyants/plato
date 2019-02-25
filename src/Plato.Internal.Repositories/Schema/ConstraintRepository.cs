@@ -6,12 +6,7 @@ using Plato.Internal.Models.Schema;
 
 namespace Plato.Internal.Repositories.Schema
 {
-
-    public interface IConstraintRepository
-    {
-        Task<IEnumerable<DbConstraint>> SelectConstraintsAsync();
-    }
-
+    
     public class ConstraintRepository : IConstraintRepository
     {
 

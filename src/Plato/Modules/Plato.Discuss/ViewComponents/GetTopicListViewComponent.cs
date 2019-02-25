@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
 {

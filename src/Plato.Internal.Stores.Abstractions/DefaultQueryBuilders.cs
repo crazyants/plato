@@ -5,17 +5,6 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Internal.Stores.Abstractions
 {
 
-    #region "IQueryBuilder"
-
-    public interface IQueryBuilder
-    {
-        string BuildSqlPopulate();
-
-        string BuildSqlCount();
-    }
-
-    #endregion
-
     #region "WhereString"
 
     public class WhereString

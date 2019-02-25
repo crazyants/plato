@@ -4,6 +4,7 @@ using Plato.Discuss.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Discuss.ViewProviders

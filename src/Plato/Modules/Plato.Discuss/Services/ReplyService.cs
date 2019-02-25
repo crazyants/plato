@@ -6,6 +6,7 @@ using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Services

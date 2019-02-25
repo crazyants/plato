@@ -110,7 +110,7 @@ namespace Plato.Discuss.Labels.Controllers
 
 
             // Build infinate scroll options
-            opts.Scroller = new ScrollerOptions
+            opts.InfiniteScroll = new InfiniteScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };

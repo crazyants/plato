@@ -15,7 +15,6 @@ namespace Plato.Internal.Localization.Extensions
             // Configure current culture
             services.Configure<LocaleOptions>(options =>
             {
-                
                 options.WatchForChanges = false;
                 options.Culture = "en-US";
             });
@@ -32,7 +31,7 @@ namespace Plato.Internal.Localization.Extensions
             services.AddSingleton<ILocaleProvider, LocaleProvider>();
             services.AddSingleton<ILocaleWatcher, LocaleWatcher>();
             services.AddSingleton<ILocaleStore, LocaleStore>();
-
+            
             return services;
 
         }

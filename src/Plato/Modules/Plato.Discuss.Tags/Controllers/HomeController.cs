@@ -106,7 +106,7 @@ namespace Plato.Discuss.Tags.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinate scroll options
-            opts.Scroller = new ScrollerOptions
+            opts.InfiniteScroll = new InfiniteScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };
@@ -197,7 +197,7 @@ namespace Plato.Discuss.Tags.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinate scroll options
-            opts.Scroller = new ScrollerOptions
+            opts.InfiniteScroll = new InfiniteScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };

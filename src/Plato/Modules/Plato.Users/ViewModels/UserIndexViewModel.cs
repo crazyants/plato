@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.ViewModels
 {
@@ -28,7 +29,7 @@ namespace Plato.Users.ViewModels
     public class UserIndexOptions
     {
 
-        public ScrollerOptions Scroller { get; set; }
+        public InfiniteScrollOptions InfiniteScroll { get; set; }
 
         [DataMember(Name = "search")]
         public string Search { get; set; }

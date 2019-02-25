@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;

@@ -2,6 +2,7 @@
 using Plato.Tags.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Tags.ViewModels
 {
@@ -24,7 +25,7 @@ namespace Plato.Discuss.Tags.ViewModels
     {
         public string Search { get; set; }
 
-        public ScrollerOptions Scroller { get; set; }
+        public InfiniteScrollOptions InfiniteScroll { get; set; }
 
         public SortBy Sort { get; set; } = SortBy.Entities;
 

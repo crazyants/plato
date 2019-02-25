@@ -2,6 +2,7 @@
 using Plato.Discuss.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewModels
 {
@@ -26,14 +27,14 @@ namespace Plato.Discuss.ViewModels
 
         public OrderBy Order { get; set; } = OrderBy.Asc;
 
-        public ScrollerOptions Scroller { get; set; }
+        public InfiniteScrollOptions InfiniteScroll { get; set; }
 
         public TopicParams Params { get; set; }
         
         public TopicOptions()
         {
             Params = new TopicParams();
-            Scroller = new ScrollerOptions();
+            InfiniteScroll = new InfiniteScrollOptions();
         }
     }
 

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Abstractions.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Media.Stores;
 
@@ -44,10 +43,7 @@ namespace Plato.Media.Controllers
    
         }
 
-        #region "Actions"
-        
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Upload(string returnUrl = null)
         {
 
@@ -97,21 +93,19 @@ namespace Plato.Media.Controllers
             };
 
             if (id > 0)
-                userPhoto = await _mediaStore.UpdateAsync(userPhoto);
+                await _mediaStore.UpdateAsync(userPhoto);
             else
-                userPhoto = await _mediaStore.CreateAsync(userPhoto);
-
-            //// update user
-            //user.Detail.ModifiedUserId = user.Id;
-            //user.Detail.ModifiedDate = DateTime.UtcNow;
-
-            //await _platoUserStore.UpdateAsync(user);
+                 await _mediaStore.CreateAsync(userPhoto);
 
             return View();
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        /// <summary>
+        /// Serves a media file from the media store.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, AllowAnonymous]
         public async Task Serve(int id)
         {
             
@@ -138,12 +132,6 @@ namespace Plato.Media.Controllers
             }
             
         }
-
-        #endregion
-
-        #region "Private Methods"
-        
-        #endregion
 
     }
 }

@@ -7,7 +7,7 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Entities.Stores
 {
 
-    public interface IEntityUsersStore : IQueryable<EntityUser>
+    public interface IEntityUsersStore : IQueryableStore<EntityUser>
     {
     }
 

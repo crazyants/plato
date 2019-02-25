@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Plato.Discuss.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewModels
 {
@@ -48,12 +49,12 @@ namespace Plato.Discuss.ViewModels
 
         public TopicIndexParams Params { get; set; }
         
-        public ScrollerOptions Scroller { get; set; }
+        public InfiniteScrollOptions InfiniteScroll { get; set; }
 
         public TopicIndexOptions()
         {
             Params = new TopicIndexParams();
-            Scroller = new ScrollerOptions();
+            InfiniteScroll = new InfiniteScrollOptions();
         }
         
     }

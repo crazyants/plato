@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Moderation.Extensions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.ViewModels

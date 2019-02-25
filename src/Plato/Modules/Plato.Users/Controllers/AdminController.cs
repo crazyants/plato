@@ -155,7 +155,7 @@ namespace Plato.Users.Controllers
 
 
             // Build infinate scroll options
-            opts.Scroller = new ScrollerOptions
+            opts.InfiniteScroll = new InfiniteScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };

@@ -1,6 +1,7 @@
 ﻿using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Roles.ViewModels
 {

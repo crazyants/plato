@@ -12,9 +12,9 @@ namespace Plato.Entities.Stores
     public class EntityUserQuery : DefaultQuery<EntityUser>
     {
 
-        private readonly IQueryable<EntityUser> _store;
+        private readonly IQueryableStore<EntityUser> _store;
 
-        public EntityUserQuery(IQueryable<EntityUser> store)
+        public EntityUserQuery(IQueryableStore<EntityUser> store)
         {
             _store = store;
         }
@@ -56,8 +56,7 @@ namespace Plato.Entities.Stores
 
     public class EntityUserQueryParams
     {
-
-
+        
         private WhereInt _entityId;
         private WhereString _userName;
         private WhereBool _showPrivate;
@@ -124,6 +123,7 @@ namespace Plato.Entities.Stores
 
     public class EntityUserQueryBuilder : IQueryBuilder
     {
+
         #region "Constructor"
 
         private readonly string _usersTableName;
@@ -352,6 +352,7 @@ namespace Plato.Entities.Stores
         }
 
         #endregion
+
     }
 
     #endregion

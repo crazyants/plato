@@ -7,7 +7,6 @@ namespace Plato.Internal.Data.Abstractions
 
     public abstract class DefaultQuery<TModel> : IQuery<TModel> where TModel : class
     {
-
         
         private readonly QueryOptions _options;
 

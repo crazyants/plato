@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Search.ViewModels
 {
