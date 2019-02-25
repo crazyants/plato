@@ -22,7 +22,7 @@ namespace Plato.Articles.Navigation
             }
 
             builder
-                .Add(T["Articles"], discuss => discuss
+                .Add(T["Articles"], 2, discuss => discuss
                         .IconCss("fal fa-copy")
                         .Attributes(new Dictionary<string, object>()
                         {

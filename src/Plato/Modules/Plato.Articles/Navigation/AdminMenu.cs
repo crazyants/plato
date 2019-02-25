@@ -21,8 +21,8 @@ namespace Plato.Articles.Navigation
             }
 
             builder
-                .Add(T["Articles"], 1, users => users
-                    .IconCss("fal fa-document")
+                .Add(T["Articles"], 2, users => users
+                    .IconCss("fal fa-copy")
                     .Add(T["Settings"], 999, create => create
                         .Action("Index", "Admin", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)

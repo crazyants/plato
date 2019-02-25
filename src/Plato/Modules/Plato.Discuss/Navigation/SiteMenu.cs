@@ -22,7 +22,7 @@ namespace Plato.Discuss.Navigation
             }
 
             builder
-                .Add(T["Discuss"], discuss => discuss
+                .Add(T["Discuss"], 1, discuss => discuss
                         .IconCss("fal fa-comment-alt fa-flip-y")
                         .Attributes(new Dictionary<string, object>()
                         {

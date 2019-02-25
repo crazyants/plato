@@ -12,7 +12,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Articles.Navigation
 {
-    public class TopicMenu : INavigationProvider
+    public class ArticleMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -20,7 +20,7 @@ namespace Plato.Articles.Navigation
 
         public IStringLocalizer T { get; set; }
 
-        public TopicMenu(
+        public ArticleMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor,
             IContextFacade contextFacade)
@@ -33,7 +33,7 @@ namespace Plato.Articles.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -60,7 +60,7 @@ namespace Plato.Articles.Navigation
             {
                 // Do we have delete permissions?
                 deletePermission = user?.Id == topic.CreatedUserId
-                    ? Permissions.DeleteOwnTopics
+                    ? Permissions.DeleteArticles
                     : Permissions.DeleteAnyTopic;
             }
 
@@ -80,7 +80,7 @@ namespace Plato.Articles.Navigation
                                 ["alias"] = topic.Alias
                             })
                             .Permission(user?.Id == topic.CreatedUserId
-                                ? Permissions.EditOwnTopics
+                                ? Permissions.EditArticles
                                 : Permissions.EditAnyTopic)
                             .LocalNav()
                         )
@@ -136,7 +136,7 @@ namespace Plato.Articles.Navigation
                                 {
                                     ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
                                 })
-                            .Permission(Permissions.PostReplies)
+                            .Permission(Permissions.PostComments)
                             .LocalNav()
                         , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
                     );

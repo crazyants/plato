@@ -3,14 +3,14 @@
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title float-left">
-            @T["My Topics"]
+            @T["My Articles"]
         </h6>
         <a class="btn btn-secondary float-right" asp-route-area="Plato.Discuss" asp-route-controller="Profile" asp-route-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]">
-            @T["All Topics"]
+            @T["All Articles"]
         </a>
     </card-title>
     <card-body>
-        @await DisplayAsync(new View("TopicList", new
+        @await DisplayAsync(new View("ArticleList", new
         {
             options = @Model.Options,
             pager = @Model.Pager

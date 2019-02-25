@@ -13,38 +13,21 @@ namespace Plato.Internal.Navigation.Abstractions
 
         List<MenuItem> Build();
 
-        INavigationBuilder Add(
-            LocalizedString caption,
-            string position,
-            Action<INavigationItemBuilder> itemBuilder,
+        INavigationBuilder Add(LocalizedString caption, string position, Action<INavigationItemBuilder> itemBuilder,
             IEnumerable<string> classes = null);
 
-        INavigationBuilder Add(
-            LocalizedString caption,
-            string authority,
-            int order,
-            Action<INavigationItemBuilder> itemBuilder,
+        INavigationBuilder Add(LocalizedString caption, string authority, int order,
+            Action<INavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null);
+
+        INavigationBuilder Add(LocalizedString caption, int order, Action<INavigationItemBuilder> itemBuilder,
             IEnumerable<string> classes = null);
 
-        INavigationBuilder Add(
-            LocalizedString caption,
-            int order,
-            Action<INavigationItemBuilder> itemBuilder,
+        INavigationBuilder Add(LocalizedString caption, Action<INavigationItemBuilder> itemBuilder,
             IEnumerable<string> classes = null);
 
-        INavigationBuilder Add(
-            LocalizedString caption,
-            Action<INavigationItemBuilder> itemBuilder,
-            IEnumerable<string> classes = null);
+        INavigationBuilder Add(Action<INavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null);
 
-        INavigationBuilder Add(
-            Action<INavigationItemBuilder> itemBuilder,
-            IEnumerable<string> classes = null);
-
-        INavigationBuilder Add(
-            LocalizedString caption,
-            string position,
-            IEnumerable<string> classes = null);
+        INavigationBuilder Add(LocalizedString caption, string position, IEnumerable<string> classes = null);
 
         INavigationBuilder Add(LocalizedString caption, IEnumerable<string> classes = null);
 
@@ -53,4 +36,5 @@ namespace Plato.Internal.Navigation.Abstractions
         INavigationBuilder Remove(Predicate<MenuItem> match);
 
     }
+
 }

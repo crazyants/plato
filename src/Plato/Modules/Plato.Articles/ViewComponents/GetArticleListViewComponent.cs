@@ -10,22 +10,22 @@ namespace Plato.Articles.ViewComponents
     public class GetArticleListViewComponent : ViewComponent
     {
         
-        private readonly ITopicService _topicService;
+        private readonly IArticleService _articleService;
 
         public GetArticleListViewComponent(
-            ITopicService topicService)
+            IArticleService articleService)
         {
-            _topicService = topicService;
+            _articleService = articleService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            TopicIndexOptions options,
+            ArticleIndexOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new TopicIndexOptions();
+                options = new ArticleIndexOptions();
             }
 
             if (pager == null)
@@ -38,12 +38,12 @@ namespace Plato.Articles.ViewComponents
         }
         
         async Task<ArticleIndexViewModel> GetViewModel(
-            TopicIndexOptions options,
+            ArticleIndexOptions options,
             PagerOptions pager)
         {
 
             // Get results
-            var results = await _topicService.GetResultsAsync(options, pager);
+            var results = await _articleService.GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);

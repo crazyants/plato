@@ -7,10 +7,10 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Articles.Services
 {
 
-    public interface ITopicService
+    public interface IArticleService
     {
 
-        Task<IPagedResults<Article>> GetResultsAsync(TopicIndexOptions options, PagerOptions pager);
+        Task<IPagedResults<Article>> GetResultsAsync(ArticleIndexOptions options, PagerOptions pager);
 
     }
 

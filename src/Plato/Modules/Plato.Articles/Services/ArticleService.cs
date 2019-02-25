@@ -14,7 +14,7 @@ using Plato.Internal.Stores.Abstractions.Roles;
 namespace Plato.Articles.Services
 {
     
-    public class TopicService : ITopicService
+    public class ArticleService : IArticleService
     {
 
         private readonly IContextFacade _contextFacade;
@@ -24,7 +24,7 @@ namespace Plato.Articles.Services
         private readonly IAuthorizationService _authorizationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public TopicService(
+        public ArticleService(
             IContextFacade contextFacade,
             IEntityStore<Article> topicStore,
             IFeatureFacade featureFacade,
@@ -40,12 +40,12 @@ namespace Plato.Articles.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IPagedResults<Article>> GetResultsAsync(TopicIndexOptions options, PagerOptions pager)
+        public async Task<IPagedResults<Article>> GetResultsAsync(ArticleIndexOptions options, PagerOptions pager)
         {
             
             if (options == null)
             {
-                options = new TopicIndexOptions();
+                options = new ArticleIndexOptions();
             }
 
             if (pager == null)
@@ -53,18 +53,17 @@ namespace Plato.Articles.Services
                 pager = new PagerOptions();
             }
 
-            // Get discuss features
+            // Get articles features
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
-            var channelFeature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
-
+            
             // Get authenticated user for use within view adapter below
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Get principal
             var principal = _httpContextAccessor.HttpContext.User;
 
-            // Get anonymous role for use within view adapt or below
-            var anonymousRole = await _roleStore.GetByNameAsync(DefaultRoles.Anonymous);
+            // Get anonymous role 
+            //var anonymousRole = await _roleStore.GetByNameAsync(DefaultRoles.Anonymous);
 
             // Return tailored results
             return await _topicStore.QueryAsync()

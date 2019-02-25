@@ -90,14 +90,14 @@ namespace Plato.Articles.Controllers
 
         public async Task<IActionResult> Index(
             int offset,
-            TopicIndexOptions opts,
+            ArticleIndexOptions opts,
             PagerOptions pager)
         {
 
             // default options
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new ArticleIndexOptions();
             }
 
             // default pager
@@ -124,7 +124,7 @@ namespace Plato.Articles.Controllers
             await CreateSampleData();
 
             // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
+            var defaultViewOptions = new ArticleIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -174,14 +174,14 @@ namespace Plato.Articles.Controllers
         // -----------------
 
         public Task<IActionResult> Popular(
-            TopicIndexOptions opts,
+            ArticleIndexOptions opts,
             PagerOptions pager)
         {
 
             // default options
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new ArticleIndexOptions();
             }
 
             // default pager
@@ -203,11 +203,11 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Create(int channel)
         {
 
-            if (!await _authorizationService.AuthorizeAsync(this.User, channel, Permissions.PostTopics))
+            if (!await _authorizationService.AuthorizeAsync(this.User, channel, Permissions.CreateArticles))
             {
                 return Unauthorized();
             }
-            
+
             var topic = new Article();
             if (channel > 0)
             {
@@ -220,8 +220,8 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], discuss => discuss
-                    .Action("Index", "Home", "Plato.Discuss")
+                ).Add(S["Articles"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 ).Add(S["New Post"], post => post
                     .LocalNav()
@@ -332,7 +332,7 @@ namespace Plato.Articles.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
+                        ["Area"] = "Plato.Articles",
                         ["Controller"] = "Home",
                         ["Action"] = "Index"
                     }));
@@ -347,7 +347,7 @@ namespace Plato.Articles.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
+                        ["Area"] = "Plato.Articles",
                         ["Controller"] = "Home",
                         ["Action"] = "Index"
                     }));
@@ -362,7 +362,7 @@ namespace Plato.Articles.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
+                        ["Area"] = "Plato.Articles",
                         ["Controller"] = "Home",
                         ["Action"] = "Index"
                     }));
@@ -393,8 +393,8 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], discuss => discuss
-                    .Action("Index", "Home", "Plato.Discuss")
+                ).Add(S["Articles"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 ).Add(S[topic.Title.TrimToAround(75)], post => post
                     .LocalNav()
@@ -547,7 +547,7 @@ namespace Plato.Articles.Controllers
             // Do we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user?.Id == topic.CreatedUserId
-                    ? Permissions.EditOwnTopics
+                    ? Permissions.EditArticles
                     : Permissions.EditAnyTopic))
             {
                 return Unauthorized();
@@ -559,11 +559,11 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
                         .LocalNav()
-                    ).Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Discuss")
+                    ).Add(S["Articles"], discuss => discuss
+                        .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
-                        .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary()
+                        .Action("Topic", "Home", "Plato.Articles", new RouteValueDictionary()
                         {
                             ["Id"] = topic.Id,
                             ["Alias"] = topic.Alias
@@ -674,8 +674,8 @@ namespace Plato.Articles.Controllers
             // Do we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user?.Id == reply.CreatedUserId
-                    ? Permissions.EditOwnReplies
-                    : Permissions.EditAnyReply))
+                    ? Permissions.EditOwnComment
+                    : Permissions.EditAnyComment))
             {
                 return Unauthorized();
             }
@@ -686,11 +686,11 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
                         .LocalNav()
-                    ).Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Discuss")
+                    ).Add(S["Articles"], discuss => discuss
+                        .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
-                        .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary()
+                        .Action("Topic", "Home", "Plato.Articles", new RouteValueDictionary()
                         {
                             ["Id"] = topic.Id,
                             ["Alias"] = topic.Alias
@@ -826,7 +826,7 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user.Id == topic.CreatedUserId
-                    ? Permissions.DeleteOwnTopics
+                    ? Permissions.DeleteArticles
                     : Permissions.DeleteAnyTopic))
             {
                 return Unauthorized();
@@ -849,10 +849,10 @@ namespace Plato.Articles.Controllers
                 _alerter.Danger(T["Could not delete the topic"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
+                ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
                 ["Action"] = "Topic",
                 ["Id"] = topic.Id,
@@ -915,10 +915,10 @@ namespace Plato.Articles.Controllers
                 _alerter.Danger(T["Could not restore the topic"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
+                ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
                 ["Action"] = "Topic",
                 ["Id"] = topic.Id,
@@ -990,10 +990,10 @@ namespace Plato.Articles.Controllers
                 _alerter.Danger(T["Could not delete the reply"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
+                ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
                 ["Action"] = "Topic",
                 ["Id"] = topic.Id,
@@ -1061,10 +1061,10 @@ namespace Plato.Articles.Controllers
                 _alerter.Danger(T["Could not restore the reply"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
+                ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
                 ["Action"] = "Topic",
                 ["Id"] = topic.Id,
@@ -1129,7 +1129,7 @@ namespace Plato.Articles.Controllers
                 // Could not locate offset, fallback by redirecting to topic
                 return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Discuss",
+                    ["Area"] = "Plato.Articles",
                     ["Controller"] = "Home",
                     ["Action"] = "Topic",
                     ["Id"] = topic.Id,
@@ -1137,10 +1137,10 @@ namespace Plato.Articles.Controllers
                 }));
             }
 
-            // Redirect to offset within topic
+            // Redirect to offset within article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
+                ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
                 ["Action"] = "Topic",
                 ["Id"] = topic.Id,

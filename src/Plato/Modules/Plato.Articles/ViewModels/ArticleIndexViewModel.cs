@@ -14,7 +14,7 @@ namespace Plato.Articles.ViewModels
 
         public PagerOptions Pager { get; set; }
         
-        public TopicIndexOptions Options { get; set; }
+        public ArticleIndexOptions Options { get; set; }
         
         public IEnumerable<SortColumn> SortColumns { get; set; }
 
@@ -29,7 +29,7 @@ namespace Plato.Articles.ViewModels
     }
 
     [DataContract]
-    public class TopicIndexOptions
+    public class ArticleIndexOptions
     {
   
         [DataMember(Name = "search")]
@@ -46,19 +46,19 @@ namespace Plato.Articles.ViewModels
 
         public bool EnableCard { get; set; } = true;
 
-        public TopicIndexParams Params { get; set; }
+        public ArticleIndexParams Params { get; set; }
         
         public InfiniteScrollOptions InfiniteScroll { get; set; }
 
-        public TopicIndexOptions()
+        public ArticleIndexOptions()
         {
-            Params = new TopicIndexParams();
+            Params = new ArticleIndexParams();
             InfiniteScroll = new InfiniteScrollOptions();
         }
         
     }
 
-    public class TopicIndexParams
+    public class ArticleIndexParams
     {
 
         [DataMember(Name = "channel")]

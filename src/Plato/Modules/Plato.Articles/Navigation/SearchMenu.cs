@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Features.Abstractions;
@@ -38,16 +36,17 @@ namespace Plato.Articles.Navigation
             //    return;
             //}
             
-            var feature = _featureFacade.GetFeatureByIdAsync("Plato.Discuss")
+            var feature = _featureFacade.GetFeatureByIdAsync("Plato.Articles")
                 .GetAwaiter()
                 .GetResult();
+
             if (feature == null)
             {
                 return;
             }
 
             builder
-                .Add(T["Articles"], 1, topics => topics
+                .Add(T["Articles"], 2, topics => topics
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
                         ["opts.FeatureId"] = feature.Id,

@@ -12,14 +12,14 @@ using Plato.Internal.Security.Abstractions;
 namespace Plato.Articles.Navigation
 {
 
-    public class TopicReplyMenu : INavigationProvider
+    public class ArticleCommentMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyMenu(
+        public ArticleCommentMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor)
         {
@@ -30,7 +30,7 @@ namespace Plato.Articles.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article-comment", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -82,8 +82,8 @@ namespace Plato.Articles.Navigation
                                 ["id"] = reply?.Id ?? 0
                             })
                             .Permission(user?.Id == reply.CreatedUserId ?
-                                Permissions.EditOwnReplies :
-                                Permissions.EditAnyReply)
+                                Permissions.EditOwnComment :
+                                Permissions.EditAnyComment)
                             .LocalNav())
                         .Add(T["Report"], int.MaxValue - 10, report => report
                             .Action("Report", "Home", "Plato.Discuss")
@@ -134,7 +134,7 @@ namespace Plato.Articles.Navigation
                                 {
                                     ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
                                 })
-                            .Permission(Permissions.PostReplies)
+                            .Permission(Permissions.PostComments)
                             .LocalNav()
                         , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
                     );

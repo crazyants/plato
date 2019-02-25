@@ -4,11 +4,10 @@ using Plato.Entities.Services;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Articles.Services
 {
-    public class TopicManager : IPostManager<Article>
+    public class ArticleManager : IPostManager<Article>
     {
 
         private readonly IEntityManager<Article> _entityManager;
@@ -16,7 +15,7 @@ namespace Plato.Articles.Services
         private readonly IFeatureFacade _featureFacade;
 
 
-        public TopicManager(
+        public ArticleManager(
             IEntityManager<Article> entityManager, 
             IContextFacade contextFacade,
             IFeatureFacade featureFacade)
@@ -30,7 +29,7 @@ namespace Plato.Articles.Services
         {
             if (model.FeatureId == 0)
             {
-                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;
@@ -45,7 +44,7 @@ namespace Plato.Articles.Services
 
             if (model.FeatureId == 0)
             {
-                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;

@@ -36,7 +36,7 @@ namespace Plato.Articles.Controllers
         
         public async Task<IActionResult> Index(
             int id,
-            TopicIndexOptions opts,
+            ArticleIndexOptions opts,
             PagerOptions pager)
         {
 
@@ -48,7 +48,7 @@ namespace Plato.Articles.Controllers
             // default options
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new ArticleIndexOptions();
             }
 
             // default pager
@@ -58,7 +58,7 @@ namespace Plato.Articles.Controllers
             }
 
             // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
+            var defaultViewOptions = new ArticleIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes

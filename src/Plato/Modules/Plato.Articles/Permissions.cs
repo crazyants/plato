@@ -6,25 +6,26 @@ namespace Plato.Articles
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission PostTopics =
-            new Permission("PostTopics", "Post topics");
+        public static readonly Permission CreateArticles =
+            new Permission("CreateArticles", "Create articles");
 
-        public static readonly Permission PostReplies =
-            new Permission("PostReplies", "Post Replies");
-        
-        public static readonly Permission EditOwnTopics =
+        public static readonly Permission EditArticles =
             new Permission("EditOwnTopics", "Edit own topics");
+
+        public static readonly Permission PostComments =
+            new Permission("PostComments", "Post comments");
+        
 
         public static readonly Permission EditAnyTopic =
             new Permission("EditAnyTopic", "Edit any topic");
 
-        public static readonly Permission EditOwnReplies =
+        public static readonly Permission EditOwnComment =
             new Permission("EditOwnReplies", "Edit own replies");
 
-        public static readonly Permission EditAnyReply =
+        public static readonly Permission EditAnyComment =
             new Permission("EditAnyReply", "Edit any reply");
         
-        public static readonly Permission DeleteOwnTopics = 
+        public static readonly Permission DeleteArticles = 
             new Permission("DeleteOwnTopics", "Delete own topics");
 
         public static readonly Permission RestoreOwnTopics =
@@ -77,13 +78,13 @@ namespace Plato.Articles
         {
             return new[]
             {
-                PostTopics,
-                PostReplies,
-                EditOwnTopics,
+                CreateArticles,
+                PostComments,
+                EditArticles,
                 EditAnyTopic,
-                EditOwnReplies,
-                EditAnyReply,
-                DeleteOwnTopics,
+                EditOwnComment,
+                EditAnyComment,
+                DeleteArticles,
                 RestoreOwnTopics,
                 DeleteAnyTopic,
                 RestoreAnyTopic,
@@ -111,13 +112,13 @@ namespace Plato.Articles
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        PostTopics,
-                        PostReplies,
-                        EditOwnTopics,
+                        CreateArticles,
+                        PostComments,
+                        EditArticles,
                         EditAnyTopic,
-                        EditOwnReplies,
-                        EditAnyReply,
-                        DeleteOwnTopics,
+                        EditOwnComment,
+                        EditAnyComment,
+                        DeleteArticles,
                         RestoreOwnTopics,
                         DeleteAnyTopic,
                         RestoreAnyTopic,
@@ -140,11 +141,10 @@ namespace Plato.Articles
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        PostTopics,
-                        PostReplies,
-                        EditOwnTopics,
-                        EditOwnReplies,
-                        DeleteOwnTopics,
+                        PostComments,
+                        EditArticles,
+                        EditOwnComment,
+                        DeleteArticles,
                         DeleteOwnReplies,
                         ReportTopics,
                         ReportReplies
@@ -155,11 +155,11 @@ namespace Plato.Articles
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        PostTopics,
-                        PostReplies,
-                        EditOwnTopics,
-                        EditOwnReplies,
-                        DeleteOwnTopics,
+                        CreateArticles,
+                        PostComments,
+                        EditArticles,
+                        EditOwnComment,
+                        DeleteArticles,
                         RestoreOwnTopics,
                         DeleteOwnReplies,
                         RestoreOwnReplies,

@@ -36,10 +36,10 @@ namespace Plato.Articles.ViewProviders
             
             var topicIndexViewModel = new ArticleIndexViewModel()
             {
-                Options = new TopicIndexOptions()
+                Options = new ArticleIndexOptions()
                 { 
                     EnableCard = false,
-                    Params = new TopicIndexParams()
+                    Params = new ArticleIndexParams()
                     {
                         CreatedByUserId = user.Id
                     }

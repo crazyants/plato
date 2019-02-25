@@ -49,8 +49,8 @@ namespace Plato.Articles
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
-            services.AddScoped<INavigationProvider, TopicMenu>();
-            services.AddScoped<INavigationProvider, TopicReplyMenu>();
+            services.AddScoped<INavigationProvider, ArticleMenu>();
+            services.AddScoped<INavigationProvider, ArticleCommentMenu>();
 
             // Stores
             services.AddScoped<IEntityRepository<Article>, EntityRepository<Article>>();
@@ -62,11 +62,11 @@ namespace Plato.Articles
             services.AddScoped<IEntityReplyManager<ArticleComment>, EntityReplyManager<ArticleComment>>();
 
             // Register data access
-            services.AddScoped<IPostManager<Article>, TopicManager>();
+            services.AddScoped<IPostManager<Article>, ArticleManager>();
             services.AddScoped<IPostManager<ArticleComment>, ReplyManager>();
 
             // Services
-            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IReplyService, ReplyService>();
 
             // Register permissions provider
@@ -145,7 +145,7 @@ namespace Plato.Articles
             // article jump to comment
             routes.MapAreaRoute(
                 name: "ArticlesJumpToComment",
-                areaName: "Plato.Discuss",
+                areaName: "Plato.Articles",
                 template: "articles/j/{id:int}/{alias}/{replyId:int?}",
                 defaults: new { controller = "Home", action = "Jump" }
             );
