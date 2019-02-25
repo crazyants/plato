@@ -8,6 +8,8 @@ using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Entities.ViewModels;
+using Plato.Entities.Models;
 
 namespace Plato.Articles.ViewProviders
 {
@@ -41,12 +43,12 @@ namespace Plato.Articles.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Article article, IViewProviderContext context)
         {
 
-            var viewModel = context.Controller.HttpContext.Items[typeof(ArticleIndexViewModel)] as ArticleIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] as EntityIndexViewModel<Article>;
             
             return Task.FromResult(Views(
-                View<ArticleIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
-                View<ArticleIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<ArticleIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
+                View<EntityIndexViewModel<Article>>("Home.Index.Header", model => viewModel).Zone("header"),
+                View<EntityIndexViewModel<Article>>("Home.Index.Tools", model => viewModel).Zone("tools"),
+                View<EntityIndexViewModel<Article>>("Home.Index.Content", model => viewModel).Zone("content")
             ));
 
         }

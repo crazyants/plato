@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Articles.Services;
-using Plato.Articles.ViewModels;
+using Plato.Articles.Models;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Entities.ViewModels;
+using Plato.Entities.Services;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Articles.ViewComponents
 {
@@ -13,7 +14,7 @@ namespace Plato.Articles.ViewComponents
     public class ArticleListViewComponent : ViewComponent
     {
 
-        private readonly IEnumerable<Filter> _defaultFilters = new List<Filter>()
+        private readonly ICollection<Filter> _defaultFilters = new List<Filter>()
         {
             new Filter()
             {
@@ -60,7 +61,7 @@ namespace Plato.Articles.ViewComponents
             }
         };
 
-        private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
+        private readonly ICollection<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
             new SortColumn()
             {
@@ -109,7 +110,7 @@ namespace Plato.Articles.ViewComponents
             }
         };
 
-        private readonly IEnumerable<SortOrder> _defaultSortOrder = new List<SortOrder>()
+        private readonly ICollection<SortOrder> _defaultSortOrder = new List<SortOrder>()
         {
             new SortOrder()
             {
@@ -123,21 +124,25 @@ namespace Plato.Articles.ViewComponents
             },
         };
 
-        private readonly IArticleService _articleService;
+        private readonly IFeatureFacade _featureFacade;
+        private readonly IEntityService<Article> _articleService;
 
-        public ArticleListViewComponent(IArticleService articleService)
+        public ArticleListViewComponent(
+            IFeatureFacade featureFacade,
+            IEntityService<Article> articleService)
         {
+            _featureFacade = featureFacade;
             _articleService = articleService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ArticleIndexOptions options,
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new ArticleIndexOptions();
+                options = new EntityIndexOptions();
             }
 
             if (pager == null)
@@ -149,11 +154,18 @@ namespace Plato.Articles.ViewComponents
 
         }
         
-        async Task<ArticleIndexViewModel> GetViewModel(
-            ArticleIndexOptions options,
+        async Task<EntityIndexViewModel<Article>> GetViewModel(
+            EntityIndexOptions options,
             PagerOptions pager)
         {
-
+            
+            // Restrict entities to articles feature
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+            
             // Get results
             var results = await _articleService.GetResultsAsync(options, pager);
 
@@ -161,7 +173,7 @@ namespace Plato.Articles.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new ArticleIndexViewModel
+            return new EntityIndexViewModel<Article>
             {
                 SortColumns = _defaultSortColumns,
                 SortOrder = _defaultSortOrder,

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -114,26 +115,25 @@ namespace Plato.Search.Controllers
             var defaultPagerOptions = new PagerOptions();
             
             // Add non default route data for pagination purposes
-            if (opts.Search != defaultViewOptions.Search)
+            if (opts.Search != defaultViewOptions.Search && !this.RouteData.Values.ContainsKey("opts.search"))
                 this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort)
+            if (opts.Sort != defaultViewOptions.Sort && !this.RouteData.Values.ContainsKey("opts.sort"))
                 this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order)
+            if (opts.Order != defaultViewOptions.Order && !this.RouteData.Values.ContainsKey("opts.order"))
                 this.RouteData.Values.Add("opts.order", opts.Order);
-            if (opts.Filter != defaultViewOptions.Filter)
+            if (opts.Filter != defaultViewOptions.Filter && !this.RouteData.Values.ContainsKey("opts.filter"))
                 this.RouteData.Values.Add("opts.filter", opts.Filter);
-            if (pager.Page != defaultPagerOptions.Page)
+            if (opts.FeatureId != defaultViewOptions.FeatureId && !this.RouteData.Values.ContainsKey("opts.featureId"))
+                this.RouteData.Values.Add("opts..featureId", opts.FeatureId);
+            if (opts.Within != defaultViewOptions.Within && !this.RouteData.Values.ContainsKey("opts.within"))
+                this.RouteData.Values.Add("opts..within", opts.Within);
+            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
+            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            if (opts.FeatureId != 0)
-                this.RouteData.Values.Add("opts..featureId", opts.FeatureId);
-            if (!string.IsNullOrEmpty(opts.Within))
-                this.RouteData.Values.Add("opts..within", opts.Within);
-
             // Add view options to context for use within view adapters
-            this.HttpContext.Items[typeof(EntityIndexViewModel)] = new EntityIndexViewModel()
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = new EntityIndexViewModel<Entity>()
             {
                 Options = opts,
                 Pager = pager

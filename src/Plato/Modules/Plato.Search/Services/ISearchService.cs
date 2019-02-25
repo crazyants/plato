@@ -7,11 +7,11 @@ using Plato.Search.ViewModels;
 
 namespace Plato.Search.Services
 {
-    public interface ISearchService
-    {
+    //public interface ISearchService
+    //{
 
-        Task<IPagedResults<Entity>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager);
+    //    Task<IPagedResults<Entity>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager);
 
-    }
+    //}
     
 }

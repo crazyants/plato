@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
@@ -115,13 +117,13 @@ namespace Plato.Search.ViewComponents
             },
         };
         
-        private readonly ISearchService _searchService;
+        private readonly IEntityService<Entity> _entityService;
 
         public SearchListViewComponent(
-            ISearchService searchService,
+            IEntityService<Entity> entityService,
             ISearchSettingsStore<SearchSettings> searchSettingsStore)
         {
-            _searchService = searchService;
+            _entityService = entityService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -145,11 +147,16 @@ namespace Plato.Search.ViewComponents
             // If full text is enabled add rank to sort options
             if (options.Sort == SortBy.Rank)
             {
-                model.SortColumns.Insert(0, new SortColumn()
+                var sortColumns = new List<SortColumn>()
                 {
-                    Text = "Relevancy",
-                    Value = SortBy.Rank
-                });
+                    new SortColumn()
+                    {
+                        Text = "Relevancy",
+                        Value = SortBy.Rank
+                    }
+                };
+                sortColumns.AddRange(model.SortColumns);
+                model.SortColumns = sortColumns;
             }
 
             // Return view model
@@ -157,19 +164,19 @@ namespace Plato.Search.ViewComponents
 
         }
         
-        async Task<EntityIndexViewModel> GetIndexViewModel(
+        async Task<EntityIndexViewModel<Entity>> GetIndexViewModel(
             EntityIndexOptions options,
             PagerOptions pager)
         {
 
             // Build results
-            var results = await _searchService.GetResultsAsync(options, pager); // GetEntities(options, pager);
+            var results = await _entityService.GetResultsAsync(options, pager); // GetEntities(options, pager);
 
             // Set pager total
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new EntityIndexViewModel
+            return new EntityIndexViewModel<Entity>
             {
                 Results = results,
                 Options = options,

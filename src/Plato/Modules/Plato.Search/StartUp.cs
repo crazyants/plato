@@ -34,8 +34,7 @@ namespace Plato.Search
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-      
+            
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
             
@@ -72,7 +71,7 @@ namespace Plato.Search
 
             // Services
             services.AddScoped<IFullTextCatalogManager, FullTextCatalogManager>();
-            services.AddScoped<ISearchService, SearchService>();
+            //services.AddScoped<ISearchService, SearchService>();
             
         }
 
@@ -85,7 +84,7 @@ namespace Plato.Search
             routes.MapAreaRoute(
                 name: "PlatoSearch",
                 areaName: "Plato.Search",
-                template: "search/{opts.FeatureId:int?}/{opts.Within?}",
+                template: "search/{opts.featureId:int?}/{opts.within?}/{opts.search?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
             

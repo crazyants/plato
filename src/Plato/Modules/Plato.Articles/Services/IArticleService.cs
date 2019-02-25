@@ -3,15 +3,16 @@ using Plato.Articles.Models;
 using Plato.Articles.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Articles.Services
 {
 
-    public interface IArticleService
-    {
+    //public interface IArticleService
+    //{
 
-        Task<IPagedResults<Article>> GetResultsAsync(ArticleIndexOptions options, PagerOptions pager);
+    //    Task<IPagedResults<Article>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager);
 
-    }
+    //}
 
 }

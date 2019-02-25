@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plato.Articles.ViewModels;
+﻿using System.Threading.Tasks;
+using Plato.Articles.Models;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -34,15 +33,12 @@ namespace Plato.Articles.ViewProviders
             //    User = user
             //};
             
-            var topicIndexViewModel = new ArticleIndexViewModel()
+            var topicIndexViewModel = new EntityIndexViewModel<Article>()
             {
-                Options = new ArticleIndexOptions()
+                Options = new EntityIndexOptions()
                 { 
-                    EnableCard = false,
-                    Params = new ArticleIndexParams()
-                    {
-                        CreatedByUserId = user.Id
-                    }
+                    //EnableCard = false,
+                    CreatedByUserId = user.Id
                 },
                 Pager = new PagerOptions()
                 {
@@ -53,7 +49,7 @@ namespace Plato.Articles.ViewProviders
             };
 
             return Views(
-                    View<ArticleIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
+                    View<EntityIndexViewModel<Article>>("Articles.Profile.Display.Content", model => topicIndexViewModel).Zone("content")
                 );
 
         }

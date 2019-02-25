@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -32,7 +33,7 @@ namespace Plato.Discuss.Navigation
 
             // Get view model from context
             var indexViewModel =
-                builder.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel)] as EntityIndexViewModel;
+                builder.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] as EntityIndexViewModel<Entity>;
             if (indexViewModel == null)
             {
                 return;
@@ -51,9 +52,9 @@ namespace Plato.Discuss.Navigation
                 .Add(T["Topics"], 1, topics => topics
                         .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                         {
-                            ["opts.FeatureId"] = feature.Id,
-                            ["opts.Within"] = "topics",
-                            ["opts.Search"] = indexViewModel.Options.Search
+                            ["opts.featureId"] = feature.Id,
+                            ["opts.within"] = "topics",
+                            ["opts.search"] = indexViewModel.Options.Search
                         })
                         .Attributes(new Dictionary<string, object>()
                         {
@@ -67,9 +68,9 @@ namespace Plato.Discuss.Navigation
                 ).Add(T["Replies"], 3, f => f
                         .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                         {
-                            ["opts.FeatureId"] = feature.Id,
-                            ["opts.Within"] = "replies",
-                            ["opts.Search"] = indexViewModel.Options.Search
+                            ["opts.featureId"] = feature.Id,
+                            ["opts.within"] = "replies",
+                            ["opts.search"] = indexViewModel.Options.Search
                         })
                         .Attributes(new Dictionary<string, object>()
                         {

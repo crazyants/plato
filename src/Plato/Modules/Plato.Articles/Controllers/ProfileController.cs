@@ -6,6 +6,7 @@ using Plato.Articles.Models;
 using Plato.Articles.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -36,7 +37,7 @@ namespace Plato.Articles.Controllers
         
         public async Task<IActionResult> Index(
             int id,
-            ArticleIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
@@ -48,7 +49,7 @@ namespace Plato.Articles.Controllers
             // default options
             if (opts == null)
             {
-                opts = new ArticleIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             // default pager
@@ -58,7 +59,7 @@ namespace Plato.Articles.Controllers
             }
 
             // Get default options
-            var defaultViewOptions = new ArticleIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -76,7 +77,7 @@ namespace Plato.Articles.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(ArticleIndexViewModel)] = new ArticleIndexViewModel()
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = new EntityIndexViewModel<Entity>()
             {
                 Options = opts,
                 Pager = pager

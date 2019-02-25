@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Entities.ViewModels
 {
   
-    public class EntityIndexViewModel
+    public class EntityIndexViewModel<TModel> where TModel : class
     {
 
-        public IPagedResults<Entity> Results { get; set; }
+        public IPagedResults<TModel> Results { get; set; }
 
         public PagerOptions Pager { get; set; } = new PagerOptions();
 
+        public InfiniteScrollOptions InfiniteScroll { get; set; } = new InfiniteScrollOptions();
+
         public EntityIndexOptions Options { get; set; } = new EntityIndexOptions();
 
-        public IList<SortColumn> SortColumns { get; set; }
+        public ICollection<SortColumn> SortColumns { get; set; }
 
-        public IList<SortOrder> SortOrder { get; set; }
+        public ICollection<SortOrder> SortOrder { get; set; }
 
-        public IList<Filter> Filters { get; set; }
+        public ICollection<Filter> Filters { get; set; }
 
     }
 
@@ -47,6 +46,16 @@ namespace Plato.Entities.ViewModels
         [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Desc;
 
+        [DataMember(Name = "channel")]
+        public int ChannelId { get; set; }
+
+        public int[] ChannelIds { get; set; }
+
+        public int CreatedByUserId { get; set; }
+
+        public int LabelId { get; set; }
+
+        public int TagId { get; set; }
     }
 
     public class SortColumn
@@ -82,8 +91,10 @@ namespace Plato.Entities.ViewModels
         Views = 4,
         Participants = 5,
         Reactions = 6,
-        Created = 7,
-        Modified = 8
+        Follows = 7,
+        Stars = 8,
+        Created = 9,
+        Modified = 10
     }
 
     public enum FilterBy

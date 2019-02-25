@@ -9,7 +9,9 @@ using Plato.Articles.Models;
 using Plato.Articles.Services;
 using Plato.Internal.Navigation;
 using Plato.Articles.ViewModels;
+using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -90,14 +92,14 @@ namespace Plato.Articles.Controllers
 
         public async Task<IActionResult> Index(
             int offset,
-            ArticleIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
             // default options
             if (opts == null)
             {
-                opts = new ArticleIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             // default pager
@@ -121,10 +123,10 @@ namespace Plato.Articles.Controllers
                 ).Add(S["Articles"]);
             });
 
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
-            var defaultViewOptions = new ArticleIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -140,22 +142,20 @@ namespace Plato.Articles.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            // Build infinite scroll options
-            opts.InfiniteScroll = new InfiniteScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-
+            
             // Build view model
-            var viewModel = new ArticleIndexViewModel()
+            var viewModel = new EntityIndexViewModel<Article>()
             {
                 Options = opts,
-                Pager = pager
+                Pager = pager,
+                InfiniteScroll = new InfiniteScrollOptions
+                {
+                    Url = GetInfiniteScrollCallbackUrl()
+                }
             };
 
             // Add view options to context for use within view adapters
-            HttpContext.Items[typeof(ArticleIndexViewModel)] = viewModel;
+            HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -174,14 +174,14 @@ namespace Plato.Articles.Controllers
         // -----------------
 
         public Task<IActionResult> Popular(
-            ArticleIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
             // default options
             if (opts == null)
             {
-                opts = new ArticleIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             // default pager

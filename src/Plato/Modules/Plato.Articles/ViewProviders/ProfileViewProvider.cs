@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Articles.Models;
 using Plato.Articles.ViewModels;
+using Plato.Entities.Models;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -35,11 +37,11 @@ namespace Plato.Articles.ViewProviders
                 User = user
             };
 
-            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(ArticleIndexViewModel)] as ArticleIndexViewModel;
+            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] as EntityIndexViewModel<Entity>;
 
             return Views(
                 View<UserDisplayViewModel>("Profile.Display.Header", model => viewModel).Zone("header"),
-                View<ArticleIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
+                View<EntityIndexViewModel<Entity>>("Profile.Articles.Display.Content", model => topicIndexViewModel).Zone("content")
             );
 
 

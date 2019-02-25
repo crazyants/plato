@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Articles.Models;
 using Plato.Articles.Services;
 using Plato.Articles.ViewModels;
+using Plato.Entities.Services;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -10,22 +13,22 @@ namespace Plato.Articles.ViewComponents
     public class GetArticleListViewComponent : ViewComponent
     {
         
-        private readonly IArticleService _articleService;
+        private readonly IEntityService<Article> _articleService;
 
         public GetArticleListViewComponent(
-            IArticleService articleService)
+            IEntityService<Article> articleService)
         {
             _articleService = articleService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ArticleIndexOptions options,
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new ArticleIndexOptions();
+                options = new EntityIndexOptions();
             }
 
             if (pager == null)
@@ -37,8 +40,8 @@ namespace Plato.Articles.ViewComponents
 
         }
         
-        async Task<ArticleIndexViewModel> GetViewModel(
-            ArticleIndexOptions options,
+        async Task<EntityIndexViewModel<Article>> GetViewModel(
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
@@ -49,7 +52,7 @@ namespace Plato.Articles.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new ArticleIndexViewModel
+            return new EntityIndexViewModel<Article>()
             {
                 Results = results,
                 Options = options,

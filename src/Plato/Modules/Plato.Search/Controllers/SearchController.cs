@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
@@ -27,14 +28,14 @@ namespace Plato.Search.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
 
-        private readonly ISearchService _searchService;
+        private readonly IEntityService<Entity> _searchService;
 
         public SearchController(
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
             IEntityStore<Entity> entityStore,
             ISearchSettingsStore<SearchSettings> searchSettingsStore,
-            ISearchService searchService)
+            IEntityService<Entity> searchService)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;

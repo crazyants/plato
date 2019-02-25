@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -31,7 +32,7 @@ namespace Plato.Articles.Navigation
             }
 
             // Get view model from context
-           var indexViewModel = builder.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel)] as EntityIndexViewModel;
+           var indexViewModel = builder.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] as EntityIndexViewModel<Entity>;
            if (indexViewModel == null)
            {
                return;
@@ -50,9 +51,9 @@ namespace Plato.Articles.Navigation
                 .Add(T["Articles"], 2, topics => topics
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
-                        ["opts.FeatureId"] = feature.Id,
-                        ["opts.Within"] = "articles",
-                        ["opts.Search"] = indexViewModel.Options.Search
+                        ["opts.featureId"] = feature.Id,
+                        ["opts.within"] = "articles",
+                        ["opts.search"] = indexViewModel.Options.Search
                     })
                     .Attributes(new Dictionary<string, object>()
                     {
@@ -66,9 +67,9 @@ namespace Plato.Articles.Navigation
                 ).Add(T["Comments"], 4, f => f
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
-                        ["opts.FeatureId"] = feature.Id,
-                        ["opts.Within"] = "comments",
-                        ["opts.Search"] = indexViewModel.Options.Search
+                        ["opts.featureId"] = feature.Id,
+                        ["opts.within"] = "comments",
+                        ["opts.search"] = indexViewModel.Options.Search
                     })
                     .Attributes(new Dictionary<string, object>()
                     {

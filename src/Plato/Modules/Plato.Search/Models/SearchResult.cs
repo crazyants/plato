@@ -5,6 +5,6 @@ namespace Plato.Search.Models
  
     public class SearchResult : Entity
     {
-        // A marker class for our search view providers
+        // A marker class for a global search view providers
     }
 }
