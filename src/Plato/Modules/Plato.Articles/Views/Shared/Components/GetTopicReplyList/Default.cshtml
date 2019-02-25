@@ -1,0 +1,23 @@
+﻿@model TopicViewModel
+
+@if (Model.Replies != null)
+{
+    var offset = Model.Pager.InitialOffset;
+    var selectedOffset = Model.Pager.SelectedOffset;
+    @foreach (var reply in Model.Replies.Data)
+     {
+         reply.Offset = offset;
+         reply.SelectedOffset = selectedOffset;
+         @await DisplayAsync(new View("TopicReplyListItem", new
+         {
+             model = new TopicReplyListItemViewModel()
+             {
+                 Topic = Model.Topic,
+                 Reply = reply
+             }
+         }))
+         {
+             offset++;
+         }
+     }
+}

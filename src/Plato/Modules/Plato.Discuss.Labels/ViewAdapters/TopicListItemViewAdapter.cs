@@ -122,7 +122,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
         
             // Get all entities for our current view
-            var entities = await _topicService.GetTopicsAsync(
+            var entities = await _topicService.GetResultsAsync(
                 viewModel?.Options, 
                 viewModel?.Pager);
 
@@ -138,7 +138,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
                     .ToList();
             }
 
-            // Build a ditionary of entity and label relationships
+            // Build a dictionary of entity and label relationships
             var output = new ConcurrentDictionary<int, IList<Label>>();
             if (entityLabels?.Data != null)
             {

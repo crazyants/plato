@@ -1,0 +1,15 @@
+﻿@model EditTopicViewModel
+
+<div class="float-right">
+    @if (Model.Id > 0)
+    {
+        <a class="btn btn-lg btn-secondary" asp-route-action="Topic" asp-route-id="@Model.Id" asp-route-alias="@Model.Alias">@T["Cancel"]</a>
+    }
+    else
+    {
+        <a class="btn btn-lg btn-secondary" asp-route-action="Index">@T["Cancel"]</a>
+    }
+    <button class="btn btn-lg btn-primary" type="submit">@T["Post"]</button>
+</div>
+
+

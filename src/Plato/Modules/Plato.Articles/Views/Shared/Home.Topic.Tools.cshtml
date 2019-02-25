@@ -1,0 +1,19 @@
+﻿@model Topic
+@if (!Model.IsClosed)
+{
+    @if (this.CurrentUser != null)
+     {
+         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" data-provide="postReply" class="btn btn-primary text-uppercase" data-toggle="tooltip" title="@T["Post a reply"]">
+             <i class="fal fa-fw fa-plus"></i>
+             @T["Reply"]
+         </a>
+    }
+     else
+     {
+         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary text-uppercase" data-toggle="tooltip" title="@T["Login to post a reply"]">
+             @T["Reply"]
+         </a>
+     }
+ 
+}
+

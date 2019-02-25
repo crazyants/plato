@@ -1,0 +1,62 @@
+﻿@model EditTopicViewModel
+
+<div class="mt-0" id="postReply">
+    <div class="topic-reply-left">
+        @if (this.CurrentUser != null)
+        {
+            <a href="#" class="avatar-link">
+                <avatar data-toggle="tooltip" title="@this.CurrentUser.DisplayName" class="avatar" url="@this.CurrentUser.Avatar.Url" />
+            </a>
+        }
+        else
+        {
+            <avatar class="avatar" user-id="0"/>
+        }
+    </div>
+    <div class="topic-reply-body">
+        <card class="card mt-0">
+            <card-title>
+
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Poll</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Question</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Direct Message</a>
+                    </li>
+                </ul>
+
+            </card-title>
+            <card-body>
+
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <fieldset>
+                    <div class="form-group">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                        <input asp-for="Title" placeholder="@T["Title"]" tabindex="1" class="form-control" autofocus/>
+                    </div>
+                    <div class="form-group">
+
+                        @await DisplayAsync(new View("Editor", new
+                        {
+                            value = @Model.Message,
+                            placeHolderText = T["Add your comments here"],
+                            htmlName = @Model.EditorHtmlName,
+                            tabIndex = 2
+                        }))
+
+                    </div>
+                </fieldset>
+
+            </card-body>
+        </card>
+    </div>
+
+</div>

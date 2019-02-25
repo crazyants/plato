@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Entities.Models;
-using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
+using Plato.Search.Services;
 using Plato.Search.Stores;
 using Plato.Search.ViewModels;
 
@@ -118,23 +114,13 @@ namespace Plato.Search.ViewComponents
             },
         };
         
-        private readonly IContextFacade _contextFacade;
-        private readonly IEntityStore<Entity> _entityStore;
-        private readonly IFeatureFacade _featureFacade;
-        private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
-
-        private SearchSettings _searchSettings;
+        private readonly ISearchService _searchService;
 
         public SearchListViewComponent(
-            IContextFacade contextFacade,
-            IEntityStore<Entity> entityStore,
-            IFeatureFacade featureFacade,
+            ISearchService searchService,
             ISearchSettingsStore<SearchSettings> searchSettingsStore)
         {
-            _contextFacade = contextFacade;
-            _entityStore = entityStore;
-            _featureFacade = featureFacade;
-            _searchSettingsStore = searchSettingsStore;
+            _searchService = searchService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -152,24 +138,17 @@ namespace Plato.Search.ViewComponents
                 pager = new PagerOptions();
             }
 
-            // Get search settings
-            _searchSettings = await _searchSettingsStore.GetAsync();
-            
             // Get view model
             var model = await GetIndexViewModel(options, pager);
 
             // If full text is enabled add rank to sort options
-            if (_searchSettings != null)
+            if (options.Sort == SortBy.Rank)
             {
-                if (_searchSettings.SearchType != SearchTypes.Tsql)
+                model.SortColumns.Insert(0, new SortColumn()
                 {
-                    model.SortColumns.Insert(0, new SortColumn()
-                    {
-                        Text = "Relevancy",
-                        Value = SortBy.Rank
-                    });
-                }
-
+                    Text = "Relevancy",
+                    Value = SortBy.Rank
+                });
             }
 
             // Return view model
@@ -183,7 +162,7 @@ namespace Plato.Search.ViewComponents
         {
 
             // Build results
-            var results = await GetEntities(options, pager);
+            var results = await _searchService.GetResultsAsync(options, pager); // GetEntities(options, pager);
 
             // Set pager total
             pager.SetTotal(results?.Total ?? 0);
@@ -199,44 +178,7 @@ namespace Plato.Search.ViewComponents
                 Filters = _defaultFilters
             };
         }
-
-
-        async Task<IPagedResults<Entity>> GetEntities(
-            SearchIndexOptions options,
-            PagerOptions pagerOptions)
-        {
-            
-            return await _entityStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Configure(o =>
-                {
-                    if (_searchSettings != null)
-                    {
-                        o.SearchType = _searchSettings.SearchType;
-                    }
-                })
-                .Select<EntityQueryParams>(q =>
-                {
-               
-                    if (options.FeatureId > 0)
-                    {
-                        q.FeatureId.Equals(options.FeatureId);
-                    }
-
-                    if (!string.IsNullOrEmpty(options.Search))
-                    {
-                        q.Keywords.Like(options.Search);
-                    }
-                    
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
-               
-                })
-                .OrderBy(options.Sort.ToString(), options.Order)
-                .ToList();
-        }
-        
+    
     }
     
 }

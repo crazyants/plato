@@ -43,7 +43,7 @@ namespace Plato.Discuss.ViewComponents
         {
 
             // Get results
-            var results = await _topicService.GetTopicsAsync(options, pager);
+            var results = await _topicService.GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);

@@ -7,7 +7,6 @@ using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
@@ -41,7 +40,7 @@ namespace Plato.Discuss.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IPagedResults<Topic>> GetTopicsAsync(TopicIndexOptions options, PagerOptions pager)
+        public async Task<IPagedResults<Topic>> GetResultsAsync(TopicIndexOptions options, PagerOptions pager)
         {
             
             if (options == null)

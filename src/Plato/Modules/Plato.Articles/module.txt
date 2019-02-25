@@ -1,0 +1,13 @@
+Name: Plato Articles
+Description: Add public articles to Plato.
+Category: Articles
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Entities",
+		Version: "1.0.0"
+	}
+]

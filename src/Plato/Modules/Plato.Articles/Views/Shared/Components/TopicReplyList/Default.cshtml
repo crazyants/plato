@@ -1,0 +1,77 @@
+﻿@model TopicViewModel
+
+@if (Model.Replies != null)
+{
+    var offset = Model.Pager.InitialOffset;
+    var selectedOffset = Model.Pager.SelectedOffset;
+    <div data-provide="infiniteScroll"
+         data-infinite-scroll-url="@Model.Options.InfiniteScroll.Url"
+         data-infinite-scroll-initial-offset="@offset"
+         data-infinite-scroll-selected-offset="@selectedOffset"
+         data-infinite-scroll-initial-page="@Model.Pager.Page"
+         data-infinite-scroll-total-pages="@Model.Pager.TotalPages">
+        <div class="infinite-scroll-loader" data-type="previous"></div>
+        @foreach (var reply in Model.Replies.Data)
+        {
+            reply.Offset = offset;
+            reply.SelectedOffset = selectedOffset;
+            @await DisplayAsync(new View("TopicReplyListItem", new
+            {
+                model = new TopicReplyListItemViewModel()
+                {
+                    Topic = Model.Topic,
+                    Reply = reply,
+                }
+            }))
+            {
+                offset++;
+            }
+        }
+        <div class="infinite-scroll-loader" data-type="next"></div>
+    </div>
+
+    <div class="my-4">
+        <card>
+            <card-body>
+                <span class="text-muted">
+                    @if (base.CurrentUser == null)
+                    {
+                       @T["Enjoying the conversation?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your reply"]
+                    }
+                    else
+                    {
+                        <a href="#" data-provide="postReply">@T["Post a reply"]</a>
+                    }
+                </span>
+            </card-body>
+        </card>
+    </div>
+
+    }
+    else
+    {
+    <div class="my-4">
+        <card>
+            <card-body>
+                <i class="fal fa-reply"></i>
+                <span class="text-muted ml-2">
+                    @if (base.CurrentUser == null)
+                    {
+                        @T["No replies have been posted yet."] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your reply"]
+                    }
+                    else
+                    {
+                        @T["No replies have been posted yet."] <a href="#" data-provide="postReply">@T["Be the first"]</a>
+                    }
+                </span>
+            </card-body>
+        </card>
+    </div>
+    }
+
+    @if (Model.Pager.Enabled && !Model.Options.InfiniteScroll.Enabled)
+    {
+        <div class="mt-4">
+            <pager model="@Model.Pager"></pager>
+        </div>
+    }

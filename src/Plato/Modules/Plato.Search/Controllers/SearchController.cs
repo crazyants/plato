@@ -8,14 +8,16 @@ using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
+using Plato.Search.Services;
 using Plato.Search.Stores;
+using Plato.Search.ViewModels;
 using Plato.WebApi.Controllers;
 using Plato.WebApi.Models;
 
 namespace Plato.Search.Controllers
 {
-
 
     public class SearchController : BaseWebApiController
     {
@@ -24,37 +26,42 @@ namespace Plato.Search.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
 
+        private readonly ISearchService _searchService;
+
         public SearchController(
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
             IEntityStore<Entity> entityStore,
-            ISearchSettingsStore<SearchSettings> searchSettingsStore)
+            ISearchSettingsStore<SearchSettings> searchSettingsStore,
+            ISearchService searchService)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
             _searchSettingsStore = searchSettingsStore;
+            _searchService = searchService;
         }
-
-        #region "Actions"
-
-        [HttpGet]
-        [ResponseCache(NoStore = true)]
+        
+        [HttpGet, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(
             int page = 1,
             int size = 10,
             string keywords = "",
-            string sort = "LastReplyDate",
+            SortBy sort = SortBy.LastReply,
             OrderBy order = OrderBy.Desc)
         {
 
-            // Get entities
-            var entities = await GetEntities(
-                page,
-                size,
-                keywords,
-                sort,
-                order);
-
+            // Get results
+            var entities = await _searchService.GetResultsAsync(new SearchIndexOptions()
+            {
+                Search = keywords,
+                Sort = sort,
+                Order = order
+            }, new PagerOptions()
+            {
+                Page = page,
+                PageSize = size
+            });
+            
             IPagedResults<SearchApiResult> results = null;
             if (entities != null)
             {
@@ -167,45 +174,7 @@ namespace Plato.Search.Controllers
                 : base.NoResults();
 
         }
-        
-        #endregion
-
-        #region "Private Methods"
-
-        async Task<IPagedResults<Entity>> GetEntities(
-            int page,
-            int pageSize,
-            string keywords,
-            string sortBy,
-            OrderBy sortOrder)
-        {
-
-            var searchSettings = await _searchSettingsStore.GetAsync();
-            return await _entityStore.QueryAsync()
-                .Take(page, pageSize)
-                .Configure(opts =>
-                {
-                    if (searchSettings != null)
-                    {
-                        opts.SearchType = searchSettings.SearchType;
-                    }
-                })
-                .Select<EntityQueryParams>(q =>
-                {
-
-                    if (!String.IsNullOrEmpty(keywords))
-                    {
-                        q.Keywords.Like(keywords);
-                    }
-
-                })
-                .OrderBy(sortBy, sortOrder)
-                .ToList();
-
-        }
-
-        #endregion
-
+      
     }
 
 }

@@ -10,7 +10,7 @@ namespace Plato.Discuss.Services
     public interface ITopicService
     {
 
-        Task<IPagedResults<Topic>> GetTopicsAsync(TopicIndexOptions options, PagerOptions pager);
+        Task<IPagedResults<Topic>> GetResultsAsync(TopicIndexOptions options, PagerOptions pager);
 
     }
 

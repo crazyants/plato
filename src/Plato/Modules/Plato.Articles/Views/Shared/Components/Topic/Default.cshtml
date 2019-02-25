@@ -1,0 +1,44 @@
+﻿@model TopicViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title d-inline-block">@T["Topic"]</h6>
+        @if (Model.Topic.IsPinned)
+        {
+            <span title="@T["This discussion is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-thumbtack"></i>
+            </span>
+        }
+        @if (Model.Topic.IsClosed)
+        {
+            <span title="@T["This discussion is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-lock"></i>
+            </span>
+        }
+        @if (Model.Topic.IsPrivate)
+        {
+            <span data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]" class="badge badge-primary">@T["Private"]</span>
+        }
+        @if (Model.Topic.IsSpam)
+        {
+            <span class="badge badge-info" data-toggle="tooltip" title="@T["This discussion has been flagged as SPAM and is only visible to you as you have permission to view topics flagged as SPAM"]">@T["SPAM"]</span>
+        }
+        @if (Model.Topic.IsDeleted)
+        {
+            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This discussion has been deleted and is only visible to you as you have permission to view deleted topics"]">@T["Deleted"]</span>
+        }
+        <navigation name="topic"
+                    model="Model.Topic"
+                    class="nav navbar p-0 float-right"
+                    child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+    </card-title>
+    <card-body class="card-body-flush">
+        <div class="markdown-body m-3" data-provide="markdownBody">
+            @Html.Raw(@Model.Topic.Html)
+        </div>
+        <navigation name="topic-footer"
+                    model="Model.Topic"
+                    enable-list="false" />
+    </card-body>
+
+</card>

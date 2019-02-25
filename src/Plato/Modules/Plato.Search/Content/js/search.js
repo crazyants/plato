@@ -150,7 +150,7 @@ $(function (win, doc, $) {
                 if (result.relevance) {
                     if (result.relevance > 0) {
                         html = html.replace(/\{relevance}/g,
-                            '<span class="float-right badge badge-primary">' + result.relevance + '</span>');
+                            '<span class="float-right badge badge-primary" data-provide="tooltip" title="Relevancy">' + result.relevance + '%</span>');
                     } else {
                         html = html.replace(/\{relevance}/g, "");
                     }

@@ -1,5 +1,6 @@
 ﻿@model SearchListItemViewModel
 
+<span class="text-muted float-right" data-toggle="tooltip" title="@T["Relevance"]">@Model.Entity.Relevance%</span>
 <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Entity.Id" asp-route-alias="@Model.Entity.Alias" class="font-weight-bold">
     @Html.Raw(Model.Entity.Title.HighlightTerms(Model.SearchIndexOptions.Search))
 </a>
@@ -7,16 +8,8 @@
     @Html.Raw(Model.Entity.Abstract.HighlightTerms(Model.SearchIndexOptions.Search))
 </div>
 <div>
-    <span class="badge badge-primary float-right" data-toggle="tooltip" title="@T["Relevance"]">
-        @Model.Entity.Relevance%
-    </span>
     @T["By"] <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
     <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
 </div>
 
-
-
-@Model.Entity.Rank
-
-@Model.Entity.MaxRank
 

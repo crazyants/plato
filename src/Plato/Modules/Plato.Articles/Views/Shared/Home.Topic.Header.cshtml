@@ -1,0 +1,53 @@
+﻿@model Topic
+@{
+    var replies = @Model.TotalReplies == 1
+        ? "reply"
+        : "replies";
+}
+
+<div class="list-left">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.CreatedUserId" asp-route-alias="@Model.CreatedBy.Alias">
+        <avatar data-toggle="tooltip" title="@Model.CreatedBy.DisplayName" class="avatar" url="@Model.CreatedBy.Avatar.Url" />
+    </a>
+</div>
+<div class="list-body">
+    <h4>
+        <span title=" @Model.Title">
+            @Model.Title.TrimToAround(75)
+        </span>
+        @if (Model.IsPinned)
+        {
+            <span title="@T["This discussion is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-thumbtack"></i>
+            </span>
+        }
+        @if (Model.IsClosed)
+        {
+            <span title="@T["This discussion is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-lock"></i>
+            </span>
+        }
+        @if (Model.IsPrivate)
+        {
+            <span data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]" class="badge badge-primary">@T["Private"]</span>
+        }
+        @if (Model.IsSpam)
+        {
+            <span class="badge badge-info" data-toggle="tooltip" title="@T["This discussion has been flagged as SPAM and is only visible to you as you have permission to view topics flagged as SPAM"]">@T["SPAM"]</span>
+        }
+        @if (Model.IsDeleted)
+        {
+            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This discussion has been deleted and is only visible to you as you have permission to view deleted topics"]">@T["Deleted"]</span>
+        }
+    </h4>
+    <span class="text-muted">
+        @T["Posted"]
+        <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        @T["by"]
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.CreatedUserId" asp-route-alias="@Model.CreatedBy.Alias">@Model.CreatedBy.DisplayName</a>
+        - @Model.TotalReplies.ToPrettyInt() @T[replies]
+    </span>
+</div>
+<hr />
+
+

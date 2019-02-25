@@ -10,7 +10,6 @@
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="filterDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @T["Filter"]
                 </a>
-                <div class="dropdown-arrow"></div>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropDown">
                     @foreach (var option in Model.Filters)
                     {
@@ -40,7 +39,6 @@
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="sortByDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @T["Sort By"]
                 </a>
-                <div class="dropdown-arrow"></div>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortByDropdown">
                     @foreach (var option in Model.SortColumns)
                     {
@@ -85,11 +83,11 @@
             <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var entity in Model.Results.Data)
                 {
-                    <li class="list-group-item  list-group-item-action pt-4">
+                    <li class="list-group-item  list-group-item-action">
                         @await DisplayAsync(new View("SearchListItem", new
                         {
                             entity = entity,
-                            viewOpts = Model.Options
+                            options = Model.Options
                         }))
                     </li>
 

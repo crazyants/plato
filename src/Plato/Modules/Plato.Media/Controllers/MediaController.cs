@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Internal.Abstractions.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
@@ -42,63 +41,71 @@ namespace Plato.Media.Controllers
             }
    
         }
+        
+        // ----------
+        // Upload
+        // ----------
+        
+        //[HttpGet, AllowAnonymous]
+        //public async Task<IActionResult> Upload(string returnUrl = null)
+        //{
 
-        [HttpGet, AllowAnonymous]
-        public async Task<IActionResult> Upload(string returnUrl = null)
-        {
+        //    var user = await _contextFacade.GetAuthenticatedUserAsync();
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(user.Id);
+        //}
 
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user.Id);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
-        {
+        //[HttpPost]
+        //public async Task<IActionResult> Upload(IFormFile file)
+        //{
        
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
+        //    if (file == null)
+        //        throw new ArgumentNullException(nameof(file));
 
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user == null)
-            {
-                return NotFound();
-            }
+        //    var user = await _contextFacade.GetAuthenticatedUserAsync();
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
                 
-            byte[] bytes = null;
-            var stream = file.OpenReadStream();
-            if (stream != null)
-            {
-                bytes = stream.StreamToByteArray();
-            }
-            if (bytes == null)
-            {
-                return NotFound();
-            }
+        //    byte[] bytes = null;
+        //    var stream = file.OpenReadStream();
+        //    if (stream != null)
+        //    {
+        //        bytes = stream.StreamToByteArray();
+        //    }
+        //    if (bytes == null)
+        //    {
+        //        return NotFound();
+        //    }
                 
-            var id = 0;
+        //    var id = 0;
           
-            var userPhoto = new Models.Media
-            {
-                Id = id,
-                Name = file.FileName,
-                ContentType = file.ContentType,
-                ContentLength = file.Length,
-                ContentBlob = bytes,
-                CreatedUserId = user.Id,
-                CreatedDate = DateTime.UtcNow
-            };
+        //    var userPhoto = new Models.Media
+        //    {
+        //        Id = id,
+        //        Name = file.FileName,
+        //        ContentType = file.ContentType,
+        //        ContentLength = file.Length,
+        //        ContentBlob = bytes,
+        //        CreatedUserId = user.Id,
+        //        CreatedDate = DateTime.UtcNow
+        //    };
 
-            if (id > 0)
-                await _mediaStore.UpdateAsync(userPhoto);
-            else
-                 await _mediaStore.CreateAsync(userPhoto);
+        //    if (id > 0)
+        //        await _mediaStore.UpdateAsync(userPhoto);
+        //    else
+        //         await _mediaStore.CreateAsync(userPhoto);
 
-            return View();
-        }
+        //    return View();
+        //}
+
+        // ----------
+        // Serve
+        // ----------
 
         /// <summary>
         /// Serves a media file from the media store.

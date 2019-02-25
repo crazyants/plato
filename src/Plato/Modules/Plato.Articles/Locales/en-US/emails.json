@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "ChannelFollowNotification",
+      "To": "{RecipientEmail}",
+      "Cc": "",
+      "Bcc": "",
+      "From": "{AppEmail}",
+      "Subject": "{AppName} - New Topic",
+      "Message": "Dear {UserName}, A new topic has been posted within a channel you are following.\n\n{EntityUrl}"
+    }
+  ]
+}

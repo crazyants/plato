@@ -8,7 +8,6 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Assets;
 using Plato.Search.Commands;
@@ -73,8 +72,8 @@ namespace Plato.Search
 
             // Services
             services.AddScoped<IFullTextCatalogManager, FullTextCatalogManager>();
+            services.AddScoped<ISearchService, SearchService>();
             
-
         }
 
         public override void Configure(

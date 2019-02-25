@@ -124,8 +124,7 @@ namespace Plato.Discuss.ViewComponents
 
         private readonly ITopicService _topicService;
 
-        public TopicListViewComponent(
-            ITopicService topicService)
+        public TopicListViewComponent(ITopicService topicService)
         {
             _topicService = topicService;
         }
@@ -155,7 +154,7 @@ namespace Plato.Discuss.ViewComponents
         {
 
             // Get results
-            var results = await _topicService.GetTopicsAsync(options, pager);
+            var results = await _topicService.GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);

@@ -971,7 +971,7 @@ namespace Plato.Entities.Stores
 
         IDictionary<string, OrderBy> GetSafeSortColumns()
         {
-            var ourput = new Dictionary<string, OrderBy>();
+            var output = new Dictionary<string, OrderBy>();
             foreach (var sortColumn in _query.SortColumns)
             {
                 var columnName = GetSortColumn(sortColumn.Key);
@@ -979,11 +979,11 @@ namespace Plato.Entities.Stores
                 {
                     throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
                 }
-                ourput.Add(columnName, sortColumn.Value);
+                output.Add(columnName, sortColumn.Value);
 
             }
 
-            return ourput;
+            return output;
         }
         
         string GetSortColumn(string columnName)

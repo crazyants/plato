@@ -1,0 +1,7 @@
+﻿@model TopicIndexViewModel
+
+@await DisplayAsync(new View("TopicList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))

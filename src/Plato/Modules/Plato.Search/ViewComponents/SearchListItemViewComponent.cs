@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
-using Plato.Entities.Stores;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Search.ViewModels;
 
 namespace Plato.Search.ViewComponents
@@ -11,37 +8,32 @@ namespace Plato.Search.ViewComponents
     public class SearchListItemViewComponent : ViewComponent
     {
 
-        private readonly IContextFacade _contextFacade;
-   
-        public SearchListItemViewComponent(
-            IContextFacade contextFacade,
-            IEntityStore<Entity> entityStore)
+        public SearchListItemViewComponent()
         {
-            _contextFacade = contextFacade;
+        
         }
 
         public Task<IViewComponentResult> InvokeAsync(
             Entity entity,
-            SearchIndexOptions searchIndexOpts)
+            SearchIndexOptions options)
         {
 
-            if (searchIndexOpts == null)
+            if (options == null)
             {
-                searchIndexOpts = new SearchIndexOptions();
+                options = new SearchIndexOptions();
             }
 
             var model = new SearchListItemViewModel()
             {
                 Entity = entity,
-                SearchIndexOptions = searchIndexOpts
+                SearchIndexOptions = options
             };
 
             return Task.FromResult((IViewComponentResult)View(model));
+
         }
-     
 
     }
-
-
+    
 }
 

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -19,9 +18,7 @@ namespace Plato.Search.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {
-
-        #region "Constructor"
-
+        
         private readonly IViewProviderManager<SearchResult> _viewProvider;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -51,18 +48,11 @@ namespace Plato.Search.Controllers
 
         }
 
-        #endregion
-
-        #region "Actions"
-
         [AllowAnonymous]
         public async Task<IActionResult> Index(
             SearchIndexOptions opts,
             PagerOptions pager)
         {
-
-            // Get search settings
-            var searchSettings = await _searchSettingsStore.GetAsync();
 
             // default options
             if (opts == null)
@@ -73,6 +63,8 @@ namespace Plato.Search.Controllers
             // Set default sort column if auto is specified
             if (opts.Sort == SortBy.Auto)
             {
+                // Get search settings
+                var searchSettings = await _searchSettingsStore.GetAsync();
                 if (searchSettings != null)
                 {
                     opts.Sort = searchSettings.SearchType == SearchTypes.Tsql
@@ -153,8 +145,6 @@ namespace Plato.Search.Controllers
             return View(result);
 
         }
-
-        #endregion
 
     }
 
