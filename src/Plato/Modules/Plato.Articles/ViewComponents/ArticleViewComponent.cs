@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Models;
 using Plato.Articles.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation;
 
 namespace Plato.Articles.ViewComponents
@@ -23,12 +24,12 @@ namespace Plato.Articles.ViewComponents
             _entityStore = entityStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(TopicOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(EntityOptions options)
         {
 
             if (options == null)
             {
-                options = new TopicOptions();
+                options = new EntityOptions();
             }
 
             var model = await GetViewModel(options);
@@ -37,23 +38,23 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<ArticleViewModel> GetViewModel(
-            TopicOptions options)
+        async Task<EntityViewModel<Article, ArticleComment>> GetViewModel(
+            EntityOptions options)
         {
 
-            if (options.Params.EntityId <= 0)
+            if (options.EntityId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(options.Params.EntityId));
+                throw new ArgumentOutOfRangeException(nameof(options.EntityId));
             }
 
-            var topic = await _entityStore.GetByIdAsync(options.Params.EntityId);
+            var topic = await _entityStore.GetByIdAsync(options.EntityId);
             if (topic == null)
             {
                 throw new ArgumentNullException();
             }
             
             // Return view model
-            return new ArticleViewModel
+            return new EntityViewModel<Article, ArticleComment>
             {
                 Options = options,
                 Article = topic

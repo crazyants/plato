@@ -56,7 +56,7 @@ namespace Plato.Articles.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Article article, IViewProviderContext context)
         {
             
-            var viewModel = context.Controller.HttpContext.Items[typeof(ArticleViewModel)] as ArticleViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Article, ArticleComment>)] as EntityViewModel<Article, ArticleComment>;
             
             // Increment entity view count
             await IncrementTopicViewCount(article);
@@ -65,7 +65,7 @@ namespace Plato.Articles.ViewProviders
                 View<Article>("Home.Article.Header", model => article).Zone("header"),
                 View<Article>("Home.Article.Tools", model => article).Zone("tools"),
                 View<Article>("Home.Article.Sidebar", model => article).Zone("sidebar"),
-                View<ArticleViewModel>("Home.Article.Content", model => viewModel).Zone("content"),
+                View<EntityViewModel<Article, ArticleComment>>("Home.Article.Content", model => viewModel).Zone("content"),
                 View<EditReplyViewModel>("Home.Article.Footer", model => new EditReplyViewModel()
                 {
                     EntityId = article.Id,

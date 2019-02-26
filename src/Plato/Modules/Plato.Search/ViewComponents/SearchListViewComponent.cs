@@ -7,9 +7,7 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
-using Plato.Search.Services;
 using Plato.Search.Stores;
-using Plato.Search.ViewModels;
 
 namespace Plato.Search.ViewComponents
 {
@@ -118,12 +116,15 @@ namespace Plato.Search.ViewComponents
         };
         
         private readonly IEntityService<Entity> _entityService;
+        private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+        private SearchSettings _searchSettings;
 
         public SearchListViewComponent(
             IEntityService<Entity> entityService,
             ISearchSettingsStore<SearchSettings> searchSettingsStore)
         {
             _entityService = entityService;
+            _searchSettingsStore = searchSettingsStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -140,6 +141,9 @@ namespace Plato.Search.ViewComponents
             {
                 pager = new PagerOptions();
             }
+
+            // Get search settings
+            _searchSettings = await _searchSettingsStore.GetAsync();
 
             // Get view model
             var model = await GetIndexViewModel(options, pager);
@@ -170,7 +174,15 @@ namespace Plato.Search.ViewComponents
         {
 
             // Build results
-            var results = await _entityService.GetResultsAsync(options, pager); // GetEntities(options, pager);
+            var results = await _entityService
+                .ConfigureDb(o =>
+                {
+                    if (_searchSettings != null)
+                    {
+                        o.SearchType = _searchSettings.SearchType;
+                    }
+                })
+                .GetResultsAsync(options, pager); 
 
             // Set pager total
             pager.SetTotal(results?.Total ?? 0);

@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
@@ -16,35 +15,47 @@ namespace Plato.Entities.Services
     public class EntityService<TModel> : IEntityService<TModel> where TModel : class, IEntity
     {
 
+        private Action<QueryOptions> _configureDb = null;
+        private Action<EntityQueryParams> _configureParams = null;
+
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<TModel> _entityStore;
-        private readonly IFeatureFacade _featureFacade;
-        //private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPlatoRoleStore _roleStore;
 
         public EntityService(
             IContextFacade contextFacade,
             IEntityStore<TModel> entityStore,
-            IFeatureFacade featureFacade,
-            //ISearchSettingsStore<SearchSettings> searchSettingsStore,
-            IAuthorizationService authorizationService, 
             IHttpContextAccessor httpContextAccessor,
             IPlatoRoleStore roleStore)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
-            _featureFacade = featureFacade;
-            //_searchSettingsStore = searchSettingsStore;
-            _authorizationService = authorizationService;
             _httpContextAccessor = httpContextAccessor;
             _roleStore = roleStore;
+
+            // Default options delegate
+            _configureDb = options => options.SearchType = SearchTypes.Tsql;
+
+        }
+        
+        public IEntityService<TModel> ConfigureDb(Action<QueryOptions> configure)
+        {
+            _configureDb = configure;
+            return this;
         }
 
-        public async Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager)
+        public IEntityService<TModel> ConfigureQuery(Action<EntityQueryParams> configure)
         {
-            
+            _configureParams = configure;
+            return this;
+        }
+        
+        public async Task<IPagedResults<TModel>> GetResultsAsync(
+            EntityIndexOptions options,
+            PagerOptions pager)
+        {
+
             if (options == null)
             {
                 options = new EntityIndexOptions();
@@ -54,19 +65,8 @@ namespace Plato.Entities.Services
             {
                 pager = new PagerOptions();
             }
-            
-            //// Get search settings
-            //var searchSettings = await _searchSettingsStore.GetAsync();
 
-            //// If full text is enabled ensure we sort by rank by default
-            //if (searchSettings != null)
-            //{
-            //    if (searchSettings.SearchType != SearchTypes.Tsql)
-            //    {
-            //        options.Sort = SortBy.Rank;
-            //    }
-            //}
-
+            // Ensure we have a sort column is non is specified
             if (options.Sort == SortBy.Auto)
             {
                 options.Sort = SortBy.LastReply;
@@ -77,22 +77,43 @@ namespace Plato.Entities.Services
 
             // Get principal
             var principal = _httpContextAccessor.HttpContext.User;
-            
+
             // Return tailored results
             return await _entityStore.QueryAsync()
                 .Take(pager.Page, pager.PageSize)
-                .Configure(o =>
-                {
-                    o.SearchType = SearchTypes.ContainsTable;
-                    //if (searchSettings != null)
-                    //{
-                    //    o.SearchType = searchSettings.SearchType;
-                    //}
-                })
+                .Configure(_configureDb)
                 .Select<EntityQueryParams>(q =>
                 {
+                    
+                    // ----------------
+                    // Basic parameters
+                    // ----------------
 
+                    if (options.FeatureId != null && options.FeatureId.Value > 0)
+                        q.FeatureId.Equals(options.FeatureId.Value);
+
+                    if (!string.IsNullOrEmpty(options.Search))
+                        q.Keywords.Like(options.Search);
+
+                    if (options.ChannelId > 0)
+                        q.CategoryId.Equals(options.ChannelId);
+
+                    if (options.ChannelIds != null)
+                        q.CategoryId.IsIn(options.ChannelIds);
+
+                    if (options.LabelId > 0)
+                        q.LabelId.Equals(options.LabelId);
+
+                    if (options.TagId > 0)
+                        q.TagId.Equals(options.TagId);
+
+                    if (options.CreatedByUserId > 0)
+                        q.CreatedUserId.Equals(options.CreatedByUserId);
+
+                    // ----------------
                     // Filters
+                    // ----------------
+
                     switch (options.Filter)
                     {
                         case FilterBy.MyTopics:
@@ -138,15 +159,12 @@ namespace Plato.Entities.Services
                             break;
                     }
 
-                    // Keywords
-                    if (!string.IsNullOrEmpty(options.Search))
-                    {
-                        q.Keywords.Like(options.Search);
-                    }
 
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
+                    // ----------------
+                    // Additional parameter configuration
+                    // ----------------
+
+                    _configureParams?.Invoke(q);
 
                     // Restrict results via user role if the channels feature is enabled
                     //if (channelFeature != null)
@@ -163,33 +181,6 @@ namespace Plato.Entities.Services
                     //        }
                     //    }
                     //}
-
-
-
-                    if (options.ChannelId > 0)
-                    {
-                        q.CategoryId.Equals(options.ChannelId);
-                    }
-
-                    if (options.ChannelIds != null)
-                    {
-                        q.CategoryId.IsIn(options.ChannelIds);
-                    }
-
-                    if (options.LabelId > 0)
-                    {
-                        q.LabelId.Equals(options.LabelId);
-                    }
-
-                    if (options.TagId > 0)
-                    {
-                        q.TagId.Equals(options.TagId);
-                    }
-
-                    if (options.CreatedByUserId > 0)
-                    {
-                        q.CreatedUserId.Equals(options.CreatedByUserId);
-                    }
 
                     //// Hide private?
                     //if (!await _authorizationService.AuthorizeAsync(principal,
@@ -228,7 +219,7 @@ namespace Plato.Entities.Services
                 .ToList();
 
 
-
         }
+
     }
 }

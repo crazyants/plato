@@ -67,9 +67,10 @@ namespace Plato.Articles
 
             // Services
             //services.AddScoped<IArticleService, ArticleService>();
-            services.AddScoped<IReplyService, ReplyService>();
+            //services.AddScoped<IReplyService, ReplyService>();
 
             services.AddScoped<IEntityService<Article>, EntityService<Article>>();
+            services.AddScoped<IEntityReplyService<ArticleComment>, EntityReplyService<ArticleComment>>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

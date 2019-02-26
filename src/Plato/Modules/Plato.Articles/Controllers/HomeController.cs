@@ -10,6 +10,7 @@ using Plato.Articles.Services;
 using Plato.Internal.Navigation;
 using Plato.Articles.ViewModels;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
@@ -41,7 +42,7 @@ namespace Plato.Articles.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IReplyService _replyService;
+        private readonly IEntityReplyService<ArticleComment> _replyService;
 
         private readonly IPlatoUserStore<User> _platoUserStore;
 
@@ -61,8 +62,8 @@ namespace Plato.Articles.Controllers
             IPostManager<ArticleComment> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService, 
-            IReplyService replyService)
+            IAuthorizationService authorizationService,
+            IEntityReplyService<ArticleComment> replyService)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -314,7 +315,7 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Topic(
             int id,
             int offset,
-            TopicOptions opts,
+            EntityOptions opts,
             PagerOptions pager)
         {
 
@@ -372,7 +373,7 @@ namespace Plato.Articles.Controllers
             // default options
             if (opts == null)
             {
-                opts = new TopicOptions();
+                opts = new EntityOptions();
             }
 
             // default pager
@@ -403,7 +404,7 @@ namespace Plato.Articles.Controllers
 
             // Maintain previous route data when generating page links
             // Get default options
-            var defaultViewOptions = new ArticleViewModel();
+            var defaultViewOptions = new EntityViewModel<Article, ArticleComment>();
             var defaultPagerOptions = new PagerOptions();
 
             if (offset > 0 && !this.RouteData.Values.ContainsKey("offset"))
@@ -413,23 +414,21 @@ namespace Plato.Articles.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
-            opts.Params.EntityId = topic.Id;
-
-            // Build infinite scroll options
-            opts.InfiniteScroll = new InfiniteScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
+            opts.EntityId = topic.Id;
 
             // Build view model
-            var viewModel = new ArticleViewModel()
+            var viewModel = new EntityViewModel<Article, ArticleComment>()
             {
                 Options = opts,
-                Pager = pager
+                Pager = pager,
+                InfiniteScroll = new InfiniteScrollOptions
+                {
+                    Url = GetInfiniteScrollCallbackUrl()
+                }
             };
 
             // Add models to context for use within view adaptors
-            HttpContext.Items[typeof(ArticleViewModel)] = viewModel;
+            HttpContext.Items[typeof(EntityViewModel<Article, ArticleComment>)] = viewModel;
             HttpContext.Items[typeof(Article)] = topic;
             
             // If we have a pager.page querystring value return paged results
@@ -1080,7 +1079,7 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Jump(
             int id,
             int replyId,
-            TopicOptions opts,
+            EntityOptions opts,
             PagerOptions pager)
         {
 
@@ -1093,7 +1092,7 @@ namespace Plato.Articles.Controllers
             // default options
             if (opts == null)
             {
-                opts = new TopicOptions();
+                opts = new EntityOptions();
             }
 
             // default pager
@@ -1103,7 +1102,7 @@ namespace Plato.Articles.Controllers
             }
             
             // Set entity Id for replies to return
-            opts.Params.EntityId = topic.Id;
+            opts.EntityId = topic.Id;
 
             // We need to iterate all replies to calculate the offset
             pager.Page = 1;

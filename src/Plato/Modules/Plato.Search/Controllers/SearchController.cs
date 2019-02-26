@@ -23,22 +23,17 @@ namespace Plato.Search.Controllers
 
     public class SearchController : BaseWebApiController
     {
-
-        private readonly IEntityStore<Entity> _entityStore;
+        
         private readonly IContextFacade _contextFacade;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
-
         private readonly IEntityService<Entity> _searchService;
 
         public SearchController(
-            IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
-            IEntityStore<Entity> entityStore,
             ISearchSettingsStore<SearchSettings> searchSettingsStore,
             IEntityService<Entity> searchService)
         {
             _contextFacade = contextFacade;
-            _entityStore = entityStore;
             _searchSettingsStore = searchSettingsStore;
             _searchService = searchService;
         }
@@ -48,21 +43,48 @@ namespace Plato.Search.Controllers
             int page = 1,
             int size = 10,
             string keywords = "",
-            SortBy sort = SortBy.LastReply,
+            SortBy sort = SortBy.Auto,
             OrderBy order = OrderBy.Desc)
         {
 
+            // Get search settings
+            var searchSettings = await _searchSettingsStore.GetAsync();
+
+            // Set default sort column if auto is specified
+            if (sort == SortBy.Auto)
+            {
+                // Get search settings
+                if (searchSettings != null)
+                {
+                    sort = searchSettings.SearchType == SearchTypes.Tsql
+                        ? SortBy.LastReply
+                        : SortBy.Rank;
+                }
+                else
+                {
+                    sort = SortBy.LastReply;
+                }
+            }
+            
             // Get results
-            var entities = await _searchService.GetResultsAsync(new EntityIndexOptions()
-            {
-                Search = keywords,
-                Sort = sort,
-                Order = order
-            }, new PagerOptions()
-            {
-                Page = page,
-                PageSize = size
-            });
+            var entities = await _searchService
+                .ConfigureDb(o =>
+                {
+                    if (searchSettings != null)
+                    {
+                        o.SearchType = searchSettings.SearchType;
+                    }
+                })
+                .GetResultsAsync(new EntityIndexOptions()
+                {
+                    Search = keywords,
+                    Sort = sort,
+                    Order = order
+                }, new PagerOptions()
+                {
+                    Page = page,
+                    PageSize = size
+                });
             
             IPagedResults<SearchApiResult> results = null;
             if (entities != null)

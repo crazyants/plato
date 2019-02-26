@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
 using Plato.Articles.ViewModels;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -17,12 +19,12 @@ namespace Plato.Articles.ViewComponents
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
 
-        private readonly IReplyService _replyService;
+        private readonly IEntityReplyService<ArticleComment> _replyService;
 
         public ArticleCommentListViewComponent(
             IEntityReplyStore<ArticleComment> entityReplyStore,
             IEntityStore<Article> entityStore,
-            IReplyService replyService)
+            IEntityReplyService<ArticleComment> replyService)
         {
             _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
@@ -30,13 +32,13 @@ namespace Plato.Articles.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            TopicOptions options,
+            EntityOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new TopicOptions();
+                options = new EntityOptions();
             }
 
             if (pager == null)
@@ -48,12 +50,12 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<ArticleViewModel> GetViewModel(
-            TopicOptions options,
+        async Task<EntityViewModel<Article, ArticleComment>> GetViewModel(
+            EntityOptions options,
             PagerOptions pager)
         {
 
-            var topic = await _entityStore.GetByIdAsync(options.Params.EntityId);
+            var topic = await _entityStore.GetByIdAsync(options.EntityId);
             if (topic == null)
             {
                 throw new ArgumentNullException();
@@ -65,7 +67,7 @@ namespace Plato.Articles.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
 
             // Return view model
-            return new ArticleViewModel
+            return new EntityViewModel<Article, ArticleComment>
             {
                 Options = options,
                 Pager = pager,
