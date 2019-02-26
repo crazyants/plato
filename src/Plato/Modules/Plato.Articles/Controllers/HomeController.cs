@@ -128,7 +128,7 @@ namespace Plato.Articles.Controllers
                 ).Add(S["Articles"]);
             });
 
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -1178,7 +1178,6 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
 
         async Task CreateSampleData()
         {
-
             
             var users = await _platoUserStore.QueryAsync()
                 .OrderBy("LastLoginDate", OrderBy.Desc)
@@ -1200,24 +1199,20 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
             var data = await _topicManager.CreateAsync(topic);
             if (data.Succeeded)
             {
-
                 for (var i = 0; i < 25; i++)
                 {
                     rnd = new Random();
-                    randomUser = users.Data[rnd.Next(0, totalUsers)];
+                    randomUser = users?.Data[rnd.Next(0, totalUsers)];
 
                     var reply = new ArticleComment()
                     {
                         EntityId = data.Response.Id,
-                        Message = GetSampleMarkDown(i) + " - reply: " + i.ToString(),
+                        Message = GetSampleMarkDown(i) + " - comment : " + i.ToString(),
                         CreatedUserId = randomUser?.Id ?? 0,
                         CreatedDate = DateTimeOffset.UtcNow
                     };
                     var newReply = await _replyManager.CreateAsync(reply);
                 }
-
-
-
             }
 
         }

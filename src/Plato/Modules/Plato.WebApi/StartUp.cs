@@ -61,12 +61,12 @@ namespace Plato.WebApi
             
             // Register client options middleware 
             app.UseMiddleware<WebApiClientOptionsMiddleware>();
-            
-            // Generate csrf token for client api requests
+
+            // Generate CSRF token for client api requests
             var keyGenerator = app.ApplicationServices.GetService<IKeyGenerator>();
             var csrfToken = keyGenerator.GenerateKey(o => { o.MaxLength = 75; });
 
-            // Add client accessible CSRF toekn for web api requests
+            // Add client accessible CSRF token for web api requests
             app.Use(next => ctx =>
             {
                 // ensure the cookie does not already exist
@@ -86,10 +86,17 @@ namespace Plato.WebApi
                 }
                 return next(ctx);
             });
+            
+            routes.MapAreaRoute(
+                name: "PlatoWebApiAdmin",
+                areaName: "Plato.WebApi",
+                template: "admin/settings/api",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
 
             // Api routes
             routes.MapAreaRoute(
-                name: "WebApiRoute",
+                name: "PlatoWebApi",
                 areaName: "Plato.WebApi",
                 template: "api/{controller}/{action}/{id?}",
                 defaults: new { controller = "Users", action = "Get" }

@@ -2563,17 +2563,29 @@ $(function (win, doc, $) {
             getStateUrl: function($caller, offset) {
                 
                 var url = methods.getUrl($caller),
+                    offsetString = "",
                     parts = win.location.href.split("?");
+
+                // Append offset if supplied
+                if (offset !== null && typeof offset !== "undefined") {
+                    offsetString = offset.toString();
+                }
+
+                // Does our Url end with /
+                if (url.substring(url.length - 1, url.length) !== "/") {
+                    url += "/";
+                }
                 
+                // Append query string params if available
                 if (parts.length === 1) {
-                    return url + offset;
+                    return url + offsetString;
                 } else {
                     // Ensure parameters are shifted to the end
                     var params = parts[parts.length - 1];
                     if (params !== "") {
                         params = "?" + params;
                     }
-                    return url + offset + params;
+                    return url + offsetString + params;
                 }
 
             },
@@ -2582,7 +2594,7 @@ $(function (win, doc, $) {
                 $().scrollSpy("stop");
                 // Clear offset
                 if (state) {
-                    history.replaceState(state, doc.title, methods.getUrl($caller));
+                    history.replaceState(state, doc.title, methods.getStateUrl($caller));
                 }
             },
             scrollToPage: function($caller, pageNumber) {

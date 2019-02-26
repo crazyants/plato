@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Settings.Handlers;
 using Plato.Settings.Navigation;
@@ -39,6 +38,16 @@ namespace Plato.Settings
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+            
+            routes.MapAreaRoute(
+                name: "PlatoSettingsAdmin",
+                areaName: "Plato.Settings",
+                template: "admin/settings/general",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
+            
         }
+
     }
+
 }

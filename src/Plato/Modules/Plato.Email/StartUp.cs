@@ -73,6 +73,15 @@ namespace Plato.Email
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "PlatoEmailAdmin",
+                areaName: "Plato.Email",
+                template: "admin/settings/email",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
+
+
         }
 
     }

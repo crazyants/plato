@@ -87,7 +87,14 @@ namespace Plato.Search
                 template: "search/{offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
-            
+
+            routes.MapAreaRoute(
+                name: "PlatoSearchAdmin",
+                areaName: "Plato.Search",
+                template: "admin/settings/search",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
+
             routes.MapAreaRoute(
                 name: "PlatoSearchWebApi",
                 areaName: "Plato.Search",

@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Search.Navigation
@@ -22,7 +21,7 @@ namespace Plato.Search.Navigation
             }
 
             builder
-                .Add(T["Settings"], int.MaxValue, configuration => configuration
+                .Add(T["Settings"], int.MaxValue, s => s
                     .IconCss("fal fa-cog")
                     .Add(T["Search"], int.MaxValue - 6, installed => installed
                         .Action("Index", "Admin", "Plato.Search")

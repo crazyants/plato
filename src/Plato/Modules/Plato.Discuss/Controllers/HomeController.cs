@@ -121,7 +121,7 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Discuss"]);
             });
 
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new TopicIndexOptions();
@@ -1180,19 +1180,19 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
 
         async Task CreateSampleData()
         {
-
             var users = await _platoUserStore.QueryAsync()
-                .Take(1, 1000)
-                .Select<UserQueryParams>(q => { })
                 .OrderBy("LastLoginDate", OrderBy.Desc)
                 .ToList();
 
             var rnd = new Random();
+            var totalUsers = users?.Total - 1 ?? 0;
+            var randomUser = users?.Data[rnd.Next(0, totalUsers)];
+
             var topic = new Topic()
             {
-                Title = "Test Topic ♥♥♥ " + rnd.Next(0, users.Total).ToString(),
-                Message = GetSampleMarkDown(rnd.Next(0, users.Total)),
-                CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id,
+                Title = "Test Topic " + rnd.Next(0, 2000).ToString(),
+                Message = GetSampleMarkDown(rnd.Next(0, 2000)),
+                CreatedUserId = randomUser?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
@@ -1200,24 +1200,21 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
             var data = await _topicManager.CreateAsync(topic);
             if (data.Succeeded)
             {
-
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 25; i++)
                 {
                     rnd = new Random();
+                    randomUser = users?.Data[rnd.Next(0, totalUsers)];
+
                     var reply = new Reply()
                     {
                         EntityId = data.Response.Id,
                         Message = GetSampleMarkDown(i) + " - reply: " + i.ToString(),
-                        CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id,
+                        CreatedUserId = randomUser?.Id ?? 0,
                         CreatedDate = DateTimeOffset.UtcNow
                     };
                     var newReply = await _replyManager.CreateAsync(reply);
                 }
-
-
-
             }
-
         }
 
         #endregion
