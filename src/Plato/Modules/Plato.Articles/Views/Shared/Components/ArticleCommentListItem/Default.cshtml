@@ -42,8 +42,8 @@
                         </span>
                     }
                 </div>
-                <navigation name="topic-reply"
-                            model="Model.Reply"
+                <navigation name="article-comment"
+                            model="Model.ArticleComment"
                             class="nav navbar p-0 float-right"
                             arrow-css="dropdown-arrow"
                             child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in"/>
@@ -58,8 +58,8 @@
                  data-reply-url="@Url.Action("Jump", "Home", new { id = Model.Article.Id, alias = Model.Article.Alias, replyId = Model.ArticleComment.Id })"
                  data-display-name="@Model.ArticleComment.CreatedBy.DisplayName">@Model.ArticleComment.Message</div>
            
-            <navigation name="topic-reply-footer"
-                        model="Model.Reply"
+            <navigation name="article-comment-footer"
+                        model="Model.ArticleComment"
                         enable-list="false" />
            
         </card-body>
