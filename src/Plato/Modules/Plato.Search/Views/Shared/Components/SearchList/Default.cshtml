@@ -99,13 +99,20 @@
                         <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
                             @await DisplayAsync(new View("SearchListItem", new
                             {
-                                entity = entity,
-                                options = Model.Options
+                                model = new SearchListItemViewModel()
+                                {
+                                    Entity = entity,
+                                    Options = Model.Options
+                                }
                             }))
+                            @{
+                                offset++;
+                            }
                         </div>
                     </li>
 
                 }
+                <li class="infinite-scroll-loader" data-type="next"></li>
             </ul>
         }
         else
@@ -118,6 +125,7 @@
         }
     </card-body>
 </card>
+
 @if (Model.Pager.Enabled && !Model.Pager.Scroll.Enabled)
 {
     <div class="mt-4 mb-4">

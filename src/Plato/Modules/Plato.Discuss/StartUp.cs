@@ -101,8 +101,7 @@ namespace Plato.Discuss
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ReplyBadgesAwarder>();
-
-
+            
         }
 
         public override void Configure(

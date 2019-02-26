@@ -2522,7 +2522,7 @@ $(function (win, doc, $) {
                 });
 
             },
-            isElementInviewPort: function(el) {
+            isElementInViewPort: function(el) {
                 var rect = el.getBoundingClientRect();
                 return (
                     rect.top >= 0 &&
@@ -2535,12 +2535,12 @@ $(function (win, doc, $) {
             updateState: function($caller) {
 
                 // Iterate each offset marker and detect the first
-                // visibie marker within the client viewport
+                // visible marker within the client viewport
                 var $marker = null,
                     $markers = methods.getOffsetMarkers($caller);
                 if ($markers) {
                     $markers.each(function() {
-                        if (methods.isElementInviewPort(this)) {
+                        if (methods.isElementInViewPort(this)) {
                             $marker = $(this);
                             return false;
                         }
@@ -2561,21 +2561,19 @@ $(function (win, doc, $) {
 
             },
             getStateUrl: function($caller, offset) {
-
+                
                 var url = methods.getUrl($caller),
-                    suffix = methods.getUrlSuffix($caller),
-                    parts = url.split("?");
-
+                    parts = win.location.href.split("?");
+                
                 if (parts.length === 1) {
-                    return url + suffix + offset;
+                    return url + offset;
                 } else {
                     // Ensure parameters are shifted to the end
-                    var base = parts[0],
-                        params = parts[parts.length - 1];
+                    var params = parts[parts.length - 1];
                     if (params !== "") {
                         params = "?" + params;
                     }
-                    return base + suffix + offset + params;
+                    return url + offset + params;
                 }
 
             },

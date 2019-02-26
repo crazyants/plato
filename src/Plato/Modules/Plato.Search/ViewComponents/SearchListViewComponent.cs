@@ -117,6 +117,7 @@ namespace Plato.Search.ViewComponents
         
         private readonly IEntityService<Entity> _entityService;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+
         private SearchSettings _searchSettings;
 
         public SearchListViewComponent(
