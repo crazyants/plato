@@ -43,7 +43,7 @@ namespace Plato.Moderation
             services.AddScoped<IPermissionsManager<ModeratorPermission>, PermissionsManager<ModeratorPermission>>();
           
             // Register additional authorization handler for implied permissions
-            //services.AddScoped<IAuthorizationHandler, ModeratorPermissionsHandler>();
+            services.AddScoped<IAuthorizationHandler, ModeratorPermissionsHandler>();
             
         }
 

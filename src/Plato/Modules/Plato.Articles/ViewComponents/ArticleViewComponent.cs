@@ -2,10 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Models;
-using Plato.Articles.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Navigation;
 
 namespace Plato.Articles.ViewComponents
 {
