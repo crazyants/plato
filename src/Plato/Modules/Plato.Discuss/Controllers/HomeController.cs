@@ -570,7 +570,7 @@ namespace Plato.Discuss.Controllers
                         })
                         .LocalNav()
                     )
-                    .Add(S["Edit Post"], post => post
+                    .Add(S["Edit Topic"], post => post
                         .LocalNav()
                     );
             });

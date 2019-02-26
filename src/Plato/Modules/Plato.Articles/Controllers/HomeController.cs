@@ -31,7 +31,7 @@ namespace Plato.Articles.Controllers
 
         #region "Constructor"
 
-        private readonly IViewProviderManager<Article> _topicViewProvider;
+        private readonly IViewProviderManager<Article> _entityViewProvider;
         private readonly IViewProviderManager<ArticleComment> _replyViewProvider;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
@@ -54,7 +54,7 @@ namespace Plato.Articles.Controllers
             IHtmlLocalizer<HomeController> localizer,
             IContextFacade contextFacade,
             IEntityStore<Article> entityStore,
-            IViewProviderManager<Article> topicViewProvider,
+            IViewProviderManager<Article> entityViewProvider,
             IEntityReplyStore<ArticleComment> entityReplyStore,
             IViewProviderManager<ArticleComment> replyViewProvider,
             IPostManager<Article> topicManager,
@@ -64,7 +64,7 @@ namespace Plato.Articles.Controllers
             IAuthorizationService authorizationService,
             IEntityReplyService<ArticleComment> replyService)
         {
-            _topicViewProvider = topicViewProvider;
+            _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
             _entityStore = entityStore;
             _contextFacade = contextFacade;
@@ -87,7 +87,7 @@ namespace Plato.Articles.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest 
+        // Latest Entities
         // -----------------
 
         public async Task<IActionResult> Index(
@@ -166,12 +166,12 @@ namespace Plato.Articles.Controllers
             }
 
             // Return view
-            return View(await _topicViewProvider.ProvideIndexAsync(new Article(), this));
+            return View(await _entityViewProvider.ProvideIndexAsync(new Article(), this));
 
         }
 
         // -----------------
-        // Popular Topics
+        // Popular Entities
         // -----------------
 
         public Task<IActionResult> Popular(
@@ -198,7 +198,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // New topic
+        // New article
         // -----------------
 
         public async Task<IActionResult> Create(int channel)
@@ -221,22 +221,20 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Articles"], discuss => discuss
+                ).Add(S["Articles"], articles => articles
                     .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
-                ).Add(S["New Post"], post => post
+                ).Add(S["New Article"], post => post
                     .LocalNav()
                 );
             });
 
             // Return view
-            return View(await _topicViewProvider.ProvideEditAsync(topic, this));
+            return View(await _entityViewProvider.ProvideEditAsync(topic, this));
 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Create))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditTopicViewModel model)
         {
 
@@ -244,7 +242,7 @@ namespace Plato.Articles.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(new Article()
+            if (await _entityViewProvider.IsModelStateValid(new Article()
             {
                 Title = model.Title,
                 Message = model.Message,
@@ -254,16 +252,16 @@ namespace Plato.Articles.Controllers
             {
 
                 // Get composed type from all involved view providers
-                var topic = await _topicViewProvider.GetComposedType(this);
+                var entity = await _entityViewProvider.GetComposedType(this);
                 
                 // Populated created by
-                topic.CreatedUserId = user?.Id ?? 0;
-                topic.CreatedDate = DateTimeOffset.UtcNow;
+                entity.CreatedUserId = user?.Id ?? 0;
+                entity.CreatedDate = DateTimeOffset.UtcNow;
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newTopic = await _topicManager.CreateAsync(topic);
+                var newTopic = await _topicManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
                 if (newTopic.Succeeded)
@@ -274,10 +272,10 @@ namespace Plato.Articles.Controllers
                     newTopic.Response.IsNewTopic = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(newTopic.Response, this);
+                    await _entityViewProvider.ProvideUpdateAsync(newTopic.Response, this);
 
                     // Everything was OK
-                    _alerter.Success(T["Topic Created Successfully!"]);
+                    _alerter.Success(T["Article Created Successfully!"]);
 
                     // Redirect to topic
                     return RedirectToAction(nameof(Topic), new {Id = newTopic.Response.Id});
@@ -309,7 +307,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Display topic
+        // Display article
         // -----------------
 
         public async Task<IActionResult> Topic(
@@ -394,7 +392,7 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Articles"], discuss => discuss
+                ).Add(S["Articles"], articles => articles
                     .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 ).Add(S[topic.Title.TrimToAround(75)], post => post
@@ -441,12 +439,12 @@ namespace Plato.Articles.Controllers
             }
             
             // Return view
-            return View(await _topicViewProvider.ProvideDisplayAsync(topic, this));
+            return View(await _entityViewProvider.ProvideDisplayAsync(topic, this));
 
         }
 
         // -----------------
-        // Post new reply
+        // Post comment
         // -----------------
 
         [HttpPost]
@@ -528,7 +526,7 @@ namespace Plato.Articles.Controllers
         }
       
         // -----------------
-        // Edit topic
+        // Edit article
         // -----------------
 
         public async Task<IActionResult> Edit(int id)
@@ -558,7 +556,7 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
                         .LocalNav()
-                    ).Add(S["Articles"], discuss => discuss
+                    ).Add(S["Articles"], articles => articles
                         .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
@@ -569,13 +567,13 @@ namespace Plato.Articles.Controllers
                         })
                         .LocalNav()
                     )
-                    .Add(S["Edit Post"], post => post
+                    .Add(S["Edit Article"], post => post
                         .LocalNav()
                     );
             });
 
             // Return view
-            return View(await _topicViewProvider.ProvideEditAsync(topic, this));
+            return View(await _entityViewProvider.ProvideEditAsync(topic, this));
 
         }
 
@@ -592,7 +590,7 @@ namespace Plato.Articles.Controllers
             }
 
             // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(new Article()
+            if (await _entityViewProvider.IsModelStateValid(new Article()
             {
                 Title = model.Title,
                 Message = model.Message
@@ -618,7 +616,7 @@ namespace Plato.Articles.Controllers
                 topic.Message = model.Message;
 
                 // Execute view providers ProvideUpdateAsync method
-                await _topicViewProvider.ProvideUpdateAsync(topic, this);
+                await _entityViewProvider.ProvideUpdateAsync(topic, this);
 
                 // Everything was OK
                 _alerter.Success(T["Topic Updated Successfully!"]);
@@ -685,7 +683,7 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
                         .LocalNav()
-                    ).Add(S["Articles"], discuss => discuss
+                    ).Add(S["Articles"], articles => articles
                         .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post

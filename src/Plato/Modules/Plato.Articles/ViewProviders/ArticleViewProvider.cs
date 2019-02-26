@@ -62,11 +62,11 @@ namespace Plato.Articles.ViewProviders
             await IncrementTopicViewCount(article);
         
             return Views(
-                View<Article>("Home.Article.Header", model => article).Zone("header"),
-                View<Article>("Home.Article.Tools", model => article).Zone("tools"),
-                View<Article>("Home.Article.Sidebar", model => article).Zone("sidebar"),
-                View<EntityViewModel<Article, ArticleComment>>("Home.Article.Content", model => viewModel).Zone("content"),
-                View<EditReplyViewModel>("Home.Article.Footer", model => new EditReplyViewModel()
+                View<Article>("Home.Entity.Header", model => article).Zone("header"),
+                View<Article>("Home.Entity.Tools", model => article).Zone("tools"),
+                View<Article>("Home.Entity.Sidebar", model => article).Zone("sidebar"),
+                View<EntityViewModel<Article, ArticleComment>>("Home.Entity.Content", model => viewModel).Zone("content"),
+                View<EditReplyViewModel>("Home.Entity.Footer", model => new EditReplyViewModel()
                 {
                     EntityId = article.Id,
                     EditorHtmlName = EditorHtmlName

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
@@ -74,7 +73,7 @@ namespace Plato.Articles.Navigation
                             {"title", T["Options"]}
                         })
                         .Add(T["Edit"], int.MinValue, edit => edit
-                            .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            .Action("Edit", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
                                 ["id"] = topic.Id,
                                 ["alias"] = topic.Alias
@@ -85,7 +84,7 @@ namespace Plato.Articles.Navigation
                             .LocalNav()
                         )
                         .Add(T["Report"], int.MaxValue - 2, report => report
-                            .Action("Report", "Home", "Plato.Discuss")
+                            .Action("Report", "Home", "Plato.Articles")
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},
@@ -100,7 +99,7 @@ namespace Plato.Articles.Navigation
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(topic.IsDeleted ? "RestoreTopic" : "DeleteTopic", "Home", "Plato.Discuss",
+                                .Action(topic.IsDeleted ? "RestoreTopic" : "DeleteTopic", "Home", "Plato.Articles",
                                     new RouteValueDictionary()
                                     {
                                         ["id"] = topic.Id
