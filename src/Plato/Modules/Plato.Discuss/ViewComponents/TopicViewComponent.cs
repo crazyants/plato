@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
-using Plato.Internal.Navigation;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Discuss.ViewComponents
 {
@@ -23,41 +22,38 @@ namespace Plato.Discuss.ViewComponents
             _entityStore = entityStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(TopicOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(EntityOptions options)
         {
 
             if (options == null)
             {
-                options = new TopicOptions();
+                options = new EntityOptions();
             }
 
-            var model = await GetViewModel(options);
-
-            return View(model);
+            return View(await GetViewModel(options));
 
         }
-
-        async Task<TopicViewModel> GetViewModel(
-            TopicOptions options)
+        async Task<EntityViewModel<Topic, Reply>> GetViewModel(
+            EntityOptions options)
         {
 
-            if (options.Params.EntityId <= 0)
+            if (options.EntityId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(options.Params.EntityId));
+                throw new ArgumentOutOfRangeException(nameof(options.EntityId));
             }
 
-            var topic = await _entityStore.GetByIdAsync(options.Params.EntityId);
+            var topic = await _entityStore.GetByIdAsync(options.EntityId);
             if (topic == null)
             {
                 throw new ArgumentNullException();
             }
-            
+
             // Return view model
-            return new TopicViewModel
+            return new EntityViewModel<Topic, Reply>
             {
                 Options = options,
-                Topic = topic
-        };
+                Entity = topic
+            };
 
         }
 

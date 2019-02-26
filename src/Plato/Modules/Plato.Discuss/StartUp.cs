@@ -65,10 +65,14 @@ namespace Plato.Discuss
             // Register data access
             services.AddScoped<IPostManager<Topic>, TopicManager>();
             services.AddScoped<IPostManager<Reply>, ReplyManager>();
-
+            
             // Services
-            services.AddScoped<ITopicService, TopicService>();
+            //services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IReplyService, ReplyService>();
+            
+            services.AddScoped<IEntityService<Topic>, EntityService<Topic>>();
+            services.AddScoped<IEntityReplyService<Reply>, EntityReplyService<Reply>>();
+            
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

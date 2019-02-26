@@ -5,6 +5,7 @@ using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -26,13 +27,13 @@ namespace Plato.Discuss.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            TopicOptions options,
+            EntityOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new TopicOptions();
+                options = new EntityOptions();
             }
 
             if (pager == null)
@@ -44,13 +45,13 @@ namespace Plato.Discuss.ViewComponents
 
         }
 
-        async Task<TopicViewModel> GetViewModel(
-            TopicOptions options,
+        async Task<EntityViewModel<Topic, Reply>> GetViewModel(
+            EntityOptions options,
             PagerOptions pager)
         {
             
           
-            var topic = await _entityStore.GetByIdAsync(options.Params.EntityId);
+            var topic = await _entityStore.GetByIdAsync(options.EntityId);
             if (topic == null)
             {
                 throw new ArgumentNullException();
@@ -62,11 +63,11 @@ namespace Plato.Discuss.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
 
             // Return view model
-            return new TopicViewModel
+            return new EntityViewModel<Topic, Reply>
             {
                 Options = options,
                 Pager = pager,
-                Topic = topic,
+                Entity = topic,
                 Replies = results
             };
 

@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Discuss.Models;
 using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
-using Plato.Internal.Navigation;
+using Plato.Entities.Services;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
@@ -10,22 +11,22 @@ namespace Plato.Discuss.ViewComponents
     public class GetTopicListViewComponent : ViewComponent
     {
         
-        private readonly ITopicService _topicService;
+        private readonly IEntityService<Topic> _entityService;
 
         public GetTopicListViewComponent(
-            ITopicService topicService)
+            IEntityService<Topic> entityService)
         {
-            _topicService = topicService;
+            _entityService = entityService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            TopicIndexOptions options,
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new TopicIndexOptions();
+                options = new EntityIndexOptions();
             }
 
             if (pager == null)
@@ -37,19 +38,19 @@ namespace Plato.Discuss.ViewComponents
 
         }
         
-        async Task<TopicIndexViewModel> GetViewModel(
-            TopicIndexOptions options,
+        async Task<EntityIndexViewModel<Topic>> GetViewModel(
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
             // Get results
-            var results = await _topicService.GetResultsAsync(options, pager);
+            var results = await _entityService.GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new TopicIndexViewModel
+            return new EntityIndexViewModel<Topic>
             {
                 Results = results,
                 Options = options,

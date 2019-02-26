@@ -5,7 +5,9 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -60,7 +62,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             };
             
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
             
             var indexViewModel = new ChannelIndexViewModel
             {

@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Labels.Models;
+using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.Services;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
@@ -23,20 +26,20 @@ namespace Plato.Discuss.Labels.ViewAdapters
         private readonly IFeatureFacade _featureFacade;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
-        private readonly ITopicService _topicService;
+        private readonly IEntityService<Topic> _entityService;
         private readonly IActionContextAccessor _actionContextAccessor;
 
         public TopicListItemViewAdapter(
             ILabelStore<Label> labelStore,
             IFeatureFacade featureFacade,
-            ITopicService topicService, 
+            IEntityService<Topic> entityService, 
             IEntityLabelStore<EntityLabel> entityLabelStore,
             IHttpContextAccessor httpContextAccessor,
             IActionContextAccessor actionContextAccessor)
         {
             _labelStore = labelStore;
             _featureFacade = featureFacade;
-            _topicService = topicService;
+            _entityService = entityService;
             _entityLabelStore = entityLabelStore;
             _httpContextAccessor = httpContextAccessor;
             _actionContextAccessor = actionContextAccessor;
@@ -62,8 +65,8 @@ namespace Plato.Discuss.Labels.ViewAdapters
             }
 
             // Build a dictionary we can use below within our AdaptModel
-            // method to add the correct labels for each displayed entitty
-            var topicLabelsDictionary = await BuildLoookUpTable(labels.ToList());
+            // method to add the correct labels for each displayed entity
+            var topicLabelsDictionary = await BuildLookUpTable(labels.ToList());
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Labels
             // Instead we update the model for the topic item view component
@@ -115,14 +118,14 @@ namespace Plato.Discuss.Labels.ViewAdapters
 
         }
         
-        async Task<IDictionary<int, IList<Label>>> BuildLoookUpTable(IEnumerable<Label> labels)
+        async Task<IDictionary<int, IList<Label>>> BuildLookUpTable(IEnumerable<Label> labels)
         {
             
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
         
             // Get all entities for our current view
-            var entities = await _topicService.GetResultsAsync(
+            var entities = await _entityService.GetResultsAsync(
                 viewModel?.Options, 
                 viewModel?.Pager);
 

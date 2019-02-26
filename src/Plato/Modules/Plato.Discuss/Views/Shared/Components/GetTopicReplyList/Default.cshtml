@@ -1,4 +1,4 @@
-﻿@model TopicViewModel
+﻿@model EntityViewModel<Topic, Reply>
 
 @if (Model.Replies != null)
 {
@@ -12,7 +12,7 @@
          {
              model = new TopicReplyListItemViewModel()
              {
-                 Topic = Model.Topic,
+                 Topic = Model.Entity,
                  Reply = reply
              }
          }))

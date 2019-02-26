@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.Services;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
@@ -12,7 +15,7 @@ namespace Plato.Discuss.ViewComponents
     public class TopicListViewComponent : ViewComponent
     {
 
-        private readonly IEnumerable<Filter> _defaultFilters = new List<Filter>()
+        private readonly ICollection<Filter> _defaultFilters = new List<Filter>()
         {
             new Filter()
             {
@@ -59,7 +62,7 @@ namespace Plato.Discuss.ViewComponents
             }
         };
 
-        private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
+        private readonly ICollection<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
             new SortColumn()
             {
@@ -108,7 +111,7 @@ namespace Plato.Discuss.ViewComponents
             }
         };
 
-        private readonly IEnumerable<SortOrder> _defaultSortOrder = new List<SortOrder>()
+        private readonly ICollection<SortOrder> _defaultSortOrder = new List<SortOrder>()
         {
             new SortOrder()
             {
@@ -121,22 +124,23 @@ namespace Plato.Discuss.ViewComponents
                 Value = OrderBy.Asc
             },
         };
+        
+        private readonly IEntityService<Topic> _entityService;
 
-        private readonly ITopicService _topicService;
-
-        public TopicListViewComponent(ITopicService topicService)
+        public TopicListViewComponent(IEntityService<Topic> entityService)
         {
-            _topicService = topicService;
+  
+            _entityService = entityService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            TopicIndexOptions options,
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new TopicIndexOptions();
+                options = new EntityIndexOptions();
             }
 
             if (pager == null)
@@ -148,19 +152,19 @@ namespace Plato.Discuss.ViewComponents
 
         }
         
-        async Task<TopicIndexViewModel> GetViewModel(
-            TopicIndexOptions options,
+        async Task<EntityIndexViewModel<Topic>> GetViewModel(
+            EntityIndexOptions options,
             PagerOptions pager)
         {
 
             // Get results
-            var results = await _topicService.GetResultsAsync(options, pager);
+            var results = await _entityService.GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
             
             // Return view model
-            return new TopicIndexViewModel
+            return new EntityIndexViewModel<Topic>
             {
                 SortColumns = _defaultSortColumns,
                 SortOrder = _defaultSortOrder,

@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Routing
 @using Plato.Internal.Data.Abstractions
-@model TopicIndexViewModel
+@model EntityIndexViewModel<Topic>
 
-<card enabled="@Model.Options.EnableCard" class="card card-body-flush">
+<card class="card card-body-flush">
     <card-title>
         <h6 class="card-title float-left">@T["Topics"]</h6>
         <ul class="nav navbar p-0 float-right">
@@ -84,7 +84,7 @@
             var offset = Model.Pager.InitialOffset;
             var selectedOffset = Model.Pager.SelectedOffset;
             <ul data-provide="infiniteScroll"
-                data-infinite-scroll-url="@Model.Options.Scroll.Url"
+                data-infinite-scroll-url="@Model.Pager.Scroll.Url"
                 data-infinite-scroll-initial-offset="@offset"
                 data-infinite-scroll-selected-offset="@selectedOffset"
                 data-infinite-scroll-initial-page="@Model.Pager.Page"
@@ -125,7 +125,7 @@
     </card-body>
 </card>
 
-@if (Model.Pager.Enabled && !Model.Options.Scroll.Enabled)
+@if (Model.Pager.Enabled && !Model.Pager.Scroll.Enabled)
 {
     <div class="mt-4 mb-4">
         <pager model="@Model.Pager"></pager>

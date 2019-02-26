@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Plato.Discuss.Models;
 using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
@@ -52,7 +54,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         {
 
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
 
             var indexViewModel = new TagDisplayViewModel
             {

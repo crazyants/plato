@@ -1,48 +1,48 @@
 ﻿using System.Runtime.Serialization;
 using Plato.Discuss.Models;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewModels
 {
-    public class TopicViewModel
-    {
+    //public class TopicViewModel
+    //{
         
-        public PagerOptions Pager { get; set; }
+    //    public PagerOptions Pager { get; set; }
         
-        public Topic Topic { get; set; }
+    //    public Topic Topic { get; set; }
 
-        public IPagedResults<Reply> Replies { get; set; }
+    //    public IPagedResults<Reply> Replies { get; set; }
      
-        public TopicOptions Options { get; set; }
+    //    public TopicOptions Options { get; set; }
         
-    }
+    //}
 
-    [DataContract]
-    public class TopicOptions
-    {
+    //[DataContract]
+    //public class TopicOptions
+    //{
         
-        public string Sort { get; set; } = "CreatedDate";
+    //    public string Sort { get; set; } = "CreatedDate";
 
-        public OrderBy Order { get; set; } = OrderBy.Asc;
+    //    public OrderBy Order { get; set; } = OrderBy.Asc;
 
-        public ScrollOptions Scroll { get; set; }
+    //    public ScrollOptions Scroll { get; set; }
 
-        public TopicParams Params { get; set; }
+    //    public TopicParams Params { get; set; }
         
-        public TopicOptions()
-        {
-            Params = new TopicParams();
-            Scroll = new ScrollOptions();
-        }
-    }
+    //    public TopicOptions()
+    //    {
+    //        Params = new TopicParams();
+    //        Scroll = new ScrollOptions();
+    //    }
+    //}
 
-    [DataContract]
-    public class TopicParams
-    {
+    //[DataContract]
+    //public class TopicParams
+    //{
 
-        public int EntityId { get; set; }
+    //    public int EntityId { get; set; }
 
-    }
+    //}
+
 }

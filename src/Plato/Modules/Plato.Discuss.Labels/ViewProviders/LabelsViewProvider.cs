@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Discuss.Models;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Discuss.Labels.ViewProviders
@@ -51,7 +53,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
 
             var indexViewModel = new LabelDisplayViewModel
             {
@@ -59,15 +61,14 @@ namespace Plato.Discuss.Labels.ViewProviders
                 PagerOpts = viewModel?.Pager
             };
 
-            // Ensure we explictly set the featureId
+            // Ensure we explicitly set the featureId
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
             }
-
-            //var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
-
+            
+            // Get labels for feature
             var labels = await _labelStore.QueryAsync()
                 .Take(1, 10)
                 .Select<LabelQueryParams>(q =>

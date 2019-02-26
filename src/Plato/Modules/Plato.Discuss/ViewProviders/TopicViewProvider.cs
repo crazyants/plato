@@ -5,6 +5,7 @@ using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Abstractions.Extensions;
@@ -41,12 +42,12 @@ namespace Plato.Discuss.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
         {
 
-            var viewModel = context.Controller.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
             
             return Task.FromResult(Views(
-                View<TopicIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
-                View<TopicIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<TopicIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
+                View<EntityIndexViewModel<Topic>>("Home.Index.Header", model => viewModel).Zone("header"),
+                View<EntityIndexViewModel<Topic>>("Home.Index.Tools", model => viewModel).Zone("tools"),
+                View<EntityIndexViewModel<Topic>>("Home.Index.Content", model => viewModel).Zone("content")
             ));
 
         }
@@ -54,7 +55,7 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic topic, IViewProviderContext context)
         {
             
-            var viewModel = context.Controller.HttpContext.Items[typeof(TopicViewModel)] as TopicViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] as EntityViewModel<Topic, Reply>;
             
             // Increment entity view count
             await IncrementTopicViewCount(topic);
@@ -63,7 +64,7 @@ namespace Plato.Discuss.ViewProviders
                 View<Topic>("Home.Topic.Header", model => topic).Zone("header"),
                 View<Topic>("Home.Topic.Tools", model => topic).Zone("tools"),
                 View<Topic>("Home.Topic.Sidebar", model => topic).Zone("sidebar"),
-                View<TopicViewModel>("Home.Topic.Content", model => viewModel).Zone("content"),
+                View<EntityViewModel<Topic, Reply>>("Home.Topic.Content", model => viewModel).Zone("content"),
                 View<EditReplyViewModel>("Home.Topic.Footer", model => new EditReplyViewModel()
                 {
                     EntityId = topic.Id,

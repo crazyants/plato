@@ -2,12 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Models;
-using Plato.Articles.Services;
-using Plato.Articles.ViewModels;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.ViewComponents
@@ -55,8 +52,8 @@ namespace Plato.Articles.ViewComponents
             PagerOptions pager)
         {
 
-            var topic = await _entityStore.GetByIdAsync(options.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(options.EntityId);
+            if (entity == null)
             {
                 throw new ArgumentNullException();
             }
@@ -71,7 +68,7 @@ namespace Plato.Articles.ViewComponents
             {
                 Options = options,
                 Pager = pager,
-                Article = topic,
+                Entity = entity,
                 Replies = results
         };
 

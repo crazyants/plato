@@ -10,14 +10,12 @@ namespace Plato.Entities.ViewModels
         where TReply : class, IEntityReply
     {
         
-        public PagerOptions Pager { get; set; } = new PagerOptions();
-        
-        public ScrollOptions Scroll { get; set; } = new ScrollOptions();
-
-        public TEntity Article { get; set; }
+        public TEntity Entity { get; set; }
 
         public IPagedResults<TReply> Replies { get; set; }
-     
+
+        public PagerOptions Pager { get; set; } = new PagerOptions();
+
         public EntityOptions Options { get; set; }
         
     }
@@ -25,13 +23,13 @@ namespace Plato.Entities.ViewModels
     [DataContract]
     public class EntityOptions
     {
-        
-        public string Sort { get; set; } = "CreatedDate";
-
-        public OrderBy Order { get; set; } = OrderBy.Asc;
 
         public int EntityId { get; set; }
 
+        public string Sort { get; set; } = "CreatedDate";
+
+        public OrderBy Order { get; set; } = OrderBy.Asc;
+        
     }
 
 }

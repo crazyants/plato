@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Plato.Discuss.Models;
 using Plato.Discuss.Tags.Models;
 using Plato.Tags.Models;
 using Plato.Internal.Hosting.Abstractions;
@@ -12,6 +13,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Stores;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -136,7 +138,7 @@ namespace Plato.Discuss.Tags.Controllers
         public async Task<IActionResult> Display(
             int id,
             int offset,
-            TopicIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
@@ -149,7 +151,7 @@ namespace Plato.Discuss.Tags.Controllers
 
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             if (pager == null)
@@ -179,7 +181,7 @@ namespace Plato.Discuss.Tags.Controllers
             });
 
             // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -197,23 +199,23 @@ namespace Plato.Discuss.Tags.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinate scroll options
-            opts.Scroll = new ScrollOptions
+            pager.Scroll = new ScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };
             
             // We don't need to add to pagination 
-            opts.Params.TagId = tag?.Id ?? 0;
+            opts.TagId = tag?.Id ?? 0;
 
             // Build view model
-            var viewModel = new TopicIndexViewModel()
+            var viewModel = new EntityIndexViewModel<Topic>()
             {
                 Options = opts,
                 Pager = pager
             };
 
             // Add view options to context for use within view adaptors
-            HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+            HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))

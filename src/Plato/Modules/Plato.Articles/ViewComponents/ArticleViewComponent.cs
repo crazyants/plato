@@ -57,7 +57,7 @@ namespace Plato.Articles.ViewComponents
             return new EntityViewModel<Article, ArticleComment>
             {
                 Options = options,
-                Article = topic
+                Entity = topic
         };
 
         }

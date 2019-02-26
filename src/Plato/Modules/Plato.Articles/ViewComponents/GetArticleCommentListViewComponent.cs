@@ -68,7 +68,7 @@ namespace Plato.Articles.ViewComponents
             {
                 Options = options,
                 Pager = pager,
-                Article = topic,
+                Entity = topic,
                 Replies = results
             };
 

@@ -5,11 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
-using Plato.Discuss.Services;
-using Plato.Internal.Navigation;
-using Plato.Discuss.ViewModels;
-using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -20,7 +15,11 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Stores.Users;
+using Plato.Discuss.Models;
+using Plato.Discuss.Services;
+using Plato.Discuss.ViewModels;
+using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Discuss.Controllers
 {
@@ -88,16 +87,13 @@ namespace Plato.Discuss.Controllers
         // Latest Topics
         // -----------------
 
-        public async Task<IActionResult> Index(
-            int offset,
-            TopicIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Index(int offset, EntityIndexOptions opts, PagerOptions pager)
         {
 
             // default options
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             // default pager
@@ -124,7 +120,7 @@ namespace Plato.Discuss.Controllers
             await CreateSampleData();
 
             // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -142,20 +138,20 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinite scroll options
-            opts.Scroll = new ScrollOptions
+            pager.Scroll = new ScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };
 
             // Build view model
-            var viewModel = new TopicIndexViewModel()
+            var viewModel = new EntityIndexViewModel<Topic>()
             {
                 Options = opts,
                 Pager = pager
             };
 
             // Add view options to context for use within view adapters
-            HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+            HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -173,15 +169,13 @@ namespace Plato.Discuss.Controllers
         // Popular Topics
         // -----------------
 
-        public Task<IActionResult> Popular(
-            TopicIndexOptions opts,
-            PagerOptions pager)
+        public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
         {
 
             // default options
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             // default pager
@@ -233,9 +227,7 @@ namespace Plato.Discuss.Controllers
 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Create))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditTopicViewModel model)
         {
 
@@ -311,11 +303,7 @@ namespace Plato.Discuss.Controllers
         // Display topic
         // -----------------
 
-        public async Task<IActionResult> Topic(
-            int id,
-            int offset,
-            TopicOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Topic(int id, int offset, EntityOptions opts, PagerOptions pager)
         {
 
             var topic = await _entityStore.GetByIdAsync(id);
@@ -372,7 +360,7 @@ namespace Plato.Discuss.Controllers
             // default options
             if (opts == null)
             {
-                opts = new TopicOptions();
+                opts = new EntityOptions();
             }
 
             // default pager
@@ -381,6 +369,12 @@ namespace Plato.Discuss.Controllers
                 pager = new PagerOptions();
             }
 
+            // Build infinite scroll options
+            pager.Scroll = new ScrollOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+            
             if (offset > 0)
             {
                 pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
@@ -403,7 +397,7 @@ namespace Plato.Discuss.Controllers
 
             // Maintain previous route data when generating page links
             // Get default options
-            var defaultViewOptions = new TopicViewModel();
+            var defaultViewOptions = new EntityViewModel<Topic, Reply>();
             var defaultPagerOptions = new PagerOptions();
 
             if (offset > 0 && !this.RouteData.Values.ContainsKey("offset"))
@@ -413,46 +407,37 @@ namespace Plato.Discuss.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
-            opts.Params.EntityId = topic.Id;
-
-            // Build infinite scroll options
-            opts.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-
+            opts.EntityId = topic.Id;
+            
             // Build view model
-            var viewModel = new TopicViewModel()
+            var viewModel = new EntityViewModel<Topic, Reply>()
             {
+                Entity = topic,
                 Options = opts,
                 Pager = pager
             };
 
-            // Add models to context for use within view adaptors
-            HttpContext.Items[typeof(TopicViewModel)] = viewModel;
+            // Add models to context 
+            HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] = viewModel;
             HttpContext.Items[typeof(Topic)] = topic;
             
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
-                {
                     return View("GetTopicReplies", viewModel);
-                }
             }
-            
+
             // Return view
             return View(await _topicViewProvider.ProvideDisplayAsync(topic, this));
 
         }
 
         // -----------------
-        // Post new reply
+        // Post reply
         // -----------------
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Topic))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Topic))]
         public async Task<IActionResult> TopicPost(EditReplyViewModel model)
         {
             // We always need an entity to reply to
@@ -580,9 +565,7 @@ namespace Plato.Discuss.Controllers
 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditTopicViewModel model)
         {
             // Get entity we are editing 
@@ -709,9 +692,7 @@ namespace Plato.Discuss.Controllers
 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(EditReply))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditReply))]
         public async Task<IActionResult> EditReplyPost(EditReplyViewModel model)
         {
 
@@ -1080,7 +1061,7 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> Jump(
             int id,
             int replyId,
-            TopicOptions opts,
+            EntityOptions opts,
             PagerOptions pager)
         {
 
@@ -1093,7 +1074,7 @@ namespace Plato.Discuss.Controllers
             // default options
             if (opts == null)
             {
-                opts = new TopicOptions();
+                opts = new EntityOptions();
             }
 
             // default pager
@@ -1103,7 +1084,7 @@ namespace Plato.Discuss.Controllers
             }
             
             // Set entity Id for replies to return
-            opts.Params.EntityId = topic.Id;
+            opts.EntityId = topic.Id;
 
             // We need to iterate all replies to calculate the offset
             pager.Page = 1;

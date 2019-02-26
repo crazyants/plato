@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -56,7 +58,7 @@ namespace Plato.Discuss.Channels.Controllers
         public async Task<IActionResult> Index(
             int id,
             int offset,
-            TopicIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
@@ -72,7 +74,7 @@ namespace Plato.Discuss.Channels.Controllers
 
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             if (pager == null)
@@ -140,7 +142,7 @@ namespace Plato.Discuss.Channels.Controllers
             });
 
             // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -158,7 +160,7 @@ namespace Plato.Discuss.Channels.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinate scroll options
-            opts.Scroll = new ScrollOptions
+            pager.Scroll = new ScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };
@@ -171,22 +173,22 @@ namespace Plato.Discuss.Channels.Controllers
                     .Children
                     .Select(c => c.Id).ToList();
                 ids.Add(category.Id);
-                opts.Params.ChannelIds = ids.ToArray();
+                opts.ChannelIds = ids.ToArray();
             }
             else
             {
-                opts.Params.ChannelId = category.Id;
+                opts.ChannelId = category.Id;
             }
     
             // Build view model
-            var viewModel = new TopicIndexViewModel()
+            var viewModel = new EntityIndexViewModel<Topic>()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
-            HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+            // Add view model to context
+            HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))

@@ -11,7 +11,9 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Shell.Abstractions;
@@ -142,7 +144,7 @@ namespace Plato.Discuss.Labels.Controllers
 
         public async Task<IActionResult> Display(
             int id,
-            TopicIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
@@ -168,7 +170,7 @@ namespace Plato.Discuss.Labels.Controllers
             });
 
             // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -186,14 +188,16 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // We don't need to add to pagination 
-            opts.Params.LabelId = label?.Id ?? 0;
+            opts.LabelId = label?.Id ?? 0;
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            var viewModel = new EntityIndexViewModel<Topic>()
             {
                 Options = opts,
                 Pager = pager
             };
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
 
             // Build view
             var result = await _labelViewProvider.ProvideDisplayAsync(label, this);

@@ -1,4 +1,5 @@
 ﻿using Plato.Discuss.Models;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
@@ -14,7 +15,7 @@ namespace Plato.Discuss.Channels.ViewModels
 
         public ChannelIndexOptions ChannelIndexOpts { get; set; }
 
-        public Discuss.ViewModels.TopicIndexOptions TopicIndexOpts { get; set; }
+        public EntityIndexOptions TopicIndexOpts { get; set; }
         
         public ChannelIndexViewModel()
         {

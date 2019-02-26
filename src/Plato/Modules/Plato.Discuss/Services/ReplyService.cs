@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
@@ -30,7 +31,7 @@ namespace Plato.Discuss.Services
         }
 
         public async Task<IPagedResults<Reply>> GetRepliesAsync(
-            TopicOptions options,
+            EntityOptions options,
             PagerOptions pager)
         {
 
@@ -42,7 +43,7 @@ namespace Plato.Discuss.Services
                 .Take(pager.Page, pager.PageSize)
                 .Select<EntityReplyQueryParams>(async q =>
                 {
-                    q.EntityId.Equals(options.Params.EntityId);
+                    q.EntityId.Equals(options.EntityId);
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(principal,

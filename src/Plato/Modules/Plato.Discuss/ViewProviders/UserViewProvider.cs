@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
@@ -34,15 +36,11 @@ namespace Plato.Discuss.ViewProviders
             //    User = user
             //};
             
-            var topicIndexViewModel = new TopicIndexViewModel()
+            var topicIndexViewModel = new EntityIndexViewModel<Topic>()
             {
-                Options = new TopicIndexOptions()
+                Options = new EntityIndexOptions()
                 { 
-                    EnableCard = false,
-                    Params = new TopicIndexParams()
-                    {
-                        CreatedByUserId = user.Id
-                    }
+                    CreatedByUserId = user.Id
                 },
                 Pager = new PagerOptions()
                 {
@@ -53,8 +51,9 @@ namespace Plato.Discuss.ViewProviders
             };
 
             return Views(
-                    View<TopicIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
-                );
+                View<EntityIndexViewModel<Topic>>("Profile.Display.Content", model => topicIndexViewModel)
+                    .Zone("content")
+            );
 
         }
 

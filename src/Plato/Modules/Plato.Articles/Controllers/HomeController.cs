@@ -414,18 +414,19 @@ namespace Plato.Articles.Controllers
             
             opts.EntityId = topic.Id;
 
+            pager.Scroll = new ScrollOptions
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
             // Build view model
             var viewModel = new EntityViewModel<Article, ArticleComment>()
             {
                 Options = opts,
-                Pager = pager,
-                Scroll = new ScrollOptions
-                {
-                    Url = GetInfiniteScrollCallbackUrl()
-                }
+                Pager = pager
             };
 
-            // Add models to context for use within view adaptors
+            // Add models to context
             HttpContext.Items[typeof(EntityViewModel<Article, ArticleComment>)] = viewModel;
             HttpContext.Items[typeof(Article)] = topic;
             
@@ -434,7 +435,7 @@ namespace Plato.Articles.Controllers
             {
                 if (page > 0)
                 {
-                    return View("GetTopicReplies", viewModel);
+                    return View("GetArticleComments", viewModel);
                 }
             }
             

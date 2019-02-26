@@ -6,6 +6,7 @@ using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -36,7 +37,7 @@ namespace Plato.Discuss.Controllers
         
         public async Task<IActionResult> Index(
             int id,
-            TopicIndexOptions opts,
+            EntityIndexOptions opts,
             PagerOptions pager)
         {
 
@@ -48,7 +49,7 @@ namespace Plato.Discuss.Controllers
             // default options
             if (opts == null)
             {
-                opts = new TopicIndexOptions();
+                opts = new EntityIndexOptions();
             }
 
             // default pager
@@ -58,7 +59,7 @@ namespace Plato.Discuss.Controllers
             }
 
             // Get default options
-            var defaultViewOptions = new TopicIndexOptions();
+            var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -75,15 +76,15 @@ namespace Plato.Discuss.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            var viewModel = new EntityIndexViewModel<Topic>()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Build breadcr
-
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
+            
             // Build view
             var result = await _viewProvider.ProvideDisplayAsync(new DiscussUser()
             {
