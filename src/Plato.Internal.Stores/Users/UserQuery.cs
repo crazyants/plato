@@ -21,7 +21,7 @@ namespace Plato.Internal.Stores.Users
             _store = store;
         }
 
-        public UserQueryParams Params { get; set; }
+        public UserQueryParams Params { get; set; } = new UserQueryParams();
 
         public override IQuery<User> Select<TParams>(Action<TParams> configure)
         {

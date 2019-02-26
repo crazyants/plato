@@ -127,7 +127,7 @@ namespace Plato.Users.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinate scroll options
-            opts.InfiniteScroll = new InfiniteScrollOptions
+            opts.Scroll = new ScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };

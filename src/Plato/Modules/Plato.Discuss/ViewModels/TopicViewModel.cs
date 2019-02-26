@@ -27,14 +27,14 @@ namespace Plato.Discuss.ViewModels
 
         public OrderBy Order { get; set; } = OrderBy.Asc;
 
-        public InfiniteScrollOptions InfiniteScroll { get; set; }
+        public ScrollOptions Scroll { get; set; }
 
         public TopicParams Params { get; set; }
         
         public TopicOptions()
         {
             Params = new TopicParams();
-            InfiniteScroll = new InfiniteScrollOptions();
+            Scroll = new ScrollOptions();
         }
     }
 

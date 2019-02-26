@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
-using Plato.Internal.Navigation;
 using Plato.Articles.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
@@ -88,7 +87,7 @@ namespace Plato.Articles.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest Topics
+        // Latest 
         // -----------------
 
         public async Task<IActionResult> Index(
@@ -108,13 +107,18 @@ namespace Plato.Articles.Controllers
             {
                 pager = new PagerOptions();
             }
-            
+
+            pager.Scroll = new ScrollOptions()
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
             if (offset > 0)
             {
                 pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
                 pager.SelectedOffset = offset;
             }
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -148,11 +152,7 @@ namespace Plato.Articles.Controllers
             var viewModel = new EntityIndexViewModel<Article>()
             {
                 Options = opts,
-                Pager = pager,
-                InfiniteScroll = new InfiniteScrollOptions
-                {
-                    Url = GetInfiniteScrollCallbackUrl()
-                }
+                Pager = pager
             };
 
             // Add view options to context for use within view adapters
@@ -421,7 +421,7 @@ namespace Plato.Articles.Controllers
             {
                 Options = opts,
                 Pager = pager,
-                InfiniteScroll = new InfiniteScrollOptions
+                Scroll = new ScrollOptions
                 {
                     Url = GetInfiniteScrollCallbackUrl()
                 }
@@ -1073,7 +1073,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Jump to reply
+        // Jump
         // -----------------
 
         public async Task<IActionResult> Jump(
@@ -1167,31 +1167,32 @@ namespace Plato.Articles.Controllers
         {
             return @"Hi There, 
 
-This is just a sample post to demonstrate discussions within Plato. Discussions use markdown for formatting and can be organized using tags, labels or channels. 
-
-You can add dozens of :large_blue_diamond: emojis :large_blue_diamond: and @mention other users within your posts. For example hey @admin.
+This is just a sample article to demonstrate articles within Plato. Articles use markdown for formatting and can be organized using tags, labels or categories. 
 
 We hope you enjoy this early version of Plato :)
 
-Ryan :heartpulse: :heartpulse: :heartpulse:";
+        string GetSampleMarkDown(int number)
+Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
 
         }
 
         async Task CreateSampleData()
         {
 
+            
             var users = await _platoUserStore.QueryAsync()
-                .Take(1, 1000)
-                .Select<UserQueryParams>(q => { })
                 .OrderBy("LastLoginDate", OrderBy.Desc)
                 .ToList();
 
             var rnd = new Random();
+            var totalUsers = users?.Total - 1 ?? 0;
+            var randomUser = users?.Data[rnd.Next(0, totalUsers)];
+
             var topic = new Article()
             {
-                Title = "Test Topic ♥♥♥ " + rnd.Next(0, users.Total).ToString(),
-                Message = GetSampleMarkDown(rnd.Next(0, users.Total)),
-                CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id,
+                Title = "Test Article " + rnd.Next(0, 2000).ToString(),
+                Message = GetSampleMarkDown(rnd.Next(0, 2000)),
+                CreatedUserId = randomUser?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
@@ -1200,14 +1201,16 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
             if (data.Succeeded)
             {
 
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 25; i++)
                 {
                     rnd = new Random();
+                    randomUser = users.Data[rnd.Next(0, totalUsers)];
+
                     var reply = new ArticleComment()
                     {
                         EntityId = data.Response.Id,
                         Message = GetSampleMarkDown(i) + " - reply: " + i.ToString(),
-                        CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id,
+                        CreatedUserId = randomUser?.Id ?? 0,
                         CreatedDate = DateTimeOffset.UtcNow
                     };
                     var newReply = await _replyManager.CreateAsync(reply);

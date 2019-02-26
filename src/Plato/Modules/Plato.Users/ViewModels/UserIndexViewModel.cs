@@ -29,7 +29,7 @@ namespace Plato.Users.ViewModels
     public class UserIndexOptions
     {
 
-        public InfiniteScrollOptions InfiniteScroll { get; set; }
+        public ScrollOptions Scroll { get; set; }
 
         [DataMember(Name = "search")]
         public string Search { get; set; }

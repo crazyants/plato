@@ -142,7 +142,7 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Build infinite scroll options
-            opts.InfiniteScroll = new InfiniteScrollOptions
+            opts.Scroll = new ScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };
@@ -416,7 +416,7 @@ namespace Plato.Discuss.Controllers
             opts.Params.EntityId = topic.Id;
 
             // Build infinite scroll options
-            opts.InfiniteScroll = new InfiniteScrollOptions
+            opts.Scroll = new ScrollOptions
             {
                 Url = GetInfiniteScrollCallbackUrl()
             };

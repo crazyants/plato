@@ -24,6 +24,8 @@ namespace Plato.Internal.Navigation.Abstractions
         public bool Enabled { get; set; } = true;
 
         public int TotalPages => _totalPages;
+        
+        public ScrollOptions Scroll { get; set; } = new ScrollOptions();
 
         public void SetTotal(int total)
         {

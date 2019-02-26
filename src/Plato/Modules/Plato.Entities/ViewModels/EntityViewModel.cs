@@ -12,7 +12,7 @@ namespace Plato.Entities.ViewModels
         
         public PagerOptions Pager { get; set; } = new PagerOptions();
         
-        public InfiniteScrollOptions InfiniteScroll { get; set; } = new InfiniteScrollOptions();
+        public ScrollOptions Scroll { get; set; } = new ScrollOptions();
 
         public TEntity Article { get; set; }
 

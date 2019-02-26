@@ -25,7 +25,7 @@ namespace Plato.Discuss.Tags.ViewModels
     {
         public string Search { get; set; }
 
-        public InfiniteScrollOptions InfiniteScroll { get; set; }
+        public ScrollOptions Scroll { get; set; }
 
         public SortBy Sort { get; set; } = SortBy.Entities;
 

@@ -5,7 +5,7 @@
     var offset = Model.Pager.InitialOffset;
     var selectedOffset = Model.Pager.SelectedOffset;
     <div data-provide="infiniteScroll"
-         data-infinite-scroll-url="@Model.InfiniteScroll.Url"
+         data-infinite-scroll-url="@Model.Scroll.Url"
          data-infinite-scroll-initial-offset="@offset"
          data-infinite-scroll-selected-offset="@selectedOffset"
          data-infinite-scroll-initial-page="@Model.Pager.Page"
@@ -69,7 +69,7 @@
     </div>
     }
 
-    @if (Model.Pager.Enabled && !Model.InfiniteScroll.Enabled)
+    @if (Model.Pager.Enabled && !Model.Scroll.Enabled)
     {
         <div class="mt-4">
             <pager model="@Model.Pager"></pager>

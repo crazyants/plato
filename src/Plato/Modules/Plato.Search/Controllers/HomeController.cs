@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -25,6 +26,7 @@ namespace Plato.Search.Controllers
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+        private readonly IContextFacade _contextFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -33,17 +35,18 @@ namespace Plato.Search.Controllers
         public HomeController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IContextFacade contextFacade,
             IAlerter alerter,
             IBreadCrumbManager breadCrumbManager,
             IViewProviderManager<SearchResult> viewProvider,
-            ISearchSettingsStore<SearchSettings> searchSettingsStore)
+            ISearchSettingsStore<SearchSettings> searchSettingsStore,
+            IContextFacade contextFacade)
         {
 
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _viewProvider = viewProvider;
             _searchSettingsStore = searchSettingsStore;
+            _contextFacade = contextFacade;
 
             T = localizer;
             S = stringLocalizer;
@@ -52,6 +55,7 @@ namespace Plato.Search.Controllers
 
         [AllowAnonymous]
         public async Task<IActionResult> Index(
+            int offset,
             EntityIndexOptions opts,
             PagerOptions pager)
         {
@@ -85,6 +89,19 @@ namespace Plato.Search.Controllers
                 pager = new PagerOptions();
             }
             
+            if (offset > 0)
+            {
+                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
+                pager.SelectedOffset = offset;
+            }
+
+
+            pager.Scroll = new ScrollOptions()
+            {
+                Url = GetInfiniteScrollCallbackUrl()
+            };
+
+
             // Build breadcrumb
             if (string.IsNullOrEmpty(opts.Search))
             {
@@ -132,18 +149,37 @@ namespace Plato.Search.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Add view options to context for use within view adapters
-            this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = new EntityIndexViewModel<Entity>()
+            var viewModel = new EntityIndexViewModel<Entity>()
             {
                 Options = opts,
                 Pager = pager
-            }; 
-            
+            };
+
+            // Add view options to context for use within view adapters
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
+
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetEntities", viewModel);
+            }
+
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new SearchResult(), this);
 
             // Return view
             return View(result);
+
+        }
+
+        string GetInfiniteScrollCallbackUrl()
+        {
+
+            RouteData.Values.Remove("pager.page");
+            RouteData.Values.Remove("offset");
+
+            return _contextFacade.GetRouteUrl(RouteData.Values);
 
         }
 

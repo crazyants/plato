@@ -49,12 +49,12 @@ namespace Plato.Discuss.ViewModels
 
         public TopicIndexParams Params { get; set; }
         
-        public InfiniteScrollOptions InfiniteScroll { get; set; }
+        public ScrollOptions Scroll { get; set; }
 
         public TopicIndexOptions()
         {
             Params = new TopicIndexParams();
-            InfiniteScroll = new InfiniteScrollOptions();
+            Scroll = new ScrollOptions();
         }
         
     }

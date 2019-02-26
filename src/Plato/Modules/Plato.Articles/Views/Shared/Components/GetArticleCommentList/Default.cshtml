@@ -1,4 +1,4 @@
-﻿@model EntityViewModel
+﻿@model EntityViewModel<Article, ArticleComment>
 
 @if (Model.Replies != null)
 {
@@ -12,8 +12,8 @@
          {
              model = new TopicReplyListItemViewModel()
              {
-                 Topic = Model.Topic,
-                 Reply = reply
+                 Article = Model.Article,
+                 ArticleComment = reply
              }
          }))
          {

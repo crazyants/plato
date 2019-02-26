@@ -13,8 +13,6 @@ namespace Plato.Entities.ViewModels
 
         public PagerOptions Pager { get; set; } = new PagerOptions();
 
-        public InfiniteScrollOptions InfiniteScroll { get; set; } = new InfiniteScrollOptions();
-
         public EntityIndexOptions Options { get; set; } = new EntityIndexOptions();
 
         public ICollection<SortColumn> SortColumns { get; set; }
@@ -27,7 +25,7 @@ namespace Plato.Entities.ViewModels
 
     public class EntityIndexOptions
     {
-
+        
         [DataMember(Name = "search")]
         public string Search { get; set; }
 

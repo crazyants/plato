@@ -83,7 +83,7 @@ namespace Plato.StopForumSpam.Client.Services
                 }
             }
 
-            return new Models.ProxyResults()
+            return new ProxyResults()
             {
                 UserName = new ProxyResult(usernameFrequency),
                 Email = new ProxyResult(emailFrequency),

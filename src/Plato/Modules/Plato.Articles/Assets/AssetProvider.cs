@@ -18,13 +18,13 @@ namespace Plato.Articles.Assets
                 {
                     new Asset()
                     {
-                        Url = "/plato.discuss/content/css/discuss.css",
+                        Url = "/plato.articles/content/css/articles.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.discuss/content/js/discuss.js",
+                        Url = "/plato.articles/content/js/articles.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -35,13 +35,13 @@ namespace Plato.Articles.Assets
                 {
                     new Asset()
                     {
-                        Url = "/plato.discuss/content/css/discuss.css",
+                        Url = "/plato.articles/content/css/articles.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.discuss/content/js/discuss.js",
+                        Url = "/plato.articles/content/js/articles.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -52,13 +52,13 @@ namespace Plato.Articles.Assets
                 {
                     new Asset()
                     {
-                        Url = "/plato.discuss/content/css/discuss.css",
+                        Url = "/plato.articles/content/css/articles.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.discuss/content/js/discuss.js",
+                        Url = "/plato.articles/content/js/articles.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }

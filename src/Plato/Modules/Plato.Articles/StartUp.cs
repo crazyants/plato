@@ -61,14 +61,11 @@ namespace Plato.Articles
             services.AddScoped<IEntityReplyStore<ArticleComment>, EntityReplyStore<ArticleComment>>();
             services.AddScoped<IEntityReplyManager<ArticleComment>, EntityReplyManager<ArticleComment>>();
 
-            // Register data access
+            //  Post managers
             services.AddScoped<IPostManager<Article>, ArticleManager>();
             services.AddScoped<IPostManager<ArticleComment>, ReplyManager>();
 
-            // Services
-            //services.AddScoped<IArticleService, ArticleService>();
-            //services.AddScoped<IReplyService, ReplyService>();
-
+            // Entity services
             services.AddScoped<IEntityService<Article>, EntityService<Article>>();
             services.AddScoped<IEntityReplyService<ArticleComment>, EntityReplyService<ArticleComment>>();
 
@@ -88,7 +85,7 @@ namespace Plato.Articles
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
             
-            // Add discussion profile views
+            // Add profile views
             services.AddScoped<IViewProviderManager<DiscussUser>, ViewProviderManager<DiscussUser>>();
             services.AddScoped<IViewProvider<DiscussUser>, ProfileViewProvider>();
 
@@ -103,8 +100,7 @@ namespace Plato.Articles
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ReplyBadgesAwarder>();
-
-
+            
         }
 
         public override void Configure(

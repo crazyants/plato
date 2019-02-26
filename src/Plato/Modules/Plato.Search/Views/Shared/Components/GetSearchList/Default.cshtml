@@ -1,4 +1,4 @@
-﻿@model EntityIndexViewModel<Article>
+﻿@model EntityIndexViewModel<Entity>
 
 @if (Model.Results != null)
 {
@@ -11,11 +11,11 @@
              : "p-3 infinite-scroll-item";
          <li class="list-group-item list-group-item-action p-0">
              <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
-                 @await DisplayAsync(new View("ArticleListItem", new
+                 @await DisplayAsync(new View("SearchListItem", new
                  {
-                     model = new ArticleListItemViewModel()
+                     model = new SearchListItemViewModel()
                      {
-                         Article = entity
+                         Entity = entity
                      }
                  }))
                  @{
