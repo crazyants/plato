@@ -1,59 +1,65 @@
 ﻿using System.Threading.Tasks;
 using Plato.Discuss.Models;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Discuss.ViewProviders
 {
-    public class ProfileViewProvider : BaseViewProvider<DiscussUser>
+    public class ProfileViewProvider : BaseViewProvider<Profile>
     {
 
         private readonly IPlatoUserStore<User> _platoUserStore;
-
+        
         public ProfileViewProvider(
             IPlatoUserStore<User> platoUserStore)
         {
             _platoUserStore = platoUserStore;
         }
-        
-        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussUser discussUser, IViewProviderContext context)
+
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile, IViewProviderContext context)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(discussUser.Id);
+            var user = await _platoUserStore.GetByIdAsync(profile.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(discussUser, context);
+                return await BuildIndexAsync(profile, context);
             }
-
-            var viewModel = new UserDisplayViewModel()
+            
+            var viewModel = new EntityIndexViewModel<Topic>()
             {
-                User = user
+                Options = new EntityIndexOptions()
+                { 
+                    CreatedByUserId = user.Id
+                },
+                Pager = new PagerOptions()
+                {
+                    Page = 1,
+                    PageSize = 5,
+                    Enabled = false
+                }
             };
 
-            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
-
             return Views(
-                View<UserDisplayViewModel>("Profile.Display.Header", model => viewModel).Zone("header"),
-                View<EntityIndexViewModel<Topic>>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
+                View<EntityIndexViewModel<Topic>>("Profile.Discuss.Display.Content", model => viewModel)
+                    .Zone("content")
             );
 
-
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(DiscussUser model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(DiscussUser discussUser, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(DiscussUser model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

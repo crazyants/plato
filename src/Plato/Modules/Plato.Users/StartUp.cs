@@ -118,8 +118,8 @@ namespace Plato.Users
             services.AddScoped<IViewProvider<User>, AdminViewProvider>();
           
             // Profile view providers
-            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
-            services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
+            services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
+            services.AddScoped<IViewProvider<Profile>, UserViewProvider>();
 
             // Edit profile view provider
             services.AddScoped<IViewProviderManager<EditProfileViewModel>, ViewProviderManager<EditProfileViewModel>>();

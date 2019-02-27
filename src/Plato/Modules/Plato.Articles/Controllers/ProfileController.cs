@@ -23,12 +23,12 @@ namespace Plato.Articles.Controllers
     {
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly IViewProviderManager<DiscussUser> _viewProvider;
+        private readonly IViewProviderManager<ArticlesUser> _viewProvider;
 
         public ProfileController(
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
-            IViewProviderManager<DiscussUser> viewProvider)
+            IViewProviderManager<ArticlesUser> viewProvider)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
@@ -86,7 +86,7 @@ namespace Plato.Articles.Controllers
             // Build breadcr
 
             // Build view
-            var result = await _viewProvider.ProvideDisplayAsync(new DiscussUser()
+            var result = await _viewProvider.ProvideDisplayAsync(new ArticlesUser()
             {
                 Id = id
             }, this);

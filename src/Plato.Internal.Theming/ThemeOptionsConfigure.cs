@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -13,17 +10,17 @@ namespace Plato.Internal.Theming
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public ThemeOptionsConfigure(
-            IServiceScopeFactory serivceScopeFactory)
+            IServiceScopeFactory serviceScopeFactory)
         {
-            _serviceScopeFactory = serivceScopeFactory;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public void Configure(ThemeOptions options)
         {
+
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfigurationRoot>();
-
                 var modulesSection = configuration.GetSection("Plato");
                 if (modulesSection != null)
                 {
@@ -33,12 +30,11 @@ namespace Plato.Internal.Theming
                         if (child.Key.Contains("VirtualPathToThemesFolder"))
                             options.VirtualPathToThemesFolder = child.Value;
                     }
-
                 }
-
             }
 
         }
 
     }
+
 }

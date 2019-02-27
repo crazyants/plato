@@ -20,8 +20,7 @@ namespace Plato.Internal.Theming.Locator
         private const string TagsSection = "tags";
        
         private readonly IPlatoFileSystem _fileSystem;
-
-
+        
         public ThemeLocator(IPlatoFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
@@ -216,9 +215,9 @@ namespace Plato.Internal.Theming.Locator
 
             return manifest;
         }
-
-
+        
         #endregion
 
     }
+
 }

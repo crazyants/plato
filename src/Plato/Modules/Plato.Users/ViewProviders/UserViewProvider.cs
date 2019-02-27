@@ -14,7 +14,7 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
 {
-    public class UserViewProvider : BaseViewProvider<UserProfile>
+    public class UserViewProvider : BaseViewProvider<Profile>
     {
         //private static string _pathToUploadFolder;
 
@@ -50,7 +50,7 @@ namespace Plato.Users.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(UserProfile user, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Profile user, IViewProviderContext context)
         {
 
             var viewModel = context.Controller.HttpContext.Items[typeof(UserIndexViewModel)] as UserIndexViewModel;
@@ -64,13 +64,13 @@ namespace Plato.Users.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile userProfile, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile, IViewProviderContext context)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
+            var user = await _platoUserStore.GetByIdAsync(profile.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(userProfile, context);
+                return await BuildIndexAsync(profile, context);
             }
 
             return Views(
@@ -81,7 +81,7 @@ namespace Plato.Users.ViewProviders
             );
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(UserProfile userProfile, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Profile profile, IViewProviderContext context)
         {
 
             return Task.FromResult(default(IViewProviderResult));
@@ -124,7 +124,7 @@ namespace Plato.Users.ViewProviders
         //    });
         //}
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(UserProfile userProfile, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Profile profile, IViewProviderContext context)
         {
 
             return Task.FromResult(default(IViewProviderResult));

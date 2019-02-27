@@ -81,13 +81,13 @@ namespace Plato.Articles
             services.AddScoped<IViewProviderManager<Comment>, ViewProviderManager<Comment>>();
             services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
 
-            // Add discussion views to base user pages
-            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
-            services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
-            
             // Add profile views
-            services.AddScoped<IViewProviderManager<DiscussUser>, ViewProviderManager<DiscussUser>>();
-            services.AddScoped<IViewProvider<DiscussUser>, ProfileViewProvider>();
+            services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
+            services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
+            
+            // Add user views
+            services.AddScoped<IViewProviderManager<ArticlesUser>, ViewProviderManager<ArticlesUser>>();
+            services.AddScoped<IViewProvider<ArticlesUser>, UserViewProvider>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Comment>>();

@@ -10,7 +10,7 @@ using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewProviders
 {
-    public class UserViewProvider : BaseViewProvider<UserProfile>
+    public class UserViewProvider : BaseViewProvider<Profile>
     {
 
         private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
@@ -27,14 +27,14 @@ namespace Plato.Users.Badges.ViewProviders
             _badgesManager = badgesManager;
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile userProfile,
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile,
             IViewProviderContext context)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
+            var user = await _platoUserStore.GetByIdAsync(profile.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(userProfile, context);
+                return await BuildIndexAsync(profile, context);
             }
 
             var availableBadges = _badgesManager.GetBadges();
@@ -51,17 +51,17 @@ namespace Plato.Users.Badges.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(UserProfile model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(UserProfile model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(UserProfile model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

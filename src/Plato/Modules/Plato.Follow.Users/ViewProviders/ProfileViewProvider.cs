@@ -8,7 +8,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Follow.Users.ViewProviders
 {
-    public class ProfileViewProvider : BaseViewProvider<UserProfile>
+    public class ProfileViewProvider : BaseViewProvider<Profile>
     {
 
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -25,13 +25,13 @@ namespace Plato.Follow.Users.ViewProviders
             _followStore = followStore;
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile discussUser, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Profile discuss, IViewProviderContext context)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(discussUser.Id);
+            var user = await _platoUserStore.GetByIdAsync(discuss.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(discussUser, context);
+                return await BuildIndexAsync(discuss, context);
             }
 
             var followType = FollowTypes.User;
@@ -63,17 +63,17 @@ namespace Plato.Follow.Users.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(UserProfile model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(UserProfile discussUser, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Profile discuss, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(UserProfile model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Profile model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

@@ -26,7 +26,7 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditProfileViewModel> _editProfileViewProvider;
         private readonly IViewProviderManager<EditAccountViewModel> _editAccountViewProvider;
         private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
-        private readonly IViewProviderManager<UserProfile> _viewProvider;
+        private readonly IViewProviderManager<Profile> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly UserManager<User> _userManager;
@@ -41,7 +41,7 @@ namespace Plato.Users.Controllers
         public HomeController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IViewProviderManager<UserProfile> viewProvider,
+            IViewProviderManager<Profile> viewProvider,
             IPlatoUserStore<User> platoUserStore,
             IContextFacade contextFacade, 
             UserManager<User> userManager, 
@@ -141,7 +141,7 @@ namespace Plato.Users.Controllers
             }
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new UserProfile(), this));
+            return View(await _viewProvider.ProvideIndexAsync(new Profile(), this));
 
         }
 
@@ -172,7 +172,7 @@ namespace Plato.Users.Controllers
             });
 
             // Build view
-            var result = await _viewProvider.ProvideDisplayAsync(new UserProfile()
+            var result = await _viewProvider.ProvideDisplayAsync(new Profile()
             {
                 Id = user.Id
             }, this);

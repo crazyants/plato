@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Plato.Internal.Theming.Models;
 
 namespace Plato.Internal.Theming
@@ -10,4 +9,5 @@ namespace Plato.Internal.Theming
         IEnumerable<IThemeDescriptor> AvailableThemes { get; }
 
     }
+
 }

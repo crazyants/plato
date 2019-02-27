@@ -26,8 +26,8 @@ namespace Plato.Follow.Users
         {
 
             // User profile View providers
-            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
-            services.AddScoped<IViewProvider<UserProfile>, ProfileViewProvider>();
+            services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
+            services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
