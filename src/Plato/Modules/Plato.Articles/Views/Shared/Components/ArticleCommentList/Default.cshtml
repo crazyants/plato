@@ -1,4 +1,4 @@
-﻿@model EntityViewModel<Article, ArticleComment>
+﻿@model EntityViewModel<Article, Comment>
 
 @if (Model.Replies != null)
 {
@@ -13,14 +13,14 @@
         <div class="infinite-scroll-loader" data-type="previous"></div>
         @foreach (var comment in Model.Replies.Data)
         {
-            comment.Offset = rowOffset;
-            comment.SelectedOffset = offset;
+            comment.RowOffset = rowOffset;
+            comment.Offset = offset;
             @await DisplayAsync(new View("ArticleCommentListItem", new
             {
-                model = new TopicReplyListItemViewModel()
+                model = new EntityReplyListItemViewModel<Article, Comment>()
                 {
-                    Article = Model.Entity,
-                    ArticleComment = comment,
+                    Entity = Model.Entity,
+                    Reply = comment,
                 }
             }))
             {

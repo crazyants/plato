@@ -1,23 +1,23 @@
-﻿@model EntityViewModel<Article, ArticleComment>
+﻿@model EntityViewModel<Article, Comment>
 
 @if (Model.Replies != null)
 {
-    var offset = Model.Pager.RowOffset;
-    var selectedOffset = Model.Pager.Offset;
+    var offset = Model.Pager.Offset;
+    var rowOffset = Model.Pager.RowOffset;
     @foreach (var reply in Model.Replies.Data)
      {
+         reply.RowOffset = rowOffset;
          reply.Offset = offset;
-         reply.SelectedOffset = selectedOffset;
-         @await DisplayAsync(new View("TopicReplyListItem", new
+         @await DisplayAsync(new View("ArticleCommentListItem", new
          {
-             model = new TopicReplyListItemViewModel()
+             model = new EntityReplyListItemViewModel<Article, Comment>()
              {
-                 Article = Model.Entity,
-                 ArticleComment = reply
+                 Entity = Model.Entity,
+                 Reply = reply
              }
          }))
          {
-             offset++;
+             rowOffset++;
          }
      }
 }

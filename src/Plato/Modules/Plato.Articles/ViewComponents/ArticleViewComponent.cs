@@ -12,10 +12,10 @@ namespace Plato.Articles.ViewComponents
     {
 
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
+        private readonly IEntityReplyStore<Comment> _entityReplyStore;
 
         public ArticleViewComponent(
-            IEntityReplyStore<ArticleComment> entityReplyStore,
+            IEntityReplyStore<Comment> entityReplyStore,
             IEntityStore<Article> entityStore)
         {
             _entityReplyStore = entityReplyStore;
@@ -36,7 +36,7 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<EntityViewModel<Article, ArticleComment>> GetViewModel(
+        async Task<EntityViewModel<Article, Comment>> GetViewModel(
             EntityOptions options)
         {
 
@@ -52,7 +52,7 @@ namespace Plato.Articles.ViewComponents
             }
             
             // Return view model
-            return new EntityViewModel<Article, ArticleComment>
+            return new EntityViewModel<Article, Comment>
             {
                 Options = options,
                 Entity = topic

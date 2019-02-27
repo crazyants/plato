@@ -17,9 +17,9 @@
             reply.SelectedOffset = offset;
             @await DisplayAsync(new View("TopicReplyListItem", new
             {
-                model = new TopicReplyListItemViewModel()
+                model = new EntityReplyListItemViewModel<Topic, Reply>()
                 {
-                    Topic = Model.Entity,
+                    Entity = Model.Entity,
                     Reply = reply,
                 }
             }))

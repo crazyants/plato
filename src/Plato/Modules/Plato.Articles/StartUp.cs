@@ -57,17 +57,17 @@ namespace Plato.Articles
             services.AddScoped<IEntityStore<Article>, EntityStore<Article>>();
             services.AddScoped<IEntityManager<Article>, EntityManager<Article>>();
 
-            services.AddScoped<IEntityReplyRepository<ArticleComment>, EntityReplyRepository<ArticleComment>>();
-            services.AddScoped<IEntityReplyStore<ArticleComment>, EntityReplyStore<ArticleComment>>();
-            services.AddScoped<IEntityReplyManager<ArticleComment>, EntityReplyManager<ArticleComment>>();
+            services.AddScoped<IEntityReplyRepository<Comment>, EntityReplyRepository<Comment>>();
+            services.AddScoped<IEntityReplyStore<Comment>, EntityReplyStore<Comment>>();
+            services.AddScoped<IEntityReplyManager<Comment>, EntityReplyManager<Comment>>();
 
             //  Post managers
             services.AddScoped<IPostManager<Article>, ArticleManager>();
-            services.AddScoped<IPostManager<ArticleComment>, ReplyManager>();
+            services.AddScoped<IPostManager<Comment>, ReplyManager>();
 
             // Entity services
             services.AddScoped<IEntityService<Article>, EntityService<Article>>();
-            services.AddScoped<IEntityReplyService<ArticleComment>, EntityReplyService<ArticleComment>>();
+            services.AddScoped<IEntityReplyService<Comment>, EntityReplyService<Comment>>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
@@ -78,8 +78,8 @@ namespace Plato.Articles
             // Register view providers
             services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
             services.AddScoped<IViewProvider<Article>, ArticleViewProvider>();
-            services.AddScoped<IViewProviderManager<ArticleComment>, ViewProviderManager<ArticleComment>>();
-            services.AddScoped<IViewProvider<ArticleComment>, CommentViewProvider>();
+            services.AddScoped<IViewProviderManager<Comment>, ViewProviderManager<Comment>>();
+            services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
 
             // Add discussion views to base user pages
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
@@ -90,8 +90,8 @@ namespace Plato.Articles
             services.AddScoped<IViewProvider<DiscussUser>, ProfileViewProvider>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, ReplySubscriber<ArticleComment>>();
-            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<ArticleComment>>();
+            services.AddScoped<IBrokerSubscriber, ReplySubscriber<Comment>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
 
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TopicBadges>();

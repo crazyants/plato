@@ -2,12 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Models;
-using Plato.Articles.Services;
-using Plato.Articles.ViewModels;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.ViewComponents
@@ -16,11 +13,11 @@ namespace Plato.Articles.ViewComponents
     public class GetArticleCommentListViewComponent : ViewComponent
     {
         
-        private readonly IEntityReplyService<ArticleComment> _replyService;
+        private readonly IEntityReplyService<Comment> _replyService;
         private readonly IEntityStore<Article> _entityStore;
 
         public GetArticleCommentListViewComponent(
-            IEntityReplyService<ArticleComment> replyService,
+            IEntityReplyService<Comment> replyService,
             IEntityStore<Article> entityStore)
         {
             _replyService = replyService;
@@ -46,7 +43,7 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<EntityViewModel<Article, ArticleComment>> GetViewModel(
+        async Task<EntityViewModel<Article, Comment>> GetViewModel(
             EntityOptions options,
             PagerOptions pager)
         {
@@ -64,7 +61,7 @@ namespace Plato.Articles.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
 
             // Return view model
-            return new EntityViewModel<Article, ArticleComment>
+            return new EntityViewModel<Article, Comment>
             {
                 Options = options,
                 Pager = pager,

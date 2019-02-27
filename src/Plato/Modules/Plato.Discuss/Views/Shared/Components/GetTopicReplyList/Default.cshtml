@@ -2,22 +2,22 @@
 
 @if (Model.Replies != null)
 {
-    var offset = Model.Pager.RowOffset;
-    var selectedOffset = Model.Pager.Offset;
+    var offset = Model.Pager.Offset;
+    var rowOffset = Model.Pager.RowOffset;
     @foreach (var reply in Model.Replies.Data)
      {
-         reply.Offset = offset;
-         reply.SelectedOffset = selectedOffset;
+         reply.Offset = rowOffset;
+         reply.SelectedOffset = offset;
          @await DisplayAsync(new View("TopicReplyListItem", new
          {
-             model = new TopicReplyListItemViewModel()
+             model = new EntityReplyListItemViewModel<Topic, Reply>()
              {
-                 Topic = Model.Entity,
+                 Entity = Model.Entity,
                  Reply = reply
              }
          }))
          {
-             offset++;
+             rowOffset++;
          }
      }
 }

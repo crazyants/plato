@@ -2,13 +2,13 @@
 
 namespace Plato.Discuss.ViewModels
 {
-    public class TopicReplyListItemViewModel
-    {
+    //public class TopicReplyListItemViewModel
+    //{
         
-        public Topic Topic { get; set; }
+    //    public Topic Topic { get; set; }
 
-        public Reply Reply { get; set;  }
+    //    public Reply Reply { get; set;  }
         
-    }
+    //}
 
 }

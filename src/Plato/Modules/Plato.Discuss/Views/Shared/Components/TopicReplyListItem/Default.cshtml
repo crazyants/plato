@@ -1,4 +1,4 @@
-﻿@model TopicReplyListItemViewModel
+﻿@model EntityReplyListItemViewModel<Topic, Reply>
 @{
     var css = Model.Reply.Offset == Model.Reply.SelectedOffset
         ? "markdown-body p-3 infinite-scroll-item infinite-scroll-item-active"
@@ -55,7 +55,7 @@
             </div>
             <div class="hidden" 
                  id="@quoteId"
-                 data-reply-url="@Url.Action("Jump", "Home", new { id = Model.Topic.Id, alias = Model.Topic.Alias, replyId = Model.Reply.Id })"
+                 data-reply-url="@Url.Action("Jump", "Home", new { id = Model.Entity.Id, alias = Model.Entity.Alias, replyId = Model.Reply.Id })"
                  data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
            
             <navigation name="topic-reply-footer"

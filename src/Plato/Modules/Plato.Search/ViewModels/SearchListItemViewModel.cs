@@ -5,17 +5,17 @@ using Plato.Internal.Models;
 
 namespace Plato.Search.ViewModels
 {
-    public class SearchListItemViewModel
-    {
+    //public class SearchListItemViewModel
+    //{
 
-        public Entity Entity { get; set; }
+    //    public Entity Entity { get; set; }
         
-        public EntityIndexOptions Options { get; set; }
+    //    public EntityIndexOptions Options { get; set; }
     
-        public ILabelBase Channel { get; set; }
+    //    public ILabelBase Channel { get; set; }
 
-        public IEnumerable<ILabelBase> Labels { get; set; }
+    //    public IEnumerable<ILabelBase> Labels { get; set; }
 
-    }
+    //}
 
 }

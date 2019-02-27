@@ -13,11 +13,11 @@ namespace Plato.Articles.ViewComponents
     {
 
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
+        private readonly IEntityReplyStore<Comment> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
 
         public ArticlePostersViewComponent(
-            IEntityReplyStore<ArticleComment> entityReplyStore,
+            IEntityReplyStore<Comment> entityReplyStore,
             IEntityStore<Article> entityStore,
             IEntityUsersStore entityUsersStore)
         {

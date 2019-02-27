@@ -43,7 +43,7 @@ namespace Plato.Articles.Navigation
             }
             
             // Get reply from context
-            var reply = builder.ActionContext.HttpContext.Items[typeof(ArticleComment)] as ArticleComment;
+            var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
             if (reply == null)
             {
                 return;

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Articles.ViewModels;
+using Plato.Articles.Models;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Articles.ViewComponents
 {
@@ -8,7 +9,7 @@ namespace Plato.Articles.ViewComponents
     {
         
         public Task<IViewComponentResult> InvokeAsync(
-            TopicReplyListItemViewModel model)
+            EntityReplyListItemViewModel<Article, Comment> model)
         {
             return Task.FromResult((IViewComponentResult)View(model));
         }

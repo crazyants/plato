@@ -20,14 +20,14 @@ namespace Plato.Articles.ViewProviders
 
  
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
+        private readonly IEntityReplyStore<Comment> _entityReplyStore;
         private readonly IPostManager<Article> _articleManager;
   
         private readonly HttpRequest _request;
         
         public ArticleViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IEntityReplyStore<ArticleComment> entityReplyStore,
+            IEntityReplyStore<Comment> entityReplyStore,
             IEntityStore<Article> entityStore,
             IPostManager<Article> articleManager)
         {
@@ -56,7 +56,7 @@ namespace Plato.Articles.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Article article, IViewProviderContext context)
         {
             
-            var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Article, ArticleComment>)] as EntityViewModel<Article, ArticleComment>;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Article, Comment>)] as EntityViewModel<Article, Comment>;
             
             // Increment entity view count
             await IncrementTopicViewCount(article);
@@ -65,7 +65,7 @@ namespace Plato.Articles.ViewProviders
                 View<Article>("Home.Display.Header", model => article).Zone("header"),
                 View<Article>("Home.Display.Tools", model => article).Zone("tools"),
                 View<Article>("Home.Display.Sidebar", model => article).Zone("sidebar"),
-                View<EntityViewModel<Article, ArticleComment>>("Home.Display.Content", model => viewModel).Zone("content"),
+                View<EntityViewModel<Article, Comment>>("Home.Display.Content", model => viewModel).Zone("content"),
                 View<EditReplyViewModel>("Home.Display.Footer", model => new EditReplyViewModel()
                 {
                     EntityId = article.Id,

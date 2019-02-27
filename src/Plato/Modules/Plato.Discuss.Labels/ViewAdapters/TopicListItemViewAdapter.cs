@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
@@ -69,14 +67,14 @@ namespace Plato.Discuss.Labels.ViewAdapters
             var topicLabelsDictionary = await BuildLookUpTable(labels.ToList());
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Labels
-            // Instead we update the model for the topic item view component
+            // Instead we update the model for the topic list item view component
             // here via our view adapter to include the label data for the entity
             // This way the label data is only ever populated if the labels feature is enabled
             return await Adapt("TopicListItem", v =>
             {
-                v.AdaptModel<TopicListItemViewModel>(model  =>
+                v.AdaptModel<EntityListItemViewModel<Topic>>(model  =>
                 {
-                    if (model.Topic == null)
+                    if (model.Entity == null)
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -86,7 +84,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
                     }
                     
                     // No need to modify the model if no labels have been found
-                    if (!topicLabelsDictionary.ContainsKey(model.Topic.Id))
+                    if (!topicLabelsDictionary.ContainsKey(model.Entity.Id))
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -96,7 +94,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
                     }
 
                     // Get labels for entity
-                    var topicLabels = topicLabelsDictionary[model.Topic.Id];
+                    var topicLabels = topicLabelsDictionary[model.Entity.Id];
 
                     // Add labels to the model from our dictionary
                     var modelLabels = new List<Label>();

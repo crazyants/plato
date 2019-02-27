@@ -262,8 +262,8 @@ namespace Plato.Discuss.Controllers
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
 
-                    // Redirect to topic
-                    return RedirectToAction(nameof(Topic), new {Id = newTopic.Response.Id});
+                    // Redirect to entity
+                    return RedirectToAction(nameof(Display), new {Id = newTopic.Response.Id});
 
                 }
                 else
@@ -295,7 +295,7 @@ namespace Plato.Discuss.Controllers
         // Display topic
         // -----------------
 
-        public async Task<IActionResult> Display(int id, int offset, EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Display(int id, EntityOptions opts, PagerOptions pager)
         {
 
             var topic = await _entityStore.GetByIdAsync(id);
@@ -382,9 +382,7 @@ namespace Plato.Discuss.Controllers
             // Get default options
             var defaultViewOptions = new EntityViewModel<Topic, Reply>();
             var defaultPagerOptions = new PagerOptions();
-
-            if (offset > 0 && !this.RouteData.Values.ContainsKey("offset"))
-                this.RouteData.Values.Add("offset", offset);
+            
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
@@ -464,7 +462,7 @@ namespace Plato.Discuss.Controllers
                     _alerter.Success(T["Reply Added Successfully!"]);
 
                     // Redirect to topic
-                    return RedirectToAction(nameof(Topic), new
+                    return RedirectToAction(nameof(Display), new
                     {
                         Id = topic.Id,
                         Alias = topic.Alias
@@ -492,7 +490,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Display(topic.Id, 0, null, null);
+            return await Display(topic.Id, null, null);
 
         }
       
@@ -591,7 +589,7 @@ namespace Plato.Discuss.Controllers
                 _alerter.Success(T["Topic Updated Successfully!"]);
 
                 // Redirect to topic
-                return RedirectToAction(nameof(Topic), new
+                return RedirectToAction(nameof(Display), new
                 {
                     Id = topic.Id,
                     Alias = topic.Alias
@@ -720,7 +718,7 @@ namespace Plato.Discuss.Controllers
                 _alerter.Success(T["Reply Updated Successfully!"]);
 
                 // Redirect to topic
-                return RedirectToAction(nameof(Topic), new
+                return RedirectToAction(nameof(Display), new
                 {
                     Id = topic.Id,
                     Alias = topic.Alias

@@ -14,14 +14,14 @@ namespace Plato.Articles.ViewComponents
     {
 
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
+        private readonly IEntityReplyStore<Comment> _entityReplyStore;
 
-        private readonly IEntityReplyService<ArticleComment> _replyService;
+        private readonly IEntityReplyService<Comment> _replyService;
 
         public ArticleCommentListViewComponent(
-            IEntityReplyStore<ArticleComment> entityReplyStore,
+            IEntityReplyStore<Comment> entityReplyStore,
             IEntityStore<Article> entityStore,
-            IEntityReplyService<ArticleComment> replyService)
+            IEntityReplyService<Comment> replyService)
         {
             _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
@@ -47,7 +47,7 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<EntityViewModel<Article, ArticleComment>> GetViewModel(
+        async Task<EntityViewModel<Article, Comment>> GetViewModel(
             EntityOptions options,
             PagerOptions pager)
         {
@@ -64,7 +64,7 @@ namespace Plato.Articles.ViewComponents
             pager.SetTotal(results?.Total ?? 0);
 
             // Return view model
-            return new EntityViewModel<Article, ArticleComment>
+            return new EntityViewModel<Article, Comment>
             {
                 Options = options,
                 Pager = pager,

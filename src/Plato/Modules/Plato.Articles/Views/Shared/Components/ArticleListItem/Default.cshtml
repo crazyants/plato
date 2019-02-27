@@ -1,11 +1,11 @@
-﻿@model ArticleListItemViewModel
+﻿@model EntityListItemViewModel<Article>
 @{
-    var details = Model.Article.GetOrCreate<PostDetails>();
+    var details = Model.Entity.GetOrCreate<PostDetails>();
 }
 
 <div class="list-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Article.CreatedUserId" asp-route-alias="@Model.Article.CreatedBy.Alias">
-        <avatar data-toggle="tooltip" title="@Model.Article.CreatedBy.DisplayName" class="avatar" url="@Model.Article.CreatedBy.Avatar.Url" />
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">
+        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url" />
     </a>
 </div>
 <div class="list-body">
@@ -15,27 +15,27 @@
         <ol class="list-inline text-muted">
             <li class="list-inline-item">
                 <span title="@T["Replies"]" data-toggle="tooltip">
-                    @Model.Article.TotalReplies <i class="fal fa-comment-alt-lines"></i>
+                    @Model.Entity.TotalReplies <i class="fal fa-comment-alt-lines"></i>
                 </span>
             </li>
             <li class="list-inline-item">
                 <span title="@T["Views"]" data-toggle="tooltip">
-                    @Model.Article.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
+                    @Model.Entity.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
                 </span>
             </li>
         </ol>
-        <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Jump" asp-route-id="@Model.Article.Id" asp-route-alias="@Model.Article.Alias" asp-route-replyId="@Model.Article.LastReplyId" title="@T["Jump to last post"]" data-toggle="tooltip">
-            <date utc="@Model.Article.LastReplyDate"></date>
+        <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Jump" asp-route-id="@Model.Entity.Id" asp-route-alias="@Model.Entity.Alias" asp-route-replyId="@Model.Entity.LastReplyId" title="@T["Jump to last post"]" data-toggle="tooltip">
+            <date utc="@Model.Entity.LastReplyDate"></date>
         </a>
     </div>
-    <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Article.Id" asp-route-alias="@Model.Article.Alias" class="font-weight-bold">@Model.Article.Title</a>
-    @if (Model.Article.IsPinned)
+    <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.Id" asp-route-alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
+    @if (Model.Entity.IsPinned)
     {
         <span title="@T["This article is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-thumbtack"></i>
         </span>
     }
-    @if (Model.Article.IsClosed)
+    @if (Model.Entity.IsClosed)
     {
         <span title="@T["This article is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-lock"></i>
@@ -53,7 +53,7 @@
         </span>
     }
     <div class="text-muted">
-        @Model.Article.Abstract
+        @Model.Entity.Abstract
     </div>
     <div>
         @if (details?.LatestUsers != null)
@@ -71,8 +71,8 @@
             </div>
         }
         @T["By"]
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Article.CreatedUserId" asp-route-alias="@Model.Article.CreatedBy.Alias">@Model.Article.CreatedBy.DisplayName</a>,
-        <date utc="@Model.Article.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
+        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
         @if (@Model.Channel != null)
         {
             <span>@T["in"]</span>
@@ -80,15 +80,15 @@
                 @Model.Channel.Name
             </a>
         }
-        @if (Model.Article.IsPrivate)
+        @if (Model.Entity.IsPrivate)
         {
             <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
         }
-        @if (Model.Article.IsSpam)
+        @if (Model.Entity.IsSpam)
         {
             <span class="badge badge-info" data-toggle="tooltip" title="@T["This discussion has been flagged as SPAM and is only visible to you as you have permission to view topics flagged as SPAM"]">@T["SPAM"]</span>
         }
-        @if (Model.Article.IsDeleted)
+        @if (Model.Entity.IsDeleted)
         {
             <span class="badge badge-danger" data-toggle="tooltip" title="@T["This discussion has been deleted and is only visible to you as you have permission to view deleted topics"]">@T["Deleted"]</span>
         }

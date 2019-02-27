@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
 
@@ -48,10 +50,10 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             // This way the channel data is only ever populated if the channels feature is enabled
             return await Adapt("TopicListItem", v =>
             {
-                v.AdaptModel<TopicListItemViewModel>(model =>
+                v.AdaptModel<EntityListItemViewModel<Topic>>(model =>
                 {
 
-                    if (model.Topic == null)
+                    if (model.Entity == null)
                     {
                         // Return an anonymous type, we are adapting a view component
                         return new
@@ -61,7 +63,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                     }
 
                     // Ensure we have a category
-                    if (model.Topic.CategoryId <= 0)
+                    if (model.Entity.CategoryId <= 0)
                     {
                         // Return an anonymous type, we are adapting a view component
                         return new
@@ -71,7 +73,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                     }
 
                     // Get our channel
-                    var channel = channels.FirstOrDefault(c => c.Id == model.Topic.CategoryId);
+                    var channel = channels.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
                     if (channel != null)
                     {
                         model.Channel = channel;

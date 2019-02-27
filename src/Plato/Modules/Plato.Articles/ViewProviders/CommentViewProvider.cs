@@ -11,13 +11,13 @@ using Plato.Internal.Layout.ViewProviders;
 namespace Plato.Articles.ViewProviders
 {
 
-    public class CommentViewProvider : BaseViewProvider<ArticleComment>
+    public class CommentViewProvider : BaseViewProvider<Comment>
     {
 
         private const string EditorHtmlName = "message";
         
-        private readonly IEntityReplyStore<ArticleComment> _replyStore;
-        private readonly IPostManager<ArticleComment> _replyManager;
+        private readonly IEntityReplyStore<Comment> _replyStore;
+        private readonly IPostManager<Comment> _replyManager;
  
         private readonly IStringLocalizer T;
 
@@ -26,8 +26,8 @@ namespace Plato.Articles.ViewProviders
         public CommentViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IStringLocalizer<ArticleViewProvider> stringLocalize,
-            IPostManager<ArticleComment> replyManager, 
-            IEntityReplyStore<ArticleComment> replyStore)
+            IPostManager<Comment> replyManager, 
+            IEntityReplyStore<Comment> replyStore)
         {
 
             _replyManager = replyManager;
@@ -38,21 +38,21 @@ namespace Plato.Articles.ViewProviders
         }
         
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(ArticleComment model, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Comment model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(ArticleComment model, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Comment model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(ArticleComment articleComment, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Comment comment, IViewProviderContext updater)
         {
 
             // Ensures we persist the message between post backs
-            var message = articleComment.Message;
+            var message = comment.Message;
             if (_request.Method == "POST")
             {
                 foreach (string key in _request.Form.Keys)
@@ -66,8 +66,8 @@ namespace Plato.Articles.ViewProviders
 
             var viewModel = new EditReplyViewModel()
             {
-                Id = articleComment.Id,
-                EntityId = articleComment.EntityId,
+                Id = comment.Id,
+                EntityId = comment.EntityId,
                 EditorHtmlName = EditorHtmlName,
                 Message = message
             };
@@ -81,39 +81,39 @@ namespace Plato.Articles.ViewProviders
 
         }
 
-        public override async Task<bool> ValidateModelAsync(ArticleComment articleComment, IUpdateModel updater)
+        public override async Task<bool> ValidateModelAsync(Comment comment, IUpdateModel updater)
         {
             // Build model
             var model = new EditReplyViewModel();
-            model.Id = articleComment.Id;
-            model.EntityId = articleComment.EntityId;
-            model.Message = articleComment.Message;
+            model.Id = comment.Id;
+            model.EntityId = comment.EntityId;
+            model.Message = comment.Message;
 
             // Validate model
             return await updater.TryUpdateModelAsync(model);
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(ArticleComment articleComment, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Comment comment, IViewProviderContext context)
         {
             
-            if (articleComment.IsNewReply)
+            if (comment.IsNewReply)
             {
                 return default(IViewProviderResult);
             }
 
             // Ensure the reply exists
-            if (await _replyStore.GetByIdAsync(articleComment.Id) == null)
+            if (await _replyStore.GetByIdAsync(comment.Id) == null)
             {
-                return await BuildIndexAsync(articleComment, context);
+                return await BuildIndexAsync(comment, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(articleComment, context.Updater))
+            if (await ValidateModelAsync(comment, context.Updater))
             {
 
                 // Update reply
-                var result = await _replyManager.UpdateAsync(articleComment);
+                var result = await _replyManager.UpdateAsync(comment);
 
                 // Was there a problem updating the reply?
                 if (!result.Succeeded)
@@ -126,7 +126,7 @@ namespace Plato.Articles.ViewProviders
 
             }
 
-            return await BuildEditAsync(articleComment, context);
+            return await BuildEditAsync(comment, context);
 
         }
 

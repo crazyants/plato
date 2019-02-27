@@ -7,17 +7,17 @@ using Plato.Internal.Abstractions;
 namespace Plato.Articles.Services
 {
 
-    public class ReplyManager : IPostManager<ArticleComment>
+    public class ReplyManager : IPostManager<Comment>
     {
 
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyManager<ArticleComment> _entityReplyManager;
-        private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
+        private readonly IEntityReplyManager<Comment> _entityReplyManager;
+        private readonly IEntityReplyStore<Comment> _entityReplyStore;
 
         public ReplyManager(
             IEntityStore<Article> entityStore,
-            IEntityReplyStore<ArticleComment> entityReplyStore,
-            IEntityReplyManager<ArticleComment> entityReplyManager)
+            IEntityReplyStore<Comment> entityReplyStore,
+            IEntityReplyManager<Comment> entityReplyManager)
         {
             _entityReplyManager = entityReplyManager;
             _entityReplyStore = entityReplyStore;
@@ -26,7 +26,7 @@ namespace Plato.Articles.Services
 
         #region "Implementation"
 
-        public async Task<ICommandResult<ArticleComment>> CreateAsync(ArticleComment model)
+        public async Task<ICommandResult<Comment>> CreateAsync(Comment model)
         {
 
             _entityReplyManager.Created += (sender, args) =>
@@ -36,7 +36,7 @@ namespace Plato.Articles.Services
         
         }
         
-        public async Task<ICommandResult<ArticleComment>> UpdateAsync(ArticleComment model)
+        public async Task<ICommandResult<Comment>> UpdateAsync(Comment model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>
@@ -46,7 +46,7 @@ namespace Plato.Articles.Services
          
         }
         
-        public async Task<ICommandResult<ArticleComment>> DeleteAsync(ArticleComment model)
+        public async Task<ICommandResult<Comment>> DeleteAsync(Comment model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>

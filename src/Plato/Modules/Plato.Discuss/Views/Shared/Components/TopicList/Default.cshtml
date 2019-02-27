@@ -100,9 +100,10 @@
                         <div class="@css" data-infinite-scroll-offset="@rowOffset" data-infinite-scroll-highlight="@rowOffset">
                             @await DisplayAsync(new View("TopicListItem", new
                             {
-                                model = new TopicListItemViewModel()
+                                model = new EntityListItemViewModel<Topic>()
                                 {
-                                    Topic = topic
+                                    Entity = topic,
+                                    Options = Model.Options
                                 }
                             }))
                         </div>

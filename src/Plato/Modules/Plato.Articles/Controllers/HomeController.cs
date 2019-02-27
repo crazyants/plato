@@ -32,16 +32,16 @@ namespace Plato.Articles.Controllers
         #region "Constructor"
 
         private readonly IViewProviderManager<Article> _entityViewProvider;
-        private readonly IViewProviderManager<ArticleComment> _replyViewProvider;
+        private readonly IViewProviderManager<Comment> _replyViewProvider;
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<ArticleComment> _entityReplyStore;
+        private readonly IEntityReplyStore<Comment> _entityReplyStore;
         private readonly IPostManager<Article> _topicManager;
-        private readonly IPostManager<ArticleComment> _replyManager;
+        private readonly IPostManager<Comment> _replyManager;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IEntityReplyService<ArticleComment> _replyService;
+        private readonly IEntityReplyService<Comment> _replyService;
 
         private readonly IPlatoUserStore<User> _platoUserStore;
 
@@ -55,14 +55,14 @@ namespace Plato.Articles.Controllers
             IContextFacade contextFacade,
             IEntityStore<Article> entityStore,
             IViewProviderManager<Article> entityViewProvider,
-            IEntityReplyStore<ArticleComment> entityReplyStore,
-            IViewProviderManager<ArticleComment> replyViewProvider,
+            IEntityReplyStore<Comment> entityReplyStore,
+            IViewProviderManager<Comment> replyViewProvider,
             IPostManager<Article> topicManager,
-            IPostManager<ArticleComment> replyManager,
+            IPostManager<Comment> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
-            IEntityReplyService<ArticleComment> replyService)
+            IEntityReplyService<Comment> replyService)
         {
             _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -116,8 +116,7 @@ namespace Plato.Articles.Controllers
                     .LocalNav()
                 ).Add(S["Articles"]);
             });
-
-
+            
             //await CreateSampleData();
 
             // Get default options
@@ -298,7 +297,7 @@ namespace Plato.Articles.Controllers
         // Display article
         // -----------------
 
-        public async Task<IActionResult> Display(int id, int offset, EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Display(int id, EntityOptions opts, PagerOptions pager)
         {
 
             var entity = await _entityStore.GetByIdAsync(id);
@@ -383,11 +382,9 @@ namespace Plato.Articles.Controllers
 
             // Maintain previous route data when generating page links
             // Get default options
-            var defaultViewOptions = new EntityViewModel<Article, ArticleComment>();
+            var defaultViewOptions = new EntityViewModel<Article, Comment>();
             var defaultPagerOptions = new PagerOptions();
-
-            if (offset > 0 && !this.RouteData.Values.ContainsKey("offset"))
-                this.RouteData.Values.Add("offset", offset);
+            
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
@@ -398,14 +395,14 @@ namespace Plato.Articles.Controllers
             
 
             // Build view model
-            var viewModel = new EntityViewModel<Article, ArticleComment>()
+            var viewModel = new EntityViewModel<Article, Comment>()
             {
                 Options = opts,
                 Pager = pager
             };
 
             // Add models to context
-            HttpContext.Items[typeof(EntityViewModel<Article, ArticleComment>)] = viewModel;
+            HttpContext.Items[typeof(EntityViewModel<Article, Comment>)] = viewModel;
             HttpContext.Items[typeof(Article)] = entity;
             
             // If we have a pager.page querystring value return paged results
@@ -440,7 +437,7 @@ namespace Plato.Articles.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Build reply
-            var reply = new ArticleComment()
+            var reply = new Comment()
             {
                 EntityId = model.EntityId,
                 Message = model.Message,
@@ -498,7 +495,7 @@ namespace Plato.Articles.Controllers
                 }
             }
 
-            return await Display(entity.Id, 0, null, null);
+            return await Display(entity.Id, null, null);
 
         }
       
@@ -1170,7 +1167,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
                     rnd = new Random();
                     randomUser = users?.Data[rnd.Next(0, totalUsers)];
 
-                    var reply = new ArticleComment()
+                    var reply = new Comment()
                     {
                         EntityId = data.Response.Id,
                         Message = GetSampleMarkDown(i) + " - comment : " + i.ToString(),

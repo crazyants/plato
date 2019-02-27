@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
@@ -18,7 +19,7 @@ namespace Plato.Discuss.ViewComponents
         }
 
         public Task<IViewComponentResult> InvokeAsync(
-            TopicListItemViewModel model)
+            EntityListItemViewModel<Topic> model)
         {
             return Task.FromResult((IViewComponentResult)View(model));
         }
