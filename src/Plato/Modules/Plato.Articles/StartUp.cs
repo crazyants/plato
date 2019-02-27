@@ -113,7 +113,7 @@ namespace Plato.Articles
             routes.MapAreaRoute(
                 name: "Articles",
                 areaName: "Plato.Articles",
-                template: "articles/{offset:int?}",
+                template: "articles/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
             
@@ -121,7 +121,7 @@ namespace Plato.Articles
             routes.MapAreaRoute(
                 name: "ArticlesPopular",
                 areaName: "Plato.Articles",
-                template: "articles/popular/{offset:int?}",
+                template: "articles/popular/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Popular" }
             );
 
@@ -129,7 +129,7 @@ namespace Plato.Articles
             routes.MapAreaRoute(
                 name: "ArticlesArticle",
                 areaName: "Plato.Articles",
-                template: "articles/a/{id:int}/{alias}/{offset:int?}",
+                template: "articles/a/{id:int}/{alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
                      

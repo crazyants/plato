@@ -52,24 +52,24 @@
     <card-body>
         @if (Model.Results != null)
         {
-            var offset = Model.Pager.InitialOffset;
-            var selectedOffset = Model.Pager.SelectedOffset;
+            var offset = Model.Pager.Offset;
+            var rowOffset = Model.Pager.RowOffset;
             <div data-provide="infiniteScroll"
-                 data-infinite-scroll-url="@Model.Options.Scroll.Url"
-                 data-infinite-scroll-initial-offset="@offset"
-                 data-infinite-scroll-selected-offset="@selectedOffset"
-                 data-infinite-scroll-initial-page="@Model.Pager.Page"
+                 data-infinite-scroll-url="@Model.Pager.Url"
+                 data-infinite-scroll-offset="@offset"
+                 data-infinite-scroll-row-offset="@rowOffset"
+                 data-infinite-scroll-page="@Model.Pager.Page"
                  data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
                  class="list-group list-group-flush list-group-hover">
                 <div class="row no-gutters">
                     <div class="infinite-scroll-loader col-12" data-type="previous"></div>
                     @foreach (var tag in Model.Results.Data)
                     {
-                        var css = offset == selectedOffset
+                        var css = rowOffset == offset
                             ? "infinite-scroll-item infinite-scroll-item-active"
                             : "infinite-scroll-item";
                         <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12">
-                            <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
+                            <div class="@css" data-infinite-scroll-offset="@rowOffset" data-infinite-scroll-highlight="@rowOffset">
                                 @await DisplayAsync(new View("TagListItem", new
                                 {
                                     model = new TagListItemViewModel()
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         {
-                            offset++;
+                            rowOffset++;
                         }
                     }
                     <div class="infinite-scroll-loader col-12" data-type="next"></div>
@@ -99,7 +99,7 @@
     </card-body>
 </card>
 
-@if (Model.Pager.Enabled && !Model.Options.Scroll.Enabled)
+@if (Model.Pager.Enabled)
 {
     <div class="mt-4 mb-4">
         <pager model="@Model.Pager"></pager>

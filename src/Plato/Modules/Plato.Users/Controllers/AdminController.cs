@@ -131,11 +131,8 @@ namespace Plato.Users.Controllers
                 pager = new PagerOptions();
             }
 
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Get default options
             var defaultViewOptions = new UserIndexOptions();
@@ -152,14 +149,7 @@ namespace Plato.Users.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-
-            // Build infinate scroll options
-            opts.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-
+            
             // Enable edit options for admin view
             opts.EnableEdit = true;
 
@@ -883,20 +873,7 @@ namespace Plato.Users.Controllers
         }
         
         #endregion
-
-        #region "Private Methods"
-
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
-
-        #endregion
-
+        
     }
+
 }

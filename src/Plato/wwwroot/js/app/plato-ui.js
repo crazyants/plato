@@ -2168,9 +2168,6 @@ $(function (win, doc, $) {
                         } else {
                             $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
                         }
-
-                        console.log("offset: " + $caller.data(dataKey).offset);
-
                         methods.init($caller, methodName);
                     }
               
@@ -2204,10 +2201,9 @@ $(function (win, doc, $) {
 
         var methods = {
             _loading: false, // track loading state
-            _initialPage: 1, // starting page
             _page: 1, // current page
-            _initialOffset: 0, // starting row offset
-            _selectedOffset: 0, // optional selected offset
+            _rowOffset: 0, // starting row offset
+            _offset: 0, // optional selected offset
             _totalPages: 1, // total pages
             _loadedPages: [], // keep track of which pages have been loaded
             _readyList: [], // functions to execute when dom is updated
@@ -2226,30 +2222,33 @@ $(function (win, doc, $) {
                     return;
                 }
 
-                if ($caller.data("infiniteScrollInitialPage")) {
-                    var page = parseInt($caller.data("infiniteScrollInitialPage"));
+                if ($caller.data("infiniteScrollPage")) {
+                    var page = parseInt($caller.data("infiniteScrollPage"));
+                    console.log("page: " + page);
                     if (!isNaN(page)) {
-                        methods._initialPage = page;
                         methods._page = page;
                     }
                 }
 
-                if (typeof $caller.data("infiniteScrollInitialOffset") !== "undefined") {
-                    var offset = parseInt($caller.data("infiniteScrollInitialOffset"));
+                if (typeof $caller.data("infiniteScrollRowOffset") !== "undefined") {
+                    var rowOffset = parseInt($caller.data("infiniteScrollRowOffset"));
+                    console.log("rowOffset: " + rowOffset);
                     if (!isNaN(offset)) {
-                        methods._initialOffset = offset;
+                        methods._rowOffset = rowOffset;
                     }
                 }
 
-                if (typeof $caller.data("infiniteScrollSelectedOffset") !== "undefined") {
-                    var selectedOffset = parseInt($caller.data("infiniteScrollSelectedOffset"));
-                    if (!isNaN(selectedOffset)) {
-                        methods._selectedOffset = selectedOffset;
+                if (typeof $caller.data("infiniteScrollOffset") !== "undefined") {
+                    var offset = parseInt($caller.data("infiniteScrollOffset"));
+                    console.log("offset: " + offset);
+                    if (!isNaN(offset)) {
+                        methods._offset = offset;
                     }
                 }
 
                 if ($caller.data("infiniteScrollTotalPages")) {
                     var totalPages = parseInt($caller.data("infiniteScrollTotalPages"));
+                    console.log("totalPages: " + totalPages);
                     if (!isNaN(totalPages)) {
                         methods._totalPages = totalPages;
                     }
@@ -2257,8 +2256,8 @@ $(function (win, doc, $) {
 
                 // Default page already rendered server side
                 methods._loadedPages.push({
-                    page: methods._initialPage,
-                    offset: methods._initialOffset
+                    page: methods._page,
+                    offset: methods._rowOffset
                 });
 
                 // Bind events
@@ -2314,9 +2313,9 @@ $(function (win, doc, $) {
 
                 // Scroll to any selected offset, wait until we complete
                 // scrolling before binding our scrollSpy events
-                if (methods._selectedOffset > 0) {
-                    var $marker = methods.getOffsetMarker($caller, methods._selectedOffset),
-                        $highlight = methods.getHighlightMarker($caller, methods._selectedOffset);
+                if (methods._offset > 0) {
+                    var $marker = methods.getOffsetMarker($caller, methods._offset),
+                        $highlight = methods.getHighlightMarker($caller, methods._offset);
 
                     if ($marker && $highlight) {
                         $().scrollTo({
@@ -2351,7 +2350,6 @@ $(function (win, doc, $) {
             unbind: function($caller) {
                 $().scrollSpy("unbind");
                 methods._readyList = [];
-                methods._initialPage = 1;
                 methods._page = 1;
                 methods._loading = false;
             },

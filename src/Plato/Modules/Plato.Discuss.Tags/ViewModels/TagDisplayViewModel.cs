@@ -10,9 +10,9 @@ namespace Plato.Discuss.Tags.ViewModels
 
         public IPagedResults<Topic> Results { get; }
 
-        public PagerOptions PagerOpts { get; set; }
+        public PagerOptions Pager { get; set; }
 
-        public EntityIndexOptions TopicIndexOpts { get; set; }
+        public EntityIndexOptions Options { get; set; }
 
         public TagDisplayViewModel()
         {
@@ -23,8 +23,8 @@ namespace Plato.Discuss.Tags.ViewModels
             PagerOptions pagerOptions)
         {
             this.Results = results;
-            this.PagerOpts = pagerOptions;
-            this.PagerOpts.SetTotal(results?.Total ?? 0);
+            this.Pager = pagerOptions;
+            this.Pager.SetTotal(results?.Total ?? 0);
         }
         
     }

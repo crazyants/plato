@@ -24,9 +24,7 @@ namespace Plato.Discuss.Labels.ViewModels
     public class LabelIndexOptions
     {
         public string Search { get; set; }
-
-        public ScrollOptions Scroll { get; set; }
-
+        
         public SortBy Sort { get; set; } = SortBy.Entities;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;

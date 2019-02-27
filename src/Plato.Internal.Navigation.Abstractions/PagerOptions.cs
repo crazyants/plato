@@ -1,81 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Navigation.Abstractions
 {
 
+    [DataContract]
     public class PagerOptions
     {
-        private int _total;
-        private int _totalPages;
+        private int _page = 1;
 
-        public int Page { get; set; } = 1;
+        /// <summary>
+        /// Gets or sets the current page. If an offset is provided the page is calculated from this offset.
+        /// </summary>
+        [DataMember(Name = "page")]
+        public int Page
+        {
+            get => Offset > 0 ? Offset.ToSafeCeilingDivision(PageSize) : _page;
+            set => _page = value;
+        }
 
+        /// <summary>
+        /// Gets or sets and optional row offset to start from.
+        /// </summary>
+        [DataMember(Name = "offset")]
+        public int Offset { get; set; }
+
+        [DataMember(Name = "pageSize")]
         public int PageSize { get; set; } = 20;
+    
+        public bool Enabled { get; set; } = false;
 
-        public int Total => _total;
+        // Private setters
 
-        public bool Enabled { get; set; } = true;
+        public int Total { get; private set; }
 
-        public int TotalPages => _totalPages;
+        public int TotalPages { get; private set; }
         
-        // RowOffset
-        public int InitialOffset => PageSize * Page - PageSize + 1;
+        /// <summary>
+        /// Gets the row offset for the current page.
+        /// </summary>
+        public int RowOffset => PageSize * Page - PageSize + 1;
+        
+        /// <summary>
+        /// Gets or sets the call back Url which can be used for client side paging purposes.
+        /// </summary>
+        public string Url { get; set; }
 
-        // 
-        public int SelectedOffset { get; set; }
-
-        public ScrollOptions Scroll { get; set; } = new ScrollOptions();
+        /// <summary>
+        /// Returns a route value dictionary from the supplied route data with all pager specific route values removed.
+        /// </summary>
+        /// <param name="routeData"></param>
+        /// <returns></returns>
+        public RouteValueDictionary Route(RouteData routeData)
+        {
+            routeData.Values.Remove("pager.page");
+            routeData.Values.Remove("pager.offset");
+            return routeData.Values;
+        }
 
         public void SetTotal(int total)
         {
-            _total = total;
-            _totalPages = PageSize > 0 ? (int)Math.Ceiling((double)total / PageSize) : 1;
+            Total = total;
+            TotalPages = total > 0 ? total.ToSafeCeilingDivision(PageSize) : 1; 
         }
 
-        public PagerOptions()
-        {
-        }
-
-        public PagerOptions(int offset)
-        {
-
-            if (offset <= 0)
-            {
-                return;
-            }
-
-            Page = offset.ToSafeCeilingDivision(PageSize);
-            SelectedOffset = offset;
-
-        }
-
-
-        public PagerOptions(RouteData routeData)
-        {
-            Page = GetRouteValueOrDefault<int>("pager.page", routeData, Page);
-            PageSize = GetRouteValueOrDefault<int>("pager.size", routeData, PageSize);
-        }
-
-        private T GetRouteValueOrDefault<T>(string key, RouteData routeData, T defaultValue)
-        {
-
-            if (routeData == null)
-            {
-                return defaultValue;
-            }
-
-            var found = routeData.Values.TryGetValue(key, out object value);
-            if (found)
-            {
-                return (T)value;
-            }
-            return defaultValue;
-        }
-        
     }
 
 }

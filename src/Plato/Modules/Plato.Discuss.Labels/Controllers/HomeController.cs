@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Labels.Models;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -12,11 +11,8 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -79,12 +75,9 @@ namespace Plato.Discuss.Labels.Controllers
                 pager = new PagerOptions();
             }
 
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
-            
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -112,13 +105,7 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            // Build infinate scroll options
-            opts.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-
+            
             // Build view model
             var viewModel = new LabelIndexViewModel()
             {
@@ -126,7 +113,7 @@ namespace Plato.Discuss.Labels.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
+            // Add view options to context 
             HttpContext.Items[typeof(LabelIndexViewModel)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
@@ -140,7 +127,6 @@ namespace Plato.Discuss.Labels.Controllers
             return View(await _labelViewProvider.ProvideIndexAsync(new Label(), this));
 
         }
-
 
         public async Task<IActionResult> Display(
             int id,
@@ -196,7 +182,7 @@ namespace Plato.Discuss.Labels.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
+            // Add view options to context 
             this.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
 
             // Build view
@@ -206,22 +192,7 @@ namespace Plato.Discuss.Labels.Controllers
             return View(result);
 
         }
-
-
-        #endregion
-
-        #region "Private Methods"
         
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
-
         #endregion
 
     }

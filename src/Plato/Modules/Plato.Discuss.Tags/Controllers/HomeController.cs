@@ -19,10 +19,10 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Tags.Controllers
 {
+
     public class HomeController : Controller, IUpdateModel
     {
-
-       
+        
         private readonly IViewProviderManager<DiscussTag> _tagViewProvider;
         private readonly ITagStore<Tag> _tagStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -73,11 +73,8 @@ namespace Plato.Discuss.Tags.Controllers
                 pager = new PagerOptions();
             }
 
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -107,12 +104,6 @@ namespace Plato.Discuss.Tags.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Build infinate scroll options
-            opts.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-            
             // Build view model
             var viewModel = new TagIndexViewModel()
             {
@@ -120,7 +111,7 @@ namespace Plato.Discuss.Tags.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
+            // Add view options to context
             HttpContext.Items[typeof(TagIndexViewModel)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
@@ -158,13 +149,10 @@ namespace Plato.Discuss.Tags.Controllers
             {
                 pager = new PagerOptions();
             }
-            
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
-            
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -198,12 +186,6 @@ namespace Plato.Discuss.Tags.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Build infinate scroll options
-            pager.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-            
             // We don't need to add to pagination 
             opts.TagId = tag?.Id ?? 0;
 
@@ -231,17 +213,6 @@ namespace Plato.Discuss.Tags.Controllers
         
         #endregion
         
-        #region "Private Methods"
-
-        string GetInfiniteScrollCallbackUrl()
-        {
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-        }
-
-        #endregion
-
     }
 
 }

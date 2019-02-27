@@ -72,18 +72,20 @@ namespace Plato.Discuss.Channels.Controllers
                 }
             }
 
+            // Build options
             if (opts == null)
             {
                 opts = new EntityIndexOptions();
             }
 
+            // Build pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
 
-
-            // Check permissions
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Build breadcrumb
             IEnumerable<Channel> parents = null;
@@ -159,12 +161,6 @@ namespace Plato.Discuss.Channels.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Build infinate scroll options
-            pager.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-
             // Include child channels
             if (category.Children.Any())
             {
@@ -193,7 +189,7 @@ namespace Plato.Discuss.Channels.Controllers
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
-                if (page > 0)
+                if (page > 0 && !pager.Enabled)
                     return View("GetTopics", viewModel);
             }
             
@@ -201,17 +197,7 @@ namespace Plato.Discuss.Channels.Controllers
             return View(await _channelViewProvider.ProvideIndexAsync(category, this));
             
         }
-
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
-
+        
 
     }
 

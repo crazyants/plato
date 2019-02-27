@@ -57,8 +57,8 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             var indexViewModel = new LabelDisplayViewModel
             {
-                TopicIndexOpts = viewModel?.Options,
-                PagerOpts = viewModel?.Pager
+                Options = viewModel?.Options,
+                Pager = viewModel?.Pager
             };
 
             // Ensure we explicitly set the featureId

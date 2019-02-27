@@ -2,7 +2,6 @@
 using System.Runtime.Serialization;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.ViewModels
@@ -28,9 +27,7 @@ namespace Plato.Users.ViewModels
     [DataContract]
     public class UserIndexOptions
     {
-
-        public ScrollOptions Scroll { get; set; }
-
+        
         [DataMember(Name = "search")]
         public string Search { get; set; }
 

@@ -77,11 +77,8 @@ namespace Plato.Discuss.Labels.Controllers
                 pager = new PagerOptions();
             }
 
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -108,12 +105,6 @@ namespace Plato.Discuss.Labels.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-
-            // Build infinate scroll options
-            opts.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
 
             // Indicate administrator view
             opts.EnableEdit = true;
@@ -290,19 +281,9 @@ namespace Plato.Discuss.Labels.Controllers
                 return feature.Id;
             }
 
-            throw new Exception($"Could not find required feture registration for Plato.Discuss.Labels");
+            throw new Exception($"Could not find required feature registration for Plato.Discuss.Labels");
         }
         
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
-
     }
 
 }

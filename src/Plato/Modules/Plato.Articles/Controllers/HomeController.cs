@@ -90,7 +90,7 @@ namespace Plato.Articles.Controllers
         // Latest Entities
         // -----------------
 
-        public async Task<IActionResult> Index(int offset, EntityIndexOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
         {
 
             // default options
@@ -105,16 +105,8 @@ namespace Plato.Articles.Controllers
                 pager = new PagerOptions();
             }
 
-            pager.Scroll = new ScrollOptions()
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -125,7 +117,8 @@ namespace Plato.Articles.Controllers
                 ).Add(S["Articles"]);
             });
 
-            await CreateSampleData();
+
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -189,7 +182,7 @@ namespace Plato.Articles.Controllers
             opts.Sort = SortBy.Replies;
             opts.Order = OrderBy.Desc;
 
-            return Index(0, opts, pager);
+            return Index(opts, pager);
         }
 
         // -----------------
@@ -308,16 +301,16 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Display(int id, int offset, EntityOptions opts, PagerOptions pager)
         {
 
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(id);
+            if (entity == null)
             {
                 return NotFound();
             }
 
             // Ensure we have permission to view deleted topics
-            if (topic.IsDeleted)
+            if (entity.IsDeleted)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId, Permissions.ViewDeletedTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -330,9 +323,9 @@ namespace Plato.Articles.Controllers
             }
 
             // Ensure we have permission to view private topics
-            if (topic.IsPrivate)
+            if (entity.IsPrivate)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId, Permissions.ViewPrivateTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -345,9 +338,9 @@ namespace Plato.Articles.Controllers
             }
 
             // Ensure we have permission to view spam topics
-            if (topic.IsSpam)
+            if (entity.IsSpam)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId, Permissions.ViewSpamTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -371,11 +364,8 @@ namespace Plato.Articles.Controllers
                 pager = new PagerOptions();
             }
 
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -386,7 +376,7 @@ namespace Plato.Articles.Controllers
                 ).Add(S["Articles"], articles => articles
                     .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
-                ).Add(S[topic.Title.TrimToAround(75)], post => post
+                ).Add(S[entity.Title.TrimToAround(75)], post => post
                     .LocalNav()
                 );
             });
@@ -403,12 +393,9 @@ namespace Plato.Articles.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
-            opts.EntityId = topic.Id;
+            opts.EntityId = entity.Id;
 
-            pager.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
+            
 
             // Build view model
             var viewModel = new EntityViewModel<Article, ArticleComment>()
@@ -419,7 +406,7 @@ namespace Plato.Articles.Controllers
 
             // Add models to context
             HttpContext.Items[typeof(EntityViewModel<Article, ArticleComment>)] = viewModel;
-            HttpContext.Items[typeof(Article)] = topic;
+            HttpContext.Items[typeof(Article)] = entity;
             
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -431,7 +418,7 @@ namespace Plato.Articles.Controllers
             }
             
             // Return view
-            return View(await _entityViewProvider.ProvideDisplayAsync(topic, this));
+            return View(await _entityViewProvider.ProvideDisplayAsync(entity, this));
 
         }
 
@@ -1141,15 +1128,6 @@ namespace Plato.Articles.Controllers
 
         #region "Private Methods"
         
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-       
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
         
         string GetSampleMarkDown(int number)
         {

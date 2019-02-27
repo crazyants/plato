@@ -84,7 +84,7 @@ namespace Plato.Search
             routes.MapAreaRoute(
                 name: "PlatoSearch",
                 areaName: "Plato.Search",
-                template: "search/{offset:int?}",
+                template: "search/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

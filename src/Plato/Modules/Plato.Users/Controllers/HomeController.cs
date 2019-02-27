@@ -95,11 +95,8 @@ namespace Plato.Users.Controllers
                 pager = new PagerOptions();
             }
 
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -125,12 +122,6 @@ namespace Plato.Users.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            // Build infinate scroll options
-            opts.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
 
             // Build view model
             var viewModel = new UserIndexViewModel()
@@ -399,17 +390,7 @@ namespace Plato.Users.Controllers
         #endregion
 
         #region "Private Methods"
-
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
-
+        
         async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
         {
             // Build timezones 

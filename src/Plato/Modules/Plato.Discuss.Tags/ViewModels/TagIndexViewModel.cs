@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Plato.Tags.Models;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Tags.ViewModels
@@ -24,9 +23,7 @@ namespace Plato.Discuss.Tags.ViewModels
     public class TagIndexOptions
     {
         public string Search { get; set; }
-
-        public ScrollOptions Scroll { get; set; }
-
+        
         public SortBy Sort { get; set; } = SortBy.Entities;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;

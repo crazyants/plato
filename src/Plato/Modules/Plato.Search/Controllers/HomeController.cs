@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -15,7 +13,6 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
 using Plato.Search.Stores;
-using Plato.Search.ViewModels;
 
 namespace Plato.Search.Controllers
 {
@@ -54,10 +51,7 @@ namespace Plato.Search.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index(
-            int offset,
-            EntityIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
         {
 
             // default options
@@ -88,19 +82,9 @@ namespace Plato.Search.Controllers
             {
                 pager = new PagerOptions();
             }
-            
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
 
-
-            pager.Scroll = new ScrollOptions()
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Build breadcrumb
             if (string.IsNullOrEmpty(opts.Search))
@@ -173,15 +157,6 @@ namespace Plato.Search.Controllers
 
         }
 
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
 
     }
 

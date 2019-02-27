@@ -2,8 +2,8 @@
 
 @if (Model.Results?.Data != null)
 {
-    var offset = Model.Pager.InitialOffset;
-    var selectedOffset = Model.Pager.SelectedOffset;
+    var offset = Model.Pager.RowOffset;
+    var selectedOffset = Model.Pager.Offset;
     @foreach (var user in Model.Results.Data)
      {
          var css = offset == selectedOffset

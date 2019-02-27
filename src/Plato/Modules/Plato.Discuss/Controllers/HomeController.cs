@@ -85,10 +85,10 @@ namespace Plato.Discuss.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest Topics
+        // Latest 
         // -----------------
 
-        public async Task<IActionResult> Index(int offset, EntityIndexOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
         {
 
             // default options
@@ -100,18 +100,12 @@ namespace Plato.Discuss.Controllers
             // default pager
             if (pager == null)
             {
-                pager = new PagerOptions(offset);
+                pager = new PagerOptions();
             }
 
-            // Build infinite scroll options
-            pager.Scroll.Url = GetInfiniteScrollCallbackUrl();;
-
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
-
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -185,7 +179,7 @@ namespace Plato.Discuss.Controllers
             opts.Sort = SortBy.Replies;
             opts.Order = OrderBy.Desc;
 
-            return Index(0, opts, pager);
+            return Index(opts, pager);
         }
 
         // -----------------
@@ -367,17 +361,8 @@ namespace Plato.Discuss.Controllers
                 pager = new PagerOptions();
             }
 
-            // Build infinite scroll options
-            pager.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
-            
-            if (offset > 0)
-            {
-                pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
-                pager.SelectedOffset = offset;
-            }
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -1132,16 +1117,6 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Private Methods"
-        
-        string GetInfiniteScrollCallbackUrl()
-        {
-
-            RouteData.Values.Remove("pager.page");
-            RouteData.Values.Remove("offset");
-       
-            return _contextFacade.GetRouteUrl(RouteData.Values);
-
-        }
         
         string GetSampleMarkDown(int number)
         {

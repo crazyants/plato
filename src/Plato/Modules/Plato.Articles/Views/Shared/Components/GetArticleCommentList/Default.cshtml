@@ -2,8 +2,8 @@
 
 @if (Model.Replies != null)
 {
-    var offset = Model.Pager.InitialOffset;
-    var selectedOffset = Model.Pager.SelectedOffset;
+    var offset = Model.Pager.RowOffset;
+    var selectedOffset = Model.Pager.Offset;
     @foreach (var reply in Model.Replies.Data)
      {
          reply.Offset = offset;
