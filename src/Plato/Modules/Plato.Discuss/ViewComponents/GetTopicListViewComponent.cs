@@ -4,25 +4,35 @@ using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
 {
     public class GetTopicListViewComponent : ViewComponent
     {
-        
+
+        private readonly IFeatureFacade _featureFacade;
         private readonly IEntityService<Topic> _entityService;
 
         public GetTopicListViewComponent(
-            IEntityService<Topic> entityService)
+            IEntityService<Topic> entityService, 
+            IFeatureFacade featureFacade)
         {
             _entityService = entityService;
+            _featureFacade = featureFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
             EntityIndexOptions options,
             PagerOptions pager)
         {
+
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
 
             if (options == null)
             {

@@ -12,7 +12,7 @@ namespace Plato.Discuss.Follow
             new FollowType(
                 "Topic",
                 "Follow Topic",
-                "Folow this topic to get notified when replies are posted...",
+                "Follow this topic to get notified when replies are posted...",
                 "Unsubscribe",
                 "You are already following this topic. Unsubscribe below...");
 

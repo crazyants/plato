@@ -68,7 +68,7 @@ namespace Plato.Discuss
             
             // Services
             //services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<IReplyService, ReplyService>();
+            //services.AddScoped<IReplyService, ReplyService>();
             
             services.AddScoped<IEntityService<Topic>, EntityService<Topic>>();
             services.AddScoped<IEntityReplyService<Reply>, EntityReplyService<Reply>>();
@@ -114,7 +114,7 @@ namespace Plato.Discuss
             IServiceProvider serviceProvider)
         {
 
-            // discuss home
+            // home
             routes.MapAreaRoute(
                 name: "Discuss",
                 areaName: "Plato.Discuss",
@@ -122,7 +122,7 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Index" }
             );
             
-            // discuss popular
+            // popular
             routes.MapAreaRoute(
                 name: "DiscussPopular",
                 areaName: "Plato.Discuss",
@@ -130,15 +130,15 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Popular" }
             );
 
-            // discuss topic
+            // topic
             routes.MapAreaRoute(
                 name: "DiscussTopic",
                 areaName: "Plato.Discuss",
                 template: "discuss/t/{id:int}/{alias}/{offset:int?}",
-                defaults: new { controller = "Home", action = "Topic" }
+                defaults: new { controller = "Home", action = "Display" }
             );
                      
-            // discuss new topic
+            // new topic
             routes.MapAreaRoute(
                 name: "DiscussNewTopic",
                 areaName: "Plato.Discuss",
@@ -146,7 +146,7 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Create" }
             );
 
-            // discuss jump to reply
+            // jump to reply
             routes.MapAreaRoute(
                 name: "DiscussJumpToReply",
                 areaName: "Plato.Discuss",

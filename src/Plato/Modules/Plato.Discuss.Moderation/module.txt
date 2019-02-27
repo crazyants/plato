@@ -7,7 +7,7 @@ PlatoVersion: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Discuss",
+		Id: "Plato.Discuss.Channels",
 		Version: "1.0.0"
 	},
 	{

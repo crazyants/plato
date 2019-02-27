@@ -63,7 +63,7 @@ namespace Plato.Discuss.Channels.Follow.Notifications
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
-                    ["Action"] = "Topic",
+                    ["Action"] = "Display",
                     ["Id"] = context.Model.Id,
                     ["Alias"] = context.Model.Alias
                 });

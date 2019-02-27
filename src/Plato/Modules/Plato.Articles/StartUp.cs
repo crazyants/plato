@@ -130,7 +130,7 @@ namespace Plato.Articles
                 name: "ArticlesArticle",
                 areaName: "Plato.Articles",
                 template: "articles/a/{id:int}/{alias}/{offset:int?}",
-                defaults: new { controller = "Home", action = "Topic" }
+                defaults: new { controller = "Home", action = "Display" }
             );
                      
             // discuss new article

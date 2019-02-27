@@ -6,7 +6,7 @@
   
 	<ItemGroup>
 	
-		<ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
+		<ProjectReference Include="..\Plato.Discuss.Channels\Plato.Discuss.Channels.csproj" />
 	
 		<ProjectReference Include="..\Plato.Moderation\Plato.Moderation.csproj" />
 	</ItemGroup>

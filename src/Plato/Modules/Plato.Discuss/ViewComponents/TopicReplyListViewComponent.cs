@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
@@ -16,12 +17,12 @@ namespace Plato.Discuss.ViewComponents
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
 
-        private readonly IReplyService _replyService;
+        private readonly IEntityReplyService<Reply> _replyService;
 
         public TopicReplyListViewComponent(
             IEntityReplyStore<Reply> entityReplyStore,
             IEntityStore<Topic> entityStore,
-            IReplyService replyService)
+            IEntityReplyService<Reply> replyService)
         {
             _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;

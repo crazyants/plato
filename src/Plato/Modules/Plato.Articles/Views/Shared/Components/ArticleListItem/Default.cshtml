@@ -28,7 +28,7 @@
             <date utc="@Model.Article.LastReplyDate"></date>
         </a>
     </div>
-    <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Article.Id" asp-route-alias="@Model.Article.Alias" class="font-weight-bold">@Model.Article.Title</a>
+    <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Article.Id" asp-route-alias="@Model.Article.Alias" class="font-weight-bold">@Model.Article.Title</a>
     @if (Model.Article.IsPinned)
     {
         <span title="@T["This article is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">

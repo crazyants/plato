@@ -41,7 +41,7 @@ namespace Plato.Stars
             services.AddScoped<IStarTypesManager, StarTypesManager>();
             
             // Follow type providers
-            services.AddScoped<IStarTypeProvider, DefaultStarTypes>();
+            //services.AddScoped<IStarTypeProvider, DefaultStarTypes>();
 
             // Follow manager
             services.AddScoped<IStarManager<Star>, StarManager>();

@@ -10,7 +10,6 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Channels.Navigation;
 using Plato.Discuss.Channels.Subscribers;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Moderation.Models;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Categories.Services;
@@ -20,6 +19,7 @@ using Plato.Discuss.Channels.ViewAdaptors;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Channels.Services;
+using Plato.Discuss.Channels.ViewAdapters;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Channels
@@ -66,11 +66,11 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewProvider<CategoryBase>, AdminViewProvider>();
 
             // Moderation view providers
-            services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
-            services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
+            //services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
+            //services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
        
             // Register view adapters
-            services.AddScoped<IViewAdapterProvider, ModerationViewAdapterProvider>();
+//            services.AddScoped<IViewAdapterProvider, ModerationViewAdapterProvider>();
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
 
             // Register message broker subscribers

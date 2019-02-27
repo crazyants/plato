@@ -27,7 +27,7 @@
             <date utc="@Model.Topic.LastReplyDate"></date>
         </a>
     </div>
-    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">@Model.Topic.Title</a>
+    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">@Model.Topic.Title</a>
     @if (Model.Topic.IsPinned)
     {
         <span title="@T["This discussion is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">

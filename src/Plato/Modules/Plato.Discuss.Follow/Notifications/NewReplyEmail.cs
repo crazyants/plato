@@ -74,7 +74,7 @@ namespace Plato.Discuss.Follow.Notifications
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
-                    ["Action"] = "Topic",
+                    ["Action"] = "Display",
                     ["Id"] = topic.Id,
                     ["Alias"] = topic.Alias
                 });

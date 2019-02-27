@@ -90,10 +90,7 @@ namespace Plato.Articles.Controllers
         // Latest Entities
         // -----------------
 
-        public async Task<IActionResult> Index(
-            int offset,
-            EntityIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Index(int offset, EntityIndexOptions opts, PagerOptions pager)
         {
 
             // default options
@@ -174,9 +171,7 @@ namespace Plato.Articles.Controllers
         // Popular Entities
         // -----------------
 
-        public Task<IActionResult> Popular(
-            EntityIndexOptions opts,
-            PagerOptions pager)
+        public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
         {
 
             // default options
@@ -278,7 +273,7 @@ namespace Plato.Articles.Controllers
                     _alerter.Success(T["Article Created Successfully!"]);
 
                     // Redirect to topic
-                    return RedirectToAction(nameof(Topic), new {Id = newTopic.Response.Id});
+                    return RedirectToAction(nameof(Display), new {Id = newTopic.Response.Id});
 
                 }
                 else
@@ -310,11 +305,7 @@ namespace Plato.Articles.Controllers
         // Display article
         // -----------------
 
-        public async Task<IActionResult> Topic(
-            int id,
-            int offset,
-            EntityOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Display(int id, int offset, EntityOptions opts, PagerOptions pager)
         {
 
             var topic = await _entityStore.GetByIdAsync(id);
@@ -448,14 +439,12 @@ namespace Plato.Articles.Controllers
         // Post comment
         // -----------------
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Topic))]
-        public async Task<IActionResult> TopicPost(EditReplyViewModel model)
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Display))]
+        public async Task<IActionResult> DisplayPost(EditReplyViewModel model)
         {
             // We always need an entity to reply to
-            var topic = await _entityStore.GetByIdAsync(model.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(model.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -494,10 +483,10 @@ namespace Plato.Articles.Controllers
                     _alerter.Success(T["Reply Added Successfully!"]);
 
                     // Redirect to topic
-                    return RedirectToAction(nameof(Topic), new
+                    return RedirectToAction(nameof(Display), new
                     {
-                        Id = topic.Id,
-                        Alias = topic.Alias
+                        Id = entity.Id,
+                        Alias = entity.Alias
                     });
 
                 }
@@ -522,7 +511,7 @@ namespace Plato.Articles.Controllers
                 }
             }
 
-            return await Topic(topic.Id, 0, null, null);
+            return await Display(entity.Id, 0, null, null);
 
         }
       
@@ -561,7 +550,7 @@ namespace Plato.Articles.Controllers
                         .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
-                        .Action("Topic", "Home", "Plato.Articles", new RouteValueDictionary()
+                        .Action("Display", "Home", "Plato.Articles", new RouteValueDictionary()
                         {
                             ["Id"] = topic.Id,
                             ["Alias"] = topic.Alias
@@ -623,7 +612,7 @@ namespace Plato.Articles.Controllers
                 _alerter.Success(T["Topic Updated Successfully!"]);
 
                 // Redirect to topic
-                return RedirectToAction(nameof(Topic), new
+                return RedirectToAction(nameof(Display), new
                 {
                     Id = topic.Id,
                     Alias = topic.Alias
@@ -688,7 +677,7 @@ namespace Plato.Articles.Controllers
                         .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
-                        .Action("Topic", "Home", "Plato.Articles", new RouteValueDictionary()
+                        .Action("Display", "Home", "Plato.Articles", new RouteValueDictionary()
                         {
                             ["Id"] = topic.Id,
                             ["Alias"] = topic.Alias
@@ -754,7 +743,7 @@ namespace Plato.Articles.Controllers
                 _alerter.Success(T["Reply Updated Successfully!"]);
 
                 // Redirect to topic
-                return RedirectToAction(nameof(Topic), new
+                return RedirectToAction(nameof(Display), new
                 {
                     Id = topic.Id,
                     Alias = topic.Alias
@@ -852,7 +841,7 @@ namespace Plato.Articles.Controllers
             {
                 ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -918,7 +907,7 @@ namespace Plato.Articles.Controllers
             {
                 ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -993,7 +982,7 @@ namespace Plato.Articles.Controllers
             {
                 ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -1064,7 +1053,7 @@ namespace Plato.Articles.Controllers
             {
                 ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -1129,7 +1118,7 @@ namespace Plato.Articles.Controllers
                 {
                     ["Area"] = "Plato.Articles",
                     ["Controller"] = "Home",
-                    ["Action"] = "Topic",
+                    ["Action"] = "Display",
                     ["Id"] = topic.Id,
                     ["Alias"] = topic.Alias
                 }));
@@ -1140,7 +1129,7 @@ namespace Plato.Articles.Controllers
             {
                 ["Area"] = "Plato.Articles",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias,
                 ["Offset"] = offset

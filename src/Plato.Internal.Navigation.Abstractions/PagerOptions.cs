@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Navigation.Abstractions
 {
@@ -15,16 +16,18 @@ namespace Plato.Internal.Navigation.Abstractions
 
         public int PageSize { get; set; } = 20;
 
-        public int InitialOffset => PageSize * Page - PageSize + 1;
-
-        public int SelectedOffset { get; set; }
-
         public int Total => _total;
 
         public bool Enabled { get; set; } = true;
 
         public int TotalPages => _totalPages;
         
+        // RowOffset
+        public int InitialOffset => PageSize * Page - PageSize + 1;
+
+        // 
+        public int SelectedOffset { get; set; }
+
         public ScrollOptions Scroll { get; set; } = new ScrollOptions();
 
         public void SetTotal(int total)
@@ -36,6 +39,20 @@ namespace Plato.Internal.Navigation.Abstractions
         public PagerOptions()
         {
         }
+
+        public PagerOptions(int offset)
+        {
+
+            if (offset <= 0)
+            {
+                return;
+            }
+
+            Page = offset.ToSafeCeilingDivision(PageSize);
+            SelectedOffset = offset;
+
+        }
+
 
         public PagerOptions(RouteData routeData)
         {

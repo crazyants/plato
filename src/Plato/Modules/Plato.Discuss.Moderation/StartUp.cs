@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Moderation.Navigation;
@@ -13,6 +12,8 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Discuss.Moderation.Handlers;
+using Plato.Discuss.Moderation.ViewAdapters;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Moderation
@@ -42,6 +43,13 @@ namespace Plato.Discuss.Moderation
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
             
+            // Moderation view providers
+            services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
+            services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
+
+            // View Adapters
+            services.AddScoped<IViewAdapterProvider, ModerationViewAdapterProvider>();
+
             // Register permissions providers
             services.AddScoped<IPermissionsProvider<ModeratorPermission>, ModeratorPermissions>();
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

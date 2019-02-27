@@ -2,11 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
@@ -15,11 +13,11 @@ namespace Plato.Discuss.ViewComponents
     public class GetTopicReplyListViewComponent : ViewComponent
     {
         
-        private readonly IReplyService _replyService;
+        private readonly IEntityReplyService<Reply> _replyService;
         private readonly IEntityStore<Topic> _entityStore;
 
         public GetTopicReplyListViewComponent(
-            IReplyService replyService,
+            IEntityReplyService<Reply> replyService,
             IEntityStore<Topic> entityStore)
         {
             _replyService = replyService;
@@ -49,8 +47,7 @@ namespace Plato.Discuss.ViewComponents
             EntityOptions options,
             PagerOptions pager)
         {
-            
-          
+
             var topic = await _entityStore.GetByIdAsync(options.EntityId);
             if (topic == null)
             {

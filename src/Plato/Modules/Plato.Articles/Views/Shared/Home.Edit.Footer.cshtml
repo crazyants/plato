@@ -3,7 +3,7 @@
 <div class="float-right">
     @if (Model.Id > 0)
     {
-        <a class="btn btn-lg btn-secondary" asp-route-action="Topic" asp-route-id="@Model.Id" asp-route-alias="@Model.Alias">@T["Cancel"]</a>
+        <a class="btn btn-lg btn-secondary" asp-route-action="Display" asp-route-id="@Model.Id" asp-route-alias="@Model.Alias">@T["Cancel"]</a>
     }
     else
     {

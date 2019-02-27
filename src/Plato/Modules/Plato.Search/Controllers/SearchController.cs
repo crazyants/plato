@@ -102,7 +102,7 @@ namespace Plato.Search.Controllers
                     {
                         ["Area"] = "Plato.Discuss",
                         ["Controller"] = "Home",
-                        ["Action"] = "Topic",
+                        ["Action"] = "Display",
                         ["Id"] = entity.Id,
                         ["Alias"] = entity.Alias
                     });

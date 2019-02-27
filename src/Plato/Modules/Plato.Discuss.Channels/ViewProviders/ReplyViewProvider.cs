@@ -104,7 +104,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                 }
 
                 builder.Add(S[topic.Title], t => t
-                    .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary
+                    .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary
                     {
                         ["id"] = topic.Id,
                         ["alias"] = topic.Alias,

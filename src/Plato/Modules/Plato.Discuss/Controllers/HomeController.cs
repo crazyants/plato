@@ -18,6 +18,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 
@@ -38,7 +39,7 @@ namespace Plato.Discuss.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IReplyService _replyService;
+        private readonly IEntityReplyService<Reply> _replyService;
 
         private readonly IPlatoUserStore<User> _platoUserStore;
 
@@ -58,8 +59,8 @@ namespace Plato.Discuss.Controllers
             IPostManager<Reply> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService, 
-            IReplyService replyService)
+            IAuthorizationService authorizationService,
+            IEntityReplyService<Reply> replyService)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -99,15 +100,18 @@ namespace Plato.Discuss.Controllers
             // default pager
             if (pager == null)
             {
-                pager = new PagerOptions();
+                pager = new PagerOptions(offset);
             }
-            
+
+            // Build infinite scroll options
+            pager.Scroll.Url = GetInfiniteScrollCallbackUrl();;
+
             if (offset > 0)
             {
                 pager.Page = offset.ToSafeCeilingDivision(pager.PageSize);
                 pager.SelectedOffset = offset;
             }
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -117,7 +121,7 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Discuss"]);
             });
 
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -136,12 +140,6 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            // Build infinite scroll options
-            pager.Scroll = new ScrollOptions
-            {
-                Url = GetInfiniteScrollCallbackUrl()
-            };
 
             // Build view model
             var viewModel = new EntityIndexViewModel<Topic>()
@@ -303,7 +301,7 @@ namespace Plato.Discuss.Controllers
         // Display topic
         // -----------------
 
-        public async Task<IActionResult> Topic(int id, int offset, EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Display(int id, int offset, EntityOptions opts, PagerOptions pager)
         {
 
             var topic = await _entityStore.GetByIdAsync(id);
@@ -437,8 +435,8 @@ namespace Plato.Discuss.Controllers
         // Post reply
         // -----------------
 
-        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Topic))]
-        public async Task<IActionResult> TopicPost(EditReplyViewModel model)
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Display))]
+        public async Task<IActionResult> DisplayPost(EditReplyViewModel model)
         {
             // We always need an entity to reply to
             var topic = await _entityStore.GetByIdAsync(model.EntityId);
@@ -509,7 +507,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Topic(topic.Id, 0, null, null);
+            return await Display(topic.Id, 0, null, null);
 
         }
       
@@ -548,7 +546,7 @@ namespace Plato.Discuss.Controllers
                         .Action("Index", "Home", "Plato.Discuss")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
-                        .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary()
+                        .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary()
                         {
                             ["Id"] = topic.Id,
                             ["Alias"] = topic.Alias
@@ -673,7 +671,7 @@ namespace Plato.Discuss.Controllers
                         .Action("Index", "Home", "Plato.Discuss")
                         .LocalNav()
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
-                        .Action("Topic", "Home", "Plato.Discuss", new RouteValueDictionary()
+                        .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary()
                         {
                             ["Id"] = topic.Id,
                             ["Alias"] = topic.Alias
@@ -835,7 +833,7 @@ namespace Plato.Discuss.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -901,7 +899,7 @@ namespace Plato.Discuss.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -976,7 +974,7 @@ namespace Plato.Discuss.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -1047,7 +1045,7 @@ namespace Plato.Discuss.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -1112,7 +1110,7 @@ namespace Plato.Discuss.Controllers
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
-                    ["Action"] = "Topic",
+                    ["Action"] = "Display",
                     ["Id"] = topic.Id,
                     ["Alias"] = topic.Alias
                 }));
@@ -1123,7 +1121,7 @@ namespace Plato.Discuss.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias,
                 ["Offset"] = offset

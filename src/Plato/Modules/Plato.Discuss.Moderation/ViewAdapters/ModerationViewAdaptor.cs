@@ -8,7 +8,7 @@ using Plato.Discuss.Channels.Models;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Moderation.Models;
 
-namespace Plato.Discuss.Channels.ViewAdaptors
+namespace Plato.Discuss.Moderation.ViewAdapters
 {
 
     public class ModerationViewAdapterProvider : BaseAdapterProvider

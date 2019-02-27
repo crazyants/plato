@@ -100,7 +100,7 @@
                     </li>
                 </ol>
 
-                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-alias="@details.LastTopic.Alias" asp-route-id="@details.LastTopic.Id" title="@T["Jump to latest topic"]" data-toggle="tooltip">
+                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-alias="@details.LastTopic.Alias" asp-route-id="@details.LastTopic.Id" title="@T["Jump to latest topic"]" data-toggle="tooltip">
                     <date utc="@details.LastTopic.CreatedDate"></date>
                 </a>
             </div>

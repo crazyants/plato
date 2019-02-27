@@ -113,7 +113,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -169,7 +169,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -224,7 +224,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -280,7 +280,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -335,7 +335,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -390,7 +390,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -445,7 +445,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -500,7 +500,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -555,7 +555,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -610,7 +610,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -675,7 +675,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -737,7 +737,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -799,7 +799,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -861,7 +861,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -923,7 +923,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
@@ -985,7 +985,7 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
-                ["Action"] = "Topic",
+                ["Action"] = "Display",
                 ["Id"] = topic.Id,
                 ["Alias"] = topic.Alias
             }));
