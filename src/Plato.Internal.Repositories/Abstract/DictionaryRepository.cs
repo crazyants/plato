@@ -137,8 +137,6 @@ namespace Plato.Internal.Repositories.Abstract
                 _logger.LogInformation($"Selecting dictionary entry {key}");
 
             DictionaryEntry entry = null;
-            // database context may not be configured.
-            // For example during set-up
             if (_dbContext != null)
             {
                 using (var context = _dbContext)

@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Notifications.Abstractions
 {
-    public interface IUserNotificationsManager<TNoficiation> : ICommandManager<TNoficiation> where TNoficiation : class
+    public interface IUserNotificationsManager<TNotification> : ICommandManager<TNotification> where TNotification : class
     {
 
     }

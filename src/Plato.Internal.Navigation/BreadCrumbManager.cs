@@ -29,8 +29,6 @@ namespace Plato.Internal.Navigation
             _shellSettings = shellSettings;
         }
 
-        #region "Implementation"
-
         public void Configure(Action<INavigationBuilder> configureBuilder)
         {
             var builder = new NavigationBuilder();
@@ -49,11 +47,7 @@ namespace Plato.Internal.Navigation
             return ComputeHref(_menuItems, actionContext);
             
         }
-
-        #endregion
         
-        #region "Private Methods"
-
         List<MenuItem> ComputeHref(List<MenuItem> menuItems, ActionContext actionContext)
         {
             foreach (var menuItem in menuItems)
@@ -117,9 +111,7 @@ namespace Plato.Internal.Navigation
 
             return url;
         }
-        
-        #endregion
-
+      
     }
 
 }

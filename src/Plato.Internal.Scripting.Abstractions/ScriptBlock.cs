@@ -7,19 +7,26 @@ namespace Plato.Internal.Scripting.Abstractions
     public class ScriptBlock
     {
 
+        public IHtmlContent Content { get; }
+
+        public int Order { get; }
+
+        public Dictionary<string, object> Attributes { get; }
+
+        public bool CanMerge { get; set; }
+
+        public bool EnsureUnique { get; set; }
+
         public ScriptBlock(string script)
             : this(new HtmlString(script))
         {
-
         }
 
         public ScriptBlock(string script, int order)
             : this(new HtmlString(script), null, order)
         {
-
         }
-
-
+        
         public ScriptBlock(IHtmlContent content)
            : this(content, null)
         {
@@ -34,6 +41,7 @@ namespace Plato.Internal.Scripting.Abstractions
             : this(null, attributes, int.MaxValue)
         {
         }
+
         public ScriptBlock(Dictionary<string, object> attributes, int order)
             : this(null, attributes, order)
         {
@@ -57,17 +65,7 @@ namespace Plato.Internal.Scripting.Abstractions
             CanMerge = canMerge;
             EnsureUnique = ensureUnique;
         }
-
-        public IHtmlContent Content { get; }
-
-        public int Order { get; }
-
-        public Dictionary<string, object> Attributes { get; }
-
-        public bool CanMerge { get; set; }
         
-        public bool EnsureUnique { get; set; }
-
     }
     
     public enum ScriptSection

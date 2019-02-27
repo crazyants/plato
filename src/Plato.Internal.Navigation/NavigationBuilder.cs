@@ -18,8 +18,7 @@ namespace Plato.Internal.Navigation
         {
             Contained = new List<MenuItem>();
         }
-
-
+        
         public INavigationBuilder Add(
             LocalizedString caption,
             string position,
@@ -28,8 +27,7 @@ namespace Plato.Internal.Navigation
         {
             return Add(caption, position, 0, itemBuilder, classes);
         }
-
-
+        
         public INavigationBuilder Add(
             LocalizedString caption,
             string authority,
@@ -120,6 +118,7 @@ namespace Plato.Internal.Navigation
                 }
             }
         }
+
     }
 
 }

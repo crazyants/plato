@@ -12,6 +12,7 @@ namespace Plato.Internal.Security.Abstractions
         }
 
         public IPermission Permission { get; set; }
+
     }
 
 }

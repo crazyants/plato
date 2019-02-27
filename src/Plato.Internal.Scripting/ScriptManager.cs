@@ -4,10 +4,9 @@ using Plato.Internal.Scripting.Abstractions;
 
 namespace Plato.Internal.Scripting
 {
-
     public class ScriptManager : IScriptManager
     {
-        const string ScriptKey = "js_";
+        private const string ScriptKey = "js_";
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<ScriptManager> _logger;
@@ -19,9 +18,12 @@ namespace Plato.Internal.Scripting
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
         }
-
-        #region "Implementation"
-
+        
+        /// <summary>
+        /// Gets all script blocks registered on the context for a given section.
+        /// </summary>
+        /// <param name="section"></param>
+        /// <returns></returns>
         public ScriptBlocks GetScriptBlocks(ScriptSection section)
         {
             var key = ScriptKey + section;
@@ -41,7 +43,11 @@ namespace Plato.Internal.Scripting
             
         }
 
-        // Register a ScriptBlock on the HttpContext for a specific section
+        /// <summary>
+        /// Register a ScriptBlock on the HttpContext for a specific section
+        /// </summary>
+        /// <param name="block"></param>
+        /// <param name="section"></param>
         public void RegisterScriptBlock(ScriptBlock block, ScriptSection section)
         {
             
@@ -68,8 +74,7 @@ namespace Plato.Internal.Scripting
             }
 
         }
-
-        #endregion
-
+        
     }
+
 }

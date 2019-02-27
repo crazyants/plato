@@ -25,6 +25,7 @@ namespace Plato.Internal.Search
         
         public IEnumerable<FullTextIndex> GetIndexes()
         {
+
             if (_indexes == null)
             {
                 var permissions = new List<FullTextIndex>();
@@ -45,8 +46,7 @@ namespace Plato.Internal.Search
             }
 
             return _indexes;
-
-
+            
         }
 
         public IDictionary<string, IEnumerable<FullTextIndex>> GetIndexesByTable()
@@ -59,7 +59,6 @@ namespace Plato.Internal.Search
                 var indexes = provider.GetIndexes();
                 foreach (var index in indexes)
                 {
-                 
                     if (output.ContainsKey(index.TableName))
                     {
                         output[index.TableName] = output[index.TableName].Concat(new[] { index });
