@@ -114,7 +114,7 @@ namespace Plato.Discuss
             IServiceProvider serviceProvider)
         {
 
-            // home
+            // Index
             routes.MapAreaRoute(
                 name: "Discuss",
                 areaName: "Plato.Discuss",
@@ -122,7 +122,7 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Index" }
             );
             
-            // popular
+            // Popular
             routes.MapAreaRoute(
                 name: "DiscussPopular",
                 areaName: "Plato.Discuss",
@@ -130,31 +130,31 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Popular" }
             );
 
-            // topic
+            // Entity
             routes.MapAreaRoute(
                 name: "DiscussTopic",
                 areaName: "Plato.Discuss",
                 template: "discuss/t/{id:int}/{alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
-                     
-            // new topic
+
+            // New Entity
             routes.MapAreaRoute(
                 name: "DiscussNewTopic",
                 areaName: "Plato.Discuss",
-                template: "discuss/new/{channel?}",
+                template: "discuss/new/{channel:int?}",
                 defaults: new { controller = "Home", action = "Create" }
             );
 
-            // Jump to reply
+            // Display Reply
             routes.MapAreaRoute(
-                name: "DiscussJumpToReply",
+                name: "DiscussDisplayReply",
                 areaName: "Plato.Discuss",
-                template: "discuss/j/{id:int}/{alias}/{replyId:int?}",
-                defaults: new { controller = "Home", action = "Jump" }
+                template: "discuss/r/{id:int}/{alias}/{replyId:int?}",
+                defaults: new { controller = "Home", action = "Reply" }
             );
             
-            // User
+            // User Index
             routes.MapAreaRoute(
                 name: "DiscussUser",
                 areaName: "Plato.Discuss",

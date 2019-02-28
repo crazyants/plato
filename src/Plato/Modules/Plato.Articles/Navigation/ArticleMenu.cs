@@ -52,15 +52,15 @@ namespace Plato.Articles.Navigation
             {
                 // Do we have restore permissions?
                 deletePermission = user?.Id == topic.CreatedUserId
-                    ? Permissions.RestoreOwnTopics
-                    : Permissions.RestoreAnyTopic;
+                    ? Permissions.RestoreOwnArticles
+                    : Permissions.RestoreAnyArticle;
             }
             else
             {
                 // Do we have delete permissions?
                 deletePermission = user?.Id == topic.CreatedUserId
-                    ? Permissions.DeleteArticles
-                    : Permissions.DeleteAnyTopic;
+                    ? Permissions.DeleteOwnArticles
+                    : Permissions.DeleteAnyArticle;
             }
 
             // Add topic options
@@ -79,8 +79,8 @@ namespace Plato.Articles.Navigation
                                 ["alias"] = topic.Alias
                             })
                             .Permission(user?.Id == topic.CreatedUserId
-                                ? Permissions.EditArticles
-                                : Permissions.EditAnyTopic)
+                                ? Permissions.EditOwnArticles
+                                : Permissions.EditAnyArticle)
                             .LocalNav()
                         )
                         .Add(T["Report"], int.MaxValue - 2, report => report
@@ -91,7 +91,7 @@ namespace Plato.Articles.Navigation
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })
-                            .Permission(Permissions.ReportTopics)
+                            .Permission(Permissions.ReportArticles)
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider
@@ -99,7 +99,7 @@ namespace Plato.Articles.Navigation
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(topic.IsDeleted ? "RestoreTopic" : "DeleteTopic", "Home", "Plato.Articles",
+                                .Action(topic.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Articles",
                                     new RouteValueDictionary()
                                     {
                                         ["id"] = topic.Id
@@ -116,13 +116,13 @@ namespace Plato.Articles.Navigation
             if (!topic.IsClosed)
             {
                 builder
-                    .Add(T["Reply"], int.MaxValue, options => options
+                    .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
                             .Attributes(user == null
                                 ? new Dictionary<string, object>()
                                 {
                                     {"data-toggle", "tooltip"},
-                                    {"title", T["Login to Reply"]}
+                                    {"title", T["Login to Comment"]}
                                 }
                                 : new Dictionary<string, object>()
                                 {

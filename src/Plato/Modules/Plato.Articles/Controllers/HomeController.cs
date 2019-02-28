@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
-using Plato.Articles.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
@@ -22,7 +21,6 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Stores.Users;
 
 namespace Plato.Articles.Controllers
 {
@@ -43,7 +41,6 @@ namespace Plato.Articles.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyService<Comment> _replyService;
-
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public IHtmlLocalizer T { get; }
@@ -194,7 +191,7 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Create(int channel)
         {
 
-            if (!await _authorizationService.AuthorizeAsync(this.User, channel, Permissions.CreateArticles))
+            if (!await _authorizationService.AuthorizeAsync(this.User, channel, Permissions.PostArticles))
             {
                 return Unauthorized();
             }
@@ -225,7 +222,7 @@ namespace Plato.Articles.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
-        public async Task<IActionResult> CreatePost(EditTopicViewModel model)
+        public async Task<IActionResult> CreatePost(EditEntityViewModel model)
         {
 
             // Get authenticated user
@@ -312,7 +309,7 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission to view deleted topics
             if (entity.IsDeleted)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedArticles))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -327,7 +324,7 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission to view private topics
             if (entity.IsPrivate)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateArticles))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -342,7 +339,7 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission to view spam topics
             if (entity.IsSpam)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamArticles))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -423,11 +420,11 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Post Reply
+        // Post Entity Reply
         // -----------------
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Display))]
-        public async Task<IActionResult> DisplayPost(EditReplyViewModel model)
+        public async Task<IActionResult> DisplayPost(EditEntityReplyViewModel model)
         {
             // We always need an entity to reply to
             var entity = await _entityStore.GetByIdAsync(model.EntityId);
@@ -509,8 +506,8 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             // Get topic we are editing
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(id);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -518,11 +515,17 @@ namespace Plato.Articles.Controllers
             // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
+            // We need to be authenticated to edit
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             // Do we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-                user?.Id == topic.CreatedUserId
-                    ? Permissions.EditArticles
-                    : Permissions.EditAnyTopic))
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user?.Id == entity.CreatedUserId
+                    ? Permissions.EditOwnArticles
+                    : Permissions.EditAnyArticle))
             {
                 return Unauthorized();
             }
@@ -536,11 +539,11 @@ namespace Plato.Articles.Controllers
                     ).Add(S["Articles"], articles => articles
                         .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
-                    ).Add(S[topic.Title.TrimToAround(75)], post => post
+                    ).Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Articles", new RouteValueDictionary()
                         {
-                            ["Id"] = topic.Id,
-                            ["Alias"] = topic.Alias
+                            ["Id"] = entity.Id,
+                            ["Alias"] = entity.Alias
                         })
                         .LocalNav()
                     )
@@ -550,12 +553,12 @@ namespace Plato.Articles.Controllers
             });
 
             // Return view
-            return View(await _entityViewProvider.ProvideEditAsync(topic, this));
+            return View(await _entityViewProvider.ProvideEditAsync(entity, this));
 
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
-        public async Task<IActionResult> EditPost(EditTopicViewModel model)
+        public async Task<IActionResult> EditPost(EditEntityViewModel model)
         {
             // Get entity we are editing 
             var topic = await _entityStore.GetByIdAsync(model.Id);
@@ -620,7 +623,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Edit Reply
+        // Edit Entity Reply
         // -----------------
 
         public async Task<IActionResult> EditReply(int id)
@@ -682,7 +685,7 @@ namespace Plato.Articles.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditReply))]
-        public async Task<IActionResult> EditReplyPost(EditReplyViewModel model)
+        public async Task<IActionResult> EditReplyPost(EditEntityReplyViewModel model)
         {
 
             // Ensure the reply exists
@@ -749,110 +752,10 @@ namespace Plato.Articles.Controllers
         }
         
         // -----------------
-        // User Entities
+        // Report Entity
         // -----------------
 
-        public async Task<IActionResult> UserIndex(int id, EntityIndexOptions opts, PagerOptions pager)
-        {
-
-            // Get user
-            var user = await _platoUserStore.GetByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // default options
-            if (opts == null)
-            {
-                opts = new EntityIndexOptions();
-            }
-
-            // default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-
-            // Build breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Users"], users => users
-                    .Action("Index", "Home", "Plato.Users")
-                    .LocalNav()
-                ).Add(S[user.DisplayName], name => name
-                    .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
-                    {
-                        ["id"] = user.Id,
-                        ["alias"] = user.Alias
-                    })
-                    .LocalNav()
-                ).Add(S["Articles"]);
-            });
-            
-            // Get default options
-            var defaultViewOptions = new EntityIndexOptions();
-            var defaultPagerOptions = new PagerOptions();
-
-            // Add non default route data for pagination purposes
-            if (opts.Search != defaultViewOptions.Search)
-                this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort)
-                this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order)
-                this.RouteData.Values.Add("opts.order", opts.Order);
-            if (opts.Filter != defaultViewOptions.Filter)
-                this.RouteData.Values.Add("opts.filter", opts.Filter);
-            if (pager.Page != defaultPagerOptions.Page)
-                this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            // Build view model
-            var viewModel = new EntityIndexViewModel<Entity>()
-            {
-                Options = opts,
-                Pager = pager
-            };
-
-            // Add view model to context
-            HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
-
-            // If we have a pager.page querystring value return paged results
-            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
-            {
-                if (page > 0)
-                    return View("GetArticles", viewModel);
-            }
-
-            // Build view
-            var result = await _userIndexProvider.ProvideDisplayAsync(new UserIndex()
-            {
-                Id = id
-            }, this);
-
-            //// Return view
-            return View(result);
-
-            //return Task.FromResult((IActionResult)View());
-        }
-
-
-
-        // -----------------
-        // Report Topic
-        // -----------------
-
-        public Task<IActionResult> Report(
-            int entityId,
-            int entityReplyId = 0)
+        public Task<IActionResult> Report(int id, int replyId = 0)
         {
             // Return view
             return Task.FromResult((IActionResult) View());
@@ -860,10 +763,10 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Delete / Restore Topic
+        // Delete / Restore Entity
         // -----------------
 
-        public async Task<IActionResult> DeleteTopic(string id)
+        public async Task<IActionResult> Delete(string id)
         {
 
             // Ensure we have a valid id
@@ -894,8 +797,8 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user.Id == topic.CreatedUserId
-                    ? Permissions.DeleteArticles
-                    : Permissions.DeleteAnyTopic))
+                    ? Permissions.DeleteOwnArticles
+                    : Permissions.DeleteAnyArticle))
             {
                 return Unauthorized();
             }
@@ -929,7 +832,7 @@ namespace Plato.Articles.Controllers
             
         }
      
-        public async Task<IActionResult> RestoreTopic(string id)
+        public async Task<IActionResult> Restore(string id)
         {
 
             // Ensure we have a valid id
@@ -960,8 +863,8 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user.Id == topic.CreatedUserId
-                    ? Permissions.RestoreOwnTopics
-                    : Permissions.RestoreAnyTopic))
+                    ? Permissions.RestoreOwnArticles
+                    : Permissions.RestoreAnyArticle))
             {
                 return Unauthorized();
             }
@@ -1035,8 +938,8 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user.Id == reply.CreatedUserId
-                    ? Permissions.DeleteOwnReplies
-                    : Permissions.DeleteAnyReply))
+                    ? Permissions.DeleteOwnComments
+                    : Permissions.DeleteAnyComment))
             {
                 return Unauthorized();
             }
@@ -1106,8 +1009,8 @@ namespace Plato.Articles.Controllers
             // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user.Id == reply.CreatedUserId
-                    ? Permissions.RestoreOwnReplies
-                    : Permissions.RestoreAnyReply))
+                    ? Permissions.RestoreOwnComments
+                    : Permissions.RestoreAnyComment))
             {
                 return Unauthorized();
             }
@@ -1145,33 +1048,30 @@ namespace Plato.Articles.Controllers
         // Jump
         // -----------------
 
-        public async Task<IActionResult> Jump(
-            int id,
-            int replyId,
-            EntityOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Jump(int id, int replyId, EntityOptions opts, PagerOptions pager)
         {
 
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(id);
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
             
             // Set entity Id for replies to return
-            opts.EntityId = topic.Id;
+            opts.EntityId = entity.Id;
 
             // We need to iterate all replies to calculate the offset
             pager.Page = 1;
@@ -1197,23 +1097,23 @@ namespace Plato.Articles.Controllers
                 // Could not locate offset, fallback by redirecting to topic
                 return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Articles",
-                    ["Controller"] = "Home",
-                    ["Action"] = "Display",
-                    ["Id"] = topic.Id,
-                    ["Alias"] = topic.Alias
+                    ["area"] = "Plato.Articles",
+                    ["controller"] = "Home",
+                    ["action"] = "Display",
+                    ["id"] = entity.Id,
+                    ["alias"] = entity.Alias
                 }));
             }
 
             // Redirect to offset within article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Articles",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = topic.Id,
-                ["Alias"] = topic.Alias,
-                ["Offset"] = offset
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["pager.offset"] = offset,
+                ["id"] = entity.Id,
+                ["alias"] = entity.Alias
             }));
 
         }
@@ -1221,7 +1121,6 @@ namespace Plato.Articles.Controllers
         #endregion
 
         #region "Private Methods"
-        
         
         string GetSampleMarkDown(int number)
         {

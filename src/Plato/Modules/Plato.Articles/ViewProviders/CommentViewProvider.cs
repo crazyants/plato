@@ -5,6 +5,7 @@ using Plato.Articles.Models;
 using Plato.Articles.Services;
 using Plato.Articles.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 
@@ -64,7 +65,7 @@ namespace Plato.Articles.ViewProviders
                 }
             }
 
-            var viewModel = new EditReplyViewModel()
+            var viewModel = new EditEntityReplyViewModel()
             {
                 Id = comment.Id,
                 EntityId = comment.EntityId,
@@ -73,9 +74,9 @@ namespace Plato.Articles.ViewProviders
             };
 
             return Task.FromResult(Views(
-                View<EditReplyViewModel>("Home.Edit.Reply.Header", model => viewModel).Zone("header"),
-                View<EditReplyViewModel>("Home.Edit.Reply.Content", model => viewModel).Zone("content"),
-                View<EditReplyViewModel>("Home.Edit.Reply.Footer", model => viewModel).Zone("Footer")
+                View<EditEntityReplyViewModel>("Home.Edit.Reply.Header", model => viewModel).Zone("header"),
+                View<EditEntityReplyViewModel>("Home.Edit.Reply.Content", model => viewModel).Zone("content"),
+                View<EditEntityReplyViewModel>("Home.Edit.Reply.Footer", model => viewModel).Zone("Footer")
             ));
 
 
@@ -84,10 +85,12 @@ namespace Plato.Articles.ViewProviders
         public override async Task<bool> ValidateModelAsync(Comment comment, IUpdateModel updater)
         {
             // Build model
-            var model = new EditReplyViewModel();
-            model.Id = comment.Id;
-            model.EntityId = comment.EntityId;
-            model.Message = comment.Message;
+            var model = new EditEntityReplyViewModel
+            {
+                Id = comment.Id,
+                EntityId = comment.EntityId,
+                Message = comment.Message
+            };
 
             // Validate model
             return await updater.TryUpdateModelAsync(model);

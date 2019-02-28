@@ -65,7 +65,7 @@ namespace Plato.Discuss.ViewProviders
                 View<Topic>("Home.Display.Tools", model => topic).Zone("tools"),
                 View<Topic>("Home.Display.Sidebar", model => topic).Zone("sidebar"),
                 View<EntityViewModel<Topic, Reply>>("Home.Display.Content", model => viewModel).Zone("content"),
-                View<EditReplyViewModel>("Home.Display.Footer", model => new EditReplyViewModel()
+                View<EditEntityReplyViewModel>("Home.Display.Footer", model => new EditEntityReplyViewModel()
                 {
                     EntityId = topic.Id,
                     EditorHtmlName = EditorHtmlName
@@ -90,7 +90,7 @@ namespace Plato.Discuss.ViewProviders
                 }
             }
           
-            var viewModel = new EditTopicViewModel()
+            var viewModel = new EditEntityViewModel()
             {
                 Id = topic.Id,
                 Title = topic.Title,
@@ -100,16 +100,16 @@ namespace Plato.Discuss.ViewProviders
             };
      
             return Task.FromResult(Views(
-                View<EditTopicViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
-                View<EditTopicViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
-                View<EditTopicViewModel>("Home.Edit.Footer", model => viewModel).Zone("Footer")
+                View<EditEntityViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
+                View<EditEntityViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
+                View<EditEntityViewModel>("Home.Edit.Footer", model => viewModel).Zone("Footer")
             ));
 
         }
         
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditTopicViewModel
+            return await updater.TryUpdateModelAsync(new EditEntityViewModel
             {
                 Title = topic.Title,
                 Message = topic.Message
@@ -119,7 +119,7 @@ namespace Plato.Discuss.ViewProviders
         public override async Task ComposeTypeAsync(Topic topic, IUpdateModel updater)
         {
 
-            var model = new EditTopicViewModel
+            var model = new EditEntityViewModel
             {
                 Title = topic.Title,
                 Message = topic.Message

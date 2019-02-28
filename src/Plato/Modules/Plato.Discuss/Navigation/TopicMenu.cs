@@ -100,7 +100,7 @@ namespace Plato.Discuss.Navigation
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(topic.IsDeleted ? "RestoreTopic" : "DeleteTopic", "Home", "Plato.Discuss",
+                                .Action(topic.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Discuss",
                                     new RouteValueDictionary()
                                     {
                                         ["id"] = topic.Id

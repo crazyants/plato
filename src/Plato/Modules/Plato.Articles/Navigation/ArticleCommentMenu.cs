@@ -57,14 +57,14 @@ namespace Plato.Articles.Navigation
             if (reply.IsDeleted)
             {
                 deletePermission = user?.Id == reply.CreatedUserId
-                    ? Permissions.RestoreOwnReplies
-                    : Permissions.RestoreAnyReply;
+                    ? Permissions.RestoreOwnComments
+                    : Permissions.RestoreAnyComment;
             }
             else
             {
                 deletePermission = user?.Id == reply.CreatedUserId
-                    ? Permissions.DeleteOwnReplies
-                    : Permissions.DeleteAnyReply;
+                    ? Permissions.DeleteOwnComments
+                    : Permissions.DeleteAnyComment;
             }
             
             // Options
@@ -77,7 +77,7 @@ namespace Plato.Articles.Navigation
                             {"title", T["Options"]}
                         })
                         .Add(T["Edit"], int.MinValue, edit => edit
-                            .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            .Action("EditReply", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
                                 ["id"] = reply?.Id ?? 0
                             })
@@ -86,18 +86,18 @@ namespace Plato.Articles.Navigation
                                 Permissions.EditAnyComment)
                             .LocalNav())
                         .Add(T["Report"], int.MaxValue - 10, report => report
-                            .Action("Report", "Home", "Plato.Discuss")
+                            .Action("Report", "Home", "Plato.Articles")
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })
-                            .Permission(Permissions.ReportReplies)
+                            .Permission(Permissions.ReportComments)
                             .LocalNav()
                         )
                         .Add(reply.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Discuss",
+                                .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Articles",
                                     new RouteValueDictionary()
                                     {
                                         ["id"] = reply.Id
@@ -114,13 +114,13 @@ namespace Plato.Articles.Navigation
             if (!topic.IsClosed)
             {
                 builder
-                    .Add(T["Reply"], int.MaxValue, options => options
+                    .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
                             .Attributes(user == null
                                 ? new Dictionary<string, object>()
                                 {
                                     {"data-toggle", "tooltip"},
-                                    {"title", T["Login to Reply"]}
+                                    {"title", T["Login to Comment"]}
                                 }
                                 : new Dictionary<string, object>()
                                 {
