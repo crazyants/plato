@@ -1,0 +1,20 @@
+﻿@model MovedViewModel
+@{
+    ViewData["Title"] = "404 - Not Found";
+}
+
+<h4>@T["404 - Not Found"]</h4>
+<div class="row">
+    <div class="col-md-6">
+        <p>
+            @T["Sorry but the page you are looking for no longer exists. It could be the content you are trying to access has since been deleted."]
+        </p>
+        <p>
+            <a class="btn btn-primary" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                <i class="fal fa-home"></i>
+                @T["Return Home"]
+            </a>
+        </p>
+      
+    </div>
+</div>

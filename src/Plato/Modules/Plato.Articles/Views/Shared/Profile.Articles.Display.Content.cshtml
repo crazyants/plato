@@ -10,12 +10,14 @@
         </a>
     </card-title>
     <card-body>
-        @await DisplayAsync(new View("GetArticleList", new
-        {
-            options = @Model.Options,
-            pager = @Model.Pager
-        }))
-    </card-body>
+        <ul class="list-group list-group-hover">
+            @await DisplayAsync(new View("GetArticleList", new
+            {
+                options = @Model.Options,
+                pager = @Model.Pager
+            }))
+        </ul>
+</card-body>
 </card>
 
      

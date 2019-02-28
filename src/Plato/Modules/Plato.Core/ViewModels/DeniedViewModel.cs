@@ -1,6 +1,6 @@
 ﻿namespace Plato.Core.ViewModels
 {
-    public class UnauthorizedViewModel
+    public class DeniedViewModel
     {
 
         public string ReturnUrl { get; set; }

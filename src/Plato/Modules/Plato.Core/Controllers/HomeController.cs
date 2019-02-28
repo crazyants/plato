@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Core.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation.Abstractions;
@@ -17,15 +16,15 @@ namespace Plato.Core.Controllers
     {
 
         #region "Constructor"
-        
-  
+
+
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-        
+
         public HomeController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
@@ -33,7 +32,7 @@ namespace Plato.Core.Controllers
             IAlerter alerter,
             IBreadCrumbManager breadCrumbManager)
         {
-         
+
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
 
@@ -53,7 +52,7 @@ namespace Plato.Core.Controllers
         [HttpGet, AllowAnonymous]
         public Task<IActionResult> Index()
         {
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -61,19 +60,18 @@ namespace Plato.Core.Controllers
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
                 ).Add(S["Discuss"]);
-              
             });
-            
+
             // Build view
             //var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
 
             // Return view
-            return Task.FromResult((IActionResult)View());
-            
+            return Task.FromResult((IActionResult) View());
+
         }
 
         // ---------------------
-        // Unauthorized / Access Denied
+        // Unauthorized - 401
         // ---------------------
 
         [HttpGet, AllowAnonymous]
@@ -91,20 +89,48 @@ namespace Plato.Core.Controllers
                     .LocalNav()
                 ).Add(S["Access Denied"]);
             });
-            
+
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
         
         // ---------------------
-        // Error page
+        // Moved - 404
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Moved()
+        {
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Not Found"]);
+            });
+
+            // Build model
+            var model = new MovedViewModel()
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            // Return view
+            return Task.FromResult((IActionResult) View(model));
+
+        }
+
+        // ---------------------
+        // Error - 500
         // ---------------------
 
         [HttpGet, AllowAnonymous]
         public Task<IActionResult> Error()
         {
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -113,19 +139,20 @@ namespace Plato.Core.Controllers
                     .LocalNav()
                 ).Add(S["Error"]);
             });
-            
+
             // Build model
-            var model = new ErrorViewModel() {
+            var model = new ErrorViewModel()
+            {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             };
 
             // Return view
             return Task.FromResult((IActionResult)View(model));
-            
+
         }
         
         #endregion
 
     }
-    
+
 }

@@ -316,6 +316,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
                     case 401:
                         context.HttpContext.Response.Redirect("/denied");
                         break;
+                    case 404:
+                        context.HttpContext.Response.Redirect("/moved");
+                        break;
                     case 500:
                         context.HttpContext.Response.Redirect("/error");
                         break;

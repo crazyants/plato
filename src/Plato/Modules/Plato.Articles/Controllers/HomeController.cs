@@ -31,6 +31,7 @@ namespace Plato.Articles.Controllers
 
         #region "Constructor"
 
+        private readonly IViewProviderManager<UserIndex> _userIndexProvider;
         private readonly IViewProviderManager<Article> _entityViewProvider;
         private readonly IViewProviderManager<Comment> _replyViewProvider;
         private readonly IEntityStore<Article> _entityStore;
@@ -62,7 +63,8 @@ namespace Plato.Articles.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
-            IEntityReplyService<Comment> replyService)
+            IEntityReplyService<Comment> replyService,
+            IViewProviderManager<UserIndex> userIndexProvider)
         {
             _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -76,6 +78,7 @@ namespace Plato.Articles.Controllers
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
             _replyService = replyService;
+            _userIndexProvider = userIndexProvider;
 
             T = localizer;
             S = stringLocalizer;
@@ -87,7 +90,7 @@ namespace Plato.Articles.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest Entities
+        // Latest
         // -----------------
 
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
@@ -144,7 +147,7 @@ namespace Plato.Articles.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adapters
+            // Add view model to context
             HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
@@ -160,7 +163,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Popular Entities
+        // Popular
         // -----------------
 
         public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
@@ -185,7 +188,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // New article
+        // New Entity
         // -----------------
 
         public async Task<IActionResult> Create(int channel)
@@ -294,7 +297,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Display article
+        // Display Entity
         // -----------------
 
         public async Task<IActionResult> Display(int id, EntityOptions opts, PagerOptions pager)
@@ -420,7 +423,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Post comment
+        // Post Reply
         // -----------------
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Display))]
@@ -500,7 +503,7 @@ namespace Plato.Articles.Controllers
         }
       
         // -----------------
-        // Edit article
+        // Edit Entity
         // -----------------
 
         public async Task<IActionResult> Edit(int id)
@@ -551,9 +554,7 @@ namespace Plato.Articles.Controllers
 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditTopicViewModel model)
         {
             // Get entity we are editing 
@@ -619,7 +620,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Edit reply
+        // Edit Reply
         // -----------------
 
         public async Task<IActionResult> EditReply(int id)
@@ -680,9 +681,7 @@ namespace Plato.Articles.Controllers
 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(EditReply))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditReply))]
         public async Task<IActionResult> EditReplyPost(EditReplyViewModel model)
         {
 
@@ -748,6 +747,104 @@ namespace Plato.Articles.Controllers
             return await Create(0);
 
         }
+        
+        // -----------------
+        // User Entities
+        // -----------------
+
+        public async Task<IActionResult> UserIndex(int id, EntityIndexOptions opts, PagerOptions pager)
+        {
+
+            // Get user
+            var user = await _platoUserStore.GetByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // default options
+            if (opts == null)
+            {
+                opts = new EntityIndexOptions();
+            }
+
+            // default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Users"], users => users
+                    .Action("Index", "Home", "Plato.Users")
+                    .LocalNav()
+                ).Add(S[user.DisplayName], name => name
+                    .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
+                    {
+                        ["id"] = user.Id,
+                        ["alias"] = user.Alias
+                    })
+                    .LocalNav()
+                ).Add(S["Articles"]);
+            });
+            
+            // Get default options
+            var defaultViewOptions = new EntityIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            // Build view model
+            var viewModel = new EntityIndexViewModel<Entity>()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
+            // Add view model to context
+            HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
+
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetArticles", viewModel);
+            }
+
+            // Build view
+            var result = await _userIndexProvider.ProvideDisplayAsync(new UserIndex()
+            {
+                Id = id
+            }, this);
+
+            //// Return view
+            return View(result);
+
+            //return Task.FromResult((IActionResult)View());
+        }
+
+
 
         // -----------------
         // Report Topic

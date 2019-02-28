@@ -91,8 +91,8 @@ namespace Plato.Discuss
             services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
             
             // Add user views
-            services.AddScoped<IViewProviderManager<DiscussUser>, ViewProviderManager<DiscussUser>>();
-            services.AddScoped<IViewProvider<DiscussUser>, UserViewProvider>();
+            services.AddScoped<IViewProviderManager<UserIndex>, ViewProviderManager<UserIndex>>();
+            services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Reply>>();
@@ -158,8 +158,8 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "DiscussUser",
                 areaName: "Plato.Discuss",
-                template: "u/{id:int}/{alias?}/discussions",
-                defaults: new { controller = "Home", action = "UserIndex" }
+                template: "u/{id:int}/{alias?}/topics/{pager.offset:int?}",
+                defaults: new { controller = "User", action = "Index" }
             );
 
         }

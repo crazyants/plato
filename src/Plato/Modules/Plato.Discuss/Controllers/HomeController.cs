@@ -29,7 +29,7 @@ namespace Plato.Discuss.Controllers
 
         #region "Constructor"
 
-        private readonly IViewProviderManager<DiscussUser> _userViewProvider;
+        private readonly IViewProviderManager<UserIndex> _userViewProvider;
         private readonly IViewProviderManager<Topic> _topicViewProvider;
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
@@ -62,7 +62,7 @@ namespace Plato.Discuss.Controllers
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
             IEntityReplyService<Reply> replyService, 
-            IViewProviderManager<DiscussUser> userViewProvider)
+            IViewProviderManager<UserIndex> userViewProvider)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -186,7 +186,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // New  Entity
+        // New Entity
         // -----------------
 
         public async Task<IActionResult> Create(int channel)
@@ -778,10 +778,10 @@ namespace Plato.Discuss.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Users"], discuss => discuss
+                ).Add(S["Users"], users => users
                     .Action("Index", "Home", "Plato.Users")
                     .LocalNav()
-                ).Add(S[user.DisplayName], discuss => discuss
+                ).Add(S[user.DisplayName], name => name
                     .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
                     {
                         ["id"] = user.Id,
@@ -810,17 +810,28 @@ namespace Plato.Discuss.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
+            // Limited results to current user
+            opts.CreatedByUserId = user.Id;
+
+            // Build view model
             var viewModel = new EntityIndexViewModel<Topic>()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Add view options to context
+            // Add view model to context
             this.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
-
+            
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetTopics", viewModel);
+            }
+            
             // Build view
-            var result = await _userViewProvider.ProvideDisplayAsync(new DiscussUser()
+            var result = await _userViewProvider.ProvideDisplayAsync(new UserIndex()
             {
                 Id = id
             }, this);

@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Handlers;
 using Plato.Core.Middleware;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
@@ -50,15 +49,8 @@ namespace Plato.Core
             // Register client options middleware 
             app.UseMiddleware<SettingsClientOptionsMiddleware>();
             
-            // Error page route
-            routes.MapAreaRoute(
-                name: "ErrorPage",
-                areaName: "Plato.Core",
-                template: "error",
-                defaults: new { controller = "Home", action = "Error" }
-            );
-
-            // Unauthorized / access denied page route
+       
+            // Unauthorized - 401
             routes.MapAreaRoute(
                 name: "UnauthorizedPage",
                 areaName: "Plato.Core",
@@ -66,6 +58,24 @@ namespace Plato.Core
                 defaults: new { controller = "Home", action = "Denied" }
             );
 
+            // Moved - 404
+            routes.MapAreaRoute(
+                name: "MovedPage",
+                areaName: "Plato.Core",
+                template: "moved",
+                defaults: new { controller = "Home", action = "Moved" }
+            );
+
+            // Error page - 500
+            routes.MapAreaRoute(
+                name: "ErrorPage",
+                areaName: "Plato.Core",
+                template: "error",
+                defaults: new { controller = "Home", action = "Error" }
+            );
+            
         }
+
     }
+
 }

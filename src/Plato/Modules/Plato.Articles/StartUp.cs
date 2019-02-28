@@ -86,8 +86,8 @@ namespace Plato.Articles
             services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
             
             // Add user views
-            services.AddScoped<IViewProviderManager<ArticlesUser>, ViewProviderManager<ArticlesUser>>();
-            services.AddScoped<IViewProvider<ArticlesUser>, UserViewProvider>();
+            services.AddScoped<IViewProviderManager<UserIndex>, ViewProviderManager<UserIndex>>();
+            services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Comment>>();
@@ -109,7 +109,7 @@ namespace Plato.Articles
             IServiceProvider serviceProvider)
         {
 
-            // discuss home
+            // Index
             routes.MapAreaRoute(
                 name: "Articles",
                 areaName: "Plato.Articles",
@@ -117,7 +117,7 @@ namespace Plato.Articles
                 defaults: new { controller = "Home", action = "Index" }
             );
             
-            // discuss popular
+            // Popular
             routes.MapAreaRoute(
                 name: "ArticlesPopular",
                 areaName: "Plato.Articles",
@@ -125,15 +125,15 @@ namespace Plato.Articles
                 defaults: new { controller = "Home", action = "Popular" }
             );
 
-            // discuss topic
+            // Entity
             routes.MapAreaRoute(
                 name: "ArticlesArticle",
                 areaName: "Plato.Articles",
                 template: "articles/a/{id:int}/{alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
-                     
-            // discuss new article
+
+            // New Entity
             routes.MapAreaRoute(
                 name: "ArticleNew",
                 areaName: "Plato.Articles",
@@ -149,11 +149,11 @@ namespace Plato.Articles
                 defaults: new { controller = "Home", action = "Jump" }
             );
             
-            // User
+            // User 
             routes.MapAreaRoute(
                 name: "ArticlesUser",
                 areaName: "Plato.Articles",
-                template: "u/{id:int}/{alias?}/articles",
+                template: "u/{id:int}/{alias?}/articles/{pager.offset:int?}",
                 defaults: new { controller = "User", action = "Index" }
             );
 

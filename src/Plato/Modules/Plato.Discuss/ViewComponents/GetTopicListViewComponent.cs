@@ -28,22 +28,26 @@ namespace Plato.Discuss.ViewComponents
             PagerOptions pager)
         {
 
+            // Build default
+            if (options == null)
+            {
+                options = new EntityIndexOptions();
+            }
+
+            // Build default
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+            
+            // Explicitly set feature Id
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature != null)
             {
                 options.FeatureId = feature.Id;
             }
 
-            if (options == null)
-            {
-                options = new EntityIndexOptions();
-            }
-
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-            
+            // Review view
             return View(await GetViewModel(options, pager));
 
         }

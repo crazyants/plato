@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Articles.Models;
 using Plato.Articles.ViewModels;
-using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -9,7 +8,8 @@ using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Articles.ViewProviders
 {
-    public class UserViewProvider : BaseViewProvider<ArticlesUser>
+
+    public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -20,43 +20,48 @@ namespace Plato.Articles.ViewProviders
             _platoUserStore = platoUserStore;
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(ArticlesUser articlesUser, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex, IViewProviderContext context)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(articlesUser.Id);
+            // Get user
+            var user = await _platoUserStore.GetByIdAsync(userIndex.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(articlesUser, context);
+                return await BuildIndexAsync(userIndex, context);
             }
 
+            // Build view model
             var viewModel = new UserDisplayViewModel()
             {
                 User = user
             };
 
-            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] as EntityIndexViewModel<Entity>;
+            // Get index view model from context
+            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
 
+            // Build view
             return Views(
-                View<UserDisplayViewModel>("User.Articles.Display.Header", model => viewModel).Zone("header"),
-                View<EntityIndexViewModel<Entity>>("User.Articles.Display.Content", model => topicIndexViewModel).Zone("content")
+                View<UserDisplayViewModel>("User.Index.Header", model => viewModel).Zone("header"),
+                View<EntityIndexViewModel<Article>>("User.Index.Content", model => topicIndexViewModel).Zone("content")
             );
-
-
+            
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(ArticlesUser model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(UserIndex model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(ArticlesUser articlesUser, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(UserIndex userIndex, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(ArticlesUser model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(UserIndex model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
     }
+
 }
