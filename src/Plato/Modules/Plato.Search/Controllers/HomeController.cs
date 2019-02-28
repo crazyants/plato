@@ -133,13 +133,14 @@ namespace Plato.Search.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
+            // Build view model
             var viewModel = new EntityIndexViewModel<Entity>()
             {
                 Options = opts,
                 Pager = pager
             };
 
-            // Add view options to context for use within view adapters
+            // Add view model to context
             this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results

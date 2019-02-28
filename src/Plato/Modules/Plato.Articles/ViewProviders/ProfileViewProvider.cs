@@ -33,7 +33,6 @@ namespace Plato.Articles.ViewProviders
             {
                 Options = new EntityIndexOptions()
                 { 
-                    //EnableCard = false,
                     CreatedByUserId = user.Id
                 },
                 Pager = new PagerOptions()
