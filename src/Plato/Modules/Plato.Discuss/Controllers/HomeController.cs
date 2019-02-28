@@ -29,6 +29,7 @@ namespace Plato.Discuss.Controllers
 
         #region "Constructor"
 
+        private readonly IViewProviderManager<DiscussUser> _userViewProvider;
         private readonly IViewProviderManager<Topic> _topicViewProvider;
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
@@ -60,7 +61,8 @@ namespace Plato.Discuss.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
-            IEntityReplyService<Reply> replyService)
+            IEntityReplyService<Reply> replyService, 
+            IViewProviderManager<DiscussUser> userViewProvider)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -74,6 +76,7 @@ namespace Plato.Discuss.Controllers
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
             _replyService = replyService;
+            _userViewProvider = userViewProvider;
 
             T = localizer;
             S = stringLocalizer;
@@ -158,7 +161,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // Popular Topics
+        // Popular
         // -----------------
 
         public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
@@ -183,7 +186,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // New topic
+        // New  Entity
         // -----------------
 
         public async Task<IActionResult> Create(int channel)
@@ -292,7 +295,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // Display topic
+        // Display Entity
         // -----------------
 
         public async Task<IActionResult> Display(int id, EntityOptions opts, PagerOptions pager)
@@ -415,7 +418,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // Post reply
+        // Post Entity Reply
         // -----------------
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Display))]
@@ -493,9 +496,9 @@ namespace Plato.Discuss.Controllers
             return await Display(topic.Id, null, null);
 
         }
-      
+
         // -----------------
-        // Edit topic
+        // Edit Entity
         // -----------------
 
         public async Task<IActionResult> Edit(int id)
@@ -612,7 +615,7 @@ namespace Plato.Discuss.Controllers
         }
 
         // -----------------
-        // Edit reply
+        // Edit Entity Reply
         // -----------------
 
         public async Task<IActionResult> EditReply(int id)
@@ -739,6 +742,94 @@ namespace Plato.Discuss.Controllers
             return await Create(0);
 
         }
+
+        // -----------------
+        // User Entities
+        // -----------------
+        
+        public async Task<IActionResult> UserIndex(int id, EntityIndexOptions opts, PagerOptions pager)
+        {
+
+            // Get user
+            var user = await _platoUserStore.GetByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // default options
+            if (opts == null)
+            {
+                opts = new EntityIndexOptions();
+            }
+
+            // default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+            
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Users"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Users")
+                    .LocalNav()
+                ).Add(S[user.DisplayName], discuss => discuss
+                    .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
+                    {
+                        ["id"] = user.Id,
+                        ["alias"] = user.Alias
+                    })
+                    .LocalNav()
+                ).Add(S["Topics"]);
+            });
+
+
+            // Get default options
+            var defaultViewOptions = new EntityIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            var viewModel = new EntityIndexViewModel<Topic>()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
+            // Add view options to context
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
+
+            // Build view
+            var result = await _userViewProvider.ProvideDisplayAsync(new DiscussUser()
+            {
+                Id = id
+            }, this);
+
+            //// Return view
+            return View(result);
+
+        }
+
 
         // -----------------
         // Report Topic

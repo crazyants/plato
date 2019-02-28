@@ -1,6 +1,6 @@
 ﻿namespace Plato.Internal.Models.Users
 {
-    public interface IUserMetaData<TNodel> : IMetaData<TNodel> where TNodel : class
+    public interface IUserMetaData<TModel> : IMetaData<TModel> where TModel : class
     {
 
     }

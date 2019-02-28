@@ -141,13 +141,22 @@ namespace Plato.Articles
                 defaults: new { controller = "Home", action = "Create" }
             );
 
-            // article jump to comment
+            // Jump to comment
             routes.MapAreaRoute(
                 name: "ArticlesJumpToComment",
                 areaName: "Plato.Articles",
                 template: "articles/j/{id:int}/{alias}/{replyId:int?}",
                 defaults: new { controller = "Home", action = "Jump" }
             );
+            
+            // User
+            routes.MapAreaRoute(
+                name: "ArticlesUser",
+                areaName: "Plato.Articles",
+                template: "u/{id:int}/{alias?}/articles",
+                defaults: new { controller = "User", action = "Index" }
+            );
+
         }
     }
 }

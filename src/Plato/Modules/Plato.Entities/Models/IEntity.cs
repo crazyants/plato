@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
-using Plato.Internal.Models;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models

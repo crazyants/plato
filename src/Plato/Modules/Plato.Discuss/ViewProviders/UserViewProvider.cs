@@ -28,7 +28,7 @@ namespace Plato.Discuss.ViewProviders
                 return await BuildIndexAsync(discussUser, context);
             }
 
-            var viewModel = new UserDisplayViewModel()
+            var userDisplayViewModel = new UserDisplayViewModel()
             {
                 User = user
             };
@@ -36,11 +36,10 @@ namespace Plato.Discuss.ViewProviders
             var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
 
             return Views(
-                View<UserDisplayViewModel>("User.Discuss.Display.Header", model => viewModel).Zone("header"),
-                View<EntityIndexViewModel<Topic>>("User.Discuss.Display.Content", model => topicIndexViewModel).Zone("content")
+                View<UserDisplayViewModel>("Home.UserIndex.Header", model => userDisplayViewModel).Zone("header"),
+                View<EntityIndexViewModel<Topic>>("Home.UserIndex.Content", model => topicIndexViewModel).Zone("content")
             );
-
-
+            
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(DiscussUser model, IViewProviderContext context)

@@ -10,12 +10,9 @@ using Plato.Internal.Abstractions;
 namespace Plato.Internal.Models.Users
 {
     
-    public class User : IdentityUser<int>,
-        IUser,
-        IModel<User>
+    public class User : IdentityUser<int>, IUser, IModel<User>
     {
-
-
+        
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
 
         private string _displayName;
@@ -134,10 +131,10 @@ namespace Plato.Internal.Models.Users
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
         }
-                 
+
         #endregion
 
-        #region "Public Methods"
+        #region "IUserMetaData Implementation"
 
         public void AddOrUpdate<T>(T obj) where T : class
         {
@@ -176,7 +173,7 @@ namespace Plato.Internal.Models.Users
 
         #endregion
 
-        #region "Implementation"
+        #region "IModel Implementation"
 
         public void PopulateModel(IDataReader dr)
         {

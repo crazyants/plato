@@ -146,13 +146,22 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Create" }
             );
 
-            // jump to reply
+            // Jump to reply
             routes.MapAreaRoute(
                 name: "DiscussJumpToReply",
                 areaName: "Plato.Discuss",
                 template: "discuss/j/{id:int}/{alias}/{replyId:int?}",
                 defaults: new { controller = "Home", action = "Jump" }
             );
+            
+            // User
+            routes.MapAreaRoute(
+                name: "DiscussUser",
+                areaName: "Plato.Discuss",
+                template: "u/{id:int}/{alias?}/discussions",
+                defaults: new { controller = "Home", action = "UserIndex" }
+            );
+
         }
     }
 }

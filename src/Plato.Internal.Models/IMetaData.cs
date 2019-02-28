@@ -6,7 +6,7 @@ namespace Plato.Internal.Models
 {
     
     /// <summary>
-    /// Represents some abstract meta data that can be stored on types.
+    /// Represents some abstract meta data that can be stored on certain types.
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     public interface IMetaData<TModel> where TModel : class

@@ -22,12 +22,14 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile, IViewProviderContext context)
         {
 
+            // Get user
             var user = await _platoUserStore.GetByIdAsync(profile.Id);
             if (user == null)
             {
                 return await BuildIndexAsync(profile, context);
             }
             
+            // Build view model
             var viewModel = new EntityIndexViewModel<Topic>()
             {
                 Options = new EntityIndexOptions()
@@ -42,6 +44,7 @@ namespace Plato.Discuss.ViewProviders
                 }
             };
 
+            // Return view
             return Views(
                 View<EntityIndexViewModel<Topic>>("Profile.Discuss.Display.Content", model => viewModel)
                     .Zone("content")
@@ -63,5 +66,7 @@ namespace Plato.Discuss.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
     }
+
 }
