@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
 using Microsoft.AspNetCore.Routing;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Labels.Navigation

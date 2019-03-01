@@ -78,7 +78,7 @@ namespace Plato.Discuss.Labels
             routes.MapAreaRoute(
                 name: "DiscussLabelDisplay",
                 areaName: "Plato.Discuss.Labels",
-                template: "discuss/label/{opts.labelId:int}/{alias?}",
+                template: "discuss/label/{opts.labelId:int}/{alias?}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 
