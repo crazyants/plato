@@ -44,16 +44,17 @@ namespace Plato.Entities.ViewModels
         [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Desc;
 
-        [DataMember(Name = "channel")]
-        public int ChannelId { get; set; }
+        [DataMember(Name = "category")]
+        public int CategoryId { get; set; }
 
-        public int[] ChannelIds { get; set; }
+        public int[] CategoryIds { get; set; }
 
         public int CreatedByUserId { get; set; }
 
         public int LabelId { get; set; }
 
         public int TagId { get; set; }
+
     }
 
     public class SortColumn

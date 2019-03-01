@@ -52,7 +52,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
 
             CategoryBase categoryBase = null;
-            if (channel.Id > 0)
+            if (channel?.Id > 0)
             {
                 categoryBase = await _categoryStore.GetByIdAsync(channel.Id);
             }

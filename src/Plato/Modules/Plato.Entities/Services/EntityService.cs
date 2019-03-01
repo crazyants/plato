@@ -95,11 +95,11 @@ namespace Plato.Entities.Services
                     if (!string.IsNullOrEmpty(options.Search))
                         q.Keywords.Like(options.Search);
 
-                    if (options.ChannelId > 0)
-                        q.CategoryId.Equals(options.ChannelId);
+                    if (options.CategoryId > 0)
+                        q.CategoryId.Equals(options.CategoryId);
 
-                    if (options.ChannelIds != null)
-                        q.CategoryId.IsIn(options.ChannelIds);
+                    if (options.CategoryIds != null)
+                        q.CategoryId.IsIn(options.CategoryIds);
 
                     if (options.LabelId > 0)
                         q.LabelId.Equals(options.LabelId);

@@ -71,14 +71,14 @@ namespace Plato.Discuss.Labels
             routes.MapAreaRoute(
                 name: "DiscussLabelIndex",
                 areaName: "Plato.Discuss.Labels",
-                template: "discuss/labels/{offset:int?}",
+                template: "discuss/labels/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
             routes.MapAreaRoute(
                 name: "DiscussLabelDisplay",
                 areaName: "Plato.Discuss.Labels",
-                template: "discuss/label/{id:int}/{alias?}",
+                template: "discuss/label/{opts.labelId:int}/{alias?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 

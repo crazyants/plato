@@ -12,22 +12,23 @@ using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using SortBy = Plato.Entities.ViewModels.SortBy;
 
 namespace Plato.Discuss.Labels.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {
 
-        #region "Constructor"
-        
         private readonly IViewProviderManager<Label> _labelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ILabelStore<Label> _labelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
-        
+        private readonly IFeatureFacade _featureFacade;
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -41,7 +42,8 @@ namespace Plato.Discuss.Labels.Controllers
             IContextFacade contextFacade,
             IAlerter alerter,
             IBreadCrumbManager breadCrumbManager,
-            IContextFacade contextFacade1)
+            IContextFacade contextFacade1,
+            IFeatureFacade featureFacade)
         {
             _settingsStore = settingsStore;
             _labelStore = labelStore;
@@ -49,20 +51,14 @@ namespace Plato.Discuss.Labels.Controllers
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade1;
+            _featureFacade = featureFacade;
 
             T = htmlLocalizer;
             S = stringLocalizer;
 
         }
-
-        #endregion
-
-        #region "Actions"
-
-        public async Task<IActionResult> Index(
-            int offset,
-            LabelIndexOptions opts,
-            PagerOptions pager)
+        
+        public async Task<IActionResult> Index(LabelIndexOptions opts, PagerOptions pager)
         {
 
             if (opts == null)
@@ -128,33 +124,18 @@ namespace Plato.Discuss.Labels.Controllers
 
         }
 
-        public async Task<IActionResult> Display(
-            int id,
-            EntityIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Display(EntityIndexOptions opts, PagerOptions pager)
         {
 
-            var label = await _labelStore.GetByIdAsync(id);
+            // Get label
+            var label = await _labelStore.GetByIdAsync(opts.LabelId);
+
+            // Ensure label exists
             if (label == null)
             {
                 return NotFound();
             }
-
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                        .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Discuss")
-                        .LocalNav()
-                    ).Add(S["Labels"], labels => labels
-                        .Action("Index", "Home", "Plato.Discuss.Labels")
-                        .LocalNav()
-                    ).Add(S[label.Name]);
-            });
-
+            
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -172,28 +153,73 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
+            
+            // Build view model
+            var viewModel = await GetDisplayViewModelAsync(opts, pager);
 
-            // We don't need to add to pagination 
-            opts.LabelId = label?.Id ?? 0;
+            // Add view model to context 
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
 
-            var viewModel = new EntityIndexViewModel<Topic>()
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
-                Options = opts,
+                if (page > 0 && !pager.Enabled)
+                    return View("GetTopics", viewModel);
+            }
+            
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                ).Add(S["Labels"], labels => labels
+                    .Action("Index", "Home", "Plato.Discuss.Labels")
+                    .LocalNav()
+                ).Add(S[label.Name]);
+            });
+
+
+            // Return view
+            return View(await _labelViewProvider.ProvideDisplayAsync(label, this));
+
+        }
+
+        async Task<EntityIndexViewModel<Topic>> GetDisplayViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        {
+
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+            
+            // Ensure results are sorted
+            if (options.Sort  == SortBy.Auto)
+            {
+                options.Sort = SortBy.LastReply;
+            }
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            // Return updated model
+            return new EntityIndexViewModel<Topic>()
+            {
+                Options = options,
                 Pager = pager
             };
 
-            // Add view options to context 
-            this.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
-
-            // Build view
-            var result = await _labelViewProvider.ProvideDisplayAsync(label, this);
-
-            // Return view
-            return View(result);
-
         }
-        
-        #endregion
+
+
+
 
     }
 

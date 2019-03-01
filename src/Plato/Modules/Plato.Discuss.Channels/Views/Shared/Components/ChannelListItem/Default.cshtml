@@ -34,7 +34,7 @@
         }
         else
         {
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
                 @Model.Channel.Name
             </a>
         }
