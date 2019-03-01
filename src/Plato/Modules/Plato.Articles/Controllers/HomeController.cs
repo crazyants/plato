@@ -109,7 +109,7 @@ namespace Plato.Articles.Controllers
                 pager = new PagerOptions();
             }
             
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -1177,11 +1177,13 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
             var rnd = new Random();
             var totalUsers = users?.Total - 1 ?? 0;
             var randomUser = users?.Data[rnd.Next(0, totalUsers)];
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
 
             var topic = new Article()
             {
                 Title = "Test Article " + rnd.Next(0, 2000).ToString(),
                 Message = GetSampleMarkDown(rnd.Next(0, 2000)),
+                FeatureId = feature?.Id ?? 0,
                 CreatedUserId = randomUser?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow
             };

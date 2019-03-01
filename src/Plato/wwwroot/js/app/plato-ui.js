@@ -2224,7 +2224,6 @@ $(function (win, doc, $) {
 
                 if ($caller.data("infiniteScrollPage")) {
                     var page = parseInt($caller.data("infiniteScrollPage"));
-                    console.log("page: " + page);
                     if (!isNaN(page)) {
                         methods._page = page;
                     }
@@ -2232,15 +2231,13 @@ $(function (win, doc, $) {
 
                 if (typeof $caller.data("infiniteScrollRowOffset") !== "undefined") {
                     var rowOffset = parseInt($caller.data("infiniteScrollRowOffset"));
-                    console.log("rowOffset: " + rowOffset);
-                    if (!isNaN(offset)) {
+                    if (!isNaN(rowOffset)) {
                         methods._rowOffset = rowOffset;
                     }
                 }
 
                 if (typeof $caller.data("infiniteScrollOffset") !== "undefined") {
                     var offset = parseInt($caller.data("infiniteScrollOffset"));
-                    console.log("offset: " + offset);
                     if (!isNaN(offset)) {
                         methods._offset = offset;
                     }
@@ -2248,7 +2245,6 @@ $(function (win, doc, $) {
 
                 if ($caller.data("infiniteScrollTotalPages")) {
                     var totalPages = parseInt($caller.data("infiniteScrollTotalPages"));
-                    console.log("totalPages: " + totalPages);
                     if (!isNaN(totalPages)) {
                         methods._totalPages = totalPages;
                     }
@@ -2287,7 +2283,7 @@ $(function (win, doc, $) {
                             var top = $caller.offset().top,
                                 bottom = top + $caller.outerHeight();
 
-                            // At the veru top of the window remove offset from url
+                            // At the very top of the window remove offset from url
                             if (spy.scrollTop === 0) {
                                 methods.resetState($caller);
                             } else {
@@ -2445,7 +2441,7 @@ $(function (win, doc, $) {
                 // Ensure we have a callback url
                 var url = methods.getUrl($caller),
                     pageLoaded = methods.isPageLoaded($caller, page);
-                if (url === "" || pageLoaded) {
+                if (url === "" || pageLoaded || methods._loading === true) {
                     return;
                 }
 
@@ -2600,16 +2596,12 @@ $(function (win, doc, $) {
                 }
 
                 var url = methods.getUrl($caller), parts = getUrl(url);
-
-                console.log("callbackURl: " + url);
-
+                
                 // Append offset if supplied
                 var offsetString = "";
                 if (offset !== null && typeof offset !== "undefined") {
                     offsetString = "/" + offset.toString();
                 }
-
-                console.log(JSON.stringify(parts));
 
                 return parts.url + offsetString + parts.qs;
                 
