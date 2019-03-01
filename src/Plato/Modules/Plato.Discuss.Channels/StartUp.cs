@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
@@ -15,11 +14,10 @@ using Plato.Categories.Repositories;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
-using Plato.Discuss.Channels.ViewAdaptors;
+using Plato.Discuss.Channels.ViewAdapters;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Channels.Services;
-using Plato.Discuss.Channels.ViewAdapters;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Channels
@@ -64,13 +62,8 @@ namespace Plato.Discuss.Channels
             // Admin view providers
             services.AddScoped<IViewProviderManager<CategoryBase>, ViewProviderManager<CategoryBase>>();
             services.AddScoped<IViewProvider<CategoryBase>, AdminViewProvider>();
-
-            // Moderation view providers
-            //services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
-            //services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
-       
+            
             // Register view adapters
-//            services.AddScoped<IViewAdapterProvider, ModerationViewAdapterProvider>();
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
 
             // Register message broker subscribers

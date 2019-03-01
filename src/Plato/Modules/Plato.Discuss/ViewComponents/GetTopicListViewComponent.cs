@@ -11,8 +11,7 @@ namespace Plato.Discuss.ViewComponents
 {
     public class GetTopicListViewComponent : ViewComponent
     {
-
-        private readonly IFeatureFacade _featureFacade;
+        
         private readonly IEntityService<Topic> _entityService;
 
         public GetTopicListViewComponent(
@@ -20,7 +19,6 @@ namespace Plato.Discuss.ViewComponents
             IFeatureFacade featureFacade)
         {
             _entityService = entityService;
-            _featureFacade = featureFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -39,14 +37,7 @@ namespace Plato.Discuss.ViewComponents
             {
                 pager = new PagerOptions();
             }
-            
-            // Explicitly set feature Id
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+        
             // Review view
             return View(await GetViewModel(options, pager));
 

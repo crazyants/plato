@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Extensions;
@@ -21,6 +22,7 @@ using Plato.Discuss.ViewModels;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
@@ -42,6 +44,7 @@ namespace Plato.Discuss.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyService<Reply> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IFeatureFacade _featureFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -61,7 +64,8 @@ namespace Plato.Discuss.Controllers
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
             IEntityReplyService<Reply> replyService, 
-            IViewProviderManager<UserIndex> userViewProvider)
+            IViewProviderManager<UserIndex> userViewProvider,
+            IFeatureFacade featureFacade)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -76,6 +80,7 @@ namespace Plato.Discuss.Controllers
             _authorizationService = authorizationService;
             _replyService = replyService;
             _userViewProvider = userViewProvider;
+            _featureFacade = featureFacade;
 
             T = localizer;
             S = stringLocalizer;
@@ -107,16 +112,7 @@ namespace Plato.Discuss.Controllers
 
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-            
-            // Build breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Discuss"]);
-            });
-
+       
             //await CreateSampleData();
 
             // Get default options
@@ -137,6 +133,15 @@ namespace Plato.Discuss.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                opts.FeatureId = feature.Id;
+            }
+            
             // Build view model
             var viewModel = new EntityIndexViewModel<Topic>()
             {
@@ -153,6 +158,15 @@ namespace Plato.Discuss.Controllers
                 if (page > 0)
                     return View("GetTopics", viewModel);
             }
+            
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"]);
+            });
 
             // Return view
             return View(await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
@@ -505,7 +519,7 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 
-            // Get topic we are editing
+            // Get entity we are editing
             var entity = await _entityStore.GetByIdAsync(id);
             if (entity == null)
             {

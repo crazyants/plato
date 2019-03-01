@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Models;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
 
-namespace Plato.Discuss.Channels.ViewAdaptors
+namespace Plato.Discuss.Channels.ViewAdapters
 {
 
     public class TopicListItemViewAdapter : BaseAdapterProvider
@@ -46,7 +45,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Channels
             // Instead we update the model for the topic item view component
-            // here via our view adaptor to include the channel information
+            // here via our view adapter to include the channel information
             // This way the channel data is only ever populated if the channels feature is enabled
             return await Adapt("TopicListItem", v =>
             {
@@ -58,7 +57,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                         // Return an anonymous type, we are adapting a view component
                         return new
                         {
-                            model = model
+                            model
                         };
                     }
 
@@ -68,7 +67,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                         // Return an anonymous type, we are adapting a view component
                         return new
                         {
-                            model = model
+                            model
                         };
                     }
 
@@ -82,7 +81,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                     // Return an anonymous type, we are adapting a view component
                     return new
                     {
-                        model = model
+                        model
                     };
 
                 });
