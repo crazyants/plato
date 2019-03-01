@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Articles.Models;
 using Plato.Articles.ViewModels;
 using Plato.Entities.ViewModels;
@@ -37,12 +38,16 @@ namespace Plato.Articles.ViewProviders
             };
 
             // Get index view model from context
-            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
-
+            var indexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
+            if (indexViewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Article>).ToString()} has not been registered on the HttpContext!");
+            }
+            
             // Build view
             return Views(
                 View<UserDisplayViewModel>("User.Index.Header", model => viewModel).Zone("header"),
-                View<EntityIndexViewModel<Article>>("User.Index.Content", model => topicIndexViewModel).Zone("content")
+                View<EntityIndexViewModel<Article>>("User.Index.Content", model => indexViewModel).Zone("content")
             );
             
         }

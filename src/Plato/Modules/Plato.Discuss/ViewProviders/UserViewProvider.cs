@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.ViewModels;
@@ -33,11 +34,15 @@ namespace Plato.Discuss.ViewProviders
                 User = user
             };
 
-            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
+            var indexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
+            if (indexViewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+            }
 
             return Views(
                 View<UserDisplayViewModel>("User.Index.Header", model => userDisplayViewModel).Zone("header"),
-                View<EntityIndexViewModel<Topic>>("User.Index.Content", model => topicIndexViewModel).Zone("content")
+                View<EntityIndexViewModel<Topic>>("User.Index.Content", model => indexViewModel).Zone("content")
             );
             
         }

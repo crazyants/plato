@@ -64,7 +64,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IViewProviderContext updater)
         {
 
-            // Ensure we explictly set the featureId
+            // Ensure we explicitly set the featureId
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {

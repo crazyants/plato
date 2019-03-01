@@ -43,8 +43,12 @@ namespace Plato.Articles.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Article article, IViewProviderContext context)
         {
 
-            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] as EntityIndexViewModel<Article>;
-            
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Entity>).ToString()} has not been registered on the HttpContext!");
+            }
+
             return Task.FromResult(Views(
                 View<EntityIndexViewModel<Article>>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<EntityIndexViewModel<Article>>("Home.Index.Tools", model => viewModel).Zone("tools"),
@@ -57,7 +61,11 @@ namespace Plato.Articles.ViewProviders
         {
             
             var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Article, Comment>)] as EntityViewModel<Article, Comment>;
-            
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Article>).ToString()} has not been registered on the HttpContext!");
+            }
+
             // Increment entity view count
             await IncrementTopicViewCount(article);
         

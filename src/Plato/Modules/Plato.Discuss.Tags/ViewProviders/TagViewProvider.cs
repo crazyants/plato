@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Models;
 using Plato.Discuss.Tags.Models;
@@ -41,7 +42,11 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             // Get index view model from context
             var viewModel = context.Controller.HttpContext.Items[typeof(TagIndexViewModel)] as TagIndexViewModel;
-         
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(TagIndexViewModel).ToString()} has not been registered on the HttpContext!");
+            }
+
             return Task.FromResult(Views(
                 View<TagIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
                 View<TagIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
@@ -55,6 +60,10 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             // Get topic index view model from context
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+            }
 
             var indexViewModel = new TagDisplayViewModel
             {

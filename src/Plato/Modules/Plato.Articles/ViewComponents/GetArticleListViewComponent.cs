@@ -3,28 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.ViewComponents
 {
     public class GetArticleListViewComponent : ViewComponent
     {
-
-        private readonly IFeatureFacade _featureFacade;
+        
         private readonly IEntityService<Article> _articleService;
 
-        public GetArticleListViewComponent(
-            IEntityService<Article> articleService,
-            IFeatureFacade featureFacade)
+        public GetArticleListViewComponent(IEntityService<Article> articleService)
         {
             _articleService = articleService;
-            _featureFacade = featureFacade;
+        
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            EntityIndexOptions options,
-            PagerOptions pager)
+        public async Task<IViewComponentResult> InvokeAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
             // Build default
@@ -39,13 +33,6 @@ namespace Plato.Articles.ViewComponents
                 pager = new PagerOptions();
             }
 
-            // Explicitly set feature Id
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-            
             // Review view
             return View(await GetViewModel(options, pager));
 

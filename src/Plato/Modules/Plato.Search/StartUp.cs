@@ -71,8 +71,7 @@ namespace Plato.Search
 
             // Services
             services.AddScoped<IFullTextCatalogManager, FullTextCatalogManager>();
-            //services.AddScoped<ISearchService, SearchService>();
-            
+          
         }
 
         public override void Configure(

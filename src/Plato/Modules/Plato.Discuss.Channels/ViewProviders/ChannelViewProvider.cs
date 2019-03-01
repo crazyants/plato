@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
@@ -7,6 +8,7 @@ using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -37,10 +39,10 @@ namespace Plato.Discuss.Channels.ViewProviders
             _actionContextAccessor = actionContextAccessor;
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Channel channel, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Channel channel, IViewProviderContext context)
         {
 
-            // Ensure we explictly set the featureId
+            // Ensure we explicitly set the featureId
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
@@ -62,7 +64,11 @@ namespace Plato.Discuss.Channels.ViewProviders
             };
             
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+            }
             
             var indexViewModel = new ChannelIndexViewModel
             {

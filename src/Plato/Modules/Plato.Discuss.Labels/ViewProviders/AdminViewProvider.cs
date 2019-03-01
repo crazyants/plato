@@ -42,6 +42,10 @@ namespace Plato.Discuss.Labels.ViewProviders
      
             // Get index view model from context
             var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(LabelIndexViewModel).ToString()} has not been registered on the HttpContext!");
+            }
             
             return Task.FromResult(Views(
                 View<LabelIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),

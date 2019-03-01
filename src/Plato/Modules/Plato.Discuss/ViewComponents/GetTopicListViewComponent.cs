@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
@@ -14,16 +12,12 @@ namespace Plato.Discuss.ViewComponents
         
         private readonly IEntityService<Topic> _entityService;
 
-        public GetTopicListViewComponent(
-            IEntityService<Topic> entityService, 
-            IFeatureFacade featureFacade)
+        public GetTopicListViewComponent(IEntityService<Topic> entityService)
         {
             _entityService = entityService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            EntityIndexOptions options,
-            PagerOptions pager)
+        public async Task<IViewComponentResult> InvokeAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
             // Build default

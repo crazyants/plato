@@ -6,7 +6,6 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Entities.ViewModels;
 using Plato.Entities.Services;
-using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Articles.ViewComponents
 {
@@ -124,14 +123,10 @@ namespace Plato.Articles.ViewComponents
             },
         };
 
-        private readonly IFeatureFacade _featureFacade;
         private readonly IEntityService<Article> _articleService;
 
-        public ArticleListViewComponent(
-            IFeatureFacade featureFacade,
-            IEntityService<Article> articleService)
+        public ArticleListViewComponent(IEntityService<Article> articleService)
         {
-            _featureFacade = featureFacade;
             _articleService = articleService;
         }
 
@@ -158,14 +153,7 @@ namespace Plato.Articles.ViewComponents
             EntityIndexOptions options,
             PagerOptions pager)
         {
-            
-            // Restrict entities to articles feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-            
+          
             // Get results
             var results = await _articleService.GetResultsAsync(options, pager);
 

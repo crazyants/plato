@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -58,11 +59,15 @@ namespace Plato.Roles.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(Role role, IViewProviderContext context)
         {
 
-            var userIndexViewModel = context.Controller.HttpContext.Items[typeof(RolesIndexViewModel)] as RolesIndexViewModel;
-            
+            var indexViewModel = context.Controller.HttpContext.Items[typeof(RolesIndexViewModel)] as RolesIndexViewModel;
+            if (indexViewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(RolesIndexViewModel).ToString()} has not been registered on the HttpContext!");
+            }
+
             var viewModel = await GetPagedModel(
-                userIndexViewModel?.Options,
-                userIndexViewModel?.Pager);
+                indexViewModel?.Options,
+                indexViewModel?.Pager);
 
             return Views(
                 View<RolesIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),

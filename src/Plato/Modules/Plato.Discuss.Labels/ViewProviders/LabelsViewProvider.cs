@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
@@ -40,7 +41,11 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             // Get index view model from context
             var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
-         
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(LabelIndexViewModel).ToString()} has not been registered on the HttpContext!");
+            }
+
             return Task.FromResult(Views(
                 View<LabelIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
                 View<LabelIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
@@ -54,7 +59,11 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             // Get topic index view model from context
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
-
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+            }
+            
             var indexViewModel = new LabelDisplayViewModel
             {
                 Options = viewModel?.Options,

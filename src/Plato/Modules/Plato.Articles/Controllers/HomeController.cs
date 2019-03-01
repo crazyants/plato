@@ -13,6 +13,7 @@ using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -42,6 +43,7 @@ namespace Plato.Articles.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyService<Comment> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IFeatureFacade _featureFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -61,7 +63,8 @@ namespace Plato.Articles.Controllers
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
             IEntityReplyService<Comment> replyService,
-            IViewProviderManager<UserIndex> userIndexProvider)
+            IViewProviderManager<UserIndex> userIndexProvider,
+            IFeatureFacade featureFacade)
         {
             _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -76,6 +79,7 @@ namespace Plato.Articles.Controllers
             _authorizationService = authorizationService;
             _replyService = replyService;
             _userIndexProvider = userIndexProvider;
+            _featureFacade = featureFacade;
 
             T = localizer;
             S = stringLocalizer;
@@ -104,18 +108,6 @@ namespace Plato.Articles.Controllers
             {
                 pager = new PagerOptions();
             }
-
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-            // Build breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Articles"]);
-            });
             
             //await CreateSampleData();
 
@@ -138,14 +130,10 @@ namespace Plato.Articles.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
             // Build view model
-            var viewModel = new EntityIndexViewModel<Article>()
-            {
-                Options = opts,
-                Pager = pager
-            };
+            var viewModel = await GetIndexViewModelAsync(opts, pager);
 
             // Add view model to context
-            HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
+            HttpContext.Items[typeof(EntityIndexViewModel<Article>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -153,7 +141,16 @@ namespace Plato.Articles.Controllers
                 if (page > 0)
                     return View("GetArticles", viewModel);
             }
-
+            
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Articles"]);
+            });
+            
             // Return view
             return View(await _entityViewProvider.ProvideIndexAsync(new Article(), this));
 
@@ -166,13 +163,13 @@ namespace Plato.Articles.Controllers
         public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
         {
 
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityIndexOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
@@ -300,13 +297,16 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Display(int id, EntityOptions opts, PagerOptions pager)
         {
 
+            // Get entity to display
             var entity = await _entityStore.GetByIdAsync(id);
+
+            // Ensure the entity exists
             if (entity == null)
             {
                 return NotFound();
             }
 
-            // Ensure we have permission to view deleted topics
+            // Ensure we have permission to view deleted entities
             if (entity.IsDeleted)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedArticles))
@@ -321,7 +321,7 @@ namespace Plato.Articles.Controllers
                 }
             }
 
-            // Ensure we have permission to view private topics
+            // Ensure we have permission to view private entities
             if (entity.IsPrivate)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateArticles))
@@ -336,7 +336,7 @@ namespace Plato.Articles.Controllers
                 }
             }
 
-            // Ensure we have permission to view spam topics
+            // Ensure we have permission to view spam entities
             if (entity.IsSpam)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamArticles))
@@ -351,37 +351,19 @@ namespace Plato.Articles.Controllers
                 }
             }
 
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
 
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-            // Build breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Articles"], articles => articles
-                    .Action("Index", "Home", "Plato.Articles")
-                    .LocalNav()
-                ).Add(S[entity.Title.TrimToAround(75)], post => post
-                    .LocalNav()
-                );
-            });
-
             // Maintain previous route data when generating page links
-            // Get default options
             var defaultViewOptions = new EntityViewModel<Article, Comment>();
             var defaultPagerOptions = new PagerOptions();
             
@@ -390,16 +372,8 @@ namespace Plato.Articles.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
-            opts.EntityId = entity.Id;
-
-            
-
             // Build view model
-            var viewModel = new EntityViewModel<Article, Comment>()
-            {
-                Options = opts,
-                Pager = pager
-            };
+            var viewModel = GetDisplayViewModel(entity, opts, pager);
 
             // Add models to context
             HttpContext.Items[typeof(EntityViewModel<Article, Comment>)] = viewModel;
@@ -414,6 +388,20 @@ namespace Plato.Articles.Controllers
                 }
             }
             
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Articles"], articles => articles
+                    .Action("Index", "Home", "Plato.Articles")
+                    .LocalNav()
+                ).Add(S[entity.Title.TrimToAround(75)], post => post
+                    .LocalNav()
+                );
+            });
+
             // Return view
             return View(await _entityViewProvider.ProvideDisplayAsync(entity, this));
 
@@ -823,11 +811,11 @@ namespace Plato.Articles.Controllers
             // Redirect back to article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Articles",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = topic.Id,
-                ["Alias"] = topic.Alias
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["id"] = topic.Id,
+                ["alias"] = topic.Alias
             }));
             
         }
@@ -889,11 +877,11 @@ namespace Plato.Articles.Controllers
             // Redirect back to article
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Articles",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = topic.Id,
-                ["Alias"] = topic.Alias
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["id"] = topic.Id,
+                ["alias"] = topic.Alias
             }));
 
         }
@@ -1045,10 +1033,10 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Jump
+        // Reply
         // -----------------
 
-        public async Task<IActionResult> Jump(int id, int replyId, EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Reply(int id, int replyId, EntityOptions opts, PagerOptions pager)
         {
 
             // Get entity
@@ -1117,11 +1105,55 @@ namespace Plato.Articles.Controllers
             }));
 
         }
-        
+
         #endregion
 
         #region "Private Methods"
+
+        async Task<EntityIndexViewModel<Article>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        {
+
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            // Return updated model
+            return new EntityIndexViewModel<Article>()
+            {
+                Options = options,
+                Pager = pager
+            };
+
+        }
+
+        EntityViewModel<Article, Comment> GetDisplayViewModel(Article entity, EntityOptions options, PagerOptions pager)
+        {
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            // Ensure view model is aware of the entity we are displaying
+            options.EntityId = entity.Id;
+
+            // Return updated view model
+            return new EntityViewModel<Article, Comment>()
+            {
+                Entity = entity,
+                Options = options,
+                Pager = pager
+            };
+        }
         
+        // --------------
+
         string GetSampleMarkDown(int number)
         {
             return @"Hi There, 

@@ -123,7 +123,7 @@ namespace Plato.Articles.Controllers
             };
 
             // Add view model to context
-            this.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] = viewModel;
+            HttpContext.Items[typeof(EntityIndexViewModel<Article>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))

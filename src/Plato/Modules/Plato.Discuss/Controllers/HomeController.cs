@@ -98,21 +98,18 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
         {
 
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityIndexOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
-
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-       
+            
             //await CreateSampleData();
 
             // Get default options
@@ -132,24 +129,11 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                opts.FeatureId = feature.Id;
-            }
             
             // Build view model
-            var viewModel = new EntityIndexViewModel<Topic>()
-            {
-                Options = opts,
-                Pager = pager
-            };
+            var viewModel = await GetIndexViewModelAsync(opts, pager);
 
-            // Add view options to context for use within view adapters
+            // Add view model to context
             HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
@@ -172,7 +156,7 @@ namespace Plato.Discuss.Controllers
             return View(await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
 
         }
-
+        
         // -----------------
         // Popular
         // -----------------
@@ -180,13 +164,13 @@ namespace Plato.Discuss.Controllers
         public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
         {
 
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityIndexOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
@@ -321,7 +305,7 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
-            // Ensure we have permission to view deleted topics
+            // Ensure we have permission to view deleted entities
             if (entity.IsDeleted)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedTopics))
@@ -336,7 +320,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            // Ensure we have permission to view private topics
+            // Ensure we have permission to view private entities
             if (entity.IsPrivate)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateTopics))
@@ -351,7 +335,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            // Ensure we have permission to view spam topics
+            // Ensure we have permission to view spam entities
             if (entity.IsSpam)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamTopics))
@@ -366,21 +350,41 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
+            
+            // Maintain previous route data when generating page links
+            var defaultViewOptions = new EntityViewModel<Topic, Reply>();
+            var defaultPagerOptions = new PagerOptions();
+            
+            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            
+            // Build view model
+            var viewModel = GetDisplayViewModel(entity, opts, pager);
 
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
+            // Add models to context 
+            HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] = viewModel;
+            HttpContext.Items[typeof(Topic)] = entity;
+            
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetTopicReplies", viewModel);
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -394,38 +398,6 @@ namespace Plato.Discuss.Controllers
                     .LocalNav()
                 );
             });
-
-            // Maintain previous route data when generating page links
-            // Get default options
-            var defaultViewOptions = new EntityViewModel<Topic, Reply>();
-            var defaultPagerOptions = new PagerOptions();
-            
-            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
-                this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
-            // Ensure view model is aware of the entity we are displaying
-            opts.EntityId = entity.Id;
-            
-            // Build view model
-            var viewModel = new EntityViewModel<Topic, Reply>()
-            {
-                Entity = entity,
-                Options = opts,
-                Pager = pager
-            };
-
-            // Add models to context 
-            HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] = viewModel;
-            HttpContext.Items[typeof(Topic)] = entity;
-            
-            // If we have a pager.page querystring value return paged results
-            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
-            {
-                if (page > 0)
-                    return View("GetTopicReplies", viewModel);
-            }
 
             // Return view
             return View(await _topicViewProvider.ProvideDisplayAsync(entity, this));
@@ -1130,11 +1102,54 @@ namespace Plato.Discuss.Controllers
             }));
 
         }
-        
+
         #endregion
 
         #region "Private Methods"
         
+        async Task<EntityIndexViewModel<Topic>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        {
+
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            // Return updated model
+            return new EntityIndexViewModel<Topic>()
+            {
+                Options = options,
+                Pager = pager
+            };
+
+        }
+
+        EntityViewModel<Topic, Reply> GetDisplayViewModel(Topic entity, EntityOptions options, PagerOptions pager)
+        {
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            // Ensure view model is aware of the entity we are displaying
+            options.EntityId = entity.Id;
+            
+            return new EntityViewModel<Topic, Reply>()
+            {
+                Entity = entity,
+                Options = options,
+                Pager = pager
+            };
+        }
+
+        // ------------
+
         string GetSampleMarkDown(int number)
         {
             return @"Hi There, 

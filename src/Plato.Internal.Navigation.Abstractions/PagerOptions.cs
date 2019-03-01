@@ -20,15 +20,12 @@ namespace Plato.Internal.Navigation.Abstractions
             set => _page = value;
         }
 
-        /// <summary>
-        /// Gets or sets and optional row offset to start from.
-        /// </summary>
+        [DataMember(Name = "size")]
+        public int PageSize { get; set; } = 20;
+
         [DataMember(Name = "offset")]
         public int Offset { get; set; }
-
-        [DataMember(Name = "pageSize")]
-        public int PageSize { get; set; } = 20;
-    
+ 
         public bool Enabled { get; set; } = false;
 
         // Private setters
@@ -55,6 +52,7 @@ namespace Plato.Internal.Navigation.Abstractions
         public RouteValueDictionary Route(RouteData routeData)
         {
             routeData.Values.Remove("pager.page");
+            routeData.Values.Remove("pager.size");
             routeData.Values.Remove("pager.offset");
             return routeData.Values;
         }

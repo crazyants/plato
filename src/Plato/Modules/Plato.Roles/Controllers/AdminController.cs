@@ -116,13 +116,16 @@ namespace Plato.Roles.Controllers
             //var routeData = new RouteData();
             //routeData.Values.Add("opts.search", opts.Search);
             //routeData.Values.Add("opts.order", opts.Order);
-            
-            // Add view model to context for involved view providers
-            this.HttpContext.Items[typeof(RolesIndexViewModel)] = new RolesIndexViewModel()
+
+            // Build view model
+            var viewModel = new RolesIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
+
+            // Add view model to context
+            this.HttpContext.Items[typeof(RolesIndexViewModel)] = viewModel;
 
             var result = await _roleViewProvider.ProvideIndexAsync(new Role(), this);
 

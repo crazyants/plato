@@ -54,38 +54,53 @@ namespace Plato.Search.Controllers
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
         {
 
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityIndexOptions();
             }
-
-            // Set default sort column if auto is specified
-            if (opts.Sort == SortBy.Auto)
-            {
-                // Get search settings
-                var searchSettings = await _searchSettingsStore.GetAsync();
-                if (searchSettings != null)
-                {
-                    opts.Sort = searchSettings.SearchType == SearchTypes.Tsql
-                        ? SortBy.LastReply
-                        : SortBy.Rank;
-                }
-                else
-                {
-                    opts.Sort = SortBy.LastReply;
-                }
-            }
             
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
+      
+            // Get default options
+            var defaultViewOptions = new EntityIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+            
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search && !this.RouteData.Values.ContainsKey("opts.search"))
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort && !this.RouteData.Values.ContainsKey("opts.sort"))
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order && !this.RouteData.Values.ContainsKey("opts.order"))
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter && !this.RouteData.Values.ContainsKey("opts.filter"))
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (opts.FeatureId != defaultViewOptions.FeatureId && !this.RouteData.Values.ContainsKey("opts.featureId"))
+                this.RouteData.Values.Add("opts.featureId", opts.FeatureId);
+            if (opts.Within != defaultViewOptions.Within && !this.RouteData.Values.ContainsKey("opts.within"))
+                this.RouteData.Values.Add("opts.within", opts.Within);
+            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            
+            // Build view model
+            var viewModel = await GetIndexViewModelAsync(opts, pager);
 
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+            // Add view model to context
+            this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
 
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetEntities", viewModel);
+            }
+            
             // Build breadcrumb
             if (string.IsNullOrEmpty(opts.Search))
             {
@@ -111,50 +126,40 @@ namespace Plato.Search.Controllers
                 });
             }
             
-            // Get default options
-            var defaultViewOptions = new EntityIndexOptions();
-            var defaultPagerOptions = new PagerOptions();
-            
-            // Add non default route data for pagination purposes
-            if (opts.Search != defaultViewOptions.Search && !this.RouteData.Values.ContainsKey("opts.search"))
-                this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort && !this.RouteData.Values.ContainsKey("opts.sort"))
-                this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order && !this.RouteData.Values.ContainsKey("opts.order"))
-                this.RouteData.Values.Add("opts.order", opts.Order);
-            if (opts.Filter != defaultViewOptions.Filter && !this.RouteData.Values.ContainsKey("opts.filter"))
-                this.RouteData.Values.Add("opts.filter", opts.Filter);
-            if (opts.FeatureId != defaultViewOptions.FeatureId && !this.RouteData.Values.ContainsKey("opts.featureId"))
-                this.RouteData.Values.Add("opts..featureId", opts.FeatureId);
-            if (opts.Within != defaultViewOptions.Within && !this.RouteData.Values.ContainsKey("opts.within"))
-                this.RouteData.Values.Add("opts..within", opts.Within);
-            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
-                this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            // Return view
+            return View(await _viewProvider.ProvideIndexAsync(new SearchResult(), this));
 
-            // Build view model
-            var viewModel = new EntityIndexViewModel<Entity>()
+        }
+
+        async Task<EntityIndexViewModel<Entity>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        {
+
+            // Set default sort column if auto is specified
+            if (options.Sort == SortBy.Auto)
             {
-                Options = opts,
-                Pager = pager
-            };
-
-            // Add view model to context
-            this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
-
-            // If we have a pager.page querystring value return paged results
-            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
-            {
-                if (page > 0)
-                    return View("GetEntities", viewModel);
+                // Get search settings
+                var searchSettings = await _searchSettingsStore.GetAsync();
+                if (searchSettings != null)
+                {
+                    options.Sort = searchSettings.SearchType == SearchTypes.Tsql
+                        ? SortBy.LastReply
+                        : SortBy.Rank;
+                }
+                else
+                {
+                    options.Sort = SortBy.LastReply;
+                }
             }
 
-            // Build view
-            var result = await _viewProvider.ProvideIndexAsync(new SearchResult(), this);
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(this.RouteData));
 
-            // Return view
-            return View(result);
+            // Return updated model
+            return new EntityIndexViewModel<Entity>()
+            {
+                Options = options,
+                Pager = pager
+            };
 
         }
 

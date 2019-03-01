@@ -54,7 +54,11 @@ namespace Plato.Users.ViewProviders
         {
 
             var viewModel = context.Controller.HttpContext.Items[typeof(UserIndexViewModel)] as UserIndexViewModel;
-            
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(UserIndexViewModel).ToString()} has not been registered on the HttpContext!");
+            }
+
             return Task.FromResult(
                 Views(
                     View<UserIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),

@@ -2560,31 +2560,59 @@ $(function (win, doc, $) {
             },
             getStateUrl: function($caller, offset) {
                 
-                var url = methods.getUrl($caller),
-                    offsetString = "",
-                    parts = win.location.href.split("?");
+                function getUrl(input) {
+                    
+                    // We always need a Url
+                    if (!input) {
+                        throw new Error("A Url is required.");
+                    }
+
+                    var qs = null,
+                        parts = input.split("?"),
+                        url = parts[0];
+                    
+                    if (parts.length > 1) {
+                        qs = "?" + parts[parts.length - 1];
+                    }
+                    
+                    var params = null;
+                    if (qs) {
+                        params = [];
+                        var pairs = qs.split("&");
+                        for (var i = 0; i < pairs.length; i++) {
+                            var pair = pairs[i].split("=");
+                            if (pair.length > 1) {
+                                params.push({
+                                    key: pair[0],
+                                    value: pair[1]
+                                });
+                            }
+                        }
+                    }
+
+                    return {
+                        url: url,
+                        qs: qs ? qs : "",
+                        params: params
+                    };
+
+                  
+                }
+
+                var url = methods.getUrl($caller), parts = getUrl(url);
+
+                console.log("callbackURl: " + url);
 
                 // Append offset if supplied
+                var offsetString = "";
                 if (offset !== null && typeof offset !== "undefined") {
-                    offsetString = offset.toString();
+                    offsetString = "/" + offset.toString();
                 }
 
-                // Does our Url end with /
-                if (url.substring(url.length - 1, url.length) !== "/") {
-                    url += "/";
-                }
+                console.log(JSON.stringify(parts));
+
+                return parts.url + offsetString + parts.qs;
                 
-                // Append query string params if available
-                if (parts.length === 1) {
-                    return url + offsetString;
-                } else {
-                    // Ensure parameters are shifted to the end
-                    var params = parts[parts.length - 1];
-                    if (params !== "") {
-                        params = "?" + params;
-                    }
-                    return url + offsetString + params;
-                }
 
             },
             resetState: function($caller) {

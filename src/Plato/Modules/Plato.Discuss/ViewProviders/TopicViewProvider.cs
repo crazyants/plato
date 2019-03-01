@@ -43,7 +43,11 @@ namespace Plato.Discuss.ViewProviders
         {
 
             var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
-            
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+            }
+
             return Task.FromResult(Views(
                 View<EntityIndexViewModel<Topic>>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<EntityIndexViewModel<Topic>>("Home.Index.Tools", model => viewModel).Zone("tools"),
@@ -56,7 +60,11 @@ namespace Plato.Discuss.ViewProviders
         {
             
             var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] as EntityViewModel<Topic, Reply>;
-            
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+            }
+
             // Increment entity view count
             await IncrementTopicViewCount(topic);
         

@@ -108,12 +108,12 @@ namespace Plato.Discuss.Moderation.ViewProviders
         {
 
             // Add moderator to context
-            if (context.Controller.HttpContext.Items[typeof(Moderator)] == null)
+            if (context.Controller.HttpContext.Features[typeof(Moderator)] == null)
             {
                 var user = await _contextFacade.GetAuthenticatedUserAsync();
                 if (user != null)
                 {
-                    context.Controller.HttpContext.Items[typeof(Moderator)] = await GetModerator(user, topic);
+                    context.Controller.HttpContext.Features[typeof(Moderator)] = await GetModerator(user, topic);
                 }
             }
 

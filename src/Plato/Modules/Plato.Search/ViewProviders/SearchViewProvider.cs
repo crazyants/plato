@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
@@ -14,7 +15,11 @@ namespace Plato.Search.ViewProviders
         {
             
             var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] as EntityIndexViewModel<Entity>;
-            
+            if (viewModel == null)
+            {
+                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Entity>).ToString()} has not been registered on the HttpContext!");
+            }
+
             return Task.FromResult(Views(
                 View<EntityIndexViewModel<Entity>>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<EntityIndexViewModel<Entity>>("Home.Index.Tools", model => viewModel).Zone("tools"),
