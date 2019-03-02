@@ -61,11 +61,11 @@ namespace Plato.Users.StopForumSpam.Notifications
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Users",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = context.Model.Id,
-                ["Alias"] = context.Model.Alias
+                ["area"] = "Plato.Users",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = context.Model.Id,
+                ["opts.alias"] = context.Model.Alias
             });
 
             // Build message from template

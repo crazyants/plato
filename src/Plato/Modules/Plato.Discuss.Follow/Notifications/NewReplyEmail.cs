@@ -72,11 +72,11 @@ namespace Plato.Discuss.Follow.Notifications
                 var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
                 var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Discuss",
-                    ["Controller"] = "Home",
-                    ["Action"] = "Display",
-                    ["Id"] = topic.Id,
-                    ["Alias"] = topic.Alias
+                    ["area"] = "Plato.Discuss",
+                    ["controller"] = "Home",
+                    ["action"] = "Display",
+                    ["opts.id"] = topic.Id,
+                    ["opts.alias"] = topic.Alias
                 });
                 
                 // Build message from template

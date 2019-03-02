@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Models;
@@ -78,7 +77,7 @@ namespace Plato.Discuss.Labels
             routes.MapAreaRoute(
                 name: "DiscussLabelDisplay",
                 areaName: "Plato.Discuss.Labels",
-                template: "discuss/label/{opts.labelId:int}/{alias?}/{pager.offset:int?}",
+                template: "discuss/label/{opts.labelId:int}/{opts.alias?}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 

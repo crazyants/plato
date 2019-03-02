@@ -26,8 +26,8 @@ namespace Plato.Discuss.Labels.Navigation
                     .Add(T["Labels"], 2, installed => installed
                         .Action("Index", "Home", "Plato.Discuss.Labels", new RouteValueDictionary()
                         {
-                            ["id"] = "",
-                            ["alias"] = ""
+                            ["opts.id"] = "",
+                            ["opts.alias"] = ""
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

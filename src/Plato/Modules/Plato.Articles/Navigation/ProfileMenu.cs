@@ -31,20 +31,20 @@ namespace Plato.Articles.Navigation
             }
 
             var context = _actionContextAccessor.ActionContext;
-            object id = context.RouteData.Values["id"], 
-                alias = context.RouteData.Values["alias"];
+            object id = context.RouteData.Values["opts.id"], 
+                alias = context.RouteData.Values["opts.alias"];
 
             builder
                 .Add(T["Discuss"], 2, discuss => discuss
                     .Add(T["Topics"], 1, topics => topics
                         .Action("Index", "Profile", "Plato.Discuss", new RouteValueDictionary()
                         {
-                            ["id"] = id?.ToString(),
-                            ["alias"] = alias?.ToString()
+                            ["opts.id"] = id?.ToString(),
+                            ["opts.alias"] = alias?.ToString()
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Favourites"], 999, favourites => favourites
+                    ).Add(T["Favorites"], 999, favorites => favorites
                         .Action("Channels", "Admin", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

@@ -14,7 +14,6 @@ using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Users.ViewAdaptors;
@@ -245,7 +244,7 @@ namespace Plato.Users
             routes.MapAreaRoute(
                 name: "AdminUsersOffset",
                 areaName: "Plato.Users",
-                template: "admin/users/{offset:int?}",
+                template: "admin/users/{pager.offset:int?}",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 
@@ -259,7 +258,7 @@ namespace Plato.Users
             routes.MapAreaRoute(
                 name: "Home-Users",
                 areaName: "Plato.Users",
-                template: "u/{offset:int?}",
+                template: "u/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index"}
             );
             
@@ -273,7 +272,7 @@ namespace Plato.Users
             routes.MapAreaRoute(
                 name: "DisplayUserProfile",
                 areaName: "Plato.Users",
-                template: "u/{id:int}/{alias}",
+                template: "u/{opts.id:int}/{opts.alias?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 

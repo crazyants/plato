@@ -27,8 +27,8 @@ namespace Plato.Discuss.Channels.Navigation
                     .Add(T["Channels"], 1, installed => installed
                         .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
                         {
-                            ["id"] = "",
-                            ["alias"] = ""
+                            ["opts.id"] = "",
+                            ["opts.alias"] = ""
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

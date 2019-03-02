@@ -63,29 +63,29 @@ namespace Plato.Entities.Controllers
 
                     var createdByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = entity.CreatedBy.Id,
-                        ["Alias"] = entity.CreatedBy.Alias
+                        ["area"] = "Plato.Users",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = entity.CreatedBy.Id,
+                        ["opts.alias"] = entity.CreatedBy.Alias
                     });
 
                     var modifiedByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = entity.ModifiedBy.Id,
-                        ["Alias"] = entity.ModifiedBy.Alias
+                        ["area"] = "Plato.Users",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = entity.ModifiedBy.Id,
+                        ["opts.alias"] = entity.ModifiedBy.Alias
                     });
 
                     var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = entity.Id,
-                        ["Alias"] = entity.Alias
+                        ["area"] = "Plato.Discuss",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = entity.Id,
+                        ["opts.alias"] = entity.Alias
                     });
 
                     results.Data.Add(new EntityApiResult()

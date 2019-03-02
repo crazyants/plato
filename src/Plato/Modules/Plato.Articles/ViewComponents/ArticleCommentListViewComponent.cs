@@ -52,7 +52,7 @@ namespace Plato.Articles.ViewComponents
             PagerOptions pager)
         {
 
-            var entity = await _entityStore.GetByIdAsync(options.EntityId);
+            var entity = await _entityStore.GetByIdAsync(options.Id);
             if (entity == null)
             {
                 throw new ArgumentNullException();

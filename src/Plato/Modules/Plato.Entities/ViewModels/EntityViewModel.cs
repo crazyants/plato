@@ -24,7 +24,7 @@ namespace Plato.Entities.ViewModels
     public class EntityOptions
     {
 
-        public int EntityId { get; set; }
+        public int Id { get; set; }
 
         public string Sort { get; set; } = "CreatedDate";
 

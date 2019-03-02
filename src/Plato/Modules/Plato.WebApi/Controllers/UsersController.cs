@@ -62,11 +62,11 @@ namespace Plato.WebApi.Controllers
 
                     var profileUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = user.Id,
-                        ["Alias"] = user.Alias
+                        ["area"] = "Plato.Users",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = user.Id,
+                        ["opts.alias"] = user.Alias
                     });
 
                     results.Data.Add(new UserApiResult()

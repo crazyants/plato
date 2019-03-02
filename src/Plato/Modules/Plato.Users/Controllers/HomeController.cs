@@ -5,14 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
@@ -69,13 +67,11 @@ namespace Plato.Users.Controllers
 
         #region "Actions"
 
+        // --------------
         // User List
-        // --------------------------
+        // --------------
 
-        public async Task<IActionResult> Index(
-            int offset,
-            UserIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Index(UserIndexOptions opts, PagerOptions pager)
         {
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
@@ -145,14 +141,15 @@ namespace Plato.Users.Controllers
 
         }
 
+        // --------------
         // User Profile
-        // --------------------------
+        // --------------
 
-        public async Task<IActionResult> Display(int id)
+        public async Task<IActionResult> Display(DisplayUserOptions opts)
         {
 
-            var user = id > 0
-                ? await _platoUserStore.GetByIdAsync(id)
+            var user = opts.Id > 0
+                ? await _platoUserStore.GetByIdAsync(opts.Id)
                 : await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
@@ -171,6 +168,9 @@ namespace Plato.Users.Controllers
                 ).Add(S[user.DisplayName]);
             });
 
+            // Add user to context
+            HttpContext.Items[typeof(User)] = user;
+
             // Build view
             var result = await _viewProvider.ProvideDisplayAsync(new Profile()
             {
@@ -182,9 +182,10 @@ namespace Plato.Users.Controllers
 
         }
 
+        // --------------
         // Edit Profile
-        // --------------------------
-        
+        // --------------
+
         public async Task<IActionResult> EditProfile()
         {
 
@@ -214,8 +215,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(EditProfile))]
+        [HttpPost, ActionName(nameof(EditProfile))]
         public async Task<IActionResult> EditProfilePost(EditProfileViewModel model)
         {
 
@@ -280,8 +280,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(EditAccount))]
+        [HttpPost, ActionName(nameof(EditAccount)), ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAccountPost(EditAccountViewModel model)
         {
 
@@ -319,8 +318,9 @@ namespace Plato.Users.Controllers
 
         }
 
+        // --------------
         // Edit Settings
-        // --------------------------
+        // --------------
 
         public async Task<IActionResult> EditSettings()
         {
@@ -348,8 +348,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(EditSettings))]
+        [HttpPost, ActionName(nameof(EditSettings)), ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSettingsPost(EditSettingsViewModel model)
         {
 

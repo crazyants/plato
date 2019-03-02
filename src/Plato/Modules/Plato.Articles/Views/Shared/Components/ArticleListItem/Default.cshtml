@@ -4,7 +4,7 @@
 }
 
 <div class="list-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">
         <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url" />
     </a>
 </div>
@@ -28,7 +28,7 @@
             <date utc="@Model.Entity.LastReplyDate"></date>
         </a>
     </div>
-    <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.Id" asp-route-alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
+    <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
     {
         <span title="@T["This article is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
@@ -46,7 +46,7 @@
         <span class="pl-2">
             @foreach (var label in Model.Labels)
             {
-                <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                     @label.Name
                 </a>
             }
@@ -64,14 +64,14 @@
                     var replies = user.TotalReplies == 1
                         ? "reply"
                         : "replies";
-                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias">
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias">
                         <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/>
                     </a>
                 }
             </div>
         }
         @T["By"]
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
         <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
         @if (@Model.Channel != null)
         {

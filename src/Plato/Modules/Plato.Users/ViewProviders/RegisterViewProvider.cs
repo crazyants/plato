@@ -144,10 +144,10 @@ namespace Plato.Users.ViewProviders
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Users",
-                    ["Controller"] = "Account",
-                    ["Action"] = "ActivateAccount",
-                    ["Code"] = user.ConfirmationToken
+                    ["area"] = "Plato.Users",
+                    ["controller"] = "Account",
+                    ["action"] = "ActivateAccount",
+                    ["code"] = user.ConfirmationToken
                 });
 
                 var body = string.Format(email.Message, user.DisplayName, callbackUrl);

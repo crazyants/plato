@@ -79,20 +79,20 @@ namespace Plato.Notifications.Controllers
 
                     var toUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = userNotification.To.Id,
-                        ["Alias"] = userNotification.To.Alias
+                        ["area"] = "Plato.Users",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = userNotification.To.Id,
+                        ["opts.alias"] = userNotification.To.Alias
                     });
 
                     var fromUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = userNotification.From.Id,
-                        ["Alias"] = userNotification.From.Alias
+                        ["area"] = "Plato.Users",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = userNotification.From.Id,
+                        ["opts.alias"] = userNotification.From.Alias
                     });
 
                     var url = userNotification.Url;

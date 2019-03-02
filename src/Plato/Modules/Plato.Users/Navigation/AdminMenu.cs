@@ -36,16 +36,7 @@ namespace Plato.Users.Navigation
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));
-
-
-            //builder
-            //    .Add(T["Settings"], 9999, configuration => configuration
-            //        .Add(T["User Settings"], 3, installed => installed
-            //            .Action("Index", "Admin", "Plato.Users")
-            //            //.Permission(Permissions.ManageUsers)
-            //            .LocalNav()
-            //        ));
-
+            
         }
     }
 

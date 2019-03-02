@@ -5,7 +5,7 @@
         <h6 class="card-title float-left">
             @T["My Articles"]
         </h6>
-        <a class="btn btn-secondary float-right" asp-route-area="Plato.Articles" asp-route-controller="User" asp-route-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-alias="@ViewContext.RouteData.Values["alias"]">
+        <a class="btn btn-secondary float-right" asp-route-area="Plato.Articles" asp-route-controller="User" asp-route-action="Index" asp-route-id="@ViewContext.RouteData.Values["opts.id"]" asp-route-alias="@ViewContext.RouteData.Values["opts.alias"]">
             @T["All Articles"]
         </a>
     </card-title>

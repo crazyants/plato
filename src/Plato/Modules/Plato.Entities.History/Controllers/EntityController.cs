@@ -78,11 +78,11 @@ namespace Plato.Entities.History.Controllers
                     
                     var createdByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = history.CreatedBy.Id,
-                        ["Alias"] = history.CreatedBy.Alias
+                        ["area"] = "Plato.Users",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = history.CreatedBy.Id,
+                        ["opts.alias"] = history.CreatedBy.Alias
                     });
 
                     var sb = new StringBuilder();

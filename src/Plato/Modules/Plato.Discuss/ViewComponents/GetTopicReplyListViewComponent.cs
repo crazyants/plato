@@ -48,7 +48,7 @@ namespace Plato.Discuss.ViewComponents
             PagerOptions pager)
         {
 
-            var topic = await _entityStore.GetByIdAsync(options.EntityId);
+            var topic = await _entityStore.GetByIdAsync(options.Id);
             if (topic == null)
             {
                 throw new ArgumentNullException();

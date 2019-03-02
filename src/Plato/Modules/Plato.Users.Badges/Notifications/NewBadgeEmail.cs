@@ -60,11 +60,11 @@ namespace Plato.Users.Badges.Notifications
                 var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
                 var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Users.Badges",
-                    ["Controller"] = "Profile",
-                    ["Action"] = "Index",
-                    ["Id"] = context.Notification.To.Id,
-                    ["Alias"] = context.Notification.To.Alias
+                    ["area"] = "Plato.Users.Badges",
+                    ["controller"] = "Profile",
+                    ["action"] = "Index",
+                    ["opts.id"] = context.Notification.To.Id,
+                    ["opts.alias"] = context.Notification.To.Alias
                 });
 
                 // Build message from template

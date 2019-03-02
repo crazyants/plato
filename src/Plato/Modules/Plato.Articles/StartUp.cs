@@ -129,7 +129,7 @@ namespace Plato.Articles
             routes.MapAreaRoute(
                 name: "ArticlesArticle",
                 areaName: "Plato.Articles",
-                template: "articles/a/{id:int}/{alias}/{pager.offset:int?}",
+                template: "articles/a/{opts.id:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 
@@ -145,15 +145,15 @@ namespace Plato.Articles
             routes.MapAreaRoute(
                 name: "ArticlesJumpToComment",
                 areaName: "Plato.Articles",
-                template: "articles/j/{id:int}/{alias}/{replyId:int?}",
-                defaults: new { controller = "Home", action = "Jump" }
+                template: "articles/j/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
+                defaults: new { controller = "Home", action = "Reply" }
             );
             
-            // User 
+            // User Index
             routes.MapAreaRoute(
                 name: "ArticlesUser",
                 areaName: "Plato.Articles",
-                template: "u/{id:int}/{alias?}/articles/{pager.offset:int?}",
+                template: "u/{opts.id:int}/{opts.alias?}/articles/{pager.offset:int?}",
                 defaults: new { controller = "User", action = "Index" }
             );
 

@@ -76,8 +76,8 @@ namespace Plato.Discuss.Navigation
                         .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
+                                ["opts.id"] = topic.Id,
+                                ["opts.alias"] = topic.Alias
                             })
                             .Permission(user?.Id == topic.CreatedUserId
                                 ? Permissions.EditOwnTopics

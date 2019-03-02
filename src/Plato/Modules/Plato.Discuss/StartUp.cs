@@ -134,7 +134,7 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "DiscussTopic",
                 areaName: "Plato.Discuss",
-                template: "discuss/t/{id:int}/{alias}/{pager.offset:int?}",
+                template: "discuss/t/{opts.id:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 
@@ -150,7 +150,7 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "DiscussDisplayReply",
                 areaName: "Plato.Discuss",
-                template: "discuss/r/{id:int}/{alias}/{replyId:int?}",
+                template: "discuss/r/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
                 defaults: new { controller = "Home", action = "Reply" }
             );
             
@@ -158,7 +158,7 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "DiscussUser",
                 areaName: "Plato.Discuss",
-                template: "u/{id:int}/{alias?}/topics/{pager.offset:int?}",
+                template: "u/{opts.id:int}/{opts.alias?}/topics/{pager.offset:int?}",
                 defaults: new { controller = "User", action = "Index" }
             );
 

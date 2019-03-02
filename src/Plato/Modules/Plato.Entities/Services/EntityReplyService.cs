@@ -42,7 +42,7 @@ namespace Plato.Entities.Services
                 .Take(pager.Page, pager.PageSize)
                 .Select<EntityReplyQueryParams>(async q =>
                 {
-                    q.EntityId.Equals(options.EntityId);
+                    q.EntityId.Equals(options.Id);
 
                     //// Hide private?
                     //if (!await _authorizationService.AuthorizeAsync(principal,

@@ -62,11 +62,11 @@ namespace Plato.Tags.Controllers
                     
                     var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Tags",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Tag",
-                        ["Id"] = tag.Id,
-                        ["Alias"] = tag.Alias
+                        ["area"] = "Plato.Tags",
+                        ["controller"] = "Home",
+                        ["action"] = "Tag",
+                        ["opts.id"] = tag.Id,
+                        ["opts.alias"] = tag.Alias
                     });
 
                     results.Data.Add(new TagApiResult()

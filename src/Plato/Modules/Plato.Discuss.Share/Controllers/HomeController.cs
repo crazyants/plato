@@ -51,23 +51,23 @@ namespace Plato.Discuss.Share.Controllers
             {
                 routeValues = new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Discuss",
-                    ["Controller"] = "Home",
-                    ["Action"] = "Jump",
-                    ["Id"] = entity.Id,
-                    ["Alias"] = entity.Alias,
-                    ["ReplyId"] = replyId
+                    ["area"] = "Plato.Discuss",
+                    ["controller"] = "Home",
+                    ["action"] = "Reply",
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias,
+                    ["opts.replyId"] = replyId
                 };
             }
             else
             {
                 routeValues = new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Discuss",
-                    ["Controller"] = "Home",
-                    ["Action"] = "Display",
-                    ["Id"] = entity.Id,
-                    ["Alias"] = entity.Alias
+                    ["area"] = "Plato.Discuss",
+                    ["controller"] = "Home",
+                    ["action"] = "Display",
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias
                 };
             }
 

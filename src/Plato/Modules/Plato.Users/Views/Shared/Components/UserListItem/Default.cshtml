@@ -30,7 +30,7 @@
 }
 else
 {
-    <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="list-group-item-action d-block p-3 text-center">
+    <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias" class="list-group-item-action d-block p-3 text-center">
         <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar avatar-md" url="@Model.User.Avatar.Url" />
         <h6 class="d-block mt-2">@Model.User.DisplayName</h6>
         <span class="d-block text-muted">

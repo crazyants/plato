@@ -77,7 +77,6 @@ namespace Plato.Users.Badges.Controllers
 
         }
         
-
         #endregion
 
     }

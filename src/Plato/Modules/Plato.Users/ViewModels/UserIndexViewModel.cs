@@ -45,6 +45,12 @@ namespace Plato.Users.ViewModels
 
     }
 
+    public class DisplayUserOptions
+    {
+        public int Id { get; set; }
+
+    }
+
     public class SortColumn
     {
         public string Text { get; set; }

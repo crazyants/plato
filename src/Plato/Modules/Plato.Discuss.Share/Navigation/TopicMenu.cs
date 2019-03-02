@@ -51,9 +51,9 @@ namespace Plato.Discuss.Share.Navigation
                         .Add(T["Share"], share => share
                             .Action("Share", "Home", "Plato.Discuss.Share", new RouteValueDictionary()
                             {
-                                ["id"] = topic.Id.ToString(),
-                                ["alias"] = topic.Alias,
-                                ["replyId"] = "0"
+                                ["opts.id"] = topic.Id.ToString(),
+                                ["opts.alias"] = topic.Alias,
+                                ["opts.replyId"] = "0"
                             })
                             .Attributes(new Dictionary<string, object>()
                             {

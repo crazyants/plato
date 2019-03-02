@@ -295,11 +295,25 @@ namespace Plato.Discuss.Controllers
         // Display Entity
         // -----------------
 
-        public async Task<IActionResult> Display(int id, EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Display(EntityOptions opts, PagerOptions pager)
         {
 
+            // Default options
+            if (opts == null)
+            {
+                opts = new EntityOptions();
+            }
+
+            // Default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+
             // Get entity to display
-            var entity = await _entityStore.GetByIdAsync(id);
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
+
+            // Ensure entity exists
             if (entity == null)
             {
                 return NotFound();
@@ -313,9 +327,9 @@ namespace Plato.Discuss.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Discuss",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
@@ -328,9 +342,9 @@ namespace Plato.Discuss.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Discuss",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
@@ -343,24 +357,13 @@ namespace Plato.Discuss.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Discuss",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
 
-            // Default options
-            if (opts == null)
-            {
-                opts = new EntityOptions();
-            }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
             
             // Maintain previous route data when generating page links
             var defaultViewOptions = new EntityViewModel<Topic, Reply>();
@@ -412,8 +415,8 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> DisplayPost(EditEntityReplyViewModel model)
         {
             // We always need an entity to reply to
-            var topic = await _entityStore.GetByIdAsync(model.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(model.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -454,8 +457,8 @@ namespace Plato.Discuss.Controllers
                     // Redirect to topic
                     return RedirectToAction(nameof(Display), new
                     {
-                        Id = topic.Id,
-                        Alias = topic.Alias
+                        Id = entity.Id,
+                        Alias = entity.Alias
                     });
 
                 }
@@ -480,7 +483,10 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Display(topic.Id, null, null);
+            return await Display(new EntityOptions()
+            {
+                Id = entity.Id
+            }, null);
 
         }
 
@@ -528,8 +534,8 @@ namespace Plato.Discuss.Controllers
                     ).Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary()
                         {
-                            ["Id"] = entity.Id,
-                            ["Alias"] = entity.Alias
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias
                         })
                         .LocalNav()
                     )
@@ -653,8 +659,8 @@ namespace Plato.Discuss.Controllers
                     ).Add(S[topic.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary()
                         {
-                            ["Id"] = topic.Id,
-                            ["Alias"] = topic.Alias
+                            ["opts.id"] = topic.Id,
+                            ["opts.alias"] = topic.Alias
                         })
                         .LocalNav()
                     )
@@ -812,8 +818,8 @@ namespace Plato.Discuss.Controllers
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
                 ["action"] = "Display",
-                ["id"] = topic.Id,
-                ["alias"] = topic.Alias
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
             }));
             
         }
@@ -875,11 +881,11 @@ namespace Plato.Discuss.Controllers
             // Redirect back to topic
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = topic.Id,
-                ["Alias"] = topic.Alias
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
             }));
 
         }
@@ -950,11 +956,11 @@ namespace Plato.Discuss.Controllers
             // Redirect back to topic
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = topic.Id,
-                ["Alias"] = topic.Alias
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
             }));
 
         }
@@ -1021,11 +1027,11 @@ namespace Plato.Discuss.Controllers
             // Redirect back to topic
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = topic.Id,
-                ["Alias"] = topic.Alias
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
             }));
 
         }
@@ -1056,7 +1062,7 @@ namespace Plato.Discuss.Controllers
             }
             
             // Set entity Id for replies to return
-            opts.EntityId = topic.Id;
+            opts.Id = topic.Id;
 
             // We need to iterate all replies to calculate the offset
             pager.Page = 1;
@@ -1085,8 +1091,8 @@ namespace Plato.Discuss.Controllers
                     ["area"] = "Plato.Discuss",
                     ["controller"] = "Home",
                     ["action"] = "Display",
-                    ["id"] = topic.Id,
-                    ["alias"] = topic.Alias
+                    ["opts.id"] = topic.Id,
+                    ["opts.alias"] = topic.Alias
                 }));
             }
 
@@ -1097,8 +1103,8 @@ namespace Plato.Discuss.Controllers
                 ["controller"] = "Home",
                 ["action"] = "Display",
                 ["pager.offset"] = offset,
-                ["id"] = topic.Id,
-                ["alias"] = topic.Alias
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
             }));
 
         }
@@ -1143,9 +1149,7 @@ namespace Plato.Discuss.Controllers
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
-            // Ensure view model is aware of the entity we are displaying
-            options.EntityId = entity.Id;
-            
+            // Return updated model
             return new EntityViewModel<Topic, Reply>()
             {
                 Entity = entity,

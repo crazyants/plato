@@ -1,7 +1,7 @@
 ﻿@model UserDisplayViewModel
 
 <div class="list-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias">
         <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar" url="@Model.User.Avatar.Url" />
     </a>
 </div>

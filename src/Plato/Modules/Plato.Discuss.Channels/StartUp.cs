@@ -84,7 +84,7 @@ namespace Plato.Discuss.Channels
             routes.MapAreaRoute(
                 name: "HomeDiscussChannel",
                 areaName: "Plato.Discuss.Channels",
-                template: "discuss/channels/{opts.categoryId:int}/{alias}/{pager.offset:int?}",
+                template: "discuss/channels/{opts.categoryId:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

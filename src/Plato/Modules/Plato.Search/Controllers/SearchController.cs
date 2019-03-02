@@ -100,11 +100,11 @@ namespace Plato.Search.Controllers
 
                     var url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Discuss",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = entity.Id,
-                        ["Alias"] = entity.Alias
+                        ["area"] = "Plato.Discuss",
+                        ["controller"] = "Home",
+                        ["action"] = "Display",
+                        ["opts.id"] = entity.Id,
+                        ["opts.alias"] = entity.Alias
                     });
 
                     results.Data.Add(new SearchApiResult()
@@ -118,11 +118,11 @@ namespace Plato.Search.Controllers
                             Avatar = entity.CreatedBy.Avatar,
                             Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                             {
-                                ["Area"] = "Plato.Users",
-                                ["Controller"] = "Home",
-                                ["Action"] = "Display",
-                                ["Id"] = entity.CreatedBy.Id,
-                                ["Alias"] = entity.CreatedBy.Alias
+                                ["area"] = "Plato.Users",
+                                ["controller"] = "Home",
+                                ["action"] = "Display",
+                                ["opts.id"] = entity.CreatedBy.Id,
+                                ["opts.alias"] = entity.CreatedBy.Alias
                             })
                         },
                         ModifiedBy = new UserApiResult()
@@ -133,11 +133,11 @@ namespace Plato.Search.Controllers
                             Avatar = entity.ModifiedBy.Avatar,
                             Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                             {
-                                ["Area"] = "Plato.Users",
-                                ["Controller"] = "Home",
-                                ["Action"] = "Display",
-                                ["Id"] = entity.ModifiedBy.Id,
-                                ["Alias"] = entity.ModifiedBy.Alias
+                                ["area"] = "Plato.Users",
+                                ["controller"] = "Home",
+                                ["action"] = "Display",
+                                ["opts.id"] = entity.ModifiedBy.Id,
+                                ["opts.alias"] = entity.ModifiedBy.Alias
                             })
                         },
                         LastReplyBy = new UserApiResult()
@@ -148,11 +148,11 @@ namespace Plato.Search.Controllers
                             Avatar = entity.LastReplyBy.Avatar,
                             Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                             {
-                                ["Area"] = "Plato.Users",
-                                ["Controller"] = "Home",
-                                ["Action"] = "Display",
-                                ["Id"] = entity.LastReplyBy.Id,
-                                ["Alias"] = entity.LastReplyBy.Alias
+                                ["area"] = "Plato.Users",
+                                ["controller"] = "Home",
+                                ["action"] = "Display",
+                                ["opts.id"] = entity.LastReplyBy.Id,
+                                ["opts.alias"] = entity.LastReplyBy.Alias
                             })
                         },
                         Title = entity.Title,

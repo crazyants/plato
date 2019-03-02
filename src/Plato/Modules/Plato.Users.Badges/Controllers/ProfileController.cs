@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
@@ -12,10 +9,11 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Badges.ViewModels;
+using Plato.Users.ViewModels;
 
 namespace Plato.Users.Badges.Controllers
 {
@@ -62,11 +60,16 @@ namespace Plato.Users.Badges.Controllers
 
         #region "Actions"
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(DisplayUserOptions opts)
         {
 
-            var user = id > 0
-                ? await _platoUserStore.GetByIdAsync(id)
+            if (opts == null)
+            {
+                opts = new DisplayUserOptions();
+            }
+
+            var user = opts.Id > 0
+                ? await _platoUserStore.GetByIdAsync(opts.Id)
                 : await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
@@ -85,8 +88,8 @@ namespace Plato.Users.Badges.Controllers
                 ).Add(S[user.DisplayName], discuss => discuss
                     .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
                     {
-                        ["id"] = user.Id,
-                        ["alias"] = user.Alias
+                        ["opts.id"] = user.Id,
+                        ["opts.alias"] = user.Alias
                     })
                     .LocalNav()
                 ).Add(S["Badges"]);
@@ -126,8 +129,8 @@ namespace Plato.Users.Badges.Controllers
                 ).Add(S[user.DisplayName], discuss => discuss
                     .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
                     {
-                        ["id"] = user.Id,
-                        ["alias"] = user.Alias
+                        ["opts.id"] = user.Id,
+                        ["opts.alias"] = user.Alias
                     })
                     .LocalNav()
                 ).Add(S["Badges"]);

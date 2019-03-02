@@ -32,15 +32,15 @@ namespace Plato.Users.Navigation
             }
 
             var context = _actionContextAccessor.ActionContext;
-            object id = context.RouteData.Values["id"],
-                alias = context.RouteData.Values["alias"];
+            object id = context.RouteData.Values["opts.id"],
+                alias = context.RouteData.Values["opts.alias"];
 
             builder
                 .Add(T["Overview"], 1, profile => profile
                     .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
                 {
-                    ["id"] = id?.ToString(),
-                    ["alias"] = alias?.ToString()
+                    ["opts.id"] = id?.ToString(),
+                    ["opts.alias"] = alias?.ToString()
                 })
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()

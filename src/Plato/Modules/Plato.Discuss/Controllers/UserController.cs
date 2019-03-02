@@ -94,8 +94,8 @@ namespace Plato.Discuss.Controllers
                 ).Add(S[user.DisplayName], name => name
                     .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
                     {
-                        ["id"] = user.Id,
-                        ["alias"] = user.Alias
+                        ["opts.id"] = user.Id,
+                        ["opts.alias"] = user.Alias
                     })
                     .LocalNav()
                 ).Add(S["Topics"]);

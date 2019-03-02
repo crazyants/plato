@@ -54,10 +54,10 @@ namespace Plato.Users.Services
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Users",
-                    ["Controller"] = "Account",
-                    ["Action"] = "ResetPassword",
-                    ["Code"] = user.ResetToken
+                    ["area"] = "Plato.Users",
+                    ["controller"] = "Account",
+                    ["action"] = "ResetPassword",
+                    ["code"] = user.ResetToken
                 });
 
                 var body = string.Format(email.Message, user.DisplayName, callbackUrl);
@@ -95,10 +95,10 @@ namespace Plato.Users.Services
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Users",
-                    ["Controller"] = "Account",
-                    ["Action"] = "ActivateAccount",
-                    ["Code"] = user.ConfirmationToken
+                    ["area"] = "Plato.Users",
+                    ["controller"] = "Account",
+                    ["action"] = "ActivateAccount",
+                    ["code"] = user.ConfirmationToken
                 });
 
                 var body = string.Format(email.Message, user.DisplayName, callbackUrl);

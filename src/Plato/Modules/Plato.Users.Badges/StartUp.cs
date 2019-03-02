@@ -6,7 +6,6 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
@@ -94,7 +93,7 @@ namespace Plato.Users.Badges
             routes.MapAreaRoute(
                 name: "DisplayUserBadges",
                 areaName: "Plato.Users.Badges",
-                template: "u/{id:int}/{alias?}/b",
+                template: "u/{opts.id:int}/{opts.alias?}/badges",
                 defaults: new { controller = "Profile", action = "Index" }
             );
 

@@ -59,8 +59,8 @@ namespace Plato.Labels.Controllers
 
                     var url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Id"] = label.Id,
-                        ["Alias"] = label.Alias
+                        ["opts.id"] = label.Id,
+                        ["opts.alias"] = label.Alias
                     });
 
                     results.Data.Add(new LabelApiResult()

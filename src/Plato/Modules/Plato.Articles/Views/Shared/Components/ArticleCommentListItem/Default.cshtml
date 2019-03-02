@@ -7,7 +7,7 @@
 }
 
 <div class="topic-reply-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
         <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
     </a>
 </div>
@@ -16,7 +16,7 @@
         <card-title>
             <div data-infinite-scroll-offset="@Model.Reply.RowOffset">
                 <div class="card-title float-left">
-                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
                         @Model.Reply.CreatedBy.DisplayName
                     </a>
                     @T["posted "]

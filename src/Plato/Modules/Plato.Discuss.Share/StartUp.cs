@@ -53,7 +53,7 @@ namespace Plato.Discuss.Share
             routes.MapAreaRoute(
                 name: "DiscussTopicShareGet",
                 areaName: "Plato.Discuss.Share",
-                template: "discuss/t/get/{id}/{alias}/{replyId?}",
+                template: "discuss/t/get/{opts.id}/{opts.alias}/{opts.replyId?}",
                 defaults: new { controller = "Home", action = "Get", replyId = "0" }
             );
 

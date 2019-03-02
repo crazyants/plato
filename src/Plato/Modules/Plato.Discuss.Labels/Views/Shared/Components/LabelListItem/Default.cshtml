@@ -41,7 +41,7 @@
 }
 else
 {
-    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@Model.Label.Id" asp-route-alias="@Model.Label.Alias" class="list-group-item-action d-block p-3">
+    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@Model.Label.Id" asp-route-opts.alias="@Model.Label.Alias" class="list-group-item-action d-block p-3">
         <span class="float-right">
             @if (Model.Label.TotalFollows > 0)
             {

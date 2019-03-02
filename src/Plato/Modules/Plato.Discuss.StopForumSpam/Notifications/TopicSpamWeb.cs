@@ -71,11 +71,11 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Display",
-                ["Id"] = context.Model.Id,
-                ["Alias"] = context.Model.Alias
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = context.Model.Id,
+                ["opts.alias"] = context.Model.Alias
             });
 
             //// Build notification

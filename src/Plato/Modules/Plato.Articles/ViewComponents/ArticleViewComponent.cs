@@ -40,12 +40,12 @@ namespace Plato.Articles.ViewComponents
             EntityOptions options)
         {
 
-            if (options.EntityId <= 0)
+            if (options.Id <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(options.EntityId));
+                throw new ArgumentOutOfRangeException(nameof(options.Id));
             }
 
-            var topic = await _entityStore.GetByIdAsync(options.EntityId);
+            var topic = await _entityStore.GetByIdAsync(options.Id);
             if (topic == null)
             {
                 throw new ArgumentNullException();

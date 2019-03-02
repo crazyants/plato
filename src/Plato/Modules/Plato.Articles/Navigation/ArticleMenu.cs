@@ -75,8 +75,8 @@ namespace Plato.Articles.Navigation
                         .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("Edit", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
-                                ["id"] = topic.Id,
-                                ["alias"] = topic.Alias
+                                ["opts.id"] = topic.Id,
+                                ["opts.alias"] = topic.Alias
                             })
                             .Permission(user?.Id == topic.CreatedUserId
                                 ? Permissions.EditOwnArticles

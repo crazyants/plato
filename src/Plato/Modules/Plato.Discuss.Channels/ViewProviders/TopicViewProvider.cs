@@ -108,8 +108,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                     builder.Add(S["Channels"], channels => channels
                         .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
                         {
-                            ["id"] = "",
-                            ["alias"] = ""
+                            ["opts.id"] = "",
+                            ["opts.alias"] = ""
                         })
                         .LocalNav()
                     );
@@ -118,8 +118,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                         builder.Add(S[parent.Name], channel => channel
                             .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary
                             {
-                                ["id"] = parent.Id,
-                                ["alias"] = parent.Alias,
+                                ["opts.id"] = parent.Id,
+                                ["opts.alias"] = parent.Alias,
                             })
                             .LocalNav()
                         );
@@ -176,8 +176,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                     builder.Add(S["Channels"], channels => channels
                         .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
                         {
-                            ["id"] = "",
-                            ["alias"] = ""
+                            ["opts.id"] = "",
+                            ["opts.alias"] = ""
                         })
                         .LocalNav()
                     );
@@ -186,8 +186,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                         builder.Add(S[parent.Name], channel => channel
                             .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary
                             {
-                                ["id"] = parent.Id,
-                                ["alias"] = parent.Alias,
+                                ["opts.id"] = parent.Id,
+                                ["opts.alias"] = parent.Alias,
                             })
                             .LocalNav()
                         );
@@ -200,8 +200,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                     builder.Add(S[topic.Title], t => t
                         .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary
                         {
-                            ["id"] = topic.Id,
-                            ["alias"] = topic.Alias,
+                            ["opts.id"] = topic.Id,
+                            ["opts.alias"] = topic.Alias,
                         })
                         .LocalNav()
                     );

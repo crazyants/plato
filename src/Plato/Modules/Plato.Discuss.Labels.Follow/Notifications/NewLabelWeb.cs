@@ -68,11 +68,11 @@ namespace Plato.Discuss.Labels.Follow.Notifications
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
-                    ["Area"] = "Plato.Discuss",
-                    ["Controller"] = "Home",
-                    ["Action"] = "Display",
-                    ["Id"] = context.Model.Id,
-                    ["Alias"] = context.Model.Alias
+                    ["area"] = "Plato.Discuss",
+                    ["controller"] = "Home",
+                    ["action"] = "Display",
+                    ["opts.id"] = context.Model.Id,
+                    ["opts.alias"] = context.Model.Alias
                 })
             };
 

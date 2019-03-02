@@ -72,11 +72,11 @@ namespace Plato.Users.Badges.Notifications
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Users.Badges",
-                ["Controller"] = "Profile",
-                ["Action"] = "Index",
-                ["Id"] = context.Notification.To.Id,
-                ["Alias"] = context.Notification.To.Alias
+                ["area"] = "Plato.Users.Badges",
+                ["controller"] = "Profile",
+                ["action"] = "Index",
+                ["opts.id"] = context.Notification.To.Id,
+                ["opts.alias"] = context.Notification.To.Alias
             });
 
             //// Build notification
