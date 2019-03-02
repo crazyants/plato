@@ -51,9 +51,7 @@ namespace Plato.Entities.Services
             return this;
         }
         
-        public async Task<IPagedResults<TModel>> GetResultsAsync(
-            EntityIndexOptions options,
-            PagerOptions pager)
+        public async Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
             if (options == null)

@@ -720,6 +720,12 @@
 .tree input:checked + label > i.check-icon:after { opacity: 1; }
 
 /* ------------------------- */
+/* List groups */
+/* ------------------------- */
+
+
+
+/* ------------------------- */
 /* Labels */
 /* ------------------------- */
 
@@ -776,6 +782,11 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
     margin: 0;
     list-style: none;
     display: none;
+    border: 0 !important;
+}
+
+.infinite-scroll-loader + .list-group-item {
+    border-top: 0;
 }
 
 .infinite-scroll-item {

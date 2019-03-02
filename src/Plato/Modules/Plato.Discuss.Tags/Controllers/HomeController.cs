@@ -6,15 +6,12 @@ using Plato.Discuss.Models;
 using Plato.Discuss.Tags.Models;
 using Plato.Tags.Models;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Stores;
 using Plato.Discuss.Tags.ViewModels;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Tags.Controllers
@@ -57,17 +54,16 @@ namespace Plato.Discuss.Tags.Controllers
    
         #region "Actions"
 
-        public async Task<IActionResult> Index(
-            int offset,
-            TagIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Index(TagIndexOptions opts, PagerOptions pager)
         {
 
+            // Default options
             if (opts == null)
             {
                 opts = new TagIndexOptions();
             }
 
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
@@ -111,7 +107,7 @@ namespace Plato.Discuss.Tags.Controllers
                 Pager = pager
             };
 
-            // Add view options to context
+            // Add view model to context
             HttpContext.Items[typeof(TagIndexViewModel)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
@@ -126,28 +122,28 @@ namespace Plato.Discuss.Tags.Controllers
 
         }
         
-        public async Task<IActionResult> Display(
-            int id,
-            int offset,
-            EntityIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Display(EntityIndexOptions opts, PagerOptions pager)
         {
-
-            var tag = await _tagStore.GetByIdAsync(id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-
+            
+            // Default options
             if (opts == null)
             {
                 opts = new EntityIndexOptions();
             }
 
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
+            }
+
+            // Get tag
+            var tag = await _tagStore.GetByIdAsync(opts.TagId);
+
+            // Ensure tag exists
+            if (tag == null)
+            {
+                return NotFound();
             }
 
             // Set pager call back Url
@@ -186,9 +182,6 @@ namespace Plato.Discuss.Tags.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // We don't need to add to pagination 
-            opts.TagId = tag?.Id ?? 0;
-
             // Build view model
             var viewModel = new EntityIndexViewModel<Topic>()
             {
@@ -196,7 +189,7 @@ namespace Plato.Discuss.Tags.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
+            // Add view model to context
             HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
 
             // If we have a pager.page querystring value return paged results
