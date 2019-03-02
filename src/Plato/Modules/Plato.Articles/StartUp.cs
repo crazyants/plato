@@ -3,6 +3,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Badges.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Badges;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 using Plato.Articles.Handlers;
 using Plato.Articles.Assets;
 using Plato.Articles.Badges;
@@ -16,17 +27,6 @@ using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Assets.Abstractions;
-using Plato.Internal.Badges.Abstractions;
-using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Models.Badges;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Security.Abstractions;
-using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Articles
 {
@@ -141,11 +141,11 @@ namespace Plato.Articles
                 defaults: new { controller = "Home", action = "Create" }
             );
 
-            // Jump to comment
+            // Display Reply
             routes.MapAreaRoute(
-                name: "ArticlesJumpToComment",
+                name: "ArticlesDisplayReply",
                 areaName: "Plato.Articles",
-                template: "articles/j/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
+                template: "articles/g/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
                 defaults: new { controller = "Home", action = "Reply" }
             );
             

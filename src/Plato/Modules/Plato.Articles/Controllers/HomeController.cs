@@ -1039,16 +1039,9 @@ namespace Plato.Articles.Controllers
         // Reply
         // -----------------
 
-        public async Task<IActionResult> Reply(int id, int replyId, EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Reply(EntityOptions opts, PagerOptions pager)
         {
-
-            // Get entity
-            var entity = await _entityStore.GetByIdAsync(id);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-
+            
             // Default options
             if (opts == null)
             {
@@ -1060,9 +1053,15 @@ namespace Plato.Articles.Controllers
             {
                 pager = new PagerOptions();
             }
-            
-            // Set entity Id for replies to return
-            opts.Id = entity.Id;
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
+
+            // Ensure entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
 
             // We need to iterate all replies to calculate the offset
             pager.Page = 1;
@@ -1076,7 +1075,7 @@ namespace Plato.Articles.Controllers
                 foreach (var reply in replies.Data)
                 {
                     offset++;
-                    if (reply.Id == replyId)
+                    if (reply.Id == opts.ReplyId)
                     {
                         break;
                     }

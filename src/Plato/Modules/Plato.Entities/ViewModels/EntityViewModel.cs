@@ -24,10 +24,16 @@ namespace Plato.Entities.ViewModels
     public class EntityOptions
     {
 
+        [DataMember(Name = "id")]
         public int Id { get; set; }
 
+        [DataMember(Name = "replyId")]
+        public int ReplyId { get; set; }
+
+        [DataMember(Name = "sort")]
         public string Sort { get; set; } = "CreatedDate";
 
+        [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Asc;
         
     }

@@ -1040,30 +1040,30 @@ namespace Plato.Discuss.Controllers
         // Display Reply
         // -----------------
 
-        public async Task<IActionResult> Reply(int id, int replyId, EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Reply(EntityOptions opts, PagerOptions pager)
         {
-
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            // default options
+            
+            // Default options
             if (opts == null)
             {
                 opts = new EntityOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
-            
-            // Set entity Id for replies to return
-            opts.Id = topic.Id;
 
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
+
+            // Ensure entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            
             // We need to iterate all replies to calculate the offset
             pager.Page = 1;
             pager.PageSize = int.MaxValue;
@@ -1076,7 +1076,7 @@ namespace Plato.Discuss.Controllers
                 foreach (var reply in replies.Data)
                 {
                     offset++;
-                    if (reply.Id == replyId)
+                    if (reply.Id == opts.ReplyId)
                     {
                         break;
                     }
@@ -1091,8 +1091,8 @@ namespace Plato.Discuss.Controllers
                     ["area"] = "Plato.Discuss",
                     ["controller"] = "Home",
                     ["action"] = "Display",
-                    ["opts.id"] = topic.Id,
-                    ["opts.alias"] = topic.Alias
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias
                 }));
             }
 
@@ -1103,8 +1103,8 @@ namespace Plato.Discuss.Controllers
                 ["controller"] = "Home",
                 ["action"] = "Display",
                 ["pager.offset"] = offset,
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
             }));
 
         }
