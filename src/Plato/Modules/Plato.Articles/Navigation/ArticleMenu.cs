@@ -84,7 +84,11 @@ namespace Plato.Articles.Navigation
                             .LocalNav()
                         )
                         .Add(T["Report"], int.MaxValue - 2, report => report
-                            .Action("Report", "Home", "Plato.Articles")
+                            .Action("Report", "Home", "Plato.Articles", new RouteValueDictionary()
+                            {
+                                ["opts.id"] = topic.Id,
+                                ["opts.alias"] = topic.Alias
+                            })
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},

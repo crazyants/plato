@@ -65,7 +65,7 @@ namespace Plato.Discuss.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
-            IEntityReplyService<Reply> replyService, 
+            IEntityReplyService<Reply> replyService,
             IViewProviderManager<UserIndex> userViewProvider,
             IFeatureFacade featureFacade)
         {
@@ -111,7 +111,7 @@ namespace Plato.Discuss.Controllers
             {
                 pager = new PagerOptions();
             }
-            
+
             await CreateSampleData();
 
             // Get default options
@@ -131,7 +131,7 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
+
             // Build view model
             var viewModel = await GetIndexViewModelAsync(opts, pager);
 
@@ -144,7 +144,7 @@ namespace Plato.Discuss.Controllers
                 if (page > 0)
                     return View("GetTopics", viewModel);
             }
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -158,7 +158,7 @@ namespace Plato.Discuss.Controllers
             return View(await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
 
         }
-        
+
         // -----------------
         // Popular
         // -----------------
@@ -195,7 +195,7 @@ namespace Plato.Discuss.Controllers
             {
                 return Unauthorized();
             }
-            
+
             var topic = new Topic();
             if (channel > 0)
             {
@@ -240,7 +240,7 @@ namespace Plato.Discuss.Controllers
 
                 // Get composed type from all involved view providers
                 var topic = await _topicViewProvider.GetComposedType(this);
-                
+
                 // Populated created by
                 topic.CreatedUserId = user?.Id ?? 0;
                 topic.CreatedDate = DateTimeOffset.UtcNow;
@@ -324,7 +324,8 @@ namespace Plato.Discuss.Controllers
             // Ensure we have permission to view deleted entities
             if (entity.IsDeleted)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                    Permissions.ViewDeletedTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -339,7 +340,8 @@ namespace Plato.Discuss.Controllers
             // Ensure we have permission to view private entities
             if (entity.IsPrivate)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                    Permissions.ViewPrivateTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -354,7 +356,8 @@ namespace Plato.Discuss.Controllers
             // Ensure we have permission to view spam entities
             if (entity.IsSpam)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamTopics))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                    Permissions.ViewSpamTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -365,31 +368,30 @@ namespace Plato.Discuss.Controllers
                     }));
                 }
             }
-
             
             // Maintain previous route data when generating page links
             var defaultViewOptions = new EntityViewModel<Topic, Reply>();
             var defaultPagerOptions = new PagerOptions();
-            
+
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
+
             // Build view model
             var viewModel = GetDisplayViewModel(entity, opts, pager);
 
             // Add models to context 
             HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] = viewModel;
             HttpContext.Items[typeof(Topic)] = entity;
-            
-            // If we have a pager.page querystring value return paged results
+
+            // If we have a pager.page querystring value return paged view
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
                     return View("GetTopicReplies", viewModel);
             }
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -460,11 +462,11 @@ namespace Plato.Discuss.Controllers
                     _alerter.Success(T["Reply Added Successfully!"]);
 
                     // Redirect
-                    return RedirectToAction(nameof(Reply), new
+                    return RedirectToAction(nameof(Reply), new RouteValueDictionary()
                     {
-                        Id = entity.Id,
-                        Alias = entity.Alias,
-                        ReplyId = result.Response?.Id ?? 0
+                        ["opts.id"] = entity.Id,
+                        ["opts.alias"] = entity.Alias,
+                        ["opts.replyId"] = result.Response.Id 
                     });
 
                 }
@@ -500,16 +502,18 @@ namespace Plato.Discuss.Controllers
         // Edit Entity
         // -----------------
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(EntityOptions opts)
         {
 
-            // Get entity we are editing
-            var entity = await _entityStore.GetByIdAsync(id);
+            // Get entity 
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
+
+            // Ensure the entity exists
             if (entity == null)
             {
                 return NotFound();
             }
-          
+
             // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -527,7 +531,7 @@ namespace Plato.Discuss.Controllers
             {
                 return Unauthorized();
             }
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -586,7 +590,7 @@ namespace Plato.Discuss.Controllers
                 // Always update modified information
                 topic.ModifiedUserId = user?.Id ?? 0;
                 topic.ModifiedDate = DateTimeOffset.UtcNow;
-                
+
                 // Update title & message
                 topic.Title = model.Title;
                 topic.Message = model.Message;
@@ -640,7 +644,7 @@ namespace Plato.Discuss.Controllers
             {
                 return NotFound();
             }
-            
+
             // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -674,7 +678,7 @@ namespace Plato.Discuss.Controllers
                         .LocalNav()
                     );
             });
-            
+
             var result = await _replyViewProvider.ProvideEditAsync(reply, this);
 
             // Return view
@@ -712,10 +716,10 @@ namespace Plato.Discuss.Controllers
             // Always update modified date
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            
+
             // Update the message
             reply.Message = model.Message;
-            
+
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
@@ -727,13 +731,13 @@ namespace Plato.Discuss.Controllers
                 _alerter.Success(T["Reply Updated Successfully!"]);
 
                 // Redirect
-                return RedirectToAction(nameof(Reply), new
+                return RedirectToAction(nameof(Reply), new RouteValueDictionary()
                 {
-                    Id = entity.Id,
-                    Alias = entity.Alias,
-                    ReplyId = reply?.Id ?? 0
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias,
+                    ["opts.replyId"] = reply.Id
                 });
-                
+
             }
 
             // if we reach this point some view model validation
@@ -749,7 +753,7 @@ namespace Plato.Discuss.Controllers
             return await Create(0);
 
         }
-        
+
         // -----------------
         // Report Entity
         // -----------------
@@ -761,7 +765,7 @@ namespace Plato.Discuss.Controllers
             {
                 opts = new EntityOptions();
             }
-            
+
             var viewModel = new ReportEntityViewModel()
             {
                 Options = opts,
@@ -776,7 +780,7 @@ namespace Plato.Discuss.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Report))]
         public async Task<IActionResult> ReportPost(ReportEntityViewModel model)
         {
-            
+
             // Ensure the entity exists
             var entity = await _entityStore.GetByIdAsync(model.Options.Id);
             if (entity == null)
@@ -795,16 +799,16 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            _alerter.Success(reply != null 
-                ? T["Reply Reported Successfully!"] 
+            _alerter.Success(reply != null
+                ? T["Reply Reported Successfully!"]
                 : T["Topic Reported Successfully!"]);
-            
+
             // Redirect
-            return RedirectToAction(nameof(Reply), new
+            return RedirectToAction(nameof(Reply), routeValues: new
             {
-                Id = entity.Id,
-                Alias = entity.Alias,
-                ReplyId = reply?.Id ?? 0
+                id = entity.Id,
+                alias = entity.Alias,
+                replyId = reply?.Id ?? 0
             });
 
         }
@@ -814,71 +818,71 @@ namespace Plato.Discuss.Controllers
         // -----------------
 
         public async Task<IActionResult> Delete(string id)
-    {
-
-        // Ensure we have a valid id
-        var ok = int.TryParse(id, out int entityId);
-        if (!ok)
         {
-            return NotFound();
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get topic
+            var topic = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the topic exists
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+                user.Id == topic.CreatedUserId
+                    ? Permissions.DeleteOwnTopics
+                    : Permissions.DeleteAnyTopic))
+            {
+                return Unauthorized();
+            }
+
+            // Update topic
+            topic.ModifiedUserId = user?.Id ?? 0;
+            topic.ModifiedDate = DateTimeOffset.UtcNow;
+            topic.IsDeleted = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(topic);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Topic deleted successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not delete the topic"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
+            }));
+
         }
 
-        // Get current user
-        var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-        // Ensure we are authenticated
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-
-        // Get topic
-        var topic = await _entityStore.GetByIdAsync(entityId);
-
-        // Ensure the topic exists
-        if (topic == null)
-        {
-            return NotFound();
-        }
-        
-        // Ensure we have permission
-        if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-            user.Id == topic.CreatedUserId
-                ? Permissions.DeleteOwnTopics
-                : Permissions.DeleteAnyTopic))
-        {
-            return Unauthorized();
-        }
-        
-        // Update topic
-        topic.ModifiedUserId = user?.Id ?? 0;
-        topic.ModifiedDate = DateTimeOffset.UtcNow;
-        topic.IsDeleted = true;
-
-        // Save changes and return results
-        var result = await _topicManager.UpdateAsync(topic);
-
-        if (result.Succeeded)
-        {
-            _alerter.Success(T["Topic deleted successfully"]);
-        }
-        else
-        {
-            _alerter.Danger(T["Could not delete the topic"]);
-        }
-
-        // Redirect back to topic
-        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-        {
-            ["area"] = "Plato.Discuss",
-            ["controller"] = "Home",
-            ["action"] = "Display",
-            ["opts.id"] = topic.Id,
-            ["opts.alias"] = topic.Alias
-        }));
-        
-    }
- 
         public async Task<IActionResult> Restore(string id)
         {
 
@@ -944,11 +948,11 @@ namespace Plato.Discuss.Controllers
             }));
 
         }
-        
+
         // -----------------
         // Delete / Restore Reply
         // -----------------
-        
+
         public async Task<IActionResult> DeleteReply(string id)
         {
 
@@ -1097,13 +1101,13 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Reply(EntityOptions opts)
         {
-            
+
             // Default options
             if (opts == null)
             {
                 opts = new EntityOptions();
             }
-            
+
             // Get entity
             var entity = await _entityStore.GetByIdAsync(opts.Id);
 
@@ -1117,7 +1121,6 @@ namespace Plato.Discuss.Controllers
             var offset = 0;
             if (opts.ReplyId > 0)
             {
-
                 // We need to iterate all replies to calculate the offset
                 var replies = await _replyService.GetRepliesAsync(opts, new PagerOptions
                 {
@@ -1165,7 +1168,7 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Private Methods"
-        
+
         async Task<EntityIndexViewModel<Topic>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
@@ -1213,7 +1216,7 @@ namespace Plato.Discuss.Controllers
 
         IEnumerable<SelectListItem> GetReportReasons()
         {
-            
+
             var output = new List<SelectListItem>
             {
                 new SelectListItem
@@ -1228,7 +1231,7 @@ namespace Plato.Discuss.Controllers
                 output.Add(new SelectListItem
                 {
                     Text = S[reason.Value],
-                    Value = Convert.ToString((int)reason.Key)
+                    Value = Convert.ToString((int) reason.Key)
                 });
             }
 
@@ -1237,7 +1240,7 @@ namespace Plato.Discuss.Controllers
 
         // ------------
 
-            string GetSampleMarkDown(int number)
+        string GetSampleMarkDown(int number)
         {
             return @"Hi There, 
 
@@ -1261,7 +1264,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
             var totalUsers = users?.Total - 1 ?? 0;
             var randomUser = users?.Data[rnd.Next(0, totalUsers)];
             var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-            
+
             var topic = new Topic()
             {
                 Title = "Test Topic " + rnd.Next(0, 2000).ToString(),

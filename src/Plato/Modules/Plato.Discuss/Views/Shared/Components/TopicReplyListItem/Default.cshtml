@@ -1,9 +1,16 @@
-﻿@model EntityReplyListItemViewModel<Topic, Reply>
+﻿@using Microsoft.AspNetCore.Routing
+@model EntityReplyListItemViewModel<Topic, Reply>
 @{
     var css = Model.Reply.Offset == Model.Reply.SelectedOffset
         ? "markdown-body p-3 infinite-scroll-item infinite-scroll-item-active"
         : "markdown-body p-3 infinite-scroll-item";
     var quoteId = "quote" + Model.Reply.Id;
+    var replyUrl = Url.Action("Reply", "Home", new RouteValueDictionary()
+    {
+        ["opts.id"] = Model.Entity.Id,
+        ["opts.alias"] = Model.Entity.Alias,
+        ["opts.replyId"] = Model.Reply.Id
+    });
 }
 
 <div class="topic-reply-left">
@@ -53,15 +60,10 @@
             <div class="@css" data-infinite-scroll-highlight="@Model.Reply.Offset" data-provide="markdownBody">
                 @Html.Raw(@Model.Reply.Html)
             </div>
-            <div class="hidden" 
-                 id="@quoteId"
-                 data-reply-url="@Url.Action("Jump", "Home", new { id = Model.Entity.Id, alias = Model.Entity.Alias, replyId = Model.Reply.Id })"
-                 data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
-           
+            <div class="hidden" id="@quoteId" data-reply-url="@replyUrl" data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
             <navigation name="topic-reply-footer"
                         model="Model.Reply"
                         enable-list="false" />
-           
         </card-body>
     </card>
 </div>

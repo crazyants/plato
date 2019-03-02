@@ -10,7 +10,6 @@ using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
 using Plato.Entities;
-using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
@@ -411,14 +410,17 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Post Entity Reply
+        // Post Reply
         // -----------------
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Display))]
         public async Task<IActionResult> DisplayPost(EditEntityReplyViewModel model)
         {
-            // We always need an entity to reply to
+
+            // Get entity
             var entity = await _entityStore.GetByIdAsync(model.EntityId);
+
+            // Ensure entity exists
             if (entity == null)
             {
                 return NotFound();
@@ -455,13 +457,14 @@ namespace Plato.Articles.Controllers
                     await _replyViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Everything was OK
-                    _alerter.Success(T["Reply Added Successfully!"]);
+                    _alerter.Success(T["Comment Added Successfully!"]);
 
-                    // Redirect to topic
-                    return RedirectToAction(nameof(Display), new
+                    // Redirect
+                    return RedirectToAction(nameof(Reply), new RouteValueDictionary()
                     {
-                        Id = entity.Id,
-                        Alias = entity.Alias
+                        ["opts.id"] = entity.Id,
+                        ["opts.alias"] = entity.Alias,
+                        ["opts.replyId"] = result.Response.Id
                     });
 
                 }
@@ -497,10 +500,10 @@ namespace Plato.Articles.Controllers
         // Edit Entity
         // -----------------
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(EntityOptions opts)
         {
             // Get topic we are editing
-            var entity = await _entityStore.GetByIdAsync(id);
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
             if (entity == null)
             {
                 return NotFound();
@@ -530,10 +533,10 @@ namespace Plato.Articles.Controllers
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
                         .LocalNav()
-                    ).Add(S["Articles"], articles => articles
+                    ).Add(S["Articles"], index => index
                         .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
-                    ).Add(S[entity.Title.TrimToAround(75)], post => post
+                    ).Add(S[entity.Title.TrimToAround(75)], display => display
                         .Action("Display", "Home", "Plato.Articles", new RouteValueDictionary()
                         {
                             ["opts.id"] = entity.Id,
@@ -617,7 +620,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Edit Entity Reply
+        // Edit Reply
         // -----------------
 
         public async Task<IActionResult> EditReply(int id)
@@ -690,8 +693,8 @@ namespace Plato.Articles.Controllers
             }
 
             // Ensure the entity exists
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -722,11 +725,12 @@ namespace Plato.Articles.Controllers
                 // Everything was OK
                 _alerter.Success(T["Reply Updated Successfully!"]);
 
-                // Redirect to topic
-                return RedirectToAction(nameof(Display), new
+                // Redirect
+                return RedirectToAction(nameof(Reply), new RouteValueDictionary()
                 {
-                    Id = topic.Id,
-                    Alias = topic.Alias
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias,
+                    ["opts.replyId"] = reply.Id
                 });
 
             }
@@ -744,11 +748,7 @@ namespace Plato.Articles.Controllers
             return await Create(0);
 
         }
-
-        // -----------------
-        // Report Entity
-        // -----------------
-
+        
         // -----------------
         // Report Entity
         // -----------------
@@ -795,15 +795,15 @@ namespace Plato.Articles.Controllers
             }
 
             _alerter.Success(reply != null
-                ? T["Reply Reported Successfully!"]
-                : T["Topic Reported Successfully!"]);
-
+                ? T["Comment Reported Successfully!"]
+                : T["Article Reported Successfully!"]);
+            
             // Redirect
-            return RedirectToAction(nameof(Reply), new
+            return RedirectToAction(nameof(Reply), new RouteValueDictionary()
             {
-                Id = entity.Id,
-                Alias = entity.Alias,
-                ReplyId = reply?.Id ?? 0
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply?.Id ?? 0
             });
 
         }

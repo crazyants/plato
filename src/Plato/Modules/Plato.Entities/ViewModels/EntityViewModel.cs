@@ -27,6 +27,9 @@ namespace Plato.Entities.ViewModels
         [DataMember(Name = "id")]
         public int Id { get; set; }
 
+        [DataMember(Name = "alias")]
+        public string Alias { get; set; }
+
         [DataMember(Name = "replyId")]
         public int ReplyId { get; set; }
 

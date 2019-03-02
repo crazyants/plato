@@ -148,6 +148,14 @@ namespace Plato.Articles
                 template: "articles/g/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
                 defaults: new { controller = "Home", action = "Reply" }
             );
+
+            // Report 
+            routes.MapAreaRoute(
+                name: "ArticlesReport",
+                areaName: "Plato.Articles",
+                template: "articles/report/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
+                defaults: new { controller = "Home", action = "Report" }
+            );
             
             // User Index
             routes.MapAreaRoute(

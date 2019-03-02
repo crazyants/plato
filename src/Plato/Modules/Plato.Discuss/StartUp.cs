@@ -145,6 +145,14 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Create" }
             );
 
+            // Edit Entity
+            routes.MapAreaRoute(
+                name: "DiscussEditTopic",
+                areaName: "Plato.Discuss",
+                template: "discuss/edit/{opts.id:int?}/{opts.alias?}",
+                defaults: new { controller = "Home", action = "Edit" }
+            );
+
             // Display Reply
             routes.MapAreaRoute(
                 name: "DiscussDisplayReply",

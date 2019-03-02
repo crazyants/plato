@@ -86,7 +86,12 @@ namespace Plato.Articles.Navigation
                                 Permissions.EditAnyComment)
                             .LocalNav())
                         .Add(T["Report"], int.MaxValue - 10, report => report
-                            .Action("Report", "Home", "Plato.Articles")
+                            .Action("Report", "Home", "Plato.Articles", new RouteValueDictionary()
+                            {
+                                ["opts.id"] = topic.Id,
+                                ["opts.alias"] = topic.Alias,
+                                ["opts.replyId"] = reply.Id
+                            })
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},
