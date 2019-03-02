@@ -3,14 +3,14 @@
 {
     @if (this.CurrentUser != null)
      {
-         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" data-provide="postReply" class="btn btn-primary text-uppercase" data-toggle="tooltip" title="@T["Post a reply"]">
+         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" data-provide="postComment" class="btn btn-primary text-uppercase">
              <i class="fal fa-fw fa-plus"></i>
              @T["Add Comment"]
          </a>
     }
      else
      {
-         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary text-uppercase" data-toggle="tooltip" title="@T["Login to post a reply"]">
+         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary text-uppercase" data-toggle="tooltip" title="@T["Login to post a comment"]">
              @T["Add Comment"]
          </a>
      }

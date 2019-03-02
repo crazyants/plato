@@ -6,7 +6,6 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
@@ -85,7 +84,11 @@ namespace Plato.Discuss.Navigation
                             .LocalNav()
                         )
                         .Add(T["Report"], int.MaxValue - 2, report => report
-                            .Action("Report", "Home", "Plato.Discuss")
+                            .Action("Report", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["opts.id"] = topic.Id,
+                                ["opts.alias"] = topic.Alias
+                            })
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},

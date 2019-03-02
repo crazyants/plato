@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
+using Plato.Entities;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
@@ -741,18 +744,70 @@ namespace Plato.Articles.Controllers
             return await Create(0);
 
         }
-        
+
         // -----------------
         // Report Entity
         // -----------------
 
-        public Task<IActionResult> Report(int id, int replyId = 0)
+        // -----------------
+        // Report Entity
+        // -----------------
+
+        public Task<IActionResult> Report(EntityOptions opts)
         {
+
+            if (opts == null)
+            {
+                opts = new EntityOptions();
+            }
+
+            var viewModel = new ReportEntityViewModel()
+            {
+                Options = opts,
+                AvailableReportReasons = GetReportReasons()
+            };
+
             // Return view
-            return Task.FromResult((IActionResult) View());
+            return Task.FromResult((IActionResult)View(viewModel));
 
         }
 
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Report))]
+        public async Task<IActionResult> ReportPost(ReportEntityViewModel model)
+        {
+
+            // Ensure the entity exists
+            var entity = await _entityStore.GetByIdAsync(model.Options.Id);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the reply exists
+            Comment reply = null;
+            if (model.Options.ReplyId > 0)
+            {
+                reply = await _entityReplyStore.GetByIdAsync(model.Options.ReplyId);
+                if (reply == null)
+                {
+                    return NotFound();
+                }
+            }
+
+            _alerter.Success(reply != null
+                ? T["Reply Reported Successfully!"]
+                : T["Topic Reported Successfully!"]);
+
+            // Redirect
+            return RedirectToAction(nameof(Reply), new
+            {
+                Id = entity.Id,
+                Alias = entity.Alias,
+                ReplyId = reply?.Id ?? 0
+            });
+
+        }
+        
         // -----------------
         // Delete / Restore Entity
         // -----------------
@@ -1039,7 +1094,7 @@ namespace Plato.Articles.Controllers
         // Reply
         // -----------------
 
-        public async Task<IActionResult> Reply(EntityOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Reply(EntityOptions opts)
         {
             
             // Default options
@@ -1047,13 +1102,7 @@ namespace Plato.Articles.Controllers
             {
                 opts = new EntityOptions();
             }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
+            
             // Get entity
             var entity = await _entityStore.GetByIdAsync(opts.Id);
 
@@ -1062,29 +1111,32 @@ namespace Plato.Articles.Controllers
             {
                 return NotFound();
             }
-
-            // We need to iterate all replies to calculate the offset
-            pager.Page = 1;
-            pager.PageSize = int.MaxValue;
-
+            
             // Get offset for given reply
             var offset = 0;
-            var replies = await _replyService.GetRepliesAsync(opts, pager);
-            if (replies?.Data != null)
+            if (opts.ReplyId > 0)
             {
-                foreach (var reply in replies.Data)
+                // We need to iterate all replies to calculate the offset
+                var replies = await _replyService.GetRepliesAsync(opts, new PagerOptions
                 {
-                    offset++;
-                    if (reply.Id == opts.ReplyId)
+                    PageSize = int.MaxValue
+                });
+                if (replies?.Data != null)
+                {
+                    foreach (var reply in replies.Data)
                     {
-                        break;
+                        offset++;
+                        if (reply.Id == opts.ReplyId)
+                        {
+                            break;
+                        }
                     }
                 }
             }
 
             if (offset == 0)
             {
-                // Could not locate offset, fallback by redirecting to topic
+                // Could not locate offset, fallback by redirecting to entity
                 return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
                     ["area"] = "Plato.Articles",
@@ -1095,7 +1147,7 @@ namespace Plato.Articles.Controllers
                 }));
             }
 
-            // Redirect to offset within article
+            // Redirect to offset within entity
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Articles",
@@ -1152,6 +1204,30 @@ namespace Plato.Articles.Controllers
                 Options = options,
                 Pager = pager
             };
+        }
+
+        IEnumerable<SelectListItem> GetReportReasons()
+        {
+
+            var output = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["-"],
+                    Value = ""
+                }
+            };
+
+            foreach (var reason in ReportEntity.Reasons)
+            {
+                output.Add(new SelectListItem
+                {
+                    Text = S[reason.Value],
+                    Value = Convert.ToString((int)reason.Key)
+                });
+            }
+
+            return output;
         }
         
         // --------------

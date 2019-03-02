@@ -152,7 +152,15 @@ namespace Plato.Discuss
                 template: "discuss/g/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
                 defaults: new { controller = "Home", action = "Reply" }
             );
-            
+
+            // Report 
+            routes.MapAreaRoute(
+                name: "DiscussReport",
+                areaName: "Plato.Discuss",
+                template: "discuss/report/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
+                defaults: new { controller = "Home", action = "Report" }
+            );
+
             // User Index
             routes.MapAreaRoute(
                 name: "DiscussUser",

@@ -1,12 +1,11 @@
-﻿@model ArticleIndexViewModel
+﻿@model ReportEntityViewModel
 @{
     Layout = null;
 }
 
-
 <div class="modal-header">
     <h6 class="modal-title">
-        Report
+        @T["Report"]
     </h6>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">
@@ -14,6 +13,20 @@
         </span>
     </button>
 </div>
-<div class="modal-body" style="max-height: 550px; overflow: auto;">
-    wewer wer wer wwer wer erwerwerwerwer wer wer wr  rwr wer wer werwer wer wer wer wr wer
+<div class="modal-body">
+    <form asp-controller="Home" asp-action="Report" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Options.Id" />
+        <input type="hidden" asp-for="Options.ReplyId" />
+        <div class="form-group">
+            @T["Choose the most relevant reason for your report from the list below and click the \"Submit Report\" button. We'll review your report and take appropriate action as quickly as possible."]
+        </div>
+        <div class="form-group">
+            <select class="form-control"
+                    asp-for="ReportReason"
+                    asp-items="@Model.AvailableReportReasons"></select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+            @T["Submit Report"]
+        </button>
+    </form>
 </div>

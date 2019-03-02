@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
@@ -15,16 +14,11 @@ namespace Plato.Discuss.Navigation
     public class TopicReplyMenu : INavigationProvider
     {
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-    
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+        public TopicReplyMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -49,7 +43,7 @@ namespace Plato.Discuss.Navigation
                 return;
             }
 
-            //// Get authenticated user from features
+            // Get authenticated user from features to avoid async lookup
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
 
             // Get delete / restore permission
@@ -86,7 +80,12 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditAnyReply)
                             .LocalNav())
                         .Add(T["Report"], int.MaxValue - 10, report => report
-                            .Action("Report", "Home", "Plato.Discuss")
+                            .Action("Report", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["opts.id"] = topic.Id,
+                                ["opts.alias"] = topic.Alias,
+                                ["opts.replyId"] = reply.Id
+                            })
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},
