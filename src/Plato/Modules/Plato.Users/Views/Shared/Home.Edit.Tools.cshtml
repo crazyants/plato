@@ -1,0 +1,5 @@
+﻿@model User
+
+<a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" class="btn btn-secondary">
+    <i class="fal fa-user"></i> @T["Public Profile"]
+</a>

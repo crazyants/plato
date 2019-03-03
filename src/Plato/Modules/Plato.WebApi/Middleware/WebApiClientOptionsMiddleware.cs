@@ -50,9 +50,9 @@ namespace Plato.WebApi.Middleware
 
             var settings = await webApiOptionsFactory.GetSettingsAsync();
 
-            // Register client options for $.Plato.Http by extending $.Plato.Options
-            // i.e. $.extend($.Plato.Options, newOptions);
-            var script = "$(function (win) { $.extend(win.$.Plato.Options, { url: '{url}', apiKey: '{apiKey}', csrfCookieName: '{csrfCookieName}' }); } (window));";
+            // Register client options for $.Plato.Http by extending $.Plato.defaults
+            // i.e. $.extend($.Plato.defaults, newOptions);
+            var script = "$(function (win) { $.extend(win.$.Plato.defaults, { url: '{url}', apiKey: '{apiKey}', csrfCookieName: '{csrfCookieName}' }); } (window));";
             script = script.Replace("{url}", settings.Url);
             script = script.Replace("{apiKey}", settings.ApiKey);
             script = script.Replace("{csrfCookieName}", PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName);

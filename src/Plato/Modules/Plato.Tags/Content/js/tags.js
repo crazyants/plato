@@ -3,17 +3,15 @@ if (typeof jQuery === "undefined") {
     throw new Error("Plato requires jQuery");
 }
 
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("$.Plato.Context Required");
-}
-
-if (typeof $.Plato.Text === "undefined") {
-    throw new Error("Plato Tags requires $.Plato.Text");
+if (typeof $.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
 $(function (win, doc, $) {
 
     'use strict';
+
+    var app = win.$.Plato;
 
     /* tagAutoComplete */
     var tagAutoComplete = function () {
@@ -32,7 +30,7 @@ $(function (win, doc, $) {
                 }
             },
             itemTemplate: '<a class="{itemCss}" href="{url}">{name}</a>',
-            parseItemTemplate: function (html, result) {
+            parseItemTemplate: function(html, result) {
 
                 if (result.id) {
                     html = html.replace(/\{id}/g, result.id);
@@ -41,7 +39,7 @@ $(function (win, doc, $) {
                 }
 
                 if (result.name) {
-                    html = html.replace(/\{name}/g, win.$.Plato.Text.htmlEncode(result.name));
+                    html = html.replace(/\{name}/g, app.text.htmlEncode(result.name));
                 } else {
                     html = html.replace(/\{name}/g, "(no name)");
                 }
@@ -54,15 +52,15 @@ $(function (win, doc, $) {
                 return html;
 
             },
-            onKeyDown: function ($caller, e) {
+            onKeyDown: function($caller, e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
                 }
             },
-            onItemClick: function ($caller, result, e) {
+            onItemClick: function($caller, result, e) {
                 e.preventDefault();
             }
-        }
+        };
 
         var methods = {
             init: function ($caller, methodName, func) {

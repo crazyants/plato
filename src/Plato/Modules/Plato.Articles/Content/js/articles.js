@@ -4,34 +4,41 @@ $(function (win, doc, $) {
 
     "use strict";
 
-    if (typeof $.Plato.Context === "undefined") {
-        throw new Error("$.Plato.Articles requires $.Plato.Context");
+    if (typeof $.Plato === "undefined") {
+        throw new Error("$.Plato.Articles requires $.Plato");
     }
 
-    if (typeof $.Plato.Options === "undefined") {
-        throw new Error("$.Plato.Articles requires $.Plato.Options");
-    }
+    // --------
 
-    if (typeof $.Plato.Logger === "undefined") {
-        throw new Error("$.Plato.Articles requires $.Plato.Logger");
-    }
+    var app = $.Plato;
 
-    var context = {
-        options: $.Plato.Options,
-        logger: $.Plato.Logger
-    };
+    // --------
 
     $(doc).ready(function () {
-        
-        // Comment
+        $.Plato.Articles.init();
+    });
 
-        $('[data-provide="postComment"]').bind("click", function(e) {
+    // --------
 
-            e.preventDefault();
+    $.Plato.Articles = {
+        init: function () {
+            app.logger.logInfo("$.Plato.Articles initializing");
+            this.bind();
+            app.logger.logInfo("$.Plato.Articles initialized");
+        },
+        bind: function () {
+            
+            // -------------
+            // Comment
+            // -------------
 
-            /* resizeable */
-            $('[data-provide="resizeable"]').resizeable("toggleVisibility", {
-                    onShow: function($caller) {
+            $('[data-provide="postComment"]').bind("click", function (e) {
+
+                e.preventDefault();
+
+                /* resizeable */
+                $('[data-provide="resizeable"]').resizeable("toggleVisibility", {
+                    onShow: function ($caller) {
                         var $textArea = $caller.find(".md-textarea");
                         if ($textArea.length > 0) {
                             $textArea.focus();
@@ -39,23 +46,9 @@ $(function (win, doc, $) {
                     }
                 });
 
-        });
+            });
 
-    });
-    
+        }
+    };
 
 }(window, document, jQuery));
-
-/* --------------------*/
-/* Plato Articles */
-/* --------------------*/
-
-$.Plato.Articles = {
-    context: null,
-    init: function(context) {
-
-        this.context = context;
-        context.logger.logInfo("$.Plato.Articles initializing");
-
-    }
-};

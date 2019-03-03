@@ -14,39 +14,11 @@ $(function (win, doc, $) {
 
     "use strict";
 
-    /* $.Plato */
+    /* Private */
     /* ---------------------------------------------*/
 
-    win.$.Plato = {};
-
-    /* Default options */
-    win.$.Plato.Options = {
-        debug: false,
-        url: "",
-        locale: "en-US",
-        apiKey: "",
-        csrfHeaderName: "X-Csrf-Token",
-        csrfCookieName: "",
-        // UI tooltips
-        bsToolTipEnabled: true,
-        bsToolTipAlternativeSelector: "[data-provide='tooltip']",
-        bsToolTipSelector: "[data-toggle='tooltip']",
-        magnificSelector: "[data-toggle='dialog']",
-        avatarUploadSelector: "[data-upload='avatar']",
-        getCsrfCookieToken: function () {
-            if (this.csrfCookieName !== "") {
-                var storage = win.$.Plato.Storage;
-                var cookie = storage.getCookie(this.csrfCookieName);
-                if (cookie) {
-                    return cookie;
-                }
-            }
-            return "";
-        }
-    };
-
-    /* Simple logging */
-    win.$.Plato.Logger = {
+    /* Plato Simple Logging */
+    var platoLogger = {
         info: "Info",
         warning: "Warning",
         error: "Error",
@@ -61,7 +33,7 @@ $(function (win, doc, $) {
             this.log(this.error, message);
         },
         log: function(level, message) {
-            if (!$.Plato.Options.debug) {
+            if (!$.Plato.defaults.debug) {
                 return;
             }
             var difference = this.getDifferenceInMilliseconds();
@@ -78,42 +50,32 @@ $(function (win, doc, $) {
         }
     };
 
-    /* Client side localization */
-    win.$.Plato.Locale = {
+    /* Plato Client Localization */
+    var platoLocale = {
         init: function () {
 
-            var context = win.$.Plato.Context;
-            if (!context) {
-                throw new Error("Plato.Locale requires a valid Plato.Context object");
-            }
-
-            var opts = context.options();
-            if (!opts) {
-                throw new Error("$.Plato.Locale requires a valid $.Plato.Options object");
-            }
-
-            context.logger.logInfo("Initializing $.Plato.Locale");
-
+            platoLogger.logInfo("Initializing $.Plato.Locale");
+            
             // We need a locale
-            if (opts.locale === "") {
-                context.logger.logError("$.Plato.Locale could not be initialized as the $.Plato.Options.locale property is empty!");
+            if (win.$.Plato.defaults.locale === "") {
+                platoLogger.logError("$.Plato.Locale could not be initialized as the $.Plato.defaults.locale property is empty!");
                 return;
             }
 
             // We need a url
-            if (opts.url === "") {
-                context.logger.logError("$.Plato.Locale could not be initialized as the $.Plato.Options.url property is empty!");
+            if (win.$.Plato.defaults.url === "") {
+                platoLogger.logError("$.Plato.Locale could not be initialized as the $.Plato.defaults.url property is empty!");
                 return;
             }
 
             // append a forward slash if needed
-            var baseUrl = opts.url;
+            var baseUrl = win.$.Plato.defaults.url;
             if (baseUrl.substring(baseUrl.length - 1, baseUrl.length) !== "/") {
                 baseUrl += "/";
             }
 
-            var url = baseUrl + "js/app/locale/app." + opts.locale + ".js";
-            context.logger.logInfo("Loading locale: " + url);
+            var url = baseUrl + "js/app/locale/app." + win.$.Plato.defaults.locale + ".js";
+            platoLogger.logInfo("Loading locale: " + url);
             this._load(url);
 
         },
@@ -127,8 +89,7 @@ $(function (win, doc, $) {
         },
         _load: function (url) {
 
-            var context = win.$.Plato.Context,
-                head = document.getElementsByTagName('head'),
+            var head = document.getElementsByTagName('head'),
                 buster = parseInt(Math.random() * 1000) + new Date().getTime();
 
             var script = document.createElement('script');
@@ -136,31 +97,17 @@ $(function (win, doc, $) {
 
             if (head) {
                 head[0].appendChild(script);
-                context.logger.logInfo("Adding locale (" + url + ") to the head element.");
+                platoLogger.logInfo("Adding locale (" + url + ") to the head element.");
             }
 
             script.onLoad = function() {
-                context.logger.logInfo("Added locale (" + url + ") to the head element.");
+                platoLogger.logInfo("Added locale (" + url + ") to the head element.");
             };
         }
     };
-
-    // access to options & core functionality
-    win.$.Plato.Context = {
-        options: function() {
-            // Extend the options if external options exist
-            if (typeof window.PlatoOptions !== "undefined") {
-                $.extend(true, $.Plato.Options, window.PlatoOptions);
-            }
-            return $.Plato.Options;
-        },
-        logger: $.Plato.Logger,
-        localizer: $.Plato.Locale
-    };
     
     /* Plato UI */
-    win.$.Plato.UI = {
-        context: win.$.Plato.Context,
+    var platoUi = {
         init: function($ele) {
 
             if (!$ele) {
@@ -174,10 +121,10 @@ $(function (win, doc, $) {
 
         },
         logInfo: function(message) {
-            this.context.logger.logInfo(message);
+            platoLogger.logInfo(message);
         },
         logError: function(message) {
-            this.context.logger.logError(message);
+            platoLogger.logError(message);
         },
         initToolTips: function ($el) {
 
@@ -188,10 +135,10 @@ $(function (win, doc, $) {
             this.logInfo("initToolTips()");
 
             // Enable Bootstrap tooltips
-            if (this.context.options().bsToolTipEnabled) {
+            if (win.$.Plato.defaults.bsToolTipEnabled) {
                 if ($el) {
-                    $el.find(this.context.options().bsToolTipSelector).tooltip({ trigger: "hover" });
-                    $el.find(this.context.options().bsToolTipAlternativeSelector).tooltip({ trigger: "hover" });
+                    $el.find(win.$.Plato.defaults.bsToolTipSelector).tooltip({ trigger: "hover" });
+                    $el.find(win.$.Plato.defaults.bsToolTipAlternativeSelector).tooltip({ trigger: "hover" });
                     
                 }
                 this.logInfo("Bootstrap tooltips initialized.");
@@ -233,7 +180,7 @@ $(function (win, doc, $) {
             this.logInfo("initAvatar()");
 
             // Avatar upload selector with preview
-            $el.find(this.context.options().avatarUploadSelector).change(function() {
+            $el.find(win.$.Plato.defaults.avatarUploadSelector).change(function() {
                 function readUrl(input) {
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();
@@ -259,29 +206,19 @@ $(function (win, doc, $) {
     };
 
     /* Plato Http */
-    win.$.Plato.Http = function(config) {
-
-        var context = win.$.Plato.Context;
-        if (!context) {
-            throw new Error("$.Plato.Http requires a valid Plato.Context object");
-        }
-
-        var ui = win.$.Plato.UI;
-        if (!ui) {
-            throw new Error("$.Plato.Http requires a valid $.Plato.UI object");
-        }
-
-        var opts = context.options();
-        if (!opts) {
-            throw new Error("$.Plato.Http requires a valid $.Plato.Options object");
+    var platoHttp = function(config) {
+        
+     
+        if (!win.$.Plato.defaults) {
+            throw new Error("platoHttp requires a valid $.Plato.defaults object");
         }
         
-        var baseUrl = opts.url,
+        var baseUrl = win.$.Plato.defaults.url,
             virtualUrl = config.url;
    
         // Remove forward slash suffix from base url
         if (baseUrl.substring(baseUrl.length - 1, baseUrl.length) === "/") {
-            baseUrl = baseUrl.substring(opts.url.length - 1);
+            baseUrl = baseUrl.substring(win.$.Plato.defaults.url.length - 1);
         }
 
         // prefix a forward slash if non is provided for our end point
@@ -293,28 +230,28 @@ $(function (win, doc, $) {
         config.url = baseUrl + virtualUrl;
 
         // add basic authentication headers
-        var apiKey = opts.apiKey;
+        var apiKey = win.$.Plato.defaults.apiKey;
         if (apiKey) {
-            context.logger.logInfo("ApiKey: " + apiKey);
+            platoLogger.logInfo("ApiKey: " + apiKey);
             config.beforeSend = function(xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + apiKey);
             };
         } else {
-            context.logger.logInfo("No api key was supplied");
+            platoLogger.logInfo("No api key was supplied");
         }
 
         // set content type & API version
         config.headers = {
             'Content-Type': 'application/json',
             'X-Api-Version': '1',
-            "X-Csrf-Token": opts.getCsrfCookieToken()
+            "X-Csrf-Token": win.$.Plato.defaults.getCsrfCookieToken()
         };
 
         var http = (function() {
 
             var getHtmlErrorMessage = function(err) {
-                    var s = '<h6>' + context.localizer.get("An error occurred!") + '</h6>';
-                    s += context.localizer.get("Information is provided below...") + "<br/><br/>";
+                    var s = '<h6>' + platoLocale.get("An error occurred!") + '</h6>';
+                s += platoLocale.get("Information is provided below...") + "<br/><br/>";
                     s += '<textarea style="min-height: 130px;" class="form-control">' + err + '</textarea>';
                     return s;
                 },
@@ -342,7 +279,7 @@ $(function (win, doc, $) {
                         JSON.stringify(xhr, null, "     ");
 
                     // Log
-                    context.logger.logError(err);
+                    platoLogger.logError(err);
 
                     // Notify
                     notify(getHtmlErrorMessage(err));
@@ -352,12 +289,11 @@ $(function (win, doc, $) {
 
                     // Display a visual indicator if the request fails due to authentication
                     if (xhr.statusCode === 401) {
-                        notify("<h6>" + context.localizer.get("Could not authenticate your request!") + "</h6>");
+                        notify("<h6>" + platoLocale.get("Could not authenticate your request!") + "</h6>");
                     }
 
                     // Log
-                    context.logger.logInfo("$.Plato.Http - Completed: " +
-                        JSON.stringify(xhr, null, "     "));
+                    platoLogger.logInfo("platoHttp - Completed: " + JSON.stringify(xhr, null, "     "));
 
                 };
 
@@ -378,14 +314,14 @@ $(function (win, doc, $) {
             };
         }());
 
-        context.logger.logInfo("$.Plato.Http - Starting Request: " + JSON.stringify(config, null, "     "));
+        platoLogger.logInfo("$.Plato.Http - Starting Request: " + JSON.stringify(config, null, "     "));
 
         return http.promise(config);
 
     };
 
     /* Plato Storage */
-    win.$.Plato.Storage = {
+    var platoStorage = {
         setCookie: function (key, value, expireDays, toJson, path) {
 
             toJson = toJson || false;
@@ -442,24 +378,64 @@ $(function (win, doc, $) {
     };
 
     /* Plato Text */
-    win.$.Plato.Text = {
+    var platoText = {
         htmlEncode: function(input) {
             var ele = document.createElement('span');
             ele.textContent = input;
             return ele.innerHTML;
         }
     };
+
+    /* Global */
+    /* ---------------------------------------------*/
+
+    win.$.Plato = {
+        defaults: {
+            debug: true,
+            url: "",
+            locale: "en-US",
+            apiKey: "",
+            csrfHeaderName: "X-Csrf-Token",
+            csrfCookieName: "",
+            // UI tooltips
+            bsToolTipEnabled: true,
+            bsToolTipAlternativeSelector: "[data-provide='tooltip']",
+            bsToolTipSelector: "[data-toggle='tooltip']",
+            magnificSelector: "[data-toggle='dialog']",
+            avatarUploadSelector: "[data-upload='avatar']",
+            getCsrfCookieToken: function() {
+                if (this.csrfCookieName !== "") {
+                    var storage = win.$.Plato.storage;
+                    var cookie = storage.getCookie(this.csrfCookieName);
+                    if (cookie) {
+                        return cookie;
+                    }
+                }
+                return "";
+            }
+        },
+        T: function(key) {
+            if ($.Plato.Locale) {
+                return this.locale.get(key);
+            }
+            return key;
+        },
+        locale: platoLocale,
+        logger: platoLogger,
+        ui: platoUi,
+        http: platoHttp,
+        storage: platoStorage,
+        text: platoText
+    };
     
     /* Initialize */
     /* ---------------------------------------------*/
     
     $(doc).ready(function () {
-
-        var context = win.$.Plato.Context;
-        context.logger.logInfo("$.Plato.Options = " + JSON.stringify(context.options(), null, "     "));
-        win.$.Plato.UI.init();
-        win.$.Plato.Locale.init();
-
+        var app = win.$.Plato;
+        app.logger.logInfo("$.Plato defaults:\n" + JSON.stringify(app.defaults, null, "     "));
+        app.ui.init();
+        app.locale.init();
     });
 
 }(window, document, jQuery));

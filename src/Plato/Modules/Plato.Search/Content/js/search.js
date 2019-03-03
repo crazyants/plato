@@ -1,19 +1,17 @@
 ﻿
 if (typeof jQuery === "undefined") {
-    throw new Error("Notifications requires jQuery");
+    throw new Error("jQuery Required");
 }
 
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("Notifications require $.Plato.Context");
-}
-
-if (typeof $.Plato.Http === "undefined") {
-    throw new Error("Notifications require $.Plato.Http");
+if (typeof $.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
 $(function (win, doc, $) {
 
     'use strict';
+
+    var app = win.$.Plato;
 
     /* searchDropDown */
     var searchDropDown = function () {

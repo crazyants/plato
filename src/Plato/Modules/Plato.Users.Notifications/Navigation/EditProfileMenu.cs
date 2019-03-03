@@ -1,6 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Plato.Internal.Navigation;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Notifications.Navigation

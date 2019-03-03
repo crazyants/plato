@@ -9,17 +9,16 @@ if (typeof $().modal === 'undefined') {
     throw new Error("Plato UI requires BootStrap 4.1.1");
 }
 
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("Plato UI requires $.Plato.Context");
+if (typeof $.Plato === "undefined") {
+    throw new Error("Plato UI requires $.Plato");
 }
 
-if (typeof $.Plato.Http === "undefined") {
-    throw new Error("Plato UI requires $.Plato.Http");
-}
 
 $(function (win, doc, $) {
 
-    var context = $.Plato.Context;
+
+    // Plato object
+    var app = win.$.Plato;
 
     /* dialog */
     var dialog = function () {
@@ -107,7 +106,7 @@ $(function (win, doc, $) {
                     return;
                 }
 
-                win.$.Plato.Http({
+                app.http({
                     method: "GET",
                     url: url
                 }).done(function(response) {
@@ -904,11 +903,8 @@ $(function (win, doc, $) {
                 var noResultsText = $caller.data(dataKey).noResultsText,
                     noResultsIcon = $caller.data(dataKey).noResultsIcon;
 
-                // Apply Localizer
-                if (context.localizer) {
-                    noResultsText = context.localizer.get(noResultsText);
-                }
-                
+                noResultsText = app.T(noResultsText);
+            
                 var $div = $("<div>")
                     .addClass("text-center p-4");
 
@@ -1007,7 +1003,7 @@ $(function (win, doc, $) {
 
                 // Begin populate
                 var config = this.getConfig($caller);
-                win.$.Plato.Http(config).done(function(response) {
+                app.http(config).done(function(response) {
                     if (response.statusCode !== 200) {
                         return;
                     }
@@ -2458,7 +2454,7 @@ $(function (win, doc, $) {
                 url += defaults.pagerKey + "=" + page;
 
                 // Request
-                win.$.Plato.Http({
+                app.http({
                     url: url,
                     method: "GET"
                 }).done(function(data) {
@@ -5011,8 +5007,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -5122,7 +5117,7 @@ $(function (win, doc, $) {
         $().infiniteScroll(function ($ele) {
 
             /* Initialize bootstrap tooltips upon infiniteScroll load */
-            win.$.Plato.UI.initToolTips($ele);
+            app.ui.initToolTips($ele);
             
             /* Initialize dialogSpy upon infiniteScroll load */
             $ele.find('[data-provide="dialog"]').dialogSpy();

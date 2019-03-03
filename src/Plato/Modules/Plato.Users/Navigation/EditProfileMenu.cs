@@ -1,6 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Plato.Internal.Navigation;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Navigation
@@ -17,7 +16,7 @@ namespace Plato.Users.Navigation
         
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
-            if (!String.Equals(name, "editprofile", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "edit-profile", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

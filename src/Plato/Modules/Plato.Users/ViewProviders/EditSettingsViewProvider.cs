@@ -1,13 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Users.Models;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -53,6 +49,7 @@ namespace Plato.Users.ViewProviders
             return Views(
                 View<User>("Home.Edit.Header", model => user).Zone("header"),
                 View<User>("Home.Edit.Sidebar", model => user).Zone("sidebar"),
+                View<User>("Home.Edit.Tools", model => user).Zone("tools"),
                 View<EditSettingsViewModel>("Home.EditSettings.Content", model => viewModel).Zone("content"),
                 View<User>("Home.Edit.Footer", model => user).Zone("footer")
             );

@@ -1,14 +1,10 @@
 ﻿
 if (typeof jQuery === "undefined") {
-    throw new Error("Plato requires jQuery");
+    throw new Error("jQuery Required");
 }
 
-if (typeof $.Plato.Locale === "undefined") {
-    throw new Error("$.Plato.Locale is required");
-}
-
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("$.Plato.Context is required");
+if (typeof $.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
 /* follow buttons */
@@ -16,6 +12,8 @@ $(function (win, doc, $) {
 
     'use strict';
 
+    var app = win.$.Plato;
+    
     // Provides state changes functionality for the star button
     var starToggle = function () {
 
@@ -234,7 +232,7 @@ $(function (win, doc, $) {
                     ThingId: this.getThingId($caller)
                 };
 
-                win.$.Plato.Http({
+                app.http({
                     url: "api/stars/star/post",
                     method: "POST",
                     data: JSON.stringify(params)
@@ -246,7 +244,7 @@ $(function (win, doc, $) {
                         $caller.starToggle("enable");
 
                         //// Bootstrap notify
-                        //win.$.Plato.UI.notify({
+                        //app.ui.notify({
                         //        // options
                         //    message: win.$.Plato.Locale.get("Star Added Successfully")
                         //    },
@@ -268,7 +266,7 @@ $(function (win, doc, $) {
                     ThingId: this.getThingId($caller)
                 };
 
-                win.$.Plato.Http({
+                app.http({
                     url: "api/stars/star/delete",
                     method: "DELETE",
                     data: JSON.stringify(params)
@@ -279,7 +277,7 @@ $(function (win, doc, $) {
                         $caller.starToggle("disable");
                         
                         //// Bootstrap notify
-                        //win.$.Plato.UI.notify({
+                        //app.ui.notify({
                         //        // options
                         //    message: win.$.Plato.Locale.get("Star Deleted Successfully")
                         //    },

@@ -1,7 +1,11 @@
 ﻿@model User
 
-<h4>@T["Edit Profile"]</h4>
-<span class="text-muted">@T["Update your account details."]</span>
+<div class="list-left">
+        <avatar class="avatar" url="@Model.Avatar.Url" />
+</div>
+<div class="list-body">
+    <h4>@T["Your Account"]</h4>
+    <span class="text-muted">@T["Manage your account details."]</span>
+</div>
 <hr />
-
 

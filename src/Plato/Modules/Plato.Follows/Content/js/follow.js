@@ -3,18 +3,17 @@ if (typeof jQuery === "undefined") {
     throw new Error("Plato requires jQuery");
 }
 
-if (typeof $.Plato.Locale === "undefined") {
-    throw new Error("$.Plato.Locale is required");
-}
-
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("$.Plato.Context Required");
+if (typeof $.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
 /* follow buttons */
 $(function (win, doc, $) {
-
+    
     'use strict';
+
+    // Plato object
+    var app = win.$.Plato;
 
     // Provides state changes functionality for the follow button
     var followToggle = function () {
@@ -229,7 +228,7 @@ $(function (win, doc, $) {
                     ThingId: this.getThingId($caller)
                 };
 
-                win.$.Plato.Http({
+                app.http({
                     url: "api/follows/follow/post",
                     method: "POST",
                     data: JSON.stringify(params)
@@ -238,17 +237,6 @@ $(function (win, doc, $) {
 
                         // Enable button
                         $caller.followToggle("enable");
-                        
-                        //// Bootstrap notify
-                        //win.$.Plato.UI.notify({
-                        //        // options
-                        //    message: win.$.Plato.Locale.get("Follow Added Successfully")
-                        //    },
-                        //    {
-                        //        width: "auto",
-                        //        type: 'success',
-                        //        delay: 2000
-                        //    });
                         
                     }
 
@@ -262,7 +250,7 @@ $(function (win, doc, $) {
                     ThingId: this.getThingId($caller)
                 };
 
-                win.$.Plato.Http({
+                app.http({
                     url: "api/follows/follow/delete",
                     method: "DELETE",
                     data: JSON.stringify(params)

@@ -1,20 +1,18 @@
 ﻿
 if (typeof jQuery === "undefined") {
-    throw new Error("Notifications requires jQuery");
+    throw new Error("Plato requires jQuery");
 }
 
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("Notifications require $.Plato.Context");
-}
-
-if (typeof $.Plato.Http === "undefined") {
-    throw new Error("Notifications require $.Plato.Http");
+if (typeof $.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
 $(function (win, doc, $) {
 
     'use strict';
-    
+
+    var app = win.$.Plato;
+
     // notifications
     var notifications = function () {
         
@@ -40,8 +38,7 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                var context = win.$.Plato.Context,
-                    deleteText = context.localizer.get("Delete");
+                var deleteText = app.T("Delete");
 
                 // Invoke suggester
                 $caller.pagedList({
@@ -203,7 +200,7 @@ $(function (win, doc, $) {
                                             return;
                                         }
 
-                                        win.$.Plato.Http({
+                                        app.http({
                                             method: "DELETE",
                                             url: 'api/notifications/user/delete?id=' + id
                                         }).done(function(response) {
@@ -326,7 +323,7 @@ $(function (win, doc, $) {
             poll: function($caller) {
 
                 // Get the number of unread notifications and display badge if needed
-                win.$.Plato.Http({
+                app.http({
                     url: "api/notifications/user/unread",
                     method: "GET"
                 }).done(function (data) {
@@ -479,7 +476,7 @@ $(function (win, doc, $) {
                     return;
                 }
 
-                win.$.Plato.Http({
+                app.http({
                     url: "api/notifications/user/markread",
                     method: "POSt"
                 }).done(function(data) {
