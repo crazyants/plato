@@ -16,8 +16,9 @@ if (typeof $.Plato === "undefined") {
 
 $(function (win, doc, $) {
 
+    'use strict';
 
-    // Plato object
+    // Plato Global Object
     var app = win.$.Plato;
 
     /* dialog */
@@ -36,7 +37,7 @@ $(function (win, doc, $) {
             buttons: [
                 {
                     text: "Close",
-                    id: this.id,
+                    id: "dialog",
                     click: function($modal) {
                         $modal.dismiss();
                     }

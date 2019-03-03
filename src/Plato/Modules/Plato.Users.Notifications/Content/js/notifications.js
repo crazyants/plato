@@ -7,10 +7,12 @@ if (typeof $.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
 
+/* notifications */
 $(function (win, doc, $) {
 
     'use strict';
 
+    // Plato Global Object
     var app = win.$.Plato;
 
     // notifications
@@ -40,7 +42,7 @@ $(function (win, doc, $) {
 
                 var deleteText = app.T("Delete");
 
-                // Invoke suggester
+                // Invoke paged list
                 $caller.pagedList({
                     page: 1,
                     pageSize: 5,
@@ -162,8 +164,7 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{date.value}/g, "");
                         }
-
-
+                        
                         if (result.url) {
                             html = html.replace(/\{url}/g, result.url);
                         } else {
@@ -327,9 +328,6 @@ $(function (win, doc, $) {
                     url: "api/notifications/user/unread",
                     method: "GET"
                 }).done(function (data) {
-
-                    console.log(JSON.stringify(data));
-
                     if (data.statusCode === 200) {
                         // Raise poll complete event
                         if ($caller.data(dataKey).onPollComplete) {

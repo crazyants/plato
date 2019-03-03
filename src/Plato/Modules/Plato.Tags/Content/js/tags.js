@@ -7,10 +7,12 @@ if (typeof $.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
 
+/* tags */
 $(function (win, doc, $) {
 
     'use strict';
 
+    // Plato Global Object
     var app = win.$.Plato;
 
     /* tagAutoComplete */
@@ -358,8 +360,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     $.fn.extend({
         tagTagIt: tagTagIt.init,
         tagAutoComplete: tagAutoComplete.init

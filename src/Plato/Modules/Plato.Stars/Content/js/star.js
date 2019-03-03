@@ -7,11 +7,12 @@ if (typeof $.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
 
-/* follow buttons */
+/* star button */
 $(function (win, doc, $) {
 
     'use strict';
 
+    // Plato Global Object
     var app = win.$.Plato;
     
     // Provides state changes functionality for the star button
@@ -272,21 +273,8 @@ $(function (win, doc, $) {
                     data: JSON.stringify(params)
                 }).done(function(data) {
                     if (data.statusCode === 200) {
-
                         // Disable button
                         $caller.starToggle("disable");
-                        
-                        //// Bootstrap notify
-                        //app.ui.notify({
-                        //        // options
-                        //    message: win.$.Plato.Locale.get("Star Deleted Successfully")
-                        //    },
-                        //    {
-                        //        width: "auto",
-                        //        type: 'success',
-                        //        delay: 2000
-                        //    });
-                        
                     }
                 });
 
@@ -374,7 +362,8 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    // Init plugins
     $.fn.extend({
         starButton: starButton.init,
         starToggle: starToggle.init,

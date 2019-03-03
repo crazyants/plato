@@ -7,12 +7,12 @@ if (typeof $.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
 
-/* follow buttons */
+/* follow button */
 $(function (win, doc, $) {
     
     'use strict';
 
-    // Plato object
+    // Plato Global Object
     var app = win.$.Plato;
 
     // Provides state changes functionality for the follow button

@@ -54,6 +54,10 @@ $(function (win, doc, $) {
     var platoLocale = {
         init: function () {
 
+            if (win.$.Plato.defaults == null) {
+                throw new Error("win.$.Plato.defaults Required");
+            }
+
             platoLogger.logInfo("Initializing $.Plato.Locale");
             
             // We need a locale
@@ -390,15 +394,15 @@ $(function (win, doc, $) {
     /* ---------------------------------------------*/
 
     win.$.Plato = {
+        // default options
         defaults: {
-            debug: true,
+            debug: false,
             url: "",
             locale: "en-US",
             apiKey: "",
-            csrfHeaderName: "X-Csrf-Token",
-            csrfCookieName: "",
-            // UI tooltips
-            bsToolTipEnabled: true,
+            csrfHeaderName: "X-Csrf-Token", // Custom CSRF header
+            csrfCookieName: "", // CSRF cookie name
+            bsToolTipEnabled: true, // UI tooltips
             bsToolTipAlternativeSelector: "[data-provide='tooltip']",
             bsToolTipSelector: "[data-toggle='tooltip']",
             magnificSelector: "[data-toggle='dialog']",
@@ -414,12 +418,14 @@ $(function (win, doc, $) {
                 return "";
             }
         },
+        // localization helper
         T: function(key) {
-            if ($.Plato.Locale) {
+            if (this.locale) {
                 return this.locale.get(key);
             }
             return key;
         },
+        // other objects
         locale: platoLocale,
         logger: platoLogger,
         ui: platoUi,
@@ -433,7 +439,7 @@ $(function (win, doc, $) {
     
     $(doc).ready(function () {
         var app = win.$.Plato;
-        app.logger.logInfo("$.Plato defaults:\n" + JSON.stringify(app.defaults, null, "     "));
+        app.logger.logInfo("$.Plato:\n" + JSON.stringify(app.defaults, null, "     "));
         app.ui.init();
         app.locale.init();
     });

@@ -7,10 +7,12 @@ if (typeof $.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
 
+/* search */
 $(function (win, doc, $) {
 
     'use strict';
 
+    // Plato Global Object
     var app = win.$.Plato;
 
     /* searchDropDown */
