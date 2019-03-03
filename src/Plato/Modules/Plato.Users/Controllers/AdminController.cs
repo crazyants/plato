@@ -8,13 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
-using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -67,10 +65,11 @@ namespace Plato.Users.Controllers
 
         #region "Action Methods"
 
-        public async Task<IActionResult> Index(
-            int offset,
-            UserIndexOptions opts,
-            PagerOptions pager)
+        // --------------
+        // Manage Users
+        // --------------
+
+        public async Task<IActionResult> Index(int offset, UserIndexOptions opts, PagerOptions pager)
         {
 
             var claims = "";
@@ -103,7 +102,7 @@ namespace Plato.Users.Controllers
                 //}
             }
 
-            ViewData["claims"] = claims;
+            //ViewData["claims"] = claims;
 
             //if (!await _authorizationService.AuthorizeAsync<Permission>(HttpContext.User, Permissions.ManageUsers))
             //{
@@ -176,32 +175,7 @@ namespace Plato.Users.Controllers
             return View(result);
 
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Display(string id)
-        {
-
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
-            
-            // Ensure user exists
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // Add user we are editing to context
-            HttpContext.Items[typeof(User)] = user;
-
-            // Build view
-            var result = await _viewProvider.ProvideDisplayAsync(user, this);
-            return View(result);
-
-        }
-
+        
         // --------------
         // Create User
         // --------------
@@ -391,7 +365,7 @@ namespace Plato.Users.Controllers
         // Edit Password
         // --------------
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> EditPassword(string id)
         {
 
@@ -445,8 +419,8 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPassword(EditPasswordViewModel model)
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditPassword))]
+        public async Task<IActionResult> EditPasswordPost(EditPasswordViewModel model)
         {
 
             if (ModelState.IsValid)
@@ -461,7 +435,7 @@ namespace Plato.Users.Controllers
                     if (result.Succeeded)
                     {
 
-                        _alerter.Success(T["Password updated successfully!"]);
+                        _alerter.Success(T["Password Updated Successfully!"]);
 
                         // Redirect back to edit user
                         return RedirectToAction(nameof(Edit), new RouteValueDictionary()
@@ -483,9 +457,9 @@ namespace Plato.Users.Controllers
             return await EditPassword(model.Id);
         }
 
-        // -------------------------
-        // Various helper actions 
-        // -------------------------
+        // --------------
+        // Manually send account confirmation email
+        // --------------
 
         public async Task<IActionResult> ResendConfirmationEmail(string id)
         {
@@ -507,7 +481,7 @@ namespace Plato.Users.Controllers
                     var emailResult = await _userEmails.SendEmailConfirmationTokenAsync(user);
                     if (result.Succeeded)
                     {
-                        _alerter.Success(T["Confirmation email sent successfully!"]);
+                        _alerter.Success(T["Confirmation Email Sent Successfully!"]);
                     }
                     else
                     {
@@ -528,6 +502,10 @@ namespace Plato.Users.Controllers
             
         }
 
+        // ------------
+        // Manually flag email as confirmed
+        // ------------
+
         public async Task<IActionResult> ConfirmEmail(string id)
         {
 
@@ -544,7 +522,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["User confirmed successfully!"]);
+                _alerter.Success(T["User Confirmed Successfully!"]);
             }
             else
             {
@@ -560,6 +538,10 @@ namespace Plato.Users.Controllers
                 ["id"] = id
             });
         }
+
+        // ------------
+        // Validate User
+        // ------------
 
         public async Task<IActionResult> ValidateUser(string id)
         {
@@ -603,7 +585,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["User verified successfully!"]);
+                _alerter.Success(T["User Verified Successfully!"]);
             }
             else
             {
@@ -653,7 +635,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Verified status removed successfully!"]);
+                _alerter.Success(T["Verified Status Removed Successfully!"]);
             }
             else
             {
@@ -670,7 +652,11 @@ namespace Plato.Users.Controllers
             });
 
         }
-        
+
+        // ------------
+        // Ban User
+        // ------------
+
         public async Task<IActionResult> BanUser(string id)
         {
 
@@ -708,7 +694,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["User added to banned successfully!"]);
+                _alerter.Success(T["User Banned Successfully!"]);
             }
             else
             {
@@ -757,7 +743,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["User removed from banned successfully!"]);
+                _alerter.Success(T["User Ban Removed Successfully!"]);
             }
             else
             {
@@ -773,6 +759,10 @@ namespace Plato.Users.Controllers
                 ["id"] = id
             });
         }
+
+        // ------------
+        // Flag As Spam
+        // ------------
 
         public async Task<IActionResult> SpamUser(string id)
         {
@@ -855,7 +845,7 @@ namespace Plato.Users.Controllers
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
-                _alerter.Success(T["User removed from SPAM successfully!"]);
+                _alerter.Success(T["User Removed from SPAM Successfully!"]);
             }
             else
             {

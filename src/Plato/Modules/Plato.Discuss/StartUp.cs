@@ -173,7 +173,7 @@ namespace Plato.Discuss
             routes.MapAreaRoute(
                 name: "DiscussUser",
                 areaName: "Plato.Discuss",
-                template: "u/{opts.id:int}/{opts.alias?}/topics/{pager.offset:int?}",
+                template: "u/{opts.createdByUserId:int}/{opts.alias?}/topics/{pager.offset:int?}",
                 defaults: new { controller = "User", action = "Index" }
             );
 

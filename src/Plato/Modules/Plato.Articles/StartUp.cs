@@ -161,7 +161,7 @@ namespace Plato.Articles
             routes.MapAreaRoute(
                 name: "ArticlesUser",
                 areaName: "Plato.Articles",
-                template: "u/{opts.id:int}/{opts.alias?}/articles/{pager.offset:int?}",
+                template: "u/{opts.createdByUserId:int}/{opts.alias?}/articles/{pager.offset:int?}",
                 defaults: new { controller = "User", action = "Index" }
             );
 

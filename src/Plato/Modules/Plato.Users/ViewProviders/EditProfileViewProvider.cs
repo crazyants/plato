@@ -21,7 +21,7 @@ namespace Plato.Users.ViewProviders
     {
 
         private static string _pathToAvatarFolder;
-        private static string _urltoAvatarFolder;
+        private static string _urlToAvatarFolder;
 
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -44,7 +44,7 @@ namespace Plato.Users.ViewProviders
 
             // paths
             _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars" );
-            _urltoAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
+            _urlToAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
             
         }
 
@@ -103,15 +103,14 @@ namespace Plato.Users.ViewProviders
             {
                 return await BuildEditAsync(userProfile, context);
             }
-
-     
+            
             if (context.Updater.ModelState.IsValid)
             {
 
-                // Update user data
-
+                // Update user 
                 user.DisplayName = model.DisplayName.Trim();
             
+                // Update meta data
                 var data = user.GetOrCreate<UserDetail>();
                 data.Profile.Location = model.Location;
                 data.Profile.Bio = model.Bio;
@@ -198,7 +197,7 @@ namespace Plato.Users.ViewProviders
                 : await _userPhotoStore.CreateAsync(userPhoto);
             if (newOrUpdatedPhoto != null)
             {
-                return _urltoAvatarFolder + newOrUpdatedPhoto.Name;
+                return _urlToAvatarFolder + newOrUpdatedPhoto.Name;
             }
             
             return string.Empty;

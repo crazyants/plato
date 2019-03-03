@@ -14,12 +14,10 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Badges;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags
 {
@@ -62,9 +60,7 @@ namespace Plato.Discuss.Tags
 
             // Notification manager
             services.AddScoped<INotificationManager<Badge>, NotificationManager<Badge>>();
-
-          
-
+            
         }
 
         public override void Configure(
@@ -73,21 +69,24 @@ namespace Plato.Discuss.Tags
             IServiceProvider serviceProvider)
         {
 
+            // Tag Index
             routes.MapAreaRoute(
                 name: "DiscussTagIndex",
                 areaName: "Plato.Discuss.Tags",
-                template: "discuss/tags/{pager.offset:int?}",
+                template: "discuss/tags/{pager.offset:int?}/{opts.search?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
+            // Tag Entities
             routes.MapAreaRoute(
                 name: "DiscussTagDisplay",
                 areaName: "Plato.Discuss.Tags",
                 template: "discuss/tag/{opts.tagId:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
-
-
+            
         }
+
     }
+
 }

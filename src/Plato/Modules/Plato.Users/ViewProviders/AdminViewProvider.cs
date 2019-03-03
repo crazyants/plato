@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +13,6 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
@@ -27,7 +25,7 @@ namespace Plato.Users.ViewProviders
     {
 
         private static string _pathToAvatarFolder;
-        private static string _urltoAvatarFolder;
+        private static string _urlToAvatarFolder;
 
         private readonly IPlatoUserStore<User> _userStore;
         private readonly IPlatoUserManager<User> _platoUserManager;
@@ -65,7 +63,7 @@ namespace Plato.Users.ViewProviders
 
             // paths
             _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars");
-            _urltoAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
+            _urlToAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
 
         }
 
@@ -228,6 +226,13 @@ namespace Plato.Users.ViewProviders
                 // Update display name. Username and email address are update via UserManager
                 user.DisplayName = model.DisplayName;
 
+                // Update meta data
+                var data = user.GetOrCreate<UserDetail>();
+                data.Profile.Location = model.Location;
+                data.Profile.Bio = model.Bio;
+                data.Profile.Url = model.Url;
+                user.AddOrUpdate<UserDetail>(data);
+
                 // Update photo
                 if (model.AvatarFile != null)
                 {
@@ -345,7 +350,7 @@ namespace Plato.Users.ViewProviders
                 : await _userPhotoStore.CreateAsync(userPhoto);
             if (newOrUpdatedPhoto != null)
             {
-                return _urltoAvatarFolder + newOrUpdatedPhoto.Name;
+                return _urlToAvatarFolder + newOrUpdatedPhoto.Name;
             }
 
             return string.Empty;

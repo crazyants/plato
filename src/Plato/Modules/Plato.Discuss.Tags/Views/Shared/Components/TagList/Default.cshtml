@@ -60,9 +60,9 @@
                  data-infinite-scroll-row-offset="@rowOffset"
                  data-infinite-scroll-page="@Model.Pager.Page"
                  data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
-                 class="list-group list-group-flush list-group-hover">
+                 class="list-group list-group-flush list-group-hover infinite-scroll">
                 <div class="row no-gutters">
-                    <div class="infinite-scroll-loader col-12" data-type="previous"></div>
+                    <div class="list-group-item infinite-scroll-loader col-12" data-type="previous"></div>
                     @foreach (var tag in Model.Results.Data)
                     {
                         var css = rowOffset == offset

@@ -30,10 +30,7 @@ else
                          @if (Model.IsVerifiedUpdatedUser != null)
                          {
                          <p>
-                             @T["This user was verified by"]
-                             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsVerifiedUpdatedUser.Id">
-                                 @Model.IsVerifiedUpdatedUser.DisplayName
-                             </a>, <date utc="Model.IsVerifiedUpdatedDate"></date>
+                             @T["This user was verified by"] <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsVerifiedUpdatedUser.Id">@Model.IsVerifiedUpdatedUser.DisplayName</a>, <date utc="Model.IsVerifiedUpdatedDate"></date>
                          </p>
                          }
                          <p>

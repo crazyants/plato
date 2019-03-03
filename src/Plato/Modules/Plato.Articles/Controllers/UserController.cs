@@ -13,12 +13,14 @@ using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Articles.Models;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Articles.Controllers
 {
     public class UserController : Controller, IUpdateModel
     {
-        
+
+        private readonly IFeatureFacade _featureFacade;
         private readonly IViewProviderManager<UserIndex> _userViewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
@@ -36,44 +38,76 @@ namespace Plato.Articles.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
-            IViewProviderManager<UserIndex> userViewProvider)
+            IViewProviderManager<UserIndex> userViewProvider,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
             _userViewProvider = userViewProvider;
+            _featureFacade = featureFacade;
 
             T = localizer;
             S = stringLocalizer;
 
         }
 
-        public async Task<IActionResult> Index(int id, EntityIndexOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
         {
 
-            // Get user
-            var user = await _platoUserStore.GetByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // default options
+            // Default options
             if (opts == null)
             {
                 opts = new EntityIndexOptions();
             }
 
-            // default pager
+            // Default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
 
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+            // Get user
+            var user = await _platoUserStore.GetByIdAsync(opts.CreatedByUserId);
 
+            // Ensure user exists
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
+            // Get default options
+            var defaultViewOptions = new EntityIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            // Build view model
+            var viewModel = await GetIndexViewModelAsync(opts, pager);
+
+            // Add view model to context
+            HttpContext.Items[typeof(EntityIndexViewModel<Article>)] = viewModel;
+
+            // If we have a pager.page querystring value return paged results
+            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
+            {
+                if (page > 0)
+                    return View("GetArticles", viewModel);
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -93,55 +127,47 @@ namespace Plato.Articles.Controllers
                 ).Add(S["Articles"]);
             });
 
-
-            // Get default options
-            var defaultViewOptions = new EntityIndexOptions();
-            var defaultPagerOptions = new PagerOptions();
-
-            // Add non default route data for pagination purposes
-            if (opts.Search != defaultViewOptions.Search)
-                this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort)
-                this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order)
-                this.RouteData.Values.Add("opts.order", opts.Order);
-            if (opts.Filter != defaultViewOptions.Filter)
-                this.RouteData.Values.Add("opts.filter", opts.Filter);
-            if (pager.Page != defaultPagerOptions.Page)
-                this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            // Limited results to current user
-            opts.CreatedByUserId = user.Id;
-
-            // Build view model
-            var viewModel = new EntityIndexViewModel<Article>()
-            {
-                Options = opts,
-                Pager = pager
-            };
-
-            // Add view model to context
-            HttpContext.Items[typeof(EntityIndexViewModel<Article>)] = viewModel;
-
-            // If we have a pager.page querystring value return paged results
-            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
-            {
-                if (page > 0)
-                    return View("GetArticles", viewModel);
-            }
-
             // Build view
             var result = await _userViewProvider.ProvideDisplayAsync(new UserIndex()
             {
-                Id = id
+                Id = user.Id
             }, this);
 
             //// Return view
             return View(result);
 
         }
+
+        async Task<EntityIndexViewModel<Article>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        {
+
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            // Ensure we have a default sort column
+            if (options.Sort == SortBy.Auto)
+            {
+                options.Sort = SortBy.LastReply;
+            }
+
+            // Return updated model
+            return new EntityIndexViewModel<Article>()
+            {
+                Options = options,
+                Pager = pager
+            };
+
+        }
+
 
     }
 
