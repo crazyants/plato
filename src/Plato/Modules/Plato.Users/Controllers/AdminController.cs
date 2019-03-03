@@ -369,14 +369,16 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> EditPassword(string id)
         {
 
-            // Ensure user exists
+            // Get user
             var user = await _userManager.FindByIdAsync(id);
+
+            // Ensure user exists
             if (user == null)
             {
                 return NotFound();
             }
 
-            // Add user we are editing to context
+            // Add user to the context
             HttpContext.Items[typeof(User)] = user;
 
             // Build breadcrumb
@@ -398,7 +400,7 @@ namespace Plato.Users.Controllers
                     .Add(S["Edit Password"]);
             });
 
-            // Apply reset token
+            // Get reset token
             var resetToken = "";
             var result = await _platoUserManager.GetForgotPasswordUserAsync(user.Email);
             if (result.Succeeded)

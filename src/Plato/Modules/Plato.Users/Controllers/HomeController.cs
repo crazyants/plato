@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
+using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.Controllers
@@ -31,6 +34,8 @@ namespace Plato.Users.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
         private readonly ITimeZoneProvider _timeZoneProvider;
+        private readonly IPlatoUserManager<User> _platoUserManager;
+        private readonly IUserEmails _userEmails;
 
         public IHtmlLocalizer T { get; }
 
@@ -48,7 +53,9 @@ namespace Plato.Users.Controllers
             IViewProviderManager<EditProfileViewModel> editProfileViewProvider,
             IViewProviderManager<EditAccountViewModel> editAccountViewProvider,
             IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IPlatoUserManager<User> platoUserManager, 
+            IUserEmails userEmails)
         {
             _viewProvider = viewProvider;
             _platoUserStore = platoUserStore;
@@ -60,6 +67,8 @@ namespace Plato.Users.Controllers
             _editAccountViewProvider = editAccountViewProvider;
             _editSettingsViewProvider = editSettingsViewProvider;
             _breadCrumbManager = breadCrumbManager;
+            _platoUserManager = platoUserManager;
+            _userEmails = userEmails;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -67,9 +76,9 @@ namespace Plato.Users.Controllers
 
         #region "Actions"
 
-        // --------------
+        // -----------------
         // User List
-        // --------------
+        // -----------------
 
         public async Task<IActionResult> Index(UserIndexOptions opts, PagerOptions pager)
         {
@@ -141,9 +150,9 @@ namespace Plato.Users.Controllers
 
         }
 
-        // --------------
+        // -----------------
         // User Profile
-        // --------------
+        // -----------------
 
         public async Task<IActionResult> Display(DisplayUserOptions opts)
         {
@@ -182,9 +191,9 @@ namespace Plato.Users.Controllers
 
         }
 
-        // --------------
+        // -----------------
         // Edit Profile
-        // --------------
+        // -----------------
 
         public async Task<IActionResult> EditProfile()
         {
@@ -254,8 +263,9 @@ namespace Plato.Users.Controllers
 
         }
 
+        // -----------------
         // Edit Account
-        // --------------------------
+        // -----------------
 
         public async Task<IActionResult> EditAccount()
         {
@@ -317,10 +327,62 @@ namespace Plato.Users.Controllers
             return await EditAccount();
 
         }
+        
+        public async Task<IActionResult> ResetPassword()
+        {
 
-        // --------------
+            // Get user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure user exists
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _platoUserManager.GetForgotPasswordUserAsync(user.UserName);
+            if (result.Succeeded)
+            {
+                // Ensure account has been confirmed
+                if (await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    user.ResetToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(result.Response.ResetToken));
+                    var emailResult = await _userEmails.SendPasswordResetTokenAsync(result.Response);
+                    if (emailResult.Succeeded)
+                    {
+                        _alerter.Success(T["Check your email. We've sent you a password reset link!"]);
+                    }
+                    else
+                    {
+                        foreach (var error in emailResult.Errors)
+                        {
+                            _alerter.Danger(T[error.Description]);
+                            //ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                        }}
+                }
+                else
+                {
+                    _alerter.Danger(T["You must confirm your email before you can reset your password!"]);
+                    //ViewData.ModelState.AddModelError(string.Empty, "You must confirm your email before you can reset your password!");
+                }
+                 
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                    //ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return RedirectToAction(nameof(EditAccount));
+
+        }
+
+        // -----------------
         // Edit Settings
-        // --------------
+        // -----------------
 
         public async Task<IActionResult> EditSettings()
         {

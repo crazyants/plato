@@ -37,13 +37,10 @@
     </h6>
 </card-title>
     <card-body>
-        
         <i class="fal fa-lock"></i>
-        <a asp-route-controller="Account" asp-route-action="ResetPassword">
-            @T["Reset my password"]
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="ResetPassword">
+            @T["Send reset link to"] @Model.Email
         </a>
-
-   
     </card-body>
 </card>
 
