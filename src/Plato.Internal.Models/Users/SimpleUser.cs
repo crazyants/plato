@@ -16,8 +16,12 @@
 
         public string PhotoColor { get; set; }
 
-        public UserAvatar Avatar => new UserAvatar(this);
+        public string Signature { get; set; }
 
+        public string SignatureHtml { get; set; }
+
+        public UserAvatar Avatar => new UserAvatar(this);
+        
         public SimpleUser()
         {
         
@@ -31,6 +35,8 @@
             Alias = user.Alias;
             PhotoUrl = user.PhotoUrl;
             PhotoColor = user.PhotoColor;
+            Signature = user.Signature;
+            SignatureHtml = user.SignatureHtml;
         }
 
     }

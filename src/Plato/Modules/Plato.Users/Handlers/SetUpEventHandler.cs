@@ -323,6 +323,12 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "SignatureHtml",
+                        DbType = DbType.String,
+                        Length = "max"
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "IsSpam",
                         DbType = DbType.Boolean
                     },

@@ -510,13 +510,14 @@ namespace Plato.Users.Controllers
             // Validate model state within all view providers
             if (await _editSignatureViewProvider.IsModelStateValid(model, this))
             {
+
                 await _editSignatureViewProvider.ProvideUpdateAsync(model, this);
 
                 // Ensure model state is still valid after view providers have executed
                 if (ModelState.IsValid)
                 {
                     _alerter.Success(T["Signature Updated Successfully!"]);
-                    return RedirectToAction(nameof(EditSettings));
+                    return RedirectToAction(nameof(EditSignature));
                 }
 
             }
@@ -531,7 +532,7 @@ namespace Plato.Users.Controllers
                 }
             }
 
-            return await EditSettings();
+            return await EditSignature();
 
         }
 

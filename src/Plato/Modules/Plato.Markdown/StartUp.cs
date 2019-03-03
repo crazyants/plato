@@ -10,7 +10,7 @@ using Plato.Internal.Assets.Abstractions;
 using Plato.Markdown.Assets;
 using Plato.Markdown.Services;
 using Plato.Markdown.Subscribers;
-using Plato.Markdown.ViewAdaptors;
+using Plato.Markdown.ViewAdapters;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Text.Abstractions;
 
@@ -31,7 +31,7 @@ namespace Plato.Markdown
             // Register markdown abstractions
             services.AddSingleton<IMarkdownParserFactory, MarkdownParserFactory>();
 
-            // Register view adaptors
+            // Register view adapters
             services.AddScoped<IViewAdapterProvider, EditorViewAdapterProvider>();
             
             // Register client resources
@@ -39,6 +39,7 @@ namespace Plato.Markdown
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
+            services.AddScoped<IBrokerSubscriber, ParseSignatureHtmlSubscriber>();
 
             // Replace the IDefaultHtmlEncoder implementation 
             // This ensures HTML is not HtmlEncoded before it's passed to the markdown parser

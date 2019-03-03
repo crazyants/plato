@@ -46,9 +46,7 @@ namespace Plato.Internal.Models.Users
         int Rank { get; set; }
 
         DateTimeOffset? RankUpdatedDate { get; set; }
-
-        string Signature { get; set; }
-
+        
         bool IsSpam { get; set; }
 
         int IsSpamUpdatedUserId { get; set; }

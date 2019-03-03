@@ -12,6 +12,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
+using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -22,25 +23,25 @@ namespace Plato.Users.ViewProviders
 
         private static string _pathToAvatarFolder;
         private static string _urlToAvatarFolder;
-
-        private readonly UserManager<User> _userManager;
+        
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
         private readonly IUploadFolder _uploadFolder;
+        private readonly IPlatoUserManager<User> _platoUserManager;
 
         public EditProfileViewProvider(
             IShellSettings shellSettings,
             IPlatoUserStore<User> platoUserStore,
-            UserManager<User> userManager,
             IHostingEnvironment hostEnvironment,
             IFileStore fileStore,
             IUserPhotoStore<UserPhoto> userPhotoStore,
-            IUploadFolder uploadFolder)
+            IUploadFolder uploadFolder,
+            IPlatoUserManager<User> platoUserManager)
         {
             _platoUserStore = platoUserStore;
-            _userManager = userManager;
             _userPhotoStore = userPhotoStore;
             _uploadFolder = uploadFolder;
+            _platoUserManager = platoUserManager;
 
             // paths
             _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars" );
@@ -126,7 +127,7 @@ namespace Plato.Users.ViewProviders
                 }
 
                 // Update user
-                var result = await _userManager.UpdateAsync(user);
+                var result = await _platoUserManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {
                     context.Updater.ModelState.AddModelError(string.Empty, error.Description);

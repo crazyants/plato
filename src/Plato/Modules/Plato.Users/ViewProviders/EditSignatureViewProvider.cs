@@ -5,6 +5,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -12,22 +13,19 @@ namespace Plato.Users.ViewProviders
 
     public class EditSignatureViewProvider : BaseViewProvider<EditSignatureViewModel>
     {
-
-        private readonly UserManager<User> _userManager;
+        
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-
+        private readonly IPlatoUserManager<User> _platoUserManager;
+ 
         private readonly HttpRequest _request;
 
         public EditSignatureViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IPlatoUserStore<User> platoUserStore,
-            UserManager<User> userManager,
-            IUserPhotoStore<UserPhoto> userPhotoStore)
+            IPlatoUserManager<User> platoUserManager)
         {
             _platoUserStore = platoUserStore;
-            _userManager = userManager;
-            _userPhotoStore = userPhotoStore;
+            _platoUserManager = platoUserManager;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -97,10 +95,11 @@ namespace Plato.Users.ViewProviders
 
             if (context.Updater.ModelState.IsValid)
             {
+
                 user.Signature = model.Signature;
              
                 // Update user
-                var result = await _userManager.UpdateAsync(user);
+                var result = await _platoUserManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {
                     context.Updater.ModelState.AddModelError(string.Empty, error.Description);

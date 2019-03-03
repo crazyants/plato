@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Net.Abstractions;
@@ -36,7 +33,6 @@ namespace Plato.Users.Services
             IOptions<IdentityOptions> identityOptions,
             IStringLocalizer<PlatoUserManager<TUser>> stringLocalizer,
             UserManager<TUser> userManager,
-            IHttpContextAccessor httpContextAccessor,
             ISiteSettingsStore siteSettingsStore,
             IPlatoUserStore<TUser> platoUserStore,
             IUserColorProvider userColorProvider, 
@@ -84,17 +80,17 @@ namespace Plato.Users.Services
             return await CreateAsync(userName, string.Empty, email, password, roleNames);
         }
         
-        public async Task<ICommandResult<TUser>> CreateAsync(TUser user)
+        public async Task<ICommandResult<TUser>> CreateAsync(TUser model)
         {
-            return await CreateAsync(user, user.Password);
+            return await CreateAsync(model, model.Password);
         }
 
-        public async Task<ICommandResult<TUser>> CreateAsync(TUser user, string password)
+        public async Task<ICommandResult<TUser>> CreateAsync(TUser model, string password)
         {
 
-            if (user == null)
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(user));
+                throw new ArgumentNullException(nameof(model));
             }
 
             var result = new CommandResult<TUser>();
@@ -102,12 +98,12 @@ namespace Plato.Users.Services
             // Validate
             // -------------------------
 
-            if (String.IsNullOrEmpty(user.UserName) || String.IsNullOrWhiteSpace(user.UserName))
+            if (String.IsNullOrEmpty(model.UserName) || String.IsNullOrWhiteSpace(model.UserName))
             {
                 return result.Failed(new CommandError("UserMame", T["A username is required"]));
             }
 
-            if (String.IsNullOrEmpty(user.Email) || String.IsNullOrWhiteSpace(user.Email))
+            if (String.IsNullOrEmpty(model.Email) || String.IsNullOrWhiteSpace(model.Email))
             {
                 return result.Failed(new CommandError("Email", T["A email is required"]));
             }
@@ -121,13 +117,13 @@ namespace Plato.Users.Services
             // -------------------------
 
             // Is this a unique email?
-            if (await _userManager.FindByEmailAsync(user.Email) != null)
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
                 return result.Failed(new CommandError("Email", T["The email already exists"]));
             }
 
             // Is this a unique username?
-            if (await _userManager.FindByNameAsync(user.UserName.Normalize()) != null)
+            if (await _userManager.FindByNameAsync(model.UserName.Normalize()) != null)
             {
                 return result.Failed(new CommandError("UserMame", T["The username already exists"]));
             }
@@ -138,49 +134,50 @@ namespace Plato.Users.Services
             var settings = await _siteSettingsStore.GetAsync();
             if (settings != null)
             {
-                user.TimeZone = settings.TimeZone;
+                model.TimeZone = settings.TimeZone;
             }
 
-            user.PhotoColor = _userColorProvider.GetColor();
-            
-            if (String.IsNullOrEmpty(user.IpV4Address))
+            model.PhotoColor = _userColorProvider.GetColor();
+            model.SignatureHtml = await ParseSignatureHtml(model.Signature);
+
+            if (String.IsNullOrEmpty(model.IpV4Address))
             {
-                user.IpV4Address = _clientIpAddress.GetIpV4Address();
+                model.IpV4Address = _clientIpAddress.GetIpV4Address();
             }
 
-            if (String.IsNullOrEmpty(user.IpV6Address))
+            if (String.IsNullOrEmpty(model.IpV6Address))
             {
-                user.IpV6Address = _clientIpAddress.GetIpV6Address();
+                model.IpV6Address = _clientIpAddress.GetIpV6Address();
             }
 
             // Add new roles
-            foreach (var role in user.RoleNames)
+            foreach (var role in model.RoleNames)
             {
-                if (!await _userManager.IsInRoleAsync(user, role))
+                if (!await _userManager.IsInRoleAsync(model, role))
                 {
-                    await _userManager.AddToRoleAsync(user, role);
+                    await _userManager.AddToRoleAsync(model, role);
                 }
             }
 
             // Invoke UserCreating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this, "UserCreating"))
             {
-                user = await handler.Invoke(new Message<TUser>(user, this));
+                model = await handler.Invoke(new Message<TUser>(model, this));
             }
 
             // Persist the user
-            var identityResult = await _userManager.CreateAsync(user, password);
+            var identityResult = await _userManager.CreateAsync(model, password);
             if (identityResult.Succeeded)
             {
 
                 // Invoke UserCreated subscriptions
                 foreach (var handler in _broker.Pub<TUser>(this, "UserCreated"))
                 {
-                    user = await handler.Invoke(new Message<TUser>(user, this));
+                    model = await handler.Invoke(new Message<TUser>(model, this));
                 }
 
                 // Return success
-                return result.Success(user);
+                return result.Success(model);
 
             }
 
@@ -245,6 +242,7 @@ namespace Plato.Users.Services
             }
             
             model.ModifiedDate = DateTimeOffset.Now;
+            model.SignatureHtml = await ParseSignatureHtml(model.Signature);
 
             // Invoke UserUpdating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this, "UserUpdating"))
@@ -503,6 +501,18 @@ namespace Plato.Users.Services
             userIdentifier = userIdentifier.Normalize();
             return await _userManager.FindByNameAsync(userIdentifier) ?? 
                    await _userManager.FindByEmailAsync(userIdentifier);
+        }
+
+        async Task<string> ParseSignatureHtml(string signature)
+        {
+
+            foreach (var handler in _broker.Pub<string>(this, "ParseSignatureHtml"))
+            {
+                signature = await handler.Invoke(new Message<string>(signature, this));
+            }
+
+            return signature;
+
         }
 
         #endregion

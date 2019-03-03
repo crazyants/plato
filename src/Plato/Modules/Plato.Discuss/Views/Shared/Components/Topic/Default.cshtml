@@ -35,6 +35,12 @@
     <card-body class="card-body-flush">
         <div class="markdown-body m-3" data-provide="markdownBody">
             @Html.Raw(@Model.Entity.Html)
+            @if (!String.IsNullOrEmpty(Model.Entity.CreatedBy.SignatureHtml))
+            {
+                <div>
+                    @Html.Raw(@Model.Entity.CreatedBy.SignatureHtml)
+                </div>
+            }
         </div>
         <navigation name="topic-footer"
                     model="Model.Entity"

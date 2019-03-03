@@ -15,6 +15,11 @@
 
         string PhotoColor { get; set; }
 
+        string Signature { get; set; }
+
+        string SignatureHtml { get; set; }
+
+
         UserAvatar Avatar { get; }
 
     }

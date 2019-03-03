@@ -124,6 +124,8 @@ namespace Plato.Entities.Models
                     CreatedBy.PhotoUrl = Convert.ToString(dr["CreatedPhotoUrl"]);
                 if (dr.ColumnIsNotNull("CreatedPhotoColor"))
                     CreatedBy.PhotoColor = Convert.ToString(dr["CreatedPhotoColor"]);
+                if (dr.ColumnIsNotNull("CreatedSignatureHtml"))
+                    CreatedBy.SignatureHtml = Convert.ToString(dr["CreatedSignatureHtml"]);
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
@@ -151,6 +153,8 @@ namespace Plato.Entities.Models
                     ModifiedBy.PhotoUrl = Convert.ToString(dr["ModifiedPhotoUrl"]);
                 if (dr.ColumnIsNotNull("ModifiedPhotoColor"))
                     ModifiedBy.PhotoColor = Convert.ToString(dr["ModifiedPhotoColor"]);
+                if (dr.ColumnIsNotNull("ModifiedSignatureHtml"))
+                    ModifiedBy.SignatureHtml = Convert.ToString(dr["ModifiedSignatureHtml"]);
             }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))

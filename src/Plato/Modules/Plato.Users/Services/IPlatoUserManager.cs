@@ -22,7 +22,7 @@ namespace Plato.Users.Services
             string[] roleNames = null);
 
         Task<ICommandResult<TUser>> CreateAsync(
-            TUser user,
+            TUser model,
             string password);
 
         Task<ICommandResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword);

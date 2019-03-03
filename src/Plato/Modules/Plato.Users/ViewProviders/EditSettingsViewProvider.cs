@@ -4,6 +4,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -11,18 +12,16 @@ namespace Plato.Users.ViewProviders
 
     public class EditSettingsViewProvider : BaseViewProvider<EditSettingsViewModel>
     {
-
-        private readonly UserManager<User> _userManager;
+        
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
+        private readonly IPlatoUserManager<User> _platoUserManager;
 
         public EditSettingsViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            UserManager<User> userManager, IUserPhotoStore<UserPhoto> userPhotoStore)
+            IPlatoUserManager<User> platoUserManager)
         {
             _platoUserStore = platoUserStore;
-            _userManager = userManager;
-            _userPhotoStore = userPhotoStore;
+            _platoUserManager = platoUserManager;
         }
 
         #region "Implementation"
@@ -83,7 +82,7 @@ namespace Plato.Users.ViewProviders
                 user.Culture = model.Culture;
            
                 // Update user
-                var result = await _userManager.UpdateAsync(user);
+                var result = await _platoUserManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {
                     context.Updater.ModelState.AddModelError(string.Empty, error.Description);

@@ -5,6 +5,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -14,15 +15,17 @@ namespace Plato.Users.ViewProviders
     {
         
         private readonly UserManager<User> _userManager;
+        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
   
         public EditAccountViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IPlatoUserManager<User> platoUserManager)
         {
             _platoUserStore = platoUserStore;
             _userManager = userManager;
-
+            _platoUserManager = platoUserManager;
         }
 
         #region "Implementation"
@@ -94,7 +97,7 @@ namespace Plato.Users.ViewProviders
                 }
 
                 // Update user
-                var result = await _userManager.UpdateAsync(user);
+                var result = await _platoUserManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {
                     context.Updater.ModelState.AddModelError(string.Empty, error.Description);

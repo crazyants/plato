@@ -83,6 +83,8 @@ namespace Plato.Internal.Models.Users
 
         public string Signature { get; set; }
 
+        public string SignatureHtml { get; set; }
+
         public bool IsSpam { get; set; }
 
         public int IsSpamUpdatedUserId { get; set; }
@@ -303,6 +305,9 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("Signature"))
                 Signature = Convert.ToString(dr["Signature"]);
+
+            if (dr.ColumnIsNotNull("SignatureHtml"))
+                SignatureHtml = Convert.ToString(dr["SignatureHtml"]);
 
             if (dr.ColumnIsNotNull("IsSpam"))
                 IsSpam = Convert.ToBoolean(dr["IsSpam"]);

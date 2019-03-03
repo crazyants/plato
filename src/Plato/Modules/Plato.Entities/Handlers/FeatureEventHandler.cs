@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
@@ -554,22 +553,25 @@ namespace Plato.Entities.Handlers
                 .CreateProcedure(
                     new SchemaProcedure(
                             $"SelectEntityById",
-                            @" SELECT e.*, 0 AS Rank, 0 AS MaxRank,
+                            @"SELECT e.*, 0 AS Rank, 0 AS MaxRank,
                                     c.UserName AS CreatedUserName,                              
                                     c.DisplayName AS CreatedDisplayName,                                  
                                     c.Alias AS CreatedAlias,
                                     c.PhotoUrl AS CreatedPhotoUrl,
                                     c.PhotoColor AS CreatedPhotoColor,
+                                    c.SignatureHtml AS CreatedSignatureHtml,
                                     m.UserName AS ModifiedUserName,                                 
                                     m.DisplayName AS ModifiedDisplayName,                                
                                     m.Alias AS ModifiedAlias,
                                     m.PhotoUrl AS ModifiedPhotoUrl,
                                     m.PhotoColor AS ModifiedPhotoColor,
+                                    m.SignatureHtml AS ModifiedSignatureHtml,
                                     l.UserName AS LastReplyUserName,                                
                                     l.DisplayName AS LastReplyDisplayName,                                  
                                     l.Alias AS LastReplyAlias,
                                     l.PhotoUrl AS LastReplyPhotoUrl,
-                                    l.PhotoColor AS LastReplyPhotoColor
+                                    l.PhotoColor AS LastReplyPhotoColor,
+                                    l.SignatureHtml AS LastReplySignatureHtml
                                 FROM {prefix}_Entities e WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
@@ -649,17 +651,19 @@ namespace Plato.Entities.Handlers
                 .CreateProcedure(
                     new SchemaProcedure(
                             "SelectEntityReplyById",
-                            @" SELECT r.*, 
+                            @"SELECT r.*, 
                                     c.UserName AS CreatedUserName,                                   
                                     c.DisplayName AS CreatedDisplayName,                                 
                                     c.Alias AS CreatedAlias,
                                     c.PhotoUrl AS CreatedPhotoUrl,
                                     c.PhotoColor AS CreatedPhotoColor,
+                                    c.SignatureHtml AS CreatedSignatureHtml,
                                     m.UserName AS ModifiedUserName,                                    
                                     m.DisplayName AS ModifiedDisplayName,                                
                                     m.Alias AS ModifiedAlias,
                                     m.PhotoUrl AS ModifiedPhotoUrl,
-                                    m.PhotoColor AS ModifiedPhotoColor 
+                                    m.PhotoColor AS ModifiedPhotoColor,
+                                    m.SignatureHtml AS ModifiedSignatureHtml
                                 FROM {prefix}_EntityReplies r WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON r.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON r.ModifiedUserId = m.Id

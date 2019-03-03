@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewAdapters;
 
-namespace Plato.Markdown.ViewAdaptors
+namespace Plato.Markdown.ViewAdapters
 {
     public class EditorViewAdapterProvider : BaseAdapterProvider
     {

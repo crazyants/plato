@@ -113,7 +113,7 @@ namespace Plato.Users.Controllers
                 ViewData["users"] = sb.ToString();
             }
 
-            //await CreateSampleUsers();
+            await CreateSampleUsers();
 
             // ----------------------------------------------------------------
 

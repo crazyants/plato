@@ -230,12 +230,14 @@ namespace Plato.Entities.Stores
                 .Append("c.Alias AS CreatedAlias,")
                 .Append("c.PhotoUrl AS CreatedPhotoUrl,")
                 .Append("c.PhotoColor AS CreatedPhotoColor,")
+                .Append("c.SignatureHtml AS CreatedSignatureHtml,")
                 .Append("m.UserName AS ModifiedUserName,")
                 .Append("m.NormalizedUserName AS ModifiedNormalizedUserName,")
                 .Append("m.DisplayName AS ModifiedDisplayName,")
                 .Append("m.Alias AS ModifiedAlias,")
                 .Append("m.PhotoUrl AS ModifiedPhotoUrl,")
-                .Append("m.PhotoColor AS ModifiedPhotoColor");
+                .Append("m.PhotoColor AS ModifiedPhotoColor, ")
+                .Append("m.SignatureHtml AS ModifiedSignatureHtml");
             return sb.ToString();
 
         }
