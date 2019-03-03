@@ -81,11 +81,7 @@ namespace Plato.Users
 
             // User account emails
             services.TryAddScoped<IUserEmails, UserEmails>();
-
-
-            // Context facade
-            //services.TryAddScoped<IContextFacade, ContextFacade>();
-
+            
             // Configure authentication cookie options
             services.ConfigureApplicationCookie(options =>
             {
@@ -131,6 +127,10 @@ namespace Plato.Users
             // Edit user settings view provider
             services.AddScoped<IViewProviderManager<EditSettingsViewModel>, ViewProviderManager<EditSettingsViewModel>>();
             services.AddScoped<IViewProvider<EditSettingsViewModel>, EditSettingsViewProvider>();
+           
+            // Edit user signature view provider
+            services.AddScoped<IViewProviderManager<EditSignatureViewModel>, ViewProviderManager<EditSignatureViewModel>>();
+            services.AddScoped<IViewProvider<EditSignatureViewModel>, EditSignatureViewProvider>();
 
             // Login view provider
             services.AddScoped<IViewProviderManager<UserLogin>, ViewProviderManager<UserLogin>>();

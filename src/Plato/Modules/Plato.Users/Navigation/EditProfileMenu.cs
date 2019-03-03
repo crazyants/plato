@@ -30,6 +30,10 @@ namespace Plato.Users.Navigation
                     .Action("EditAccount", "Home", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
+                ).Add(T["Signature"], int.MaxValue, signature => signature
+                    .Action("EditSignature", "Home", "Plato.Users")
+                    //.Permission(Permissions.ManageUsers)
+                    .LocalNav()
                 ).Add(T["Settings"], int.MaxValue, profile => profile
                     .Action("EditSettings", "Home", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)

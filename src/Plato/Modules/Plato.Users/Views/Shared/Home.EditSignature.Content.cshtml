@@ -1,0 +1,25 @@
+﻿@model EditSignatureViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">
+            @T["Signature"]
+        </h6>
+    </card-title>
+    <card-body>
+        <div class="row">
+
+            @await DisplayAsync(new View("Editor", new
+            {
+                value = @Model.Signature,
+                placeHolderText = T["Provide a signature. Your signature appears below any repliesn or comments you post."],
+                htmlName = @Model.EditorHtmlName,
+                autoFocus = true
+            }))
+
+        </div>
+    </card-body>
+</card>
+
+
+<input type="hidden" asp-for="Id" />

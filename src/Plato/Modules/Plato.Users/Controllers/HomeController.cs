@@ -27,6 +27,8 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditProfileViewModel> _editProfileViewProvider;
         private readonly IViewProviderManager<EditAccountViewModel> _editAccountViewProvider;
         private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
+        private readonly IViewProviderManager<EditSignatureViewModel> _editSignatureViewProvider;
+
         private readonly IViewProviderManager<Profile> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -53,6 +55,7 @@ namespace Plato.Users.Controllers
             IViewProviderManager<EditProfileViewModel> editProfileViewProvider,
             IViewProviderManager<EditAccountViewModel> editAccountViewProvider,
             IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
+            IViewProviderManager<EditSignatureViewModel> editSignatureViewProvider,
             IBreadCrumbManager breadCrumbManager,
             IPlatoUserManager<User> platoUserManager, 
             IUserEmails userEmails)
@@ -69,6 +72,7 @@ namespace Plato.Users.Controllers
             _breadCrumbManager = breadCrumbManager;
             _platoUserManager = platoUserManager;
             _userEmails = userEmails;
+            _editSignatureViewProvider = editSignatureViewProvider;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -198,14 +202,17 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> EditProfile()
         {
 
+            // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure user is authenticated
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
-
+            
+            // Build model
             var data = user.GetOrCreate<UserDetail>();
-
             var editProfileViewModel = new EditProfileViewModel()
             {
                 Id = user.Id,
@@ -229,6 +236,7 @@ namespace Plato.Users.Controllers
         {
 
             var user = await _userManager.FindByIdAsync(model.Id.ToString());
+
             if (user == null)
             {
                 return NotFound();
@@ -240,7 +248,7 @@ namespace Plato.Users.Controllers
             {
                 var result = await _editProfileViewProvider.ProvideUpdateAsync(model, this);
 
-                // Ensure modelstate is still valid after view providers have executed
+                // Ensure model state is still valid after view providers have executed
                 if (ModelState.IsValid)
                 {
                     _alerter.Success(T["Profile Updated Successfully!"]);
@@ -269,12 +277,17 @@ namespace Plato.Users.Controllers
 
         public async Task<IActionResult> EditAccount()
         {
+
+            // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure user is authenticated
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
+            // Build view model
             var viewModel = new EditAccountViewModel()
             {
                 Id = user.Id,
@@ -295,6 +308,7 @@ namespace Plato.Users.Controllers
         {
 
             var user = await _userManager.FindByIdAsync(model.Id.ToString());
+
             if (user == null)
             {
                 return NotFound();
@@ -305,7 +319,7 @@ namespace Plato.Users.Controllers
             {
                 var result = await _editAccountViewProvider.ProvideUpdateAsync(model, this);
 
-                // Ensure modelstate is still valid after view providers have executed
+                // Ensure model state is still valid after view providers have executed
                 if (ModelState.IsValid)
                 {
                     _alerter.Success(T["Account Updated Successfully!"]);
@@ -386,12 +400,16 @@ namespace Plato.Users.Controllers
 
         public async Task<IActionResult> EditSettings()
         {
+
+            // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure user is authenticated
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
-
+            
             // Get user data
             var data = user.GetOrCreate<UserDetail>();
 
@@ -425,7 +443,7 @@ namespace Plato.Users.Controllers
             {
                 await _editSettingsViewProvider.ProvideUpdateAsync(model, this);
 
-                // Ensure modelstate is still valid after view providers have executed
+                // Ensure model state is still valid after view providers have executed
                 if (ModelState.IsValid)
                 {
                     _alerter.Success(T["Settings Updated Successfully!"]);
@@ -448,10 +466,80 @@ namespace Plato.Users.Controllers
 
         }
 
+        // -----------------
+        // Edit Signature
+        // -----------------
+
+        public async Task<IActionResult> EditSignature()
+        {
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure user is authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get user data
+            var data = user.GetOrCreate<UserDetail>();
+
+            // Build view model
+            var result = await _editSignatureViewProvider.ProvideEditAsync(new EditSignatureViewModel()
+            {
+                Id = user.Id,
+                Signature = user.Signature
+            }, this);
+
+            // Return view
+            return View(result);
+
+        }
+
+        [HttpPost, ActionName(nameof(EditSignature)), ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSignaturePost(EditSignatureViewModel model)
+        {
+
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Validate model state within all view providers
+            if (await _editSignatureViewProvider.IsModelStateValid(model, this))
+            {
+                await _editSignatureViewProvider.ProvideUpdateAsync(model, this);
+
+                // Ensure model state is still valid after view providers have executed
+                if (ModelState.IsValid)
+                {
+                    _alerter.Success(T["Signature Updated Successfully!"]);
+                    return RedirectToAction(nameof(EditSettings));
+                }
+
+            }
+
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await EditSettings();
+
+        }
+
+
         #endregion
 
         #region "Private Methods"
-        
+
         async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
         {
             // Build timezones 
