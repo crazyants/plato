@@ -52,8 +52,8 @@
                                                         <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
                                                     </authorize-success>
                                                     <authorize-fail>
-                                                        
-                                                        FAIL
+                                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["FAIL"]</a>
+                                                 
                                                     </authorize-fail>
                                                 </div>
                                                 <button type="submit" class="btn dropdown-item">@T["Log off"]</button>

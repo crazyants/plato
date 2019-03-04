@@ -35,6 +35,7 @@ namespace Plato.Internal.Security
         public IEnumerable<TPermission> GetPermissions()
         {
             
+            // Ensure we only load permissions once
             if (_permissions == null)
             {
                 var permissions = new List<TPermission>();

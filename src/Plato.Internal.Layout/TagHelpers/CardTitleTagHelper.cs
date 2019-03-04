@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Plato.Internal.Layout.TagHelpers
 {
     [HtmlTargetElement("card-title", ParentTag = "card")]
-    public class PanelTitleTagHelper : TagHelper
+    public class CardTitleTagHelper : TagHelper
     {
 
         public string Class { get; set; } = "card-header";

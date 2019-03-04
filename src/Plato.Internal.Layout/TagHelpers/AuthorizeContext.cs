@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
@@ -11,8 +8,7 @@ namespace Plato.Internal.Layout.TagHelpers
         public AuthorizeSection Success { get; set; }
 
         public AuthorizeSection Fail { get; set; }
-
-
+        
     }
 
     public class AuthorizeSection
@@ -20,5 +16,7 @@ namespace Plato.Internal.Layout.TagHelpers
         public string CssClass { get; set; }
 
         public IHtmlContent Content { get; set; }
+
     }
+
 }
