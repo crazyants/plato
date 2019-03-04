@@ -29,6 +29,7 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Discuss.NotificationTypes;
 using Plato.Discuss.Notifications;
+using Plato.Entities.Models;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
@@ -110,14 +111,14 @@ namespace Plato.Discuss
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Notification manager
-            services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
-            services.AddScoped<INotificationManager<Reply>, NotificationManager<Reply>>();
+            services.AddScoped<INotificationManager<ReportSubmission<Topic>>, NotificationManager<ReportSubmission<Topic>>>();
+            services.AddScoped<INotificationManager<ReportSubmission<Reply>>, NotificationManager<ReportSubmission<Reply>>>();
 
             // Notification providers
-            services.AddScoped<INotificationProvider<Topic>, TopicReportWeb>();
-            services.AddScoped<INotificationProvider<Topic>, TopicReportEmail>();
-            services.AddScoped<INotificationProvider<Reply>, ReplyReportWeb>();
-            services.AddScoped<INotificationProvider<Reply>, ReplyReportEmail>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Topic>>, TopicReportWeb>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Topic>>, TopicReportEmail>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Reply>>, ReplyReportWeb>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Reply>>, ReplyReportEmail>();
 
             // Report entity managers
             services.AddScoped<IReportEntityManager<Topic>, ReportTopicManager>();

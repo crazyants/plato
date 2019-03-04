@@ -10,12 +10,12 @@ namespace Plato.Discuss.NotificationTypes
     {
 
         public static readonly WebNotification TopicReport =
-            new WebNotification("TopicReportWeb", "Spam Topics",
-                "Show me a web notification for each topic detected as SPAM.");
+            new WebNotification("TopicReportWeb", "Reported Topics",
+                "Show me a web notification each time a topic is reported.");
 
         public static readonly WebNotification ReplyReport =
-            new WebNotification("ReplyReportWeb", "Spam Replies",
-                "Show me a web notification for each reply detected as SPAM.");
+            new WebNotification("ReplyReportWeb", "Reported Replies",
+                "Show me a web notification each time a reply is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

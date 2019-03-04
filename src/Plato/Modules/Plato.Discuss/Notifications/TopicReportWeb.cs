@@ -10,10 +10,12 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Discuss.NotificationTypes;
+using Plato.Entities;
+using Plato.Entities.Models;
 
 namespace Plato.Discuss.Notifications
 {
-    public class TopicReportWeb : INotificationProvider<Topic>
+    public class TopicReportWeb : INotificationProvider<ReportSubmission<Topic>>
     {
 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -36,7 +38,7 @@ namespace Plato.Discuss.Notifications
             S = stringLocalizer;
         }
 
-        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
+        public async Task<ICommandResult<ReportSubmission<Topic>>> SendAsync(INotificationContext<ReportSubmission<Topic>> context)
         {
 
             // Validate
@@ -67,7 +69,7 @@ namespace Plato.Discuss.Notifications
             }
             
             // Create result
-            var result = new CommandResult<Topic>();
+            var result = new CommandResult<ReportSubmission<Topic>>();
             
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
@@ -75,8 +77,8 @@ namespace Plato.Discuss.Notifications
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
                 ["action"] = "Display",
-                ["opts.id"] = context.Model.Id,
-                ["opts.alias"] = context.Model.Alias
+                ["opts.id"] = context.Model.What.Id,
+                ["opts.alias"] = context.Model.What.Alias
             });
 
             //// Build notification
@@ -84,7 +86,7 @@ namespace Plato.Discuss.Notifications
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = S["Topic Reported"].Value,
+                Title = S[ReportReasons.Reasons[context.Model.Why]].Value,
                 Message = S["A topic has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,

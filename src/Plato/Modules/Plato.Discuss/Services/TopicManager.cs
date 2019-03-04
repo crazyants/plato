@@ -14,8 +14,7 @@ namespace Plato.Discuss.Services
         private readonly IEntityManager<Topic> _entityManager;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
-
-
+        
         public TopicManager(
             IEntityManager<Topic> entityManager, 
             IContextFacade contextFacade,

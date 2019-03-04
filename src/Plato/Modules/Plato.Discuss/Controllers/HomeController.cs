@@ -39,8 +39,8 @@ namespace Plato.Discuss.Controllers
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
-        private readonly IPostManager<Topic> _topicManager;
-        private readonly IPostManager<Reply> _replyManager;
+        private readonly IEntityManager<Topic> _topicManager;
+        private readonly IEntityManager<Reply> _replyManager;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
@@ -63,8 +63,8 @@ namespace Plato.Discuss.Controllers
             IViewProviderManager<Topic> topicViewProvider,
             IEntityReplyStore<Reply> entityReplyStore,
             IViewProviderManager<Reply> replyViewProvider,
-            IPostManager<Topic> topicManager,
-            IPostManager<Reply> replyManager,
+            IEntityManager<Topic> topicManager,
+            IEntityManager<Reply> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
@@ -817,70 +817,38 @@ namespace Plato.Discuss.Controllers
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             
-            // Invoke correct report manager and compile results
-            var errors = new List<CommandError>();
+            // Invoke report manager and compile results
             if (reply != null)
             {
-                
                 // Report reply
-                var result = await _reportReplyManager.ReportAsync(new ReportSubmission<Reply>()
+                await _reportReplyManager.ReportAsync(new ReportSubmission<Reply>()
                 {
                     Who = user,
                     What = reply,
                     Why = (ReportReasons.Reason)model.ReportReason
                 });
-
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        errors.Add(error);
-                    }
-                }
-
             }
             else
             {
-
                 // Report entity
-               var result =  await _reportEntityManager.ReportAsync(new ReportSubmission<Topic>()
+               await _reportEntityManager.ReportAsync(new ReportSubmission<Topic>()
                {
                    Who = user,
                    What = entity,
                    Why = (ReportReasons.Reason)model.ReportReason
                });
-
-               if (!result.Succeeded)
-               {
-                   foreach (var error in result.Errors)
-                   {
-                       errors.Add(error);
-                   }
-               }
-
             }
-
-            // Display result
-            if (errors.Count > 0)
-            {
-                foreach (var error in errors)
-                {
-                    _alerter.Success(T[error.Description]);
-                }
-            }
-            else
-            {
-                _alerter.Success(reply != null
-                    ? T["Reply Reported Successfully!"]
-                    : T["Topic Reported Successfully!"]);
-            }
-      
+            
+            _alerter.Success(reply != null
+                ? T["Reply Reported Successfully!"]
+                : T["Topic Reported Successfully!"]);
+   
             // Redirect
-            return RedirectToAction(nameof(Reply), routeValues: new
+            return RedirectToAction(nameof(Reply), new RouteValueDictionary()
             {
-                id = entity.Id,
-                alias = entity.Alias,
-                replyId = reply?.Id ?? 0
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply?.Id ?? 0
             });
 
         }

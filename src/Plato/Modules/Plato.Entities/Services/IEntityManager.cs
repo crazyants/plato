@@ -14,5 +14,5 @@ namespace Plato.Entities.Services
         event EntityEvents<TEntity>.Handler Deleted;
         
     }
-
+    
 }

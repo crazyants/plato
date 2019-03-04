@@ -2,9 +2,13 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Discuss.NotificationTypes;
+using Plato.Entities;
+using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
@@ -17,7 +21,7 @@ using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Discuss.Notifications
 {
-    public class ReplyReportEmail : INotificationProvider<Reply>
+    public class ReplyReportEmail : INotificationProvider<ReportSubmission<Reply>>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -26,7 +30,13 @@ namespace Plato.Discuss.Notifications
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
         private readonly IEntityStore<Topic> _topicStore;
 
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
+
         public ReplyReportEmail(
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
             ILocaleStore localeStore,
             IEmailManager emailManager,
@@ -38,9 +48,13 @@ namespace Plato.Discuss.Notifications
             _emailManager = emailManager;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
             _topicStore = topicStore;
+
+            T = htmlLocalizer;
+            S = stringLocalizer;
+
         }
 
-        public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
+        public async Task<ICommandResult<ReportSubmission<Reply>>> SendAsync(INotificationContext<ReportSubmission<Reply>> context)
         {
 
             // Ensure correct notification provider
@@ -50,7 +64,7 @@ namespace Plato.Discuss.Notifications
             }
 
             // Create result
-            var result = new CommandResult<Reply>();
+            var result = new CommandResult<ReportSubmission<Reply>>();
 
             // Get email template
             const string templateId = "NewReplyReport";
@@ -63,14 +77,17 @@ namespace Plato.Discuss.Notifications
             }
 
             // Get topic for reply
-            var topic = await _topicStore.GetByIdAsync(context.Model.EntityId);
+            var topic = await _topicStore.GetByIdAsync(context.Model.What.EntityId);
 
             // We need an topic for the reply
             if (topic == null)
             {
                 return result.Failed(
-                    $"No entity with id '{context.Model.EntityId}' exists. Failed to send reply spam email notification.");
+                    $"No entity with id '{context.Model.What.EntityId}' exists. Failed to send reply spam email notification.");
             }
+            
+            // Get reason given text
+            var reasonGiven = S[ReportReasons.Reasons[context.Model.Why]].Value;
 
             // Build topic url
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
@@ -81,7 +98,7 @@ namespace Plato.Discuss.Notifications
                 ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
                 ["opts.alias"] = topic.Alias,
-                ["opts.replyId"] = context.Model.Id
+                ["opts.replyId"] = context.Model.What.Id
             });
 
             // Build message from template
@@ -90,6 +107,7 @@ namespace Plato.Discuss.Notifications
                 email.Message,
                 context.Notification.To.DisplayName,
                 topic.Title,
+                reasonGiven,
                 baseUri + url);
             ;
             message.IsBodyHtml = true;

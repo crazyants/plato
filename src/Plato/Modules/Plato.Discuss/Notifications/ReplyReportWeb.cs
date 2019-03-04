@@ -10,14 +10,18 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Discuss.NotificationTypes;
+using Plato.Entities;
+using Plato.Entities.Models;
+using Plato.Entities.Stores;
 
 namespace Plato.Discuss.Notifications
 {
-    public class ReplyReportWeb : INotificationProvider<Reply>
+    public class ReplyReportWeb : INotificationProvider<ReportSubmission<Reply>>
     {
 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
         private readonly ICapturedRouterUrlHelper _urlHelper;
+        private readonly IEntityStore<Topic> _entityStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -27,16 +31,18 @@ namespace Plato.Discuss.Notifications
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             ICapturedRouterUrlHelper urlHelper,
-            IUserNotificationsManager<UserNotification> userNotificationManager)
+            IUserNotificationsManager<UserNotification> userNotificationManager,
+            IEntityStore<Topic> entityStore)
         {
             _urlHelper = urlHelper;
             _userNotificationManager = userNotificationManager;
+            _entityStore = entityStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;
         }
 
-        public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
+        public async Task<ICommandResult<ReportSubmission<Reply>>> SendAsync(INotificationContext<ReportSubmission<Reply>> context)
         {
             // Validate
             if (context == null)
@@ -64,18 +70,25 @@ namespace Plato.Discuss.Notifications
             {
                 return null;
             }
-            
+
+            var entity = await _entityStore.GetByIdAsync(context.Model.What.EntityId);
+            if (entity == null)
+            {
+                return null;
+            }
+
             // Create result
-            var result = new CommandResult<Reply>();
+            var result = new CommandResult<ReportSubmission<Reply>>();
             
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Jump",
-                ["Id"] = context.Model.EntityId,
-                ["ReplyId"] = context.Model.Id
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.id"] = entity.Alias,
+                ["opts.replyId"] = context.Model.What.Id
             });
 
             //// Build notification
@@ -83,7 +96,7 @@ namespace Plato.Discuss.Notifications
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = S["Reply Reported"].Value,
+                Title = S[ReportReasons.Reasons[context.Model.Why]].Value,
                 Message = S["A reply has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,

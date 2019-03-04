@@ -10,14 +10,13 @@ namespace Plato.Discuss.NotificationTypes
     {
 
         public static readonly EmailNotification TopicReport =
-            new EmailNotification("TopicReportEmail", "Spam Topics",
-                "Send me an email notification for each topic detected as SPAM.");
+            new EmailNotification("TopicReportEmail", "Reported Topics",
+                "Send me an email notification each time a topic is reported.");
 
         public static readonly EmailNotification ReplyReport =
-            new EmailNotification("ReplyReportEmail", "Spam Replies",
-                "Send me an email notification for each reply detected as SPAM.");
-
-
+            new EmailNotification("ReplyReportEmail", "Reported Replies",
+                "Send me an email notification each time a reply is reported.");
+        
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
