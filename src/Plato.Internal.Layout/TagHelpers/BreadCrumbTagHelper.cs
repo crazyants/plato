@@ -16,13 +16,13 @@ namespace Plato.Internal.Layout.TagHelpers
 
         private readonly HtmlEncoder _htmlEncoder;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IActionContextAccessor _actionContextAccesor;
+        private readonly IActionContextAccessor _actionContextAccessor;
 
         public BreadCrumbTagHelper(
-            IActionContextAccessor actionContextAccesor,
+            IActionContextAccessor actionContextAccessor,
             IBreadCrumbManager breadCrumbManager)
         {
-            _actionContextAccesor = actionContextAccesor;
+            _actionContextAccessor = actionContextAccessor;
             _breadCrumbManager = breadCrumbManager;
             _htmlEncoder = HtmlEncoder.Default;
         }
@@ -34,7 +34,7 @@ namespace Plato.Internal.Layout.TagHelpers
             output.TagMode = TagMode.StartTagAndEndTag;
             
             var items = _breadCrumbManager
-                .BuildMenu(_actionContextAccesor.ActionContext);
+                .BuildMenu(_actionContextAccessor.ActionContext);
 
             if (items != null)
             {

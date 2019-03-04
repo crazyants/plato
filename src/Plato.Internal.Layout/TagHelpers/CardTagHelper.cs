@@ -5,18 +5,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
-
-    public enum CardType
-    {
-        Default,
-        Primary,
-        Success,
-        Info,
-        Warning,
-        Danger
-    }
-
-
+    
     [RestrictChildren("card-title", "card-body", "card-footer")]
     public class CardTagHelper : TagHelper
     {
@@ -84,4 +73,15 @@ namespace Plato.Internal.Layout.TagHelpers
         }
         
     }
+    
+    public enum CardType
+    {
+        Default,
+        Primary,
+        Success,
+        Info,
+        Warning,
+        Danger
+    }
+    
 }

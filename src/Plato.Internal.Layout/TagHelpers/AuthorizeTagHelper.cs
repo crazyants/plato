@@ -10,8 +10,9 @@ using Plato.Internal.Security.Abstractions;
 namespace Plato.Internal.Layout.TagHelpers
 {
     
-    [HtmlTargetElement(Attributes = "asp-authorize,asp-permission")]
+    [HtmlTargetElement(Attributes = "asp-permission")]
     [HtmlTargetElement(Attributes = "asp-permission,asp-resource")]
+    [RestrictChildren("authorize-success", "authorize-fail")]
     public class AuthorizeTagHelper : TagHelper
     {
 
@@ -50,16 +51,43 @@ namespace Plato.Internal.Layout.TagHelpers
                 return;
             }
 
+            var authorizeContext = new AuthorizeContext();
+            context.Items.Add(typeof(AuthorizeContext), authorizeContext);
+
+
+
             // Validate against registered permission handlers
             var result = await _authorizationService.AuthorizeAsync(
                 ViewContext.HttpContext.User,
                 Resource,
                 new PermissionRequirement(permission));
+            
 
-            // Authorization failed - Suppress output
-            if (!result.Succeeded)
+            // Authorization failed 
+            if (result.Succeeded)
             {
-                output.SuppressOutput();
+                if (authorizeContext.Success != null)
+                {
+                    var success = new TagBuilder("div");
+                    success.AddCssClass(authorizeContext.Success.CssClass);
+                    success.InnerHtml.AppendHtml(authorizeContext.Success.Content);
+                    output.Content.AppendHtml(success);
+                }
+            }
+            else
+            {
+                if (authorizeContext.Fail != null)
+                {
+                    var fail = new TagBuilder("div");
+                    fail.AddCssClass(authorizeContext.Fail.CssClass);
+                    fail.InnerHtml.AppendHtml(authorizeContext.Fail.Content);
+                    output.Content.AppendHtml(fail);
+                }
+                else
+                {
+                    // Suppress output 
+                    output.SuppressOutput();
+                }
             }
 
         }
