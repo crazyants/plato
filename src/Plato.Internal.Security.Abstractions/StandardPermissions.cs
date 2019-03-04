@@ -6,7 +6,7 @@
         public const string CategoryName = "Plato";
 
         public static readonly Permission Administrator = 
-            new Permission("AdminAccess", "Can access administrator control panel", CategoryName);
+            new Permission("AdminAccess", "Can access administrator dashboard", CategoryName);
 
     }
 }

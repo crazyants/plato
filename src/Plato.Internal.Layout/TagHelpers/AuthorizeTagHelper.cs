@@ -39,11 +39,15 @@ namespace Plato.Internal.Layout.TagHelpers
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
-            // Get available permissions
-            var permissions = _permissionManager.GetPermissions();
+            // Create a context for our success and failure tag helpers
+            var authorizeContext = new AuthorizeContext();
+            context.Items.Add(typeof(AuthorizeContext), authorizeContext);
 
+            // Required to invoke child tag helpers
+            var content = await output.GetChildContentAsync();
+            
             // Find permission
-            var permission = permissions?.FirstOrDefault(p => p.Name.Equals(Permission, StringComparison.OrdinalIgnoreCase));
+            var permission = _permissionManager.GetPermissions()?.FirstOrDefault(p => p.Name.Equals(Permission, StringComparison.OrdinalIgnoreCase));
 
             // We always need a permission
             if (permission == null)
@@ -56,10 +60,6 @@ namespace Plato.Internal.Layout.TagHelpers
                 ViewContext.HttpContext.User,
                 Resource,
                 new PermissionRequirement(permission));
-
-            // Create a context for our success and failure tag helpers
-            var authorizeContext = new AuthorizeContext();
-            context.Items.Add(typeof(AuthorizeContext), authorizeContext);
 
             // Authorization failed 
             if (result.Succeeded)

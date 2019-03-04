@@ -25,6 +25,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var cardContext = new CardContext();
             context.Items.Add(typeof(CardContext), cardContext);
 
+            // Required to invoke child tag helpers
             var content = await output.GetChildContentAsync();
             
             output.TagName = "div";

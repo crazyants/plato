@@ -45,16 +45,13 @@
                                             <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
                                                 <div asp-permission="AdminAccess">
                                                     <authorize-success>
                                                         <div class="dropdown-divider"></div>
                                                         <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
                                                     </authorize-success>
-                                                    <authorize-fail>
-                                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["FAIL"]</a>
-                                                 
-                                                    </authorize-fail>
                                                 </div>
                                                 <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                             </div>

@@ -1,9 +1,20 @@
 ﻿@model EntityIndexViewModel<Topic>
 
-<a asp-controller="Home" asp-action="Create" class="btn btn-primary" title="Reply">
-    <i class="fal fa-fw fa-plus"></i>
-    @T["New Post"]
-</a>
+<div asp-permission="PostTopics">
+    <authorize-success>
+        <a asp-route-controller="Home" asp-route-action="Create" class="btn btn-primary" title="@T["New Topic"]">
+            <i class="fal fa-fw fa-plus"></i>
+            @T["New Topic"]
+        </a>
+    </authorize-success>
+    <authorize-fail>
+        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary" title="@T["New Topic"]">
+            <i class="fal fa-fw fa-lock"></i>
+            @T["Login to Post"]
+        </a>
+    </authorize-fail>
+</div>
+
 
     @*<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
             <i class="fal fa-fw fa-plus"></i>

@@ -29,8 +29,7 @@ namespace Plato.Discuss
 
         public static readonly Permission RestoreOwnTopics =
             new Permission("RestoreOwnTopics", "Restore own topics");
-
-
+        
         public static readonly Permission DeleteAnyTopic =
             new Permission("DeleteAnyTopic", "Delete any topic");
 

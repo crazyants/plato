@@ -827,7 +827,7 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
 }
 
 .resizable-container::-webkit-scrollbar { background:#eee; width: 9px; }
-.resizable-container::-webkit-scrollbar-thumb:vertical { border-radius: 4px; margin: 0 9px; background-color: #ccc;  }
+.resizable-container::-webkit-scrollbar-thumb:vertical { border-radius: 0; margin: 0 9px; background-color: #ccc;  }
 .resizable-container::-webkit-scrollbar-thumb:vertical:hover { cursor: pointer; background-color: #aaa; }
 .resizable-container::-webkit-scrollbar-button:start:decrement,
 .resizable-container::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
@@ -867,23 +867,21 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
     user-select: none;
     text-align: center;
     position: relative;
+    background-color: #C1C1C1; 
 }
+
+.resizable-bar.active,
+.resizable-bar:hover { background-color: #A8A8A8; }
 
 .resizable-bar i {
     position: absolute;
     left: 50%;
-    top: 5px;
+    top: 3px;
     transform: translate(-50%, -50%);
-    color: #888;
+    color: white;
     margin: 0;
     transform-origin: center center;
     transition: all 0.15s ease-out;
-}
-
-
-.resizable-bar.active,
-.resizable-bar:hover {
-    background: #eee;
 }
 
 .resizable-header {

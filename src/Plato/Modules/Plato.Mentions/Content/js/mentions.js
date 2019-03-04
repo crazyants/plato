@@ -1,15 +1,21 @@
 ﻿
 if (typeof jQuery === "undefined") {
-    throw new Error("Plato requires jQuery");
+    throw new Error("jQuery Required");
 }
 
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("$.Plato.Context Required");
+if (typeof window.$.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
 $(function (win, doc, $) {
 
     'use strict';
+
+    // --------
+
+    var app = win.$.Plato;
+
+    // --------
 
     // keyBinder
     var keyBinder = function () {
@@ -55,13 +61,13 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                // Bind shuuld be called after all internalKeys have been initialized
+                // Bind should be called after all internalKeys have been initialized
                 var key = null,
                     id = $caller.data(dataKey).id,
                     keys = $caller.data(dataKey).internalKeys,
                     event = $caller.data(dataKey).event;
 
-                if (event === null) {
+                if (event === null || typeof event === "undefined") {
                     return;
                 }
 
@@ -455,8 +461,8 @@ $(function (win, doc, $) {
 
             },
             getOrCreateMenu: function($caller) {
-                var elementid = $caller.attr("id") ? $caller.attr("id") : $caller.attr("name"),
-                    id = elementid + "Suggester",
+                var elementId = $caller.attr("id") ? $caller.attr("id") : $caller.attr("name"),
+                    id = elementId + "Suggester",
                     $menu = $("#" + id);
 
                 // Create menu & bind events the first time the menu is created
@@ -466,7 +472,7 @@ $(function (win, doc, $) {
                     $menu = $("<div>",
                         {
                             "id": id,
-                            "class": "dropdown-menu suggester-menu col-6",
+                            "class": "dropdown-menu dropdown-menu-no-arrow suggester-menu col-6",
                             "role": "menu"
                         });
                     $caller.after($menu);

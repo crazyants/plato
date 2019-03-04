@@ -1,16 +1,16 @@
 ﻿// <reference path="/wwwroot/js/app.js" />
 
+if (typeof window.$.Plato === "undefined") {
+    throw new Error("$.Plato Required");
+}
+
 $(function (win, doc, $) {
 
     "use strict";
 
-    if (typeof $.Plato === "undefined") {
-        throw new Error("$.Plato.Discuss requires $.Plato");
-    }
-
     // --------
 
-    var app = $.Plato;
+    var app = win.$.Plato;
 
     // --------
 
@@ -45,7 +45,7 @@ $(function (win, doc, $) {
                         $quote = $(selector);
 
                     // Apply locale
-                    var text = app.text("In response to");
+                    var text = app.T("In response to");
 
                     if ($quote.length > 0) {
                         var displayName = $quote.attr("data-display-name"),
