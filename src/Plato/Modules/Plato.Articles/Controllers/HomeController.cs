@@ -1226,7 +1226,7 @@ namespace Plato.Articles.Controllers
                 }
             };
 
-            foreach (var reason in ReportEntity.Reasons)
+            foreach (var reason in ReportReasons.Reasons)
             {
                 output.Add(new SelectListItem
                 {

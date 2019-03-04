@@ -20,9 +20,11 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities;
+using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Discuss.Controllers
@@ -46,8 +48,8 @@ namespace Plato.Discuss.Controllers
         private readonly IEntityReplyService<Reply> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IReportManager<Topic> _reportEntityManager;
-        private readonly IReportManager<Reply> _reportReplyManager;
+        private readonly IReportEntityManager<Topic> _reportEntityManager;
+        private readonly IReportEntityManager<Reply> _reportReplyManager;
 
         public IHtmlLocalizer T { get; }
 
@@ -68,7 +70,9 @@ namespace Plato.Discuss.Controllers
             IAuthorizationService authorizationService,
             IEntityReplyService<Reply> replyService,
             IViewProviderManager<UserIndex> userViewProvider,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IReportEntityManager<Topic> reportEntityManager,
+            IReportEntityManager<Reply> reportReplyManager)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -84,6 +88,8 @@ namespace Plato.Discuss.Controllers
             _replyService = replyService;
             _userViewProvider = userViewProvider;
             _featureFacade = featureFacade;
+            _reportEntityManager = reportEntityManager;
+            _reportReplyManager = reportReplyManager;
 
             T = localizer;
             S = stringLocalizer;
@@ -808,21 +814,67 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
+            // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-
+            
+            // Invoke correct report manager and compile results
+            var errors = new List<CommandError>();
             if (reply != null)
             {
-                var result = await _reportReplyManager.ReportAsync(reply, user);
+                
+                // Report reply
+                var result = await _reportReplyManager.ReportAsync(new ReportSubmission<Reply>()
+                {
+                    Who = user,
+                    What = reply,
+                    Why = (ReportReasons.Reason)model.ReportReason
+                });
+
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        errors.Add(error);
+                    }
+                }
+
             }
             else
             {
-                var result = await _reportEntityManager.ReportAsync(entity, user);
+
+                // Report entity
+               var result =  await _reportEntityManager.ReportAsync(new ReportSubmission<Topic>()
+               {
+                   Who = user,
+                   What = entity,
+                   Why = (ReportReasons.Reason)model.ReportReason
+               });
+
+               if (!result.Succeeded)
+               {
+                   foreach (var error in result.Errors)
+                   {
+                       errors.Add(error);
+                   }
+               }
+
             }
 
-            _alerter.Success(reply != null
-                ? T["Reply Reported Successfully!"]
-                : T["Topic Reported Successfully!"]);
-
+            // Display result
+            if (errors.Count > 0)
+            {
+                foreach (var error in errors)
+                {
+                    _alerter.Success(T[error.Description]);
+                }
+            }
+            else
+            {
+                _alerter.Success(reply != null
+                    ? T["Reply Reported Successfully!"]
+                    : T["Topic Reported Successfully!"]);
+            }
+      
             // Redirect
             return RedirectToAction(nameof(Reply), routeValues: new
             {
@@ -1246,7 +1298,7 @@ namespace Plato.Discuss.Controllers
                 }
             };
 
-            foreach (var reason in ReportEntity.Reasons)
+            foreach (var reason in ReportReasons.Reasons)
             {
                 output.Add(new SelectListItem
                 {

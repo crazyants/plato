@@ -2,7 +2,7 @@
 
 namespace Plato.Entities
 {
-    public class ReportEntity
+    public class ReportReasons
     {
 
         public static readonly IDictionary<Reason, string> Reasons = new Dictionary<Reason, string>()
@@ -15,7 +15,6 @@ namespace Plato.Entities
             [Reason.PrivacyPolicy] = "Privacy Policy Violation",
             [Reason.Signature] = "Inappropriate Signature",
         };
-       
 
         public enum Reason
         {

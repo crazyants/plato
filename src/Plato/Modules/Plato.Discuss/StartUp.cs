@@ -118,7 +118,11 @@ namespace Plato.Discuss
             services.AddScoped<INotificationProvider<Topic>, TopicReportEmail>();
             services.AddScoped<INotificationProvider<Reply>, ReplyReportWeb>();
             services.AddScoped<INotificationProvider<Reply>, ReplyReportEmail>();
-            
+
+            // Report entity managers
+            services.AddScoped<IReportEntityManager<Topic>, ReportTopicManager>();
+            services.AddScoped<IReportEntityManager<Reply>, ReportReplyManager>();
+
         }
 
         public override void Configure(
