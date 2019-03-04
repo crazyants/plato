@@ -168,8 +168,10 @@ namespace Plato.Users
             // Must be registered after .NET authentication middleware has been registered
             // i.e. after app.UseAuthentication() above
             app.UseMiddleware<AuthenticatedUserMiddleware>();
-          
-            // Routes
+
+            // --------------
+            // Account
+            // --------------
 
             routes.MapAreaRoute(
                 name: "Login",
@@ -241,6 +243,68 @@ namespace Plato.Users
                 defaults: new { controller = "Account", action = "ResetPasswordConfirmation" }
             );
 
+            // --------------
+            // Users
+            // --------------
+
+            routes.MapAreaRoute(
+                name: "UsersIndex",
+                areaName: "Plato.Users",
+                template: "u/{pager.offset:int?}",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+
+            routes.MapAreaRoute(
+                name: "DisplayUser",
+                areaName: "Plato.Users",
+                template: "u/{opts.id:int}/{opts.alias?}",
+                defaults: new { controller = "Home", action = "Display" }
+            );
+            
+
+            routes.MapAreaRoute(
+                name: "UserLetter",
+                areaName: "Plato.Users",
+                template: "u/l/{letter}/{color}",
+                defaults: new { controller = "Letter", action = "Get" }
+            );
+            
+            // --------------
+            // Profile
+            // --------------
+
+            routes.MapAreaRoute(
+                name: "EditUserProfile",
+                areaName: "Plato.Users",
+                template: "profile",
+                defaults: new { controller = "Home", action = "EditProfile" }
+            );
+            
+            routes.MapAreaRoute(
+                name: "EditUserAccount",
+                areaName: "Plato.Users",
+                template: "profile/account",
+                defaults: new { controller = "Home", action = "EditAccount" }
+            );
+
+            routes.MapAreaRoute(
+                name: "EditUserSignature",
+                areaName: "Plato.Users",
+                template: "profile/signature",
+                defaults: new { controller = "Home", action = "EditSignature" }
+            );
+
+            routes.MapAreaRoute(
+                name: "EditUserSettings",
+                areaName: "Plato.Users",
+                template: "profile/settings",
+                defaults: new { controller = "Home", action = "EditSettings" }
+            );
+            
+            // --------------
+            // Admin Routes
+            // --------------
+
             routes.MapAreaRoute(
                 name: "AdminUsersOffset",
                 areaName: "Plato.Users",
@@ -253,48 +317,6 @@ namespace Plato.Users
                 areaName: "Plato.Users",
                 template: "admin/users/{action}/{id?}",
                 defaults: new { controller = "Admin", action = "Index" }
-            );
-
-            routes.MapAreaRoute(
-                name: "Home-Users",
-                areaName: "Plato.Users",
-                template: "u/{pager.offset:int?}",
-                defaults: new { controller = "Home", action = "Index"}
-            );
-            
-            routes.MapAreaRoute(
-                name: "ServeUserLetterFolder",
-                areaName: "Plato.Users",
-                template: "u/l/{letter}/{color}",
-                defaults: new { controller = "Letter", action = "Get" }
-            );
-            
-            routes.MapAreaRoute(
-                name: "DisplayUserProfile",
-                areaName: "Plato.Users",
-                template: "u/{opts.id:int}/{opts.alias?}",
-                defaults: new { controller = "Home", action = "Display" }
-            );
-
-            routes.MapAreaRoute(
-                name: "EditUserProfile",
-                areaName: "Plato.Users",
-                template: "profile/edit",
-                defaults: new { controller = "Home", action = "EditProfile" }
-            );
-            
-            routes.MapAreaRoute(
-                name: "EditUserAccount",
-                areaName: "Plato.Users",
-                template: "account/edit",
-                defaults: new { controller = "Home", action = "EditAccount" }
-            );
-
-            routes.MapAreaRoute(
-                name: "EditUserSettings",
-                areaName: "Plato.Users",
-                template: "settings/edit",
-                defaults: new { controller = "Home", action = "EditSettings" }
             );
             
         }

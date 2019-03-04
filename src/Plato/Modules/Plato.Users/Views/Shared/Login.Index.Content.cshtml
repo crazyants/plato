@@ -17,3 +17,4 @@
     <span asp-validation-for="Password" class="text-danger"></span>
     <input asp-for="Password" autocomplete="off" class="form-control" placeholder="@T["Password"]" />
 </div>
+<input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]"/>

@@ -4,7 +4,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
-using Plato.Discuss.StopForumSpam.NotificationTypes;
+using Plato.Discuss.NotificationTypes;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
@@ -15,9 +15,9 @@ using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Discuss.StopForumSpam.Notifications
+namespace Plato.Discuss.Notifications
 {
-    public class ReplySpamEmail : INotificationProvider<Reply>
+    public class ReplyReportEmail : INotificationProvider<Reply>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -26,7 +26,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
         private readonly IEntityStore<Topic> _topicStore;
 
-        public ReplySpamEmail(
+        public ReplyReportEmail(
             IContextFacade contextFacade,
             ILocaleStore localeStore,
             IEmailManager emailManager,
@@ -42,8 +42,9 @@ namespace Plato.Discuss.StopForumSpam.Notifications
 
         public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
         {
+
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.ReplySpam.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.ReplyReport.Name, StringComparison.Ordinal))
             {
                 return null;
             }
@@ -52,7 +53,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             var result = new CommandResult<Reply>();
 
             // Get email template
-            const string templateId = "NewReplySpam";
+            const string templateId = "NewReplyReport";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email == null)

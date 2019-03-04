@@ -136,7 +136,7 @@ namespace Plato.Articles.Controllers
 
             // Add view model to context
             HttpContext.Items[typeof(EntityIndexViewModel<Article>)] = viewModel;
-
+            
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
@@ -144,6 +144,14 @@ namespace Plato.Articles.Controllers
                     return View("GetArticles", viewModel);
             }
             
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Index"
+            });
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

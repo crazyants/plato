@@ -7,7 +7,7 @@ namespace Plato.Articles
     {
 
         public static readonly Permission PostArticles =
-            new Permission("CreateArticles", "Create articles");
+            new Permission("PostArticles", "Post articles");
 
         public static readonly Permission PostComments =
             new Permission("PostComments", "Post comments");
@@ -18,7 +18,6 @@ namespace Plato.Articles
         public static readonly Permission EditAnyArticle =
             new Permission("EditAnyArticle", "Edit own topics");
         
-    
         public static readonly Permission EditOwnComment =
             new Permission("EditOwnComment", "Edit own replies");
 

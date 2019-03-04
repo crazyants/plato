@@ -4,8 +4,6 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
-using Plato.Discuss.StopForumSpam.NotificationTypes;
-using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -14,45 +12,43 @@ using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Discuss.NotificationTypes;
 
-namespace Plato.Discuss.StopForumSpam.Notifications
+namespace Plato.Discuss.Notifications
 {
-    public class ReplySpamEmail : INotificationProvider<Reply>
+    public class TopicReportEmail : INotificationProvider<Topic>
     {
-
+        
         private readonly IContextFacade _contextFacade;
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
-        private readonly IEntityStore<Topic> _topicStore;
 
-        public ReplySpamEmail(
+        public TopicReportEmail(
             IContextFacade contextFacade,
-            ILocaleStore localeStore,
+            ILocaleStore localeStore, 
             IEmailManager emailManager,
-            ICapturedRouterUrlHelper capturedRouterUrlHelper,
-            IEntityStore<Topic> topicStore)
+            ICapturedRouterUrlHelper capturedRouterUrlHelper)
         {
             _contextFacade = contextFacade;
             _localeStore = localeStore;
             _emailManager = emailManager;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
-            _topicStore = topicStore;
         }
 
-        public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
+        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
         {
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.ReplySpam.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.TopicReport.Name, StringComparison.Ordinal))
             {
                 return null;
             }
 
             // Create result
-            var result = new CommandResult<Reply>();
+            var result = new CommandResult<Topic>();
 
             // Get email template
-            const string templateId = "NewReplySpam";
+            const string templateId = "NewTopicReport";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email == null)
@@ -60,27 +56,16 @@ namespace Plato.Discuss.StopForumSpam.Notifications
                 return result.Failed(
                     $"No email template with the Id '{templateId}' exists within the 'locales/{culture}/emails.json' file!");
             }
-
-            // Get topic for reply
-            var topic = await _topicStore.GetByIdAsync(context.Model.EntityId);
-
-            // We need an topic for the reply
-            if (topic == null)
-            {
-                return result.Failed(
-                    $"No entity with id '{context.Model.EntityId}' exists. Failed to send reply spam email notification.");
-            }
-
+            
             // Build topic url
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Reply",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias,
-                ["opts.replyId"] = context.Model.Id
+                ["action"] = "Display",
+                ["opts.id"] = context.Model.Id,
+                ["opts.alias"] = context.Model.Alias
             });
 
             // Build message from template
@@ -88,7 +73,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             message.Body = string.Format(
                 email.Message,
                 context.Notification.To.DisplayName,
-                topic.Title,
+                context.Model.Title,
                 baseUri + url);
             ;
             message.IsBodyHtml = true;
@@ -102,8 +87,9 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             }
 
             return result.Failed(emailResult.Errors?.ToArray());
-
+            
         }
 
     }
+
 }

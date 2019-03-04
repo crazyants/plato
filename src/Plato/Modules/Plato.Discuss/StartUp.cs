@@ -27,6 +27,10 @@ using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Discuss.NotificationTypes;
+using Plato.Discuss.Notifications;
+using Plato.Internal.Notifications;
+using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -66,13 +70,9 @@ namespace Plato.Discuss
             services.AddScoped<IPostManager<Reply>, ReplyManager>();
             
             // Services
-            //services.AddScoped<ITopicService, TopicService>();
-            //services.AddScoped<IReplyService, ReplyService>();
-            
             services.AddScoped<IEntityService<Topic>, EntityService<Topic>>();
             services.AddScoped<IEntityReplyService<Reply>, EntityReplyService<Reply>>();
             
-
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
@@ -104,6 +104,20 @@ namespace Plato.Discuss
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ReplyBadgesAwarder>();
+
+            // Notification types
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
+
+            // Notification manager
+            services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+            services.AddScoped<INotificationManager<Reply>, NotificationManager<Reply>>();
+
+            // Notification providers
+            services.AddScoped<INotificationProvider<Topic>, TopicReportWeb>();
+            services.AddScoped<INotificationProvider<Topic>, TopicReportEmail>();
+            services.AddScoped<INotificationProvider<Reply>, ReplyReportWeb>();
+            services.AddScoped<INotificationProvider<Reply>, ReplyReportEmail>();
             
         }
 

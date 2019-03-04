@@ -19,7 +19,6 @@ using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
 using Plato.Entities;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
@@ -47,6 +46,8 @@ namespace Plato.Discuss.Controllers
         private readonly IEntityReplyService<Reply> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IReportManager<Topic> _reportEntityManager;
+        private readonly IReportManager<Reply> _reportReplyManager;
 
         public IHtmlLocalizer T { get; }
 
@@ -132,14 +133,6 @@ namespace Plato.Discuss.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            // Return Url for authentication purposes
-            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Discuss",
-                ["controller"] = "Home",
-                ["action"] = "Index"
-            });
-
             // Build view model
             var viewModel = await GetIndexViewModelAsync(opts, pager);
 
@@ -152,6 +145,14 @@ namespace Plato.Discuss.Controllers
                 if (page > 0)
                     return View("GetTopics", viewModel);
             }
+            
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Index"
+            });
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -805,6 +806,17 @@ namespace Plato.Discuss.Controllers
                 {
                     return NotFound();
                 }
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (reply != null)
+            {
+                var result = await _reportReplyManager.ReportAsync(reply, user);
+            }
+            else
+            {
+                var result = await _reportEntityManager.ReportAsync(entity, user);
             }
 
             _alerter.Success(reply != null

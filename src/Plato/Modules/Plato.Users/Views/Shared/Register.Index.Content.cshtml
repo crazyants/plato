@@ -22,3 +22,4 @@
     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     <input asp-for="ConfirmPassword" placeholder="@T["Confirm Password"]" class="form-control" />
 </div>
+<input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
