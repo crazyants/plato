@@ -1,62 +1,67 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
-
-    [HtmlTargetElement(Attributes = "asp-authorize")]
-    [HtmlTargetElement(Attributes = "asp-authorize,asp-policy")]
-    [HtmlTargetElement(Attributes = "asp-authorize,asp-roles")]
-    [HtmlTargetElement(Attributes = "asp-authorize,asp-authentication-schemes")]
-    public class AuthorizeTagHelper : TagHelper, IAuthorizeData
+    
+    [HtmlTargetElement(Attributes = "asp-authorize,asp-permission")]
+    [HtmlTargetElement(Attributes = "asp-permission,asp-resource")]
+    public class AuthorizeTagHelper : TagHelper
     {
-        private readonly IAuthorizationPolicyProvider _policyProvider;
-        private readonly IPolicyEvaluator _policyEvaluator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        private readonly IPermissionsManager<Permission> _permissionManager;
+        private readonly IAuthorizationService _authorizationService;
+        
+        [HtmlAttributeName("asp-permission")]
+        public string Permission { get; set; }
+
+        [HtmlAttributeName("asp-resource")]
+        public object Resource { get; set; }
+        
+        [ViewContext] // inform razor to inject
+        public ViewContext ViewContext { get; set; }
+        
         public AuthorizeTagHelper(
-            IHttpContextAccessor httpContextAccessor,
-            IAuthorizationPolicyProvider policyProvider,
-            IPolicyEvaluator policyEvaluator)
+            IAuthorizationService authorizationService,
+            IPermissionsManager<Permission> permissionManager)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _policyProvider = policyProvider;
-            _policyEvaluator = policyEvaluator;
+            _authorizationService = authorizationService;
+            _permissionManager = permissionManager;
         }
-
-        /// <summary>
-        /// Gets or sets the policy name that determines access to the HTML block.
-        /// </summary>
-        [HtmlAttributeName("asp-policy")]
-        public string Policy { get; set; }
-
-        /// <summary>
-        /// Gets or sets a comma delimited list of roles that are allowed to access the HTML  block.
-        /// </summary>
-        [HtmlAttributeName("asp-roles")]
-        public string Roles { get; set; }
-
-        /// <summary>
-        /// Gets or sets a comma delimited list of schemes from which user information is constructed.
-        /// </summary>
-        [HtmlAttributeName("asp-authentication-schemes")]
-        public string AuthenticationSchemes { get; set; }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var policy = await AuthorizationPolicy.CombineAsync(_policyProvider, new[] { this });
 
-            var authenticateResult = await _policyEvaluator.AuthenticateAsync(policy, _httpContextAccessor.HttpContext);
+            // Get available permissions
+            var permissions = _permissionManager.GetPermissions();
 
-            var authorizeResult = await _policyEvaluator.AuthorizeAsync(policy, authenticateResult, _httpContextAccessor.HttpContext, null);
+            // Find permission
+            var permission = permissions?.FirstOrDefault(p => p.Name.Equals(Permission, StringComparison.OrdinalIgnoreCase));
 
-            if (!authorizeResult.Succeeded)
+            // We always need a permission
+            if (permission == null)
+            {
+                return;
+            }
+
+            // Validate against registered permission handlers
+            var result = await _authorizationService.AuthorizeAsync(
+                ViewContext.HttpContext.User,
+                Resource,
+                new PermissionRequirement(permission));
+
+            // Authorization failed - Suppress output
+            if (!result.Succeeded)
             {
                 output.SuppressOutput();
             }
+
         }
 
     }
