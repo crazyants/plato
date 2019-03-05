@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -114,6 +115,12 @@ namespace Plato.Discuss.History.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
+            // Validate
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+
             // Get history point
             var history = await _entityHistoryStore.GetByIdAsync(id);
 
@@ -133,12 +140,16 @@ namespace Plato.Discuss.History.Controllers
             }
 
             // Get reply
-            var reply = await _entityReplyStore.GetByIdAsync(history.EntityReplyId);
-
-            // Ensure we found a reply if supplied
-            if (reply == null && history.EntityReplyId > 0)
+            Reply reply = null;
+            if (history.EntityReplyId > 0)
             {
-                return NotFound();
+                reply = await _entityReplyStore.GetByIdAsync(history.EntityReplyId);
+
+                // Ensure we found a reply if supplied
+                if (reply == null)
+                {
+                    return NotFound();
+                }
             }
             
             // Delete history point
@@ -162,9 +173,10 @@ namespace Plato.Discuss.History.Controllers
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = entity.Id,
-                ["opts.alias"] = entity.Alias
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply?.Id ?? 0
             }));
 
         }

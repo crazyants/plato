@@ -243,12 +243,12 @@ namespace Plato.Entities.History.Handlers
                             BEGIN
 	                            SET @MajorVersion = (
                                     SELECT TOP 1 IsNull(MajorVersion, 0) FROM 
-                                    {prefix}_EntityHistory WHERE EntityId = @EntityId
+                                    {prefix}_EntityHistory WHERE EntityId = @EntityId AND EntityReplyId = 0
                                     ORDER BY Id DESC
 	                            );
 	                            SET @MinorVersion = (
                                     SELECT TOP 1 IsNull(MinorVersion, 0) FROM 
-                                    {prefix}_EntityHistory WHERE EntityId = @EntityId
+                                    {prefix}_EntityHistory WHERE EntityId = @EntityId AND EntityReplyId = 0
                                     ORDER BY Id DESC
 	                            );
                             END

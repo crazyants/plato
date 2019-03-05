@@ -7,42 +7,57 @@
         : "DeleteReplyHistory";
 }
 
-@if (!String.IsNullOrEmpty(Model.Html))
-{
-    <div class="modal-header">
-        <h6 class="modal-title">
-            @if (Model.History.CreatedBy != null)
-            {
-                <avatar title="@Model.History.CreatedBy.DisplayName" class="avatar avatar-sm mr-1" url="@Model.History.CreatedBy.Avatar.Url"></avatar>
-                @Model.History.CreatedBy.DisplayName
-            }
-            @T["edited"] <date utc="@Model.History.CreatedDate"></date>
+<div id="versionModal">
+    @if (!String.IsNullOrEmpty(Model.Html))
+    {
+        <div class="modal-header">
+            <h6 class="modal-title">
+                @if (Model.History.CreatedBy != null)
+                {
+                    <avatar title="@Model.History.CreatedBy.DisplayName" class="avatar avatar-sm mr-1" url="@Model.History.CreatedBy.Avatar.Url"></avatar>
+                    @Model.History.CreatedBy.DisplayName
+                }
+                @T["edited"] <date utc="@Model.History.CreatedDate"></date>
             
-        </h6>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">
-                <i class="fal fa-times"></i>
-            </span>
-        </button>
-    </div>
-    <div class="modal-body" style="max-height: 550px; overflow: auto;">
-        <div class="markdown-body">
-            @Html.Raw(Model.Html)
+            </h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="fal fa-times"></i>
+                </span>
+            </button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <div class="text-muted mr-auto">
-            @T["Version:"] @Model.History.Version
+        <div class="modal-body" style="max-height: 400px; overflow: auto;">
+            <div class="markdown-body">
+                @Html.Raw(Model.Html)
+            </div>
         </div>
-        <div asp-permission="@permissionName">
-            <authorize-success>
-                <form asp-controller="Home" asp-action="Delete" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="@Model.History.Id" />
-                    <button type="submit" class="btn btn-danger">
-                        @T["Delete Version"]
-                    </button>
-                </form>
-            </authorize-success>
+        <div class="modal-footer">
+            <div class="text-muted mr-auto">
+                @T["Version:"] @Model.History.Version
+            </div>
+            <button class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                @T["Close"]
+            </button>
+            <div asp-permission="@permissionName">
+                <authorize-success>
+                    <form class="form-inline" asp-controller="Home" asp-action="Delete" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="@Model.History.Id"/>
+                        <button type="submit" data-provide="confirm" class="btn btn-danger">
+                            <i class="fal fa-trash"></i>
+                            @T["Delete"]
+                        </button>
+                    </form>
+                </authorize-success>
+            </div>
         </div>
-    </div>
-}
+    }
+</div>
+
+<script>
+    (function(win, doc, $) {
+        $(doc).ready(function() {
+            // Init plato UI
+            $("#versionModal").platoUI();
+        });
+    }(window, document, jQuery));
+</script>

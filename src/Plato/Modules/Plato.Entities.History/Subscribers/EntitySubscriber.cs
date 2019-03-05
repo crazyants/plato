@@ -107,7 +107,11 @@ namespace Plato.Entities.History.Subscribers
             // Get previous history points
             var previousHistories = await _entityHistoryStore.QueryAsync()
                 .Take(1)
-                .Select<EntityHistoryQueryParams>(q => { q.EntityId.Equals(entity.Id); })
+                .Select<EntityHistoryQueryParams>(q =>
+                {
+                    q.EntityId.Equals(entity.Id);
+                    q.EntityReplyId.Equals(0);
+                })
                 .OrderBy("CreatedDate", OrderBy.Desc)
                 .ToList();
 
@@ -157,6 +161,7 @@ namespace Plato.Entities.History.Subscribers
                 .Select<EntityHistoryQueryParams>(q =>
                 {
                     q.EntityId.Equals(entity.Id);
+                    q.EntityReplyId.Equals(0);
                 })
                 .OrderBy("CreatedDate", OrderBy.Desc)
                 .ToList();
