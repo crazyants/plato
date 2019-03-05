@@ -35,6 +35,7 @@ namespace Plato.Discuss.History.Navigation
                         topic,
                         reply
                     })
+                    .Permission(Permissions.ViewReplyHistory)
                 );
             
         }

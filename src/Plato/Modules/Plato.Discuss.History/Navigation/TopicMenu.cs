@@ -38,6 +38,7 @@ namespace Plato.Discuss.History.Navigation
                     {
                         topic
                     })
+                    .Permission(Permissions.ViewTopicHistory)
                 );
 
         }

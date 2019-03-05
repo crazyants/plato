@@ -10,7 +10,7 @@ namespace Plato.Discuss
             new Permission("PostTopics", "Post topics");
 
         public static readonly Permission PostReplies =
-            new Permission("PostReplies", "Post Replies");
+            new Permission("PostReplies", "Post replies");
         
         public static readonly Permission EditOwnTopics =
             new Permission("EditOwnTopics", "Edit own topics");

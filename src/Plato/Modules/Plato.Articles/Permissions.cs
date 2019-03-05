@@ -13,64 +13,64 @@ namespace Plato.Articles
             new Permission("PostComments", "Post comments");
 
         public static readonly Permission EditOwnArticles =
-            new Permission("EditOwnArticles", "Edit own topics");
+            new Permission("EditOwnArticles", "Edit own articles");
 
         public static readonly Permission EditAnyArticle =
-            new Permission("EditAnyArticle", "Edit own topics");
+            new Permission("EditAnyArticle", "Edit any article");
         
         public static readonly Permission EditOwnComment =
-            new Permission("EditOwnComment", "Edit own replies");
+            new Permission("EditOwnComment", "Edit own comments");
 
         public static readonly Permission EditAnyComment =
-            new Permission("EditAnyComment", "Edit any reply");
+            new Permission("EditAnyComment", "Edit any comment");
         
         public static readonly Permission DeleteOwnArticles = 
-            new Permission("DeleteOwnArticles", "Delete own topics");
+            new Permission("DeleteOwnArticles", "Delete own articles");
 
         public static readonly Permission RestoreOwnArticles =
-            new Permission("RestoreOwnArticles", "Restore own topics");
+            new Permission("RestoreOwnArticles", "Restore own articles");
         
         public static readonly Permission DeleteAnyArticle =
-            new Permission("DeleteAnyArticle", "Delete any topic");
+            new Permission("DeleteAnyArticle", "Delete any article");
 
         public static readonly Permission RestoreAnyArticle =
-            new Permission("RestoreAnyArticle", "Restore any topic");
+            new Permission("RestoreAnyArticle", "Restore any article");
         
         public static readonly Permission DeleteOwnComments =
-            new Permission("DeleteOwnComments", "Delete own replies");
+            new Permission("DeleteOwnComments", "Delete own comments");
 
         public static readonly Permission RestoreOwnComments =
-            new Permission("RestoreOwnComments", "Restore own replies");
+            new Permission("RestoreOwnComments", "Restore own comments");
         
         public static readonly Permission DeleteAnyComment =
-            new Permission("DeleteAnyComment", "Delete any reply");
+            new Permission("DeleteAnyComment", "Delete any comment");
 
         public static readonly Permission RestoreAnyComment =
-            new Permission("RestoreAnyComment", "Restore any reply");
+            new Permission("RestoreAnyComment", "Restore any comment");
 
         public static readonly Permission ReportArticles =
-            new Permission("ReportArticles", "Report topics");
+            new Permission("ReportArticles", "Report articles");
 
         public static readonly Permission ReportComments =
-            new Permission("ReportComments", "Report replies");
+            new Permission("ReportComments", "Report comments");
 
         public static readonly Permission ViewPrivateArticles =
-            new Permission("ViewPrivateArticles", "View hidden topics");
+            new Permission("ViewPrivateArticles", "View private articles");
 
         public static readonly Permission ViewPrivateComments =
-            new Permission("ViewPrivateComments", "View hidden replies");
+            new Permission("ViewPrivateComments", "View private comments");
 
         public static readonly Permission ViewSpamArticles =
-            new Permission("ViewSpamArticles", "View topics flagged as SPAM");
+            new Permission("ViewSpamArticles", "View articles flagged as SPAM");
 
         public static readonly Permission ViewSpamComments =
-            new Permission("ViewSpamReplies", "View replies flagged as SPAM");
+            new Permission("ViewSpamComments", "View comments flagged as SPAM");
         
         public static readonly Permission ViewDeletedArticles =
-            new Permission("ViewDeletedTopics", "View deleted topics");
+            new Permission("ViewDeletedArticles", "View deleted articles");
 
         public static readonly Permission ViewDeletedComments =
-            new Permission("ViewDeletedReplies", "View deleted replies");
+            new Permission("ViewDeletedComments", "View deleted comments");
         
         public IEnumerable<Permission> GetPermissions()
         {
@@ -140,9 +140,7 @@ namespace Plato.Articles
                     Permissions = new[]
                     {
                         PostComments,
-                        EditOwnArticles,
                         EditOwnComment,
-                        DeleteOwnArticles,
                         DeleteOwnComments,
                         ReportArticles,
                         ReportComments
