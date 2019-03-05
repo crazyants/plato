@@ -7,7 +7,6 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Tags.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;

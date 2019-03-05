@@ -24,7 +24,6 @@ using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Discuss.Controllers
@@ -33,23 +32,22 @@ namespace Plato.Discuss.Controllers
     {
 
         #region "Constructor"
-
-        private readonly IViewProviderManager<UserIndex> _userViewProvider;
+        
+        private readonly IAuthorizationService _authorizationService;
         private readonly IViewProviderManager<Topic> _topicViewProvider;
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
-        private readonly IEntityManager<Topic> _topicManager;
-        private readonly IEntityManager<Reply> _replyManager;
-        private readonly IAlerter _alerter;
-        private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IContextFacade _contextFacade;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IEntityReplyService<Reply> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IFeatureFacade _featureFacade;
+        private readonly IEntityReplyService<Reply> _replyService;
         private readonly IReportEntityManager<Topic> _reportEntityManager;
         private readonly IReportEntityManager<Reply> _reportReplyManager;
+        private readonly IPostManager<Topic> _topicManager;
+        private readonly IPostManager<Reply> _replyManager;
+        private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -58,21 +56,21 @@ namespace Plato.Discuss.Controllers
         public HomeController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IContextFacade contextFacade,
+            IPostManager<Topic> topicManager,
+            IPostManager<Reply> replyManager,
             IEntityStore<Topic> entityStore,
-            IViewProviderManager<Topic> topicViewProvider,
             IEntityReplyStore<Reply> entityReplyStore,
-            IViewProviderManager<Reply> replyViewProvider,
-            IEntityManager<Topic> topicManager,
-            IEntityManager<Reply> replyManager,
-            IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
+            IViewProviderManager<Topic> topicViewProvider,
+            IViewProviderManager<Reply> replyViewProvider,
+            IReportEntityManager<Topic> reportEntityManager,
+            IReportEntityManager<Reply> reportReplyManager,
             IAuthorizationService authorizationService,
             IEntityReplyService<Reply> replyService,
-            IViewProviderManager<UserIndex> userViewProvider,
+            IBreadCrumbManager breadCrumbManager,
             IFeatureFacade featureFacade,
-            IReportEntityManager<Topic> reportEntityManager,
-            IReportEntityManager<Reply> reportReplyManager)
+            IContextFacade contextFacade,
+            IAlerter alerter)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -86,7 +84,6 @@ namespace Plato.Discuss.Controllers
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
             _replyService = replyService;
-            _userViewProvider = userViewProvider;
             _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
@@ -840,8 +837,8 @@ namespace Plato.Discuss.Controllers
             }
             
             _alerter.Success(reply != null
-                ? T["Reply Reported Successfully!"]
-                : T["Topic Reported Successfully!"]);
+                ? T["Thank You. Reply Reported Successfully!"]
+                : T["Thank You. Topic Reported Successfully!"]);
    
             // Redirect
             return RedirectToAction(nameof(Reply), new RouteValueDictionary()
@@ -1257,15 +1254,7 @@ namespace Plato.Discuss.Controllers
         IEnumerable<SelectListItem> GetReportReasons()
         {
 
-            var output = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = S["-"],
-                    Value = ""
-                }
-            };
-
+            var output = new List<SelectListItem>();
             foreach (var reason in ReportReasons.Reasons)
             {
                 output.Add(new SelectListItem

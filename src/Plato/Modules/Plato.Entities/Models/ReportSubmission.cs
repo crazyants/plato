@@ -9,10 +9,10 @@ namespace Plato.Entities.Models
 
         public IUser Who { get; set; }
 
-        public ReportReasons.Reason Why { get; set; }
-
         public TModel What { get; set; }
 
+        public ReportReasons.Reason Why { get; set; }
+        
         public DateTimeOffset When { get; set; }
 
         public ReportSubmission()

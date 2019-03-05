@@ -85,10 +85,7 @@ namespace Plato.Discuss.Notifications
                 return result.Failed(
                     $"No entity with id '{context.Model.What.EntityId}' exists. Failed to send reply spam email notification.");
             }
-            
-            // Get reason given text
-            var reasonGiven = S[ReportReasons.Reasons[context.Model.Why]].Value;
-
+        
             // Build topic url
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
@@ -101,15 +98,24 @@ namespace Plato.Discuss.Notifications
                 ["opts.replyId"] = context.Model.What.Id
             });
 
+            // Reason given text
+            var reasonText = S["None Provided"];
+            if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
+            {
+                reasonText = S[ReportReasons.Reasons[context.Model.Why]];
+            }
+            
             // Build message from template
             var message = email.BuildMailMessage();
             message.Body = string.Format(
                 email.Message,
                 context.Notification.To.DisplayName,
                 topic.Title,
-                reasonGiven,
+                reasonText.Value,
+                context.Model.Who.DisplayName,
+                context.Model.Who.UserName,
                 baseUri + url);
-            ;
+
             message.IsBodyHtml = true;
             message.To.Add(new MailAddress(context.Notification.To.Email));
 

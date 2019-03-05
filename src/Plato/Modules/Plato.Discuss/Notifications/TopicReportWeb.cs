@@ -81,12 +81,19 @@ namespace Plato.Discuss.Notifications
                 ["opts.alias"] = context.Model.What.Alias
             });
 
+            // Get reason given text
+            var reasonText = S["Topic Reported"];
+            if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
+            {
+                reasonText = S[ReportReasons.Reasons[context.Model.Why]];
+            }
+            
             //// Build notification
             var userNotification = new UserNotification()
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = S[ReportReasons.Reasons[context.Model.Why]].Value,
+                Title = reasonText.Value,
                 Message = S["A topic has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,

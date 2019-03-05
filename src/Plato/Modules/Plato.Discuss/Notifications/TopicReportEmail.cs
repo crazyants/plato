@@ -44,6 +44,10 @@ namespace Plato.Discuss.Notifications
             _localeStore = localeStore;
             _emailManager = emailManager;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
+
+            T = htmlLocalizer;
+            S = stringLocalizer;
+
         }
 
         public async Task<ICommandResult<ReportSubmission<Topic>>> SendAsync(INotificationContext<ReportSubmission<Topic>> context)
@@ -68,8 +72,12 @@ namespace Plato.Discuss.Notifications
             }
 
             // Get reason given text
-            var reasonGiven = S[ReportReasons.Reasons[context.Model.Why]].Value;
-
+            var reasonText = S["No reason supplied"];
+            if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
+            {
+                reasonText = S[ReportReasons.Reasons[context.Model.Why]];
+            }
+            
             // Build topic url
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
@@ -87,9 +95,11 @@ namespace Plato.Discuss.Notifications
                 email.Message,
                 context.Notification.To.DisplayName,
                 context.Model.What.Title,
-                reasonGiven,
+                reasonText.Value,
+                context.Model.Who.DisplayName,
+                context.Model.Who.UserName,
                 baseUri + url);
-            ;
+
             message.IsBodyHtml = true;
             message.To.Add(new MailAddress(context.Notification.To.Email));
 

@@ -71,7 +71,10 @@ namespace Plato.Discuss.Notifications
                 return null;
             }
 
+            // Get entity for reply
             var entity = await _entityStore.GetByIdAsync(context.Model.What.EntityId);
+
+            // Ensure entity exists
             if (entity == null)
             {
                 return null;
@@ -87,16 +90,23 @@ namespace Plato.Discuss.Notifications
                 ["controller"] = "Home",
                 ["action"] = "Reply",
                 ["opts.id"] = entity.Id,
-                ["opts.id"] = entity.Alias,
+                ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = context.Model.What.Id
             });
 
-            //// Build notification
+            // Get reason given text
+            var reasonText = S["Reply Reported"];
+            if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
+            {
+                reasonText = S[ReportReasons.Reasons[context.Model.Why]];
+            }
+
+            // Build notification
             var userNotification = new UserNotification()
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = S[ReportReasons.Reasons[context.Model.Why]].Value,
+                Title = reasonText.Value,
                 Message = S["A reply has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,

@@ -96,7 +96,7 @@ namespace Plato.Internal.Layout.Alerts
                 _alerts.Add(alert);
             }
             
-            // Result is not a view, so assume a redirect and assign values to persistance
+            // Result is not a view, so assume a redirect and assign values to persistence
             if (!(context.Result is ViewResult) && _alerts.Count > 0)
             {
                 context.HttpContext.Response.Cookies.Append(

@@ -803,9 +803,9 @@ namespace Plato.Articles.Controllers
             }
 
             _alerter.Success(reply != null
-                ? T["Comment Reported Successfully!"]
-                : T["Article Reported Successfully!"]);
-            
+                ? T["Thank You. Comment Reported Successfully!"]
+                : T["Thank You. Article Reported Successfully!"]);
+
             // Redirect
             return RedirectToAction(nameof(Reply), new RouteValueDictionary()
             {
@@ -1217,15 +1217,7 @@ namespace Plato.Articles.Controllers
         IEnumerable<SelectListItem> GetReportReasons()
         {
 
-            var output = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = S["-"],
-                    Value = ""
-                }
-            };
-
+            var output = new List<SelectListItem>();
             foreach (var reason in ReportReasons.Reasons)
             {
                 output.Add(new SelectListItem
