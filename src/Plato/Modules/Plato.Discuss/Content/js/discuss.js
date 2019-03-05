@@ -1,5 +1,9 @@
 ﻿// <reference path="/wwwroot/js/app.js" />
 
+if (typeof $().modal === 'undefined') {
+    throw new Error("BootStrap 4.1.1 or above Required");
+}
+
 if (typeof window.$.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }

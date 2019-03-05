@@ -7,8 +7,7 @@ using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Discuss.History.Subscribers;
-using Plato.Internal.Navigation;
+using Plato.Entities.History.Subscribers;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.History

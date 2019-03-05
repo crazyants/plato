@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Entities.History.Models;
@@ -10,8 +9,6 @@ using Plato.Entities.History.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.WebApi.Controllers;
 using Plato.WebApi.Models;
 
@@ -21,7 +18,7 @@ namespace Plato.Entities.History.Controllers
     public class EntityController : BaseWebApiController
     {
 
-        private readonly IEntityHistoryStore<EntityHistory> _userNotificationStore;
+        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
         private readonly IContextFacade _contextFacade;
 
         public IHtmlLocalizer T { get; }
@@ -29,13 +26,13 @@ namespace Plato.Entities.History.Controllers
         public IStringLocalizer S { get; }
 
         public EntityController(
-            IContextFacade contextFacade,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IEntityHistoryStore<EntityHistory> userNotificationStore)
+            IContextFacade contextFacade,
+            IEntityHistoryStore<EntityHistory> entityHistoryStore)
         {
             _contextFacade = contextFacade;
-            _userNotificationStore = userNotificationStore;
+            _entityHistoryStore = entityHistoryStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -150,7 +147,7 @@ namespace Plato.Entities.History.Controllers
             string sortBy,
             OrderBy sortOrder)
         {
-            return await _userNotificationStore.QueryAsync()
+            return await _entityHistoryStore.QueryAsync()
                 .Take(page, pageSize)
                 .Select<EntityHistoryQueryParams>(q =>
                 {

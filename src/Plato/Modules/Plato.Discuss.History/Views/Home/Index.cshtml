@@ -27,5 +27,13 @@
             @Html.Raw(Model.Html)
         </div>
     </div>
+    <div class="modal-footer">
+        <div class="text-muted mr-auto">
+            @T["Version:"] @Model.History.Version
+        </div>
+        <a href="#" class="btn btn-danger">
+            @T["Delete Version"]
+        </a>
+    </div>
 
 }

@@ -1,24 +1,23 @@
-﻿
-if (typeof jQuery === "undefined") {
-    throw new Error("History requires jQuery");
+﻿// <reference path="/wwwroot/js/app.js" />
+
+if (typeof $().modal === 'undefined') {
+    throw new Error("BootStrap 4.1.1 or above Required");
 }
 
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("History require $.Plato.Context");
-}
-
-if (typeof $.Plato.Http === "undefined") {
-    throw new Error("History require $.Plato.Http");
-}
-
-if (typeof $.Plato.Http === "undefined") {
-    throw new Error("History require $.Plato.Ui");
+if (typeof window.$.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
 $(function (win, doc, $) {
 
     'use strict';
-    
+
+    // --------
+
+    var app = win.$.Plato;
+
+    // --------
+
     // history list
     var history = function () {
         
@@ -54,6 +53,9 @@ $(function (win, doc, $) {
                 params = params.replace(/\{entityId}/g, entityId);
                 params = params.replace(/\{entityReplyId}/g, entityReplyId);
 
+                // No results text
+                var noResultsText = app.T("No history at this time");
+
                 // Invoke suggester
                 $caller.pagedList({
                     page: 1,
@@ -66,7 +68,7 @@ $(function (win, doc, $) {
                         css: "active"
                     },
                     noResultsIcon: null,
-                    noResultsText: "No history at this time",
+                    noResultsText: noResultsText,
                     config: {
                         method: "GET",
                         url: 'api/history/entity/get' + params,
@@ -100,7 +102,7 @@ $(function (win, doc, $) {
 
                         if (result.version) {
                             if (result.version === "1.0") {
-                                html = html.replace(/\{original}/g, '<span class="float-right">Original</span>');
+                                html = html.replace(/\{original}/g, '<span class="float-right">' + app.T("Original") + '</span>');
                             } else {
                                 html = html.replace(/\{original}/g, "");
                             }

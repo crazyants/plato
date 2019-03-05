@@ -43,7 +43,7 @@ namespace Plato.Entities.History.Services
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            // We always need an eneityId
+            // We always need an entityId
             if (model.EntityId <= 0)
             {
                 throw new ArgumentNullException(nameof(model.EntityId));

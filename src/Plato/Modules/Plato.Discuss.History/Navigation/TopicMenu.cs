@@ -1,28 +1,19 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
-using Plato.Entities.Stores;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.History.Navigation
 {
+
     public class TopicMenu : INavigationProvider
     {
-
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IActionContextAccessor _actionContextAccessor;
-    
+        
         public IStringLocalizer T { get; set; }
 
-        public TopicMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor, IEntityStore<Topic> entityStore)
+        public TopicMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
-            _entityStore = entityStore;
         }
         
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -39,12 +30,13 @@ namespace Plato.Discuss.History.Navigation
             {
                 return;
             }
-            
+
+            // Add HistoryMenu view to topic
             builder
                 .Add(T["History"], int.MinValue, history => history
                     .View("HistoryMenu", new
                     {
-                        topic = topic
+                        topic
                     })
                 );
 

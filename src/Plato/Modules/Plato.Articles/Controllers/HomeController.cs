@@ -839,18 +839,18 @@ namespace Plato.Articles.Controllers
                 return Unauthorized();
             }
 
-            // Get topic
-            var topic = await _entityStore.GetByIdAsync(entityId);
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(entityId);
 
             // Ensure the topic exists
-            if (topic == null)
+            if (entity == null)
             {
                 return NotFound();
             }
             
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-                user.Id == topic.CreatedUserId
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == entity.CreatedUserId
                     ? Permissions.DeleteOwnArticles
                     : Permissions.DeleteAnyArticle))
             {
@@ -858,16 +858,16 @@ namespace Plato.Articles.Controllers
             }
             
             // Update topic
-            topic.ModifiedUserId = user?.Id ?? 0;
-            topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsDeleted = true;
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(topic);
+            var result = await _topicManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic deleted successfully"]);
+                _alerter.Success(T["Article deleted successfully"]);
             }
             else
             {
@@ -880,8 +880,8 @@ namespace Plato.Articles.Controllers
                 ["area"] = "Plato.Articles",
                 ["controller"] = "Home",
                 ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
             }));
             
         }

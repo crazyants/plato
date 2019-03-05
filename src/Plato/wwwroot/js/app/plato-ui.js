@@ -2,15 +2,15 @@
 // <reference path="~/js/vendors/bootstrap.js" />
 
 if (typeof jQuery === "undefined") {
-    throw new Error("Plato UI requires jQuery 3.3.1");
+    throw new Error("jQuery 3.3.1 or above Required");
 }
 
 if (typeof $().modal === 'undefined') {
-    throw new Error("Plato UI requires BootStrap 4.1.1");
+    throw new Error("BootStrap 4.1.1 or above Required");
 }
 
 if (typeof $.Plato === "undefined") {
-    throw new Error("Plato UI requires $.Plato");
+    throw new Error("$.Plato Required");
 }
 
 
@@ -18,8 +18,11 @@ $(function (win, doc, $) {
 
     'use strict';
 
-    // Plato Global Object
+    // --------
+
     var app = win.$.Plato;
+
+    // --------
 
     /* dialog */
     var dialog = function () {

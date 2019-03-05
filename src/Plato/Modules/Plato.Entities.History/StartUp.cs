@@ -36,11 +36,7 @@ namespace Plato.Entities.History
 
             // Managers
             services.AddScoped<IEntityHistoryManager<EntityHistory>, EntityHistoryManager>();
-
-            // Register message broker subscribers
-            //services.AddScoped<IBrokerSubscriber, EntitySubscriber<Entity>>();
-            //services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<EntityReply>>();
-
+            
             // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 

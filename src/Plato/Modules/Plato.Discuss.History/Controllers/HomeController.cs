@@ -16,18 +16,17 @@ namespace Plato.Discuss.History.Controllers
     {
 
         private readonly IInlineDiffBuilder _inlineDiffBuilder;
-
-        private readonly IEntityStore<Topic> _topicStore;
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
 
         public HomeController(
             IEntityHistoryStore<EntityHistory> entityHistoryStore,
             IInlineDiffBuilder inlineDiffBuilder,
-            IEntityStore<Topic> topicStore)
+            IEntityStore<Topic> entityStore)
         {
             _entityHistoryStore = entityHistoryStore;
             _inlineDiffBuilder = inlineDiffBuilder;
-            _topicStore = topicStore;
+            _entityStore = entityStore;
         }
 
         public async Task<IActionResult> Index(int id)
@@ -39,7 +38,7 @@ namespace Plato.Discuss.History.Controllers
                 return NotFound();
             }
 
-            var entity = await _topicStore.GetByIdAsync(history.EntityId);
+            var entity = await _entityStore.GetByIdAsync(history.EntityId);
             if (entity == null)
             {
                 return NotFound();
@@ -56,16 +55,15 @@ namespace Plato.Discuss.History.Controllers
                 })
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();
-
-
+            
             // Compare previous to current
-            // If no previous exists use current
             var html = history.Html;
             if (previousHistory?.Data != null)
             {
                 html = PrepareDifAsync(previousHistory.Data[0].Html, history.Html);
             }
         
+            // Build model
             var viewModel = new HistoryIndexViewModel()
             {
                 History = history,

@@ -54,21 +54,21 @@ $(function (win, doc, $) {
     var platoLocale = {
         init: function () {
 
-            if (win.$.Plato.defaults == null) {
+            if (win.$.Plato.defaults === null) {
                 throw new Error("win.$.Plato.defaults Required");
             }
 
-            platoLogger.logInfo("Initializing $.Plato.Locale");
+            platoLogger.logInfo("Initializing platoLocale");
             
             // We need a locale
             if (win.$.Plato.defaults.locale === "") {
-                platoLogger.logError("$.Plato.Locale could not be initialized as the $.Plato.defaults.locale property is empty!");
+                platoLogger.logError("platoLocale could not be initialized as the $.Plato.defaults.locale property is empty!");
                 return;
             }
 
             // We need a url
             if (win.$.Plato.defaults.url === "") {
-                platoLogger.logError("$.Plato.Locale could not be initialized as the $.Plato.defaults.url property is empty!");
+                platoLogger.logError("platoLocale could not be initialized as the $.Plato.defaults.url property is empty!");
                 return;
             }
 
@@ -394,7 +394,7 @@ $(function (win, doc, $) {
     /* ---------------------------------------------*/
 
     win.$.Plato = {
-        // default options
+        // defaults
         defaults: {
             debug: false,
             url: "",
@@ -418,14 +418,17 @@ $(function (win, doc, $) {
                 return "";
             }
         },
-        // localization helper
-        T: function(key) {
+        // helpers
+        T: function (key) {
+            // Gets the first matching key from any of the loaded client side locales
             if (this.locale) {
                 return this.locale.get(key);
             }
             return key;
         },
-        // other objects
+        // facade access - ensures we can easily implement 
+        // new objects or extend existing objects 
+        // i.e.$.extend(window.$.Plato.logger, myLogger)
         locale: platoLocale,
         logger: platoLogger,
         ui: platoUi,
@@ -438,10 +441,19 @@ $(function (win, doc, $) {
     /* ---------------------------------------------*/
     
     $(doc).ready(function () {
+
+        // Our main global object
         var app = win.$.Plato;
+
+        // Write options to the console
         app.logger.logInfo("$.Plato:\n" + JSON.stringify(app.defaults, null, "     "));
+
+        // init UI
         app.ui.init();
+
+        // init Locales
         app.locale.init();
+
     });
 
 }(window, document, jQuery));

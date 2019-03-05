@@ -40,7 +40,7 @@ namespace Plato.Users.reCAPTCHA2.Stores
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("Email settings updating");
+                _logger.LogInformation("reCAPTCHA2 settings updating");
             }
 
             var settings = await _dictionaryStore.UpdateAsync<ReCaptchaSettings>(SettingsKey, model);
@@ -49,12 +49,13 @@ namespace Plato.Users.reCAPTCHA2.Stores
                 _cacheManager.CancelTokens(this.GetType());
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("ReCaptcha2 settings updated");
+                    _logger.LogInformation("reCAPTCHA2 settings updated");
                 }
 
             }
 
             return settings;
+
         }
 
         public async Task<bool> DeleteAsync()
@@ -65,7 +66,7 @@ namespace Plato.Users.reCAPTCHA2.Stores
                 _cacheManager.CancelTokens(this.GetType());
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("ReCaptcha2 settings deleted");
+                    _logger.LogInformation("reCAPTCHA2 settings deleted");
                 }
             }
 
@@ -74,4 +75,5 @@ namespace Plato.Users.reCAPTCHA2.Stores
         }
 
     }
+
 }

@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Plato.Internal.Navigation;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.reCAPTCHA2.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
+
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
@@ -16,11 +16,13 @@ namespace Plato.Users.reCAPTCHA2.Navigation
 
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
+
             if (!String.Equals(name, "admin", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
+            // reCAPTCHA2 Admin Settings
             builder
                 .Add(T["SPAM"], int.MaxValue - 1, configuration => configuration
                     .IconCss("fal fa-exclamation-triangle")
@@ -30,8 +32,8 @@ namespace Plato.Users.reCAPTCHA2.Navigation
                         .LocalNav()
                     ));
 
-
         }
+
     }
 
 }
