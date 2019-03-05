@@ -54,8 +54,8 @@ namespace Plato.Discuss.Controllers
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IStringLocalizer<HomeController> stringLocalizer,
-            IHtmlLocalizer<HomeController> localizer,
+            IStringLocalizer stringLocalizer,
+            IHtmlLocalizer localizer,
             IPostManager<Topic> topicManager,
             IPostManager<Reply> replyManager,
             IEntityStore<Topic> entityStore,

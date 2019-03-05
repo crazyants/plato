@@ -72,6 +72,15 @@ namespace Plato.Entities.History.Controllers
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 foreach (var history in histories.Data)
                 {
+
+
+                    var historyUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    {
+                        ["area"] = "Plato.Discuss.History",
+                        ["controller"] = "Home",
+                        ["action"] = "Index",
+                        ["id"] = history.Id
+                    });
                     
                     var createdByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
@@ -95,6 +104,7 @@ namespace Plato.Entities.History.Controllers
                     {
                         Id = history.Id,
                         Text = sb.ToString(),
+                        Url = historyUrl,
                         Version = history.Version,
                         CreatedBy = new UserApiResult()
                         {

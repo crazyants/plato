@@ -173,7 +173,7 @@ $(function (win, doc, $) {
                             $().dialog({
                                     id: "historyDialog",
                                     body: {
-                                        url: "/discuss/history/home/" + historyId
+                                        url: "/discuss/history/" + historyId
                                     },
                                     css: {
                                         modal: "modal fade",

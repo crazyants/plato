@@ -52,10 +52,17 @@ namespace Plato.Discuss.History
             routes.MapAreaRoute(
                 name: "DiscussHistory",
                 areaName: "Plato.Discuss.History",
-                template: "discuss/history/{controller}/{id?}",
+                template: "discuss/history/{id:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
-            
+
+            routes.MapAreaRoute(
+                name: "DiscussDeleteHistory",
+                areaName: "Plato.Discuss.History",
+                template: "discuss/history/delete",
+                defaults: new { controller = "Home", action = "Delete" }
+            );
+
         }
 
     }

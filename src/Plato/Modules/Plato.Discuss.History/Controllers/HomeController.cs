@@ -1,12 +1,19 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Discuss.History.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Entities.History.Models;
+using Plato.Entities.History.Services;
 using Plato.Entities.History.Stores;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Text.Abstractions.Diff;
 using Plato.Internal.Text.Abstractions.Diff.Models;
 
@@ -17,17 +24,43 @@ namespace Plato.Discuss.History.Controllers
 
         private readonly IInlineDiffBuilder _inlineDiffBuilder;
         private readonly IEntityStore<Topic> _entityStore;
+        private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
+        private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
+
+        private readonly IContextFacade _contextFacade;
+        private readonly IAlerter _alerter;
+
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
 
         public HomeController(
+            IStringLocalizer stringLocalizer,
+            IHtmlLocalizer localizer,
             IEntityHistoryStore<EntityHistory> entityHistoryStore,
             IInlineDiffBuilder inlineDiffBuilder,
-            IEntityStore<Topic> entityStore)
+            IEntityStore<Topic> entityStore,
+            IAlerter alerter, IEntityReplyStore<Reply> entityReplyStore,
+            IContextFacade contextFacade,
+            IEntityHistoryManager<EntityHistory> entityHistoryManager)
         {
             _entityHistoryStore = entityHistoryStore;
             _inlineDiffBuilder = inlineDiffBuilder;
             _entityStore = entityStore;
+            _alerter = alerter;
+            _entityReplyStore = entityReplyStore;
+            _contextFacade = contextFacade;
+            _entityHistoryManager = entityHistoryManager;
+
+            T = localizer;
+            S = stringLocalizer;
+
         }
+
+        // --------------
+        // Version modal
+        // --------------
 
         public async Task<IActionResult> Index(int id)
         {
@@ -73,6 +106,68 @@ namespace Plato.Discuss.History.Controllers
             return View(viewModel);
         }
 
+        // --------------
+        // Delete version
+        // --------------
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+
+            // Get history point
+            var history = await _entityHistoryStore.GetByIdAsync(id);
+
+            // Ensure we found the entity
+            if (history == null)
+            {
+                return NotFound();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(history.EntityId);
+
+            // Ensure we found the entity
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Get reply
+            var reply = await _entityReplyStore.GetByIdAsync(history.EntityReplyId);
+
+            // Ensure we found a reply if supplied
+            if (reply == null && history.EntityReplyId > 0)
+            {
+                return NotFound();
+            }
+            
+            // Delete history point
+            var result = await _entityHistoryManager.DeleteAsync(history);
+
+            // Add result
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Version Deleted Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+            
+            // Redirect
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
 
         string PrepareDifAsync(string before, string after)
         {

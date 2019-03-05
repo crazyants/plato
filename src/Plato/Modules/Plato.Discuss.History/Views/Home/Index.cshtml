@@ -2,6 +2,9 @@
 @{
     Layout = null;
     ViewData["Title"] = "History";
+    var permissionName = Model.History.EntityReplyId == 0
+        ? "DeleteTopicHistory"
+        : "DeleteReplyHistory";
 }
 
 @if (!String.IsNullOrEmpty(Model.Html))
@@ -31,9 +34,15 @@
         <div class="text-muted mr-auto">
             @T["Version:"] @Model.History.Version
         </div>
-        <a href="#" class="btn btn-danger">
-            @T["Delete Version"]
-        </a>
+        <div asp-permission="@permissionName">
+            <authorize-success>
+                <form asp-controller="Home" asp-action="Delete" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="@Model.History.Id" />
+                    <button type="submit" class="btn btn-danger">
+                        @T["Delete Version"]
+                    </button>
+                </form>
+            </authorize-success>
+        </div>
     </div>
-
 }

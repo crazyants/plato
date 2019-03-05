@@ -75,18 +75,18 @@ namespace Plato.Entities.History.Services
 
             var result = new CommandResult<EntityHistory>();
 
-            var newEntityHistory = await _entityHistoryStore.CreateAsync(model);
-            if (newEntityHistory != null)
+            var newHistory = await _entityHistoryStore.CreateAsync(model);
+            if (newHistory != null)
             {
 
                 // Invoke EntityHistoryCreated subscriptions
                 foreach (var handler in _broker.Pub<EntityHistory>(this, "EntityHistoryCreated"))
                 {
-                    newEntityHistory = await handler.Invoke(new Message<EntityHistory>(newEntityHistory, this));
+                    newHistory = await handler.Invoke(new Message<EntityHistory>(newHistory, this));
                 }
 
                 // Return success
-                return result.Success(newEntityHistory);
+                return result.Success(newHistory);
 
             }
 
@@ -141,18 +141,18 @@ namespace Plato.Entities.History.Services
 
             var result = new CommandResult<EntityHistory>();
 
-            var label = await _entityHistoryStore.UpdateAsync(model);
-            if (label != null)
+            var updatedHistory = await _entityHistoryStore.UpdateAsync(model);
+            if (updatedHistory != null)
             {
 
                 // Invoke EntityHistoryUpdated subscriptions
                 foreach (var handler in _broker.Pub<EntityHistory>(this, "EntityHistoryUpdated"))
                 {
-                    label = await handler.Invoke(new Message<EntityHistory>(label, this));
+                    updatedHistory = await handler.Invoke(new Message<EntityHistory>(updatedHistory, this));
                 }
 
                 // Return success
-                return result.Success(label);
+                return result.Success(updatedHistory);
             }
 
             return result.Failed(new CommandError("An unknown error occurred whilst attempting to update the entity history entry"));
