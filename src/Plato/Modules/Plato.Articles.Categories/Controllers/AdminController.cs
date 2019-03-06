@@ -1,38 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout.Alerts;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Features;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.ViewModels;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.Alerts;
-using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
-using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Articles.Categories.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
-        private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Channel> _categoryStore;
-        private readonly ICategoryManager<Channel> _categoryManager;
-        private readonly IViewProviderManager<CategoryBase> _viewProvider;
+     
+        private readonly ICategoryStore<ArticleCategory> _categoryStore;
+        private readonly ICategoryManager<ArticleCategory> _categoryManager;
+        private readonly IViewProviderManager<Category> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IAlerter _alerter;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -41,24 +36,28 @@ namespace Plato.Articles.Categories.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            IContextFacade contextFacade,
-            ICategoryStore<Channel> categoryStore,
-            IViewProviderManager<CategoryBase> viewProvider,
+            ICategoryStore<ArticleCategory> categoryStore,
+            IViewProviderManager<Category> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IAlerter alerter, 
-            ICategoryManager<Channel> categoryManager, IFeatureFacade featureFacade)
+            ICategoryManager<ArticleCategory> categoryManager,
+            IFeatureFacade featureFacade,
+            IAlerter alerter)
         {
-            _contextFacade = contextFacade;
+    
             _categoryStore = categoryStore;
             _viewProvider = viewProvider;
-            _alerter = alerter;
             _categoryManager = categoryManager;
             _featureFacade = featureFacade;
             _breadCrumbManager = breadCrumbManager;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
         }
+
+        // --------------
+        // Manage Categories
+        // --------------
 
         public async Task<IActionResult> Index(int id)
         {
@@ -68,7 +67,7 @@ namespace Plato.Articles.Categories.Controllers
             //    return Unauthorized();
             //}
             
-            IEnumerable<Channel> parents = null;
+            IEnumerable<ArticleCategory> parents = null;
             if (id > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(id);
@@ -110,16 +109,22 @@ namespace Plato.Articles.Categories.Controllers
 
             });
 
-            Channel currentChannel = null;
+            // Get optional current category
+            ArticleCategory currentCategory = null;
             if (id > 0)
             {
-                currentChannel = await _categoryStore.GetByIdAsync(id);
+                currentCategory = await _categoryStore.GetByIdAsync(id);
             }
             
-            var model = await _viewProvider.ProvideIndexAsync(currentChannel ?? new Channel(), this);
-            return View(model);
+            // Return view
+            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new ArticleCategory(), this));
+
         }
-        
+
+        // --------------
+        // Create Category
+        // --------------
+
         public async Task<IActionResult> Create(int id = 0)
         {
 
@@ -135,8 +140,8 @@ namespace Plato.Articles.Categories.Controllers
             });
             
             // We need to pass along the featureId
-            var feature = await GetcurrentFeature();
-            var model = await _viewProvider.ProvideEditAsync(new CategoryBase
+            var feature = await GetCurrentFeature();
+            var model = await _viewProvider.ProvideEditAsync(new Category
             {
                 ParentId = id,
                 FeatureId = feature.Id
@@ -146,14 +151,13 @@ namespace Plato.Articles.Categories.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(Create))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditChannelViewModel viewModel)
         {
 
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+                return await Create(viewModel.Id);
             }
 
             var iconCss = viewModel.IconCss;
@@ -162,8 +166,8 @@ namespace Plato.Articles.Categories.Controllers
                 iconCss = viewModel.IconPrefix + iconCss;
             }
 
-            var feature = await GetcurrentFeature();
-            var category =  new Channel()
+            var feature = await GetCurrentFeature();
+            var category =  new ArticleCategory()
             {
                 ParentId = viewModel.ParentId,
                 FeatureId = feature.Id,
@@ -196,7 +200,11 @@ namespace Plato.Articles.Categories.Controllers
             return View(viewModel);
             
         }
-        
+
+        // --------------
+        // Edit Category
+        // --------------
+
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -217,8 +225,7 @@ namespace Plato.Articles.Categories.Controllers
 
         }
         
-        [HttpPost]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public  async Task<IActionResult> EditPost(int id)
         {
 
@@ -241,7 +248,11 @@ namespace Plato.Articles.Categories.Controllers
 
         }
 
-        [HttpPost]
+        // --------------
+        // Delete
+        // --------------
+
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
             
@@ -251,13 +262,16 @@ namespace Plato.Articles.Categories.Controllers
                 return NotFound();
             }
 
+            // Get category
             var currentCategory = await _categoryStore.GetByIdAsync(categoryId);
 
+            // Ensure category exists
             if (currentCategory == null)
             {
                 return NotFound();
             }
 
+            // Delete
             var result = await _categoryManager.DeleteAsync(currentCategory);
 
             if (result.Succeeded)
@@ -266,13 +280,20 @@ namespace Plato.Articles.Categories.Controllers
             }
             else
             {
-
-                _alerter.Danger(T["Could not delete the channel"]);
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+         
             }
 
             return RedirectToAction(nameof(Index));
         }
-        
+
+        // --------------
+        // Move Up / Down
+        // --------------
+
         public async Task<IActionResult> MoveUp(int id)
         {
 
@@ -325,7 +346,9 @@ namespace Plato.Articles.Categories.Controllers
 
         }
 
-        async Task<IShellFeature> GetcurrentFeature()
+        // ---------
+
+        async Task<IShellFeature> GetCurrentFeature()
         {
             var featureId = "Plato.Articles.Categories";
             var feature = await _featureFacade.GetFeatureByIdAsync(featureId);

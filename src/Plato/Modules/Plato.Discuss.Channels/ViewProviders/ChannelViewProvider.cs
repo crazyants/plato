@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Categories.ViewModels;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Models;
@@ -49,16 +50,16 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
 
-            CategoryBase categoryBase = null;
+            Category category = null;
             if (channel?.Id > 0)
             {
-                categoryBase = await _categoryStore.GetByIdAsync(channel.Id);
+                category = await _categoryStore.GetByIdAsync(channel.Id);
             }
 
             // channel filter options
             var channelViewOpts = new CategoryIndexOptions
             {
-                ChannelId = categoryBase?.Id ?? 0
+                ChannelId = category?.Id ?? 0
             };
             
             // Get topic index view model from context
@@ -76,10 +77,10 @@ namespace Plato.Discuss.Channels.ViewProviders
             };
 
             return Views(
-                View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
-                View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
+                View<Category>("Home.Index.Header", model => category).Zone("header").Order(1),
+                View<Category>("Home.Index.Tools", model => category).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<ChannelListViewModel>("Topic.Channels.Index.Sidebar", model =>
+                View<CategoryListViewModel<Channel>>("Topic.Channels.Index.Sidebar", model =>
                 {
                     //model.SelectedChannelId = channel?.Id ?? 0;
                     model.Options = channelViewOpts;

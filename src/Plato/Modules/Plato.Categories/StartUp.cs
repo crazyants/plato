@@ -31,17 +31,17 @@ namespace Plato.Categories
             // Repositories
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
-            services.AddScoped<ICategoryRepository<CategoryBase>, CategoryRepository<CategoryBase>>();
+            services.AddScoped<ICategoryRepository<Category>, CategoryRepository<Category>>();
             services.AddScoped<IEntityCategoryRepository<EntityCategory>, EntityCategoryRepository>();
 
             // Stores
-            services.AddScoped<ICategoryStore<CategoryBase>, CategoryStore<CategoryBase>>();
+            services.AddScoped<ICategoryStore<Category>, CategoryStore<Category>>();
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
             services.AddScoped<IEntityCategoryStore<EntityCategory>, EntityCategoryStore>();
 
             // Managers
-            services.AddScoped<ICategoryManager<CategoryBase>, CategoryManager<CategoryBase>>();
+            services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();
         
         }
 

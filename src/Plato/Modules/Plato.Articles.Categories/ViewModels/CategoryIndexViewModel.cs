@@ -2,7 +2,7 @@
 using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Channels.ViewModels
+namespace Plato.Articles.Categories.ViewModels
 {
     public class CategoryIndexViewModel 
     {

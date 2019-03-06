@@ -1,11 +1,11 @@
-﻿@model CategoryListViewModel<Channel>
+﻿@model CategoryListViewModel<ArticleCategory>
 
 <card class="card card-body-flush">
     <card-title>
-        <a data-toggle="tooltip" title="@T["All Channels"]" asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+        <a data-toggle="tooltip" title="@T["All Categories"]" asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
             <i class="fal fa-ellipsis-h fa-2x"></i>
         </a>
-        <h6 class="card-title float-left">@T["Channel"]</h6>
+        <h6 class="card-title float-left">@T["Categories"]</h6>
     </card-title>
     <card-body>
         @if (Model.Channels != null && Model.Channels.Any())
@@ -14,7 +14,7 @@
                 @foreach (var channel in Model.Channels)
                 {
                     var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
-                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
+                    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
 
                         @if (!String.IsNullOrWhiteSpace(channel.IconCss))
                         {

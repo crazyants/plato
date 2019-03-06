@@ -7,24 +7,20 @@ using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Categories.ViewComponents
 {
 
     public class CategoryInputViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<CategoryBase> _channelStore;
-        private readonly IContextFacade _contextFacade;
+        private readonly ICategoryStore<Category> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
         public CategoryInputViewComponent(
-            ICategoryStore<CategoryBase> channelStore,
-            IContextFacade contextFacade, 
+            ICategoryStore<Category> channelStore,
             IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;
-            _contextFacade = contextFacade;
             _featureFacade = featureFacade;
         }
 
@@ -44,7 +40,7 @@ namespace Plato.Categories.ViewComponents
             return View(model);
         }
 
-        private async Task<IList<Selection<CategoryBase>>> BuildChannelSelectionsAsync(
+        private async Task<IList<Selection<Category>>> BuildChannelSelectionsAsync(
             IEnumerable<int> selectedCategories)
         {
             
@@ -55,7 +51,7 @@ namespace Plato.Categories.ViewComponents
 
                 var items = await RecurseChannels(channels);
           
-                var selections = items.Select(c => new Selection<CategoryBase>
+                var selections = items.Select(c => new Selection<Category>
                     {
                         IsSelected = selectedCategories.Any(v => v == c.Id),
                         Value = c
@@ -71,15 +67,15 @@ namespace Plato.Categories.ViewComponents
         }
 
 
-        Task<IList<CategoryBase>> RecurseChannels(
+        Task<IList<Category>> RecurseChannels(
             IEnumerable<ICategory> input,
-            IList<CategoryBase> output = null,
+            IList<Category> output = null,
             int id = 0)
         {
 
             if (output == null)
             {
-                output = new List<CategoryBase>();
+                output = new List<Category>();
             }
 
             var categories = input.ToList();
@@ -92,7 +88,7 @@ namespace Plato.Categories.ViewComponents
                     {
                         indent += " ";
                     }
-                    output.Add(new CategoryBase
+                    output.Add(new Category
                     {
                         Id = category.Id,
                         Name = indent + category.Name

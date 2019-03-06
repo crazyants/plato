@@ -24,7 +24,7 @@ namespace Plato.Articles.Categories.Navigation
 
             builder
                 .Add(T["Articles"], configuration => configuration
-                    .Add(T["Categories"], 1, index => index
+                    .Add(T["Channels"], 1, installed => installed
                         .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
                         {
                             ["opts.id"] = "",

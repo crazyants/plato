@@ -4,7 +4,8 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Articles.Categories.Models
 {
-    public class ChannelDetails : Serializable
+
+    public class ArticleCategoryDetails : Serializable
     {
         public int TotalTopics { get; set; }
 

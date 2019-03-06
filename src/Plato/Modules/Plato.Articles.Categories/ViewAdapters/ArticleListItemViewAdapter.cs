@@ -10,14 +10,14 @@ using Plato.Internal.Layout.ViewAdapters;
 namespace Plato.Articles.Categories.ViewAdapters
 {
 
-    public class TopicListItemViewAdapter : BaseAdapterProvider
+    public class ArticleListItemViewAdapter : BaseAdapterProvider
     {
 
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ArticleCategory> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
-        public TopicListItemViewAdapter(
-            ICategoryStore<Channel> channelStore,
+        public ArticleListItemViewAdapter(
+            ICategoryStore<ArticleCategory> channelStore,
             IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;
@@ -42,12 +42,12 @@ namespace Plato.Articles.Categories.ViewAdapters
                 // No categories available to adapt the view 
                 return default(IViewAdapterResult);
             }
-            
-            // Plato.Discuss does not have a dependency on Plato.Articles.Categories
-            // Instead we update the model for the topic item view component
-            // here via our view adapter to include the channel information
-            // This way the channel data is only ever populated if the channels feature is enabled
-            return await Adapt("TopicListItem", v =>
+
+            // Plato.Articles does not have a dependency on Plato.Articles.Categories
+            // Instead we update the model for the article item view component
+            // here via our view adapter to include the category information
+            // This way the category data is only ever populated if the categories feature is enabled
+            return await Adapt("ArticleListItem", v =>
             {
                 v.AdaptModel<EntityListItemViewModel<Article>>(model =>
                 {

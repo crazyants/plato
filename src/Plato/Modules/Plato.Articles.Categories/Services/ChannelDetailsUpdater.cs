@@ -4,6 +4,7 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Models;
+using Plato.Articles.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 
@@ -13,20 +14,20 @@ namespace Plato.Articles.Categories.Services
     public class ChannelDetailsUpdater : IChannelDetailsUpdater
     {
 
-        private readonly ICategoryStore<Channel> _channelStore;
-        private readonly ICategoryManager<Channel> _channelManager;
-        private readonly IEntityStore<Article> _topicStore;
+        private readonly ICategoryStore<ArticleCategory> _channelStore;
+        private readonly ICategoryManager<ArticleCategory> _channelManager;
+        private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<Comment> _replyStore;
 
         public ChannelDetailsUpdater(
-            ICategoryStore<Channel> channelStore, 
-            ICategoryManager<Channel> channelManager,
-            IEntityStore<Article> topicStore, 
+            ICategoryStore<ArticleCategory> channelStore, 
+            ICategoryManager<ArticleCategory> channelManager,
+            IEntityStore<Article> entityStore, 
             IEntityReplyStore<Comment> replyStore)
         {
             _channelStore = channelStore;
             _channelManager = channelManager;
-            _topicStore = topicStore;
+            _entityStore = entityStore;
             _replyStore = replyStore;
         }
         
@@ -43,13 +44,13 @@ namespace Plato.Articles.Categories.Services
                 // Get all children for current channel
                 var children = await _channelStore.GetChildrenByIdAsync(parent.Id);
 
-                // Get latest topic & total topic count for current channel
-                var topics = await _topicStore.QueryAsync()
-                    .Take(1, 1) // we only need the latest topic
+                // Get latest entity & total entity count for current category
+                var entities = await _entityStore.QueryAsync()
+                    .Take(1, 1) // we only need the latest entity
                     .Select<EntityQueryParams>(q =>
                     {
 
-                        // If the channel has children also include all child topics
+                        // If the category has children also include all child categories
                         if (children != null)
                         {
                             var channelIds = children
@@ -60,7 +61,7 @@ namespace Plato.Articles.Categories.Services
                         }
                         else
                         {
-                            // Get topics for current channel
+                            // Get entities for current channel
                             q.CategoryId.Equals(parent.Id);
                         }
 
@@ -88,7 +89,7 @@ namespace Plato.Articles.Categories.Services
                         }
                         else
                         {
-                            // Get topics for current channel
+                            // Get entities for current channel
                             q.CategoryId.Equals(parent.Id);
                         }
 
@@ -101,10 +102,10 @@ namespace Plato.Articles.Categories.Services
                 
                 var totalTopics = 0;
                 Article latestTopic = null;
-                if (topics?.Data != null)
+                if (entities?.Data != null)
                 {
-                    totalTopics = topics.Total;
-                    latestTopic = topics.Data[0];
+                    totalTopics = entities.Total;
+                    latestTopic = entities.Data[0];
                 }
 
                 var totalReplies = 0;
@@ -116,7 +117,7 @@ namespace Plato.Articles.Categories.Services
                 }
 
                 // Update channel details with latest entity details
-                var details = parent.GetOrCreate<ChannelDetails>();
+                var details = parent.GetOrCreate<ArticleCategoryDetails>();
                 details.TotalTopics = totalTopics;
                 details.TotalReplies = totalReplies;
 
@@ -135,7 +136,7 @@ namespace Plato.Articles.Categories.Services
                     details.LastReply.CreatedDate = latestReply.CreatedDate;
                 }
 
-                parent.AddOrUpdate<ChannelDetails>(details);
+                parent.AddOrUpdate<ArticleCategoryDetails>(details);
 
                 // Save the updated details 
                 await _channelManager.UpdateAsync(parent);

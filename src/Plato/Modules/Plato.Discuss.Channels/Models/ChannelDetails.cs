@@ -4,6 +4,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.Channels.Models
 {
+
     public class ChannelDetails : Serializable
     {
         public int TotalTopics { get; set; }

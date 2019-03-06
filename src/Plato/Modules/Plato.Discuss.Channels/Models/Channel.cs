@@ -2,7 +2,7 @@
 
 namespace Plato.Discuss.Channels.Models
 {
-    public class Channel : CategoryBase
+    public class Channel : Category
     {
     }
 }

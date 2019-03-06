@@ -24,7 +24,7 @@ namespace Plato.Discuss.Channels.Controllers
      
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly ICategoryManager<Channel> _categoryManager;
-        private readonly IViewProviderManager<CategoryBase> _viewProvider;
+        private readonly IViewProviderManager<Category> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
@@ -37,7 +37,7 @@ namespace Plato.Discuss.Channels.Controllers
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
             ICategoryStore<Channel> categoryStore,
-            IViewProviderManager<CategoryBase> viewProvider,
+            IViewProviderManager<Category> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             ICategoryManager<Channel> categoryManager,
             IFeatureFacade featureFacade,
@@ -109,14 +109,16 @@ namespace Plato.Discuss.Channels.Controllers
 
             });
 
-            Channel currentChannel = null;
+            // Get optional current category
+            Channel currentCategory = null;
             if (id > 0)
             {
-                currentChannel = await _categoryStore.GetByIdAsync(id);
+                currentCategory = await _categoryStore.GetByIdAsync(id);
             }
             
-            var model = await _viewProvider.ProvideIndexAsync(currentChannel ?? new Channel(), this);
-            return View(model);
+            // Return view
+            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new Channel(), this));
+
         }
 
         // --------------
@@ -139,7 +141,7 @@ namespace Plato.Discuss.Channels.Controllers
             
             // We need to pass along the featureId
             var feature = await GetCurrentFeature();
-            var model = await _viewProvider.ProvideEditAsync(new CategoryBase
+            var model = await _viewProvider.ProvideEditAsync(new Category
             {
                 ParentId = id,
                 FeatureId = feature.Id
@@ -149,7 +151,7 @@ namespace Plato.Discuss.Channels.Controllers
 
         }
 
-        [HttpPost, ActionName(nameof(Create))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditChannelViewModel viewModel)
         {
 
@@ -223,7 +225,7 @@ namespace Plato.Discuss.Channels.Controllers
 
         }
         
-        [HttpPost, ActionName(nameof(Edit))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public  async Task<IActionResult> EditPost(int id)
         {
 
@@ -250,7 +252,7 @@ namespace Plato.Discuss.Channels.Controllers
         // Delete
         // --------------
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
             
@@ -260,13 +262,16 @@ namespace Plato.Discuss.Channels.Controllers
                 return NotFound();
             }
 
+            // Get category
             var currentCategory = await _categoryStore.GetByIdAsync(categoryId);
 
+            // Ensure category exists
             if (currentCategory == null)
             {
                 return NotFound();
             }
 
+            // Delete
             var result = await _categoryManager.DeleteAsync(currentCategory);
 
             if (result.Succeeded)
@@ -275,13 +280,20 @@ namespace Plato.Discuss.Channels.Controllers
             }
             else
             {
-
-                _alerter.Danger(T["Could not delete the channel"]);
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+         
             }
 
             return RedirectToAction(nameof(Index));
         }
-        
+
+        // --------------
+        // Move Up / Down
+        // --------------
+
         public async Task<IActionResult> MoveUp(int id)
         {
 

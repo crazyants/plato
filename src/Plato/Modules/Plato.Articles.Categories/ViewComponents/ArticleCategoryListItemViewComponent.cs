@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.ViewModels;
+using Plato.Categories.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
@@ -10,28 +11,23 @@ namespace Plato.Articles.Categories.ViewComponents
 
     public class ArticleCategoryListItemViewComponent : ViewComponent
     {
-     
-        private readonly IContextFacade _contextFacade;
-
-        public ArticleCategoryListItemViewComponent(IContextFacade contextFacade)
+ 
+        public ArticleCategoryListItemViewComponent()
         {
-            _contextFacade = contextFacade;
         }
 
-        public Task<IViewComponentResult> InvokeAsync(
-            Channel channel,
-            ChannelIndexOptions channelIndexOpts)
+        public Task<IViewComponentResult> InvokeAsync(ArticleCategory articleCategory, CategoryIndexOptions categoryIndexOpts)
         {
 
-            if (channelIndexOpts == null)
+            if (categoryIndexOpts == null)
             {
-                channelIndexOpts = new ChannelIndexOptions();
+                categoryIndexOpts = new CategoryIndexOptions();
             }
 
-            var model = new ChannelListItemViewModel()
+            var model = new CategoryListItemViewModel<ArticleCategory>()
             {
-                Channel = channel,
-                ChannelIndexOpts = channelIndexOpts
+                Category = articleCategory,
+                Options = categoryIndexOpts
             };
 
             return Task.FromResult((IViewComponentResult)View(model));

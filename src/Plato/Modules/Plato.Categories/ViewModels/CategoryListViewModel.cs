@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using Plato.Categories.Models;
 
-namespace Plato.Discuss.Channels.ViewModels
+namespace Plato.Categories.ViewModels
 {
-    public class ChannelListViewModel
+    public class CategoryListViewModel<TModel> where TModel : class, ICategory
     {
     
         public CategoryIndexOptions Options { get; set; } = new CategoryIndexOptions();
 
-        public IEnumerable<CategoryBase> Channels { get; set; }
+        public IEnumerable<TModel> Channels { get; set; }
 
     }
+
+
+   
 
 }

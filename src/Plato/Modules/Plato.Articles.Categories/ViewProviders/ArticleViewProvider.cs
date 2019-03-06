@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
+using Plato.Categories.ViewModels;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.ViewModels;
 using Plato.Articles.Models;
@@ -20,15 +21,15 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Categories.ViewProviders
 {
-    public class TopicViewProvider : BaseViewProvider<Article>
+    public class ArticleViewProvider : BaseViewProvider<Article>
     {
 
-        private const string ChannelHtmlName = "channel";
+        private const string CategoryHtmlName = "category";
 
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ArticleCategory> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
         private readonly IFeatureFacade _featureFacade;
@@ -37,10 +38,10 @@ namespace Plato.Articles.Categories.ViewProviders
 
         public IStringLocalizer S { get; }
         
-        public TopicViewProvider(
-            IStringLocalizer<TopicViewProvider> stringLocalizer,
+        public ArticleViewProvider(
+            IStringLocalizer<ArticleViewProvider> stringLocalizer,
             IContextFacade contextFacade,
-            ICategoryStore<Channel> channelStore, 
+            ICategoryStore<ArticleCategory> channelStore, 
             IEntityStore<Article> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
@@ -72,7 +73,7 @@ namespace Plato.Articles.Categories.ViewProviders
             }
 
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            return Views(View<ChannelListViewModel>("Topic.Channels.Index.Sidebar", model =>
+            return Views(View<CategoryListViewModel<ArticleCategory>>("Article.Category.Index.Sidebar", model =>
                 {
                     model.Channels = categories?.Where(c => c.ParentId == 0);
                     return model;
@@ -82,14 +83,14 @@ namespace Plato.Articles.Categories.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Article topic, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Article entity, IViewProviderContext updater)
         {
 
-            // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<Channel> parents = null;
-            if (topic.CategoryId > 0)
+            // Override breadcrumb configuration within base controller 
+            IEnumerable<ArticleCategory> parents = null;
+            if (entity.CategoryId > 0)
             {
-                parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
+                parents = await _channelStore.GetParentsByIdAsync(entity.CategoryId);
             }
 
             _breadCrumbManager.Configure(builder =>
@@ -98,8 +99,8 @@ namespace Plato.Articles.Categories.ViewProviders
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
-                    .Action("Index", "Home", "Plato.Discuss")
+                ).Add(S["Articles"], home => home
+                    .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 );
 
@@ -126,7 +127,7 @@ namespace Plato.Articles.Categories.ViewProviders
                     }
                 }
 
-                builder.Add(S[topic.Title]);
+                builder.Add(S[entity.Title]);
 
             });
             
@@ -141,24 +142,23 @@ namespace Plato.Articles.Categories.ViewProviders
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<ChannelListViewModel>("Topic.Channels.Display.Sidebar", model =>
+                View<CategoryListViewModel<ArticleCategory>>("Article.Category.Display.Sidebar", model =>
                 {
-                    model.Channels = categories?.Where(c => c.Id == topic.CategoryId);
+                    model.Channels = categories?.Where(c => c.Id == entity.CategoryId);
                     return model;
                 }).Zone("sidebar").Order(2)
             );
 
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(Article topic, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Article entity, IViewProviderContext updater)
         {
             
-            // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<Channel> parents = null;
-            if (topic.CategoryId > 0)
+            // Override breadcrumb configuration within base controller 
+            IEnumerable<ArticleCategory> parents = null;
+            if (entity.CategoryId > 0)
             {
-                parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
-
+                parents = await _channelStore.GetParentsByIdAsync(entity.CategoryId);
             }
             _breadCrumbManager.Configure(builder =>
             {
@@ -166,8 +166,8 @@ namespace Plato.Articles.Categories.ViewProviders
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
-                    .Action("Index", "Home", "Plato.Discuss")
+                ).Add(S["Articles"], home => home
+                    .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 );
 
@@ -194,64 +194,64 @@ namespace Plato.Articles.Categories.ViewProviders
                     }
                 }
 
-                // Ensure we have a topic title
-                if (!String.IsNullOrEmpty(topic.Title))
+                // Ensure we have a title
+                if (!String.IsNullOrEmpty(entity.Title))
                 {
-                    builder.Add(S[topic.Title], t => t
-                        .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary
+                    builder.Add(S[entity.Title], t => t
+                        .Action("Display", "Home", "Plato.Articles", new RouteValueDictionary
                         {
-                            ["opts.id"] = topic.Id,
-                            ["opts.alias"] = topic.Alias,
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias,
                         })
                         .LocalNav()
                     );
                 }
            
-                builder.Add(S[topic.Id > 0 ? "Edit Post" : "New Post"]);
+                builder.Add(S[entity.Id > 0 ? "Edit Post" : "New Post"]);
 
             });
             
-            var viewModel = new EditTopicChannelsViewModel()
+            var viewModel = new CategoryInputViewModel()
             {
-                HtmlName = ChannelHtmlName,
-                SelectedChannels = await GetCategoryIdsByEntityIdAsync(topic)
+                HtmlName = CategoryHtmlName,
+                SelectedCategories = await GetCategoryIdsByEntityIdAsync(entity)
             };
 
             return Views(
-                View<EditTopicChannelsViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<CategoryInputViewModel>("Article.Category.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }
         
-        public override async Task<bool> ValidateModelAsync(Article topic, IUpdateModel updater)
+        public override async Task<bool> ValidateModelAsync(Article entity, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditTopicChannelsViewModel
+            return await updater.TryUpdateModelAsync(new CategoryInputViewModel
             {
-                SelectedChannels = GetChannelsToAdd()
+                SelectedCategories = GetCategoriesToAdd()
             });
 
         }
 
-        public override async Task ComposeTypeAsync(Article topic, IUpdateModel updater)
+        public override async Task ComposeTypeAsync(Article entity, IUpdateModel updater)
         {
 
-            var model = new EditTopicChannelsViewModel
+            var model = new CategoryInputViewModel
             {
-                SelectedChannels = GetChannelsToAdd()
+                SelectedCategories = GetCategoriesToAdd()
             };
 
             await updater.TryUpdateModelAsync(model);
 
             if (updater.ModelState.IsValid)
             {
-                var channelsToAdd = GetChannelsToAdd();
+                var channelsToAdd = GetCategoriesToAdd();
                 if (channelsToAdd != null)
                 {
                     foreach (var channelId in channelsToAdd)
                     {
                         if (channelId > 0)
                         {
-                            topic.CategoryId = channelId;
+                            entity.CategoryId = channelId;
                         }
                     }
                 }
@@ -259,28 +259,28 @@ namespace Plato.Articles.Categories.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Article topic, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Article article, IViewProviderContext context)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(article.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(topic, context);
+                return await BuildIndexAsync(article, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(topic, context.Updater))
+            if (await ValidateModelAsync(article, context.Updater))
             {
                
                 // Get selected channels
-                var channelsToAdd = GetChannelsToAdd();
+                var channelsToAdd = GetCategoriesToAdd();
                 if (channelsToAdd != null)
                 {
 
                     // Build channels to remove
                     var channelsToRemove = new List<int>();
-                    foreach (var channel in await GetCategoryIdsByEntityIdAsync(topic))
+                    foreach (var channel in await GetCategoryIdsByEntityIdAsync(article))
                     {
                         if (!channelsToAdd.Contains(channel))
                         {
@@ -291,7 +291,7 @@ namespace Plato.Articles.Categories.ViewProviders
                     // Remove channels
                     foreach (var channelId in channelsToRemove)
                     {
-                        await _entityCategoryStore.DeleteByEntityIdAndCategoryId(topic.Id, channelId);
+                        await _entityCategoryStore.DeleteByEntityIdAndCategoryId(article.Id, channelId);
                     }
                     
                     // Get current user
@@ -302,7 +302,7 @@ namespace Plato.Articles.Categories.ViewProviders
                     {
                         await _entityCategoryStore.CreateAsync(new EntityCategory()
                         {
-                            EntityId = topic.Id,
+                            EntityId = article.Id,
                             CategoryId = channelId,
                             CreatedUserId = user?.Id ?? 0,
                             ModifiedUserId = user?.Id ?? 0,
@@ -314,8 +314,8 @@ namespace Plato.Articles.Categories.ViewProviders
                     {
                         if (channelId > 0)
                         {
-                            topic.CategoryId = channelId;
-                            await _entityStore.UpdateAsync(topic);
+                            article.CategoryId = channelId;
+                            await _entityStore.UpdateAsync(article);
                             break;
                         }
 
@@ -325,7 +325,7 @@ namespace Plato.Articles.Categories.ViewProviders
 
             }
            
-            return await BuildEditAsync(topic, context);
+            return await BuildEditAsync(article, context);
 
         }
 
@@ -334,42 +334,42 @@ namespace Plato.Articles.Categories.ViewProviders
 
         #region "Private Methods"
         
-        List<int> GetChannelsToAdd()
+        List<int> GetCategoriesToAdd()
         {
             // Build selected channels
-            List<int> channelsToAdd = null;
+            List<int> categoriesToAdd = null;
             foreach (var key in _request.Form.Keys)
             {
-                if (key.StartsWith(ChannelHtmlName))
+                if (key.StartsWith(CategoryHtmlName))
                 {
-                    if (channelsToAdd == null)
+                    if (categoriesToAdd == null)
                     {
-                        channelsToAdd = new List<int>();
+                        categoriesToAdd = new List<int>();
                     }
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
                         int.TryParse(value, out var id);
-                        if (!channelsToAdd.Contains(id))
+                        if (!categoriesToAdd.Contains(id))
                         {
-                            channelsToAdd.Add(id);
+                            categoriesToAdd.Add(id);
                         }
                     }
                 }
             }
 
-            return channelsToAdd;
+            return categoriesToAdd;
         }
 
         async Task<IEnumerable<int>> GetCategoryIdsByEntityIdAsync(Article entity)
         {
 
-            // When creating a new topic use the categoryId set on the topic
+            // When creating a new entity use the categoryId set on the entity
             if (entity.Id == 0)
             {
                 if (entity.CategoryId > 0)
                 {
-                    // return empty collection for new topics
+                    // return empty collection for new entities
                     return new List<int>()
                     {
                         entity.CategoryId

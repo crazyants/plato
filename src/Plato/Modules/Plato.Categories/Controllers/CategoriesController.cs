@@ -11,10 +11,10 @@ namespace Plato.Categories.Controllers
     public class CategoriesController : BaseWebApiController
     {
 
-        private readonly ICategoryStore<CategoryBase> _categoryStore;
+        private readonly ICategoryStore<Category> _categoryStore;
 
         public CategoriesController(
-            ICategoryStore<CategoryBase> categoryStore)
+            ICategoryStore<Category> categoryStore)
         {
             _categoryStore = categoryStore;
         }
@@ -32,7 +32,7 @@ namespace Plato.Categories.Controllers
         }
         
         [HttpPost, ResponseCache(NoStore = true)]
-        public Task<IActionResult> Post([FromBody] CategoryBase category)
+        public Task<IActionResult> Post([FromBody] Category category)
         {
      
             throw new NotImplementedException();
@@ -74,14 +74,14 @@ namespace Plato.Categories.Controllers
 
         [HttpPut]
         [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Put(CategoryBase category)
+        public Task<IActionResult> Put(Category category)
         {
             throw new NotImplementedException();
         }
         
         [HttpDelete]
         [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Delete([FromBody] CategoryBase category)
+        public Task<IActionResult> Delete([FromBody] Category category)
         {
 
             throw new NotImplementedException();

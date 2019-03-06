@@ -2,7 +2,7 @@
 
 namespace Plato.Articles.Categories.Models
 {
-    public class Channel : CategoryBase
+    public class ArticleCategory : Category
     {
     }
 }

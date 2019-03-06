@@ -12,10 +12,10 @@ namespace Plato.Discuss.Channels.ViewComponents
     public class EditChannelMenuViewComponent : ViewComponent
     {
 
-        private readonly ICategoryStore<CategoryBase> _channelStore;
+        private readonly ICategoryStore<Category> _channelStore;
        
         public EditChannelMenuViewComponent(
-            ICategoryStore<CategoryBase> channelStore)
+            ICategoryStore<Category> channelStore)
         {
             _channelStore = channelStore;
         }

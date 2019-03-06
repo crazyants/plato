@@ -49,7 +49,7 @@
 
     @{
         // get selected channels for preview
-        var selectedChannels = Model.Categories?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<CategoryBase>>();
+        var selectedChannels = Model.Categories?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<Category>>();
     }
     @if (selectedChannels.Count > 0)
     {

@@ -3,6 +3,7 @@ using Plato.Categories.Stores;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.Services;
 using Plato.Articles.Models;
+using Plato.Articles.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
@@ -18,19 +19,19 @@ namespace Plato.Articles.Categories.Subscribers
     {
 
         private readonly IBroker _broker;
-        private readonly ICategoryStore<Channel> _channelStore;
-        private readonly IEntityStore<Article> _topicStore;
+        private readonly ICategoryStore<ArticleCategory> _channelStore;
+        private readonly IEntityStore<Article> _entityStore;
         private readonly IChannelDetailsUpdater _channelDetailsUpdater;
 
         public EntityReplySubscriber(
             IBroker broker,
-            ICategoryStore<Channel> channelStore,
-            IEntityStore<Article> topicStore,
+            ICategoryStore<ArticleCategory> channelStore,
+            IEntityStore<Article> entityStore,
             IChannelDetailsUpdater channelDetailsUpdater)
         {
             _broker = broker;
             _channelStore = channelStore;
-            _topicStore = topicStore;
+            _entityStore = entityStore;
             _channelDetailsUpdater = channelDetailsUpdater;
         }
 
@@ -95,7 +96,7 @@ namespace Plato.Articles.Categories.Subscribers
             }
 
             // Get the entity we are replying to
-            var entity = await _topicStore.GetByIdAsync(reply.EntityId);
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
                 return reply;
@@ -126,7 +127,7 @@ namespace Plato.Articles.Categories.Subscribers
         {
 
             // Get the entity we are replying to
-            var entity = await _topicStore.GetByIdAsync(reply.EntityId);
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
                 return reply;

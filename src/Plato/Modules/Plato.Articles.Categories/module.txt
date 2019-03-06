@@ -1,5 +1,5 @@
 Name: Plato Articles Categories
-Description: Add categories to help organizae articles.
+Description: Adds the ability to organize articles into categories.
 Category: Articles
 Author: InstantASP
 Version: 1.0.0

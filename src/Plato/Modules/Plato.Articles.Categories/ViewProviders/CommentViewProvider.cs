@@ -14,11 +14,11 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Categories.ViewProviders
 {
-    public class ReplyViewProvider : BaseViewProvider<Comment>
+    public class CommentViewProvider : BaseViewProvider<Comment>
     {
 
         private readonly IEntityStore<Article> _entityStore;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ArticleCategory> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IStringLocalizer T;
@@ -26,10 +26,10 @@ namespace Plato.Articles.Categories.ViewProviders
         public IStringLocalizer S { get; }
 
 
-        public ReplyViewProvider(
-            IStringLocalizer<ReplyViewProvider> stringLocalizer,
+        public CommentViewProvider(
+            IStringLocalizer<CommentViewProvider> stringLocalizer,
             IEntityStore<Article> entityStore,
-            ICategoryStore<Channel> channelStore, 
+            ICategoryStore<ArticleCategory> channelStore, 
             IBreadCrumbManager breadCrumbManager)
         {
             _entityStore = entityStore;
@@ -53,19 +53,18 @@ namespace Plato.Articles.Categories.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(Comment viewModel, IViewProviderContext context)
         {
-
-
-            var topic = await _entityStore.GetByIdAsync(viewModel.EntityId);
-            if (topic == null)
+            
+            var entity = await _entityStore.GetByIdAsync(viewModel.EntityId);
+            if (entity == null)
             {
                 return default(IViewProviderResult);
             }
 
-            // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<Channel> parents = null;
-            if (topic.CategoryId > 0)
+            // Override breadcrumb configuration within base controller 
+            IEnumerable<ArticleCategory> parents = null;
+            if (entity.CategoryId > 0)
             {
-                parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
+                parents = await _channelStore.GetParentsByIdAsync(entity.CategoryId);
 
             }
 
@@ -75,8 +74,8 @@ namespace Plato.Articles.Categories.ViewProviders
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
-                    .Action("Index", "Home", "Plato.Discuss")
+                ).Add(S["Articles"], home => home
+                    .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 );
 
@@ -103,11 +102,11 @@ namespace Plato.Articles.Categories.ViewProviders
                     }
                 }
 
-                builder.Add(S[topic.Title], t => t
-                    .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary
+                builder.Add(S[entity.Title], t => t
+                    .Action("Display", "Home", "Plato.Articles", new RouteValueDictionary
                     {
-                        ["opts.id"] = topic.Id,
-                        ["opts.alias"] = topic.Alias,
+                        ["opts.id"] = entity.Id,
+                        ["opts.alias"] = entity.Alias,
                     })
                     .LocalNav()
                 );

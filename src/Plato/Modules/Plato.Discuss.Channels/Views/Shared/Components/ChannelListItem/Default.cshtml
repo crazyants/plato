@@ -1,17 +1,17 @@
-﻿@model ChannelListItemViewModel
+﻿@model CategoryListItemViewModel<Channel>
 @{
-    var details = Model.Channel.GetOrCreate<ChannelDetails>();
-    var childBgColor = !String.IsNullOrEmpty(Model.Channel.BackColor) ? Model.Channel.BackColor : "#666";
-    var childForeColor = !String.IsNullOrEmpty(Model.Channel.ForeColor) ? Model.Channel.ForeColor : "#fff";
+    var details = Model.Category.GetOrCreate<ChannelDetails>();
+    var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "#666";
+    var childForeColor = !String.IsNullOrEmpty(Model.Category.ForeColor) ? Model.Category.ForeColor : "#fff";
 }
 
 <div class="row">
 
-    @if (!String.IsNullOrEmpty(Model.Channel.IconCss))
+    @if (!String.IsNullOrEmpty(Model.Category.IconCss))
     {
         <div class="col-1 text-center">
             <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
-                <i class="@Model.Channel.IconCss"></i>
+                <i class="@Model.Category.IconCss"></i>
             </span>
         </div>
     }
@@ -28,21 +28,21 @@
 
         @if (Model.Options.EnableEdit)
         {
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-                @Model.Channel.Name
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="font-weight-bold">
+                @Model.Category.Name
             </a>
         }
         else
         {
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-                @Model.Channel.Name
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="font-weight-bold">
+                @Model.Category.Name
             </a>
         }
 
-        @if (!String.IsNullOrEmpty(Model.Channel.Description))
+        @if (!String.IsNullOrEmpty(Model.Category.Description))
         {
             <div class="text-muted">
-                @Model.Channel.Description
+                @Model.Category.Description
             </div>
         }
         else
@@ -52,10 +52,10 @@
             </div>
         }
 
-        @if (Model.Channel.Children.Any())
+        @if (Model.Category.Children.Any())
         {
             <ul class="list-inline">
-                @foreach (var subchannel in Model.Channel.Children)
+                @foreach (var subchannel in Model.Category.Children)
                 {
                     <li class="float-left mr-2">
                         @if (Model.Options.EnableEdit)

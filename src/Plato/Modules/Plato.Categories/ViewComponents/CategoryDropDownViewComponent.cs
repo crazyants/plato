@@ -13,12 +13,12 @@ namespace Plato.Categories.ViewComponents
 
     public class CategoryDropDownViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<CategoryBase> _channelStore;
+        private readonly ICategoryStore<Category> _channelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
         public CategoryDropDownViewComponent(
-            ICategoryStore<CategoryBase> channelStore, 
+            ICategoryStore<Category> channelStore, 
             IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
@@ -44,14 +44,14 @@ namespace Plato.Categories.ViewComponents
 
         }
 
-        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(
+        private async Task<IList<Selection<Category>>> BuildSelectionsAsync(
             IEnumerable<int> selected)
         {
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
-            var selections = channels?.Select(c => new Selection<CategoryBase>
+            var selections = channels?.Select(c => new Selection<Category>
                 {
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c

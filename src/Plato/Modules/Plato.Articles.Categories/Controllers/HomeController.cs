@@ -22,9 +22,9 @@ namespace Plato.Articles.Categories.Controllers
     public class HomeController : Controller, IUpdateModel
     {
      
-        private readonly IViewProviderManager<Channel> _channelViewProvider;
+        private readonly IViewProviderManager<ArticleCategory> _channelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ArticleCategory> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
@@ -35,11 +35,11 @@ namespace Plato.Articles.Categories.Controllers
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IViewProviderManager<Channel> channelViewProvider,
+            IViewProviderManager<ArticleCategory> channelViewProvider,
             IStringLocalizer<AdminController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryStore<Channel> channelStore,
+            ICategoryStore<ArticleCategory> channelStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IAlerter alerter,
@@ -110,7 +110,7 @@ namespace Plato.Articles.Categories.Controllers
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0 && !pager.Enabled)
-                    return View("GetTopics", viewModel);
+                    return View("GetArticles", viewModel);
             }
 
             // Build breadcrumb
@@ -120,8 +120,8 @@ namespace Plato.Articles.Categories.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
-                    .Action("Index", "Home", "Plato.Discuss")
+                ).Add(S["Articles"], home => home
+                    .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 );
 
@@ -174,11 +174,11 @@ namespace Plato.Articles.Categories.Controllers
 
         }
 
-        async Task<EntityIndexViewModel<Article>> GetIndexViewModelAsync(Channel category, EntityIndexOptions options, PagerOptions pager)
+        async Task<EntityIndexViewModel<Article>> GetIndexViewModelAsync(ArticleCategory category, EntityIndexOptions options, PagerOptions pager)
         {
             
             // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
 
             // Restrict results to current feature
             if (feature != null)

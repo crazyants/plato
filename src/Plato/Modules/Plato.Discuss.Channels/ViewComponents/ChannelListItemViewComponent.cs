@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Categories.ViewModels;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
@@ -23,9 +24,9 @@ namespace Plato.Discuss.Channels.ViewComponents
                 categoryIndexOpts = new CategoryIndexOptions();
             }
 
-            var model = new ChannelListItemViewModel()
+            var model = new CategoryListItemViewModel<Channel>()
             {
-                Channel = channel,
+                Category = channel,
                 Options = categoryIndexOpts
             };
 

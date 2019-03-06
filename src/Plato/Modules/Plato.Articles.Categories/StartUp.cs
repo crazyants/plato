@@ -24,6 +24,7 @@ namespace Plato.Articles.Categories
 {
     public class Startup : StartupBase
     {
+
         private readonly IShellSettings _shellSettings;
 
         public Startup(IShellSettings shellSettings)
@@ -41,30 +42,30 @@ namespace Plato.Articles.Categories
             // Repositories
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
-            services.AddScoped<ICategoryRepository<Channel>, CategoryRepository<Channel>>();
+            services.AddScoped<ICategoryRepository<ArticleCategory>, CategoryRepository<ArticleCategory>>();
 
             // Stores
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
-            services.AddScoped<ICategoryStore<Channel>, CategoryStore<Channel>>();
-            services.AddScoped<ICategoryManager<Channel>, CategoryManager<Channel>>();
+            services.AddScoped<ICategoryStore<ArticleCategory>, CategoryStore<ArticleCategory>>();
+            services.AddScoped<ICategoryManager<ArticleCategory>, CategoryManager<ArticleCategory>>();
 
-            // Discuss view providers
+            // Articles view providers
             services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
-            services.AddScoped<IViewProvider<Article>, TopicViewProvider>();
+            services.AddScoped<IViewProvider<Article>, ArticleViewProvider>();
             services.AddScoped<IViewProviderManager<Comment>, ViewProviderManager<Comment>>();
-            services.AddScoped<IViewProvider<Comment>, ReplyViewProvider>();
+            services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
 
             // Channel view provider
-            services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
-            services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
+            services.AddScoped<IViewProviderManager<ArticleCategory>, ViewProviderManager<ArticleCategory>>();
+            services.AddScoped<IViewProvider<ArticleCategory>, CategoryViewProvider>();
 
             // Admin view providers
-            services.AddScoped<IViewProviderManager<CategoryBase>, ViewProviderManager<CategoryBase>>();
-            services.AddScoped<IViewProvider<CategoryBase>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
+            services.AddScoped<IViewProvider<Category>, AdminViewProvider>();
             
             // Register view adapters
-            services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
+            services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Article>>();
@@ -82,9 +83,9 @@ namespace Plato.Articles.Categories
         {
             
             routes.MapAreaRoute(
-                name: "ArticleCategoriesIndex",
+                name: "ArticleCategoryIndex",
                 areaName: "Plato.Articles.Categories",
-                template: "articles/categories/{opts.categoryId:int}/{opts.alias}/{pager.offset:int?}",
+                template: "articles/category/{opts.categoryId:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

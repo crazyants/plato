@@ -7,7 +7,8 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Categories.Models
 {
-    public class CategoryBase :
+
+    public class Category :
         IComparable<ICategory>,
         IModel<ICategory>,
         ICategory
@@ -53,7 +54,7 @@ namespace Plato.Categories.Models
 
         public int Depth { get; set; }
 
-        public CategoryBase()
+        public Category()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
         }

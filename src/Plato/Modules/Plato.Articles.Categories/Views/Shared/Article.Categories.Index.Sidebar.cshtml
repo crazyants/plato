@@ -5,17 +5,20 @@
         <a data-toggle="tooltip" title="@T["All Channels"]" asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
             <i class="fal fa-ellipsis-h fa-2x"></i>
         </a>
-        <h6 class="card-title float-left">@T["Channel"]</h6>
+        <h6 class="card-title float-left">@T["Channels"]</h6>
     </card-title>
     <card-body>
-        @if (Model.Channels != null && Model.Channels.Any())
+        @if (Model.Channels != null)
         {
             <div class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Channels)
+                @foreach (var channel in Model.Channels.Where(c => c.ParentId == 0))
                 {
-                    var css = channel.Id == Model.SelectedChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                    var channelDetails = channel.GetOrCreate<ArticleCategoryDetails>();
+                    var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
                     <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
-
+                        <span data-toggle="tooltip" title="@T["Total Topics"]" class="badge badge-info float-right">
+                            @channelDetails.TotalTopics.ToPrettyInt()
+                        </span>
                         @if (!String.IsNullOrWhiteSpace(channel.IconCss))
                         {
                             <div class="float-left mr-3">
@@ -31,10 +34,12 @@
         }
         else
         {
-            <div class="list-group list-group-flush">
-                <div class="list-group-item">
-                    @T["No channel"]
-                </div>
+            <div class="text-center p-4 text-muted">
+                @T["Channels help you organize & control access to your conversations"]
+                <br /><br />
+                <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index">
+                    @T["Create Channels"]
+                </a>
             </div>
         }
     </card-body>
