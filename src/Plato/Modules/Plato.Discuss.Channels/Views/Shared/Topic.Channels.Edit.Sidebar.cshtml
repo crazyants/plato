@@ -1,9 +1,9 @@
-﻿@model EditTopicChannelsViewModel
+﻿@model Plato.Categories.ViewModels.CategoryInputViewModel
 
 
-@await DisplayAsync(new View("ChannelsDropDown", new
+@await DisplayAsync(new View("CategoryDropDown", new
 {
-    selectedChannels = @Model.SelectedChannels,
+    selectedChannels = @Model.SelectedCategories,
     htmlName = @Model.HtmlName
 }))
 

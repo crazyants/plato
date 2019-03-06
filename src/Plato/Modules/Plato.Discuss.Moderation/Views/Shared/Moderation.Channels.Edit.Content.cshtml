@@ -1,4 +1,4 @@
-﻿@model EditTopicChannelsViewModel
+﻿@model Plato.Categories.ViewModels.CategoryInputViewModel
 
 <card>
     <card-title>
@@ -8,9 +8,9 @@
     </card-title>
     <card-body>
 
-        @await DisplayAsync(new View("SelectChannel", new
+        @await DisplayAsync(new View("CategoryInput", new
         {
-            selectedChannels = @Model.SelectedChannels,
+            selectedCategories = @Model.SelectedCategories,
             htmlName = @Model.HtmlName
         }))
 

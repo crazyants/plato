@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Categories.Stores;
+using Plato.Categories.ViewModels;
 using Plato.Discuss.Channels.Models;
-using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -52,26 +50,26 @@ namespace Plato.Discuss.Moderation.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IViewProviderContext updater)
         {
 
-            var viewModel = new EditTopicChannelsViewModel()
+            var viewModel = new CategoryInputViewModel()
             {
                 HtmlName = ChannelHtmlName,
-                SelectedChannels = new List<int>
+                SelectedCategories = new List<int>
                 {
                     moderator.CategoryId
                 }
             };
 
             return Task.FromResult(Views(
-                View<EditTopicChannelsViewModel>("Moderation.Channels.Edit.Content", model => viewModel).Zone("sidebar").Order(1)
+                View<CategoryInputViewModel>("Moderation.Channels.Edit.Content", model => viewModel).Zone("sidebar").Order(1)
             ));
 
         }
 
         public override async Task<bool> ValidateModelAsync(Moderator moderator, IUpdateModel updater)
         {
-            var valid = await updater.TryUpdateModelAsync(new EditTopicChannelsViewModel()
+            var valid = await updater.TryUpdateModelAsync(new CategoryInputViewModel()
             {
-                SelectedChannels = GetChannelsToAdd()
+                SelectedCategories = GetChannelsToAdd()
             });
 
             return valid;
@@ -80,16 +78,16 @@ namespace Plato.Discuss.Moderation.ViewProviders
         public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
         {
 
-            var model = new EditTopicChannelsViewModel
+            var model = new CategoryInputViewModel
             {
-                SelectedChannels = GetChannelsToAdd()
+                SelectedCategories = GetChannelsToAdd()
             };
 
             await updater.TryUpdateModelAsync(model);
 
             if (updater.ModelState.IsValid)
             {
-                moderator.CategoryId = model.SelectedChannels.FirstOrDefault();
+                moderator.CategoryId = model.SelectedCategories.FirstOrDefault();
             }
 
         }
@@ -258,17 +256,13 @@ namespace Plato.Discuss.Moderation.ViewProviders
                     output.TryAdd(moderator.User, new[] { channelName });
                 }
             }
-
-
-
-
+            
             return output;
+
         }
-
-
+        
         #endregion
 
     }
-
 
 }

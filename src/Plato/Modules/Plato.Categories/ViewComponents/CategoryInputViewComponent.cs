@@ -4,24 +4,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
-using Plato.Discuss.Channels.Models;
-using Plato.Discuss.Channels.ViewModels;
+using Plato.Categories.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
-namespace Plato.Discuss.Channels.ViewComponents
+namespace Plato.Categories.ViewComponents
 {
 
-    public class SelectChannelViewComponent : ViewComponent
+    public class CategoryInputViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<CategoryBase> _channelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
-        public SelectChannelViewComponent(
-            ICategoryStore<Channel> channelStore,
+        public CategoryInputViewComponent(
+            ICategoryStore<CategoryBase> channelStore,
             IContextFacade contextFacade, 
             IFeatureFacade featureFacade)
         {
@@ -30,26 +28,24 @@ namespace Plato.Discuss.Channels.ViewComponents
             _featureFacade = featureFacade;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            IEnumerable<int> selectedChannels,
-            string htmlName)
+        public async Task<IViewComponentResult> InvokeAsync(IEnumerable<int> selectedCategories, string htmlName)
         {
-            if (selectedChannels == null)
+            if (selectedCategories == null)
             {
-                selectedChannels = new int[0];
+                selectedCategories = new int[0];
             }
-            ;
-            var model = new SelectChannelsViewModel
+            
+            var categories = await BuildChannelSelectionsAsync(selectedCategories);
+            var model = new CategoryInputViewModel(categories)
             {
-                HtmlName = htmlName,
-                SelectedChannels = await BuildChannelSelectionsAsync(selectedChannels)
+                HtmlName = htmlName
             };
 
             return View(model);
         }
 
-        private async Task<IList<Selection<Channel>>> BuildChannelSelectionsAsync(
-            IEnumerable<int> selectedChannels)
+        private async Task<IList<Selection<CategoryBase>>> BuildChannelSelectionsAsync(
+            IEnumerable<int> selectedCategories)
         {
             
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
@@ -59,10 +55,10 @@ namespace Plato.Discuss.Channels.ViewComponents
 
                 var items = await RecurseChannels(channels);
           
-                var selections = items.Select(r => new Selection<Channel>
+                var selections = items.Select(c => new Selection<CategoryBase>
                     {
-                        IsSelected = selectedChannels.Any(v => v == r.Id),
-                        Value = r
+                        IsSelected = selectedCategories.Any(v => v == c.Id),
+                        Value = c
                     })
                     .OrderBy(r => r.Value)
                     .ToList();
@@ -75,15 +71,15 @@ namespace Plato.Discuss.Channels.ViewComponents
         }
 
 
-        Task<IList<Channel>> RecurseChannels(
+        Task<IList<CategoryBase>> RecurseChannels(
             IEnumerable<ICategory> input,
-            IList<Channel> output = null,
+            IList<CategoryBase> output = null,
             int id = 0)
         {
 
             if (output == null)
             {
-                output = new List<Channel>();
+                output = new List<CategoryBase>();
             }
 
             var categories = input.ToList();
@@ -96,7 +92,7 @@ namespace Plato.Discuss.Channels.ViewComponents
                     {
                         indent += " ";
                     }
-                    output.Add(new Channel
+                    output.Add(new CategoryBase
                     {
                         Id = category.Id,
                         Name = indent + category.Name

@@ -1,11 +1,11 @@
-﻿@model SelectChannelsViewModel
+﻿@model CategoryInputViewModel
 
-@if (Model.SelectedChannels != null)
+@if (Model.Categories != null)
 {
     <select id="@Model.HtmlName" name="@Model.HtmlName" multiple="multiple" class="form-control" style="min-height: 150px;">
-        @for (var i = 0; i < Model.SelectedChannels.Count; i++)
+        @for (var i = 0; i < Model.Categories.Count; i++)
         {
-            var item = Model.SelectedChannels[i];
+            var item = Model.Categories[i];
             <option value="@item.Value.Id" selected="@item.IsSelected">
                 @item.Value.Name
             </option>

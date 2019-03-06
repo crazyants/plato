@@ -3,23 +3,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Stores;
-using Plato.Discuss.Channels.Models;
-using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
+using Plato.Categories.Models;
+using Plato.Categories.ViewModels;
 
-namespace Plato.Discuss.Channels.ViewComponents
+namespace Plato.Categories.ViewComponents
 {
 
-    public class ChannelsDropDownViewComponent : ViewComponent
+    public class CategoryDropDownViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<CategoryBase> _channelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
-        public ChannelsDropDownViewComponent(
-            ICategoryStore<Channel> channelStore, 
+        public CategoryDropDownViewComponent(
+            ICategoryStore<CategoryBase> channelStore, 
             IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
@@ -28,38 +27,35 @@ namespace Plato.Discuss.Channels.ViewComponents
             _featureFacade = featureFacade;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            IEnumerable<int> selectedChannels, 
-            string htmlName)
+        public async Task<IViewComponentResult> InvokeAsync(IEnumerable<int> selectedChannels,  string htmlName)
         {
             if (selectedChannels == null)
             {
                 selectedChannels = new int[0];
             }
-
+            
             var selectedChannelsList = selectedChannels.ToList();
-            return View(new SelectChannelsViewModel
+            var categories = await BuildSelectionsAsync(selectedChannelsList);
+            return View(new CategoryInputViewModel(categories)
             {
                 HtmlName = htmlName,
-                SelectedChannelIds = selectedChannelsList,
-                SelectedChannels = await BuildSelectionsAsync(selectedChannelsList)
+                SelectedCategories = selectedChannelsList
             });
 
         }
 
-        private async Task<IList<Selection<Channel>>> BuildSelectionsAsync(
+        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(
             IEnumerable<int> selected)
         {
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
-            var selections = channels?.Select(c => new Selection<Channel>
+            var selections = channels?.Select(c => new Selection<CategoryBase>
                 {
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c
                 })
-                //.OrderBy(s => s.Value.Name)
                 .ToList();
 
             return selections;

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
+using Plato.Categories.ViewModels;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Models;
@@ -23,7 +24,7 @@ namespace Plato.Discuss.Channels.ViewProviders
     public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
-        private const string ChannelHtmlName = "channel";
+        private const string CategoryHtmlName = "channel";
 
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityStore<Topic> _entityStore;
@@ -158,7 +159,6 @@ namespace Plato.Discuss.Channels.ViewProviders
             if (topic.CategoryId > 0)
             {
                 parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
-
             }
             _breadCrumbManager.Configure(builder =>
             {
@@ -211,23 +211,23 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             });
             
-            var viewModel = new EditTopicChannelsViewModel()
+            var viewModel = new CategoryInputViewModel()
             {
-                HtmlName = ChannelHtmlName,
-                SelectedChannels = await GetCategoryIdsByEntityIdAsync(topic)
+                HtmlName = CategoryHtmlName,
+                SelectedCategories = await GetCategoryIdsByEntityIdAsync(topic)
             };
 
             return Views(
-                View<EditTopicChannelsViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<CategoryInputViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }
         
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditTopicChannelsViewModel
+            return await updater.TryUpdateModelAsync(new CategoryInputViewModel
             {
-                SelectedChannels = GetChannelsToAdd()
+                SelectedCategories = GetCategoriesToAdd()
             });
 
         }
@@ -235,16 +235,16 @@ namespace Plato.Discuss.Channels.ViewProviders
         public override async Task ComposeTypeAsync(Topic topic, IUpdateModel updater)
         {
 
-            var model = new EditTopicChannelsViewModel
+            var model = new CategoryInputViewModel
             {
-                SelectedChannels = GetChannelsToAdd()
+                SelectedCategories = GetCategoriesToAdd()
             };
 
             await updater.TryUpdateModelAsync(model);
 
             if (updater.ModelState.IsValid)
             {
-                var channelsToAdd = GetChannelsToAdd();
+                var channelsToAdd = GetCategoriesToAdd();
                 if (channelsToAdd != null)
                 {
                     foreach (var channelId in channelsToAdd)
@@ -274,7 +274,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                
                 // Get selected channels
-                var channelsToAdd = GetChannelsToAdd();
+                var channelsToAdd = GetCategoriesToAdd();
                 if (channelsToAdd != null)
                 {
 
@@ -334,31 +334,31 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Private Methods"
         
-        List<int> GetChannelsToAdd()
+        List<int> GetCategoriesToAdd()
         {
             // Build selected channels
-            List<int> channelsToAdd = null;
+            List<int> categoriesToAdd = null;
             foreach (var key in _request.Form.Keys)
             {
-                if (key.StartsWith(ChannelHtmlName))
+                if (key.StartsWith(CategoryHtmlName))
                 {
-                    if (channelsToAdd == null)
+                    if (categoriesToAdd == null)
                     {
-                        channelsToAdd = new List<int>();
+                        categoriesToAdd = new List<int>();
                     }
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
                         int.TryParse(value, out var id);
-                        if (!channelsToAdd.Contains(id))
+                        if (!categoriesToAdd.Contains(id))
                         {
-                            channelsToAdd.Add(id);
+                            categoriesToAdd.Add(id);
                         }
                     }
                 }
             }
 
-            return channelsToAdd;
+            return categoriesToAdd;
         }
 
         async Task<IEnumerable<int>> GetCategoryIdsByEntityIdAsync(Topic entity)

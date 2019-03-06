@@ -8,8 +8,7 @@ using Plato.Categories.Stores;
 
 namespace Plato.Discuss.Channels.ViewComponents
 {
-
-
+    
     public class EditChannelMenuViewComponent : ViewComponent
     {
 

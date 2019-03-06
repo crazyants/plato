@@ -17,15 +17,5 @@ namespace Plato.Categories.ViewModels
         public string CssClass { get; set; }
 
     }
-
-    public class Selection<T>
-    {
-
-        public bool IsSelected { get; set; }
-
-        public T Value { get; set; }
-
-    }
-
-
+    
 }
