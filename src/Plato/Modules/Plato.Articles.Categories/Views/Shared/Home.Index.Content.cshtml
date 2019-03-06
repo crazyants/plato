@@ -1,0 +1,16 @@
+﻿@model ChannelIndexViewModel
+
+@await DisplayAsync(new View("ArticleCategoryList", new
+{
+    options = @Model.ChannelIndexOpts
+}))
+
+@if (Model.ChannelIndexOpts.ChannelId != 0)
+{
+    @await DisplayAsync(new View("ArticleList", new
+    {
+        options = @Model.TopicIndexOpts,
+        pager = @Model.PagerOpts
+    }))
+}
+

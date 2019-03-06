@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
@@ -58,7 +59,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             }
 
             // channel filter options
-            var channelViewOpts = new ChannelIndexOptions
+            var channelViewOpts = new CategoryIndexOptions
             {
                 ChannelId = categoryBase?.Id ?? 0
             };
@@ -70,20 +71,21 @@ namespace Plato.Discuss.Channels.ViewProviders
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
             }
             
-            var indexViewModel = new ChannelIndexViewModel
+            var indexViewModel = new CategoryIndexViewModel()
             {
-                ChannelIndexOpts = channelViewOpts,
-                TopicIndexOpts = viewModel?.Options,
-                PagerOpts = viewModel?.Pager
+                Options = channelViewOpts,
+                EntityIndexOptions = viewModel?.Options,
+                Pager = viewModel?.Pager
             };
 
             return Views(
                 View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
-                View<ChannelIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
+                View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
                 View<ChannelListViewModel>("Topic.Channels.Index.Sidebar", model =>
                 {
-                    model.SelectedChannelId = channel?.Id ?? 0;
+                    //model.SelectedChannelId = channel?.Id ?? 0;
+                    model.Options = channelViewOpts;
                     model.Channels = categories;
                     return model;
                 }).Zone("sidebar").Order(1)

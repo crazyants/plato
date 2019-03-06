@@ -10,6 +10,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
 using Plato.Entities;
+using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
@@ -47,6 +48,10 @@ namespace Plato.Articles.Controllers
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
 
+
+        private readonly IReportEntityManager<Article> _reportEntityManager;
+        private readonly IReportEntityManager<Comment> _reportReplyManager;
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -66,7 +71,9 @@ namespace Plato.Articles.Controllers
             IAuthorizationService authorizationService,
             IEntityReplyService<Comment> replyService,
             IViewProviderManager<UserIndex> userIndexProvider,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IReportEntityManager<Article> reportEntityManager,
+            IReportEntityManager<Comment> reportReplyManager)
         {
             _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -82,6 +89,8 @@ namespace Plato.Articles.Controllers
             _replyService = replyService;
             _userIndexProvider = userIndexProvider;
             _featureFacade = featureFacade;
+            _reportEntityManager = reportEntityManager;
+            _reportReplyManager = reportReplyManager;
 
             T = localizer;
             S = stringLocalizer;
@@ -111,7 +120,7 @@ namespace Plato.Articles.Controllers
                 pager = new PagerOptions();
             }
             
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -780,6 +789,7 @@ namespace Plato.Articles.Controllers
 
         }
 
+
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Report))]
         public async Task<IActionResult> ReportPost(ReportEntityViewModel model)
         {
@@ -802,6 +812,31 @@ namespace Plato.Articles.Controllers
                 }
             }
 
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Invoke report manager and compile results
+            if (reply != null)
+            {
+                // Report reply
+                await _reportReplyManager.ReportAsync(new ReportSubmission<Comment>()
+                {
+                    Who = user,
+                    What = reply,
+                    Why = (ReportReasons.Reason)model.ReportReason
+                });
+            }
+            else
+            {
+                // Report entity
+                await _reportEntityManager.ReportAsync(new ReportSubmission<Article>()
+                {
+                    Who = user,
+                    What = entity,
+                    Why = (ReportReasons.Reason)model.ReportReason
+                });
+            }
+
             _alerter.Success(reply != null
                 ? T["Thank You. Comment Reported Successfully!"]
                 : T["Thank You. Article Reported Successfully!"]);
@@ -815,7 +850,7 @@ namespace Plato.Articles.Controllers
             });
 
         }
-        
+
         // -----------------
         // Delete / Restore Entity
         // -----------------

@@ -1,0 +1,17 @@
+Name: Plato Articles Categories
+Description: Add categories to help organizae articles.
+Category: Articles
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Categories",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Articles",
+		Version: "1.0.0"
+	}
+]

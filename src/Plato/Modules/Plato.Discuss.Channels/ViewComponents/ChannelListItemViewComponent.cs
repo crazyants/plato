@@ -10,28 +10,23 @@ namespace Plato.Discuss.Channels.ViewComponents
 
     public class ChannelListItemViewComponent : ViewComponent
     {
-     
-        private readonly IContextFacade _contextFacade;
-
-        public ChannelListItemViewComponent(IContextFacade contextFacade)
+ 
+        public ChannelListItemViewComponent()
         {
-            _contextFacade = contextFacade;
         }
 
-        public Task<IViewComponentResult> InvokeAsync(
-            Channel channel,
-            ChannelIndexOptions channelIndexOpts)
+        public Task<IViewComponentResult> InvokeAsync(Channel channel, CategoryIndexOptions categoryIndexOpts)
         {
 
-            if (channelIndexOpts == null)
+            if (categoryIndexOpts == null)
             {
-                channelIndexOpts = new ChannelIndexOptions();
+                categoryIndexOpts = new CategoryIndexOptions();
             }
 
             var model = new ChannelListItemViewModel()
             {
                 Channel = channel,
-                ChannelIndexOpts = channelIndexOpts
+                Options = categoryIndexOpts
             };
 
             return Task.FromResult((IViewComponentResult)View(model));

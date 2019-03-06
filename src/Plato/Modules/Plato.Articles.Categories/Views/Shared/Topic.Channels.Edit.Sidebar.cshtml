@@ -1,0 +1,9 @@
+﻿@model EditTopicChannelsViewModel
+
+
+@await DisplayAsync(new View("ChannelsDropDown", new
+{
+    selectedChannels = @Model.SelectedChannels,
+    htmlName = @Model.HtmlName
+}))
+

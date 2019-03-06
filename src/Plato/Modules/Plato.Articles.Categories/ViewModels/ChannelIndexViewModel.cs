@@ -1,15 +1,16 @@
-﻿using Plato.Discuss.Models;
+﻿using Plato.Articles.Models;
+using Plato.Articles.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Channels.ViewModels
+namespace Plato.Articles.Categories.ViewModels
 {
     public class ChannelIndexViewModel
     {
 
-        public IPagedResults<Topic> Results { get; }
+        public IPagedResults<Article> Results { get; }
 
         public PagerOptions PagerOpts { get; set; }
 
@@ -22,7 +23,7 @@ namespace Plato.Discuss.Channels.ViewModels
         }
 
         public ChannelIndexViewModel(
-            IPagedResults<Topic> results,
+            IPagedResults<Article> results,
             PagerOptions pagerOptions)
         {
             this.Results = results;

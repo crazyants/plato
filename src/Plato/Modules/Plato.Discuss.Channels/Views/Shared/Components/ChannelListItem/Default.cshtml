@@ -26,7 +26,7 @@
 
     <div class="col-7 pl-0">
 
-        @if (Model.ChannelIndexOpts.EnableEdit)
+        @if (Model.Options.EnableEdit)
         {
             <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
                 @Model.Channel.Name
@@ -58,7 +58,7 @@
                 @foreach (var subchannel in Model.Channel.Children)
                 {
                     <li class="float-left mr-2">
-                        @if (Model.ChannelIndexOpts.EnableEdit)
+                        @if (Model.Options.EnableEdit)
                         {
                             <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
                                 @subchannel.Name

@@ -9,14 +9,12 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Discuss.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -52,9 +50,9 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
             //var indexViewModel = await GetIndexModel(category?.Id ?? 0);
 
-            var viewModel = new ChannelIndexViewModel()
+            var viewModel = new CategoryIndexViewModel()
             {
-                ChannelIndexOpts = new ChannelIndexOptions()
+                Options = new CategoryIndexOptions()
                 {
                     ChannelId = category?.Id ?? 0,
                     EnableEdit = true
@@ -63,8 +61,8 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             return Task.FromResult(Views(
                 View<CategoryBase>("Admin.Index.Header", model => category).Zone("header").Order(1),
-                View<ChannelIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
-                View<ChannelIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
+                View<CategoryIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
+                View<CategoryIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
             ));
 
         }

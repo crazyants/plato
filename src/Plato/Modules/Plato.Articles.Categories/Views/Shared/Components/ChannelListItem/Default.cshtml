@@ -1,0 +1,111 @@
+﻿@model ChannelListItemViewModel
+@{
+    var details = Model.Channel.GetOrCreate<ChannelDetails>();
+    var childBgColor = !String.IsNullOrEmpty(Model.Channel.BackColor) ? Model.Channel.BackColor : "#666";
+    var childForeColor = !String.IsNullOrEmpty(Model.Channel.ForeColor) ? Model.Channel.ForeColor : "#fff";
+}
+
+<div class="row">
+
+    @if (!String.IsNullOrEmpty(Model.Channel.IconCss))
+    {
+        <div class="col-1 text-center">
+            <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+                <i class="@Model.Channel.IconCss"></i>
+            </span>
+        </div>
+    }
+    else
+    {
+        <div class="col-1 text-center">
+            <span class="channel-icon channel-icon-md bg-info text-light">
+                <i class="fal fa-folder"></i>
+            </span>
+        </div>
+    }
+
+    <div class="col-7 pl-0">
+
+        @if (Model.ChannelIndexOpts.EnableEdit)
+        {
+            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                @Model.Channel.Name
+            </a>
+        }
+        else
+        {
+            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                @Model.Channel.Name
+            </a>
+        }
+
+        @if (!String.IsNullOrEmpty(Model.Channel.Description))
+        {
+            <div class="text-muted">
+                @Model.Channel.Description
+            </div>
+        }
+        else
+        {
+            <div class="text-muted">
+                @T["No description provided"]
+            </div>
+        }
+
+        @if (Model.Channel.Children.Any())
+        {
+            <ul class="list-inline">
+                @foreach (var subchannel in Model.Channel.Children)
+                {
+                    <li class="float-left mr-2">
+                        @if (Model.ChannelIndexOpts.EnableEdit)
+                        {
+                            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                @subchannel.Name
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                @subchannel.Name
+                            </a>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+
+    </div>
+
+    <div class="col-4 text-right">
+
+        @if (details.TotalTopics > 0)
+        {
+            <div class="float-right ml-2">
+                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@details.LastTopic.CreatedBy.Id" asp-route-opts.alias="@details.LastTopic.CreatedBy.Alias">
+                    <avatar data-toggle="tooltip" title="@details.LastTopic.CreatedBy.DisplayName" class="avatar" url="@details.LastTopic.CreatedBy.Avatar.Url" />
+                </a>
+            </div>
+            <div class="float-right">
+                <ol class="list-inline text-muted">
+                    <li class="list-inline-item">
+                        <span title="@T["Topics"]" data-toggle="tooltip">
+                            @details.TotalTopics.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
+                        </span>
+                    </li>
+                    <li class="list-inline-item">
+                        <span title="@T["Replies"]" data-toggle="tooltip">
+                            @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                        </span>
+                    </li>
+                </ol>
+
+                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@details.LastTopic.Id" asp-route-opts.alias="@details.LastTopic.Alias">
+                    <date utc="@details.LastTopic.CreatedDate"></date>
+                </a>
+            </div>
+        }
+    </div>
+
+</div>
+

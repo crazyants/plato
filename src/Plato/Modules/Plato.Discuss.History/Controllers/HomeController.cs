@@ -11,7 +11,6 @@ using Plato.Entities.History.Models;
 using Plato.Entities.History.Services;
 using Plato.Entities.History.Stores;
 using Plato.Entities.Stores;
-using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -28,7 +27,6 @@ namespace Plato.Discuss.History.Controllers
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
         private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
-
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
 
@@ -189,7 +187,6 @@ namespace Plato.Discuss.History.Controllers
 
             foreach (var line in diff.Lines)
             {
-                
                 switch (line.Type)
                 {
                     case ChangeType.Inserted:
@@ -210,7 +207,10 @@ namespace Plato.Discuss.History.Controllers
                     case ChangeType.Modified:
                         foreach (var character in line.SubPieces)
                         {
-                            if (character.Type == ChangeType.Imaginary) continue;
+                            if (character.Type == ChangeType.Imaginary)
+                            {
+                                continue;
+                            }
                             sb.Append("<span class=\"")
                                 .Append(character.Type.ToString().ToLower())
                                 .Append("-character\">")

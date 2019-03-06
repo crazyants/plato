@@ -1,38 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout.Alerts;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Features;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.Alerts;
-using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
-using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
-        private readonly IContextFacade _contextFacade;
+     
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly ICategoryManager<Channel> _categoryManager;
         private readonly IViewProviderManager<CategoryBase> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IAlerter _alerter;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -41,24 +36,28 @@ namespace Plato.Discuss.Channels.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            IContextFacade contextFacade,
             ICategoryStore<Channel> categoryStore,
             IViewProviderManager<CategoryBase> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IAlerter alerter, 
-            ICategoryManager<Channel> categoryManager, IFeatureFacade featureFacade)
+            ICategoryManager<Channel> categoryManager,
+            IFeatureFacade featureFacade,
+            IAlerter alerter)
         {
-            _contextFacade = contextFacade;
+    
             _categoryStore = categoryStore;
             _viewProvider = viewProvider;
-            _alerter = alerter;
             _categoryManager = categoryManager;
             _featureFacade = featureFacade;
             _breadCrumbManager = breadCrumbManager;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
         }
+
+        // --------------
+        // Manage Categories
+        // --------------
 
         public async Task<IActionResult> Index(int id)
         {
@@ -119,7 +118,11 @@ namespace Plato.Discuss.Channels.Controllers
             var model = await _viewProvider.ProvideIndexAsync(currentChannel ?? new Channel(), this);
             return View(model);
         }
-        
+
+        // --------------
+        // Create Category
+        // --------------
+
         public async Task<IActionResult> Create(int id = 0)
         {
 
@@ -135,7 +138,7 @@ namespace Plato.Discuss.Channels.Controllers
             });
             
             // We need to pass along the featureId
-            var feature = await GetcurrentFeature();
+            var feature = await GetCurrentFeature();
             var model = await _viewProvider.ProvideEditAsync(new CategoryBase
             {
                 ParentId = id,
@@ -146,14 +149,13 @@ namespace Plato.Discuss.Channels.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(Create))]
+        [HttpPost, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditChannelViewModel viewModel)
         {
 
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+                return await Create(viewModel.Id);
             }
 
             var iconCss = viewModel.IconCss;
@@ -162,7 +164,7 @@ namespace Plato.Discuss.Channels.Controllers
                 iconCss = viewModel.IconPrefix + iconCss;
             }
 
-            var feature = await GetcurrentFeature();
+            var feature = await GetCurrentFeature();
             var category =  new Channel()
             {
                 ParentId = viewModel.ParentId,
@@ -196,7 +198,11 @@ namespace Plato.Discuss.Channels.Controllers
             return View(viewModel);
             
         }
-        
+
+        // --------------
+        // Edit Category
+        // --------------
+
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -217,8 +223,7 @@ namespace Plato.Discuss.Channels.Controllers
 
         }
         
-        [HttpPost]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ActionName(nameof(Edit))]
         public  async Task<IActionResult> EditPost(int id)
         {
 
@@ -240,6 +245,10 @@ namespace Plato.Discuss.Channels.Controllers
             return RedirectToAction(nameof(Index));
 
         }
+
+        // --------------
+        // Delete
+        // --------------
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
@@ -325,7 +334,9 @@ namespace Plato.Discuss.Channels.Controllers
 
         }
 
-        async Task<IShellFeature> GetcurrentFeature()
+        // ---------
+
+        async Task<IShellFeature> GetCurrentFeature()
         {
             var featureId = "Plato.Discuss.Channels";
             var feature = await _featureFacade.GetFeatureByIdAsync(featureId);

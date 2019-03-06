@@ -14,23 +14,16 @@ $(function (win, doc, $) {
 
     // --------
 
-    var app = win.$.Plato;
+    var app = win.$.Plato,
+        featureId = "Plato.Discuss";
 
     // --------
 
-    $(doc).ready(function () {
-        $.Plato.Discuss.init();
-    });
-
-    // --------
-
-    $.Plato.Discuss = {
+    var discuss = {
         init: function () {
-            
-            app.logger.logInfo("$.Plato.Discuss initializing");
+            app.logger.logInfo(featureId + " initializing");
             this.bind();
-            app.logger.logInfo("$.Plato.Discuss initialized");
-
+            app.logger.logInfo(featureId + " initialized");
         },
         bind: function () {
             
@@ -101,5 +94,10 @@ $(function (win, doc, $) {
         }
     };
 
+    // --------
 
+    $(doc).ready(function () {
+        discuss.init();
+    });
+    
 }(window, document, jQuery));

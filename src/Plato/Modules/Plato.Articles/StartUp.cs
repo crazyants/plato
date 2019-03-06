@@ -19,14 +19,19 @@ using Plato.Articles.Assets;
 using Plato.Articles.Badges;
 using Plato.Articles.Models;
 using Plato.Articles.Navigation;
+using Plato.Articles.Notifications;
+using Plato.Articles.NotificationTypes;
 using Plato.Articles.Services;
 using Plato.Articles.Subscribers;
 using Plato.Articles.Tasks;
 using Plato.Articles.ViewProviders;
+using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Internal.Notifications;
+using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Articles
 {
@@ -100,7 +105,26 @@ namespace Plato.Articles
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ReplyBadgesAwarder>();
-            
+
+
+            // Notification types
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
+
+            // Notification manager
+            services.AddScoped<INotificationManager<ReportSubmission<Article>>, NotificationManager<ReportSubmission<Article>>>();
+            services.AddScoped<INotificationManager<ReportSubmission<Comment>>, NotificationManager<ReportSubmission<Comment>>>();
+
+            // Notification providers
+            services.AddScoped<INotificationProvider<ReportSubmission<Article>>, ArticleReportWeb>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Article>>, ArticleReportEmail>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Comment>>, CommentReportWeb>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Comment>>, CommentReportEmail>();
+
+            // Report entity managers
+            services.AddScoped<IReportEntityManager<Article>, ReportArticleManager>();
+            services.AddScoped<IReportEntityManager<Comment>, ReportCommentManager>();
+
         }
 
         public override void Configure(

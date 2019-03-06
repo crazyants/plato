@@ -8,7 +8,7 @@ namespace Plato.Articles.Badges
     {
 
         public static readonly Badge First =
-            new Badge("First Topic", "Started a new topic", "fal fa-comment-alt-plus", BadgeLevel.Bronze, 1, 0);
+            new Badge("First Article", "Posted an article", "fal fa-comment-alt-plus", BadgeLevel.Bronze, 1, 0);
 
         public static readonly Badge Bronze =
             new Badge("Conversation Starter", "Started several topics", "fal fa-asterisk", BadgeLevel.Bronze, 10, 5);

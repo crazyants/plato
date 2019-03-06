@@ -10,21 +10,16 @@ $(function (win, doc, $) {
 
     // --------
 
-    var app = $.Plato;
+    var app = $.Plato,
+        featureId = "Plato.Articles";
 
     // --------
 
-    $(doc).ready(function () {
-        $.Plato.Articles.init();
-    });
-
-    // --------
-
-    $.Plato.Articles = {
+    var articles = {
         init: function () {
-            app.logger.logInfo("$.Plato.Articles initializing");
+            app.logger.logInfo(featureId + " initializing");
             this.bind();
-            app.logger.logInfo("$.Plato.Articles initialized");
+            app.logger.logInfo(featureId + " initialized");
         },
         bind: function () {
             
@@ -50,5 +45,11 @@ $(function (win, doc, $) {
 
         }
     };
+    
+    // --------
+
+    $(doc).ready(function () {
+        articles.init();
+    });
 
 }(window, document, jQuery));

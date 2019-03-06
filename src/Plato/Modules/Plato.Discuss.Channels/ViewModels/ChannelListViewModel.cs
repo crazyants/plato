@@ -5,13 +5,11 @@ namespace Plato.Discuss.Channels.ViewModels
 {
     public class ChannelListViewModel
     {
-        public int SelectedChannelId { get; set; }
-
-        public ChannelIndexOptions ChannelIndexOpts { get; set; }
+    
+        public CategoryIndexOptions Options { get; set; } = new CategoryIndexOptions();
 
         public IEnumerable<CategoryBase> Channels { get; set; }
 
     }
-    
 
 }

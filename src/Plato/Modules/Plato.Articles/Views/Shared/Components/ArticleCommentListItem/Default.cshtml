@@ -52,6 +52,12 @@
         <card-body>
             <div class="@css" data-infinite-scroll-highlight="@Model.Reply.RowOffset" data-provide="markdownBody">
                 @Html.Raw(@Model.Reply.Html)
+                @if (!String.IsNullOrEmpty(Model.Reply.CreatedBy.SignatureHtml))
+                {
+                    <div>
+                        @Html.Raw(@Model.Reply.CreatedBy.SignatureHtml)
+                    </div>
+                }
             </div>
             <div class="hidden" 
                  id="@quoteId"

@@ -1,0 +1,80 @@
+﻿@model SelectChannelsViewModel
+
+<div class="card" data-provide="category-select-dropdown">
+
+    <div class="dropdown">
+        <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+            <i class="fal fa-cog float-right"></i>
+            @T["Channel"]
+        </a>
+        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" style="width: 450px;" aria-labelledby="channelDropdown">
+            <div class="dropdown-header">
+                <a href="#" class="text-muted float-right" data-toggle="dropdown">
+                    <i class="fal fa-times"></i>
+                </a>
+                @T["Select a channel for this post..."]
+            </div>
+            <div class="my-2 mx-3">
+                <input type="search" class="form-control" 
+                       data-filter-list-empty=".no-channel-results"
+                       placeholder="@T["Search channels..."]" />
+            </div>
+            <div class="dropdown-header hidden">
+                @T["No channel found"]
+            </div>
+            @if (Model.SelectedChannels != null)
+            {
+                @await DisplayAsync(new View("CategoryTree", new
+                {
+                    options = new CategoryTreeOptions()
+                    {
+                        SelectedCategories = Model.SelectedChannelIds,
+                        HtmlName = Model.HtmlName,
+                        EnableCheckBoxes = true,
+                        CssClass = "dropdown-scrollable"
+                    }
+                }))
+            }
+            else
+            {
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        @T["No channels available."]
+                    </li>
+                </ul>
+            }
+
+        </div>
+    </div>
+
+    @{
+        // get selected channels for preview
+        var selectedChannels = Model.SelectedChannels?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<Channel>>();
+    }
+    @if (selectedChannels.Count > 0)
+    {
+        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
+            @foreach (var channel in selectedChannels)
+            {
+                <li class="list-group-item">
+                    @if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))
+                    {
+                        <span class="channel-icon channel-icon-sm mr-2" style="background-color: @channel.Value.BackColor; color: @channel.Value.ForeColor">
+                            <i class="@channel.Value.IconCss"></i>
+                        </span>
+                    }
+                    @channel.Value.Name
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
+            <li class="list-group-item">
+                @T["No channels selected."]
+            </li>
+        </ul>
+    }
+
+</div>
