@@ -14,11 +14,11 @@ namespace Plato.Discuss.Channels.ViewComponents
 
     public class ChannelListViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<ChannelHome> _channelStore;
+        private readonly ICategoryStore<Channel> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
         public ChannelListViewComponent(
-            ICategoryStore<ChannelHome> channelStore,
+            ICategoryStore<Channel> channelStore,
             IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;

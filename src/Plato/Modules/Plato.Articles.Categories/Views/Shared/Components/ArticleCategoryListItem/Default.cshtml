@@ -1,4 +1,4 @@
-﻿@model CategoryListItemViewModel<CategoryHome>
+﻿@model CategoryListItemViewModel<Category>
 @{
     var details = Model.Category.GetOrCreate<CategoryDetails>();
     var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "#666";

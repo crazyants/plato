@@ -22,9 +22,9 @@ namespace Plato.Discuss.Channels.Controllers
     public class AdminController : Controller, IUpdateModel
     {
      
-        private readonly ICategoryStore<ChannelHome> _categoryStore;
-        private readonly ICategoryManager<ChannelHome> _categoryManager;
-        private readonly IViewProviderManager<Channel> _viewProvider;
+        private readonly ICategoryStore<Channel> _categoryStore;
+        private readonly ICategoryManager<Channel> _categoryManager;
+        private readonly IViewProviderManager<ChannelAdmin> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
@@ -36,10 +36,10 @@ namespace Plato.Discuss.Channels.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            ICategoryStore<ChannelHome> categoryStore,
-            IViewProviderManager<Channel> viewProvider,
+            ICategoryStore<Channel> categoryStore,
+            IViewProviderManager<ChannelAdmin> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryManager<ChannelHome> categoryManager,
+            ICategoryManager<Channel> categoryManager,
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
@@ -67,7 +67,7 @@ namespace Plato.Discuss.Channels.Controllers
             //    return Unauthorized();
             //}
             
-            IEnumerable<Channel> parents = null;
+            IEnumerable<ChannelAdmin> parents = null;
             if (id > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(id);
@@ -110,14 +110,14 @@ namespace Plato.Discuss.Channels.Controllers
             });
 
             // Get optional current category
-            Channel currentCategory = null;
+            ChannelAdmin currentCategory = null;
             if (id > 0)
             {
                 currentCategory = await _categoryStore.GetByIdAsync(id);
             }
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new Channel(), this));
+            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new ChannelAdmin(), this));
 
         }
 
@@ -141,7 +141,7 @@ namespace Plato.Discuss.Channels.Controllers
             
             // We need to pass along the featureId
             var feature = await GetCurrentFeature();
-            var model = await _viewProvider.ProvideEditAsync(new ChannelHome
+            var model = await _viewProvider.ProvideEditAsync(new Channel
             {
                 ParentId = id,
                 FeatureId = feature.Id
@@ -167,7 +167,7 @@ namespace Plato.Discuss.Channels.Controllers
             }
 
             var feature = await GetCurrentFeature();
-            var category =  new ChannelHome()
+            var category =  new Channel()
             {
                 ParentId = viewModel.ParentId,
                 FeatureId = feature.Id,

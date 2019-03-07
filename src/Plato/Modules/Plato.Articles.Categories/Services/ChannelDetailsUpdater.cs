@@ -14,14 +14,14 @@ namespace Plato.Articles.Categories.Services
     public class ChannelDetailsUpdater : IChannelDetailsUpdater
     {
 
-        private readonly ICategoryStore<CategoryHome> _channelStore;
-        private readonly ICategoryManager<CategoryHome> _channelManager;
+        private readonly ICategoryStore<Category> _channelStore;
+        private readonly ICategoryManager<Category> _channelManager;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<Comment> _replyStore;
 
         public ChannelDetailsUpdater(
-            ICategoryStore<CategoryHome> channelStore, 
-            ICategoryManager<CategoryHome> channelManager,
+            ICategoryStore<Category> channelStore, 
+            ICategoryManager<Category> channelManager,
             IEntityStore<Article> entityStore, 
             IEntityReplyStore<Comment> replyStore)
         {

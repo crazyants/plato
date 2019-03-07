@@ -87,7 +87,7 @@
                                  <li class="list-group-item list-group-item-action">
                                      @await DisplayAsync(new View("ChannelListItem", new
                                      {
-                                         channel = child,
+                                         category = child,
                                          options = Model.Options
                                      }))
                                  </li>
@@ -134,12 +134,12 @@ else
              </card-title>
              <card-body>
                  <ul class="list-group list-group-flush list-group-hover">
-                     @foreach (var channel in Model.Categories)
+                     @foreach (var category in Model.Categories)
                      {
                          <li class="list-group-item list-group-item-action">
                              @await DisplayAsync(new View("ChannelListItem", new
                              {
-                                 channel = channel,
+                                 category = category,
                                  options = Model.Options
                              }))
                          </li>

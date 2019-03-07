@@ -13,9 +13,9 @@ namespace Plato.Articles.Categories.ViewComponents
 
     public class ArticleCategoryListViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<CategoryHome> _channelStore;
+        private readonly ICategoryStore<Category> _channelStore;
        
-        public ArticleCategoryListViewComponent(ICategoryStore<CategoryHome> channelStore)
+        public ArticleCategoryListViewComponent(ICategoryStore<Category> channelStore)
         {
             _channelStore = channelStore;
         }
@@ -32,10 +32,10 @@ namespace Plato.Articles.Categories.ViewComponents
 
         }
         
-        async Task<CategoryListViewModel<CategoryHome>> GetIndexModel(CategoryIndexOptions options)
+        async Task<CategoryListViewModel<Category>> GetIndexModel(CategoryIndexOptions options)
         {
             var categories = await _channelStore.GetByFeatureIdAsync(options.FeatureId);
-            return new CategoryListViewModel<CategoryHome>()
+            return new CategoryListViewModel<Category>()
             {
                 Options = options,
                 Categories = categories?.Where(c => c.ParentId == options.ChannelId)

@@ -22,9 +22,9 @@ namespace Plato.Articles.Categories.Controllers
     public class AdminController : Controller, IUpdateModel
     {
      
-        private readonly ICategoryStore<CategoryHome> _categoryStore;
-        private readonly ICategoryManager<CategoryHome> _categoryManager;
-        private readonly IViewProviderManager<Category> _viewProvider;
+        private readonly ICategoryStore<Category> _categoryStore;
+        private readonly ICategoryManager<Category> _categoryManager;
+        private readonly IViewProviderManager<CategoryAdmin> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
@@ -36,10 +36,10 @@ namespace Plato.Articles.Categories.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            ICategoryStore<CategoryHome> categoryStore,
-            IViewProviderManager<Category> viewProvider,
+            ICategoryStore<Category> categoryStore,
+            IViewProviderManager<CategoryAdmin> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryManager<CategoryHome> categoryManager,
+            ICategoryManager<Category> categoryManager,
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
@@ -67,7 +67,7 @@ namespace Plato.Articles.Categories.Controllers
             //    return Unauthorized();
             //}
             
-            IEnumerable<CategoryHome> parents = null;
+            IEnumerable<Category> parents = null;
             if (id > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(id);
@@ -110,14 +110,14 @@ namespace Plato.Articles.Categories.Controllers
             });
 
             // Get optional current category
-            CategoryHome currentCategoryHome = null;
+            Category currentCategory = null;
             if (id > 0)
             {
-                currentCategoryHome = await _categoryStore.GetByIdAsync(id);
+                currentCategory = await _categoryStore.GetByIdAsync(id);
             }
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(currentCategoryHome ?? new CategoryHome(), this));
+            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new Category(), this));
 
         }
 
@@ -141,7 +141,7 @@ namespace Plato.Articles.Categories.Controllers
             
             // We need to pass along the featureId
             var feature = await GetCurrentFeature();
-            var model = await _viewProvider.ProvideEditAsync(new Category
+            var model = await _viewProvider.ProvideEditAsync(new CategoryAdmin
             {
                 ParentId = id,
                 FeatureId = feature.Id
@@ -167,7 +167,7 @@ namespace Plato.Articles.Categories.Controllers
             }
 
             var feature = await GetCurrentFeature();
-            var category =  new CategoryHome()
+            var category =  new Category()
             {
                 ParentId = viewModel.ParentId,
                 FeatureId = feature.Id,

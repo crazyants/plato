@@ -15,19 +15,19 @@ using Plato.Entities.ViewModels;
 
 namespace Plato.Articles.Categories.ViewProviders
 {
-    public class CategoryViewProvider : BaseViewProvider<CategoryHome>
+    public class CategoryViewProvider : BaseViewProvider<Category>
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<CategoryHome> _categoryStore;
-        private readonly ICategoryManager<CategoryHome> _categoryManager;
+        private readonly ICategoryStore<Category> _categoryStore;
+        private readonly ICategoryManager<Category> _categoryManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
 
         public CategoryViewProvider(
             IContextFacade contextFacade,
-            ICategoryStore<CategoryHome> categoryStore,
-            ICategoryManager<CategoryHome> categoryManager,
+            ICategoryStore<Category> categoryStore,
+            ICategoryManager<Category> categoryManager,
             IFeatureFacade featureFacade,
             IActionContextAccessor actionContextAccessor)
         {
@@ -38,7 +38,7 @@ namespace Plato.Articles.Categories.ViewProviders
             _actionContextAccessor = actionContextAccessor;
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(CategoryHome categoryHome, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Category category, IViewProviderContext context)
         {
 
             // Ensure we explicitly set the featureId
@@ -51,9 +51,9 @@ namespace Plato.Articles.Categories.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
 
             CategoryBase categoryBase = null;
-            if (categoryHome?.Id > 0)
+            if (category?.Id > 0)
             {
-                categoryBase = await _categoryStore.GetByIdAsync(categoryHome.Id);
+                categoryBase = await _categoryStore.GetByIdAsync(category.Id);
             }
 
             // channel filter options
@@ -81,7 +81,7 @@ namespace Plato.Articles.Categories.ViewProviders
                 View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<CategoryListViewModel<CategoryHome>>("Article.Categories.Index.Sidebar", model =>
+                View<CategoryListViewModel<Category>>("Article.Categories.Index.Sidebar", model =>
                 {
                     //model.SelectedChannelId = channel?.Id ?? 0;
                     model.Options = channelViewOpts;
@@ -92,17 +92,17 @@ namespace Plato.Articles.Categories.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryHome indexViewModel, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Category indexViewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(CategoryHome categoryHome, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Category category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(CategoryHome categoryHome, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Category category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

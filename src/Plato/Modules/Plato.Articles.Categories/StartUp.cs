@@ -42,13 +42,13 @@ namespace Plato.Articles.Categories
             // Repositories
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
-            services.AddScoped<ICategoryRepository<CategoryHome>, CategoryRepository<CategoryHome>>();
+            services.AddScoped<ICategoryRepository<Category>, CategoryRepository<Category>>();
 
             // Stores
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
-            services.AddScoped<ICategoryStore<CategoryHome>, CategoryStore<CategoryHome>>();
-            services.AddScoped<ICategoryManager<CategoryHome>, CategoryManager<CategoryHome>>();
+            services.AddScoped<ICategoryStore<Category>, CategoryStore<Category>>();
+            services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();
 
             // Articles view providers
             services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
@@ -57,12 +57,12 @@ namespace Plato.Articles.Categories
             services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
 
             // Home view provider
-            services.AddScoped<IViewProviderManager<CategoryHome>, ViewProviderManager<CategoryHome>>();
-            services.AddScoped<IViewProvider<CategoryHome>, CategoryViewProvider>();
+            services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
+            services.AddScoped<IViewProvider<Category>, CategoryViewProvider>();
 
             // Admin view providers
-            services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
-            services.AddScoped<IViewProvider<Category>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
+            services.AddScoped<IViewProvider<CategoryAdmin>, AdminViewProvider>();
             
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();

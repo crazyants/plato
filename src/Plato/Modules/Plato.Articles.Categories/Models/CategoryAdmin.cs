@@ -2,11 +2,12 @@
 
 namespace Plato.Articles.Categories.Models
 {
+
     /// <summary>
-    /// A marker class used for front-end view providers.
+    /// A marker class used for admin view providers.
     /// </summary>
-    public class CategoryHome : Category
+    public class CategoryAdmin : CategoryBase
     {
     }
-    
+
 }

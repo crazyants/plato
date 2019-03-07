@@ -27,7 +27,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<ChannelHome> _categoryStore;
+        private readonly ICategoryStore<Channel> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
         private readonly IFeatureFacade _featureFacade;
@@ -39,7 +39,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         public TopicViewProvider(
             IStringLocalizer<TopicViewProvider> stringLocalizer,
             IContextFacade contextFacade,
-            ICategoryStore<ChannelHome> categoryStore, 
+            ICategoryStore<Channel> categoryStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
@@ -71,7 +71,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             }
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return Views(View<CategoryListViewModel<Channel>>("Topic.Channels.Index.Sidebar", model =>
+            return Views(View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Index.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.ParentId == 0);
                     return model;
@@ -85,7 +85,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
 
             // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<Channel> parents = null;
+            IEnumerable<ChannelAdmin> parents = null;
             if (topic.CategoryId > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(topic.CategoryId);
@@ -140,7 +140,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<CategoryListViewModel<Channel>>("Topic.Channels.Display.Sidebar", model =>
+                View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Display.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.Id == topic.CategoryId);
                     return model;
@@ -163,7 +163,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
 
             // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<Channel> parents = null;
+            IEnumerable<ChannelAdmin> parents = null;
             if (entity.CategoryId > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(entity.CategoryId);

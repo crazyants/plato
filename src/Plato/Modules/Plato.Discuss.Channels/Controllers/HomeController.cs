@@ -22,8 +22,8 @@ namespace Plato.Discuss.Channels.Controllers
     public class HomeController : Controller, IUpdateModel
     {
      
-        private readonly IViewProviderManager<ChannelHome> _channelViewProvider;
-        private readonly ICategoryStore<ChannelHome> _channelStore;
+        private readonly IViewProviderManager<Channel> _channelViewProvider;
+        private readonly ICategoryStore<Channel> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
@@ -34,15 +34,15 @@ namespace Plato.Discuss.Channels.Controllers
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IViewProviderManager<ChannelHome> channelViewProvider,
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
+            IViewProviderManager<Channel> channelViewProvider,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryStore<ChannelHome> channelStore,
+            ICategoryStore<Channel> channelStore,
             ISiteSettingsStore settingsStore,
-            IAlerter alerter,
             IContextFacade contextFacade1, 
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IAlerter alerter)
         {
             _channelStore = channelStore;
             _channelViewProvider = channelViewProvider;

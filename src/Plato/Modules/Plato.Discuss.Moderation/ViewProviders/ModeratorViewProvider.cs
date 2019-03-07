@@ -20,14 +20,14 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         private const string ChannelHtmlName = "channel";
 
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ChannelAdmin> _channelStore;
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly HttpRequest _request;
 
         public ModeratorViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IModeratorStore<Moderator> moderatorStore,
-            ICategoryStore<Channel> channelStore)
+            ICategoryStore<ChannelAdmin> channelStore)
         {
             _moderatorStore = moderatorStore;
             _channelStore = channelStore;
@@ -235,16 +235,16 @@ namespace Plato.Discuss.Moderation.ViewProviders
             {
 
                 // Attemptt to get channel for moderator
-                Channel channel = null;
+                ChannelAdmin channelAdmin = null;
                 if (moderator.CategoryId > 0)
                 {
-                    channel = await _channelStore.GetByIdAsync(moderator.CategoryId);
+                    channelAdmin = await _channelStore.GetByIdAsync(moderator.CategoryId);
                 }
 
                 var channelName = "";
-                if (channel != null)
+                if (channelAdmin != null)
                 {
-                    channelName = channel.Name;
+                    channelName = channelAdmin.Name;
                 }
 
                 if (output.ContainsKey(moderator.User))

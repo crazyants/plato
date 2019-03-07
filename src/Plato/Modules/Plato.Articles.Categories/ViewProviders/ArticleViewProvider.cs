@@ -28,7 +28,7 @@ namespace Plato.Articles.Categories.ViewProviders
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<CategoryHome> _categoryStore;
+        private readonly ICategoryStore<Category> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
         private readonly IFeatureFacade _featureFacade;
@@ -40,7 +40,7 @@ namespace Plato.Articles.Categories.ViewProviders
         public ArticleViewProvider(
             IStringLocalizer<ArticleViewProvider> stringLocalizer,
             IContextFacade contextFacade,
-            ICategoryStore<CategoryHome> categoryStore, 
+            ICategoryStore<Category> categoryStore, 
             IEntityStore<Article> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
@@ -72,7 +72,7 @@ namespace Plato.Articles.Categories.ViewProviders
             }
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return Views(View<CategoryListViewModel<CategoryHome>>("Article.Categories.Index.Sidebar", model =>
+            return Views(View<CategoryListViewModel<Category>>("Article.Categories.Index.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.ParentId == 0);
                     return model;
@@ -86,7 +86,7 @@ namespace Plato.Articles.Categories.ViewProviders
         {
 
             // Override breadcrumb configuration within base controller 
-            IEnumerable<CategoryHome> parents = null;
+            IEnumerable<Category> parents = null;
             if (entity.CategoryId > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(entity.CategoryId);
@@ -141,7 +141,7 @@ namespace Plato.Articles.Categories.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<CategoryListViewModel<CategoryHome>>("Article.Categories.Display.Sidebar", model =>
+                View<CategoryListViewModel<Category>>("Article.Categories.Display.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.Id == entity.CategoryId);
                     return model;
@@ -163,7 +163,7 @@ namespace Plato.Articles.Categories.ViewProviders
             }
 
             // Override breadcrumb configuration within base controller 
-            IEnumerable<CategoryHome> parents = null;
+            IEnumerable<Category> parents = null;
             if (entity.CategoryId > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(entity.CategoryId);

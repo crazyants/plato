@@ -28,7 +28,7 @@ namespace Plato.Articles.ViewComponents
             },
             new Filter()
             {
-                Text = "My Topics",
+                Text = "My Articles",
                 Value = FilterBy.MyTopics
             },
             new Filter()

@@ -13,14 +13,14 @@ namespace Plato.Discuss.Channels.Services
     public class ChannelDetailsUpdater : IChannelDetailsUpdater
     {
 
-        private readonly ICategoryStore<ChannelHome> _channelStore;
-        private readonly ICategoryManager<ChannelHome> _channelManager;
+        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryManager<Channel> _channelManager;
         private readonly IEntityStore<Topic> _topicStore;
         private readonly IEntityReplyStore<Reply> _replyStore;
 
         public ChannelDetailsUpdater(
-            ICategoryStore<ChannelHome> channelStore, 
-            ICategoryManager<ChannelHome> channelManager,
+            ICategoryStore<Channel> channelStore, 
+            ICategoryManager<Channel> channelManager,
             IEntityStore<Topic> topicStore, 
             IEntityReplyStore<Reply> replyStore)
         {

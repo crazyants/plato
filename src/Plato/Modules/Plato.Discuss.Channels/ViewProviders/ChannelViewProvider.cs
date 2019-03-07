@@ -15,19 +15,19 @@ using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class ChannelViewProvider : BaseViewProvider<ChannelHome>
+    public class ChannelViewProvider : BaseViewProvider<Channel>
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<ChannelHome> _categoryStore;
-        private readonly ICategoryManager<ChannelHome> _categoryManager;
+        private readonly ICategoryStore<Channel> _categoryStore;
+        private readonly ICategoryManager<Channel> _categoryManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
 
         public ChannelViewProvider(
             IContextFacade contextFacade,
-            ICategoryStore<ChannelHome> categoryStore,
-            ICategoryManager<ChannelHome> categoryManager,
+            ICategoryStore<Channel> categoryStore,
+            ICategoryManager<Channel> categoryManager,
             IFeatureFacade featureFacade,
             IActionContextAccessor actionContextAccessor)
         {
@@ -38,7 +38,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             _actionContextAccessor = actionContextAccessor;
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(ChannelHome channel, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Channel channelAdmin, IViewProviderContext context)
         {
 
             // Ensure we explicitly set the featureId
@@ -51,9 +51,9 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
 
             CategoryBase categoryBase = null;
-            if (channel?.Id > 0)
+            if (channelAdmin?.Id > 0)
             {
-                categoryBase = await _categoryStore.GetByIdAsync(channel.Id);
+                categoryBase = await _categoryStore.GetByIdAsync(channelAdmin.Id);
             }
 
             // channel filter options
@@ -80,7 +80,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                 View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<CategoryListViewModel<Channel>>("Topic.Channels.Index.Sidebar", model =>
+                View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Index.Sidebar", model =>
                 {
                     //model.SelectedChannelId = channel?.Id ?? 0;
                     model.Options = channelViewOpts;
@@ -91,17 +91,17 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(ChannelHome indexViewModel, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Channel indexViewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(ChannelHome category, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Channel category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(ChannelHome category, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Channel category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

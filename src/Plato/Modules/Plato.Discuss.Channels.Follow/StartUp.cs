@@ -31,8 +31,8 @@ namespace Plato.Discuss.Channels.Follow
         {
 
             // Channel View providers
-            services.AddScoped<IViewProviderManager<ChannelHome>, ViewProviderManager<ChannelHome>>();
-            services.AddScoped<IViewProvider<ChannelHome>, ChannelViewProvider>();
+            services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
+            services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
 
             // Broker subscriptions
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();

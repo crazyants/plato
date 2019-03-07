@@ -1,4 +1,4 @@
-﻿@model CategoryListViewModel<CategoryHome>
+﻿@model CategoryListViewModel<Category>
 
 @if (Model.Options.ChannelId == 0)
 {
@@ -38,12 +38,12 @@ else
              <card-body>
                  <div class="list-group list-group-flush list-group-hover">
                      <div class="row no-gutters">
-                         @foreach (var channel in Model.Categories)
+                         @foreach (var category in Model.Categories)
                          {
                              <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12 p-0">
                                  @await DisplayAsync(new View("ArticleCategoryListItem", new
                                  {
-                                     category = channel,
+                                     category = category,
                                      options = Model.Options
                                  }))
                              </div>
