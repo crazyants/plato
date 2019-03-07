@@ -14,14 +14,10 @@ namespace Plato.Articles.Categories.ViewComponents
     public class ArticleCategoryListViewComponent : ViewComponent
     {
         private readonly ICategoryStore<CategoryHome> _channelStore;
-        private readonly IFeatureFacade _featureFacade;
-
-        public ArticleCategoryListViewComponent(
-            ICategoryStore<CategoryHome> channelStore,
-            IFeatureFacade featureFacade)
+       
+        public ArticleCategoryListViewComponent(ICategoryStore<CategoryHome> channelStore)
         {
             _channelStore = channelStore;
-            _featureFacade = featureFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(CategoryIndexOptions options)
@@ -38,24 +34,12 @@ namespace Plato.Articles.Categories.ViewComponents
         
         async Task<CategoryListViewModel<CategoryHome>> GetIndexModel(CategoryIndexOptions options)
         {
-            var feature = await GetCurrentFeature();
-            var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
+            var categories = await _channelStore.GetByFeatureIdAsync(options.FeatureId);
             return new CategoryListViewModel<CategoryHome>()
             {
                 Options = options,
                 Channels = categories?.Where(c => c.ParentId == options.ChannelId)
             };
-        }
-
-        async Task<IShellFeature> GetCurrentFeature()
-        {
-            var featureId = "Plato.Articles.Categories";
-            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
-            if (feature == null)
-            {
-                throw new Exception($"No feature could be found for the Id '{featureId}'");
-            }
-            return feature;
         }
 
     }

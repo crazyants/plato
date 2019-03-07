@@ -12,7 +12,6 @@ using Plato.Articles.Categories.ViewModels;
 using Plato.Categories.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Features;
 
@@ -28,13 +27,13 @@ namespace Plato.Articles.Categories.ViewProviders
         public IStringLocalizer S { get; }
         
         public AdminViewProvider(
-            ICategoryStore<CategoryHome> categoryStore,
-            ICategoryManager<CategoryHome> categoryManager,
             IStringLocalizer<AdminViewProvider> stringLocalizer,
+            ICategoryManager<CategoryHome> categoryManager,
+            ICategoryStore<CategoryHome> categoryStore,
             IFeatureFacade featureFacade)
         {
-            _categoryStore = categoryStore;
             _categoryManager = categoryManager;
+            _categoryStore = categoryStore;
 
             S = stringLocalizer;
             _featureFacade = featureFacade;
@@ -42,23 +41,30 @@ namespace Plato.Articles.Categories.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Category categoryBase, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Category categoryBase, IViewProviderContext updater)
         {
+
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles.Categories");
+            if (feature == null)
+            {
+                throw new Exception($"No feature could be found for the Id 'Plato.Articles.Categories'");
+            }
 
             var viewModel = new CategoryIndexViewModel()
             {
                 Options = new CategoryIndexOptions()
                 {
+                    FeatureId = feature.Id,
                     ChannelId = categoryBase?.Id ?? 0,
                     EnableEdit = true
                 }
             };
             
-            return Task.FromResult(Views(
+            return Views(
                 View<CategoryBase>("Admin.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
-            ));
+            );
 
         }
 
@@ -79,7 +85,7 @@ namespace Plato.Articles.Categories.ViewProviders
                 {
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons,
-                    IsNewChannel = true,
+                    IsNewCategory = true,
                     ParentId = categoryBase.ParentId,
                     AvailableChannels = await GetAvailableCategories()
                 };
@@ -170,12 +176,19 @@ namespace Plato.Articles.Categories.ViewProviders
                     Value = "0"
                 }
             };
-            
-            var feature = await GetCurrentFeature();
-            var channels = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            if (channels != null)
+
+            // Get feature
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles.Categories");
+            if (feature == null)
             {
-                var items = await RecurseChannels(channels);
+                throw new Exception($"No feature could be found for the Id 'Plato.Articles.Categories'");
+            }
+
+            // Get categories
+            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+            if (categories != null)
+            {
+                var items = await RecurseChannels(categories);
                 foreach (var item in items)
                 {
                     output.Add(item);
@@ -220,16 +233,6 @@ namespace Plato.Articles.Categories.ViewProviders
 
         }
         
-        async Task<IShellFeature> GetCurrentFeature()
-        {
-            var featureId = "Plato.Articles.Categories";
-            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
-            if (feature == null)
-            {
-                throw new Exception($"No feature could be found for the Id '{featureId}'");
-            }
-            return feature;
-        }
 
         #endregion
 

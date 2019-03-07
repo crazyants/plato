@@ -121,7 +121,7 @@
 
                     if (!String.IsNullOrEmpty(Model.EditMenuViewName))
                     {
-                        var view = await DisplayAsync(new View("EditChannelMenu", new
+                        var view = await DisplayAsync(new View(Model.EditMenuViewName, new
                         {
                             categoryId = channel.Value.Id
                         }));

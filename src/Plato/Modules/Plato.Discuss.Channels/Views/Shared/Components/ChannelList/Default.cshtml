@@ -87,8 +87,8 @@
                                  <li class="list-group-item list-group-item-action">
                                      @await DisplayAsync(new View("ChannelListItem", new
                                      {
-                                         Channel = child,
-                                         ViewOpts = Model.Options
+                                         channel = child,
+                                         options = Model.Options
                                      }))
                                  </li>
                              }
@@ -140,7 +140,7 @@ else
                              @await DisplayAsync(new View("ChannelListItem", new
                              {
                                  channel = channel,
-                                 viewOpts = Model.Options
+                                 options = Model.Options
                              }))
                          </li>
                      }

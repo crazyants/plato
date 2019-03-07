@@ -30,10 +30,10 @@ namespace Plato.Discuss.Channels.ViewProviders
 
 
         public AdminViewProvider(
+            IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
             ICategoryStore<ChannelHome> categoryStore,
             ICategoryManager<ChannelHome> categoryManager,
-            IStringLocalizer<AdminViewProvider> stringLocalizer,
             IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
@@ -46,24 +46,30 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Channel categoryBase, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Channel categoryBase, IViewProviderContext updater)
         {
-            //var indexViewModel = await GetIndexModel(category?.Id ?? 0);
+
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
+            if (feature == null)
+            {
+                throw new Exception($"No feature could be found for the Id 'Plato.Discuss.Channels'");
+            }
 
             var viewModel = new CategoryIndexViewModel()
             {
                 Options = new CategoryIndexOptions()
                 {
+                    FeatureId = feature.Id,
                     ChannelId = categoryBase?.Id ?? 0,
                     EnableEdit = true
                 }
             };
 
-            return Task.FromResult(Views(
+            return Views(
                 View<CategoryBase>("Admin.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
-            ));
+            );
 
         }
 
@@ -175,8 +181,13 @@ namespace Plato.Discuss.Channels.ViewProviders
                     Value = "0"
                 }
             };
-            
-            var feature = await GetcurrentFeature();
+
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
+            if (feature == null)
+            {
+                throw new Exception($"No feature could be found for the Id 'Plato.Discuss.Channels'");
+            }
+
             var channels = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             if (channels != null)
             {
@@ -225,27 +236,6 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
         
-        //async Task<ChannelListViewModel> GetIndexModel(int parentId)
-        //{
-        //    var feature = await GetcurrentFeature();
-        //    var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-        //    return new ChannelListViewModel()
-        //    {
-        //        Channels = categories?.Where(c => c.ParentId == parentId)
-        //    };
-        //}
-        
-        async Task<IShellFeature> GetcurrentFeature()
-        {
-            var featureId = "Plato.Discuss.Channels";
-            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
-            if (feature == null)
-            {
-                throw new Exception($"No feature could be found for the Id '{featureId}'");
-            }
-            return feature;
-        }
-
         #endregion
 
     }

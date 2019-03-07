@@ -59,6 +59,7 @@ namespace Plato.Articles.Categories.ViewProviders
             // channel filter options
             var channelViewOpts = new CategoryIndexOptions
             {
+                FeatureId = feature.Id,
                 ChannelId = categoryBase?.Id ?? 0
             };
             

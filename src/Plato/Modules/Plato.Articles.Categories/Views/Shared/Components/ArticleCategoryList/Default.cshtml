@@ -85,10 +85,10 @@
                              foreach (var child in channel.Children)
                              {
                                  <li class="list-group-item list-group-item-action">
-                                     @await DisplayAsync(new View("ChannelListItem", new
+                                     @await DisplayAsync(new View("ArticleCategoryListItem", new
                                      {
-                                         Channel = child,
-                                         ViewOpts = Model.Options
+                                         category = child,
+                                         options = Model.Options
                                      }))
                                  </li>
                              }
@@ -139,8 +139,8 @@ else
                          <li class="list-group-item list-group-item-action">
                              @await DisplayAsync(new View("ArticleCategoryListItem", new
                              {
-                                 channel = channel,
-                                 viewOpts = Model.Options
+                                 category = channel,
+                                 options = Model.Options
                              }))
                          </li>
                      }

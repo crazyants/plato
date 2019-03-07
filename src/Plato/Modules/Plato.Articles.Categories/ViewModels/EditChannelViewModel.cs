@@ -8,7 +8,7 @@ namespace Plato.Articles.Categories.ViewModels
     public class EditChannelViewModel
     {
 
-        public bool IsNewChannel { get; set; }
+        public bool IsNewCategory { get; set; }
 
         public int Id { get; set; }
 

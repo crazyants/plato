@@ -35,7 +35,7 @@ namespace Plato.WebApi.Middleware
                 scriptManager?.RegisterScriptBlock(scriptBlock, ScriptSection.Footer);
             }
             
-            await _next(context);
+            await _next.Invoke(context);
 
         }
         

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using Plato.Categories.ViewModels;
 
 namespace Plato.Categories.Models
 {
     public class CategoryTreeOptions
     {
+
+        public CategoryIndexOptions IndexOptions { get; set; } = new CategoryIndexOptions();
 
         public IEnumerable<int> SelectedCategories { get; set; }
 

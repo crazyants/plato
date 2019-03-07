@@ -1,6 +1,6 @@
 ﻿@model CategoryBase
 @{
-    var dropdownId = "editChannel" + Model.Id;
+    var dropdownId = "editCategory" + Model.Id;
 }
 
 <div class="dropdown float-right">
@@ -9,7 +9,7 @@
     </a>
     <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="@dropdownId">
         <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Edit Channel"]
+            @T["Edit Category"]
         </a>
         <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
             @T["Add Child"]
@@ -20,12 +20,9 @@
         <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
             @T["Move Down"]
         </a>
-        <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Close Channel"]
-        </a>
         <div class="dropdown-divider"></div>
         <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
-            @T["Delete Channel"]
+            @T["Delete Category"]
         </a>
     </div>
 </div>

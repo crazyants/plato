@@ -1,16 +1,15 @@
 ﻿@model EditChannelViewModel
 
-@if (Model.IsNewChannel)
+@if (Model.IsNewCategory)
 {
-    <h4>@T["Add Channel"]</h4>
-    <span class="text-muted">@T["Channels help group similar conversations."]</span>
+    <h4>@T["Add Category"]</h4>
+    <span class="text-muted">@T["Categories help group similar articles."]</span>
 }
 else
 {
-    <h4>@T["Edit Channel"]</h4>
-    <span class="text-muted">@T["Edit an existing channel."]</span>
+    <h4>@T["Edit Category"]</h4>
+    <span class="text-muted">@T["Edit an existing category."]</span>
 }
-
 <hr />
 
 

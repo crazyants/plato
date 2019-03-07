@@ -6,6 +6,7 @@ namespace Plato.Categories.ViewModels
     public class CategoryTreeViewModel
     {
         
+    
         public IList<Selection<CategoryBase>> SelectedCategories { get; set; }
 
         public string HtmlName { get; set; }

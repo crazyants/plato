@@ -7,7 +7,7 @@
 
 @if (Model.Options.ChannelId != 0)
 {
-    @await DisplayAsync(new View("TopicList", new
+    @await DisplayAsync(new View("ArticleList", new
     {
         options = @Model.EntityIndexOptions,
         pager = @Model.Pager

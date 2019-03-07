@@ -14,7 +14,7 @@ namespace Plato.Users.Middleware
 
     public class AuthenticatedUserMiddleware
     {
-
+        static readonly object SyncLock = new object();
         internal const string CookieName = "plato_active";
         private readonly RequestDelegate _next;
 
@@ -26,17 +26,17 @@ namespace Plato.Users.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             
-            // Signout the request if the user is not found
+            // Sign out the request if the user is not found
             await SignOutRequestIfUserNotFound(context);
 
-            // hydrate HttpContext.Features with our user
+            // Hydrate HttpContext.Features with our user
             await HydrateHttpContextFeature(context);
 
             // Attempt to update last login date
             await UpdateAuthenticatedUsersLastLoginDateAsync(context);
             
             // Return next delegate
-            await _next(context);
+            await _next.Invoke(context);
 
         }
 
@@ -58,7 +58,7 @@ namespace Plato.Users.Middleware
                 return;
             }
 
-            // Attempt tto get the user
+            // Attempt to get the user
             var user = await contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
@@ -97,7 +97,7 @@ namespace Plato.Users.Middleware
                 return;
             }
 
-            lock (user)
+            lock (SyncLock)
             {
                 // Add authenticated user to features for subsequent use
                 context.Features[typeof(User)] = user;
