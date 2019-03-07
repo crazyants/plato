@@ -22,9 +22,9 @@ namespace Plato.Articles.Categories.Controllers
     public class HomeController : Controller, IUpdateModel
     {
      
-        private readonly IViewProviderManager<CategoryHome> _channelViewProvider;
+        private readonly IViewProviderManager<CategoryHome> _viewProvider;
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly ICategoryStore<CategoryHome> _channelStore;
+        private readonly ICategoryStore<CategoryHome> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
@@ -35,11 +35,11 @@ namespace Plato.Articles.Categories.Controllers
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IViewProviderManager<CategoryHome> channelViewProvider,
+            IViewProviderManager<CategoryHome> viewProvider,
             IStringLocalizer<AdminController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryStore<CategoryHome> channelStore,
+            ICategoryStore<CategoryHome> categoryStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IAlerter alerter,
@@ -47,8 +47,8 @@ namespace Plato.Articles.Categories.Controllers
             IFeatureFacade featureFacade)
         {
             _settingsStore = settingsStore;
-            _channelStore = channelStore;
-            _channelViewProvider = channelViewProvider;
+            _categoryStore = categoryStore;
+            _viewProvider = viewProvider;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
             _contextFacade = contextFacade1;
@@ -74,7 +74,7 @@ namespace Plato.Articles.Categories.Controllers
             }
 
             // Get category
-            var category = await _channelStore.GetByIdAsync(opts.CategoryId);
+            var category = await _categoryStore.GetByIdAsync(opts.CategoryId);
 
             // If supplied ensure category exists
             if (category == null && opts.CategoryId > 0)
@@ -127,16 +127,16 @@ namespace Plato.Articles.Categories.Controllers
 
                 // Build breadcrumb
                 var parents = category != null
-                    ? await _channelStore.GetParentsByIdAsync(category.Id)
+                    ? await _categoryStore.GetParentsByIdAsync(category.Id)
                     : null;
                 if (parents == null)
                 {
-                    builder.Add(S["Channels"]);
+                    builder.Add(S["Categories"]);
                 }
                 else
                 {
 
-                    builder.Add(S["Channels"], channels => channels
+                    builder.Add(S["Categories"], categories => categories
                         .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
                         {
                             ["opts.id"] = "",
@@ -149,7 +149,7 @@ namespace Plato.Articles.Categories.Controllers
                     {
                         if (parent.Id != category.Id)
                         {
-                            builder.Add(S[parent.Name], channel => channel
+                            builder.Add(S[parent.Name], c => c
                                 .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary
                                 {
                                     ["opts.id"] = parent.Id,
@@ -170,7 +170,7 @@ namespace Plato.Articles.Categories.Controllers
             });
             
             // Return view
-            return View(await _channelViewProvider.ProvideIndexAsync(category, this));
+            return View(await _viewProvider.ProvideIndexAsync(category, this));
 
         }
 
@@ -186,7 +186,7 @@ namespace Plato.Articles.Categories.Controllers
                 options.FeatureId = feature.Id;
             }
             
-            // Include child channels
+            // Include child categories
             if (categoryHome != null)
             {
                 if (categoryHome.Children.Any())

@@ -2,9 +2,9 @@
 
 @if (Model.Options.ChannelId == 0)
 {
-    if (Model.Channels != null)
+    if (Model.Categories != null)
     {
-        @foreach (var channel in Model.Channels)
+        @foreach (var channel in Model.Categories)
          {
              <card class="card card-body-flush">
                  <card-title>
@@ -126,7 +126,7 @@
 }
 else
 {
-    @if (Model.Channels.Any())
+    @if (Model.Categories.Any())
      {
          <card class="card card-body-flush">
              <card-title>
@@ -134,7 +134,7 @@ else
              </card-title>
              <card-body>
                  <ul class="list-group list-group-flush list-group-hover">
-                     @foreach (var channel in Model.Channels)
+                     @foreach (var channel in Model.Categories)
                      {
                          <li class="list-group-item list-group-item-action">
                              @await DisplayAsync(new View("ChannelListItem", new

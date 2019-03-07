@@ -3,9 +3,86 @@
     var details = Model.Category.GetOrCreate<CategoryDetails>();
     var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "#666";
     var childForeColor = !String.IsNullOrEmpty(Model.Category.ForeColor) ? Model.Category.ForeColor : "#fff";
+    var buttonText = details.TotalTopics == 1
+        ? "article"
+        : "articles";
 }
 
-<div class="row">
+
+@if (Model.Options.EnableEdit)
+{
+    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
+        <div class="p-3">
+            @if (!String.IsNullOrEmpty(Model.Category.IconCss))
+            {
+
+                <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+                    <i class="@Model.Category.IconCss"></i>
+                </span>
+
+            }
+            else
+            {
+
+                <span class="channel-icon channel-icon-md bg-info text-light">
+                    <i class="fal fa-folder"></i>
+                </span>
+
+            }
+            <h6 class="d-block mt-2">
+                @Model.Category.Name
+            </h6>
+            @if (!String.IsNullOrEmpty(Model.Category.Description))
+            {
+                <div class="text-muted">
+                    @Model.Category.Description
+                </div>
+            }
+            else
+            {
+                <div class="text-muted">
+                    @T["No description provided"]
+                </div>
+            }
+
+        </div>
+    </a>
+}
+else
+{
+    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
+        <div class="p-3">
+            @if (!String.IsNullOrEmpty(Model.Category.IconCss))
+            {
+
+                <div class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+                    <i class="@Model.Category.IconCss"></i>
+                </div>
+
+            }
+            else
+            {
+
+                <div class="channel-icon channel-icon-md bg-info text-light">
+                    <i class="fal fa-folder"></i>
+                </div>
+
+            }
+            <h6 class="d-block mt-2">
+                @Model.Category.Name
+            </h6>
+         
+            <div class="btn btn-secondary">
+                @details.TotalTopics.ToPrettyInt() @T[buttonText]
+            </div>
+         
+        </div>
+    </a>
+}
+
+
+
+<div class="row" style="display: none;">
 
     @if (!String.IsNullOrEmpty(Model.Category.IconCss))
     {

@@ -4,6 +4,14 @@ using Plato.Categories.Models;
 
 namespace Plato.Categories.ViewModels
 {
+
+    public class CategoryDropDownViewModel : CategoryInputViewModel
+    {
+        
+        public CategoryIndexOptions Options { get; set; } = new CategoryIndexOptions();
+
+    }
+
     public class CategoryInputViewModel
     {
 
@@ -13,8 +21,8 @@ namespace Plato.Categories.ViewModels
         
         public string HtmlName { get; set; }
         
-        public IList<Selection<CategoryBase>> Categories { get; }
-        
+        public IList<Selection<CategoryBase>> Categories { get; set; }
+    
         public CategoryInputViewModel()
         {
         }

@@ -1,4 +1,4 @@
-﻿@model CategoryInputViewModel
+﻿@model CategoryDropDownViewModel
 
 <div class="card" data-provide="category-select-dropdown">
 
@@ -28,6 +28,7 @@
                 {
                     options = new CategoryTreeOptions()
                     {
+                        IndexOptions = Model.Options,
                         SelectedCategories = Model.SelectedCategories,
                         HtmlName = Model.HtmlName,
                         EnableCheckBoxes = true,

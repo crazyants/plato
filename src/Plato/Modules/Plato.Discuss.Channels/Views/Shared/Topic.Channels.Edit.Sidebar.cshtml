@@ -1,8 +1,6 @@
-﻿@model CategoryInputViewModel
+﻿@model CategoryDropDownViewModel
 
 @await DisplayAsync(new View("CategoryDropDown", new
 {
-    selectedChannels = @Model.SelectedCategories,
-    htmlName = @Model.HtmlName
+    @Model
 }))
-

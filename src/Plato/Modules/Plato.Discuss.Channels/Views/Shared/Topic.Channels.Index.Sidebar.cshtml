@@ -8,10 +8,10 @@
         <h6 class="card-title float-left">@T["Channels"]</h6>
     </card-title>
     <card-body>
-        @if (Model.Channels != null)
+        @if (Model.Categories != null)
         {
             <div class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Channels.Where(c => c.ParentId == 0))
+                @foreach (var channel in Model.Categories.Where(c => c.ParentId == 0))
                 {
                     var channelDetails = channel.GetOrCreate<ChannelDetails>();
                     var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";

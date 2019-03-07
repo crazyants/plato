@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Stores;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Categories.Models;
 using Plato.Categories.ViewModels;
 
@@ -14,50 +12,40 @@ namespace Plato.Categories.ViewComponents
     public class CategoryDropDownViewComponent : ViewComponent
     {
         private readonly ICategoryStore<CategoryBase> _channelStore;
-        private readonly IContextFacade _contextFacade;
-        private readonly IFeatureFacade _featureFacade;
 
-        public CategoryDropDownViewComponent(
-            ICategoryStore<CategoryBase> channelStore, 
-            IContextFacade contextFacade,
-            IFeatureFacade featureFacade)
+
+        public CategoryDropDownViewComponent(ICategoryStore<CategoryBase> channelStore)
         {
             _channelStore = channelStore;
-            _contextFacade = contextFacade;
-            _featureFacade = featureFacade;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(IEnumerable<int> selectedChannels,  string htmlName)
+        public async Task<IViewComponentResult> InvokeAsync(CategoryDropDownViewModel model)
         {
-            if (selectedChannels == null)
+
+            if (model == null)
             {
-                selectedChannels = new int[0];
+                model = new CategoryDropDownViewModel();
+            }
+
+            if (model.SelectedCategories == null)
+            {
+                model.SelectedCategories = new int[0];
             }
             
-            var selectedChannelsList = selectedChannels.ToList();
-            var categories = await BuildSelectionsAsync(selectedChannelsList);
-            return View(new CategoryInputViewModel(categories)
-            {
-                HtmlName = htmlName,
-                SelectedCategories = selectedChannelsList
-            });
+            model.Categories = await BuildSelectionsAsync(model);
+            return View(model);
 
         }
 
-        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(
-            IEnumerable<int> selected)
+        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(CategoryDropDownViewModel model)
         {
-
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
-            var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            
+            var channels = await _channelStore.GetByFeatureIdAsync(model.Options.FeatureId);
             var selections = channels?.Select(c => new Selection<CategoryBase>
                 {
-                    IsSelected = selected.Any(v => v == c.Id),
+                    IsSelected = model.SelectedCategories.Any(v => v == c.Id),
                     Value = c
                 })
                 .ToList();
-
             return selections;
         }
     }

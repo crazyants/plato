@@ -85,7 +85,7 @@ namespace Plato.Articles.Categories.ViewProviders
                 {
                     //model.SelectedChannelId = channel?.Id ?? 0;
                     model.Options = channelViewOpts;
-                    model.Channels = categories;
+                    model.Categories = categories;
                     return model;
                 }).Zone("sidebar").Order(1)
             );

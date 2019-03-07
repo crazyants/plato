@@ -75,7 +75,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             return Views(View<CategoryListViewModel<Channel>>("Topic.Channels.Index.Sidebar", model =>
                 {
-                    model.Channels = categories?.Where(c => c.ParentId == 0);
+                    model.Categories = categories?.Where(c => c.ParentId == 0);
                     return model;
                 }).Zone("sidebar").Order(1)
             );
@@ -144,21 +144,31 @@ namespace Plato.Discuss.Channels.ViewProviders
             return Views(
                 View<CategoryListViewModel<Channel>>("Topic.Channels.Display.Sidebar", model =>
                 {
-                    model.Channels = categories?.Where(c => c.Id == topic.CategoryId);
+                    model.Categories = categories?.Where(c => c.Id == topic.CategoryId);
                     return model;
                 }).Zone("sidebar").Order(2)
             );
 
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext updater)
         {
-            
+
+            // Get feature
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
+
+            // Ensure we found the feature
+            if (feature == null)
+            {
+                return default(IViewProviderResult);
+            }
+
+
             // Override breadcrumb configuration within base discuss controller 
             IEnumerable<Channel> parents = null;
-            if (topic.CategoryId > 0)
+            if (entity.CategoryId > 0)
             {
-                parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
+                parents = await _channelStore.GetParentsByIdAsync(entity.CategoryId);
             }
             _breadCrumbManager.Configure(builder =>
             {
@@ -195,30 +205,34 @@ namespace Plato.Discuss.Channels.ViewProviders
                 }
 
                 // Ensure we have a topic title
-                if (!String.IsNullOrEmpty(topic.Title))
+                if (!String.IsNullOrEmpty(entity.Title))
                 {
-                    builder.Add(S[topic.Title], t => t
+                    builder.Add(S[entity.Title], t => t
                         .Action("Display", "Home", "Plato.Discuss", new RouteValueDictionary
                         {
-                            ["opts.id"] = topic.Id,
-                            ["opts.alias"] = topic.Alias,
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias,
                         })
                         .LocalNav()
                     );
                 }
            
-                builder.Add(S[topic.Id > 0 ? "Edit Post" : "New Post"]);
+                builder.Add(S[entity.Id > 0 ? "Edit Post" : "New Post"]);
 
             });
             
-            var viewModel = new CategoryInputViewModel()
+            var viewModel = new CategoryDropDownViewModel()
             {
+                Options = new CategoryIndexOptions()
+                {
+                    FeatureId = feature.Id
+                },
                 HtmlName = CategoryHtmlName,
-                SelectedCategories = await GetCategoryIdsByEntityIdAsync(topic)
+                SelectedCategories = await GetCategoryIdsByEntityIdAsync(entity)
             };
 
             return Views(
-                View<CategoryInputViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<CategoryDropDownViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }

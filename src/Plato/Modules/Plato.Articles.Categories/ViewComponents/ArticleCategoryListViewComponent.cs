@@ -38,7 +38,7 @@ namespace Plato.Articles.Categories.ViewComponents
             return new CategoryListViewModel<CategoryHome>()
             {
                 Options = options,
-                Channels = categories?.Where(c => c.ParentId == options.ChannelId)
+                Categories = categories?.Where(c => c.ParentId == options.ChannelId)
             };
         }
 

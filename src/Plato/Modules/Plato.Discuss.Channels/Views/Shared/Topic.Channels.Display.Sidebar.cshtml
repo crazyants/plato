@@ -8,10 +8,10 @@
         <h6 class="card-title float-left">@T["Channel"]</h6>
     </card-title>
     <card-body>
-        @if (Model.Channels != null && Model.Channels.Any())
+        @if (Model.Categories != null && Model.Categories.Any())
         {
             <div class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Channels)
+                @foreach (var channel in Model.Categories)
                 {
                     var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
                     <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">

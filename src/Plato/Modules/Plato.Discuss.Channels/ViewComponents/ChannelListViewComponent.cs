@@ -44,7 +44,7 @@ namespace Plato.Discuss.Channels.ViewComponents
             return new CategoryListViewModel<Channel>()
             {
                 Options = options,
-                Channels = categories?.Where(c => c.ParentId == options.ChannelId)
+                Categories = categories?.Where(c => c.ParentId == options.ChannelId)
             };
         }
 
