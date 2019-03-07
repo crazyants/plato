@@ -1,4 +1,4 @@
-﻿@model CategoryListViewModel<ArticleCategory>
+﻿@model CategoryListViewModel<CategoryHome>
 
 @if (Model.Options.ChannelId == 0)
 {
@@ -39,7 +39,7 @@
                      }
                      else
                      {
-                         var details = channel.GetOrCreate<ArticleCategoryDetails>();
+                         var details = channel.GetOrCreate<CategoryDetails>();
                        
                          <ol class="list-inline text-muted float-right">
                              <li class="list-inline-item">

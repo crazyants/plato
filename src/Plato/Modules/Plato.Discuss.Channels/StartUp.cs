@@ -41,13 +41,17 @@ namespace Plato.Discuss.Channels
             // Repositories
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
-            services.AddScoped<ICategoryRepository<Channel>, CategoryRepository<Channel>>();
+            services.AddScoped<ICategoryRepository<ChannelHome>, CategoryRepository<ChannelHome>>();
 
             // Stores
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
-            services.AddScoped<ICategoryStore<Channel>, CategoryStore<Channel>>();
-            services.AddScoped<ICategoryManager<Channel>, CategoryManager<Channel>>();
+
+            //services.AddScoped<ICategoryStore<Channel>, CategoryStore<Channel>>();
+            //services.AddScoped<ICategoryManager<Channel>, CategoryManager<Channel>>();
+
+            services.AddScoped<ICategoryStore<ChannelHome>, CategoryStore<ChannelHome>>();
+            services.AddScoped<ICategoryManager<ChannelHome>, CategoryManager<ChannelHome>>();
 
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
@@ -55,13 +59,13 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
 
-            // Channel view provider
-            services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
-            services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
+            // Home view provider
+            services.AddScoped<IViewProviderManager<ChannelHome>, ViewProviderManager<ChannelHome>>();
+            services.AddScoped<IViewProvider<ChannelHome>, ChannelViewProvider>();
 
             // Admin view providers
-            services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
-            services.AddScoped<IViewProvider<Category>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
+            services.AddScoped<IViewProvider<Channel>, AdminViewProvider>();
             
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();

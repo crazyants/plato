@@ -9,7 +9,6 @@ using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewProviders
@@ -18,7 +17,7 @@ namespace Plato.Discuss.Channels.ViewProviders
     {
 
         private readonly IEntityStore<Topic> _entityStore;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ChannelHome> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IStringLocalizer T;
@@ -29,7 +28,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         public ReplyViewProvider(
             IStringLocalizer<ReplyViewProvider> stringLocalizer,
             IEntityStore<Topic> entityStore,
-            ICategoryStore<Channel> channelStore, 
+            ICategoryStore<ChannelHome> channelStore, 
             IBreadCrumbManager breadCrumbManager)
         {
             _entityStore = entityStore;

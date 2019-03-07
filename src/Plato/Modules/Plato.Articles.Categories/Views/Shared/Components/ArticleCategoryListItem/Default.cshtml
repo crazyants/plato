@@ -1,6 +1,6 @@
-﻿@model CategoryListItemViewModel<ArticleCategory>
+﻿@model CategoryListItemViewModel<CategoryHome>
 @{
-    var details = Model.Category.GetOrCreate<ArticleCategoryDetails>();
+    var details = Model.Category.GetOrCreate<CategoryDetails>();
     var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "#666";
     var childForeColor = !String.IsNullOrEmpty(Model.Category.ForeColor) ? Model.Category.ForeColor : "#fff";
 }

@@ -13,11 +13,11 @@ namespace Plato.Discuss.Channels.ViewAdapters
     public class TopicListItemViewAdapter : BaseAdapterProvider
     {
 
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ChannelHome> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
         public TopicListItemViewAdapter(
-            ICategoryStore<Channel> channelStore,
+            ICategoryStore<ChannelHome> channelStore,
             IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;

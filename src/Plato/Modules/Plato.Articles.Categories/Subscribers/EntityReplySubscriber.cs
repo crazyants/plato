@@ -19,13 +19,13 @@ namespace Plato.Articles.Categories.Subscribers
     {
 
         private readonly IBroker _broker;
-        private readonly ICategoryStore<ArticleCategory> _channelStore;
+        private readonly ICategoryStore<CategoryHome> _channelStore;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IChannelDetailsUpdater _channelDetailsUpdater;
 
         public EntityReplySubscriber(
             IBroker broker,
-            ICategoryStore<ArticleCategory> channelStore,
+            ICategoryStore<CategoryHome> channelStore,
             IEntityStore<Article> entityStore,
             IChannelDetailsUpdater channelDetailsUpdater)
         {

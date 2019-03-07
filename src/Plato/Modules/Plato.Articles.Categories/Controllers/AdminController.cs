@@ -22,8 +22,8 @@ namespace Plato.Articles.Categories.Controllers
     public class AdminController : Controller, IUpdateModel
     {
      
-        private readonly ICategoryStore<ArticleCategory> _categoryStore;
-        private readonly ICategoryManager<ArticleCategory> _categoryManager;
+        private readonly ICategoryStore<CategoryHome> _categoryStore;
+        private readonly ICategoryManager<CategoryHome> _categoryManager;
         private readonly IViewProviderManager<Category> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
@@ -36,10 +36,10 @@ namespace Plato.Articles.Categories.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            ICategoryStore<ArticleCategory> categoryStore,
+            ICategoryStore<CategoryHome> categoryStore,
             IViewProviderManager<Category> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryManager<ArticleCategory> categoryManager,
+            ICategoryManager<CategoryHome> categoryManager,
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
@@ -67,7 +67,7 @@ namespace Plato.Articles.Categories.Controllers
             //    return Unauthorized();
             //}
             
-            IEnumerable<ArticleCategory> parents = null;
+            IEnumerable<CategoryHome> parents = null;
             if (id > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(id);
@@ -86,7 +86,7 @@ namespace Plato.Articles.Categories.Controllers
                 }
                 else
                 {
-                    builder.Add(S["Channels"], channels => channels
+                    builder.Add(S["Categories"], channels => channels
                         .Action("Index", "Admin", "Plato.Articles.Categories", new RouteValueDictionary { ["Id"] = 0 })
                         .LocalNav()
                     );
@@ -110,14 +110,14 @@ namespace Plato.Articles.Categories.Controllers
             });
 
             // Get optional current category
-            ArticleCategory currentCategory = null;
+            CategoryHome currentCategoryHome = null;
             if (id > 0)
             {
-                currentCategory = await _categoryStore.GetByIdAsync(id);
+                currentCategoryHome = await _categoryStore.GetByIdAsync(id);
             }
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new ArticleCategory(), this));
+            return View(await _viewProvider.ProvideIndexAsync(currentCategoryHome ?? new CategoryHome(), this));
 
         }
 
@@ -167,7 +167,7 @@ namespace Plato.Articles.Categories.Controllers
             }
 
             var feature = await GetCurrentFeature();
-            var category =  new ArticleCategory()
+            var category =  new CategoryHome()
             {
                 ParentId = viewModel.ParentId,
                 FeatureId = feature.Id,

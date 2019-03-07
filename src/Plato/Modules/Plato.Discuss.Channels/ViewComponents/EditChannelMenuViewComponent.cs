@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
+using Plato.Discuss.Channels.Models;
 
 namespace Plato.Discuss.Channels.ViewComponents
 {
@@ -12,10 +13,10 @@ namespace Plato.Discuss.Channels.ViewComponents
     public class EditChannelMenuViewComponent : ViewComponent
     {
 
-        private readonly ICategoryStore<Category> _channelStore;
+        private readonly ICategoryStore<ChannelHome> _channelStore;
        
         public EditChannelMenuViewComponent(
-            ICategoryStore<Category> channelStore)
+            ICategoryStore<ChannelHome> channelStore)
         {
             _channelStore = channelStore;
         }

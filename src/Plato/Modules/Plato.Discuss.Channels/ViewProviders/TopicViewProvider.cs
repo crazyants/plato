@@ -29,7 +29,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ChannelHome> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
         private readonly IFeatureFacade _featureFacade;
@@ -41,7 +41,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         public TopicViewProvider(
             IStringLocalizer<TopicViewProvider> stringLocalizer,
             IContextFacade contextFacade,
-            ICategoryStore<Channel> channelStore, 
+            ICategoryStore<ChannelHome> channelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,

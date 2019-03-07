@@ -14,12 +14,12 @@ namespace Plato.Discuss.Moderation.ViewAdapters
     public class ModerationViewAdapterProvider : BaseAdapterProvider
     {
 
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ChannelHome> _channelStore;
 
         private IHtmlLocalizer T { get; }
         
         public ModerationViewAdapterProvider(
-            ICategoryStore<Channel> channelStore,
+            ICategoryStore<ChannelHome> channelStore,
             IHtmlLocalizer htmlLocalizer)
         {
             _channelStore = channelStore;

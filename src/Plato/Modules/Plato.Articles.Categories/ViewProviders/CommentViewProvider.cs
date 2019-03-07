@@ -18,7 +18,7 @@ namespace Plato.Articles.Categories.ViewProviders
     {
 
         private readonly IEntityStore<Article> _entityStore;
-        private readonly ICategoryStore<ArticleCategory> _channelStore;
+        private readonly ICategoryStore<CategoryHome> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IStringLocalizer T;
@@ -29,7 +29,7 @@ namespace Plato.Articles.Categories.ViewProviders
         public CommentViewProvider(
             IStringLocalizer<CommentViewProvider> stringLocalizer,
             IEntityStore<Article> entityStore,
-            ICategoryStore<ArticleCategory> channelStore, 
+            ICategoryStore<CategoryHome> channelStore, 
             IBreadCrumbManager breadCrumbManager)
         {
             _entityStore = entityStore;
@@ -61,7 +61,7 @@ namespace Plato.Articles.Categories.ViewProviders
             }
 
             // Override breadcrumb configuration within base controller 
-            IEnumerable<ArticleCategory> parents = null;
+            IEnumerable<CategoryHome> parents = null;
             if (entity.CategoryId > 0)
             {
                 parents = await _channelStore.GetParentsByIdAsync(entity.CategoryId);

@@ -9,6 +9,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Articles.Categories.Navigation;
 using Plato.Articles.Categories.Subscribers;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Categories.Services;
@@ -18,7 +19,6 @@ using Plato.Articles.Categories.ViewAdapters;
 using Plato.Articles.Categories.ViewProviders;
 using Plato.Articles.Models;
 using Plato.Articles.Categories.Services;
-using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Categories
 {
@@ -42,13 +42,13 @@ namespace Plato.Articles.Categories
             // Repositories
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
-            services.AddScoped<ICategoryRepository<ArticleCategory>, CategoryRepository<ArticleCategory>>();
+            services.AddScoped<ICategoryRepository<CategoryHome>, CategoryRepository<CategoryHome>>();
 
             // Stores
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
-            services.AddScoped<ICategoryStore<ArticleCategory>, CategoryStore<ArticleCategory>>();
-            services.AddScoped<ICategoryManager<ArticleCategory>, CategoryManager<ArticleCategory>>();
+            services.AddScoped<ICategoryStore<CategoryHome>, CategoryStore<CategoryHome>>();
+            services.AddScoped<ICategoryManager<CategoryHome>, CategoryManager<CategoryHome>>();
 
             // Articles view providers
             services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
@@ -56,9 +56,9 @@ namespace Plato.Articles.Categories
             services.AddScoped<IViewProviderManager<Comment>, ViewProviderManager<Comment>>();
             services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
 
-            // Channel view provider
-            services.AddScoped<IViewProviderManager<ArticleCategory>, ViewProviderManager<ArticleCategory>>();
-            services.AddScoped<IViewProvider<ArticleCategory>, CategoryViewProvider>();
+            // Home view provider
+            services.AddScoped<IViewProviderManager<CategoryHome>, ViewProviderManager<CategoryHome>>();
+            services.AddScoped<IViewProvider<CategoryHome>, CategoryViewProvider>();
 
             // Admin view providers
             services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();

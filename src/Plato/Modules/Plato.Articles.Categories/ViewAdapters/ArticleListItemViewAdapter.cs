@@ -13,11 +13,11 @@ namespace Plato.Articles.Categories.ViewAdapters
     public class ArticleListItemViewAdapter : BaseAdapterProvider
     {
 
-        private readonly ICategoryStore<ArticleCategory> _channelStore;
+        private readonly ICategoryStore<CategoryHome> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
         public ArticleListItemViewAdapter(
-            ICategoryStore<ArticleCategory> channelStore,
+            ICategoryStore<CategoryHome> channelStore,
             IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;

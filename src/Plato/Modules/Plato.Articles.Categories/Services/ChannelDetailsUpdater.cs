@@ -14,14 +14,14 @@ namespace Plato.Articles.Categories.Services
     public class ChannelDetailsUpdater : IChannelDetailsUpdater
     {
 
-        private readonly ICategoryStore<ArticleCategory> _channelStore;
-        private readonly ICategoryManager<ArticleCategory> _channelManager;
+        private readonly ICategoryStore<CategoryHome> _channelStore;
+        private readonly ICategoryManager<CategoryHome> _channelManager;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<Comment> _replyStore;
 
         public ChannelDetailsUpdater(
-            ICategoryStore<ArticleCategory> channelStore, 
-            ICategoryManager<ArticleCategory> channelManager,
+            ICategoryStore<CategoryHome> channelStore, 
+            ICategoryManager<CategoryHome> channelManager,
             IEntityStore<Article> entityStore, 
             IEntityReplyStore<Comment> replyStore)
         {
@@ -117,7 +117,7 @@ namespace Plato.Articles.Categories.Services
                 }
 
                 // Update channel details with latest entity details
-                var details = parent.GetOrCreate<ArticleCategoryDetails>();
+                var details = parent.GetOrCreate<CategoryDetails>();
                 details.TotalTopics = totalTopics;
                 details.TotalReplies = totalReplies;
 
@@ -136,7 +136,7 @@ namespace Plato.Articles.Categories.Services
                     details.LastReply.CreatedDate = latestReply.CreatedDate;
                 }
 
-                parent.AddOrUpdate<ArticleCategoryDetails>(details);
+                parent.AddOrUpdate<CategoryDetails>(details);
 
                 // Save the updated details 
                 await _channelManager.UpdateAsync(parent);

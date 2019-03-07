@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Categories.ViewModels
+﻿namespace Plato.Categories.ViewModels
 {
     public class CategoryIndexOptions
     {

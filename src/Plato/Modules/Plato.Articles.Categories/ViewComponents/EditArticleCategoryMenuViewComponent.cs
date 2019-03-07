@@ -9,10 +9,10 @@ namespace Plato.Articles.Categories.ViewComponents
     public class EditArticleCategoryMenuViewComponent : ViewComponent
     {
 
-        private readonly ICategoryStore<Category> _channelStore;
+        private readonly ICategoryStore<CategoryBase> _channelStore;
        
         public EditArticleCategoryMenuViewComponent(
-            ICategoryStore<Category> channelStore)
+            ICategoryStore<CategoryBase> channelStore)
         {
             _channelStore = channelStore;
         }

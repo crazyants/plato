@@ -16,12 +16,12 @@ namespace Plato.Discuss.Channels.Subscribers
     {
 
         private readonly IBroker _broker;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<ChannelHome> _channelStore;
         private readonly IChannelDetailsUpdater _channelDetailsUpdater;
 
         public EntitySubscriber(
             IBroker broker,
-            ICategoryStore<Channel> channelStore,
+            ICategoryStore<ChannelHome> channelStore,
             IChannelDetailsUpdater channelDetailsUpdater)
         {
             _broker = broker;

@@ -7,18 +7,17 @@ using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Categories.ViewComponents
 {
     public class CategoryTreeViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<Category> _channelStore;
+        private readonly ICategoryStore<CategoryBase> _channelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
         public CategoryTreeViewComponent(
-            ICategoryStore<Category> channelStore,
+            ICategoryStore<CategoryBase> channelStore,
             IContextFacade contextFacade, 
             IFeatureFacade featureFacade)
         {
@@ -52,13 +51,13 @@ namespace Plato.Categories.ViewComponents
 
         }
 
-        private async Task<IList<Selection<Category>>> BuildSelectionsAsync(
+        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(
             IEnumerable<int> selected)
         {
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            return channels?.Select(c => new Selection<Category>
+            return channels?.Select(c => new Selection<CategoryBase>
                 {
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c

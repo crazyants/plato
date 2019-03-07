@@ -22,9 +22,9 @@ namespace Plato.Articles.Categories.Controllers
     public class HomeController : Controller, IUpdateModel
     {
      
-        private readonly IViewProviderManager<ArticleCategory> _channelViewProvider;
+        private readonly IViewProviderManager<CategoryHome> _channelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly ICategoryStore<ArticleCategory> _channelStore;
+        private readonly ICategoryStore<CategoryHome> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
@@ -35,11 +35,11 @@ namespace Plato.Articles.Categories.Controllers
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IViewProviderManager<ArticleCategory> channelViewProvider,
+            IViewProviderManager<CategoryHome> channelViewProvider,
             IStringLocalizer<AdminController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryStore<ArticleCategory> channelStore,
+            ICategoryStore<CategoryHome> channelStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IAlerter alerter,
@@ -174,7 +174,7 @@ namespace Plato.Articles.Categories.Controllers
 
         }
 
-        async Task<EntityIndexViewModel<Article>> GetIndexViewModelAsync(ArticleCategory category, EntityIndexOptions options, PagerOptions pager)
+        async Task<EntityIndexViewModel<Article>> GetIndexViewModelAsync(CategoryHome categoryHome, EntityIndexOptions options, PagerOptions pager)
         {
             
             // Get current feature
@@ -187,20 +187,20 @@ namespace Plato.Articles.Categories.Controllers
             }
             
             // Include child channels
-            if (category != null)
+            if (categoryHome != null)
             {
-                if (category.Children.Any())
+                if (categoryHome.Children.Any())
                 {
                     // Convert child ids to list and add current id
-                    var ids = category
+                    var ids = categoryHome
                         .Children
                         .Select(c => c.Id).ToList();
-                    ids.Add(category.Id);
+                    ids.Add(categoryHome.Id);
                     options.CategoryIds = ids.ToArray();
                 }
                 else
                 {
-                    options.CategoryId = category.Id;
+                    options.CategoryId = categoryHome.Id;
                 }
             }
 

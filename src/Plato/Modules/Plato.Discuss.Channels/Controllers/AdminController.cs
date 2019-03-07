@@ -22,9 +22,9 @@ namespace Plato.Discuss.Channels.Controllers
     public class AdminController : Controller, IUpdateModel
     {
      
-        private readonly ICategoryStore<Channel> _categoryStore;
-        private readonly ICategoryManager<Channel> _categoryManager;
-        private readonly IViewProviderManager<Category> _viewProvider;
+        private readonly ICategoryStore<ChannelHome> _categoryStore;
+        private readonly ICategoryManager<ChannelHome> _categoryManager;
+        private readonly IViewProviderManager<Channel> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
@@ -36,10 +36,10 @@ namespace Plato.Discuss.Channels.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            ICategoryStore<Channel> categoryStore,
-            IViewProviderManager<Category> viewProvider,
+            ICategoryStore<ChannelHome> categoryStore,
+            IViewProviderManager<Channel> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryManager<Channel> categoryManager,
+            ICategoryManager<ChannelHome> categoryManager,
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
@@ -141,7 +141,7 @@ namespace Plato.Discuss.Channels.Controllers
             
             // We need to pass along the featureId
             var feature = await GetCurrentFeature();
-            var model = await _viewProvider.ProvideEditAsync(new Category
+            var model = await _viewProvider.ProvideEditAsync(new ChannelHome
             {
                 ParentId = id,
                 FeatureId = feature.Id
@@ -167,7 +167,7 @@ namespace Plato.Discuss.Channels.Controllers
             }
 
             var feature = await GetCurrentFeature();
-            var category =  new Channel()
+            var category =  new ChannelHome()
             {
                 ParentId = viewModel.ParentId,
                 FeatureId = feature.Id,

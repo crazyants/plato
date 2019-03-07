@@ -1,13 +1,13 @@
 ﻿@model CategoryTreeViewModel
 @functions {
 
-    async Task<string> BuildChannels(CategoryTreeViewModel model)
+    async Task<string> BuildCategories(CategoryTreeViewModel model)
     {
-        return await BuildChannelsRecursivly(model.SelectedCategories, model.HtmlName); ;
+        return await BuildCategoriesRecursively(model.SelectedCategories, model.HtmlName); ;
     }
 
-    async Task<string> BuildChannelsRecursivly(
-        IList<Selection<Category>> channels,
+    async Task<string> BuildCategoriesRecursively(
+        IList<Selection<CategoryBase>> channels,
         string htmlName,
         System.Text.StringBuilder sb = null,
         int id = 0)
@@ -130,8 +130,8 @@
 
                     sb.Append("</div>");
 
-                    // Recuse
-                    await BuildChannelsRecursivly(channels, htmlName, sb, channel.Value.Id);
+                    // Recurse
+                    await BuildCategoriesRecursively(channels, htmlName, sb, channel.Value.Id);
 
                     sb.Append("</li>");
 
@@ -159,5 +159,5 @@
         : "tree " + Model.CssClass;
 }
 <div class="@css" data-provide="tree">
-    @Html.Raw(await BuildChannels(Model))
+    @Html.Raw(await BuildCategories(Model))
 </div>

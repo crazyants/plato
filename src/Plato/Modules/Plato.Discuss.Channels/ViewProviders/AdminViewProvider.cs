@@ -10,7 +10,6 @@ using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
-using Plato.Discuss.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -19,12 +18,12 @@ using Plato.Internal.Models.Features;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class AdminViewProvider : BaseViewProvider<Category>
+    public class AdminViewProvider : BaseViewProvider<Channel>
     {
         
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Channel> _categoryStore;
-        private readonly ICategoryManager<Channel> _categoryManager;
+        private readonly ICategoryStore<ChannelHome> _categoryStore;
+        private readonly ICategoryManager<ChannelHome> _categoryManager;
         private readonly IFeatureFacade _featureFacade;
 
         public IStringLocalizer S { get; }
@@ -32,8 +31,8 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         public AdminViewProvider(
             IContextFacade contextFacade,
-            ICategoryStore<Channel> categoryStore,
-            ICategoryManager<Channel> categoryManager,
+            ICategoryStore<ChannelHome> categoryStore,
+            ICategoryManager<ChannelHome> categoryManager,
             IStringLocalizer<AdminViewProvider> stringLocalizer,
             IFeatureFacade featureFacade)
         {
@@ -47,7 +46,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Category category, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Channel categoryBase, IViewProviderContext updater)
         {
             //var indexViewModel = await GetIndexModel(category?.Id ?? 0);
 
@@ -55,38 +54,38 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 Options = new CategoryIndexOptions()
                 {
-                    ChannelId = category?.Id ?? 0,
+                    ChannelId = categoryBase?.Id ?? 0,
                     EnableEdit = true
                 }
             };
 
             return Task.FromResult(Views(
-                View<Category>("Admin.Index.Header", model => category).Zone("header").Order(1),
+                View<CategoryBase>("Admin.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
             ));
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Category viewModel, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Channel viewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(Category category, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Channel categoryBase, IViewProviderContext updater)
         {
 
             var defaultIcons = new DefaultIcons();
 
             EditChannelViewModel editChannelViewModel = null;
-            if (category.Id == 0)
+            if (categoryBase.Id == 0)
             {
                 editChannelViewModel = new EditChannelViewModel()
                 {
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons,
                     IsNewChannel = true,
-                    ParentId = category.ParentId,
+                    ParentId = categoryBase.ParentId,
                     AvailableChannels = await GetAvailableChannels()
                 };
             }
@@ -94,13 +93,13 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 editChannelViewModel = new EditChannelViewModel()
                 {
-                    Id = category.Id,
-                    ParentId = category.ParentId,
-                    Name = category.Name,
-                    Description = category.Description,
-                    ForeColor = category.ForeColor,
-                    BackColor = category.BackColor,
-                    IconCss = category.IconCss,
+                    Id = categoryBase.Id,
+                    ParentId = categoryBase.ParentId,
+                    Name = categoryBase.Name,
+                    Description = categoryBase.Description,
+                    ForeColor = categoryBase.ForeColor,
+                    BackColor = categoryBase.BackColor,
+                    IconCss = categoryBase.IconCss,
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons,
                     AvailableChannels = await GetAvailableChannels()
@@ -115,14 +114,14 @@ namespace Plato.Discuss.Channels.ViewProviders
             );
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Category category, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Channel categoryBase, IViewProviderContext context)
         {
 
             var model = new EditChannelViewModel();
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(category, context);
+                return await BuildEditAsync(categoryBase, context);
             }
 
             model.Name = model.Name?.Trim();
@@ -137,17 +136,17 @@ namespace Plato.Discuss.Channels.ViewProviders
                     iconCss = model.IconPrefix + iconCss;
                 }
 
-                var result = await _categoryManager.UpdateAsync(new Channel()
+                var result = await _categoryManager.UpdateAsync(new ChannelHome()
                 {
-                    Id = category.Id,
-                    FeatureId = category.FeatureId,
+                    Id = categoryBase.Id,
+                    FeatureId = categoryBase.FeatureId,
                     ParentId = model.ParentId,
                     Name = model.Name,
                     Description = model.Description,
                     ForeColor = model.ForeColor,
                     BackColor = model.BackColor,
                     IconCss = iconCss,
-                    SortOrder = category.SortOrder
+                    SortOrder = categoryBase.SortOrder
                 });
 
                 foreach (var error in result.Errors)
@@ -157,7 +156,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             }
 
-            return await BuildEditAsync(category, context);
+            return await BuildEditAsync(categoryBase, context);
             
         }
 

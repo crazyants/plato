@@ -1,15 +1,15 @@
-﻿@model Category
+﻿@model CategoryBase
 
 @if (@Model.Id == 0)
 {
-    <h4>@T["Channels"]</h4>
+    <h4>@T["Categories"]</h4>
 }
 else
 {
     <h4>@Model.Name</h4>
 }
 
-<span class="text-muted">@T["Channels help group & organize conversations."]</span>
+<span class="text-muted">@T["Categories help group & organize articles."]</span>
 <hr />
 
 

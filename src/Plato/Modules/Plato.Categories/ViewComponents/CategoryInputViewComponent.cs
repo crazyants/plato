@@ -13,11 +13,11 @@ namespace Plato.Categories.ViewComponents
 
     public class CategoryInputViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<Category> _channelStore;
+        private readonly ICategoryStore<CategoryBase> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
         public CategoryInputViewComponent(
-            ICategoryStore<Category> channelStore,
+            ICategoryStore<CategoryBase> channelStore,
             IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;
@@ -40,7 +40,7 @@ namespace Plato.Categories.ViewComponents
             return View(model);
         }
 
-        private async Task<IList<Selection<Category>>> BuildChannelSelectionsAsync(
+        private async Task<IList<Selection<CategoryBase>>> BuildChannelSelectionsAsync(
             IEnumerable<int> selectedCategories)
         {
             
@@ -51,7 +51,7 @@ namespace Plato.Categories.ViewComponents
 
                 var items = await RecurseChannels(channels);
           
-                var selections = items.Select(c => new Selection<Category>
+                var selections = items.Select(c => new Selection<CategoryBase>
                     {
                         IsSelected = selectedCategories.Any(v => v == c.Id),
                         Value = c
@@ -67,15 +67,15 @@ namespace Plato.Categories.ViewComponents
         }
 
 
-        Task<IList<Category>> RecurseChannels(
+        Task<IList<CategoryBase>> RecurseChannels(
             IEnumerable<ICategory> input,
-            IList<Category> output = null,
+            IList<CategoryBase> output = null,
             int id = 0)
         {
 
             if (output == null)
             {
-                output = new List<Category>();
+                output = new List<CategoryBase>();
             }
 
             var categories = input.ToList();
@@ -88,7 +88,7 @@ namespace Plato.Categories.ViewComponents
                     {
                         indent += " ";
                     }
-                    output.Add(new Category
+                    output.Add(new CategoryBase
                     {
                         Id = category.Id,
                         Name = indent + category.Name

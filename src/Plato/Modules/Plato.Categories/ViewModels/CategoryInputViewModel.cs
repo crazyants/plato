@@ -13,13 +13,13 @@ namespace Plato.Categories.ViewModels
         
         public string HtmlName { get; set; }
         
-        public IList<Selection<Category>> Categories { get; }
+        public IList<Selection<CategoryBase>> Categories { get; }
         
         public CategoryInputViewModel()
         {
         }
 
-        public CategoryInputViewModel(IList<Selection<Category>> categories)
+        public CategoryInputViewModel(IList<Selection<CategoryBase>> categories)
         {
             Categories = categories;
         }

@@ -2,7 +2,12 @@
 
 namespace Plato.Discuss.Channels.Models
 {
-    public class Channel : Category
+    
+    /// <summary>
+    /// A marker class used for admin view providers.
+    /// </summary>
+    public class Channel : CategoryBase
     {
     }
+
 }

@@ -15,12 +15,12 @@ using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewProviders
 {
-    public class CategoryViewProvider : BaseViewProvider<Category>
+    public class CategoryViewProvider : BaseViewProvider<CategoryBase>
     {
 
         private const string HtmlName = "UserRoles";
 
-        private readonly ICategoryManager<Category> _categoryManager;
+        private readonly ICategoryManager<CategoryBase> _categoryManager;
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IContextFacade _contextFacade;
 
@@ -30,7 +30,7 @@ namespace Plato.Roles.ViewProviders
         public CategoryViewProvider(
             IPlatoRoleStore platoRoleStore,
             IHttpContextAccessor httpContextAccessor,
-            ICategoryManager<Category> categoryManager,
+            ICategoryManager<CategoryBase> categoryManager,
             IContextFacade contextFacade)
         {
           
@@ -41,20 +41,20 @@ namespace Plato.Roles.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Category user, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryBase user, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Category user, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(CategoryBase user, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Category category, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IViewProviderContext updater)
         {
 
-            var selectedRoles = await _categoryManager.GetRolesAsync(category);
+            var selectedRoles = await _categoryManager.GetRolesAsync(categoryBase);
 
             return Views(
                 View<EditUserRolesViewModel>("Category.Roles.Edit.Content", model =>
@@ -67,7 +67,7 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Category category, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryBase categoryBase, IViewProviderContext context)
         {
 
             // Get available role names
@@ -99,7 +99,7 @@ namespace Plato.Roles.ViewProviders
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(category, context);
+                return await BuildEditAsync(categoryBase, context);
             }
 
             if (context.Updater.ModelState.IsValid)
@@ -116,7 +116,7 @@ namespace Plato.Roles.ViewProviders
 
                 // Remove roles in two steps to prevent an iteration on a modified collection
                 var rolesToRemove = new List<string>();
-                foreach (var role in await _categoryManager.GetRolesAsync(category))
+                foreach (var role in await _categoryManager.GetRolesAsync(categoryBase))
                 {
                     if (!rolesToAdd.Contains(role))
                     {
@@ -126,15 +126,15 @@ namespace Plato.Roles.ViewProviders
 
                 foreach (var role in rolesToRemove)
                 {
-                    await _categoryManager.RemoveFromRoleAsync(category, role);
+                    await _categoryManager.RemoveFromRoleAsync(categoryBase, role);
                 }
 
                 // Add new roles
                 foreach (var role in rolesToAdd)
                 {
-                    if (!await _categoryManager.IsInRoleAsync(category, role))
+                    if (!await _categoryManager.IsInRoleAsync(categoryBase, role))
                     {
-                        await _categoryManager.AddToRoleAsync(category, role);
+                        await _categoryManager.AddToRoleAsync(categoryBase, role);
                     }
                 }
 
@@ -166,7 +166,7 @@ namespace Plato.Roles.ViewProviders
 
             }
 
-            return await BuildEditAsync(category, context);
+            return await BuildEditAsync(categoryBase, context);
 
         }
 
