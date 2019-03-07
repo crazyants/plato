@@ -136,8 +136,8 @@ namespace Plato.Discuss.Channels.Controllers
                     builder.Add(S["Channels"], channels => channels
                         .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
                         {
-                            ["opts.id"] = "",
-                            ["opts.alias"] = ""
+                            ["opts.categoryId"] = null,
+                            ["opts.alias"] = null
                         })
                         .LocalNav()
                     );
@@ -149,7 +149,7 @@ namespace Plato.Discuss.Channels.Controllers
                             builder.Add(S[parent.Name], channel => channel
                                 .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary
                                 {
-                                    ["opts.id"] = parent.Id,
+                                    ["opts.categoryId"] = parent.Id,
                                     ["opts.alias"] = parent.Alias,
                                 })
                                 .LocalNav()

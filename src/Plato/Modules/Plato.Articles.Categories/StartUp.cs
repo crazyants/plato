@@ -85,7 +85,7 @@ namespace Plato.Articles.Categories
             routes.MapAreaRoute(
                 name: "ArticleCategoryIndex",
                 areaName: "Plato.Articles.Categories",
-                template: "articles/category/{opts.categoryId:int}/{opts.alias}/{pager.offset:int?}",
+                template: "articles/categories/{opts.categoryId:int?}/{opts.alias?}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

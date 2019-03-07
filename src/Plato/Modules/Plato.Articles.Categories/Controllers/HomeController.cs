@@ -139,8 +139,8 @@ namespace Plato.Articles.Categories.Controllers
                     builder.Add(S["Categories"], categories => categories
                         .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
                         {
-                            ["opts.id"] = "",
-                            ["opts.alias"] = ""
+                            ["opts.categoryId"] = null,
+                            ["opts.alias"] = null
                         })
                         .LocalNav()
                     );
@@ -152,7 +152,7 @@ namespace Plato.Articles.Categories.Controllers
                             builder.Add(S[parent.Name], c => c
                                 .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary
                                 {
-                                    ["opts.id"] = parent.Id,
+                                    ["opts.categoryId"] = parent.Id,
                                     ["opts.alias"] = parent.Alias,
                                 })
                                 .LocalNav()

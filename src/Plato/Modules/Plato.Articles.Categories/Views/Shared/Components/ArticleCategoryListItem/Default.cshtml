@@ -11,7 +11,7 @@
 
 @if (Model.Options.EnableEdit)
 {
-    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
+    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
         <div class="p-3">
             @if (!String.IsNullOrEmpty(Model.Category.IconCss))
             {
@@ -50,7 +50,7 @@
 }
 else
 {
-    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
+    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
         <div class="p-3">
             @if (!String.IsNullOrEmpty(Model.Category.IconCss))
             {
@@ -105,13 +105,13 @@ else
 
         @if (Model.Options.EnableEdit)
         {
-            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="font-weight-bold">
+            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
                 @Model.Category.Name
             </a>
         }
         else
         {
-            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-alias="@Model.Category.Alias" class="font-weight-bold">
+            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
                 @Model.Category.Name
             </a>
         }

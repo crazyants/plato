@@ -10,7 +10,6 @@
 </div>
 <div class="list-body">
     
- 
     <div class="float-right text-right">
         <ol class="list-inline text-muted">
             <li class="list-inline-item">
@@ -76,7 +75,7 @@
         @if (@Model.Channel != null)
         {
             <span>@T["in"]</span>
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias">
+            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
                 @Model.Channel.Name
             </a>
         }

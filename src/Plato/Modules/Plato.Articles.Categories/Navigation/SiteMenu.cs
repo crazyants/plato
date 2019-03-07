@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
 using Microsoft.AspNetCore.Routing;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Categories.Navigation
@@ -24,11 +23,11 @@ namespace Plato.Articles.Categories.Navigation
 
             builder
                 .Add(T["Articles"], configuration => configuration
-                    .Add(T["Channels"], 1, installed => installed
+                    .Add(T["Categories"], 1, categories => categories
                         .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
                         {
-                            ["opts.id"] = "",
-                            ["opts.alias"] = ""
+                            ["opts.categoryId"] = null,
+                            ["opts.alias"] = null
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

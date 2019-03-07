@@ -105,11 +105,11 @@ namespace Plato.Articles.Categories.ViewProviders
 
                 if (parents != null)
                 {
-                    builder.Add(S["Channels"], channels => channels
+                    builder.Add(S["Categories"], channels => channels
                         .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
                         {
-                            ["opts.id"] = "",
-                            ["opts.alias"] = ""
+                            ["opts.categoryId"] = null,
+                            ["opts.alias"] = null
                         })
                         .LocalNav()
                     );
@@ -118,7 +118,7 @@ namespace Plato.Articles.Categories.ViewProviders
                         builder.Add(S[parent.Name], channel => channel
                             .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary
                             {
-                                ["opts.id"] = parent.Id,
+                                ["opts.categoryId"] = parent.Id,
                                 ["opts.alias"] = parent.Alias,
                             })
                             .LocalNav()
@@ -184,8 +184,8 @@ namespace Plato.Articles.Categories.ViewProviders
                     builder.Add(S["Categories"], categories => categories
                         .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
                         {
-                            ["opts.id"] = "",
-                            ["opts.alias"] = ""
+                            ["opts.categoryId"] = null,
+                            ["opts.alias"] = null
                         })
                         .LocalNav()
                     );
@@ -194,7 +194,7 @@ namespace Plato.Articles.Categories.ViewProviders
                         builder.Add(S[parent.Name], category => category
                             .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary
                             {
-                                ["opts.id"] = parent.Id,
+                                ["opts.categoryId"] = parent.Id,
                                 ["opts.alias"] = parent.Alias,
                             })
                             .LocalNav()
@@ -215,7 +215,7 @@ namespace Plato.Articles.Categories.ViewProviders
                     );
                 }
            
-                builder.Add(S[entity.Id > 0 ? "Edit Comment" : "New Comment"]);
+                builder.Add(S[entity.Id > 0 ? "Edit Article" : "New Article"]);
 
             });
             
