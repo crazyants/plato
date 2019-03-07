@@ -1,16 +1,16 @@
 ﻿using System.Threading.Tasks;
-using Plato.Discuss.Models;
-using Plato.Entities.Services;
 using Plato.Internal.Models.Users;
-using Plato.Entities.Models;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
-using Plato.Discuss.NotificationTypes;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Discuss.NotificationTypes;
+using Plato.Discuss.Models;
+using Plato.Entities.Services;
+using Plato.Entities.Models;
 
 namespace Plato.Discuss.Services
 {
@@ -19,20 +19,20 @@ namespace Plato.Discuss.Services
     {
 
         private readonly INotificationManager<ReportSubmission<Topic>> _notificationManager;
-        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
         public ReportTopicManager(
             INotificationManager<ReportSubmission<Topic>> notificationManager,
-            IPlatoUserStore<User> platoUserStore,
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            IDeferredTaskManager deferredTaskManager)
+            IDeferredTaskManager deferredTaskManager,
+            IPlatoUserStore<User> platoUserStore)
         {
-            _notificationManager = notificationManager;
-            _platoUserStore = platoUserStore;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _deferredTaskManager = deferredTaskManager;
+            _notificationManager = notificationManager;
+            _platoUserStore = platoUserStore;
         }
 
         public Task ReportAsync(ReportSubmission<Topic> submission)
@@ -60,7 +60,9 @@ namespace Plato.Discuss.Services
                     return;
                 }
 
-                var from = submission.Who ?? await _platoUserStore.GetPlatoBotAsync();
+                // If anonymous use bot as sender
+                var from = submission.Who ??
+                           await _platoUserStore.GetPlatoBotAsync();
 
                 // Send notifications
                 foreach (var user in users.Data)

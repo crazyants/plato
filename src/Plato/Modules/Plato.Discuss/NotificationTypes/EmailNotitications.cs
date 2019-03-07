@@ -67,6 +67,7 @@ namespace Plato.Discuss.NotificationTypes
                 }
 
             };
+
         }
 
     }

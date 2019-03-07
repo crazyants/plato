@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Entities.Models;
@@ -12,6 +13,9 @@ namespace Plato.Entities.Services
     
     public class EntityReplyService<TModel> : IEntityReplyService<TModel> where TModel : class, IEntityReply
     {
+
+        private Action<QueryOptions> _configureDb = null;
+        private Action<EntityReplyQueryParams> _configureParams = null;
 
         private readonly IEntityReplyStore<TModel> _entityReplyStore;
         private readonly IAuthorizationService _authorizationService;
@@ -27,9 +31,19 @@ namespace Plato.Entities.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IPagedResults<TModel>> GetRepliesAsync(
-            EntityOptions options,
-            PagerOptions pager)
+        public IEntityReplyService<TModel> ConfigureDb(Action<QueryOptions> configure)
+        {
+            _configureDb = configure;
+            return this;
+        }
+        
+        public IEntityReplyService<TModel> ConfigureQuery(Action<EntityReplyQueryParams> configure)
+        {
+            _configureParams = configure;
+            return this;
+        }
+        
+        public async Task<IPagedResults<TModel>> GetResultsAsync(EntityOptions options, PagerOptions pager)
         {
 
             // Get principal

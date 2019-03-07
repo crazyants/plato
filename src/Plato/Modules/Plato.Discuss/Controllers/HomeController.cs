@@ -1159,7 +1159,7 @@ namespace Plato.Discuss.Controllers
             if (opts.ReplyId > 0)
             {
                 // We need to iterate all replies to calculate the offset
-                var replies = await _replyService.GetRepliesAsync(opts, new PagerOptions
+                var replies = await _replyService.GetResultsAsync(opts, new PagerOptions
                 {
                     PageSize = int.MaxValue
                 });

@@ -215,7 +215,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                     );
                 }
            
-                builder.Add(S[entity.Id > 0 ? "Edit Post" : "New Post"]);
+                builder.Add(S[entity.Id > 0 ? "Edit Topic" : "New Topic"]);
 
             });
             

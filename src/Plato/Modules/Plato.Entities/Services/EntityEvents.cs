@@ -1,4 +1,6 @@
-﻿namespace Plato.Entities.Services
+﻿using Plato.Entities.Models;
+
+namespace Plato.Entities.Services
 {
     public class EntityEvents<TModel> where TModel : class
     {

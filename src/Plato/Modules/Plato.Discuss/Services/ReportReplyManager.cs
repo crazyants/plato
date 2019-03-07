@@ -60,7 +60,9 @@ namespace Plato.Discuss.Services
                     return;
                 }
 
-                var from = submission.Who ?? await _platoUserStore.GetPlatoBotAsync();
+                // If anonymous use bot as sender
+                var from = submission.Who ?? 
+                           await _platoUserStore.GetPlatoBotAsync();
 
                 // Send notifications
                 foreach (var user in users.Data)

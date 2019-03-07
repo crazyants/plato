@@ -1,7 +1,7 @@
 ﻿using System;
 using Plato.Entities.Models;
 
-namespace Plato.Entities.Services
+namespace Plato.Entities.Models
 {
     public class EntityEventArgs<TModel> where TModel : class
     {

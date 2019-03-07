@@ -2,19 +2,19 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Channels.Follow.Notifications;
-using Plato.Discuss.Channels.Follow.NotificationTypes;
-using Plato.Discuss.Channels.Follow.Subscribers;
-using Plato.Discuss.Channels.Follow.ViewProviders;
-using Plato.Discuss.Channels.Models;
-using Plato.Discuss.Models;
-using Plato.Follows.Services;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Discuss.Models;
+using Plato.Follows.Services;
+using Plato.Discuss.Channels.Follow.Notifications;
+using Plato.Discuss.Channels.Follow.NotificationTypes;
+using Plato.Discuss.Channels.Follow.Subscribers;
+using Plato.Discuss.Channels.Follow.ViewProviders;
+using Plato.Discuss.Channels.Models;
 
 namespace Plato.Discuss.Channels.Follow
 {
@@ -31,8 +31,8 @@ namespace Plato.Discuss.Channels.Follow
         {
 
             // Channel View providers
-            services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
-            services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
+            services.AddScoped<IViewProviderManager<ChannelHome>, ViewProviderManager<ChannelHome>>();
+            services.AddScoped<IViewProvider<ChannelHome>, ChannelViewProvider>();
 
             // Broker subscriptions
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();

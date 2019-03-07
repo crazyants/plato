@@ -13,20 +13,20 @@ namespace Plato.Entities.Subscribers
         private string _baseUrl;
 
         private readonly IContextFacade _contextFacade;
-        private readonly IBroker _broker;
         private readonly IImageUriExtractor _imageUriExtractor;
         private readonly IAnchorUriExtractor _anchorUriExtractor;
+        private readonly IBroker _broker;
 
         public ParseEntityUrlsSubscriber(
-            IBroker broker,
             IImageUriExtractor imageUriExtractor,
             IAnchorUriExtractor anchorUriExtractor,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IBroker broker)
         {
-            _broker = broker;
             _imageUriExtractor = imageUriExtractor;
             _anchorUriExtractor = anchorUriExtractor;
             _contextFacade = contextFacade;
+            _broker = broker;
         }
 
         #region "Implementation"
