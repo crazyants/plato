@@ -1,17 +1,27 @@
-﻿
-if (typeof jQuery === "undefined") {
-    throw new Error("Plato requires jQuery");
+﻿// <reference path="/wwwroot/js/app.js" />
+
+if (typeof window.jQuery === "undefined") {
+    throw new Error("jQuery 3.3.1 or above Required");
 }
 
-if (typeof $.Plato.Context === "undefined") {
-    throw new Error("$.Plato.Context Required");
+if (typeof window.$.Plato === "undefined") {
+    throw new Error("$.Plato Required");
 }
 
-/* reactions */
+if (typeof window.$.fn.platoUI === "undefined") {
+    throw new Error("$.Plato UI Required");
+}
+
 $(function (win, doc, $) {
 
     'use strict';
-    
+
+    // --------
+
+    var app = win.$.Plato;
+
+    // --------
+
     var reactions = function () {
 
         var dataKey = "reactions",
@@ -107,7 +117,7 @@ $(function (win, doc, $) {
                 params.entityId = this.getEntityId($caller);
                 params.entityReplyId = this.getEntityReplyId($caller);
 
-                win.$.Plato.Http({
+                app.http({
                     url: "api/reactions/react/post",
                     method: "POST",
                     data: JSON.stringify(params)
@@ -269,11 +279,14 @@ $(function (win, doc, $) {
     });
 
     // Initial load
-    $(doc).ready(function () {
-        $('[data-provide="reactions"]').reactions();
+    app.ready(function () {
+
+        $('[data-provide="reactions"]')
+            .reactions();
+
     });
 
-    // infinateScroller load
+    // infinite scroll load
     $().infiniteScroll(function ($ele) {
         $ele.find('[data-provide="reactions"]').reactions();
     }, "ready");

@@ -1,18 +1,17 @@
 ﻿// <reference path="~/js/vendors/jquery.js" />
 // <reference path="~/js/vendors/bootstrap.js" />
 
-if (typeof jQuery === "undefined") {
+if (typeof window.jQuery === "undefined") {
     throw new Error("jQuery 3.3.1 or above Required");
 }
 
-if (typeof $().modal === 'undefined') {
+if (typeof window.$().modal === 'undefined') {
     throw new Error("BootStrap 4.1.1 or above Required");
 }
 
-if (typeof $.Plato === "undefined") {
+if (typeof window.$.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
-
 
 $(function (win, doc, $) {
 
@@ -1511,287 +1510,6 @@ $(function (win, doc, $) {
 
     }();
 
-    /* userAutoComplete */
-    var userAutoComplete = function () {
-
-        var dataKey = "userAutoComplete",
-            dataIdKey = dataKey + "Id";
-
-        var defaults = {
-            valueField: "keywords",
-            config: {
-                method: "GET",
-                url: 'api/users/get?page={page}&size={pageSize}&keywords={keywords}',
-                data: {
-                    sort: "LastLoginDate",
-                    order: "Desc"
-                }
-            },
-            itemTemplate:
-                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
-            parseItemTemplate: function(html, result) {
-
-                if (result.id) {
-                    html = html.replace(/\{id}/g, result.id);
-                } else {
-                    html = html.replace(/\{id}/g, "0");
-                }
-
-                if (result.displayName) {
-                    html = html.replace(/\{displayName}/g, result.displayName);
-                } else {
-                    html = html.replace(/\{displayName}/g, "(no username)");
-                }
-                if (result.userName) {
-                    html = html.replace(/\{userName}/g, result.userName);
-                } else {
-                    html = html.replace(/\{userName}/g, "(no username)");
-                }
-
-                if (result.email) {
-                    html = html.replace(/\{email}/g, result.email);
-                } else {
-                    html = html.replace(/\{email}/g, "");
-                }
-            
-                if (result.avatar.url) {
-                    html = html.replace(/\{avatar.url}/g, result.avatar.url);
-                } else {
-                    html = html.replace(/\{avatar.url}/g, "");
-                }
-
-
-                return html;
-
-            },
-            onKeyDown: function($caller, e) {
-                if (e.keyCode === 13) {
-                    e.preventDefault();
-                }
-            },
-            onItemClick: function($caller, result, e) {
-                e.preventDefault();
-            }
-        };
-
-        var methods = {
-            init: function($caller, methodName, func) {
-
-                if (func) {
-                    return func(this);
-                }
-                if (methodName) {
-                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
-                        this[methodName].apply(this, [$caller]);
-                    } else {
-                        alert(methodName + " is not a valid method!");
-                    }
-                    return null;
-                }
-
-                // init autoComplete
-                $caller.autoComplete($caller.data(dataKey), methodName);
-
-            },
-            show: function($caller) {
-                $caller.autoComplete("show");
-            }
-        };
-
-        return {
-            init: function () {
-
-                var options = {};
-                var methodName = null;
-                for (var i = 0; i < arguments.length; ++i) {
-                    var a = arguments[i];
-                    if (a) {
-                        switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
-                        }
-                    }
-                }
-
-                if (this.length > 0) {
-                    // $(selector).userAutoComplete()
-                    return this.each(function () {
-                        if (!$(this).data(dataIdKey)) {
-                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                            $(this).data(dataIdKey, id);
-                            $(this).data(dataKey, $.extend({}, defaults, options));
-                        } else {
-                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
-                        }
-                        methods.init($(this), methodName);
-                    });
-                } else {
-                    // $().userAutoComplete()
-                    if (methodName) {
-                        if (methods[methodName]) {
-                            var $caller = $("body");
-                            $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
-                        } else {
-                            alert(methodName + " is not a valid method!");
-                        }
-                    }
-                }
-
-            }
-
-        };
-
-    }();
-
-    /* labelAutoComplete */
-    var labelAutoComplete = function () {
-
-        var dataKey = "labelutoComplete",
-            dataIdKey = dataKey + "Id";
-
-        var defaults = {
-            valueField: "keywords",
-            config: {
-                method: "GET",
-                url: 'api/labels/get?page={page}&size={pageSize}&keywords={keywords}',
-                data: {
-                    sort: "TotalEntities",
-                    order: "Desc"
-                }
-            },
-            itemCss: "dropdown-item",
-            itemTemplate:
-                '<a class="{itemCss}" href="{url}"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></a>',
-            parseItemTemplate: function(html, result) {
-
-                if (result.id) {
-                    html = html.replace(/\{id}/g, result.id);
-                } else {
-                    html = html.replace(/\{id}/g, "0");
-                }
-
-                if (result.name) {
-                    html = html.replace(/\{name}/g, result.name);
-                } else {
-                    html = html.replace(/\{name}/g, "(no name)");
-                }
-
-                if (result.foreColor) {
-                    html = html.replace(/\{foreColor}/g, result.foreColor);
-                } else {
-                    html = html.replace(/\{foreColor}/g, "");
-                }
-
-                if (result.backColor) {
-                    html = html.replace(/\{backColor}/g, result.backColor);
-                } else {
-                    html = html.replace(/\{backColor}/g, "");
-                }
-
-                if (result.totalEntities.text) {
-                    html = html.replace(/\{totalEntities.text}/g, result.totalEntities.text);
-                } else {
-                    html = html.replace(/\{totalEntities.text}/g, "");
-                }
-
-                if (result.alias) {
-                    html = html.replace("{alias}", result.alias);
-                } else {
-                    html = html.replace("{alias}", "");
-                }
-
-                return html;
-
-            },
-            onKeyDown: function($caller, e) {
-                if (e.keyCode === 13) {
-                    e.preventDefault();
-                }
-            },
-            onItemClick: function($caller, result, e) {
-                e.preventDefault();
-            }
-        };
-
-        var methods = {
-            init: function($caller, methodName, func) {
-
-                if (func) {
-                    return func(this);
-                }
-                // init autoComplete
-                $caller.autoComplete($caller.data(dataKey), methodName);
-
-            }
-        };
-
-        return {
-            init: function () {
-
-                var options = {};
-                var methodName = null;
-                for (var i = 0; i < arguments.length; ++i) {
-                    var a = arguments[i];
-                    if (a) {
-                        switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
-                        }
-                    }
-                }
-
-                if (this.length > 0) {
-                    // $(selector).labelAutoComplete()
-                    return this.each(function () {
-                        if (!$(this).data(dataIdKey)) {
-                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                            $(this).data(dataIdKey, id);
-                            $(this).data(dataKey, $.extend({}, defaults, options));
-                        } else {
-                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
-                        }
-                        methods.init($(this), methodName);
-                    });
-                } else {
-                    // $().labelAutoComplete()
-                    if (methodName) {
-                        if (methods[methodName]) {
-                            var $caller = $("body");
-                            $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
-                        } else {
-                            alert(methodName + " is not a valid method!");
-                        }
-                    }
-                }
-
-            }
-
-        };
-
-    }();
-    
     /* typeSpy */
     var typeSpy = function () {
 
@@ -3396,355 +3114,6 @@ $(function (win, doc, $) {
 
     }();
     
-    /* userTagIt */
-    var userTagIt = function(options) {
-
-        var dataKey = "userTagIt",
-            dataIdKey = dataKey + "Id";
-
-        var defaults = {};
-
-        var methods = {
-            init: function($caller, methodName, func) {
-
-                if (func) {
-                    return func(this);
-                }
-                if (methodName) {
-                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
-                        this[methodName].apply(this, [$caller]);
-                    } else {
-                        alert(methodName + " is not a valid method!");
-                    }
-                    return null;
-                }
-
-                this.bind($caller);
-
-            },
-            bind: function($caller) {
-
-                // init tagIt
-                $caller.tagIt($.extend({
-                        itemTemplate:
-                            '<li class="tagit-list-item"><span class="avatar avatar-sm mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
-                        parseItemTemplate: function(html, result) {
-
-                            if (result.id) {
-                                html = html.replace(/\{id}/g, result.id);
-                            } else {
-                                html = html.replace(/\{id}/g, "0");
-                            }
-                            if (result.displayName) {
-                                html = html.replace(/\{displayName}/g, result.displayName);
-                            } else {
-                                html = html.replace(/\{displayName}/g, "(no username)");
-                            }
-
-                            if (result.avatar.url) {
-                                html = html.replace(/\{avatar.url}/g, result.avatar.url);
-                            } else {
-                                html = html.replace(/\{avatar.url}/g, "");
-                            }
-
-                            return html;
-
-                        },
-                        onAddItem: function($input, result, e) {
-                            $input.val("");
-                        }
-                    },
-                    defaults,
-                    options));
-
-                // user auto complete
-                methods.getInput($caller).userAutoComplete($.extend({
-                        onItemClick: function($input, result, e) {
-
-                            e.preventDefault();
-
-                            // Get index if item already exists, else return -1
-                            var index = methods.getIndex($caller, result);
-                            if (index === -1) {
-
-                                // Add new item if within allowed bounds
-                                var tagIt = $caller.data("tagIt");
-                                if (tagIt.items.length < tagIt.maxItems) {
-                                    tagIt.items.push(result);
-                                    $caller.tagIt("update");
-                                    $caller.tagIt("focus");
-                                    $caller.tagIt("select");
-                                    $caller.tagIt("show");
-                                } 
-
-                                // We've reached max allowed bounds hide autoComplete
-                                if (tagIt.items.length === tagIt.maxItems) {
-                                    $caller.tagIt("hide");
-                                }
-                                
-                            } else {
-                                // Highlight duplicates
-                                $caller.tagIt({
-                                        highlightIndex: index
-                                    },
-                                    "highlight");
-                            }
-
-                        }
-                    },
-                    defaults,
-                    options));
-
-            },
-            getInput: function($caller) {
-                return $caller.find(".tagit-list-item-input").find("input");
-            },
-            getIndex: function($caller, item) {
-                var ensureUnique = $caller.data("tagIt").ensureUnique,
-                    tagit = $caller.data("tagIt"),
-                    items = tagit.items,
-                    index = -1;
-                if (ensureUnique === false) {
-                    return index;
-                }
-                for (var i = 0; i < items.length; i++) {
-                    if (item.id === items[i].id) {
-                        index = i;
-                    }
-                }
-                return index;
-            }
-
-        };
-
-        return {
-            init: function () {
-
-                var options = {};
-                var methodName = null;
-                for (var i = 0; i < arguments.length; ++i) {
-                    var a = arguments[i];
-                    switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
-                    }
-                }
-
-                if (this.length > 0) {
-                    // $(selector).userTagIt()
-                    return this.each(function () {
-                        if (!$(this).data(dataIdKey)) {
-                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                            $(this).data(dataIdKey, id);
-                            $(this).data(dataKey, $.extend({}, defaults, options));
-                        } else {
-                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
-                        }
-                        methods.init($(this), methodName);
-                    });
-                } else {
-                    // $().userTagIt()
-                    if (methodName) {
-                        if (methods[methodName]) {
-                            var $caller = $("body");
-                            $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
-                        } else {
-                            alert(methodName + " is not a valid method!");
-                        }
-                    }
-                }
-
-            }
-        };
-
-    }();
-
-    /* labelTagIt */
-    var labelTagIt = function (options) {
-
-        var dataKey = "labelTagIt",
-            dataIdKey = dataKey + "Id";
-
-        var defaults = {};
-
-        var methods = {
-            init: function($caller, methodName, func) {
-
-                if (func) {
-                    return func(this);
-                }
-                if (methodName) {
-                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
-                        this[methodName].apply(this, [$caller]);
-                    } else {
-                        alert(methodName + " is not a valid method!");
-                    }
-                    return null;
-                }
-
-                this.bind($caller);
-
-                return null;
-
-            },
-            bind: function($caller) {
-
-                // init tagIt
-                $caller.tagIt($.extend({
-                        itemTemplate:
-                            '<li class="tagit-list-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name} <a href="#" class="tagit-list-item-delete" data-toggle="tooltip" title="Delete" style="color: {foreColor};"><i class="fal fa-times"></i></a></span></li>',
-                        parseItemTemplate: function(html, result) {
-
-                            if (result.id) {
-                                html = html.replace(/\{id}/g, result.id);
-                            } else {
-                                html = html.replace(/\{id}/g, "0");
-                            }
-
-                            if (result.name) {
-                                html = html.replace(/\{name}/g, result.name);
-                            } else {
-                                html = html.replace(/\{name}/g, "(no name)");
-                            }
-
-                            if (result.foreColor) {
-                                html = html.replace(/\{foreColor}/g, result.foreColor);
-                            } else {
-                                html = html.replace(/\{foreColor}/g, "");
-                            }
-
-                            if (result.backColor) {
-                                html = html.replace(/\{backColor}/g, result.backColor);
-                            } else {
-                                html = html.replace(/\{backColor}/g, "");
-                            }
-
-                            return html;
-
-                        },
-                        onAddItem: function($input, result, e) {
-                            $input.val("");
-                        }
-                    },
-                    defaults,
-                    options));
-
-                // init auto complete
-
-                methods.getInput($caller).labelAutoComplete($.extend({
-                        onItemClick: function($input, result, e) {
-
-                            e.preventDefault();
-
-                            // ensure we only add uunque entries
-                            var index = methods.getIndex($caller, result);
-
-                            if (index === -1) {
-                                var tagit = $caller.data("tagIt");
-                                tagit.items.push(result);
-                                $caller.tagIt("update");
-                            } else {
-                                $caller.tagIt({
-                                        highlightIndex: index
-                                    },
-                                    "highlight");
-                            }
-
-                            $caller.tagIt("focus");
-                            $caller.tagIt("select");
-
-                        }
-                    },
-                    defaults,
-                    options));
-
-
-            },
-            getInput: function($caller) {
-                return $caller.find(".tagit-list-item-input").find("input");
-            },
-            getIndex: function($caller, item) {
-                var ensureUnique = $caller.data("tagIt").ensureUnique,
-                    tagit = $caller.data("tagIt"),
-                    items = tagit.items,
-                    index = -1;
-                if (ensureUnique === false) {
-                    return index;
-                }
-                for (var i = 0; i < items.length; i++) {
-                    if (item.id === items[i].id) {
-                        index = i;
-                    }
-                }
-                return index;
-            }
-
-        };
-
-        return {
-            init: function () {
-
-                var options = {};
-                var methodName = null;
-                for (var i = 0; i < arguments.length; ++i) {
-                    var a = arguments[i];
-                    switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
-                    }
-                }
-
-                if (this.length > 0) {
-                    // $(selector).labelTagIt()
-                    return this.each(function () {
-                        if (!$(this).data(dataIdKey)) {
-                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                            $(this).data(dataIdKey, id);
-                            $(this).data(dataKey, $.extend({}, defaults, options));
-                        } else {
-                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
-                        }
-                        methods.init($(this), methodName);
-                    });
-                } else {
-                    // $().labelTagIt()
-                    if (methodName) {
-                        if (methods[methodName]) {
-                            var $caller = $("body");
-                            $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
-                        } else {
-                            alert(methodName + " is not a valid method!");
-                        }
-                    }
-                }
-
-            }
-        };
-
-    }();
-    
     /* selectDropdown */
     var selectDropdown = function () {
 
@@ -4002,21 +3371,107 @@ $(function (win, doc, $) {
         };
 
     }();
+    
+    /* confirm */
+    var confirm = function () {
 
-    /* labelSelectDropdown */
-    var labelSelectDropdown = function (options) {
-
-        var dataKey = "labelSelectDropdown",
+        var dataKey = "confirm",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+            event: "click", // unique namespace
+            message: "Are you sure you wish to delete this item?\n\nClick OK to confirm..."
+        };
 
         var methods = {
-            init: function($caller, methodName, func) {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                var event = $caller.data(dataKey).event,
+                    message = $caller.data("confirmMessage") || $caller.data(dataKey).message;
+                $caller.on(event,
+                    function (e) {
+                        return win.confirm(message);
+                    });
+            },
+            unbind: function ($caller) {
+                var event = $caller.data(dataKey).event;
+                $caller.unbind(event);
+            }
+        };
 
-                if (func) {
-                    return func(this);
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
                 }
+
+                if (this.length > 0) {
+                    // $(selector).confirm()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().confirm()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
+    /* resizeable */
+    var resizeable = function () {
+
+        var dataKey = "resizeable",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            onShow: null,
+            onHide: null
+        };
+
+        var methods = {
+            init: function ($caller, methodName) {
+
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
@@ -4028,131 +3483,182 @@ $(function (win, doc, $) {
 
                 this.bind($caller);
 
-                return null;
-
             },
-            bind: function($caller) {
+            bind: function ($caller) {
 
-                // init selectDropdown
-                $caller.selectDropdown($.extend({
-                        itemTemplate:
-                            '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
-                        parseItemTemplate: function(html, result) {
+                var $bar = $caller.find(".resizable-bar"),
+                    $container = $caller.find(".resizable-container"),
+                    resizing = false,
+                    cursorPosition = { x: 0, y: 0 },
+                    dimensions = { w: 0, h: 0 };
 
-                            if (result.id) {
-                                html = html.replace(/\{id}/g, result.id);
-                            } else {
-                                html = html.replace(/\{id}/g, "0");
-                            }
+                // Bar events
 
-                            if (result.name) {
-                                html = html.replace(/\{name}/g, result.name);
-                            } else {
-                                html = html.replace(/\{name}/g, "(no name)");
-                            }
-
-                            if (result.foreColor) {
-                                html = html.replace(/\{foreColor}/g, result.foreColor);
-                            } else {
-                                html = html.replace(/\{foreColor}/g, "");
-                            }
-
-                            if (result.backColor) {
-                                html = html.replace(/\{backColor}/g, result.backColor);
-                            } else {
-                                html = html.replace(/\{backColor}/g, "");
-                            }
-
-                            return html;
-
-                        },
-                        onShow: function($sender, $dropdown) {
-                            // Focus search & set-up autoComplete on dropdown show
-                            var $input = $dropdown.find('[type="search"]');
-                            if ($input.length > 0) {
-                                $input.focus()
-                                    .labelAutoComplete("show")
-                                    .labelAutoComplete("update");
-                            }
-                        },
-                        onUpdated: function($sender) {
-
-                            // Set active items within dropdown when preview is updated
-                            var $dropdown = $sender.find(".dropdown-menu"),
-                                items = $sender.data("selectDropdown").items;
-
-                            // Clear all selections within dropdown
-                            $dropdown.find("label").each(function() {
-                                var $ckb = $("#" + $(this).attr("for"));
-                                if ($ckb.length > 0) {
-                                    $ckb.prop("checked", false);
-                                    $(this).removeClass("active");
-                                }
-                            });
-
-                            // Set all selections within dropdown based on items within our array
-                            if (items && items.length > 0) {
-                                for (var i = 0; i < items.length; i++) {
-                                    var checkId = "label-" + items[i].id,
-                                        $ckb = $dropdown.find("#" + checkId),
-                                        $lbl = $dropdown.find('[for="' + checkId + '"]');
-                                    if ($ckb.length > 0) {
-                                        $ckb.prop("checked", true);
-                                    }
-                                    if ($lbl.length > 0) {
-                                        $lbl.addClass("active");
-                                    }
-                                }
-                            }
+                $bar.bind("mousedown",
+                    function (e) {
+                        resizing = true;
+                        if (!$bar.hasClass("active")) {
+                            $bar.addClass("active");
                         }
-                    },
-                    defaults,
-                    options));
-
-                // init auto complete
-                methods.getInput($caller).labelAutoComplete($.extend({
-                        itemTemplate:
-                            '<input type="checkbox" value="{id}" id="label-{id}"/><label for="label-{id}" class="{itemCss}"><i class="fal mr-2 check-icon"></i><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></label>',
-                        onItemClick: function($input, result, e) {
-
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            // ensure we only add uunque entries
-                            var index = methods.getIndex($caller, result);
-                            if (index === -1) {
-                                $caller.data("selectDropdown").items.push(result);
+                        cursorPosition = { x: e.clientX, y: e.clientY };
+                        dimensions = { w: $caller.width(), h: $caller.height() };
+                        if (!methods._isExpanded($caller)) {
+                            if (methods._isHorizontal($caller)) {
+                                methods._setCollapseSize($caller, $caller.height());
                             } else {
-                                $caller.data("selectDropdown").items.splice(index, 1);
+                                methods._setCollapseSize($caller, $caller.width());
                             }
-                            $caller.selectDropdown("update");
-                        },
-                        onLoaded: function($input) {
-                            $caller.selectDropdown("update");
+
                         }
-                    },
-                    defaults,
-                    options));
+                    });
+
+                $bar.bind("dblclick",
+                    function (e) {
+                        methods.toggle($caller);
+                    });
+
+                // Window events 
+
+                $(win).bind("mouseup",
+                    function (e) {
+                        resizing = false;
+                        if ($bar.hasClass("active")) {
+                            $bar.removeClass("active");
+                        }
+                        cursorPosition = { x: 0, y: 0 };
+                    });
+
+                $(win).bind("mousemove",
+                    function (e) {
+                        if (resizing === false) {
+                            return;
+                        }
+
+                        var newPosition = { x: e.clientX, y: e.clientY },
+                            horizontal = methods._isHorizontal($caller),
+                            delta = horizontal
+                                ? parseInt(newPosition.y - cursorPosition.y)
+                                : parseInt(newPosition.x - cursorPosition.x),
+                            size = horizontal
+                                ? parseInt(dimensions.h - Math.floor(delta))
+                                : parseInt(dimensions.w - Math.floor(delta));
+
+                        if (horizontal) {
+                            $caller.css({ "height": size });
+                            $container.css({ "height": size - $bar.height() });
+                        } else {
+                            $caller.css({ "width": size });
+                            $container.css({ "width": size - $bar.width() });
+                        }
+
+                    });
+
+                // Bind close buttons
+                $caller.find(".resizable-close").bind("click",
+                    function (e) {
+                        e.preventDefault();
+                        methods.hide($caller);
+                    });
 
             },
-            getInput: function($caller) {
-                return $caller.find('[type="search"]');
-            },
-            getIndex: function($caller, item) {
+            unbind: function ($caller) {
 
-                var ensureUnique = $caller.data("selectDropdown").ensureUnique,
-                    selectDropdown = $caller.data("selectDropdown"),
-                    items = selectDropdown.items,
-                    index = -1;
-                if (ensureUnique === false) {
-                    return index;
+                var $bar = $caller.find(".resizable-bar");
+                if ($bar.length > 0) {
+                    $bar.unbind("mousedown");
                 }
-                for (var i = 0; i < items.length; i++) {
-                    if (item.id === items[i].id) {
-                        index = i;
+                $(win).unbind("mouseup");
+                $(win).unbind("mousemove");
+
+            },
+            toggle: function ($caller) {
+                if (methods._isExpanded($caller)) {
+                    methods.collapse($caller);
+                } else {
+                    methods.expand($caller);
+                }
+            },
+            expand: function ($caller) {
+                var $bar = $caller.find(".resizable-bar"),
+                    $container = $caller.find(".resizable-container");
+                if (methods._isHorizontal($caller)) {
+                    $caller.css({ "height": $(win).height() });
+                    $container.css({ "height": $(win).height() - $bar.height() });
+                } else {
+                    $caller.css({ "width": $(win).width() });
+                    $container.css({ "height": $(win).width() - $bar.width() });
+                }
+            },
+            collapse: function ($caller) {
+                var size = methods._getCollapseSize($caller),
+                    $bar = $caller.find(".resizable-bar"),
+                    $container = $caller.find(".resizable-container");
+                if (methods._isHorizontal($caller)) {
+                    $caller.css({ "height": size });
+                    $container.css({ "height": size - $bar.height() });
+                } else {
+                    $caller.css({ "width": size });
+                    $container.css({ "width": size - $bar.width() });
+                }
+            },
+            show: function ($caller) {
+                if ($caller.hasClass("resizable-hidden")) {
+                    $caller.removeClass("resizable-hidden");
+                    // onShow event
+                    if ($caller.data(dataKey).onShow) {
+                        $caller.data(dataKey).onShow($caller);
                     }
                 }
-                return index;
+            },
+            hide: function ($caller) {
+                if (!$caller.hasClass("resizable-hidden")) {
+                    $caller.addClass("resizable-hidden");
+                    // onHide event
+                    if ($caller.data(dataKey).onHide) {
+                        $caller.data(dataKey).onHide($caller);
+                    }
+                }
+            },
+            toggleVisibility: function ($caller) {
+                if ($caller.hasClass("resizable-hidden")) {
+                    methods.show($caller);
+                } else {
+                    methods.hide($caller);
+                }
+            },
+            _isExpanded($caller) {
+                if (methods._isHorizontal($caller)) {
+                    return $caller.height() === $(win).height();
+                }
+                return $caller.width() === $(win).width();
+            },
+            _setCollapseSize: function ($caller, size) {
+                $caller.attr("data-collapse-size", size);
+            },
+            _getCollapseSize: function ($caller) {
+                var size = parseInt($caller.attr("data-collapse-size"));
+                if (!win.isNaN(size)) {
+                    return size;
+                }
+                return Math.floor($(win).height() / 2);
+            },
+            _isHorizontal: function ($caller) {
+                return methods._isTop($caller) || methods._isBottom($caller);
+            },
+            _isVertical: function ($caller) {
+                return methods._isLeft($caller) || methods._isRight($caller);
+            },
+            _isLeft: function ($caller) {
+                return $caller.hasClass("resizable-left");
+            },
+            _isTop: function ($caller) {
+                return $caller.hasClass("resizable-top");
+            },
+            _isRight: function ($caller) {
+                return $caller.hasClass("resizable-right");
+            },
+            _isBottom: function ($caller) {
+                return $caller.hasClass("resizable-bottom");
             }
 
         };
@@ -4183,7 +3689,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).labelSelectDropdown()
+                    // $(selector).resizeable()
                     return this.each(function () {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -4195,7 +3701,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().labelSelectDropdown()
+                    // $().resizeable()
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -4208,211 +3714,11 @@ $(function (win, doc, $) {
                 }
 
             }
+
         };
 
     }();
-
-    /* categorySelectDropdown */
-    var categorySelectDropdown = function (options) {
-
-        var dataKey = "categorySelectDropdown",
-            dataIdKey = dataKey + "Id";
-
-        var defaults = {};
-
-        var methods = {
-            init: function($caller, methodName, func) {
-
-                if (func) {
-                    return func(this);
-                }
-                if (methodName) {
-                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
-                        this[methodName].apply(this, [$caller]);
-                    } else {
-                        alert(methodName + " is not a valid method!");
-                    }
-                    return null;
-                }
-
-                this.bind($caller);
-
-                return null;
-
-            },
-            bind: function($caller) {
-
-                //var $dropdown = $caller.find(".dropdown-menu");
-
-                // init selectDropdown
-                $caller.selectDropdown($.extend({
-                        itemTemplate:
-                            '<li class="list-group-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
-                        parseItemTemplate: function(html, $label) {
-                            var $div = $('<div class="list-group-item">');
-                            $div.append($label.clone());
-                            return $div;
-                        },
-                        onAddItem: function($input, result, e) {
-                            $input.val("");
-                        },
-                        onShow: function($sender, $dropdown) {
-
-                            // get tree
-                            var $tree = $dropdown.find('[data-provide="tree"]');
-
-                            // Focus & set-up search on dropdown shwn
-                            var $input = $dropdown.find('[type="search"]');
-                            if ($input.length > 0) {
-                                $input.focus()
-                                    .filterList({
-                                        target: $tree
-                                    });
-                            }
-
-                            // Expand tree view selection on dropdown shown
-
-                            if ($tree.length > 0) {
-                                $tree.treeView("scrollToSelected");
-                            }
-
-                        },
-                        onChange: function($dropdown, $input, e) {
-
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            // Get all checked labels within the dropdown
-                            $dropdown.find('input:checked').each(function() {
-
-                                var checkId = $(this).attr("id");
-                                var $label = $dropdown.find('[for="' + checkId + '"]');
-                                if ($label.length > 0) {
-                                    var index = methods.getIndex($caller, $label);
-                                    if (index === -1) {
-                                        $dropdown.data("selectDropdown").items = [];
-                                        $dropdown.data("selectDropdown").items.push($label);
-                                        $dropdown.selectDropdown("update");
-                                    } else {
-                                        $dropdown.selectDropdown({
-                                                highlightIndex: index
-                                            },
-                                            "highlight");
-                                    }
-
-                                }
-                            });
-
-
-                        }
-                    },
-                    defaults,
-                    options));
-
-                // init tree
-                $caller.find('[data-provide="tree"]').treeView($.extend({
-                            onClick: function($tree, $link, e) {
-
-                                e.preventDefault();
-                                e.stopPropagation();
-
-                                // Toggle checkbox when we click a tree node item
-                                var $inputs = $link.find("input").first();
-                                $inputs.each(function(i) {
-                                    if ($(this).is(":checked")) {
-                                        $(this).prop("checked", false);
-                                    } else {
-                                        $(this).prop("checked", true);
-                                    }
-                                    $(this).trigger("change");
-                                });
-                            },
-                            onToggle: function($tree, $toggler, e) {
-                                // Prevent onClick raising when we toggle a node
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return true;
-                            }
-                        },
-                        defaults,
-                        options),
-                    "expandAll");
-
-
-            },
-            getIndex: function($caller, $label) {
-
-                // Has the item been added to our items array
-                var ensureUnique = $caller.data("selectDropdown").ensureUnique,
-                    selectDropdown = $caller.data("selectDropdown"),
-                    items = selectDropdown.items,
-                    index = -1;
-                if (ensureUnique === false) {
-                    return index;
-                }
-                for (var i = 0; i < items.length; i++) {
-                    if ($label.attr("for") === items[i].attr("for")) {
-                        index = i;
-                    }
-                }
-                return index;
-            }
-
-        };
-
-        return {
-            init: function () {
-
-                var options = {};
-                var methodName = null;
-                for (var i = 0; i < arguments.length; ++i) {
-                    var a = arguments[i];
-                    switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
-                    }
-                }
-
-                if (this.length > 0) {
-                    // $(selector).categorySelectDropdown()
-                    return this.each(function () {
-                        if (!$(this).data(dataIdKey)) {
-                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                            $(this).data(dataIdKey, id);
-                            $(this).data(dataKey, $.extend({}, defaults, options));
-                        } else {
-                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
-                        }
-                        methods.init($(this), methodName);
-                    });
-                } else {
-                    // $().categorySelectDropdown()
-                    if (methodName) {
-                        if (methods[methodName]) {
-                            var $caller = $("body");
-                            $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
-                        } else {
-                            alert(methodName + " is not a valid method!");
-                        }
-                    }
-                }
-
-            }
-        };
-
-    }();
-
+    
     /* autoTargetBlank */
     var autoTargetBlank = function () {
 
@@ -4665,33 +3971,90 @@ $(function (win, doc, $) {
 
     }();
     
-    /* confirm */
-    var confirm = function () {
+    /* userAutoComplete */
+    var userAutoComplete = function () {
 
-        var dataKey = "confirm",
+        var dataKey = "userAutoComplete",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            event: "click", // unique namespace
-            message: "Are you sure you wish to delete this item?\n\nClick OK to confirm..."
+            valueField: "keywords",
+            config: {
+                method: "GET",
+                url: 'api/users/get?page={page}&size={pageSize}&keywords={keywords}',
+                data: {
+                    sort: "LastLoginDate",
+                    order: "Desc"
+                }
+            },
+            itemTemplate:
+                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
+            parseItemTemplate: function (html, result) {
+
+                if (result.id) {
+                    html = html.replace(/\{id}/g, result.id);
+                } else {
+                    html = html.replace(/\{id}/g, "0");
+                }
+
+                if (result.displayName) {
+                    html = html.replace(/\{displayName}/g, result.displayName);
+                } else {
+                    html = html.replace(/\{displayName}/g, "(no username)");
+                }
+                if (result.userName) {
+                    html = html.replace(/\{userName}/g, result.userName);
+                } else {
+                    html = html.replace(/\{userName}/g, "(no username)");
+                }
+
+                if (result.email) {
+                    html = html.replace(/\{email}/g, result.email);
+                } else {
+                    html = html.replace(/\{email}/g, "");
+                }
+
+                if (result.avatar.url) {
+                    html = html.replace(/\{avatar.url}/g, result.avatar.url);
+                } else {
+                    html = html.replace(/\{avatar.url}/g, "");
+                }
+
+
+                return html;
+
+            },
+            onKeyDown: function ($caller, e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                }
+            },
+            onItemClick: function ($caller, result, e) {
+                e.preventDefault();
+            }
         };
 
         var methods = {
-            timer: null,
-            init: function($caller) {
-                this.bind($caller);
+            init: function ($caller, methodName, func) {
+
+                if (func) {
+                    return func(this);
+                }
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return null;
+                }
+
+                // init autoComplete
+                $caller.autoComplete($caller.data(dataKey), methodName);
+
             },
-            bind: function($caller) {
-                var event = $caller.data(dataKey).event,
-                    message = $caller.data("confirmMessage") || $caller.data(dataKey).message;
-                $caller.on(event,
-                    function(e) {
-                        return win.confirm(message);
-                    });
-            },
-            unbind: function($caller) {
-                var event = $caller.data(dataKey).event;
-                $caller.unbind(event);
+            show: function ($caller) {
+                $caller.autoComplete("show");
             }
         };
 
@@ -4721,7 +4084,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).confirm()
+                    // $(selector).userAutoComplete()
                     return this.each(function () {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -4733,7 +4096,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().confirm()
+                    // $().userAutoComplete()
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -4751,20 +4114,20 @@ $(function (win, doc, $) {
 
     }();
 
-    /* resizeable */
-    var resizeable = function () {
+    /* userTagIt */
+    var userTagIt = function (options) {
 
-        var dataKey = "resizeable",
+        var dataKey = "userTagIt",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {
-            onShow: null,
-            onHide: null
-        };
+        var defaults = {};
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function ($caller, methodName, func) {
 
+                if (func) {
+                    return func(this);
+                }
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
@@ -4773,185 +4136,101 @@ $(function (win, doc, $) {
                     }
                     return null;
                 }
-                
+
                 this.bind($caller);
 
             },
-            bind: function($caller) {
+            bind: function ($caller) {
 
-                var $bar = $caller.find(".resizable-bar"),
-                    $container = $caller.find(".resizable-container"),
-                    resizing = false,
-                    cursorPosition = { x: 0, y: 0 },
-                    dimensions = { w: 0, h: 0 };
-                
-                // Bar events
+                // init tagIt
+                $caller.tagIt($.extend({
+                    itemTemplate:
+                        '<li class="tagit-list-item"><span class="avatar avatar-sm mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
+                    parseItemTemplate: function (html, result) {
 
-                $bar.bind("mousedown",
-                    function (e) {
-                        resizing = true;
-                        if (!$bar.hasClass("active")) {
-                            $bar.addClass("active");
-                        }
-                        cursorPosition = { x: e.clientX, y: e.clientY };
-                        dimensions = { w: $caller.width(), h: $caller.height() };
-                        if (!methods._isExpanded($caller)) {
-                            if (methods._isHorizontal($caller)) {
-                                methods._setCollapseSize($caller, $caller.height());
-                            } else {
-                                methods._setCollapseSize($caller, $caller.width());
-                            }
-                            
-                        }
-                    });
-
-                $bar.bind("dblclick",
-                    function(e) {
-                        methods.toggle($caller);
-                    });
-
-                // Window events 
-
-                $(win).bind("mouseup",
-                    function (e) {
-                        resizing = false;
-                        if ($bar.hasClass("active")) {
-                            $bar.removeClass("active");
-                        }
-                        cursorPosition = { x: 0, y: 0 };
-                    });
-
-                $(win).bind("mousemove",
-                    function(e) {
-                        if (resizing === false) {
-                            return;
-                        }
-                        
-                        var newPosition = { x: e.clientX, y: e.clientY },
-                            horizontal = methods._isHorizontal($caller),
-                            delta = horizontal
-                                ? parseInt(newPosition.y - cursorPosition.y)
-                                : parseInt(newPosition.x - cursorPosition.x),
-                            size = horizontal
-                                ? parseInt(dimensions.h - Math.floor(delta))
-                                : parseInt(dimensions.w - Math.floor(delta));
-
-                        if (horizontal) {
-                            $caller.css({ "height": size });
-                            $container.css({ "height": size - $bar.height() });
+                        if (result.id) {
+                            html = html.replace(/\{id}/g, result.id);
                         } else {
-                            $caller.css({ "width": size });
-                            $container.css({ "width": size - $bar.width() });
+                            html = html.replace(/\{id}/g, "0");
                         }
-                        
-                    });
+                        if (result.displayName) {
+                            html = html.replace(/\{displayName}/g, result.displayName);
+                        } else {
+                            html = html.replace(/\{displayName}/g, "(no username)");
+                        }
 
-                // Bind close buttons
-                $caller.find(".resizable-close").bind("click",
-                    function (e) {
+                        if (result.avatar.url) {
+                            html = html.replace(/\{avatar.url}/g, result.avatar.url);
+                        } else {
+                            html = html.replace(/\{avatar.url}/g, "");
+                        }
+
+                        return html;
+
+                    },
+                    onAddItem: function ($input, result, e) {
+                        $input.val("");
+                    }
+                },
+                    defaults,
+                    options));
+
+                // user auto complete
+                methods.getInput($caller).userAutoComplete($.extend({
+                    onItemClick: function ($input, result, e) {
+
                         e.preventDefault();
-                        methods.hide($caller);
-                    });
+
+                        // Get index if item already exists, else return -1
+                        var index = methods.getIndex($caller, result);
+                        if (index === -1) {
+
+                            // Add new item if within allowed bounds
+                            var tagIt = $caller.data("tagIt");
+                            if (tagIt.items.length < tagIt.maxItems) {
+                                tagIt.items.push(result);
+                                $caller.tagIt("update");
+                                $caller.tagIt("focus");
+                                $caller.tagIt("select");
+                                $caller.tagIt("show");
+                            }
+
+                            // We've reached max allowed bounds hide autoComplete
+                            if (tagIt.items.length === tagIt.maxItems) {
+                                $caller.tagIt("hide");
+                            }
+
+                        } else {
+                            // Highlight duplicates
+                            $caller.tagIt({
+                                highlightIndex: index
+                            },
+                                "highlight");
+                        }
+
+                    }
+                },
+                    defaults,
+                    options));
 
             },
-            unbind: function ($caller) {
-
-                var $bar = $caller.find(".resizable-bar");
-                if ($bar.length > 0) {
-                    $bar.unbind("mousedown");
-                }
-                $(win).unbind("mouseup");
-                $(win).unbind("mousemove");
-
+            getInput: function ($caller) {
+                return $caller.find(".tagit-list-item-input").find("input");
             },
-            toggle: function ($caller) {
-                if (methods._isExpanded($caller)) {
-                    methods.collapse($caller);
-                } else {
-                    methods.expand($caller);
+            getIndex: function ($caller, item) {
+                var ensureUnique = $caller.data("tagIt").ensureUnique,
+                    tagit = $caller.data("tagIt"),
+                    items = tagit.items,
+                    index = -1;
+                if (ensureUnique === false) {
+                    return index;
                 }
-            },
-            expand: function ($caller) {
-                var $bar = $caller.find(".resizable-bar"),
-                    $container = $caller.find(".resizable-container");
-                if (methods._isHorizontal($caller)) {
-                    $caller.css({ "height": $(win).height() });
-                    $container.css({ "height": $(win).height() - $bar.height() });
-                } else {
-                    $caller.css({ "width": $(win).width() });
-                    $container.css({ "height": $(win).width() - $bar.width() });
-                }
-            },
-            collapse: function ($caller) {
-                var size = methods._getCollapseSize($caller),
-                    $bar = $caller.find(".resizable-bar"),
-                    $container = $caller.find(".resizable-container");
-                if (methods._isHorizontal($caller)) {
-                    $caller.css({ "height": size });
-                    $container.css({ "height": size - $bar.height() });
-                } else {
-                    $caller.css({ "width": size });
-                    $container.css({ "width": size - $bar.width() });
-                }
-            },
-            show: function ($caller) {
-                if ($caller.hasClass("resizable-hidden")) {
-                    $caller.removeClass("resizable-hidden");
-                    // onShow event
-                    if ($caller.data(dataKey).onShow) {
-                        $caller.data(dataKey).onShow($caller);
+                for (var i = 0; i < items.length; i++) {
+                    if (item.id === items[i].id) {
+                        index = i;
                     }
                 }
-            },
-            hide: function ($caller) {
-                if (!$caller.hasClass("resizable-hidden")) {
-                    $caller.addClass("resizable-hidden");
-                    // onHide event
-                    if ($caller.data(dataKey).onHide) {
-                        $caller.data(dataKey).onHide($caller);
-                    }
-                }
-            },
-            toggleVisibility: function ($caller) {
-                if ($caller.hasClass("resizable-hidden")) {
-                    methods.show($caller);
-                } else {
-                    methods.hide($caller);
-                }
-            },
-            _isExpanded($caller) {
-                if (methods._isHorizontal($caller)) {
-                    return $caller.height() === $(win).height();
-                }
-                return $caller.width() === $(win).width();
-            },
-            _setCollapseSize: function ($caller, size) {
-                $caller.attr("data-collapse-size", size);
-            },
-            _getCollapseSize: function ($caller) {
-                var size = parseInt($caller.attr("data-collapse-size"));
-                if (!win.isNaN(size)) {
-                    return size;
-                }
-                return Math.floor($(win).height() / 2);
-            },
-            _isHorizontal: function($caller) {
-                return methods._isTop($caller) || methods._isBottom($caller);
-            },
-            _isVertical: function ($caller) {
-                return methods._isLeft($caller) || methods._isRight($caller);
-            },
-            _isLeft: function ($caller) {
-                return $caller.hasClass("resizable-left");
-            },
-            _isTop: function ($caller) {
-                return $caller.hasClass("resizable-top");
-            },
-            _isRight: function ($caller) {
-                return $caller.hasClass("resizable-right");
-            },
-            _isBottom: function ($caller) {
-                return $caller.hasClass("resizable-bottom");
+                return index;
             }
 
         };
@@ -4963,8 +4242,7 @@ $(function (win, doc, $) {
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
-                    if (a) {
-                        switch (a.constructor) {
+                    switch (a.constructor) {
                         case Object:
                             $.extend(options, a);
                             break;
@@ -4977,12 +4255,11 @@ $(function (win, doc, $) {
                             break;
                         case Function:
                             break;
-                        }
                     }
                 }
 
                 if (this.length > 0) {
-                    // $(selector).resizeable()
+                    // $(selector).userTagIt()
                     return this.each(function () {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -4994,7 +4271,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().resizeable()
+                    // $().userTagIt()
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -5007,11 +4284,10 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
-    
+
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -5027,12 +4303,8 @@ $(function (win, doc, $) {
         filterList: filterList.init,
         tagIt: tagIt.init,
         userAutoComplete: userAutoComplete.init,
-        labelAutoComplete: labelAutoComplete.init,
         userTagIt: userTagIt.init,
-        labelTagIt: labelTagIt.init,
         selectDropdown: selectDropdown.init,
-        labelSelectDropdown: labelSelectDropdown.init,
-        categorySelectDropdown: categorySelectDropdown.init,
         autoTargetBlank: autoTargetBlank.init,
         autoLinkImages: autoLinkImages.init,
         markdownBody: markdownBody.init,
@@ -5041,7 +4313,7 @@ $(function (win, doc, $) {
     });
 
     // ---------------------------
-    // Initialize plug-ins
+    // Initialize core plug-ins
     // ----------------------------
 
     $.fn.platoUI = function(opts) {
@@ -5057,13 +4329,7 @@ $(function (win, doc, $) {
 
         /* select dropdown */
         this.find('[data-provide="select-dropdown"]').selectDropdown();
-
-        /* label select dropdown */
-        this.find('[data-provide="label-select-dropdown"]').labelSelectDropdown();
-
-        /* category select dropdown */
-        this.find('[data-provide="category-select-dropdown"]').categorySelectDropdown();
-
+        
         /* treeView */
         this.find('[data-provide="tree"]').treeView();
 
@@ -5075,18 +4341,12 @@ $(function (win, doc, $) {
 
         /* userAutoComplete */
         this.find('[data-provide="userAutoComplete"]').userAutoComplete();
-
-        /* labelAutoComplete */
-        this.find('[data-provide="labelAutoComplete"]').labelAutoComplete();
-
+        
         /* tagIt */
         this.find('[data-provide="tagIt"]').tagIt();
 
         /* userTagIt */
         this.find('[data-provide="userTagIt"]').userTagIt();
-
-        /* labelTagIt */
-        this.find('[data-provide="labelTagIt"]').labelTagIt();
 
         /* confirm */
         this.find('[data-provide="confirm"]').confirm();
@@ -5112,7 +4372,7 @@ $(function (win, doc, $) {
     // doc ready
     // --------------
 
-    $(doc).ready(function () {
+    app.ready(function () {
 
         // Init plato UI
         $("body").platoUI();

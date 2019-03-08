@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
+using Plato.Labels.Assets;
 using Plato.Labels.Handlers;
 using Plato.Labels.Models;
 using Plato.Labels.Repositories;
@@ -48,6 +50,9 @@ namespace Plato.Labels
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntityLabelSubscriber>();
+          
+            // Client assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
         }
 

@@ -32,7 +32,7 @@
 
                         <label asp-for="Name"><strong>@T["Icon"]</strong></label>
                         <br />
-                        <button type="button" href="#selectIconModal" id="selectIconTrigger" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary text-muted" role="button">
+                        <button type="button" href="#selectIconModal" data-provide="category-icon-modal" data-icon-prefix="@Model.ChannelIcons.Prefix" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary text-muted" role="button">
                             @if (String.IsNullOrEmpty(Model.IconCss))
                             {
                                 <i class="fal fa-plus"></i>
@@ -116,20 +116,16 @@
             <div class="modal-header">
                 <h6>@T["Channel Icon"]</h6>
             </div>
-            <div class="modal-body" style="max-height: 600px; overflow-y: scroll;">
-                
-                <div id="availableIcons" data-icon-prefix="@Model.ChannelIcons.Prefix">
-                    @foreach (var icon in Model.ChannelIcons.Icons)
-                    {
-                        var css = Model.IconPrefix + icon;
-                        var selected = Model.IconCss == css;
-                        <label class="btn btn-secondary radio-icon" id="@icon">
-                            <input checked="@selected" type="radio" value="@icon" name="iconCss" id="@icon" />
-                            <span><i class="@css"></i></span>
-                        </label>
-                    }
-                </div>
-
+            <div class="modal-body" style="max-height: 500px; overflow-y: scroll;">
+                @foreach (var icon in Model.ChannelIcons.Icons)
+                {
+                    var css = Model.IconPrefix + icon;
+                    var selected = Model.IconCss == css;
+                    <label class="btn btn-secondary radio-icon" id="@icon">
+                        <input checked="@selected" type="radio" value="@icon" name="iconCss" id="@icon" />
+                        <span><i class="@css"></i></span>
+                    </label>
+                }
             </div>
             <div class="modal-footer">
                 <button tyoe="button" class="btn btn-primary" data-dismiss="modal">
@@ -141,40 +137,3 @@
 
 </div>
 
-<script section="Footer" allow-merge="true">
-
-        $(function(win, doc, $) {
-
-        var selectedIcon = "";
-
-            $(doc).ready(function() {
-
-                var $icons = $("#availableIcons"),
-                    $inputs = $icons.find("input[name=iconCss]"),
-                    $checked = $icons.find("input[name=iconCss]:checked"),
-                    iconPrefix = $icons.attr("data-icon-prefix");
-
-                if ($checked.length > 0) {
-                    selectedIcon = $checked.val();
-                }
-
-                $inputs.change(function() {
-                    selectedIcon = $(this).val();
-                });
-
-                $('#selectIconModal').on('hidden.bs.modal',
-                    function (e) {
-                        if (selectedIcon === "") {
-                            return;
-                        }
-                        var $i = $("#selectIconTrigger").find("i");
-                        if ($i.length > 0) {
-                            $i.removeClass()
-                                .addClass(iconPrefix + selectedIcon);
-                        }
-                    });
-            });
-
-        }(window, document, jQuery));
-
-</script>

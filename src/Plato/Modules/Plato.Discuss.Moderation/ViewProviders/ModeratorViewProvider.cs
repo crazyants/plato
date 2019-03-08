@@ -20,14 +20,14 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         private const string ChannelHtmlName = "channel";
 
-        private readonly ICategoryStore<ChannelAdmin> _channelStore;
+        private readonly ICategoryStore<Channel> _channelStore;
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly HttpRequest _request;
 
         public ModeratorViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IModeratorStore<Moderator> moderatorStore,
-            ICategoryStore<ChannelAdmin> channelStore)
+            ICategoryStore<Channel> channelStore)
         {
             _moderatorStore = moderatorStore;
             _channelStore = channelStore;

@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Categories.Assets;
 using Plato.Categories.Handlers;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
@@ -42,7 +44,11 @@ namespace Plato.Categories
 
             // Managers
             services.AddScoped<ICategoryManager<CategoryBase>, CategoryManager<CategoryBase>>();
-        
+         
+            // Client assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
+
+
         }
 
         public override void Configure(

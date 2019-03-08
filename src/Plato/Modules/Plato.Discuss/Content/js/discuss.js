@@ -96,7 +96,7 @@ $(function (win, doc, $) {
 
     // --------
 
-    $(doc).ready(function () {
+    app.ready(function () {
         discuss.init();
     });
     

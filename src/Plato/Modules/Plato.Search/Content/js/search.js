@@ -1,19 +1,26 @@
-﻿
-if (typeof jQuery === "undefined") {
-    throw new Error("jQuery Required");
+﻿// <reference path="/wwwroot/js/app.js" />
+
+if (typeof window.jQuery === "undefined") {
+    throw new Error("jQuery 3.3.1 or above Required");
 }
 
-if (typeof $.Plato === "undefined") {
+if (typeof window.$.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
 
-/* search */
+if (typeof window.$.fn.platoUI === "undefined") {
+    throw new Error("$.Plato UI Required");
+}
+
 $(function (win, doc, $) {
 
     'use strict';
 
-    // Plato Global Object
+    // --------
+
     var app = win.$.Plato;
+
+    // --------
 
     /* searchDropDown */
     var searchDropDown = function () {
@@ -298,10 +305,12 @@ $(function (win, doc, $) {
     $(doc).ready(function () {
 
         // Search auto complete
-        $('[data-provide="searchAutoComplete"]').searchAutoComplete();
+        $('[data-provide="searchAutoComplete"]')
+            .searchAutoComplete();
 
         // Search drop down menu
-        $('[data-provide="searchDropDown"]').searchDropDown();
+        $('[data-provide="searchDropDown"]')
+            .searchDropDown();
         
     });
 

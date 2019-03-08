@@ -396,7 +396,7 @@ $(function (win, doc, $) {
     win.$.Plato = {
         // defaults
         defaults: {
-            debug: true,
+            debug: false,
             url: "",
             locale: "en-US",
             apiKey: "",
@@ -426,6 +426,10 @@ $(function (win, doc, $) {
             }
             return key;
         },
+        readyMethods: [],
+        ready: function(func) {
+            this.readyMethods.push(func);
+        },
         // facade access - ensures we can easily implement 
         // new objects or extend existing objects 
         // i.e.$.extend(window.$.Plato.logger, myLogger)
@@ -444,6 +448,11 @@ $(function (win, doc, $) {
 
         // Our main global object
         var app = win.$.Plato;
+
+        // Invoke pushed ready functions
+        for (var i = 0; i < app.readyMethods.length; i++) {
+            app.readyMethods[i]();
+        }
 
         // Write options to the console
         app.logger.logInfo("$.Plato:\n" + JSON.stringify(app.defaults, null, "     "));

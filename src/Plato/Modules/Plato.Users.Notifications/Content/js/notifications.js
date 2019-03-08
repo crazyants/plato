@@ -1,10 +1,15 @@
-﻿
-if (typeof jQuery === "undefined") {
+﻿// <reference path="/wwwroot/js/app.js" />
+
+if (typeof window.jQuery === "undefined") {
     throw new Error("Plato requires jQuery");
 }
 
-if (typeof $.Plato === "undefined") {
+if (typeof window.$.Plato === "undefined") {
     throw new Error("$.Plato Required");
+}
+
+if (typeof window.$.fn.platoUI === "undefined") {
+    throw new Error("$.Plato UI Required");
 }
 
 /* notifications */
@@ -12,8 +17,11 @@ $(function (win, doc, $) {
 
     'use strict';
 
-    // Plato Global Object
+    // --------
+
     var app = win.$.Plato;
+
+    // --------
 
     // notifications
     var notifications = function () {

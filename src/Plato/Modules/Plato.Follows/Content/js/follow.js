@@ -468,7 +468,7 @@ $(function (win, doc, $) {
         followCheckbox: followCheckbox.init
     });
     
-    $(doc).ready(function () {
+    app.ready(function () {
 
         $('[data-provide="follow-button"]')
             .followButton();

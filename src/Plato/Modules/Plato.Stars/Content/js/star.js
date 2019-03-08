@@ -1,10 +1,15 @@
-﻿
-if (typeof jQuery === "undefined") {
-    throw new Error("jQuery Required");
+﻿// <reference path="/wwwroot/js/app.js" />
+
+if (typeof window.jQuery === "undefined") {
+    throw new Error("jQuery 3.3.1 or above Required");
 }
 
-if (typeof $.Plato === "undefined") {
+if (typeof window.$.Plato === "undefined") {
     throw new Error("$.Plato Required");
+}
+
+if (typeof window.$.fn.platoUI === "undefined") {
+    throw new Error("$.Plato UI Required");
 }
 
 /* star button */
@@ -369,9 +374,11 @@ $(function (win, doc, $) {
         starToggle: starToggle.init,
     });
     
-    $(doc).ready(function () {
+    app.ready(function () {
+
         $('[data-provide="star-button"]')
             .starButton();
+
     });
 
 }(window, document, jQuery));
