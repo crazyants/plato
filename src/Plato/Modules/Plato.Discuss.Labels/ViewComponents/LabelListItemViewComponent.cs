@@ -7,7 +7,7 @@ using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Labels.Models;
+using Plato.Entities.Labels.Models;
 
 namespace Plato.Discuss.Labels.ViewComponents
 {

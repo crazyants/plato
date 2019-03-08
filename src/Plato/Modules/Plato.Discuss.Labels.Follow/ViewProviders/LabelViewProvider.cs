@@ -4,7 +4,7 @@ using Plato.Follows.Stores;
 using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Labels.Stores;
+using Plato.Entities.Labels.Stores;
 
 namespace Plato.Discuss.Labels.Follow.ViewProviders
 {

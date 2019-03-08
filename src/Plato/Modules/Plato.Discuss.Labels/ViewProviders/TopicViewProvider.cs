@@ -9,15 +9,15 @@ using Plato.Discuss.Labels.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Labels.Models;
-using Plato.Labels.Stores;
+using Plato.Entities.Labels.Models;
+using Plato.Entities.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Labels.Services;
+using Plato.Entities.Labels.Services;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {

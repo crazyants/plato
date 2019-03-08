@@ -7,7 +7,7 @@ PlatoVersion: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Labels",
+		Id: "Plato.Entities.Labels",
 		Version: "1.0.0"
 	},
 	{

@@ -10,7 +10,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
-    <ProjectReference Include="..\Plato.Labels\Plato.Labels.csproj" />
+    <ProjectReference Include="..\Plato.Entities.Labels\Plato.Entities.Labels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

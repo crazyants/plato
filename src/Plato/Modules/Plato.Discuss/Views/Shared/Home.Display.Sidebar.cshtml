@@ -1,5 +1,9 @@
 ﻿@model Topic
-
+@{
+    var viewText = Model.TotalViews == 1
+        ? "view"
+        : "views";
+}
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title">@T["Details"]</h6>
@@ -13,10 +17,7 @@
                 @T["Latest Reply"]: <date utc="@Model.LastReplyDate"></date>
             </li>
             <li class="list-group-item">
-                @Model.TotalViews
-                @T[" views"],
-                @Model.TotalFollows
-                @T["follows"]
+                @Model.TotalViews @T[viewText], @Model.DailyViews @T["daily"]
             </li>
         </ul>
     </card-body>

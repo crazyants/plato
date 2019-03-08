@@ -5,29 +5,29 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Labels.Models;
-using Plato.Labels.Services;
-using Plato.Labels.Stores;
+using Plato.Entities.Labels.Services;
+using Plato.Entities.Labels.Stores;
+using Plato.Entities.Labels.ViewModels;
 
 namespace Plato.Discuss.Labels.Controllers
 {
+
     public class AdminController : Controller, IUpdateModel
     {
+
         private readonly IContextFacade _contextFacade;
-        private readonly ILabelStore<LabelBase> _labelStore;
-        private readonly ILabelManager<LabelBase> _labelManager;
-        private readonly IViewProviderManager<LabelBase> _viewProvider;
-        private readonly IAlerter _alerter;
+        private readonly ILabelStore<Label> _labelStore;
+        private readonly ILabelManager<Label> _labelManager;
+        private readonly IViewProviderManager<LabelAdmin> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -37,12 +37,12 @@ namespace Plato.Discuss.Labels.Controllers
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
-            ILabelStore<LabelBase> labelStore,
-            IViewProviderManager<LabelBase> viewProvider,
+            ILabelStore<Label> labelStore,
+            ILabelManager<Label> labelManager,
+            IViewProviderManager<LabelAdmin> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IAlerter alerter,
-            ILabelManager<LabelBase> labelManager,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IAlerter alerter)
         {
             _contextFacade = contextFacade;
             _labelStore = labelStore;
@@ -56,10 +56,7 @@ namespace Plato.Discuss.Labels.Controllers
             S = stringLocalizer;
         }
 
-        public async Task<IActionResult> Index(
-            int offset,
-            LabelIndexOptions opts,
-            PagerOptions pager)
+        public async Task<IActionResult> Index(LabelIndexOptions opts, PagerOptions pager)
         {
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
@@ -110,14 +107,14 @@ namespace Plato.Discuss.Labels.Controllers
             opts.EnableEdit = true;
             
             // Build view model
-            var viewModel = new LabelIndexViewModel()
+            var viewModel = new LabelIndexViewModel<Label>()
             {
                 Options = opts,
                 Pager = pager
             };
 
             // Add view options to context for use within view adaptors
-            HttpContext.Items[typeof(LabelIndexViewModel)] = viewModel;
+            HttpContext.Items[typeof(LabelIndexViewModel<Label>)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -127,7 +124,7 @@ namespace Plato.Discuss.Labels.Controllers
             }
 
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new LabelBase(), this));
+            return View(await _viewProvider.ProvideIndexAsync(new Label(), this));
 
         }
         

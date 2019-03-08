@@ -1,8 +1,7 @@
-﻿using Plato.Labels.Models;
-
-namespace Plato.Discuss.Labels.Models
+﻿namespace Plato.Discuss.Labels.Models
 {
-    public class Label : LabelBase
+    public class Label : LabelAdmin
     {
     }
+    
 }

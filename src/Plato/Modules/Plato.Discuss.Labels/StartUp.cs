@@ -5,14 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Labels.Models;
-using Plato.Labels.Repositories;
-using Plato.Labels.Services;
-using Plato.Labels.Stores;
+using Plato.Entities.Labels.Models;
+using Plato.Entities.Labels.Repositories;
+using Plato.Entities.Labels.Services;
+using Plato.Entities.Labels.Stores;
 using Plato.Discuss.Models;
 using Plato.Discuss.Labels.Navigation;
 using Plato.Discuss.Labels.Models;
-using Plato.Discuss.Labels.Services;
 using Plato.Discuss.Labels.ViewAdapters;
 using Plato.Discuss.Labels.ViewProviders;
 using Plato.Internal.Layout.ViewAdapters;
@@ -46,8 +45,8 @@ namespace Plato.Discuss.Labels
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
 
             // Admin view providers
-            services.AddScoped<IViewProviderManager<LabelBase>, ViewProviderManager<LabelBase>>();
-            services.AddScoped<IViewProvider<LabelBase>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<LabelAdmin>, ViewProviderManager<LabelAdmin>>();
+            services.AddScoped<IViewProvider<LabelAdmin>, AdminViewProvider>();
        
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
@@ -57,7 +56,7 @@ namespace Plato.Discuss.Labels
             services.AddScoped<IViewProvider<Label>, LabelViewProvider>();
 
             // Label service
-            services.AddScoped<ILabelService, LabelService>();
+            services.AddScoped<ILabelService<Label>, LabelService<Label>>();
 
         }
 

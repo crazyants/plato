@@ -2,19 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Labels.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Labels.Stores;
-using Plato.Discuss.Labels.ViewModels;
-using Plato.Discuss.Models;
-using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using SortBy = Plato.Entities.ViewModels.SortBy;
+using Plato.Entities.Labels.Stores;
+using Plato.Discuss.Models;
+using Plato.Discuss.Labels.Models;
+using Plato.Entities.Labels.ViewModels;
+using Plato.Entities.ViewModels;
+
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -34,9 +35,9 @@ namespace Plato.Discuss.Labels.Controllers
         public IStringLocalizer S { get; }
         
         public HomeController(
-            IViewProviderManager<Label> labelViewProvider,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
+            IViewProviderManager<Label> labelViewProvider,
             ILabelStore<Label> labelStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
@@ -70,10 +71,7 @@ namespace Plato.Discuss.Labels.Controllers
             {
                 pager = new PagerOptions();
             }
-
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
+            
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -103,14 +101,10 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
             // Build view model
-            var viewModel = new LabelIndexViewModel()
-            {
-                Options = opts,
-                Pager = pager
-            };
+            var viewModel = await GetIndexViewModelAsync(opts, pager);
 
             // Add view options to context 
-            HttpContext.Items[typeof(LabelIndexViewModel)] = viewModel;
+            HttpContext.Items[typeof(LabelIndexViewModel<Label>)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -188,10 +182,33 @@ namespace Plato.Discuss.Labels.Controllers
 
         }
 
-        async Task<EntityIndexViewModel<Topic>> GetDisplayViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        async Task<LabelIndexViewModel<Label>> GetIndexViewModelAsync(LabelIndexOptions options, PagerOptions pager)
         {
 
             // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            return new LabelIndexViewModel<Label>()
+            {
+                Options = options,
+                Pager = pager
+            };
+
+        }
+        
+        async Task<EntityIndexViewModel<Topic>> GetDisplayViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        {
+
+            // Get discuss feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
 
             // Restrict results to current feature
@@ -217,10 +234,7 @@ namespace Plato.Discuss.Labels.Controllers
             };
 
         }
-
-
-
-
+        
     }
 
 }

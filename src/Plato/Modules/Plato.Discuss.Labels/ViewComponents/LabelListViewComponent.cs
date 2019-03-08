@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Discuss.Labels.Services;
-using Plato.Discuss.Labels.ViewModels;
+using Plato.Discuss.Labels.Models;
+using Plato.Entities.Labels.Services;
+using Plato.Entities.Labels.ViewModels;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Labels.ViewComponents
@@ -61,10 +61,10 @@ namespace Plato.Discuss.Labels.ViewComponents
             },
         };
         
-        private readonly ILabelService _labelService;
+        private readonly ILabelService<Label> _labelService;
 
         public LabelListViewComponent(
-            ILabelService labelService)
+            ILabelService<Label> labelService)
         {
             _labelService = labelService;
         }
@@ -88,18 +88,19 @@ namespace Plato.Discuss.Labels.ViewComponents
 
         }
 
-        async Task<LabelIndexViewModel> GetViewModel(
+        async Task<LabelIndexViewModel<Label>> GetViewModel(
             LabelIndexOptions options,
             PagerOptions pager)
         {
 
-            var results = await _labelService.GetLabelsAsunc(options, pager);
+            var results = await _labelService
+                .GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
 
             // Return view model
-            return new LabelIndexViewModel
+            return new LabelIndexViewModel<Label>
             {
                 SortColumns = _defaultSortColumns,
                 SortOrder = _defaultSortOrder,

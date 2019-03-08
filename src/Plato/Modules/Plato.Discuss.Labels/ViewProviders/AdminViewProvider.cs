@@ -5,17 +5,15 @@ using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell.Abstractions;
-using Plato.Labels.Models;
-using Plato.Labels.Services;
-using Plato.Labels.Stores;
+using Plato.Entities.Labels.Models;
+using Plato.Entities.Labels.Services;
+using Plato.Entities.Labels.Stores;
+using Plato.Entities.Labels.ViewModels;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {
-    public class AdminViewProvider : BaseViewProvider<LabelBase>
+    public class AdminViewProvider : BaseViewProvider<LabelAdmin>
     {
         
         private readonly IContextFacade _contextFacade;
@@ -37,31 +35,31 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(LabelBase label, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(LabelAdmin label, IViewProviderContext context)
         {
      
             // Get index view model from context
-            var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel<Label>)] as LabelIndexViewModel<Label>;
             if (viewModel == null)
             {
-                throw new Exception($"A view model of type {typeof(LabelIndexViewModel).ToString()} has not been registered on the HttpContext!");
+                throw new Exception($"A view model of type {typeof(LabelIndexViewModel<Label>).ToString()} has not been registered on the HttpContext!");
             }
             
             return Task.FromResult(Views(
-                View<LabelIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
-                View<LabelIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
-                View<LabelIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
+                View<LabelIndexViewModel<Label>>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
+                View<LabelIndexViewModel<Label>>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
+                View<LabelIndexViewModel<Label>>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
             ));
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(LabelBase label, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(LabelAdmin label, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(LabelBase label, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(LabelAdmin label, IViewProviderContext updater)
         {
 
             EditLabelViewModel editLabelViewModel = null;
@@ -92,7 +90,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(LabelBase label, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(LabelAdmin label, IViewProviderContext context)
         {
 
             var model = new EditLabelViewModel();

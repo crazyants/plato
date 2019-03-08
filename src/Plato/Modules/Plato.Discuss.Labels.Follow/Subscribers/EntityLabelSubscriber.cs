@@ -14,8 +14,8 @@ using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Labels.Models;
-using Plato.Labels.Stores;
+using Plato.Entities.Labels.Models;
+using Plato.Entities.Labels.Stores;
 using Plato.Internal.Stores.Users;
 
 namespace Plato.Discuss.Labels.Follow.Subscribers

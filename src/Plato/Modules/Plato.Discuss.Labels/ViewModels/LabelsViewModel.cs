@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plato.Labels.Models;
+using Plato.Entities.Labels.Models;
 
 namespace Plato.Discuss.Labels.ViewModels
 {

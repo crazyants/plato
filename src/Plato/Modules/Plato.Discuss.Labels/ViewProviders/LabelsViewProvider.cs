@@ -7,8 +7,9 @@ using Plato.Discuss.Models;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Labels.Stores;
+using Plato.Entities.Labels.Stores;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.Labels.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 
@@ -40,16 +41,16 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             // Get index view model from context
-            var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel<Label>)] as LabelIndexViewModel<Label>;
             if (viewModel == null)
             {
-                throw new Exception($"A view model of type {typeof(LabelIndexViewModel).ToString()} has not been registered on the HttpContext!");
+                throw new Exception($"A view model of type {typeof(LabelIndexViewModel<Label>).ToString()} has not been registered on the HttpContext!");
             }
 
             return Task.FromResult(Views(
-                View<LabelIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
-                View<LabelIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
-                View<LabelIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content").Order(1)
+                View<LabelIndexViewModel<Label>>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
+                View<LabelIndexViewModel<Label>>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
+                View<LabelIndexViewModel<Label>>("Home.Index.Content", model => viewModel).Zone("content").Order(1)
             ));
 
         }
