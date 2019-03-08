@@ -4,7 +4,7 @@
 @if (Model.Reply != null) {
     @if (Model.Reply.EditedDate != null)
      {
-         <div class="dropdown history-dropdown" data-provide="historyDropdown">
+         <div class="dropdown history-dropdown" data-provide="history-dropdown">
              <a class="nav-link text-muted dropdown-toggle" href="#" id="historyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                  @T["edited"] <date utc="@Model.Reply.EditedDate"></date>
              </a>
@@ -28,7 +28,7 @@ else
 {
     @if (Model.Topic?.EditedDate != null)
      {
-         <div class="dropdown history-dropdown" data-provide="historyDropdown">
+         <div class="dropdown history-dropdown" data-provide="history-dropdown">
              <a class="nav-link text-muted dropdown-toggle" href="#" id="historyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                  @T["edited"]  <date utc="@Model.Topic.EditedDate"></date>
              </a>

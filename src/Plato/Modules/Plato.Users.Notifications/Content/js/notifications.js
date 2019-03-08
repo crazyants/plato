@@ -559,7 +559,7 @@ $(function (win, doc, $) {
         notificationsDropdown: notificationsDropdown.init
     });
 
-    $(doc).ready(function () {
+    app.ready(function () {
 
         var $dropdown = $('[data-provide="notificationsDropdown"]'),
             $badge = $('[data-provide="notificationsBadge"]'),
