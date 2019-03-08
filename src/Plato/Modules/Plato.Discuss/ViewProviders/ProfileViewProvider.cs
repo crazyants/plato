@@ -55,7 +55,7 @@ namespace Plato.Discuss.ViewProviders
                 Pager = new PagerOptions()
                 {
                     Page = 1,
-                    PageSize = 5,
+                    Size = 5,
                     Enabled = false
                 }
             };

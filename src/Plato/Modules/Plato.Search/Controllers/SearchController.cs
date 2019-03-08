@@ -83,7 +83,7 @@ namespace Plato.Search.Controllers
                 }, new PagerOptions()
                 {
                     Page = page,
-                    PageSize = size
+                    Size = size
                 });
             
             IPagedResults<SearchApiResult> results = null;

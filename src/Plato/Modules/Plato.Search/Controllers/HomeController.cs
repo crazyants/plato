@@ -85,8 +85,8 @@ namespace Plato.Search.Controllers
                 this.RouteData.Values.Add("opts.within", opts.Within);
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            if (pager.Size != defaultPagerOptions.Size && !this.RouteData.Values.ContainsKey("pager.size"))
+                this.RouteData.Values.Add("pager.size", pager.Size);
             
             // Build view model
             var viewModel = await GetIndexViewModelAsync(opts, pager);

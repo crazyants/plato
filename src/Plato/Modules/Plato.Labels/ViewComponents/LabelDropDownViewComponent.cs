@@ -21,33 +21,32 @@ namespace Plato.Labels.ViewComponents
             _labelStore = labelStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            IEnumerable<int> selectedLabels,
-            string htmlName)
+        public async Task<IViewComponentResult> InvokeAsync(LabelDropDownViewModel model)
         {
-            if (selectedLabels == null)
+            if (model.SelectedLabels == null)
             {
-                selectedLabels = new int[0];
+                model.SelectedLabels = new int[0];
             }
 
-            var labels = await BuildSelectionsAsync(selectedLabels);
-            return View(new LabelDropDownViewModel
+            var labels = await BuildSelectionsAsync(model);
+            if (labels != null)
             {
-                HtmlName = htmlName,
-                LabelsJson = labels.Serialize()
-            });
+                model.LabelsJson = labels.Serialize();
+            }
+        
+            return View(model);
 
         }
 
-        private async Task<IEnumerable<LabelApiResult>> BuildSelectionsAsync(IEnumerable<int> selected)
+        private async Task<IEnumerable<LabelApiResult>> BuildSelectionsAsync(LabelDropDownViewModel model)
         {
 
-            if (selected == null)
+            if (model.SelectedLabels == null)
             {
                 return new List<LabelApiResult>();
             }
 
-            if (((int[])selected).Length == 0)
+            if (((int[])model.SelectedLabels).Length == 0)
             {
                 return new List<LabelApiResult>();
             }
@@ -56,7 +55,7 @@ namespace Plato.Labels.ViewComponents
             var labels = await _labelStore.QueryAsync()
                 .Select<LabelQueryParams>(q =>
                 {
-                    q.Id.IsIn(selected.ToArray());
+                    q.Id.IsIn(model.SelectedLabels.ToArray());
                 })
                 .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();

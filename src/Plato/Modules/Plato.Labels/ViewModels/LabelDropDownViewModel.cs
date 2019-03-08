@@ -4,11 +4,18 @@ using System.ComponentModel.DataAnnotations;
 namespace Plato.Labels.ViewModels
 {
     
-    public class LabelDropDownViewModel
+    public class LabelDropDownViewModel : LabelInputViewModel
     {
 
+        public LabelIndexOptions Options { get; set; }
+
         public string LabelsJson { get; set; }
-    
+
+    }
+
+    public class LabelInputViewModel
+    {
+
         public string HtmlName { get; set; }
 
         [Required]

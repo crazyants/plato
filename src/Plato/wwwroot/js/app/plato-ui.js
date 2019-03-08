@@ -1348,6 +1348,9 @@ $(function (win, doc, $) {
                         if (onShow) {
                             onShow();
                         }
+                        if ($caller.data(dataKey).onShow) {
+                            $caller.data(dataKey).onShow($caller, $target);
+                        }
                     }
                 }
             },
@@ -1365,6 +1368,9 @@ $(function (win, doc, $) {
                         $target.removeClass("show");
                         if (onHide) {
                             onHide();
+                        }
+                        if ($caller.data(dataKey).onHide) {
+                            $caller.data(dataKey).onHide($caller, $target);
                         }
                     }
                 }

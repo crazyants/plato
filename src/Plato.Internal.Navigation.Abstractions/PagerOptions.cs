@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Internal.Navigation.Abstractions
 {
 
-    [DataContract]
+    [DataContract(Name = "pager")]
     public class PagerOptions
     {
         private int _page = 1;
@@ -16,12 +16,12 @@ namespace Plato.Internal.Navigation.Abstractions
         [DataMember(Name = "page")]
         public int Page
         {
-            get => Offset > 0 ? Offset.ToSafeCeilingDivision(PageSize) : _page;
+            get => Offset > 0 ? Offset.ToSafeCeilingDivision(Size) : _page;
             set => _page = value;
         }
 
         [DataMember(Name = "size")]
-        public int PageSize { get; set; } = 20;
+        public int Size { get; set; } = 20;
 
         [DataMember(Name = "offset")]
         public int Offset { get; set; }
@@ -37,7 +37,7 @@ namespace Plato.Internal.Navigation.Abstractions
         /// <summary>
         /// Gets the row offset for the current page.
         /// </summary>
-        public int RowOffset => PageSize * Page - PageSize + 1;
+        public int RowOffset => Size * Page - Size + 1;
         
         /// <summary>
         /// Gets or sets the call back Url which can be used for client side paging purposes.
@@ -60,7 +60,7 @@ namespace Plato.Internal.Navigation.Abstractions
         public void SetTotal(int total)
         {
             Total = total;
-            TotalPages = total > 0 ? total.ToSafeCeilingDivision(PageSize) : 1; 
+            TotalPages = total > 0 ? total.ToSafeCeilingDivision(Size) : 1; 
         }
 
     }

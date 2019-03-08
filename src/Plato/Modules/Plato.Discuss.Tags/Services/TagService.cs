@@ -39,7 +39,7 @@ namespace Plato.Discuss.Tags.Services
             }
 
             return await _tagStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
+                .Take(pager.Page, pager.Size)
                 .Select<TagQueryParams>(q =>
                 {
                    q.FeatureId.Equals(feature.Id);

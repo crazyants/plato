@@ -62,7 +62,7 @@ namespace Plato.Internal.Layout.TagHelpers
         {
          
             // Calculate total pages
-            _totalPageCount = Model.PageSize > 0 ? (int)Math.Ceiling((double)Model.Total / Model.PageSize) : 1;
+            _totalPageCount = Model.Size > 0 ? (int)Math.Ceiling((double)Model.Total / Model.Size) : 1;
             
             // Get route data
             _routeData = new RouteValueDictionary(_actionContextAccesor.ActionContext.RouteData.Values);
@@ -164,9 +164,9 @@ namespace Plato.Internal.Layout.TagHelpers
                 throw new ArgumentNullException(nameof(Model));
             }
 
-            if (Model.PageSize == 0)
+            if (Model.Size == 0)
             {
-                throw new ArgumentNullException(nameof(Model.PageSize));
+                throw new ArgumentNullException(nameof(Model.Size));
             }
                
             var currentPage = Model.Page;

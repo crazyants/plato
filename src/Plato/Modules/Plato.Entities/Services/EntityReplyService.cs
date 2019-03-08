@@ -51,7 +51,7 @@ namespace Plato.Entities.Services
 
 
             return await _entityReplyStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
+                .Take(pager.Page, pager.Size)
                 .Select<EntityReplyQueryParams>(async q =>
                 {
                     q.EntityId.Equals(options.Id);

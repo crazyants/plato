@@ -69,7 +69,7 @@ namespace Plato.Labels
             routes.MapAreaRoute(
                 name: "LabelsWebApi",
                 areaName: "Plato.Labels",
-                template: "api/{controller}/{action}/{id?}",
+                template: "api/labels/{action}/{id?}",
                 defaults: new { controller = "Labels", action = "Get" }
             );
 

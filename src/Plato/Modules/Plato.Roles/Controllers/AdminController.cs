@@ -109,8 +109,8 @@ namespace Plato.Roles.Controllers
                 this.RouteData.Values.Add("opts.order", opts.Order);
             if (pager.Page != defaultPagerOptions.Page)
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            if (pager.Size != defaultPagerOptions.Size)
+                this.RouteData.Values.Add("pager.size", pager.Size);
             
             //// Maintain previous route data when generating page links
             //var routeData = new RouteData();

@@ -123,6 +123,13 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
         {
 
+            // Ensure we explicitly set the featureId
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
+            if (feature == null)
+            {
+                return default(IViewProviderResult);
+            }
+
             List<int> selectedLabels;
             // Persist state on post back
             if (_request.Method == "POST")
@@ -138,6 +145,10 @@ namespace Plato.Discuss.Labels.ViewProviders
             
             var viewModel = new LabelDropDownViewModel()
             {
+                Options = new LabelIndexOptions()
+                {
+                    FeatureId = feature.Id
+                },
                 HtmlName = LabelHtmlName,
                 SelectedLabels = selectedLabels?.ToArray()
             };

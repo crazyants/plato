@@ -133,8 +133,8 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("opts.filter", opts.Filter);
             if (pager.Page != defaultPagerOptions.Page)
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            if (pager.Size != defaultPagerOptions.Size)
+                this.RouteData.Values.Add("pager.size", pager.Size);
 
             // Build view model
             var viewModel = await GetIndexViewModelAsync(opts, pager);
@@ -387,8 +387,8 @@ namespace Plato.Discuss.Controllers
 
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            if (pager.Size != defaultPagerOptions.Size && !this.RouteData.Values.ContainsKey("pager.size"))
+                this.RouteData.Values.Add("pager.size", pager.Size);
 
             // Build view model
             var viewModel = GetDisplayViewModel(entity, opts, pager);
@@ -1161,7 +1161,7 @@ namespace Plato.Discuss.Controllers
                 // We need to iterate all replies to calculate the offset
                 var replies = await _replyService.GetResultsAsync(opts, new PagerOptions
                 {
-                    PageSize = int.MaxValue
+                    Size = int.MaxValue
                 });
                 if (replies?.Data != null)
                 {

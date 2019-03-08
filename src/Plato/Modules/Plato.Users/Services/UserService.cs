@@ -25,7 +25,7 @@ namespace Plato.Users.Services
             PagerOptions pager)
         {
             return await _ploatUserStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
+                .Take(pager.Page, pager.Size)
                 .Select<UserQueryParams>(q =>
                 {
 

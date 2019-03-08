@@ -152,7 +152,7 @@ namespace Plato.Roles.ViewProviders
             PagerOptions pager)
         {
             return await _platoRoleStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
+                .Take(pager.Page, pager.Size)
                 .Select<RoleQueryParams>(q =>
                 {
                     if (options.RoleId > 0)

@@ -96,8 +96,8 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("opts.order", opts.Order);
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            if (pager.Size != defaultPagerOptions.Size && !this.RouteData.Values.ContainsKey("pager.size"))
+                this.RouteData.Values.Add("pager.size", pager.Size);
             
             // Build view model
             var viewModel = await GetIndexViewModelAsync(opts, pager);
@@ -142,8 +142,8 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("opts.order", opts.Order);
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            if (pager.Size != defaultPagerOptions.Size && !this.RouteData.Values.ContainsKey("pager.size"))
+                this.RouteData.Values.Add("pager.size", pager.Size);
 
             // Build view model
             var viewModel = await GetDisplayViewModelAsync(opts, pager);
@@ -172,8 +172,7 @@ namespace Plato.Discuss.Labels.Controllers
                     .LocalNav()
                 ).Add(S[label.Name]);
             });
-
-
+            
             // Return view
             return View(await _labelViewProvider.ProvideDisplayAsync(label, this));
 

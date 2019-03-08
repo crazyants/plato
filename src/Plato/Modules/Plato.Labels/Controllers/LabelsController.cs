@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Labels.Models;
+using Plato.Labels.Services;
 using Plato.Labels.Stores;
+using Plato.Labels.ViewModels;
 using Plato.WebApi.Controllers;
 
 namespace Plato.Labels.Controllers
@@ -16,35 +19,39 @@ namespace Plato.Labels.Controllers
     public class LabelsController : BaseWebApiController
     {
         
-        private readonly ILabelStore<LabelBase> _labelStore;
+        private readonly ILabelService<LabelBase> _labelService;
         private readonly IContextFacade _contextFacade;
    
         public LabelsController(
-            ILabelStore<LabelBase> labelStore,
-            IUrlHelperFactory urlHelperFactory,
+            ILabelService<LabelBase> labelService,
             IContextFacade contextFacade)
         {
-            _labelStore = labelStore;
+            _labelService = labelService;
             _contextFacade = contextFacade;
         }
         
-        [HttpGet]
-        [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Get(
-            int page = 1,
-            int size = 10,
-            string keywords = "",
-            string sort = "TotalEntities",
-            OrderBy order = OrderBy.Desc)
+        [HttpGet, ResponseCache(NoStore = true)]
+        public async Task<IActionResult> Get(LabelIndexOptions opts, PagerOptions pager)
         {
 
-            var labels = await GetData(
-                page,
-                size,
-                keywords,
-                sort,
-                order);
-            
+            if (opts == null)
+            {
+                opts = new LabelIndexOptions();;
+            }
+
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+
+            if (opts.Sort == LabelSortBy.Auto)
+            {
+                opts.Sort = LabelSortBy.Entities;
+                opts.Order = OrderBy.Desc;
+            }
+
+            var labels = await _labelService.GetResultsAsync(opts, pager);
+
             PagedResults<LabelApiResult> results = null;
             if (labels != null)
             {
@@ -59,7 +66,7 @@ namespace Plato.Labels.Controllers
 
                     var url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["opts.id"] = label.Id,
+                        ["opts.labelId"] = label.Id,
                         ["opts.alias"] = label.Alias
                     });
 
@@ -86,10 +93,10 @@ namespace Plato.Labels.Controllers
             {
                 output = new LabelApiResults()
                 {
-                    Page = page,
-                    Size = size,
+                    Page = pager.Page,
+                    Size = pager.Size,
                     Total = results.Total,
-                    TotalPages = results.Total.ToSafeCeilingDivision(size),
+                    TotalPages = results.Total.ToSafeCeilingDivision(pager.Size),
                     Data = results.Data
                 };
             }
@@ -100,29 +107,6 @@ namespace Plato.Labels.Controllers
 
         }
         
-        async Task<IPagedResults<LabelBase>> GetData(
-            int page,
-            int pageSize,
-            string keywords,
-            string sortBy,
-            OrderBy sortOrder)
-        {
-
-            return await _labelStore.QueryAsync()
-                .Take(page, pageSize)
-                .Select<LabelQueryParams>(q =>
-                {
-                    if (!String.IsNullOrEmpty(keywords))
-                    {
-                        q.Keywords.StartsWith(keywords);
-                    }
-                })
-                .OrderBy(sortBy, sortOrder)
-                //.OrderBy("CreatedDate", OrderBy.Desc)
-                .ToList();
-
-        }
-
     }
 
 }

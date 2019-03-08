@@ -209,15 +209,11 @@ namespace Plato.Labels.Stores
 
             if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
-
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Name", "Keywords"));
-          
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Description", "Keywords"));
-
+                sb.Append(_query.Params.Keywords.ToSqlString("Name", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("Description", "Keywords"));
             }
             
             return sb.ToString();

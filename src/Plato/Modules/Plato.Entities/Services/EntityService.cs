@@ -78,7 +78,7 @@ namespace Plato.Entities.Services
 
             // Return tailored results
             return await _entityStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
+                .Take(pager.Page, pager.Size)
                 .Configure(_configureDb)
                 .Select<EntityQueryParams>(q =>
                 {

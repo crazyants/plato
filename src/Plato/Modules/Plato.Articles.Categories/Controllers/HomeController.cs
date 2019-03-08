@@ -97,8 +97,8 @@ namespace Plato.Articles.Categories.Controllers
                 this.RouteData.Values.Add("opts.filter", opts.Filter);
             if (pager.Page != defaultPagerOptions.Page)
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
-                this.RouteData.Values.Add("pager.size", pager.PageSize);
+            if (pager.Size != defaultPagerOptions.Size)
+                this.RouteData.Values.Add("pager.size", pager.Size);
 
             // Build view model
             var viewModel = await GetIndexViewModelAsync(category, opts, pager);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Labels.Models;
@@ -20,15 +21,20 @@ namespace Plato.Labels.ViewModels
         
     }
 
+    [DataContract(Name = "opts")]
     public class LabelIndexOptions
     {
 
+        [DataMember(Name = "featureId")]
         public int FeatureId { get; set; }
 
+        [DataMember(Name = "search")]
         public string Search { get; set; }
         
+        [DataMember(Name = "sort")]
         public LabelSortBy Sort { get; set; } = LabelSortBy.Auto;
 
+        [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Desc;
         
         public bool EnableEdit { get; set; }

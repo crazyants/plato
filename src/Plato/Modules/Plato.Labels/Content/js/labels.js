@@ -25,7 +25,7 @@ $(function (win, doc, $) {
     /* labelDropdown */
     var labelDropdown = function (options) {
 
-        var dataKey = "labelSelectDropdown",
+        var dataKey = "labelDropDown",
             dataIdKey = dataKey + "Id";
 
         var defaults = {};
@@ -148,6 +148,14 @@ $(function (win, doc, $) {
                     },
                     onLoaded: function ($input) {
                         $caller.selectDropdown("update");
+                    },
+                    onHide: function ($input) {
+                        // autoComplete will hide it's target if no input is provided
+                        // Override this behaviour to ensure the auto complete target
+                        // is always visible even if the search input is empty
+                        $input
+                            .autoComplete("show")
+                            .autoComplete("update");
                     }
                 },
                     defaults,
@@ -173,7 +181,6 @@ $(function (win, doc, $) {
                 }
                 return index;
             }
-
         };
 
         return {
@@ -234,14 +241,14 @@ $(function (win, doc, $) {
     /* labelAutoComplete */
     var labelAutoComplete = function () {
 
-        var dataKey = "labelutoComplete",
+        var dataKey = "labelAutoComplete",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
             valueField: "keywords",
             config: {
                 method: "GET",
-                url: 'api/labels/get?page={page}&size={pageSize}&keywords={keywords}',
+                url: 'api/labels/get?pager.page={page}&pager.size={pageSize}&opts.search={keywords}',
                 data: {
                     sort: "TotalEntities",
                     order: "Desc"

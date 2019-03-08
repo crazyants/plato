@@ -25,7 +25,7 @@ namespace Plato.Labels.Services
         {
             
             return await _labelStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
+                .Take(pager.Page, pager.Size)
                 .Select<LabelQueryParams>(q =>
                 {
                     if (options.FeatureId > 0)
