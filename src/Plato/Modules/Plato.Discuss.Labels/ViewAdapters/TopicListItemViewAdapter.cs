@@ -12,8 +12,8 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
-using Plato.Entities.Labels.Models;
-using Plato.Entities.Labels.Stores;
+using Plato.Labels.Models;
+using Plato.Labels.Stores;
 
 namespace Plato.Discuss.Labels.ViewAdapters
 {

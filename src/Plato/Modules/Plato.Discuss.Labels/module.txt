@@ -1,13 +1,13 @@
 Name: Plato Discuss Labels
 Description: Adds the ability to label topics.
-Category: Discussions
+Category: Discuss
 Author: InstantASP
 Version: 1.0.0
 PlatoVersion: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Entities.Labels",
+		Id: "Plato.Labels",
 		Version: "1.0.0"
 	},
 	{

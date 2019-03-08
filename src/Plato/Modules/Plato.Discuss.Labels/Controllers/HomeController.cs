@@ -9,13 +9,12 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
-using SortBy = Plato.Entities.ViewModels.SortBy;
-using Plato.Entities.Labels.Stores;
+using Plato.Labels.Stores;
 using Plato.Discuss.Models;
 using Plato.Discuss.Labels.Models;
-using Plato.Entities.Labels.ViewModels;
+using Plato.Labels.ViewModels;
 using Plato.Entities.ViewModels;
-
+using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -89,15 +88,15 @@ namespace Plato.Discuss.Labels.Controllers
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
-            if (opts.Search != defaultViewOptions.Search)
+            if (opts.Search != defaultViewOptions.Search && !this.RouteData.Values.ContainsKey("opts.search"))
                 this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort)
+            if (opts.Sort != defaultViewOptions.Sort && !this.RouteData.Values.ContainsKey("opts.sort"))
                 this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order)
+            if (opts.Order != defaultViewOptions.Order && !this.RouteData.Values.ContainsKey("opts.order"))
                 this.RouteData.Values.Add("opts.order", opts.Order);
-            if (pager.Page != defaultPagerOptions.Page)
+            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
+            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
             // Build view model
@@ -135,19 +134,17 @@ namespace Plato.Discuss.Labels.Controllers
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
-            if (opts.Search != defaultViewOptions.Search)
+            if (opts.Search != defaultViewOptions.Search && !this.RouteData.Values.ContainsKey("opts.search"))
                 this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort)
+            if (opts.Sort != defaultViewOptions.Sort && !this.RouteData.Values.ContainsKey("opts.sort"))
                 this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order)
+            if (opts.Order != defaultViewOptions.Order && !this.RouteData.Values.ContainsKey("opts.order"))
                 this.RouteData.Values.Add("opts.order", opts.Order);
-            if (opts.Filter != defaultViewOptions.Filter)
-                this.RouteData.Values.Add("opts.filter", opts.Filter);
-            if (pager.Page != defaultPagerOptions.Page)
+            if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.PageSize != defaultPagerOptions.PageSize)
+            if (pager.PageSize != defaultPagerOptions.PageSize && !this.RouteData.Values.ContainsKey("pager.size"))
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
+
             // Build view model
             var viewModel = await GetDisplayViewModelAsync(opts, pager);
 
@@ -194,6 +191,12 @@ namespace Plato.Discuss.Labels.Controllers
                 options.FeatureId = feature.Id;
             }
 
+            if (options.Sort == LabelSortBy.Auto)
+            {
+                options.Sort = LabelSortBy.Entities;
+                options.Order = OrderBy.Desc;
+            }
+
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
@@ -204,7 +207,7 @@ namespace Plato.Discuss.Labels.Controllers
             };
 
         }
-        
+
         async Task<EntityIndexViewModel<Topic>> GetDisplayViewModelAsync(EntityIndexOptions options, PagerOptions pager)
         {
 

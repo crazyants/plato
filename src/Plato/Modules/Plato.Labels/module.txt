@@ -1,0 +1,14 @@
+Name: Plato Labels
+Description: Adds core data services allowing entities to be associated with one or more labels.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.WebApi",
+		Version: "1.0.0"
+	}
+]

@@ -3,17 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Labels.Models;
-using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Entities.Labels.Services;
-using Plato.Entities.Labels.Stores;
-using Plato.Entities.Labels.ViewModels;
+using Plato.Labels.Services;
+using Plato.Labels.Stores;
+using Plato.Labels.ViewModels;
+using Plato.Discuss.Labels.Models;
+using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -74,9 +75,6 @@ namespace Plato.Discuss.Labels.Controllers
                 pager = new PagerOptions();
             }
 
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -101,19 +99,11 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-
-            // Indicate administrator view
-            opts.EnableEdit = true;
             
             // Build view model
-            var viewModel = new LabelIndexViewModel<Label>()
-            {
-                Options = opts,
-                Pager = pager
-            };
+            var viewModel = await GetIndexViewModelAsync(opts, pager);
 
-            // Add view options to context for use within view adaptors
+            // Add view model to context
             HttpContext.Items[typeof(LabelIndexViewModel<Label>)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
@@ -269,7 +259,39 @@ namespace Plato.Discuss.Labels.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        
+
+        async Task<LabelIndexViewModel<Label>> GetIndexViewModelAsync(LabelIndexOptions options, PagerOptions pager)
+        {
+
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+
+            if (options.Sort == LabelSortBy.Auto)
+            {
+                options.Sort = LabelSortBy.Created;
+                options.Order = OrderBy.Desc;
+            }
+
+            // Indicate administrator view
+            options.EnableEdit = true;
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            return new LabelIndexViewModel<Label>()
+            {
+                Options = options,
+                Pager = pager
+            };
+
+        }
+
         async Task<int> GetFeatureIdAsync()
         {
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");

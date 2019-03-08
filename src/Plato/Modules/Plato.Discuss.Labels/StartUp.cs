@@ -5,17 +5,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Entities.Labels.Models;
-using Plato.Entities.Labels.Repositories;
-using Plato.Entities.Labels.Services;
-using Plato.Entities.Labels.Stores;
+using Plato.Internal.Layout.ViewAdapters;
+using Plato.Internal.Navigation.Abstractions;
+using Plato.Labels.Repositories;
+using Plato.Labels.Services;
+using Plato.Labels.Stores;
 using Plato.Discuss.Models;
 using Plato.Discuss.Labels.Navigation;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewAdapters;
 using Plato.Discuss.Labels.ViewProviders;
-using Plato.Internal.Layout.ViewAdapters;
-using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Labels
 {

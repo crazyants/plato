@@ -1,4 +1,4 @@
-﻿using Plato.Entities.Labels.Models;
+﻿using Plato.Labels.Models;
 
 namespace Plato.Discuss.Labels.Models
 {

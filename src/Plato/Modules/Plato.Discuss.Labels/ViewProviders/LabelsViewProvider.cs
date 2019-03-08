@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Plato.Discuss.Labels.Models;
-using Plato.Discuss.Labels.ViewModels;
-using Plato.Discuss.Models;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Entities.Labels.Stores;
-using Plato.Discuss.ViewModels;
-using Plato.Entities.Labels.ViewModels;
-using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Labels.Stores;
+using Plato.Labels.ViewModels;
+using Plato.Entities.ViewModels;
+using Plato.Discuss.Labels.Models;
+using Plato.Discuss.Models;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {
+
     public class LabelViewProvider : BaseViewProvider<Label>
     {
 
@@ -34,8 +33,6 @@ namespace Plato.Discuss.Labels.ViewProviders
             _featureFacade = featureFacade;
             _actionContextAccessor = actionContextAccessor;
         }
-        
-        #region "Imlementation"
         
         public override Task<IViewProviderResult> BuildIndexAsync(Label label, IViewProviderContext context)
         {
@@ -65,7 +62,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
             }
             
-            var indexViewModel = new LabelDisplayViewModel
+            var indexViewModel = new EntityIndexViewModel<Topic>
             {
                 Options = viewModel?.Options,
                 Pager = viewModel?.Pager
@@ -91,16 +88,15 @@ namespace Plato.Discuss.Labels.ViewProviders
             return Views(
                 View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Display.Tools", model => label).Zone("tools").Order(1),
-                View<LabelDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
+                View<EntityIndexViewModel<Topic>>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
+                View<LabelsViewModel<Label>>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
                     model.Labels = labels?.Data;
                     return model;
                 }).Zone("sidebar").Order(1)
             );
-
-
+            
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(Label model, IViewProviderContext context)
@@ -113,7 +109,6 @@ namespace Plato.Discuss.Labels.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        #endregion
-
     }
+
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Plato.Discuss.Labels.Models;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
-using Plato.Entities.Labels.Stores;
+using Plato.Labels.Stores;
 
 namespace Plato.Discuss.Labels.Follow.Subscribers
 {
@@ -11,8 +11,8 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
     {
 
         private readonly ILabelStore<Label> _labelStore;
-        private readonly IBroker _broker;
         private readonly IUserReputationAwarder _reputationAwarder;
+        private readonly IBroker _broker;
 
         public FollowSubscriber(
             IBroker broker,

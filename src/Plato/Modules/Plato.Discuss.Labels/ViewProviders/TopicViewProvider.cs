@@ -9,15 +9,15 @@ using Plato.Discuss.Labels.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Entities.Labels.Models;
-using Plato.Entities.Labels.Stores;
-using Plato.Discuss.Labels.ViewModels;
-using Plato.Discuss.Models;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Entities.Labels.Services;
+using Plato.Labels.Models;
+using Plato.Labels.Stores;
+using Plato.Labels.Services;
+using Plato.Discuss.Models;
+using Plato.Labels.ViewModels;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {
@@ -30,38 +30,38 @@ namespace Plato.Discuss.Labels.ViewProviders
         private readonly IEntityLabelManager<EntityLabel> _entityLabelManager;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
-        private readonly IStringLocalizer T;
         private readonly IFeatureFacade _featureFacade;
         private readonly ICacheManager _cacheManager;
         private readonly IContextFacade _contextFacade;
 
         private readonly HttpRequest _request;
 
+        private readonly IStringLocalizer T;
+
         public TopicViewProvider(
             ILabelStore<Label> labelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityLabelStore<EntityLabel> entityLabelStore,
-            IStringLocalizer<TopicViewProvider> stringLocalize,
+            IStringLocalizer stringLocalize,
             IFeatureFacade featureFacade, 
             IEntityLabelManager<EntityLabel> entityLabelManager,
             ICacheManager cacheManager,
             IContextFacade contextFacade)
         {
-           
             _labelStore = labelStore;
             _entityStore = entityStore;
             _entityLabelStore = entityLabelStore;
             _request = httpContextAccessor.HttpContext.Request;
-            T = stringLocalize;
             _featureFacade = featureFacade;
             _entityLabelManager = entityLabelManager;
             _cacheManager = cacheManager;
             _contextFacade = contextFacade;
+
+            T = stringLocalize;
+
         }
-
-        #region "Implementation"
-
+        
         public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IViewProviderContext updater)
         {
 
@@ -82,7 +82,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();
 
-            return Views(View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
+            return Views(View<LabelsViewModel<Label>>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.Labels = labels?.Data;
                     return model;
@@ -111,7 +111,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 .ToList();
             
             return Views(
-                View<LabelsViewModel>("Topic.Labels.Display.Sidebar", model =>
+                View<LabelsViewModel<Label>>("Topic.Labels.Display.Sidebar", model =>
                 {
                     model.Labels = labels?.Data;
                     return model;
@@ -136,14 +136,14 @@ namespace Plato.Discuss.Labels.ViewProviders
                 selectedLabels = labels?.Select(l => l.LabelId).ToList();
             }
             
-            var viewModel = new EditTopicLabelsViewModel()
+            var viewModel = new LabelDropDownViewModel()
             {
                 HtmlName = LabelHtmlName,
                 SelectedLabels = selectedLabels?.ToArray()
             };
             
             return Views(
-                View<EditTopicLabelsViewModel>("Topic.Labels.Edit.Sidebar", model => viewModel).Zone("sidebar")
+                View<LabelDropDownViewModel>("Topic.Labels.Edit.Sidebar", model => viewModel).Zone("sidebar")
                     .Order(2)
             );
 
@@ -235,10 +235,6 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
         
-        #endregion
-
-        #region "Private Methods"
-         
         async Task<List<int>> GetLabelsToAddAsync()
         {
             // Build selected channels
@@ -282,8 +278,6 @@ namespace Plato.Discuss.Labels.ViewProviders
             return await _entityLabelStore.GetByEntityId(entityId) ?? new List<EntityLabel>();
 
         }
-
-        #endregion
         
     }
 

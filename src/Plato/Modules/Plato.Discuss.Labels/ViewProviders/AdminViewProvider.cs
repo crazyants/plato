@@ -1,40 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Labels.Services;
+using Plato.Labels.Stores;
+using Plato.Labels.ViewModels;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Features;
-using Plato.Entities.Labels.Models;
-using Plato.Entities.Labels.Services;
-using Plato.Entities.Labels.Stores;
-using Plato.Entities.Labels.ViewModels;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<LabelAdmin>
     {
-        
-        private readonly IContextFacade _contextFacade;
+ 
         private readonly ILabelStore<Label> _labelStore;
         private readonly ILabelManager<Label> _labelManager;
         private readonly IFeatureFacade _featureFacade;
 
         public AdminViewProvider(
-            IContextFacade contextFacade,
             ILabelStore<Label> labelStore,
             ILabelManager<Label> labelManager,
             IFeatureFacade featureFacade)
         {
-            _contextFacade = contextFacade;
             _labelStore = labelStore;
             _labelManager = labelManager;
             _featureFacade = featureFacade;
         }
-
-        #region "Implementation"
-
+        
         public override Task<IViewProviderResult> BuildIndexAsync(LabelAdmin label, IViewProviderContext context)
         {
      
@@ -103,8 +95,6 @@ namespace Plato.Discuss.Labels.ViewProviders
             model.Name = model.Name?.Trim();
             model.Description = model.Description?.Trim();
             
-            //Category category = null;
-
             if (context.Updater.ModelState.IsValid)
             {
                 
@@ -129,34 +119,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
 
         }
-
-        #endregion
-
-        #region "Private Methods"
-
-        async Task<LabelsViewModel> GetIndexModel()
-        {
-            var feature = await GetcurrentFeature();
-            var categories = await _labelStore.GetByFeatureIdAsync(feature.Id);
-
-            return new LabelsViewModel()
-            {
-                Labels = categories
-            };
-        }
         
-        async Task<IShellFeature> GetcurrentFeature()
-        {
-            var featureId = "Plato.Discuss.Labels";
-            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
-            if (feature == null)
-            {
-                throw new Exception($"No feature could be found for the module '{featureId}'");
-            }
-            return feature;
-        }
-
-        #endregion
-
     }
+
 }

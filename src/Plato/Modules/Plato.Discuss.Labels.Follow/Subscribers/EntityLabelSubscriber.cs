@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Labels.Follow.NotificationTypes;
@@ -11,11 +10,9 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Extensions;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Entities.Labels.Models;
-using Plato.Entities.Labels.Stores;
+using Plato.Labels.Models;
 using Plato.Internal.Stores.Users;
 
 namespace Plato.Discuss.Labels.Follow.Subscribers
