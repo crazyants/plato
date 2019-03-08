@@ -12,8 +12,11 @@ $(function (win, doc, $) {
 
     'use strict';
 
-    // Plato Global Object
+    // --------
+
     var app = win.$.Plato;
+
+    // --------
 
     /* tagAutoComplete */
     var tagAutoComplete = function () {
@@ -366,7 +369,7 @@ $(function (win, doc, $) {
         tagAutoComplete: tagAutoComplete.init
     });
     
-    $(doc).ready(function () {
+    app.ready(function () {
 
         $('[data-provide="tagTagIt"]')
             .tagTagIt();

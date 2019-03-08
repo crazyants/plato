@@ -1,0 +1,22 @@
+﻿@model ReactionListViewModel
+@{
+    var css = Model.Reactions.Any() 
+        ? "reaction-list" 
+        : "reaction-list hidden";
+    var id = "reaction-" + Model.Entity?.Id;
+    if (Model.Reply != null)
+    {
+        id += "-" + Model.Reply.Id;
+    }
+}
+
+<ul class="list-group list-group-flush list-group-hover card-footer float-left col-12 bg-light @css" id="@id" data-entity-id="@Model.Entity?.Id" data-entity-reply-id="@Model.Reply?.Id" data-reactions-target="#@id" data-provide="reactions">
+    @foreach (var reaction in Model.Reactions)
+    {
+        <li>
+            <a href="#" class="list-group-item list-group-item-action py-2 px-3 border-0" data-reaction-name="@reaction.Name" data-toggle="tooltip" title="@reaction.ToolTip">
+                <span class="d-inline-block mx-1">@reaction.Emoji</span><span class="d-inline-block mx-1">@reaction.Total</span>
+            </a>
+        </li>
+    }
+</ul>

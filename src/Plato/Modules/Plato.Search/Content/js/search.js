@@ -302,7 +302,7 @@ $(function (win, doc, $) {
         searchDropDown: searchDropDown.init
     });
 
-    $(doc).ready(function () {
+    app.ready(function () {
 
         // Search auto complete
         $('[data-provide="searchAutoComplete"]')

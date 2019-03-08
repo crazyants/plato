@@ -45,7 +45,7 @@ namespace Plato.Discuss.Reactions.Navigation
                 .Add(T["React"], react => react
                     .View("ReactionMenu", new
                     {
-                        topic = topic
+                        entity = topic
                     })
                     .Permission(Permissions.ReactToTopics)
                 );

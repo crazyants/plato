@@ -1,0 +1,33 @@
+﻿@model ReactionMenuViewModel
+@{
+    var id = "reaction-" + Model.Entity?.Id;
+    if (Model.Reply != null)
+    {
+        id += "-" + Model.Reply.Id;
+    }
+}
+
+<div class="dropdown">
+    <a class="nav-link text-muted dropdown-toggle" href="#" id="reactionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span title="@T["React"]" data-toggle="tooltip">
+            <i class="fal fa-smile"></i>
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in react-dropdown-menu" data-entity-id="@Model.Entity?.Id" data-entity-reply-id="@Model.Reply?.Id" data-reactions-target="#@id" data-provide="reactions" aria-labelledby="reactionDropdown">
+        <div class="px-2">
+            <div class="d-block">
+                @foreach (var reaction in Model.Reactions)
+                {
+                    <a href="#" class="dropdown-item" data-reaction-name="@reaction.Name" data-reaction-description="@reaction.Description">
+                        @reaction.Emoji
+                    </a>
+                }
+            </div>
+            <div class="d-block border-top mt-2">
+                <div class="m-2 text-muted">
+                    @T["React"]
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,8 @@
-Name: Plato Discuss Reactions
-Description: Adds the ability for users to react to topics & replies using emoji.
+Name: Plato Articles Reactions
+Description: Adds the ability for users to react to articles & comments using emoji.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Discuss
+Category: Articles
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 
@@ -12,7 +12,7 @@ Dependencies:
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Discuss",
+		Id: "Plato.Articles",
 		Version: "1.0.0"
 	}
 ]

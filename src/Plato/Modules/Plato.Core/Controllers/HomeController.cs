@@ -81,6 +81,8 @@ namespace Plato.Core.Controllers
             // Persist returnUrl
             ViewData["ReturnUrl"] = returnUrl;
 
+            Response.StatusCode = 401;
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -112,6 +114,8 @@ namespace Plato.Core.Controllers
                 ).Add(S["Not Found"]);
             });
 
+            Response.StatusCode = 404;
+
             // Build model
             var model = new MovedViewModel()
             {
@@ -139,6 +143,8 @@ namespace Plato.Core.Controllers
                     .LocalNav()
                 ).Add(S["Error"]);
             });
+
+            Response.StatusCode = 500;
 
             // Build model
             var model = new ErrorViewModel()

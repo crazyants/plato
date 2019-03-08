@@ -1,20 +1,20 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Articles.Models;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Reactions.Navigation
+namespace Plato.Articles.Reactions.Navigation
 {
-    public class TopicReplyFooterMenu : INavigationProvider
+    public class CommentFooterMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyFooterMenu(
+        public CommentFooterMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor)
         {
@@ -25,14 +25,14 @@ namespace Plato.Discuss.Reactions.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-reply-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article-comment-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get model from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
+            var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
             
             // Add reaction list to topic reply footer navigation
             builder

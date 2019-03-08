@@ -260,9 +260,9 @@ $(function (win, doc, $) {
                     return s;
                 },
                 notify = function(message) {
-
+                    
                     // Bootstrap notify
-                    ui.notify({
+                    platoUi.notify({
                             // options
                             message: message
                         },
@@ -275,7 +275,7 @@ $(function (win, doc, $) {
 
                 },
                 onError = function(config, xhr, ajaxOptions, thrownError) {
-
+                    
                     // Error details
                     var err = "$.Plato.Http - " +
                         thrownError +
@@ -284,18 +284,22 @@ $(function (win, doc, $) {
 
                     // Log
                     platoLogger.logError(err);
-
+                    
                     // Notify
                     notify(getHtmlErrorMessage(err));
 
                 },
                 onAlways = function(xhr, textStatus) {
-
-                    // Display a visual indicator if the request fails due to authentication
-                    if (xhr.statusCode === 401) {
-                        notify("<h6>" + platoLocale.get("Could not authenticate your request!") + "</h6>");
+                    
+                    switch (xhr.statusCode) {
+                        case 401:
+                            notify("<h6>" + platoLocale.get("Could not authenticate your request!") + "</h6>");
+                            break;
+                        case 404:
+                            notify("<h6>" + platoLocale.get("404 - Service Not Found!") + "</h6>");
+                            break;
                     }
-
+               
                     // Log
                     platoLogger.logInfo("platoHttp - Completed: " + JSON.stringify(xhr, null, "     "));
 
@@ -449,7 +453,7 @@ $(function (win, doc, $) {
         // Our main global object
         var app = win.$.Plato;
 
-        // Invoke pushed ready functions
+        // Invoke pushed ready methods
         for (var i = 0; i < app.readyMethods.length; i++) {
             app.readyMethods[i]();
         }

@@ -1,50 +1,56 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Articles.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Reactions.Navigation
+namespace Plato.Articles.Reactions.Navigation
 {
-    public class TopicReplyMenu : INavigationProvider
+    public class ArticleMenu : INavigationProvider
     {
 
+        private readonly IEntityStore<Article> _entityStore;
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyMenu(
+        public ArticleMenu(
             IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+            IActionContextAccessor actionContextAccessor,
+            IEntityStore<Article> entityStore)
         {
             T = localizer;
             _actionContextAccessor = actionContextAccessor;
+            _entityStore = entityStore;
         }
         
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get model from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
-            
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
+            if (entity == null)
+            {
+                return;
+            }
+
             // Add reaction menu view to navigation
             builder
                 .Add(T["React"], react => react
                     .View("ReactionMenu", new
                     {
-                        entity,
-                        reply
+                        entity = entity
                     })
-                    .Permission(Permissions.ReactToReplies)
+                    .Permission(Permissions.ReactToTopics)
                 );
-            
+
         }
 
     }

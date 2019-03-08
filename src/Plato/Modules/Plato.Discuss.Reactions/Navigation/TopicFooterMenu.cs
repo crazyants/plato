@@ -31,14 +31,14 @@ namespace Plato.Discuss.Reactions.Navigation
             }
 
             // Get model from navigation builder
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             
             builder
                 .Add(T["Reactions"], int.MaxValue, react => react
                     .View("ReactionList", new
                     {
-                        topic,
+                        entity,
                         reply
                     })
                 );

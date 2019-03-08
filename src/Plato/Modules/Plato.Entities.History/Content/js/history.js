@@ -325,13 +325,16 @@ $(function (win, doc, $) {
     });
 
     // Initial load
-    $(doc).ready(function () {
-        $('[data-provide="historyDropdown"]').historyDropdown();
+    app.ready(function () {
+
+        $('[data-provide="history-dropdown"]')
+            .historyDropdown();
+
     });
 
     // infiniteScroll load
     $().infiniteScroll(function ($ele) {
-        $ele.find('[data-provide="historyDropdown"]').historyDropdown();
+        $ele.find('[data-provide="history-dropdown"]').historyDropdown();
     }, "ready");
 
 }(window, document, jQuery));
