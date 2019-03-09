@@ -47,7 +47,7 @@ namespace Plato.Articles.Reactions.Navigation
                             Reply = reply
                         }
                     })
-                    .Permission(Permissions.ReactToReplies)
+                    .Permission(Permissions.ReactToComments)
                 );
             
         }

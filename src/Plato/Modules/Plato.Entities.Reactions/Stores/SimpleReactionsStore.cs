@@ -41,7 +41,7 @@ namespace Plato.Entities.Reactions.Stores
 
             var output = new List<SimpleReaction>();
             foreach (var reaction in await GetReactionsAsync(entityId, entityReplyId))
-            {
+            { 
                 // Build information tooltip
                 var i = 0;
                 var sb = new StringBuilder();
@@ -108,7 +108,7 @@ namespace Plato.Entities.Reactions.Stores
                     return null;
                 }
 
-                // Iterate all entity reactions matching supplied eneityId and entityReplyId
+                // Iterate all entity reactions matching supplied entityId and entityReplyId
                 foreach (var entityReaction in entityReactions?.Data.Where(r => r.EntityReplyId == entityReplyId))
                 {
 
@@ -117,7 +117,7 @@ namespace Plato.Entities.Reactions.Stores
                     if (reaction != null)
                     {
                         // Create a dictionary with all users who have reacted with this reaction
-                        output.AddOrUpdate(reaction.Emoji,
+                        output.AddOrUpdate(reaction.Name,
                             new ReactionEntryGrouped(new ReactionEntry(reaction)
                             {
                                 CreatedBy = entityReaction.CreatedBy,

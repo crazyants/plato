@@ -42,7 +42,7 @@ namespace Plato.Articles.Reactions.Navigation
                         entity,
                         reply
                     })
-                    .Permission(Permissions.ViewReactions)
+                    .Permission(Permissions.ViewCommentReactions)
                 );
 
         }

@@ -4,7 +4,7 @@ using Plato.Entities.Reactions.Services;
 
 namespace Plato.Articles.Reactions
 {
-
+    
     public class Reactions : IReactionsProvider<Reaction>
     {
         

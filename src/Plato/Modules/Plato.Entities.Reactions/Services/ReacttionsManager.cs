@@ -61,21 +61,21 @@ namespace Plato.Entities.Reactions.Services
 
                 var module = await _typedModuleProvider.GetModuleForDependency(provider.GetType());
                 var name = module.Descriptor.Name;
-                var badges = provider.GetReactions();
-                foreach (var badge in badges)
+                var reactions = provider.GetReactions();
+                foreach (var reaction in reactions)
                 {
-                    var category = badge.Category;
+                    var category = reaction.Category;
                     var title = String.IsNullOrWhiteSpace(category) ?
                         name :
                         category;
 
                     if (output.ContainsKey(title))
                     {
-                        output[title] = output[title].Concat(new[] { badge });
+                        output[title] = output[title].Concat(new[] { reaction });
                     }
                     else
                     {
-                        output.Add(title, new[] { badge });
+                        output.Add(title, new[] { reaction });
                     }
                 }
             }

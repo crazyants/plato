@@ -7,13 +7,16 @@ namespace Plato.Discuss.Reactions
     {
 
         public static readonly Permission ReactToTopics =
-            new Permission("ReactToTopics", "React To Topics");
+            new Permission("ReactToTopics", "React To topics");
 
         public static readonly Permission ReactToReplies =
-            new Permission("ReactToReplies", "React To Replies");
+            new Permission("ReactToReplies", "React To topic replies");
 
-        public static readonly Permission ViewReactions =
-            new Permission("ViewReactions", "View Reactions");
+        public static readonly Permission ViewTopicReactions =
+            new Permission("ViewTopicReactions", "View topic reactions");
+
+        public static readonly Permission ViewReplyReactions =
+            new Permission("ViewReplyReactions", "View topic reply reactions");
 
         public IEnumerable<Permission> GetPermissions()
         {
@@ -21,7 +24,8 @@ namespace Plato.Discuss.Reactions
             {
                 ReactToTopics,
                 ReactToReplies,
-                ViewReactions
+                ViewTopicReactions,
+                ViewReplyReactions
             };
         }
 
@@ -36,7 +40,8 @@ namespace Plato.Discuss.Reactions
                     {
                         ReactToTopics,
                         ReactToReplies,
-                        ViewReactions
+                        ViewTopicReactions,
+                        ViewReplyReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -46,7 +51,8 @@ namespace Plato.Discuss.Reactions
                     {
                         ReactToTopics,
                         ReactToReplies,
-                        ViewReactions
+                        ViewTopicReactions,
+                        ViewReplyReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -56,7 +62,8 @@ namespace Plato.Discuss.Reactions
                     {
                         ReactToTopics,
                         ReactToReplies,
-                        ViewReactions
+                        ViewTopicReactions,
+                        ViewReplyReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -64,7 +71,8 @@ namespace Plato.Discuss.Reactions
                     RoleName = DefaultRoles.Anonymous,
                     Permissions = new[]
                     {
-                        ViewReactions
+                        ViewTopicReactions,
+                        ViewReplyReactions
                     }
                 }
             };

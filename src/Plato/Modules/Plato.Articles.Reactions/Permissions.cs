@@ -6,22 +6,26 @@ namespace Plato.Articles.Reactions
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ReactToTopics =
-            new Permission("ReactToTopics", "React To Topics");
+        public static readonly Permission ReactToArticles =
+            new Permission("ReactToArticles", "React to articles");
 
-        public static readonly Permission ReactToReplies =
-            new Permission("ReactToReplies", "React To Replies");
+        public static readonly Permission ReactToComments =
+            new Permission("ReactToComments", "React to article comments");
 
-        public static readonly Permission ViewReactions =
-            new Permission("ViewReactions", "View Reactions");
+        public static readonly Permission ViewArticleReactions =
+            new Permission("ViewArticleReactions", "View article reactions");
+
+        public static readonly Permission ViewCommentReactions =
+            new Permission("ViewCommentReactions", "View comment reactions");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ReactToTopics,
-                ReactToReplies,
-                ViewReactions
+                ReactToArticles,
+                ReactToComments,
+                ViewArticleReactions,
+                ViewCommentReactions
             };
         }
 
@@ -34,9 +38,10 @@ namespace Plato.Articles.Reactions
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ReactToTopics,
-                        ReactToReplies,
-                        ViewReactions
+                        ReactToArticles,
+                        ReactToComments,
+                        ViewArticleReactions,
+                        ViewCommentReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -44,9 +49,10 @@ namespace Plato.Articles.Reactions
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        ReactToTopics,
-                        ReactToReplies,
-                        ViewReactions
+                        ReactToArticles,
+                        ReactToComments,
+                        ViewArticleReactions,
+                        ViewCommentReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -54,9 +60,10 @@ namespace Plato.Articles.Reactions
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ReactToTopics,
-                        ReactToReplies,
-                        ViewReactions
+                        ReactToArticles,
+                        ReactToComments,
+                        ViewArticleReactions,
+                        ViewCommentReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -64,7 +71,8 @@ namespace Plato.Articles.Reactions
                     RoleName = DefaultRoles.Anonymous,
                     Permissions = new[]
                     {
-                        ViewReactions
+                        ViewArticleReactions,
+                        ViewCommentReactions
                     }
                 }
             };

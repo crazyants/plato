@@ -53,7 +53,7 @@ namespace Plato.Articles.Reactions.Navigation
                             Entity = entity
                         }
                     })
-                    .Permission(Permissions.ReactToTopics)
+                    .Permission(Permissions.ReactToArticles)
                 );
 
         }
