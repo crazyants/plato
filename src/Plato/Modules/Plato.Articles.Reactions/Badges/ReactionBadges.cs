@@ -8,16 +8,16 @@ namespace Plato.Articles.Reactions.Badges
     {
 
         public static readonly Badge FirstReactor =
-            new Badge("First Reaction", "Added a reaction", "fal fa-thumbs-up", BadgeLevel.Bronze, 1);
+            new Badge("Decisive", "Added an article reaction", "fal fa-smile", BadgeLevel.Bronze, 1);
         
         public static readonly Badge BronzeReactor =
-            new Badge("New Reactor", "Added {threshold} reactions", "fal fa-smile", BadgeLevel.Bronze, 5, 2);
+            new Badge("Assured", "Added {threshold} article reactions", "fal fa-grin", BadgeLevel.Bronze, 5, 2);
 
         public static readonly Badge SilverReactor =
-            new Badge("Reactor", "Added {threshold} reactions", "fal fa-bullhorn", BadgeLevel.Silver, 25, 10);
+            new Badge("Assertive", "Added {threshold} article reactions", "fal fa-smile-wink", BadgeLevel.Silver, 25, 10);
 
         public static readonly Badge GoldReactor =
-            new Badge("Chain Reactor", "Added {threshold} reactions", "fal fa-hands-heart", BadgeLevel.Gold, 50, 25);
+            new Badge("Opinionated", "Added {threshold} article reactions", "fal fa-grin-hearts", BadgeLevel.Gold, 50, 25);
         
         public IEnumerable<Badge> GetBadges()
         {

@@ -15,7 +15,8 @@ namespace Plato.Internal.Data.Providers
 
         private readonly string _connectionString;
         private SqlConnection _dbConnection;
-   
+        private SqlDataReader _reader;
+
         #endregion
 
         #region "Constructors"
@@ -45,9 +46,10 @@ namespace Plato.Internal.Data.Providers
         public async Task OpenAsync()
         {
 
+            Close();
+
             if (String.IsNullOrEmpty(_connectionString))
             {
-                Close();
                 throw new Exception("The connection string has not been initialized.");
             }
 
@@ -61,6 +63,13 @@ namespace Plato.Internal.Data.Providers
 
         public void Close()
         {
+
+            if (_reader != null)
+            {
+                _reader.Dispose();
+                _reader = null;
+            }
+
             if (_dbConnection != null)
             {
                 _dbConnection.Dispose();
@@ -75,13 +84,13 @@ namespace Plato.Internal.Data.Providers
         public async Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args)
         {
 
-            SqlDataReader reader = null;
+            _reader = null;
             try
             {
                 await OpenAsync();
                 using (var command = CreateCommand(_dbConnection, sql, args))
                 {
-                    reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                    _reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                     OnExecutedCommand(command);
                 }
             }
@@ -91,7 +100,7 @@ namespace Plato.Internal.Data.Providers
             }
           
 
-            return reader;
+            return _reader;
 
         }
      

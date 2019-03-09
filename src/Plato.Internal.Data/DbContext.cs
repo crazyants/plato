@@ -17,6 +17,7 @@ namespace Plato.Internal.Data
         #region "Private Variables"
 
         private IDataProvider _provider;
+        private DataProviderFactory _providerFactory;
         private readonly ILogger<DbContext> _logger;
 
         #endregion
@@ -51,14 +52,7 @@ namespace Plato.Internal.Data
             _logger = logger;
             ConfigureInternal(dbContextOptions.Value);
         }
-
-        public DbContext(Action<DbContextOptions> options)
-        {
-            var cfg = new DbContextOptions();
-            options(cfg);
-            Configure(options);
-        }
-
+   
         public void Configure(Action<DbContextOptions> options)
         {
             var cfg = new DbContextOptions();
@@ -68,8 +62,12 @@ namespace Plato.Internal.Data
         
         private void ConfigureInternal(DbContextOptions cfg)
         {
-            var providerFactory = new DataProviderFactory(cfg);
-            _provider = providerFactory.Provider;
+            if (_providerFactory == null)
+            {
+                _providerFactory = new DataProviderFactory(cfg);
+            }
+            
+            _provider = _providerFactory.Provider;
             if (_provider != null)
             {
                 // handle exceptions within the provider
@@ -82,7 +80,7 @@ namespace Plato.Internal.Data
                 }
                 else
                 {
-                    // dbContext has a explict exception handler
+                    // dbContext has a explicit exception handler
                     _provider.OnException += this.OnException;
                 }
                     

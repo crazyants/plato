@@ -13,9 +13,7 @@
         string Emoji { get; set; }
 
         Sentiment Sentiment { get; set; }
-
-        Rating Rating { get; set; }
-
+        
         int Points { get; set; }
         
     }
@@ -27,13 +25,5 @@
         Positive = 1
     }
 
-    public enum Rating
-    {
-        Useless = 1,
-        Poor = 2,
-        OK = 3,
-        Useful = 4,
-        Excellent = 5
-    }
 
 }

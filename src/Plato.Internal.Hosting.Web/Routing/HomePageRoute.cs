@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Routing;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -55,8 +55,10 @@ namespace Plato.Internal.Hosting.Web.Routing
         public override VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
             if (_tokens == null)
+            {
                 return null;
-
+            }
+                
             // Return null if it doesn't match the home route values
             foreach (var entry in _tokens)
             {

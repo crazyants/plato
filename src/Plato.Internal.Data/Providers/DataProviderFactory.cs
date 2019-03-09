@@ -28,15 +28,14 @@ namespace Plato.Internal.Data.Providers
         #region "Private Variables"
 
         private readonly DbContextOptions _cfg;
-        private IDataProvider _provider;
-
+   
         #endregion
 
         #region "Public Properties"
         
         public string ConnectionString => _cfg.ConnectionString;
 
-        public IDataProvider Provider => _provider;
+        public IDataProvider Provider { get; private set; }
 
         #endregion
 
@@ -45,17 +44,22 @@ namespace Plato.Internal.Data.Providers
         public DataProviderFactory(DbContextOptions cfg)
         {
             _cfg = cfg;
-            BuildDataProvider();
+            BuildProvider();
         }
         
-        void BuildDataProvider()
+        void BuildProvider()
         {
+
+            if (Provider != null)
+            {
+                return;
+            }
 
             switch (_cfg.DatabaseProvider?.ToLower())
             {
                 case SqlClient:
                     {
-                        _provider = new SqlProvider(_cfg.ConnectionString);
+                        Provider = new SqlProvider(_cfg.ConnectionString);
                         break;
                     }
             }
@@ -64,6 +68,6 @@ namespace Plato.Internal.Data.Providers
         
         #endregion
 
-
     }
+
 }

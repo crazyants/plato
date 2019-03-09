@@ -13,9 +13,7 @@
         public string Description { get; set; }
 
         public string Emoji { get; set; }
-
-        public Rating Rating { get; set; }
-
+        
         public int Points { get; set; }
         
         public Sentiment Sentiment { get; set; }
@@ -62,19 +60,7 @@
         {
             this.Sentiment = sentiment;
         }
-
-        public Reaction(
-            string name,
-            string description,
-            string emoji,
-            int points,
-            Sentiment sentiment,
-            Rating rating) : this(name, description, emoji, points, sentiment)
-        {
-            this.Rating = rating;
-        }
-
-
+        
     }
 
 

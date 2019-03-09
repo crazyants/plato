@@ -60,7 +60,7 @@ namespace Plato.Entities.Reactions.Services
             {
 
                 var module = await _typedModuleProvider.GetModuleForDependency(provider.GetType());
-                var name = module.Descriptor.Name;
+                var name = module.Descriptor.Id;
                 var reactions = provider.GetReactions();
                 foreach (var reaction in reactions)
                 {
