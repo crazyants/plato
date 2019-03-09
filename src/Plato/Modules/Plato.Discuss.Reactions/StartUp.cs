@@ -9,6 +9,8 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Discuss.Reactions.Badges;
 using Plato.Discuss.Reactions.Tasks;
+using Plato.Entities.Reactions.Models;
+using Plato.Entities.Reactions.Services;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
@@ -46,6 +48,9 @@ namespace Plato.Discuss.Reactions
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, ReactionBadgesAwarder>();
+          
+            // Discuss reaction providers
+            services.AddScoped<IReactionsProvider<Reaction>, ReactionProvider>();
 
         }
 

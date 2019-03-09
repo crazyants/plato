@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Reactions.Models;
+using Plato.Entities.Reactions.Services;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Reactions.Models;
-using Plato.Reactions.Services;
 
-namespace Plato.Reactions.Stores
+namespace Plato.Entities.Reactions.Stores
 {
 
     public class SimpleReactionsStore : ISimpleReactionsStore

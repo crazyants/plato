@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Entities.Reactions.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Reactions.Models;
 
-namespace Plato.Reactions.Repositories
+namespace Plato.Entities.Reactions.Repositories
 {
     
     public class EntityReactionRepository : IEntityReactionsRepository<EntityReaction>

@@ -1377,7 +1377,7 @@ $(function (win, doc, $) {
             },
             update: function($caller) {
 
-                // no dropdown target found
+                // no target found
                 var $target = methods.getTarget($caller);
                 if ($target.length === 0) {
                     return;
@@ -1387,6 +1387,12 @@ $(function (win, doc, $) {
                 var config = $.extend({}, $caller.data(dataKey).config),
                     valueField = $caller.data(dataKey).valueField;
 
+                // Any supplied data-autocomplete-url attribute  
+                // should override any configured config.url property
+                if ($caller.data("autocompleteUrl")) {
+                    config.url = $caller.data("autocompleteUrl");
+                }
+                
                 if (valueField) {
 
                     // For get requests replace keywords in URL with auto complete value

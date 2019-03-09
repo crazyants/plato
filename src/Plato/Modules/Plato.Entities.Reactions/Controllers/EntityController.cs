@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Reactions.Models;
-using Plato.Reactions.Services;
-using Plato.Reactions.Stores;
+using Plato.Entities.Reactions.Models;
+using Plato.Entities.Reactions.Services;
+using Plato.Entities.Reactions.Stores;
 using Plato.WebApi.Controllers;
 
-namespace Plato.Reactions.Controllers
+namespace Plato.Entities.Reactions.Controllers
 {
 
     public class EntityController : BaseWebApiController

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Internal.Repositories;
 
-namespace Plato.Reactions.Repositories
+namespace Plato.Entities.Reactions.Repositories
 {
     public interface IEntityReactionsRepository<TModel> : IRepository<TModel> where TModel : class
     {

@@ -28,7 +28,7 @@ $(function (win, doc, $) {
         var dataKey = "labelDropDown",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+       var defaults = {};
 
         var methods = {
             init: function ($caller, methodName, func) {
@@ -52,7 +52,7 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
-                // init selectDropdown
+                // init select dropdown
                 $caller.selectDropdown($.extend({
                     itemTemplate:
                         '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
@@ -180,6 +180,9 @@ $(function (win, doc, $) {
                     }
                 }
                 return index;
+            },
+            getUrl: function($caller) {
+
             }
         };
 

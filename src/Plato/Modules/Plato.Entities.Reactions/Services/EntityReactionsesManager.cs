@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Entities.Reactions.Models;
+using Plato.Entities.Reactions.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Reactions.Models;
-using Plato.Reactions.Stores;
 
-namespace Plato.Reactions.Services
+namespace Plato.Entities.Reactions.Services
 {
 
     public class EntityReactionsesManager : IEntityReactionsManager<EntityReaction>

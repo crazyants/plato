@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
 
-namespace Plato.Reactions.Handlers
+namespace Plato.Entities.Reactions.Handlers
 {
     public class FeatureEventHandler : BaseFeatureEventHandler
     {

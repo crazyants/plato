@@ -1,4 +1,4 @@
-﻿namespace Plato.Reactions.Models
+﻿namespace Plato.Entities.Reactions.Models
 {
     
     public interface IReaction

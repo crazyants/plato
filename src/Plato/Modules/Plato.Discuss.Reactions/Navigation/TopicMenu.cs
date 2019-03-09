@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
+using Plato.Entities.Reactions.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
@@ -34,18 +35,22 @@ namespace Plato.Discuss.Reactions.Navigation
             }
 
             // Get model from navigation builder
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (entity == null)
             {
                 return;
             }
-
+       
             // Add reaction menu view to navigation
             builder
                 .Add(T["React"], react => react
                     .View("ReactionMenu", new
                     {
-                        entity = topic
+                        model = new ReactionMenuViewModel()
+                        {
+                            ModuleId = "Plato Discuss Reactions",
+                            Entity = entity
+                        }
                     })
                     .Permission(Permissions.ReactToTopics)
                 );

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Reactions.Models
+namespace Plato.Entities.Reactions.Models
 {
 
     public class ReactionEntryGrouped : ReactionEntry

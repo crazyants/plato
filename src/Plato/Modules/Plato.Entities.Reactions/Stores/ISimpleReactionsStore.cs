@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Reactions.Models;
+using Plato.Entities.Reactions.Models;
 
-namespace Plato.Reactions.Stores
+namespace Plato.Entities.Reactions.Stores
 {
     public interface ISimpleReactionsStore
     {

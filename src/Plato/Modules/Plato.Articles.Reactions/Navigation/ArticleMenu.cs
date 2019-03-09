@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
+using Plato.Entities.Reactions.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
@@ -46,7 +47,11 @@ namespace Plato.Articles.Reactions.Navigation
                 .Add(T["React"], react => react
                     .View("ReactionMenu", new
                     {
-                        entity = entity
+                        model = new ReactionMenuViewModel()
+                        {
+                            ModuleId = "Plato.Articles.Reactions",
+                            Entity = entity
+                        }
                     })
                     .Permission(Permissions.ReactToTopics)
                 );

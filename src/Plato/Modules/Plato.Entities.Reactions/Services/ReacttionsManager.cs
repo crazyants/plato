@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Entities.Reactions.Models;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Reactions.Models;
 
-namespace Plato.Reactions.Services
+namespace Plato.Entities.Reactions.Services
 {
     
     public class ReactionsManager<TReaction> : IReactionsManager<TReaction> where TReaction : class, IReaction

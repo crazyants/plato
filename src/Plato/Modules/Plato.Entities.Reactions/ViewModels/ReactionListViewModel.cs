@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Plato.Entities.Models;
-using Plato.Reactions.Models;
+using Plato.Entities.Reactions.Models;
 
 namespace Plato.Entities.Reactions.ViewModels
 {

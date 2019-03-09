@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Entities.Reactions.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
-using Plato.Reactions.Models;
 
-namespace Plato.Reactions.Stores
+namespace Plato.Entities.Reactions.Stores
 {
 
     #region "EntityReactionQuery"

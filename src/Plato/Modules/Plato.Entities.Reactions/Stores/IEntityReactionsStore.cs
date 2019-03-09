@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Reactions.Stores
+namespace Plato.Entities.Reactions.Stores
 {
     public interface IEntityReactionsStore<TModel> : IStore<TModel> where TModel : class
     {

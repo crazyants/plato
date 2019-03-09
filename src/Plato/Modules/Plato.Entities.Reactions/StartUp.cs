@@ -7,11 +7,11 @@ using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Reactions.Handlers;
-using Plato.Reactions.Models;
-using Plato.Reactions.Repositories;
-using Plato.Reactions.Services;
-using Plato.Reactions.Stores;
+using Plato.Entities.Reactions.Handlers;
+using Plato.Entities.Reactions.Models;
+using Plato.Entities.Reactions.Repositories;
+using Plato.Entities.Reactions.Services;
+using Plato.Entities.Reactions.Stores;
 
 namespace Plato.Entities.Reactions
 {
@@ -44,10 +44,7 @@ namespace Plato.Entities.Reactions
 
             // Managers
             services.AddScoped<IEntityReactionsManager<EntityReaction>, EntityReactionsesManager>();
-
-            // Default Reaction Providers
-            services.AddScoped<IReactionsProvider<Reaction>, DefaultReactions>();
-           
+            
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
 

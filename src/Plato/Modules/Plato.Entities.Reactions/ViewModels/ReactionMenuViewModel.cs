@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using Plato.Entities.Models;
-using Plato.Reactions.Models;
+using Plato.Entities.Reactions.Models;
 
 namespace Plato.Entities.Reactions.ViewModels
 {
     public class ReactionMenuViewModel
     {
+
+        public string ModuleId { get; set; }
 
         public IEntity Entity { get; set; }
 
@@ -14,4 +16,5 @@ namespace Plato.Entities.Reactions.ViewModels
         public IEnumerable<IReaction> Reactions { get; set; }
 
     }
+
 }

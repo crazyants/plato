@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Reactions.ViewModels;
-using Plato.Reactions.Stores;
+using Plato.Entities.Reactions.Stores;
 
 namespace Plato.Entities.Reactions.ViewComponents
 {

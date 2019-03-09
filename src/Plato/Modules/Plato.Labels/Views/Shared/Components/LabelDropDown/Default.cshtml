@@ -20,6 +20,7 @@
                        autocomplete="off"
                        class="form-control"
                        data-autocomplete-target="#labelAutoCompleteResults"
+                       data-autocomplete-url="api/labels/get?pager.page={page}&pager.size={pageSize}&opts.search={keywords}&opts.featureId=@Model.Options.FeatureId"
                        placeholder="@T["Search labels..."]">
             </div>
             <div style="max-height: 350px; overflow: auto">

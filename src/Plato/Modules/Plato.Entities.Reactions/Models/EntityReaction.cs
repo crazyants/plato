@@ -4,7 +4,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Reactions.Models
+namespace Plato.Entities.Reactions.Models
 {
     
     public class EntityReaction : IModel<EntityReaction>

@@ -1,7 +1,7 @@
 ﻿using System;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Reactions.Models
+namespace Plato.Entities.Reactions.Models
 {
 
     public interface IReactionEntry : IReaction
