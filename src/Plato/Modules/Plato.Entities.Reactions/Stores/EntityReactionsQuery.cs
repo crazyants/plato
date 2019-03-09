@@ -60,6 +60,7 @@ namespace Plato.Entities.Reactions.Stores
 
 
         private WhereInt _id;
+        private WhereInt _featureId;
         private WhereInt _entityId;
         private WhereString _reactionName;
 
@@ -68,6 +69,12 @@ namespace Plato.Entities.Reactions.Stores
         {
             get => _id ?? (_id = new WhereInt());
             set => _id = value;
+        }
+
+        public WhereInt FeatureId
+        {
+            get => _featureId ?? (_featureId = new WhereInt());
+            set => _featureId = value;
         }
 
         public WhereInt EntityId
@@ -96,7 +103,6 @@ namespace Plato.Entities.Reactions.Stores
 
         private readonly string _entityReactionsTableName;
         private readonly string _usersTableName;
-
         private readonly EntityReactionsQuery _query;
 
         public EntityReactionsQueryBuilder(EntityReactionsQuery query)
@@ -192,6 +198,14 @@ namespace Plato.Entities.Reactions.Stores
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
                 sb.Append(_query.Params.Id.ToSqlString("er.Id"));
+            }
+
+            // FeatureId
+            if (_query.Params.FeatureId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.FeatureId.Operator);
+                sb.Append(_query.Params.FeatureId.ToSqlString("er.FeatureId"));
             }
 
             // ReactionName

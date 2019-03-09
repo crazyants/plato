@@ -16,6 +16,7 @@ using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Internal.Badges.NotificationTypes;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Notifications.Extensions;
 
 namespace Plato.Discuss.Reactions.Tasks
@@ -37,7 +38,7 @@ namespace Plato.Discuss.Reactions.Tasks
                 );
                 DECLARE MSGCURSOR CURSOR FOR SELECT er.CreatedUserId, COUNT(er.Id) AS Reactions 
                 FROM {prefix}_EntityReactions er
-                WHERE NOT EXISTS (
+                WHERE er.FeatureId = {featureId} AND NOT EXISTS (
                    SELECT Id FROM {prefix}_UserBadges ub 
                    WHERE ub.UserId = er.CreatedUserId AND ub.BadgeName = @badgeName
                  )
@@ -72,35 +73,43 @@ namespace Plato.Discuss.Reactions.Tasks
             ReactionBadges.SilverReactor,
             ReactionBadges.GoldReactor
         };
-
-
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbHelper _dbHelper;
-        private readonly IPlatoUserStore<User> _userStore;
+        
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IFeatureFacade _featureFacade;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDbHelper _dbHelper;
 
         public ReactionBadgesAwarder(
-            ICacheManager cacheManager,
-            IDbHelper dbHelper,
-            IPlatoUserStore<User> userStore,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<Badge> notificationManager,
             IUserReputationAwarder userReputationAwarder,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults)
+            IPlatoUserStore<User> userStore,
+            IFeatureFacade featureFacade,
+            ICacheManager cacheManager,
+            IDbHelper dbHelper)
         {
-            _cacheManager = cacheManager;
-            _dbHelper = dbHelper;
-            _userStore = userStore;
             _notificationManager = notificationManager;
             _userReputationAwarder = userReputationAwarder;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _featureFacade = featureFacade;
+            _cacheManager = cacheManager;
+            _userStore = userStore;
+            _dbHelper = dbHelper;
         }
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
 
+            // Get feature to filter reactions
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+
+            // Get bot for notifications
             var bot = await _userStore.GetPlatoBotAsync();
+
+            // Iterate badges
             foreach (var badge in this.Badges)
             {
 
@@ -108,7 +117,8 @@ namespace Plato.Discuss.Reactions.Tasks
                 var replacements = new Dictionary<string, string>()
                 {
                     ["{name}"] = badge.Name,
-                    ["{threshold}"] = badge.Threshold.ToString()
+                    ["{threshold}"] = badge.Threshold.ToString(),
+                    ["{featureId}"] = feature?.Id.ToString() ?? "0"
                 };
 
                 var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>

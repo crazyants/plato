@@ -26,22 +26,26 @@ namespace Plato.Entities.Reactions.Repositories
 
         #region "Implementation"
 
-        public async Task<EntityReaction> InsertUpdateAsync(EntityReaction entityReaction)
+        public async Task<EntityReaction> InsertUpdateAsync(EntityReaction reaction)
         {
-            if (entityReaction == null)
+            if (reaction == null)
             {
-                throw new ArgumentNullException(nameof(entityReaction));
+                throw new ArgumentNullException(nameof(reaction));
             }
 
             var id = await InsertUpdateInternal(
-                entityReaction.Id,
-                entityReaction.ReactionName,
-                entityReaction.Sentiment,
-                entityReaction.Points,
-                entityReaction.EntityId,
-                entityReaction.EntityReplyId,
-                entityReaction.CreatedUserId,
-                entityReaction.CreatedDate);
+                reaction.Id,
+                reaction.ReactionName,
+                reaction.Sentiment,
+                reaction.Points,
+                reaction.FeatureId,
+                reaction.EntityId,
+                reaction.EntityReplyId,
+                reaction.IpV4Address,
+                reaction.IpV6Address,
+                reaction.UserAgent,
+                reaction.CreatedUserId,
+                reaction.CreatedDate);
 
             if (id > 0)
             {
@@ -186,8 +190,12 @@ namespace Plato.Entities.Reactions.Repositories
             string reactionName,
             Sentiment sentiment,
             int points,
+            int featureId,
             int entityId,
             int entityReplyId,
+            string ipV4Address,
+            string ipV6Address,
+            string userAgent,
             int createdUserId,
             DateTimeOffset? createdDate)
         {
@@ -202,8 +210,12 @@ namespace Plato.Entities.Reactions.Repositories
                     reactionName.ToEmptyIfNull().TrimToSize(255),
                     (short)sentiment,
                     points,
+                    featureId,
                     entityId,
                     entityReplyId,
+                    ipV4Address.TrimToSize(20).ToEmptyIfNull(),
+                    ipV6Address.TrimToSize(50).ToEmptyIfNull(),
+                    userAgent.TrimToSize(255).ToEmptyIfNull(),
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output)

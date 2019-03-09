@@ -39,12 +39,14 @@ namespace Plato.Categories.ViewComponents
                 options.SelectedCategories = new int[0];
             }
 
+            var selected = await BuildSelectionsAsync(options);
+
             return View(new CategoryTreeViewModel
             {
                 HtmlName = options.HtmlName,
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 EditMenuViewName = options.EditMenuViewName,
-                SelectedCategories = await BuildSelectionsAsync(options),
+                SelectedCategories = selected,
                 CssClass = options.CssClass
             });
 

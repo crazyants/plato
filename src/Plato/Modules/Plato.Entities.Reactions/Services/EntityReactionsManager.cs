@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Plato.Entities.Models;
 using Plato.Entities.Reactions.Models;
 using Plato.Entities.Reactions.Stores;
+using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -9,21 +12,24 @@ using Plato.Internal.Messaging.Abstractions;
 namespace Plato.Entities.Reactions.Services
 {
 
-    public class EntityReactionsesManager : IEntityReactionsManager<EntityReaction>
+    public class EntityReactionsManager : IEntityReactionsManager<EntityReaction>
     {
-
+        
+        private readonly IEntityStore<Entity> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
         private readonly IBroker _broker;
 
-        public EntityReactionsesManager(
+        public EntityReactionsManager(
             IEntityReactionsStore<EntityReaction> entityReactionsStore,
             IContextFacade contextFacade,
-            IBroker broker)
+            IBroker broker,
+            IEntityStore<Entity> entityStore)
         {
             _entityReactionsStore = entityReactionsStore;
             _contextFacade = contextFacade;
             _broker = broker;
+            _entityStore = entityStore;
         }
 
         public async Task<ICommandResult<EntityReaction>> CreateAsync(EntityReaction model)
@@ -44,25 +50,23 @@ namespace Plato.Entities.Reactions.Services
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
 
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(model.EntityId);
+            if (entity == null)
+            {
+                throw new Exception("The entity no longer exists!");
+            }
+
             if (String.IsNullOrEmpty(model.ReactionName))
             {
                 throw new ArgumentNullException(nameof(model.ReactionName));
             }
-
-            // Update created by
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (model.CreatedUserId == 9)
-            {
-                model.CreatedUserId = user?.Id ?? 0;
-            }
-
+            
+            model.FeatureId = entity.FeatureId;
             model.CreatedDate = DateTime.UtcNow;
 
             // Invoke EntityReactionCreating subscriptions
-            foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
-            {
-                Key = "EntityReactionCreating"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityReaction>(this, "EntityReactionCreating", model))
             {
                 model = await handler.Invoke(new Message<EntityReaction>(model, this));
             }
@@ -76,10 +80,7 @@ namespace Plato.Entities.Reactions.Services
             {
 
                 // Invoke EntityReactionCreated subscriptions
-                foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
-                {
-                    Key = "EntityReactionCreated"
-                }, reaction))
+                foreach (var handler in _broker.Pub<EntityReaction>(this, "EntityReactionCreated", reaction))
                 {
                     reaction = await handler.Invoke(new Message<EntityReaction>(reaction, this));
                 }
@@ -115,12 +116,18 @@ namespace Plato.Entities.Reactions.Services
             {
                 throw new ArgumentNullException(nameof(model.ReactionName));
             }
+            
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(model.EntityId);
+            if (entity == null)
+            {
+                throw new Exception("The entity no longer exists!");
+            }
+            
+            model.FeatureId = entity.FeatureId;
 
             // Invoke EntityReactionUpdating subscriptions
-            foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
-            {
-                Key = "EntityReactionUpdating"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityReaction>(this, "EntityReactionUpdating", model))
             {
                 model = await handler.Invoke(new Message<EntityReaction>(model, this));
             }
@@ -134,10 +141,7 @@ namespace Plato.Entities.Reactions.Services
             {
 
                 // Invoke EntityReactionUpdated subscriptions
-                foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
-                {
-                    Key = "EntityReactionUpdated"
-                }, reaction))
+                foreach (var handler in _broker.Pub<EntityReaction>(this,"EntityReactionUpdated", reaction))
                 {
                     reaction = await handler.Invoke(new Message<EntityReaction>(reaction, this));
                 }
@@ -160,10 +164,7 @@ namespace Plato.Entities.Reactions.Services
             }
 
             // Invoke EntityReactionDeleting subscriptions
-            foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
-            {
-                Key = "EntityReactionDeleting"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityReaction>(this, "EntityReactionDeleting", model))
             {
                 model = await handler.Invoke(new Message<EntityReaction>(model, this));
             }
@@ -175,10 +176,7 @@ namespace Plato.Entities.Reactions.Services
             {
 
                 // Invoke EntityReactionDeleted subscriptions
-                foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
-                {
-                    Key = "EntityReactionDeleted"
-                }, model))
+                foreach (var handler in _broker.Pub<EntityReaction>(this, "EntityReactionDeleted", model))
                 {
                     model = await handler.Invoke(new Message<EntityReaction>(model, this));
                 }

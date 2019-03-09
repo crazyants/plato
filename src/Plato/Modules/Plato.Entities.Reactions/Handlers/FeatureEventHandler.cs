@@ -42,6 +42,11 @@ namespace Plato.Entities.Reactions.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "FeatureId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "EntityId",
                         DbType = DbType.Int32
                     },
@@ -49,6 +54,24 @@ namespace Plato.Entities.Reactions.Handlers
                     {
                         Name = "EntityReplyId",
                         DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV4Address",
+                        DbType = DbType.String,
+                        Length = "20"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV6Address",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserAgent",
+                        DbType = DbType.String,
+                        Length = "255"
                     },
                     new SchemaColumn()
                     {

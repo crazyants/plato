@@ -98,7 +98,7 @@ namespace Plato.Internal.Data
         /// <returns></returns>
         public async Task<T> ExecuteReaderAsync<T>(string sql, IDictionary<string, string> replacements, Func<DbDataReader, Task<T>> populate) where T : class
         {
-            return await ExecuteReaderAsync(PerformSqlReplacements(sql, replacements), populate);
+            return await ExecuteReaderAsync<T>(PerformSqlReplacements(sql, replacements), populate);
         }
 
         #endregion

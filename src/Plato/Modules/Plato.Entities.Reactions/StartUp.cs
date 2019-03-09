@@ -43,7 +43,7 @@ namespace Plato.Entities.Reactions
             services.AddScoped<IReactionsManager<Reaction>, ReactionsManager<Reaction>>();
 
             // Managers
-            services.AddScoped<IEntityReactionsManager<EntityReaction>, EntityReactionsesManager>();
+            services.AddScoped<IEntityReactionsManager<EntityReaction>, EntityReactionsManager>();
             
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

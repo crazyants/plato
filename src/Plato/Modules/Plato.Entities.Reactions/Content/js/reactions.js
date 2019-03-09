@@ -114,9 +114,9 @@ $(function (win, doc, $) {
             post: function ($caller) {
 
                 var params = $caller.data(dataKey).params;
+                params.featureId = this.getFeatureId($caller);
                 params.entityId = this.getEntityId($caller);
-                params.entityReplyId = this.getEntityReplyId($caller);
-                
+            
                 app.http({
                     url: "api/reactions/react/post",
                     method: "POST",
@@ -195,7 +195,7 @@ $(function (win, doc, $) {
                     entityId = parseInt($caller.attr("data-entity-id"));
                 }
                 if (entityId === 0) {
-                    throw new Error("An entity id is required in order to react to an entity");
+                    throw new Error("A entity id is required in order to react to an entity");
                 }
                 return entityId;
             },
