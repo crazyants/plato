@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using Newtonsoft.Json;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
@@ -14,13 +15,15 @@ namespace Plato.Follows.Models
         public string Name { get; set; }
 
         public int ThingId { get; set; }
-        
+
+        [JsonIgnore]
         public string CancellationToken { get; set; }
 
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset CreatedDate { get; set; }
 
+        [JsonIgnore]
         public IUser CreatedBy { get; set; } = new User();
 
         public void PopulateModel(IDataReader dr)

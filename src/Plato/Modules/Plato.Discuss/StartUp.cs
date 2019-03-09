@@ -95,6 +95,7 @@ namespace Plato.Discuss
             services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();
 
             // Register message broker subscribers
+            services.AddScoped<IBrokerSubscriber, TopicSubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Reply>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
 

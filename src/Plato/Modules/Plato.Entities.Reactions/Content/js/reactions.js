@@ -114,8 +114,8 @@ $(function (win, doc, $) {
             post: function ($caller) {
 
                 var params = $caller.data(dataKey).params;
-                params.featureId = this.getFeatureId($caller);
                 params.entityId = this.getEntityId($caller);
+                params.entityReplyId = this.getEntityReplyId($caller);
             
                 app.http({
                     url: "api/reactions/react/post",

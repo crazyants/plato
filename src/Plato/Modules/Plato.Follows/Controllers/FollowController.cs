@@ -25,8 +25,7 @@ namespace Plato.Follows.Controllers
             _followManager = followManager;
         }
 
-        [HttpGet]
-        [ResponseCache(NoStore = true)]
+        [HttpGet, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(int id)
         {
             var follow = await _followStore.GetByIdAsync(id);
@@ -37,8 +36,7 @@ namespace Plato.Follows.Controllers
             return base.NotFound();
         }
         
-        [HttpPost, ValidateClientAntiForgeryToken]
-        [ResponseCache(NoStore = true)]
+        [HttpPost, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Post([FromBody] Follow follow)
         {
      
@@ -73,11 +71,6 @@ namespace Plato.Follows.Controllers
             var result = await _followManager.CreateAsync(followToAdd);
             if (result != null)
             {
-
-                // Award reputation
-                
-                // Send notifications
-                
                 return base.Result(result);
             }
 
@@ -86,15 +79,13 @@ namespace Plato.Follows.Controllers
 
         }
 
-        [HttpPut]
-        [ResponseCache(NoStore = true)]
+        [HttpPut, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
         public Task<IActionResult> Put(Follow follow)
         {
             throw new NotImplementedException();
         }
         
-        [HttpDelete]
-        [ResponseCache(NoStore = true)]
+        [HttpDelete, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Delete([FromBody] Follow follow)
         {
 

@@ -167,7 +167,6 @@ namespace Plato.Entities.Subscribers
 
         async Task<IPagedResults<TEntityReply>> GetReplies(Entity entity)
         {
-
             return await _entityReplyStore.QueryAsync()
                 .Select<EntityReplyQueryParams>(q =>
                 {
@@ -178,7 +177,6 @@ namespace Plato.Entities.Subscribers
                 })
                 .OrderBy("CreatedDate", OrderBy.Desc)
                 .ToList();
-
         }
 
         #endregion

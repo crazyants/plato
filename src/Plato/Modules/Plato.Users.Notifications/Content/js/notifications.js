@@ -331,12 +331,25 @@ $(function (win, doc, $) {
             },
             poll: function($caller) {
 
+                if (app === null) {
+                    throw new Error("$.Plato Required");
+                }
+
+                if (app.logger) {
+                    app.logger.logInfo("Polling user notifications");
+                }
+                
                 // Get the number of unread notifications and display badge if needed
                 app.http({
                     url: "api/notifications/user/unread",
                     method: "GET"
                 }).done(function (data) {
                     if (data.statusCode === 200) {
+
+                        if (app.logger) {
+                            app.logger.logInfo("Successfully polled user notifications");
+                        }
+
                         // Raise poll complete event
                         if ($caller.data(dataKey).onPollComplete) {
                             $caller.data(dataKey).onPollComplete($caller, data.result);
