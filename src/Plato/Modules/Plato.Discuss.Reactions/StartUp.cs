@@ -49,8 +49,8 @@ namespace Plato.Discuss.Reactions
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, ReactionBadgesAwarder>();
           
-            // Discuss reaction providers
-            services.AddScoped<IReactionsProvider<Reaction>, ReactionProvider>();
+            // Reaction providers
+            services.AddScoped<IReactionsProvider<Reaction>, Reactions>();
 
         }
 

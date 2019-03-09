@@ -2,18 +2,20 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Articles.Reactions.Handlers;
-using Plato.Articles.Reactions.Navigation;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Articles.Reactions.Badges;
-using Plato.Articles.Reactions.Tasks;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Entities.Reactions.Models;
+using Plato.Entities.Reactions.Services;
+using Plato.Articles.Reactions.Handlers;
+using Plato.Articles.Reactions.Navigation;
+using Plato.Articles.Reactions.Badges;
+using Plato.Articles.Reactions.Tasks;
 
 namespace Plato.Articles.Reactions
 {
@@ -46,6 +48,9 @@ namespace Plato.Articles.Reactions
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, ReactionBadgesAwarder>();
+
+            // Reaction providers
+            services.AddScoped<IReactionsProvider<Reaction>, Reactions>();
 
         }
 

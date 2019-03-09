@@ -5,7 +5,7 @@ using Plato.Entities.Reactions.Services;
 namespace Plato.Discuss.Reactions
 {
 
-    public class ReactionProvider : IReactionsProvider<Reaction>
+    public class Reactions : IReactionsProvider<Reaction>
     {
 
         public static readonly Reaction ThumbUp =

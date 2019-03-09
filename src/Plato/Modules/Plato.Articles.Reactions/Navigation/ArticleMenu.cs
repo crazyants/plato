@@ -49,7 +49,7 @@ namespace Plato.Articles.Reactions.Navigation
                     {
                         model = new ReactionMenuViewModel()
                         {
-                            ModuleId = "Plato.Articles.Reactions",
+                            ModuleId = "Plato Articles Reactions",
                             Entity = entity
                         }
                     })
