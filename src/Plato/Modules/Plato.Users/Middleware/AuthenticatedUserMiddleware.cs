@@ -25,9 +25,15 @@ namespace Plato.Users.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            
+
+            // If the request is not authenticated move along
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                await _next.Invoke(context);
+            }
+
             // Sign out the request if the user is not found
-            await SignOutRequestIfUserNotFound(context);
+            //await SignOutRequestIfUserNotFound(context);
 
             // Hydrate HttpContext.Features with our user
             await HydrateHttpContextFeature(context);
@@ -44,13 +50,7 @@ namespace Plato.Users.Middleware
 
         async Task SignOutRequestIfUserNotFound(HttpContext context)
         {
-
-            // If the request is not authenticated move along
-            if (!context.User.Identity.IsAuthenticated)
-            {
-                return;
-            }
-
+            
             // Get context facade
             var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
             if (contextFacade == null)
@@ -74,13 +74,7 @@ namespace Plato.Users.Middleware
         
         async Task HydrateHttpContextFeature(HttpContext context)
         {
-
-            // If the request is not authenticated move along
-            if (!context.User.Identity.IsAuthenticated)
-            {
-                return;
-            }
-
+            
             // Get context facade
             var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
             if (contextFacade == null)
@@ -107,31 +101,26 @@ namespace Plato.Users.Middleware
         
         async Task UpdateAuthenticatedUsersLastLoginDateAsync(HttpContext context)
         {
-
-            // If the request is not authenticated move along
-            if (!context.User.Identity.IsAuthenticated)
-            {
-                return;
-            }
             
+            // If the tracking cookie still exists simply return
             var cookie = context.Request.Cookies[CookieName];
             if (cookie != null)
             {
                 return;
             }
 
+            // Get context facade
             var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
             if (contextFacade == null)
             {
                 return;
             }
 
-            // Is the request authenticated?
+            // Get authenticated user
             var user = await contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return;
-
             }
 
             user.Visits += 1;
@@ -152,9 +141,7 @@ namespace Plato.Users.Middleware
                 var userReputationAwarder = context.RequestServices.GetRequiredService<IUserReputationAwarder>();
                 if (userReputationAwarder != null)
                 {
-                    await userReputationAwarder.AwardAsync(
-                        Reputations.UniqueVisit,
-                        result.Response.Id);
+                    await userReputationAwarder.AwardAsync(Reputations.UniqueVisit, result.Response.Id);
                 }
                 
                 // Set cookie to prevent further execution

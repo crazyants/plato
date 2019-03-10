@@ -132,7 +132,7 @@ namespace Plato.Discuss
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
+            
             // Index
             routes.MapAreaRoute(
                 name: "Discuss",

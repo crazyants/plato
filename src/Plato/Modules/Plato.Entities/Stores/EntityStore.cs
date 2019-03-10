@@ -18,6 +18,8 @@ namespace Plato.Entities.Stores
     public class EntityStore<TEntity> : IEntityStore<TEntity> where TEntity : class, IEntity
     {
 
+        public const string  ById = "ById";
+
         private readonly ICacheManager _cacheManager;
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
@@ -129,7 +131,7 @@ namespace Plato.Entities.Stores
                 throw new InvalidEnumArgumentException(nameof(id));
             }
 
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var entity = await _entityRepository.SelectByIdAsync(id);
@@ -281,6 +283,9 @@ namespace Plato.Entities.Stores
 
         void CancelTokens(TEntity model)
         {
+
+            // Clear entity cache
+            _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
 
             // Clear cache for current type, EntityStore<Entity>,
             // EntityStore<Topic>, EntityStore<Article> etc

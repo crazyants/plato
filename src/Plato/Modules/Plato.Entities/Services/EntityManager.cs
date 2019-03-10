@@ -137,15 +137,15 @@ namespace Plato.Entities.Services
                 throw new ArgumentNullException(nameof(model.Message));
             }
 
-            //if (model.ModifiedUserId <= 0)
-            //{
-            //    throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
-            //}
+            if (model.ModifiedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
+            }
 
-            //if (model.ModifiedDate == null)
-            //{
-            //    throw new ArgumentNullException(nameof(model.ModifiedDate));
-            //}
+            if (model.ModifiedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.ModifiedDate));
+            }
 
             // Parse Html and message abstract
             model.Html = await ParseEntityHtml(model.Message);

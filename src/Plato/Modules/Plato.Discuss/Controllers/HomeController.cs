@@ -874,17 +874,17 @@ namespace Plato.Discuss.Controllers
             }
 
             // Get topic
-            var topic = await _entityStore.GetByIdAsync(entityId);
+            var entity = await _entityStore.GetByIdAsync(entityId);
 
             // Ensure the topic exists
-            if (topic == null)
+            if (entity == null)
             {
                 return NotFound();
             }
 
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-                user.Id == topic.CreatedUserId
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == entity.CreatedUserId
                     ? Permissions.DeleteOwnTopics
                     : Permissions.DeleteAnyTopic))
             {
@@ -892,12 +892,12 @@ namespace Plato.Discuss.Controllers
             }
 
             // Update topic
-            topic.ModifiedUserId = user?.Id ?? 0;
-            topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsDeleted = true;
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(topic);
+            var result = await _topicManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -914,8 +914,8 @@ namespace Plato.Discuss.Controllers
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
                 ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
             }));
 
         }
@@ -940,17 +940,17 @@ namespace Plato.Discuss.Controllers
             }
 
             // Get topic
-            var topic = await _entityStore.GetByIdAsync(entityId);
+            var entity = await _entityStore.GetByIdAsync(entityId);
 
             // Ensure the topic exists
-            if (topic == null)
+            if (entity == null)
             {
                 return NotFound();
             }
 
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-                user.Id == topic.CreatedUserId
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == entity.CreatedUserId
                     ? Permissions.RestoreOwnTopics
                     : Permissions.RestoreAnyTopic))
             {
@@ -958,12 +958,12 @@ namespace Plato.Discuss.Controllers
             }
 
             // Update topic
-            topic.ModifiedUserId = user?.Id ?? 0;
-            topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsDeleted = false;
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsDeleted = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(topic);
+            var result = await _topicManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -980,8 +980,8 @@ namespace Plato.Discuss.Controllers
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
                 ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
             }));
 
         }

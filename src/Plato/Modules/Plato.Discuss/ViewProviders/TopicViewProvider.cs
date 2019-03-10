@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities.Stores;
@@ -8,6 +11,8 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models.Shell;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss.ViewProviders
 {
@@ -16,23 +21,21 @@ namespace Plato.Discuss.ViewProviders
 
         private const string EditorHtmlName = "message";
 
- 
+
+        private readonly IShellSettings _shellSettings;
         private readonly IEntityStore<Topic> _entityStore;
-        private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IPostManager<Topic> _topicManager;
-  
         private readonly HttpRequest _request;
         
         public TopicViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IEntityReplyStore<Reply> entityReplyStore,
             IEntityStore<Topic> entityStore,
-            IPostManager<Topic> topicManager)
+            IPostManager<Topic> topicManager,
+            IShellSettings shellSettings)
         {
-    
-            _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
             _topicManager = topicManager;
+            _shellSettings = shellSettings;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -64,9 +67,8 @@ namespace Plato.Discuss.ViewProviders
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
             }
 
-            // Increment entity view count
-            await IncrementTopicViewCount(topic);
-        
+            await IncrementTopicViewCount(topic, context);
+
             return Views(
                 View<Topic>("Home.Display.Header", model => topic).Zone("header"),
                 View<Topic>("Home.Display.Tools", model => topic).Zone("tools"),
@@ -181,12 +183,63 @@ namespace Plato.Discuss.ViewProviders
         #endregion
         
         #region "Private Methods"
-        
-        async Task IncrementTopicViewCount(Topic topic)
+
+        async Task IncrementTopicViewCount(Topic topic, IViewProviderContext context)
         {
+
+
+            var cookieName = "plato_reads";
+
+            // Transform tracking cookie into int array
+            List<int> values = null;
+            var cookie = context.Controller.HttpContext.Request.Cookies[cookieName];
+            if (!String.IsNullOrEmpty(cookie))
+            {
+                values = cookie.ToIntArray().ToList();
+            }
+
+            if (values != null)
+            {
+                // Does the entity we are accessing exist in our tracking cookie
+                if (values.Contains(topic.Id))
+                {
+                    return;
+                }
+            }
+
             topic.TotalViews = topic.TotalViews + 1;
             topic.DailyViews = topic.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(topic.CreatedDate));
-            await _entityStore.UpdateAsync(topic);
+            var result = await _entityStore.UpdateAsync(topic);
+
+            if (result != null)
+            {
+
+                if (values == null)
+                {
+                    values = new List<int>();
+                }
+
+                values.Add(result.Id);
+
+                // Set cookie to prevent further execution
+                var tennantPath = "/";
+                if (_shellSettings != null)
+                {
+                    tennantPath += _shellSettings.RequestedUrlPrefix;
+                }
+
+                context.Controller.HttpContext.Response.Cookies.Append(
+                    cookieName,
+                    values.ToArray().ToDelimitedString(),
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Path = tennantPath,
+                        Expires = DateTime.Now.AddMinutes(20)
+                    });
+                
+            }
+            
         }
 
         #endregion

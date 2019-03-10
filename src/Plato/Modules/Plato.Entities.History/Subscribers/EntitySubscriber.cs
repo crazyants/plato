@@ -14,14 +14,14 @@ namespace Plato.Entities.History.Subscribers
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
 
-        private readonly IEntityStore<Entity> _entityStore;
+        private readonly IEntityStore<TEntity> _entityStore;
         private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
         private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
         private readonly IBroker _broker;
       
         public EntitySubscriber(
             IBroker broker,
-            IEntityStore<Entity> entityStore,
+            IEntityStore<TEntity> entityStore,
             IEntityHistoryManager<EntityHistory> entityHistoryManager, 
             IEntityHistoryStore<EntityHistory> entityHistoryStore)
         {
@@ -64,8 +64,7 @@ namespace Plato.Entities.History.Subscribers
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
-
-
+            
             // Updating
             _broker.Unsub<TEntity>(new MessageOptions()
             {
