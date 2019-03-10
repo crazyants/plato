@@ -41,7 +41,6 @@ namespace Plato.Entities.Controllers
             OrderBy order = OrderBy.Desc)
         {
 
-            // Get notificaitons
             var entities = await GetEntities(
                 page,
                 size,

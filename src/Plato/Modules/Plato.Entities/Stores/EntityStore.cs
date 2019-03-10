@@ -284,9 +284,6 @@ namespace Plato.Entities.Stores
         void CancelTokens(TEntity model)
         {
 
-            // Clear entity cache
-            //_cacheManager.CancelTokens(this.GetType(), ById, model.Id);
-
             // Clear cache for current type, EntityStore<Entity>,
             // EntityStore<Topic>, EntityStore<Article> etc
             _cacheManager.CancelTokens(this.GetType());

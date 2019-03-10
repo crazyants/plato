@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
-using Plato.Search.ViewModels;
 
 namespace Plato.Search.ViewComponents
 {

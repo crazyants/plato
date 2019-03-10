@@ -2,6 +2,7 @@
 using Plato.Discuss.Models;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
+using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
@@ -12,20 +13,22 @@ namespace Plato.Discuss.Subscribers
     /// <typeparam name="TEntity"></typeparam>
     public class TopicSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-
+        
+        private readonly IEntityStore<TEntity> _entityStore;
+        private readonly IEntityRepository<TEntity> _entityRepository;
+        private readonly IUserReputationAwarder _reputationAwarder;
         private readonly IBroker _broker;
 
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IUserReputationAwarder _reputationAwarder;
-
         public TopicSubscriber(
-            IBroker broker, 
             IUserReputationAwarder reputationAwarder,
-            IEntityStore<Topic> entityStore)
+            IEntityStore<TEntity> entityStore,
+            IEntityRepository<TEntity> entityRepository,
+            IBroker broker)
         {
-            _broker = broker;
             _reputationAwarder = reputationAwarder;
+            _entityRepository = entityRepository;
             _entityStore = entityStore;
+            _broker = broker;
         }
 
         #region "Implementation"
@@ -121,6 +124,8 @@ namespace Plato.Discuss.Subscribers
             
             // Get existing entity before any changes
             var existingEntity = await _entityStore.GetByIdAsync(entity.Id);
+            
+            var repo = await _entityRepository.SelectByIdAsync(entity.Id);
 
             // We need an existing entity
             if (existingEntity == null)

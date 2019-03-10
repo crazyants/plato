@@ -15,12 +15,11 @@ namespace Plato.Entities.Services
     {
 
         public const string CookieName = "plato_reads";
+        private HttpContext _context;
 
         private readonly IShellSettings _shellSettings;
         private readonly IEntityStore<TEntity> _entityStore;
-
-        private HttpContext _context;
-
+   
         public EntityViewIncrementer(
             IEntityStore<TEntity> entityStore, 
             IShellSettings shellSettings)
@@ -66,8 +65,7 @@ namespace Plato.Entities.Services
             entity.TotalViews = entity.TotalViews + 1;
             entity.DailyViews = entity.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(entity.CreatedDate));
             var result = await _entityStore.UpdateAsync(entity);
-
-          
+            
             if (result != null)
             {
                 if (values == null)
@@ -84,8 +82,8 @@ namespace Plato.Entities.Services
                 }
 
                 // If a context is supplied use a client side cookie to track views
-                // Expire the cookie every 10 minutes to ensure views are updated often
-                // but not on every page refresh
+                // Expire the cookie every 10 minutes using a sliding expiration to
+                // ensure views are updated often but not on every refresh
                 _context?.Response.Cookies.Append(
                     CookieName,
                     values.ToArray().ToDelimitedString(),
@@ -95,8 +93,7 @@ namespace Plato.Entities.Services
                         Path = tennantPath,
                         Expires = DateTime.Now.AddMinutes(10)
                     });
-
-
+                
             }
             
             return entity;

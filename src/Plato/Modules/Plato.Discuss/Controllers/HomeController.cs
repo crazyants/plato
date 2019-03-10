@@ -858,7 +858,7 @@ namespace Plato.Discuss.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -924,7 +924,7 @@ namespace Plato.Discuss.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -939,7 +939,7 @@ namespace Plato.Discuss.Controllers
                 return Unauthorized();
             }
 
-            // Get topic
+            // Get entity
             var entity = await _entityStore.GetByIdAsync(entityId);
 
             // Ensure the topic exists
@@ -994,7 +994,7 @@ namespace Plato.Discuss.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
@@ -1065,7 +1065,7 @@ namespace Plato.Discuss.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
