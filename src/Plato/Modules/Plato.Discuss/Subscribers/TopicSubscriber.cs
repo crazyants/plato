@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Plato.Discuss.Models;
 using Plato.Entities.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 
@@ -11,13 +13,18 @@ namespace Plato.Discuss.Subscribers
     {
 
         private readonly IBroker _broker;
+
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IUserReputationAwarder _reputationAwarder;
 
-        public TopicSubscriber(IBroker broker, 
-            IUserReputationAwarder reputationAwarder)
+        public TopicSubscriber(
+            IBroker broker, 
+            IUserReputationAwarder reputationAwarder,
+            IEntityStore<Topic> entityStore)
         {
             _broker = broker;
             _reputationAwarder = reputationAwarder;
+            _entityStore = entityStore;
         }
 
         #region "Implementation"
@@ -29,6 +36,12 @@ namespace Plato.Discuss.Subscribers
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
+
+            // Updating
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdating(message.What));
 
             // Updated
             _broker.Sub<TEntity>(new MessageOptions()
@@ -90,6 +103,23 @@ namespace Plato.Discuss.Subscribers
 
             // Award reputation
             await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId);
+
+            // Return
+            return entity;
+
+        }
+
+        async Task<TEntity> EntityUpdating(TEntity entity)
+        {
+
+            // Get existing entity before update
+            var existingEntity = await _entityStore.GetByIdAsync(entity.Id);
+            if (existingEntity == null)
+            {
+                return entity;
+            }
+
+            
 
             // Return
             return entity;
