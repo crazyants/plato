@@ -73,6 +73,9 @@ namespace Plato.Discuss
             // Services
             services.AddScoped<IEntityService<Topic>, EntityService<Topic>>();
             services.AddScoped<IEntityReplyService<Reply>, EntityReplyService<Reply>>();
+
+            // View incrementer
+            services.AddScoped<IEntityViewIncrementer<Topic>, EntityViewIncrementer<Topic>>();
             
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

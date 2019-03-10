@@ -9,6 +9,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Entities.ViewModels;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 
 namespace Plato.Articles.ViewProviders
 {
@@ -16,28 +17,24 @@ namespace Plato.Articles.ViewProviders
     {
 
         private const string EditorHtmlName = "message";
-
- 
+        
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<Comment> _entityReplyStore;
         private readonly IPostManager<Article> _articleManager;
-  
+        private readonly IEntityViewIncrementer<Article> _viewIncrementer;
+
         private readonly HttpRequest _request;
         
         public ArticleViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IEntityReplyStore<Comment> entityReplyStore,
             IEntityStore<Article> entityStore,
-            IPostManager<Article> articleManager)
+            IPostManager<Article> articleManager,
+            IEntityViewIncrementer<Article> viewIncrementer)
         {
-    
-            _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
             _articleManager = articleManager;
+            _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
         }
-
-        #region "Implementation"
 
         public override Task<IViewProviderResult> BuildIndexAsync(Article article, IViewProviderContext context)
         {
@@ -65,9 +62,11 @@ namespace Plato.Articles.ViewProviders
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Article>).ToString()} has not been registered on the HttpContext!");
             }
 
-            // Increment entity view count
-            await IncrementTopicViewCount(article);
-        
+            // Increment entity views
+            await _viewIncrementer
+                .Contextulize(context.Controller.HttpContext)
+                .IncrementAsync(article);
+
             return Views(
                 View<Article>("Home.Display.Header", model => article).Zone("header"),
                 View<Article>("Home.Display.Tools", model => article).Zone("tools"),
@@ -178,19 +177,6 @@ namespace Plato.Articles.ViewProviders
             return await BuildEditAsync(article, context);
 
         }
-
-        #endregion
-        
-        #region "Private Methods"
-        
-        async Task IncrementTopicViewCount(Article article)
-        {
-            article.TotalViews = article.TotalViews + 1;
-            article.DailyViews = article.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(article.CreatedDate));
-            await _entityStore.UpdateAsync(article);
-        }
-
-        #endregion
 
     }
 

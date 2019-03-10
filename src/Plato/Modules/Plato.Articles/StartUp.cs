@@ -74,6 +74,9 @@ namespace Plato.Articles
             services.AddScoped<IEntityService<Article>, EntityService<Article>>();
             services.AddScoped<IEntityReplyService<Comment>, EntityReplyService<Comment>>();
 
+            // View incrementer
+            services.AddScoped<IEntityViewIncrementer<Article>, EntityViewIncrementer<Article>>();
+
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 

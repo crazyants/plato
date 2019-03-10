@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
@@ -20,26 +21,24 @@ namespace Plato.Discuss.ViewProviders
     {
 
         private const string EditorHtmlName = "message";
-
-
-        private readonly IShellSettings _shellSettings;
+        
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IPostManager<Topic> _topicManager;
+        private readonly IEntityViewIncrementer<Topic> _viewIncrementer;
+
         private readonly HttpRequest _request;
         
         public TopicViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IEntityStore<Topic> entityStore,
             IPostManager<Topic> topicManager,
-            IShellSettings shellSettings)
+            IEntityViewIncrementer<Topic> viewIncrementer)
         {
             _entityStore = entityStore;
             _topicManager = topicManager;
-            _shellSettings = shellSettings;
+            _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
         }
-
-        #region "Implementation"
 
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
         {
@@ -67,7 +66,10 @@ namespace Plato.Discuss.ViewProviders
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
             }
 
-            await IncrementTopicViewCount(topic, context);
+            // Increment entity views
+            await _viewIncrementer
+                .Contextulize(context.Controller.HttpContext)
+                .IncrementAsync(topic);
 
             return Views(
                 View<Topic>("Home.Display.Header", model => topic).Zone("header"),
@@ -179,71 +181,7 @@ namespace Plato.Discuss.ViewProviders
             return await BuildEditAsync(topic, context);
 
         }
-
-        #endregion
         
-        #region "Private Methods"
-
-        async Task IncrementTopicViewCount(Topic topic, IViewProviderContext context)
-        {
-
-
-            var cookieName = "plato_reads";
-
-            // Transform tracking cookie into int array
-            List<int> values = null;
-            var cookie = context.Controller.HttpContext.Request.Cookies[cookieName];
-            if (!String.IsNullOrEmpty(cookie))
-            {
-                values = cookie.ToIntArray().ToList();
-            }
-
-            if (values != null)
-            {
-                // Does the entity we are accessing exist in our tracking cookie
-                if (values.Contains(topic.Id))
-                {
-                    return;
-                }
-            }
-
-            topic.TotalViews = topic.TotalViews + 1;
-            topic.DailyViews = topic.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(topic.CreatedDate));
-            var result = await _entityStore.UpdateAsync(topic);
-
-            if (result != null)
-            {
-
-                if (values == null)
-                {
-                    values = new List<int>();
-                }
-
-                values.Add(result.Id);
-
-                // Set cookie to prevent further execution
-                var tennantPath = "/";
-                if (_shellSettings != null)
-                {
-                    tennantPath += _shellSettings.RequestedUrlPrefix;
-                }
-
-                context.Controller.HttpContext.Response.Cookies.Append(
-                    cookieName,
-                    values.ToArray().ToDelimitedString(),
-                    new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Path = tennantPath,
-                        Expires = DateTime.Now.AddMinutes(20)
-                    });
-                
-            }
-            
-        }
-
-        #endregion
-
     }
 
 }
