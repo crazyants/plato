@@ -141,7 +141,7 @@ namespace Plato.Users.Middleware
                 var userReputationAwarder = context.RequestServices.GetRequiredService<IUserReputationAwarder>();
                 if (userReputationAwarder != null)
                 {
-                    await userReputationAwarder.AwardAsync(Reputations.UniqueVisit, result.Response.Id);
+                    await userReputationAwarder.AwardAsync(Reputations.UniqueVisit, result.Response.Id, $"Unique Visit");
                 }
                 
                 // Set cookie to prevent further execution

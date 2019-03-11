@@ -83,7 +83,17 @@ namespace Plato.Discuss.Labels.ViewAdapters
                             model
                         };
                     }
-                    
+
+                    // No need to modify if we don't have a lookup table
+                    if (entityLabelsDictionary == null)
+                    {
+                        // Return an anonymous type as we are adapting a view component
+                        return new
+                        {
+                            model
+                        };
+                    }
+
                     // No need to modify the model if no labels have been found
                     if (!entityLabelsDictionary.ContainsKey(model.Entity.Id))
                     {
@@ -124,7 +134,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
             if (viewModel == null)
             {
-                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+                return null;
             }
 
             // Get all entities for our current view

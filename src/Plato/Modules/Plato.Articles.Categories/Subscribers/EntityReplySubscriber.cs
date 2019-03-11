@@ -1,20 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Categories.Stores;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.Services;
 using Plato.Articles.Models;
-using Plato.Articles.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
-using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Articles.Categories.Subscribers
 {
-
-    /// <summary>
-    /// Updates category meta data whenever an entity reply is created or updated.
-    /// </summary>
-    /// <typeparam name="TEntityReply"></typeparam>
+    
     public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 

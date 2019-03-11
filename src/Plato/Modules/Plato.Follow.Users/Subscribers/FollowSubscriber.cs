@@ -63,11 +63,13 @@ namespace Plato.Follow.Users.Subscribers
                 return follow;
             }
 
+
+
             // Award new follow reputation to the user following another user
-            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId);
+            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, "Followed a user");
 
             // Award new follower reputation to the user the current user is following
-            await _reputationAwarder.AwardAsync(Reputations.NewFollower, follow.ThingId);
+            await _reputationAwarder.AwardAsync(Reputations.NewFollower, follow.ThingId, "Received a follower");
             
             return follow;
 
@@ -88,10 +90,10 @@ namespace Plato.Follow.Users.Subscribers
             }
 
             // Award new follow reputation to the user following another user
-            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId);
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, "Removed Follow");
 
             // Award new follower reputation to the user the current user is following
-            await _reputationAwarder.RevokeAsync(Reputations.NewFollower, follow.ThingId);
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollower, follow.ThingId, "Follower Removed");
 
             return follow;
 

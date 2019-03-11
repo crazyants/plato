@@ -83,7 +83,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             if (updatedLabel != null)
             {
                 // Award reputation for following label
-                await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId);
+                await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, $"Followed label \"{label.Name}\"");
             }
 
             return follow;
@@ -125,7 +125,7 @@ namespace Plato.Discuss.Labels.Follow.Subscribers
             if (updatedLabel != null)
             {
                 // Revoke reputation for following tag
-                await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId);
+                await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, $"Unfollowed label \"{label.Name}\"");
             }
             
             return follow;

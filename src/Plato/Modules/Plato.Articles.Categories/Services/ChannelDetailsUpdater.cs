@@ -4,7 +4,6 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Models;
-using Plato.Articles.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 

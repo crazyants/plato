@@ -58,10 +58,7 @@ namespace Plato.Mentions.Services
             model.CreatedDate = DateTime.UtcNow;
             
             // Invoke EntityMentionCreating subscriptions
-            foreach (var handler in _broker.Pub<EntityMention>(this, new MessageOptions()
-            {
-                Key = "EntityMentionCreating"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityMention>(this, "EntityMentionCreating"))
             {
                 model = await handler.Invoke(new Message<EntityMention>(model, this));
             }
@@ -75,10 +72,7 @@ namespace Plato.Mentions.Services
             {
 
                 // Invoke EntityMentionCreated subscriptions
-                foreach (var handler in _broker.Pub<EntityMention>(this, new MessageOptions()
-                {
-                    Key = "EntityMentionCreated"
-                }, newEntityMention))
+                foreach (var handler in _broker.Pub<EntityMention>(this,"EntityMentionCreated"))
                 {
                     newEntityMention = await handler.Invoke(new Message<EntityMention>(newEntityMention, this));
                 }
@@ -120,10 +114,7 @@ namespace Plato.Mentions.Services
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Invoke EntityMentionUpdating subscriptions
-            foreach (var handler in _broker.Pub<EntityMention>(this, new MessageOptions()
-            {
-                Key = "EntityMentionUpdating"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityMention>(this, "EntityMentionUpdating"))
             {
                 model = await handler.Invoke(new Message<EntityMention>(model, this));
             }
@@ -137,10 +128,7 @@ namespace Plato.Mentions.Services
             {
 
                 // Invoke EntityMentionUpdated subscriptions
-                foreach (var handler in _broker.Pub<EntityMention>(this, new MessageOptions()
-                {
-                    Key = "EntityMentionUpdated"
-                }, updatedEntityMention))
+                foreach (var handler in _broker.Pub<EntityMention>(this, "EntityMentionUpdated"))
                 {
                     updatedEntityMention = await handler.Invoke(new Message<EntityMention>(updatedEntityMention, this));
                 }
@@ -164,10 +152,7 @@ namespace Plato.Mentions.Services
             }
 
             // Invoke EntityMentionDeleting subscriptions
-            foreach (var handler in _broker.Pub<EntityMention>(this, new MessageOptions()
-            {
-                Key = "EntityMentionDeleting"
-            }, model))
+            foreach (var handler in _broker.Pub<EntityMention>(this, "EntityMentionDeleting"))
             {
                 model = await handler.Invoke(new Message<EntityMention>(model, this));
             }
@@ -177,10 +162,7 @@ namespace Plato.Mentions.Services
             {
 
                 // Invoke EntityLabelDeleted subscriptions
-                foreach (var handler in _broker.Pub<EntityMention>(this, new MessageOptions()
-                {
-                    Key = "EntityMentionDeleted"
-                }, model))
+                foreach (var handler in _broker.Pub<EntityMention>(this, "EntityMentionDeleted"))
                 {
                     model = await handler.Invoke(new Message<EntityMention>(model, this));
                 }

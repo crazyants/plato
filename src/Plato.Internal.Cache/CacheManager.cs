@@ -109,11 +109,11 @@ namespace Plato.Internal.Cache
           
             _cacheDependency.CancelToken(token.ToString());
             
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("Invalidated cache entry with key '{0}'",
-                    token.ToString());
-            }
+            //if (_logger.IsEnabled(LogLevel.Information))
+            //{
+            //    _logger.LogInformation("Invalidated cache entry with key '{0}'",
+            //        token.ToString());
+            //}
 
         }
 

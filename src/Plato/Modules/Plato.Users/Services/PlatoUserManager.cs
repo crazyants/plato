@@ -258,8 +258,8 @@ namespace Plato.Users.Services
 
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
-                // Invoke UserUpdatied subscriptions
-                foreach (var handler in _broker.Pub<TUser>(this, "UserUpdatied"))
+                // Invoke UserUpdated subscriptions
+                foreach (var handler in _broker.Pub<TUser>(this, "UserUpdated"))
                 {
                     model = await handler.Invoke(new Message<TUser>(model, this));
                 }

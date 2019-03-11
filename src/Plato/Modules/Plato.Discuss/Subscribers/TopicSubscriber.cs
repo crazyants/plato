@@ -13,21 +13,18 @@ namespace Plato.Discuss.Subscribers
     /// <typeparam name="TEntity"></typeparam>
     public class TopicSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-        
-        private readonly IEntityStore<TEntity> _entityStore;
+
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly IUserReputationAwarder _reputationAwarder;
         private readonly IBroker _broker;
 
         public TopicSubscriber(
             IUserReputationAwarder reputationAwarder,
-            IEntityStore<TEntity> entityStore,
             IEntityRepository<TEntity> entityRepository,
             IBroker broker)
         {
             _reputationAwarder = reputationAwarder;
             _entityRepository = entityRepository;
-            _entityStore = entityStore;
             _broker = broker;
         }
 
@@ -47,17 +44,6 @@ namespace Plato.Discuss.Subscribers
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
 
-            // Updated
-            _broker.Sub<TEntity>(new MessageOptions()
-            {
-                Key = "EntityUpdated"
-            }, async message => await EntityUpdated(message.What));
-
-            // Deleted
-            _broker.Sub<TEntity>(new MessageOptions()
-            {
-                Key = "EntityDeleted"
-            }, async message => await EntityDeleted(message.What));
         }
 
         public void Unsubscribe()
@@ -68,51 +54,29 @@ namespace Plato.Discuss.Subscribers
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
-            
+
             // Updating
             _broker.Unsub<TEntity>(new MessageOptions()
             {
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
 
-            // Updated
-            _broker.Unsub<TEntity>(new MessageOptions()
-            {
-                Key = "EntityUpdated"
-            }, async message => await EntityUpdated(message.What));
-
-            // Deleted
-            _broker.Unsub<TEntity>(new MessageOptions()
-            {
-                Key = "EntityDeleted"
-            }, async message => await EntityDeleted(message.What));
-
         }
-        
+
         #endregion
 
         #region "Private Methods"
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-            
-            if (entity.IsPrivate)
-            {
-                return entity;
-            }
-            
-            if (entity.IsDeleted)
-            {
-                return entity;
-            }
-            
-            if (entity.IsSpam)
+
+            if (entity.IsHidden())
             {
                 return entity;
             }
 
             // Award reputation
-            await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId);
+            await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic posted");
 
             // Return
             return entity;
@@ -121,11 +85,9 @@ namespace Plato.Discuss.Subscribers
 
         async Task<TEntity> EntityUpdating(TEntity entity)
         {
-            
+
             // Get existing entity before any changes
-            var existingEntity = await _entityStore.GetByIdAsync(entity.Id);
-            
-            var repo = await _entityRepository.SelectByIdAsync(entity.Id);
+            var existingEntity = await _entityRepository.SelectByIdAsync(entity.Id);
 
             // We need an existing entity
             if (existingEntity == null)
@@ -136,10 +98,10 @@ namespace Plato.Discuss.Subscribers
             // Entity has been hidden
             if (entity.IsHidden())
             {
-                // If the existing entity was not hidden revoke reputation
+                // If the existing entity was not already hidden revoke reputation
                 if (!existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.RevokeAsync(Reputations.NewTopic, entity.CreatedUserId);
+                    await _reputationAwarder.RevokeAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic deleted or hidden");
                 }
             }
             else
@@ -147,40 +109,15 @@ namespace Plato.Discuss.Subscribers
                 // If the existing entity was hidden award reputation
                 if (existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId);
+                    await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic approved or made visible");
                 }
             }
-            
-            // Return
-            return entity;
-
-        }
-
-        Task<TEntity> EntityUpdated(TEntity entity)
-        {
-          
-            // Return
-            return Task.FromResult(entity);
-
-        }
-
-        async Task<TEntity> EntityDeleted(TEntity entity)
-        {
-
-            // Ensure we have a categoryId for the entity
-            if (entity.CategoryId <= 0)
-            {
-                return entity;
-            }
-
-            // Revoke reputation
-            await _reputationAwarder.RevokeAsync(Reputations.NewTopic, entity.CreatedUserId);
 
             // Return
             return entity;
 
         }
-        
+
         #endregion
 
     }

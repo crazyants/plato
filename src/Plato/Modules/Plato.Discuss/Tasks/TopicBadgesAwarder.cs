@@ -147,7 +147,7 @@ namespace Plato.Discuss.Tasks
                             var badgeReputation = badge.GetReputation();
                             if (badgeReputation.Points != 0)
                             {
-                                await _userReputationAwarder.AwardAsync(badgeReputation, user.Id);
+                                await _userReputationAwarder.AwardAsync(badgeReputation, user.Id, $"{badge.Name} badge awarded");
                             }
 
                             // ---------------

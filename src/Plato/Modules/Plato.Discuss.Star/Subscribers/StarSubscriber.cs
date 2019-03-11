@@ -86,10 +86,10 @@ namespace Plato.Discuss.Star.Subscribers
             if (updatedTopic != null)
             {
                 // Award reputation to user starring the topic
-                await _reputationAwarder.AwardAsync(Reputations.StarTopic, star.CreatedUserId);
+                await _reputationAwarder.AwardAsync(Reputations.StarTopic, star.CreatedUserId, "Starred a topic");
 
                 // Award reputation to topic author when there topic is starred
-                await _reputationAwarder.AwardAsync(Reputations.StarredTopic, topic.CreatedUserId);
+                await _reputationAwarder.AwardAsync(Reputations.StarredTopic, topic.CreatedUserId, "Someone starred my topic");
 
             }
 
@@ -132,10 +132,10 @@ namespace Plato.Discuss.Star.Subscribers
             if (updatedTopic != null)
             {
                 // Revoke reputation from user removing the topic star
-                await _reputationAwarder.RevokeAsync(Reputations.StarTopic, star.CreatedUserId);
+                await _reputationAwarder.RevokeAsync(Reputations.StarTopic, star.CreatedUserId, "Unstarred a topic");
 
                 // Revoke reputation from topic author for user removing there topic star
-                await _reputationAwarder.RevokeAsync(Reputations.StarredTopic, topic.CreatedUserId);
+                await _reputationAwarder.RevokeAsync(Reputations.StarredTopic, topic.CreatedUserId, "A user unstarred my topic");
 
             }
             

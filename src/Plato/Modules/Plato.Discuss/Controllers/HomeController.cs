@@ -20,11 +20,13 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities;
+using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
@@ -79,7 +81,6 @@ namespace Plato.Discuss.Controllers
             _entityReplyStore = entityReplyStore;
             _topicManager = topicManager;
             _replyManager = replyManager;
-            _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
@@ -87,6 +88,7 @@ namespace Plato.Discuss.Controllers
             _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
+            _alerter = alerter;
 
             T = localizer;
             S = stringLocalizer;
@@ -260,30 +262,30 @@ namespace Plato.Discuss.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newTopic = await _topicManager.CreateAsync(topic);
+                var newEntity = await _topicManager.CreateAsync(topic);
 
                 // Ensure the insert was successful
-                if (newTopic.Succeeded)
+                if (newEntity.Succeeded)
                 {
 
                     // Indicate new topic to prevent topic update
                     // on first creation within our topic view provider
-                    newTopic.Response.IsNewTopic = true;
+                    newEntity.Response.IsNewTopic = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(newTopic.Response, this);
-
+                    await _topicViewProvider.ProvideUpdateAsync(newEntity.Response, this);
+                    
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
 
                     // Redirect to entity
-                    return RedirectToAction(nameof(Display), new {Id = newTopic.Response.Id});
+                    return RedirectToAction(nameof(Display), new {Id = newEntity.Response.Id});
 
                 }
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in newTopic.Errors)
+                    foreach (var error in newEntity.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -574,9 +576,12 @@ namespace Plato.Discuss.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditEntityViewModel model)
         {
+
             // Get entity we are editing 
-            var topic = await _entityStore.GetByIdAsync(model.Id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(model.Id);
+
+            // Ensure entity exists
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -593,31 +598,31 @@ namespace Plato.Discuss.Controllers
                 var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                 // Only update edited information if the message changes
-                if (model.Message != topic.Message)
+                if (model.Message != entity.Message)
                 {
-                    topic.EditedUserId = user?.Id ?? 0;
-                    topic.EditedDate = DateTimeOffset.UtcNow;
+                    entity.EditedUserId = user?.Id ?? 0;
+                    entity.EditedDate = DateTimeOffset.UtcNow;
                 }
 
                 // Always update modified information
-                topic.ModifiedUserId = user?.Id ?? 0;
-                topic.ModifiedDate = DateTimeOffset.UtcNow;
+                entity.ModifiedUserId = user?.Id ?? 0;
+                entity.ModifiedDate = DateTimeOffset.UtcNow;
 
                 // Update title & message
-                topic.Title = model.Title;
-                topic.Message = model.Message;
+                entity.Title = model.Title;
+                entity.Message = model.Message;
 
                 // Execute view providers ProvideUpdateAsync method
-                await _topicViewProvider.ProvideUpdateAsync(topic, this);
-
+                await _topicViewProvider.ProvideUpdateAsync(entity, this);
+                
                 // Everything was OK
                 _alerter.Success(T["Topic Updated Successfully!"]);
 
                 // Redirect to topic
                 return RedirectToAction(nameof(Display), new
                 {
-                    Id = topic.Id,
-                    Alias = topic.Alias
+                    Id = entity.Id,
+                    Alias = entity.Alias
                 });
 
             }
@@ -898,7 +903,6 @@ namespace Plato.Discuss.Controllers
 
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(entity);
-
             if (result.Succeeded)
             {
                 _alerter.Success(T["Topic deleted successfully"]);
@@ -964,7 +968,6 @@ namespace Plato.Discuss.Controllers
 
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(entity);
-
             if (result.Succeeded)
             {
                 _alerter.Success(T["Topic restored successfully"]);

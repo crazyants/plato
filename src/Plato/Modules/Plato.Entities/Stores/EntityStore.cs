@@ -87,7 +87,7 @@ namespace Plato.Entities.Stores
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Updated existing entity with id {1}",
+                    _logger.LogInformation("Updated entity with id {1}",
                         updatedEntity.Id);
                 }
 

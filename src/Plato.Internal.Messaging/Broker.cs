@@ -38,28 +38,28 @@ namespace Plato.Internal.Messaging
         public IEnumerable<Func<Message<T>, Task<T>>> Pub<T>(object sender, MessageOptions options, T message) where T : class
         {
 
-            var ourput = new List<Func<Message<T>, Task<T>>>();
+            var output = new List<Func<Message<T>, Task<T>>>();
             
             // Nothing to process return empty collection
             if (sender == null)
             {
-                return ourput;
+                return output;
             }
 
             // No _subscribers for given type return empty collection
             if (!_subscribers.ContainsKey(typeof(T)))
             {
-                return ourput;
+                return output;
             }
 
             // No delegates within subscriber for given type return empty collection
             var delegates = _subscribers[typeof(T)];
             if (delegates == null || delegates.Count == 0)
             {
-                return ourput;
+                return output;
             }
 
-            // The payload passwed to each subscriber delegate
+            // The payload passed to each subscriber delegate
             //var delegatePayload = new Message<T>(message, sender);
 
             // Iterate through subscriber action delegates matching our key
@@ -74,14 +74,14 @@ namespace Plato.Internal.Messaging
                     // Action delegates return void and as such cannot be awaited
                     // Wrap action delegates within a dummy func delegate ensuring 
                     // the action can be executed consistently and asynchronously 
-                    ourput.Add(new Func<Message<T>, Task<T>>(async (Message<T> input) =>
+                    output.Add(async input =>
                     {
                         return await Task.Factory.StartNew(() =>
                         {
                             handler.Invoke(input);
                             return input.What;
                         });
-                    }));
+                    });
                 }         
               
             }
@@ -94,23 +94,15 @@ namespace Plato.Internal.Messaging
             {
                 if (func != null)
                 {
-                    if (message != null)
-                    {
-
-                    }
                     // Wrap our subscriber delegate within a dummy delegate
                     // This allows us to invoke the dummy delegate externally
                     // passing in a custom message for our real subscriber delegate
-                    ourput.Add(new Func<Message<T>, Task<T>>(async (Message<T> input) => await func.Invoke(input)));
-
-                    // convert delegates generic type to
-                    // concrete delegate type to allow for deferred invocation
-                    //ourput.Add((Message<T> input) => func(delegatePayload));
+                    output.Add(async input => await func.Invoke(input));
                 }
             }
 
             // Return funcs to invoke
-            return ourput;
+            return output;
 
         }
 

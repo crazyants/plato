@@ -56,10 +56,7 @@ namespace Plato.Email.Services
             }
 
             // Invoke EmailCreating subscriptions
-            foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
-            {
-                Key = "EmailCreating"
-            }, message))
+            foreach (var handler in _broker.Pub<MailMessage>(this, "EmailCreating"))
             {
                 message = await handler.Invoke(new Message<MailMessage>(message, this));
             }
@@ -69,10 +66,7 @@ namespace Plato.Email.Services
             if (email != null)
             {
                 // Invoke EmailCreated subscriptions
-                foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
-                {
-                    Key = "EmailCreated"
-                }, message))
+                foreach (var handler in _broker.Pub<MailMessage>(this,"EmailCreated"))
                 {
                     message = await handler.Invoke(new Message<MailMessage>(message, this));
                 }
@@ -100,10 +94,7 @@ namespace Plato.Email.Services
             }
 
             // Invoke EmailSending subscriptions
-            foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
-            {
-                Key = "EmailSending"
-            }, message))
+            foreach (var handler in _broker.Pub<MailMessage>(this, "EmailSending"))
             {
                 message = await handler.Invoke(new Message<MailMessage>(message, this));
             }
@@ -113,10 +104,7 @@ namespace Plato.Email.Services
             if (sendResult.Succeeded)
             {
                 // Invoke EmailSent subscriptions
-                foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
-                {
-                    Key = "EmailSent"
-                }, message))
+                foreach (var handler in _broker.Pub<MailMessage>(this, "EmailSent"))
                 {
                     message = await handler.Invoke(new Message<MailMessage>(message, this));
                 }

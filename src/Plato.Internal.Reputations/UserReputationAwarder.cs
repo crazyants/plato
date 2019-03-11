@@ -16,7 +16,7 @@ namespace Plato.Internal.Reputations
             _userReputationManager = userReputationManager;
         }
 
-        public async Task<UserReputation> AwardAsync(IReputation reputation, int userId)
+        public async Task<UserReputation> AwardAsync(IReputation reputation, int userId, string description = null)
         {
 
             if (reputation == null)
@@ -32,6 +32,7 @@ namespace Plato.Internal.Reputations
             var userReputation = new UserReputation()
             {
                 Name = reputation.Name,
+                Description = description,
                 Points = reputation.Points,
                 CreatedUserId = userId
             };
@@ -46,7 +47,7 @@ namespace Plato.Internal.Reputations
 
         }
 
-        public async Task<UserReputation> RevokeAsync(IReputation reputation, int userId)
+        public async Task<UserReputation> RevokeAsync(IReputation reputation, int userId, string description = null)
         {
 
             if (reputation == null)
@@ -62,6 +63,7 @@ namespace Plato.Internal.Reputations
             var userReputation = new UserReputation()
             {
                 Name = reputation.Name,
+                Description = description,
                 Points = -reputation.Points,
                 CreatedUserId = userId
             };

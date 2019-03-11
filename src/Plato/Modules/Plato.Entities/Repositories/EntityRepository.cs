@@ -237,20 +237,6 @@ namespace Plato.Entities.Repositories
             var entityId = 0;
             using (var context = _dbContext)
             {
-
-                context.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                    {
-                        _logger.LogInformation(
-                            id == 0
-                                ? $"Insert for entity with title '{title}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for entity with Id {id} failed with the following error {args.Exception.Message}");
-                    }
-
-                    throw args.Exception;
-                };
-
                 entityId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
@@ -312,23 +298,7 @@ namespace Plato.Entities.Repositories
             return entityId;
 
         }
-
-        public IDbDataParameter RetrieveParameter(
-            IEnumerable<IDbDataParameter> paramCollection,
-            string parameterName)
-        {
-            foreach (var param in paramCollection)
-            {
-                if (param.ParameterName == parameterName)
-                {
-                    return param;
-                }
-            }
-
-            return null;
-
-        }
-
+        
         #endregion
     }
 

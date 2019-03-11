@@ -65,7 +65,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
             }
 
             // Award reputation for following channel
-            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId);
+            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, "Followed a channel");
 
             return follow;
 
@@ -86,7 +86,7 @@ namespace Plato.Discuss.Channels.Follow.Subscribers
             }
 
             // Revoke reputation for following tag
-            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId);
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, "Unfollowed a channel");
 
             return follow;
 

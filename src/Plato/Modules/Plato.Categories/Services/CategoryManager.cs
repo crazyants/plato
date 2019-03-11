@@ -456,10 +456,7 @@ namespace Plato.Categories.Services
         async Task<string> ParseAlias(string input)
         {
 
-            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseCategoryAlias"
-            }, input))
+            foreach (var handler in _broker.Pub<string>(this, "ParseCategoryAlias"))
             {
                 return await handler.Invoke(new Message<string>(input, this));
             }

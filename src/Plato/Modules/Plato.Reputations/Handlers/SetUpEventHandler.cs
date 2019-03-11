@@ -31,6 +31,12 @@ namespace Plato.Reputations.Handlers
                 },
                 new SchemaColumn()
                 {
+                    Name = "Description",
+                    DbType = DbType.String,
+                    Length = "255"
+                },
+                new SchemaColumn()
+                {
                     Name = "Points",
                     DbType = DbType.Int32
                 },
