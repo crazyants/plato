@@ -16,8 +16,7 @@ namespace Plato.Core.Controllers
     {
 
         #region "Constructor"
-
-
+        
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Follow.Users.Subscribers
 {
@@ -10,13 +12,16 @@ namespace Plato.Follow.Users.Subscribers
 
         private readonly IBroker _broker;
         private readonly IUserReputationAwarder _reputationAwarder;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
         public FollowSubscriber(
             IBroker broker,
-            IUserReputationAwarder reputationAwarder)
+            IUserReputationAwarder reputationAwarder,
+            IPlatoUserStore<User> platoUserStore)
         {
             _broker = broker;
             _reputationAwarder = reputationAwarder;
+            _platoUserStore = platoUserStore;
         }
 
         public void Subscribe()
@@ -63,13 +68,18 @@ namespace Plato.Follow.Users.Subscribers
                 return follow;
             }
 
-
+            // Get the user we are following
+            var user = await _platoUserStore.GetByIdAsync(follow.ThingId);
+            if (user == null)
+            {
+                return follow;
+            }
 
             // Award new follow reputation to the user following another user
-            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, "Followed a user");
+            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, $"Following user \"{user.DisplayName}");
 
             // Award new follower reputation to the user the current user is following
-            await _reputationAwarder.AwardAsync(Reputations.NewFollower, follow.ThingId, "Received a follower");
+            await _reputationAwarder.AwardAsync(Reputations.NewFollower, follow.ThingId, $"{follow.CreatedBy.DisplayName} is following me");
             
             return follow;
 
@@ -89,11 +99,19 @@ namespace Plato.Follow.Users.Subscribers
                 return follow;
             }
 
-            // Award new follow reputation to the user following another user
-            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, "Removed Follow");
 
-            // Award new follower reputation to the user the current user is following
-            await _reputationAwarder.RevokeAsync(Reputations.NewFollower, follow.ThingId, "Follower Removed");
+            // Get the user we are following
+            var user = await _platoUserStore.GetByIdAsync(follow.ThingId);
+            if (user == null)
+            {
+                return follow;
+            }
+            
+            // Revoke follow reputation to the user following another user
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, $"Unfollowed user \"{user.DisplayName}");
+
+            // Revoke follower reputation for the user the current user is following
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollower, follow.ThingId, $"{follow.CreatedBy.DisplayName} stopped following me");
 
             return follow;
 

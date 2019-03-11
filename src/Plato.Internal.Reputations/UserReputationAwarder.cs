@@ -16,7 +16,7 @@ namespace Plato.Internal.Reputations
             _userReputationManager = userReputationManager;
         }
 
-        public async Task<UserReputation> AwardAsync(IReputation reputation, int userId, string description = null)
+        public async Task<UserReputation> AwardAsync(IReputation reputation, int userId, string description)
         {
 
             if (reputation == null)
@@ -47,7 +47,7 @@ namespace Plato.Internal.Reputations
 
         }
 
-        public async Task<UserReputation> RevokeAsync(IReputation reputation, int userId, string description = null)
+        public async Task<UserReputation> RevokeAsync(IReputation reputation, int userId, string description)
         {
 
             if (reputation == null)

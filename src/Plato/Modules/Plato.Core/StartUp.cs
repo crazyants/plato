@@ -48,8 +48,15 @@ namespace Plato.Core
 
             // Register client options middleware 
             app.UseMiddleware<SettingsClientOptionsMiddleware>();
-            
-       
+        
+            // Homepage
+            routes.MapAreaRoute(
+                name: "Homepage",
+                areaName: "Plato.Core",
+                template: "",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+
             // Unauthorized - 401
             routes.MapAreaRoute(
                 name: "UnauthorizedPage",

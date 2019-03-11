@@ -13,18 +13,18 @@ namespace Plato.Users.Services
     public class UserService : IUserService
     {
 
-        private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
-        public UserService(IPlatoUserStore<User> ploatUserStore)
+        public UserService(IPlatoUserStore<User> platoUserStore)
         {
-            _ploatUserStore = ploatUserStore;
+            _platoUserStore = platoUserStore;
         }
 
-        public async Task<IPagedResults<User>> GetUsersAsunc(
+        public async Task<IPagedResults<User>> GetResultsAsync(
             UserIndexOptions options,
             PagerOptions pager)
         {
-            return await _ploatUserStore.QueryAsync()
+            return await _platoUserStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
                 .Select<UserQueryParams>(q =>
                 {

@@ -65,14 +65,16 @@ namespace Plato.Internal.Hosting.Web.Routing
                 object value;
                 if (String.Equals(entry.Key, "area", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (!context.AmbientValues.TryGetValue("area", out value) || !String.Equals(value.ToString(), _tokens["area"].ToString(), StringComparison.OrdinalIgnoreCase))
+                    if (!context.AmbientValues.TryGetValue("area", out value) || 
+                        !String.Equals(value.ToString(), _tokens["area"].ToString(), StringComparison.OrdinalIgnoreCase))
                     {
                         return null;
                     }
                 }
                 else
                 {
-                    if (!context.Values.TryGetValue(entry.Key, out value) || !String.Equals(value.ToString(), entry.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                    if (!context.Values.TryGetValue(entry.Key, out value) ||
+                        !String.Equals(value.ToString(), entry.Value.ToString(), StringComparison.OrdinalIgnoreCase))
                     {
                         return null;
                     }

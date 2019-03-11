@@ -145,7 +145,7 @@ namespace Plato.Users.ViewComponents
             PagerOptions pager)
         {
 
-            var results = await _userService.GetUsersAsunc(options, pager);
+            var results = await _userService.GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);

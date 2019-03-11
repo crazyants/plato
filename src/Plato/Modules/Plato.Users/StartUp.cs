@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -168,7 +169,24 @@ namespace Plato.Users
             // Must be registered after .NET authentication middleware has been registered
             // i.e. after app.UseAuthentication() above
             app.UseMiddleware<AuthenticatedUserMiddleware>();
+            
+            //// Executes on every request, safe to modify response 
+            //app.Run(async context =>
+            //{
+            //    // If the request is not authenticated move along
+            //    if (!context.User.Identity.IsAuthenticated)
+            //    {
 
+            //        return;
+            //    }
+
+            //    // Sign out the request if the user is not found
+            //    await SignOutRequestIfUserNotFound(context);
+            //    // Attempt to update last login date
+            //    await UpdateAuthenticatedUsersLastLoginDateAsync(context);
+
+            //});
+            
             // --------------
             // Account
             // --------------
@@ -320,7 +338,106 @@ namespace Plato.Users
             );
             
         }
+        
+        async Task SignOutRequestIfUserNotFound(HttpContext context)
+        {
 
+            // Get context facade
+            var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
+            if (contextFacade == null)
+            {
+                return;
+            }
+
+            // Attempt to get the user
+            var user = await contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                // If the request is authenticated but we didn't find a user attempt to sign out the request
+                var signInManager = context.RequestServices.GetRequiredService<SignInManager<User>>();
+                if (signInManager != null)
+                {
+                    await signInManager.SignOutAsync();
+                }
+            }
+
+        }
+        
+        async Task UpdateAuthenticatedUsersLastLoginDateAsync(HttpContext context)
+        {
+
+            const string cookieName = "plato_active";
+
+            // If the request is not authenticated move along
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                return;
+            }
+
+            // If the tracking cookie still exists simply return
+            var cookie = context.Request.Cookies[cookieName];
+            if (cookie != null)
+            {
+                return;
+            }
+
+            // Get context facade
+            var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
+            if (contextFacade == null)
+            {
+                return;
+            }
+
+            // Get authenticated user
+            var user = await contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return;
+            }
+
+            user.Visits += 1;
+            user.VisitsUpdatedDate = DateTimeOffset.UtcNow;
+            user.LastLoginDate = DateTimeOffset.UtcNow;
+
+            var userManager = context.RequestServices.GetRequiredService<IPlatoUserManager<User>>();
+            if (userManager == null)
+            {
+                return;
+            }
+
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+
+                // Award visit reputation
+                var userReputationAwarder = context.RequestServices.GetRequiredService<IUserReputationAwarder>();
+                if (userReputationAwarder != null)
+                {
+                    await userReputationAwarder.AwardAsync(Reputations.UniqueVisit, result.Response.Id, $"Unique Visit");
+                }
+
+                // Set cookie to prevent further execution
+                var tennantPath = "/";
+                var shellSettings = context.RequestServices.GetRequiredService<IShellSettings>();
+                if (shellSettings != null)
+                {
+                    tennantPath += shellSettings.RequestedUrlPrefix;
+                }
+
+                context.Response.Cookies.Append(
+                    cookieName,
+                    true.ToString(),
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Path = tennantPath,
+                        Expires = DateTime.Now.AddMinutes(20)
+                    });
+
+            }
+
+        }
+        
     }
 
 }

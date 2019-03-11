@@ -30,7 +30,6 @@ namespace Plato.Internal.Navigation
         private readonly IShellSettings _shellSettings;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IAuthorizationService _authorizationService;
-
         private IUrlHelper _urlHelper;
 
         public NavigationManager(

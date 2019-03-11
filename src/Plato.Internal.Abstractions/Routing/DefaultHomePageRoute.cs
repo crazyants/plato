@@ -7,9 +7,9 @@ namespace Plato.Internal.Abstractions.Routing
 
         public DefaultHomePageRoute()
         {
-            this["Area"] = "Plato.Core";
-            this["Controller"] = "Home";
-            this["Action"] = "Index";
+            this["area"] = "Plato.Core";
+            this["controller"] = "Home";
+            this["action"] = "Index";
         }
 
     }
