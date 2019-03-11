@@ -9,10 +9,10 @@ namespace Plato.Users
     {
 
         public static readonly Reputation UniqueVisit =
-            new Reputation("Visit", "Reputation awarded for each unique visit", 1);
+            new Reputation("Visit",  1);
 
         public static readonly Reputation NewTopicReputation =
-            new Reputation("New Topic", "Reputation awarded for posting a new topic.", 1);
+            new Reputation("New Topic", 1);
 
         public IEnumerable<Reputation> GetReputations()
         {

@@ -9,10 +9,10 @@ namespace Plato.Discuss
     {
 
         public static readonly Reputation NewTopic =
-            new Reputation("New Topic", "Reputation awarded for posting a new topic.", 1);
+            new Reputation("New Topic", 1);
 
         public static readonly Reputation NewReply =
-            new Reputation("New Reply", "Reputation awarded for posting a new reply.", 1);
+            new Reputation("New Reply", 1);
 
         public IEnumerable<Reputation> GetReputations()
         {

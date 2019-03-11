@@ -48,6 +48,7 @@ namespace Plato.Internal.Layout.Extensions
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
                 options.Filters.Add(typeof(AlertFilter));
+
             });
 
             // model binding model accessor

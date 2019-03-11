@@ -9,7 +9,7 @@ namespace Plato.Discuss.Channels.Follow
     {
 
         public static readonly Reputation NewFollow =
-            new Reputation("Channel Follow", "Reputation awarded for following a discussion channel.", 1);
+            new Reputation("Channel Follow", 1);
         
         public IEnumerable<Reputation> GetReputations()
         {

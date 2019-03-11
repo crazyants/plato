@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -45,6 +46,7 @@ using Plato.Internal.Assets.Extensions;
 using Plato.Internal.Badges.Extensions;
 using Plato.Internal.Drawing.Extensions;
 using Plato.Internal.Hosting.Web.Configuration;
+using Plato.Internal.Hosting.Web.Filters;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Navigation.Extensions;
 using Plato.Internal.Net.Extensions;
@@ -96,7 +98,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
                 internalServices.AddSingleton<ICapturedRouterUrlHelper, CapturedRouterUrlHelper>();
                 internalServices.AddTransient<IContextFacade, ContextFacade>();
-          
+                
+                // Action filters
+                internalServices.Configure<MvcOptions>(options =>
+                {
+                    options.Filters.Add(typeof(UpdateUserLastLoginDateFilter));
+                    options.Filters.Add(typeof(SignOutRequestIfUserNotFoundFilter));
+                });
+
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
@@ -105,7 +114,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoCaching();
                 internalServices.AddPlatoText();
                 internalServices.AddPlatoNotifications();
-        
                 internalServices.AddPlatoModules();
                 internalServices.AddPlatoTheming();
                 internalServices.AddPlatoViewFeature();
@@ -199,9 +207,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             // localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-
+            
             // Razor & Views
-            var builder = services.AddMvcCore()
+            var builder = services
+                .AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddViews()
                 .AddRazorViewEngine();
@@ -377,6 +386,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
             
+
+
         }
         
         private static void ListAllRegisteredServices(IApplicationBuilder app)

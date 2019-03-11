@@ -9,10 +9,10 @@ namespace Plato.Follow.Users
     {
 
         public static readonly Reputation NewFollow =
-            new Reputation("New Follow", "Reputation awarded for following a user.", 1);
+            new Reputation("New Follow", 1);
 
         public static readonly Reputation NewFollower =
-            new Reputation("New Follower", "Reputation awarded for each new follower.", 2);
+            new Reputation("New Follower", 2);
 
         public IEnumerable<Reputation> GetReputations()
         {

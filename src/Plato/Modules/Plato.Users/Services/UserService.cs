@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;

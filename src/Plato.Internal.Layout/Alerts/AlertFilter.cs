@@ -13,10 +13,11 @@ using Plato.Internal.Models.Shell;
 
 namespace Plato.Internal.Layout.Alerts
 {
+
     public class AlertFilter : IActionFilter, IAsyncResultFilter
     {
 
-        readonly string _tenantPath;
+        private readonly string _tenantPath;
         internal const string CookieName = "plato_alerts";
         private bool _deleteCookie = false;
         private IList<AlertInfo> _alerts = new List<AlertInfo>();

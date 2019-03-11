@@ -9,10 +9,10 @@ namespace Plato.Discuss.Star
     {
 
         public static readonly Reputation StarTopic =
-            new Reputation("Star Topic", "Reputation awarded for starring a topic.", 1);
+            new Reputation("Star Topic", 1);
 
         public static readonly Reputation StarredTopic =
-            new Reputation("Starred Topic", "Reputation awarded to authors when there topic is starred.", 2);
+            new Reputation("Starred Topic", 2);
         
         public IEnumerable<Reputation> GetReputations()
         {

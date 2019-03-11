@@ -11,7 +11,7 @@ namespace Plato.Internal.Models.Badges
 
         private string _description;
 
-        // Globally multiply the default thredhold and bounus points for all badges
+        // Globally multiply the default threshold and bonus points for all badges
         // Default value should be set to 1 increase the accomodate requirements
         public static readonly int ThresholdMultiplier = 0;
         public static readonly int PointsMultiplier = 0;
@@ -44,7 +44,7 @@ namespace Plato.Internal.Models.Badges
 
         public IReputation GetReputation()
         {
-            return new Reputation(this.Name, string.Empty, this.BonusPoints);
+            return new Reputation(this.Name,  this.BonusPoints);
         }
         
         public Badge()
