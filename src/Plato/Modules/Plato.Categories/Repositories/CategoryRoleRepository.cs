@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Repositories;
 
 namespace Plato.Categories.Repositories
 {
@@ -65,15 +64,21 @@ namespace Plato.Categories.Repositories
             CategoryRole categoryRole = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                categoryRole = await context.ExecuteReaderAsync<CategoryRole>(
                     CommandType.StoredProcedure,
-                    "SelectCategoryRoleById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    categoryRole = new CategoryRole();
-                    categoryRole.PopulateModel(reader);
-                }
+                    "SelectCategoryRoleById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            categoryRole = new CategoryRole();
+                            await reader.ReadAsync();
+                            categoryRole.PopulateModel(reader);
+                        }
+
+                        return categoryRole;
+                    },
+                    id);
 
             }
 
@@ -83,39 +88,42 @@ namespace Plato.Categories.Repositories
 
         public async Task<IPagedResults<CategoryRole>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<CategoryRole> output = null;
+            IPagedResults<CategoryRole> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<CategoryRole>>(
                     CommandType.StoredProcedure,
                     "SelectCategoryRolesPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<CategoryRole>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new CategoryRole();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                              
+                            }
+
+                        }
+
+                        return output;
+                    },
                     inputParams
                 );
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<CategoryRole>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new CategoryRole();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+           
             }
 
             return output;
@@ -144,33 +152,31 @@ namespace Plato.Categories.Repositories
         public async Task<IEnumerable<CategoryRole>> SelectByCategoryIdAsync(int categoryId)
         {
 
-            List<CategoryRole> output = null;
+            IList<CategoryRole> output = null;
             using (var context = _dbContext)
             {
 
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<CategoryRole>>(
                     CommandType.StoredProcedure,
                     "SelectCategoryRolesByCategoryId",
-                    categoryId
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<CategoryRole>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var category = new CategoryRole();
-                        category.PopulateModel(reader);
-                        output.Add(category);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<CategoryRole>();
+                            while (await reader.ReadAsync())
+                            {
+                                var category = new CategoryRole();
+                                category.PopulateModel(reader);
+                                output.Add(category);
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    categoryId);
+                
             }
 
             return output;

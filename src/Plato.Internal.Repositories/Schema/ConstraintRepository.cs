@@ -35,19 +35,26 @@ namespace Plato.Internal.Repositories.Schema
             ICollection<DbConstraint> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
-                    CommandType.Text, BySql);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<DbConstraint>();
-                    while (await reader.ReadAsync())
+                output = await context.ExecuteReaderAsync(
+                    CommandType.Text,
+                    BySql,
+                    async reader =>
                     {
-                        var constraint = new DbConstraint();
-                        constraint.PopulateModel(reader);
-                        output.Add(constraint);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<DbConstraint>();
+                            while (await reader.ReadAsync())
+                            {
+                                var constraint = new DbConstraint();
+                                constraint.PopulateModel(reader);
+                                output.Add(constraint);
+                            }
 
-                }
+                        }
+
+                        return output;
+                    });
+              
             }
 
             return output;

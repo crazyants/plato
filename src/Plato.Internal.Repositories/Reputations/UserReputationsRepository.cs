@@ -50,59 +50,67 @@ namespace Plato.Internal.Repositories.Reputations
 
         public async Task<UserReputation> SelectByIdAsync(int id)
         {
-            UserReputation userBadge = null;
+            UserReputation userReputation = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                userReputation = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectUserReputationById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    userBadge = new UserReputation();
-                    userBadge.PopulateModel(reader);
-                }
+                    "SelectUserReputationById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            userReputation = new UserReputation();
+                            await reader.ReadAsync();
+                            userReputation.PopulateModel(reader);
+                        }
+
+                        return userReputation;
+                    },
+                    id);
+             
 
             }
 
-            return userBadge;
+            return userReputation;
         }
 
         public async Task<IPagedResults<UserReputation>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<UserReputation> output = null;
+            IPagedResults<UserReputation> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<UserReputation>>(
                     CommandType.StoredProcedure,
                     "SelectUserReputationsPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<UserReputation>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var Label = new UserReputation();
-                        Label.PopulateModel(reader);
-                        output.Data.Add(Label);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<UserReputation>();
+                            while (await reader.ReadAsync())
+                            {
+                                var userReputation = new UserReputation();
+                                userReputation.PopulateModel(reader);
+                                output.Data.Add(userReputation);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    inputParams);
+
+              
             }
 
             return output;

@@ -30,7 +30,6 @@ namespace Plato.Internal.Data
             _provider = provider;
             _logger = logger;
             Configuration = dbContextOptions.Value;
-            //ConfigureInternal(dbContextOptions.Value);
         }
    
         public void Configure(Action<DbContextOptions> options)
@@ -38,47 +37,10 @@ namespace Plato.Internal.Data
             var cfg = new DbContextOptions();
             options(cfg);
             Configuration = cfg;
-            //ConfigureInternal(cfg);
         }
-        
-        private void ConfigureInternal(DbContextOptions cfg)
-        {
-        
-            //_provider = new DataProviderFactory(cfg).Provider;
-            //if (_provider != null)
-            //{
-            //    // handle exceptions within the provider
-            //    if (this.OnException == null)
-            //    {
-            //        _provider.OnException += (sender, args) =>
-            //        {
-            //            HandleException(args.Exception);
-            //        };
-            //    }
-            //    else
-            //    {
-            //        // dbContext has a explicit exception handler
-            //        _provider.OnException += this.OnException;
-            //    }
-                    
-            //}
-            //Configuration = cfg;
-        }
-        
+  
         #region "Implementation"
-
-        public async Task<DbDataReader> ExecuteReaderAsync(
-            CommandType commandType,
-            string sql,
-            params object[] commandParams)
-        {
-            if (_provider == null)
-                return null;
-            if (commandType == CommandType.StoredProcedure)
-                sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
-            return await _provider.ExecuteReaderAsync(sql, commandParams);
-        }
-
+        
         public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
         {
             if (_provider == null)

@@ -85,19 +85,26 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                role = await context.ExecuteReaderAsync<Role>(
                     CommandType.StoredProcedure,
-                    "SelectRoleById", id);
+                    "SelectRoleById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            role = new Role();
+                            await reader.ReadAsync();
+                            role.PopulateModel(reader);
+                        }
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    role = new Role();
-                    role.PopulateModel(reader);
-                }
+                        return role;
+                    },
+                    id);
+                
             }
 
             return role;
+
         }
 
         public async Task<Role> SelectByNameAsync(string name)
@@ -105,16 +112,23 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                role = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectRoleByName", name);
+                    "SelectRoleByName",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            role = new Role();
+                            await reader.ReadAsync();
+                            role.PopulateModel(reader);
+                        }
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    role = new Role();
-                    role.PopulateModel(reader);
-                }
+                        return role;
+                    },
+                    name);
+
+
             }
 
             return role;
@@ -125,16 +139,23 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                role = await context.ExecuteReaderAsync<Role>(
                     CommandType.StoredProcedure,
-                    "SelectRoleByNameNormalized", normalizedName);
+                    "SelectRoleByNameNormalized",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            role = new Role();
+                            await reader.ReadAsync();
+                            role.PopulateModel(reader);
+                        }
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    role = new Role();
-                    role.PopulateModel(reader);
-                }
+                        return role;
+                    },
+                    normalizedName);
+
+             
             }
 
             return role;
@@ -142,26 +163,30 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<IList<Role>> SelectByUserIdAsync(int userId)
         {
-            var output = new List<Role>();
+            List<Role> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectRolesByUserId",
-                    userId
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<Role>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var role = new Role();
-                        role.PopulateModel(reader);
-                        output.Add(role);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<Role>();
+                            while (await reader.ReadAsync())
+                            {
+                                var role = new Role();
+                                role.PopulateModel(reader);
+                                output.Add(role);
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    userId);
+
             }
 
             return output;
@@ -170,31 +195,39 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParams) where T : class
         {
-            PagedResults<T> output = null;
+            IPagedResults<T> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<T>>(
                     CommandType.StoredProcedure,
                     "SelectRolesPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<T>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var role = new Role();
-                        role.PopulateModel(reader);
-                        output.Data.Add((T) Convert.ChangeType(role, typeof(T)));
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<T>();
+                            while (await reader.ReadAsync())
+                            {
+                                var role = new Role();
+                                role.PopulateModel(reader);
+                                output.Data.Add((T)Convert.ChangeType(role, typeof(T)));
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+                        }
+
+                        return output;
+                    },
+                    inputParams);
+
+             
             }
 
             return output;
@@ -203,31 +236,40 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<IPagedResults<Role>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Role> output = null;
+            IPagedResults<Role> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<Role>>(
                     CommandType.StoredProcedure,
                     "SelectRolesPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<Role>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var role = new Role();
-                        role.PopulateModel(reader);
-                        output.Data.Add(role);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<Role>();
+                            while (await reader.ReadAsync())
+                            {
+                                var role = new Role();
+                                role.PopulateModel(reader);
+                                output.Data.Add(role);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                          
+                            }
+                        }
+
+                        return output;
+                    },
+                    inputParams);
+
+              
             }
 
             return output;
@@ -236,22 +278,28 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<IEnumerable<Role>> SelectRoles()
         {
-            var output = new List<Role>();
+            IList<Role> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<Role>>(
                     CommandType.StoredProcedure,
-                    "SelectRoles");
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    while (await reader.ReadAsync())
+                    "SelectRoles",
+                    async reader =>
                     {
-                        var role = new Role();
-                        role.PopulateModel(reader);
-                        output.Add(role);
-                    }
-                }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<Role>();
+                            while (await reader.ReadAsync())
+                            {
+                                var role = new Role();
+                                role.PopulateModel(reader);
+                                output.Add(role);
+                            }
+                        }
+
+                        return output;
+                    });
+                
             }
 
             return output;

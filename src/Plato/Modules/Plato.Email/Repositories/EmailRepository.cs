@@ -61,15 +61,21 @@ namespace Plato.Email.Repositories
             EmailMessage email = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                email = await context.ExecuteReaderAsync<EmailMessage>(
                     CommandType.StoredProcedure,
-                    "SelectEmailById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    email = new EmailMessage();
-                    email.PopulateModel(reader);
-                }
+                    "SelectEmailById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            email = new EmailMessage();
+                            email.PopulateModel(reader);
+                        }
+
+                        return email;
+                    },
+                    id);
 
             }
 
@@ -79,30 +85,36 @@ namespace Plato.Email.Repositories
 
         public async Task<IPagedResults<EmailMessage>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EmailMessage> output = null;
+            IPagedResults<EmailMessage> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<EmailMessage>>(
                     CommandType.StoredProcedure,
                     "SelectEmailsPaged",
-                    inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<EmailMessage>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new EmailMessage();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<EmailMessage>();
+                            while (await reader.ReadAsync())
+                            {
+                                var email = new EmailMessage();
+                                email.PopulateModel(reader);
+                                output.Data.Add(email);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                    
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+                    },
+                    inputParams);
+               
             }
 
             return output;

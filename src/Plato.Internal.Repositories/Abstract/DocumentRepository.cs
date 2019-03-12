@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models;
 using Plato.Internal.Models.Abstract;
 
 namespace Plato.Internal.Repositories.Abstract
@@ -126,29 +123,31 @@ namespace Plato.Internal.Repositories.Abstract
 
         async Task<DocumentEntry> SelectByIdAsync(int id)
         {
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Selecting document entry {id}");
-
             DocumentEntry entry = null;
-            // database context may not be configured.
-            // For example during set-up
             if (_dbContext != null)
             {
                 using (var context = _dbContext)
                 {
-                    var reader = await context.ExecuteReaderAsync(
+                    entry= await context.ExecuteReaderAsync<DocumentEntry>(
                         CommandType.StoredProcedure,
                         "SelectDocumentEntryById",
-                        id);
-                    if (reader != null)
-                    {
-                        if (reader.HasRows)
+                        async reader =>
                         {
-                            await reader.ReadAsync();
-                            entry = new DocumentEntry();
-                            entry.PopulateModel(reader);
-                        }
-                    }
+                            if (reader != null)
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    entry = new DocumentEntry();
+                                    entry.PopulateModel(reader);
+                                }
+                            }
+
+                            return entry;
+
+                        },
+                        id);
+                  
                 }
             }
 
@@ -157,45 +156,37 @@ namespace Plato.Internal.Repositories.Abstract
 
         async Task<DocumentEntry> SelectByTypeAsync(string type)
         {
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Selecting document entry for type: {type}");
-
+   
             DocumentEntry entry = null;
-            // database context may not be configured.
-            // For example during set-up
             if (_dbContext != null)
             {
                 using (var context = _dbContext)
                 {
-                    var reader = await context.ExecuteReaderAsync(
+                    entry = await context.ExecuteReaderAsync<DocumentEntry>(
                         CommandType.StoredProcedure,
                         "SelectDocumentEntryByType",
-                        type);
-                    if (reader != null)
-                    {
-                        if (reader.HasRows)
+                        async reader =>
                         {
-                            await reader.ReadAsync();
-                            entry = new DocumentEntry();
-                            entry.PopulateModel(reader);
-                        }
-                    }
+                            if ((reader != null) && (reader.HasRows))
+                            {
+                                await reader.ReadAsync();
+                                entry = new DocumentEntry();
+                                entry.PopulateModel(reader);
+                            }
+
+                            return entry;
+
+                        },
+                        type);
+
                 }
             }
 
             return entry;
         }
-
-
+        
         #endregion
-
-
-
-
-
-
-
-
+        
     }
 
 }

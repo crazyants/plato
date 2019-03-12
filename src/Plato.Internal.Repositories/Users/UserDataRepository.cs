@@ -36,22 +36,26 @@ namespace Plato.Internal.Repositories.Users
 
         public async Task<UserData> SelectByIdAsync(int id)
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Selecting setting with id: {id}");
-
+            
             UserData userData = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                userData = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectUserDatumById", id);
-                if (reader != null && reader.HasRows)
-                {
-                    userData = new UserData();
-                    await reader.ReadAsync();
-                    userData.PopulateModel(reader);
-                }
+                    "SelectUserDatumById",
+                    async reader =>
+                    {
+                        if (reader != null && reader.HasRows)
+                        {
+                            userData = new UserData();
+                            await reader.ReadAsync();
+                            userData.PopulateModel(reader);
+                        }
+
+                        return userData;
+                    },
+                    id);
+            
 
             }
 
@@ -62,25 +66,26 @@ namespace Plato.Internal.Repositories.Users
         public async Task<UserData> SelectByKeyAndUserIdAsync(string key, int userId)
         {
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Selecting all user data for userId {userId}");
-            }
-
             UserData data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserDatumByKeyAndUserId",
+                    async reader =>
+                    {
+                        if (reader != null && reader.HasRows)
+                        {
+                            data = new UserData();
+                            await reader.ReadAsync();
+                            data.PopulateModel(reader);
+                        }
+
+                        return data;
+                    },
                     key.ToEmptyIfNull(),
                     userId);
-                if (reader != null && reader.HasRows)
-                {
-                    await reader.ReadAsync();
-                    data = new UserData();
-                    data.PopulateModel(reader);
-                }
+
             }
 
             return data;
@@ -90,29 +95,29 @@ namespace Plato.Internal.Repositories.Users
         public async Task<IEnumerable<UserData>> SelectByUserIdAsync(int userId)
         {
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Selecting all user data for userId {userId}");
-            }
-                
-
-            List<UserData> data = null;
+            IList<UserData> data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync<IList<UserData>>(
                     CommandType.StoredProcedure,
                     "SelectUserDatumByUserId",
-                    userId);
-                if (reader != null && reader.HasRows)
-                {
-                    data = new List<UserData>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var userData = new UserData();
-                        userData.PopulateModel(reader);
-                        data.Add(userData);
-                    }
-                }
+                        if (reader != null && reader.HasRows)
+                        {
+                            data = new List<UserData>();
+                            while (await reader.ReadAsync())
+                            {
+                                var userData = new UserData();
+                                userData.PopulateModel(reader);
+                                data.Add(userData);
+                            }
+                        }
+
+                        return data;
+                    },
+                    userId);
+             
             }
             return data;
 
@@ -157,36 +162,41 @@ namespace Plato.Internal.Repositories.Users
         public async Task<IPagedResults<UserData>> SelectAsync(params object[] inputParams)
         {
 
-            PagedResults<UserData> output = null;
+            IPagedResults<UserData> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<UserData>>(
                     CommandType.StoredProcedure,
                     "SelectUserDatumPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<UserData>();
+                            while (await reader.ReadAsync())
+                            {
+                                var data = new UserData();
+                                data.PopulateModel(reader);
+                                output.Data.Add(data);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                        }
+
+                        return output;
+                    },
                     inputParams
                 );
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<UserData>();
-                    while (await reader.ReadAsync())
-                    {
-                        var data = new UserData();
-                        data.PopulateModel(reader);
-                        output.Data.Add(data);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        if (reader.HasRows)
-                        {
-                            await reader.ReadAsync();
-                            output.PopulateTotal(reader);
-                        }
-                    }
-
-                }
+              
             }
 
             return output;

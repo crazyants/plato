@@ -57,16 +57,23 @@ namespace Plato.Internal.Repositories.Users
             UserSecret secret = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                secret = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserSecret", id);
+                    "plato_sp_SelectUserSecret",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            secret = new UserSecret();
+                            await reader.ReadAsync();
+                            secret.PopulateModel(reader);
+                        }
 
-                if (reader != null)
-                {
-                    await reader.ReadAsync();
-                    secret = new UserSecret();
-                    secret.PopulateModel(reader);
-                }
+                        return secret;
+                    },
+                    id);
+
+              
             }
 
             return secret;
@@ -81,8 +88,7 @@ namespace Plato.Internal.Repositories.Users
             // TODO
             throw new NotImplementedException();
         }
-
-
+        
         #endregion
 
         #region "Private Methods"

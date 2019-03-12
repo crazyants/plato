@@ -80,15 +80,22 @@ namespace Plato.Internal.Repositories.Users
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                photo = await context.ExecuteReaderAsync<UserPhoto>(
                     CommandType.StoredProcedure,
-                    "SelectUserPhotoById", id);
+                    "SelectUserPhotoById",
+                    async reader =>
+                    {
+                        if ((reader != null) && reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            photo = new UserPhoto(reader);
+                        }
 
-                if ((reader != null) && reader.HasRows)
-                {
-                    await reader.ReadAsync();
-                    photo = new UserPhoto(reader);
-                }
+                        return photo;
+                    },
+                    id);
+
+
             }
 
             return photo;
@@ -99,15 +106,22 @@ namespace Plato.Internal.Repositories.Users
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                photo = await context.ExecuteReaderAsync<UserPhoto>(
                     CommandType.StoredProcedure,
-                    "SelectUserPhotoByUserId", userId);
+                    "SelectUserPhotoByUserId",
+                    async reader =>
+                    {
+                        if ((reader != null) && reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            photo = new UserPhoto(reader);
+                        }
 
-                if ((reader != null) && reader.HasRows)
-                {
-                    await reader.ReadAsync();
-                    photo = new UserPhoto(reader);
-                }
+                        return photo;
+                    },
+                    userId);
+
+
             }
 
             return photo;

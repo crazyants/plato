@@ -37,26 +37,25 @@ namespace Plato.Categories.Repositories
         public async Task<CategoryData> SelectByIdAsync(int id)
         {
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Selecting entity data with id: {id}");
-            }
-
             CategoryData data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                    "SelectCategoryDatumById", id);
-                if (reader != null)
-                {
-                    if (reader.HasRows)
+                data = await context.ExecuteReaderAsync<CategoryData>(
+                    CommandType.StoredProcedure,
+                    "SelectCategoryDatumById",
+                    async reader =>
                     {
-                        data = new CategoryData();
-                        await reader.ReadAsync();
-                        data.PopulateModel(reader);
-                    }
-                }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            data = new CategoryData();
+                            await reader.ReadAsync();
+                            data.PopulateModel(reader);
+                        }
+
+                        return data;
+
+                    },
+                    id);
 
             }
 
@@ -66,32 +65,30 @@ namespace Plato.Categories.Repositories
 
         public async Task<IEnumerable<CategoryData>> SelectByCategoryIdAsync(int categoryId)
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Selecting all category data for id {categoryId}");
-            }
-
+            
             List<CategoryData> data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumByCategoryId",
-                    categoryId);
-                if (reader != null)
-                {
-                    if (reader.HasRows)
+                    async reader =>
                     {
-                        data = new List<CategoryData>();
-                        while (await reader.ReadAsync())
+                        if ((reader != null) && (reader.HasRows))
                         {
-                            var entityData = new CategoryData();
-                            entityData.PopulateModel(reader);
-                            data.Add(entityData);
+                            data = new List<CategoryData>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entityData = new CategoryData();
+                                entityData.PopulateModel(reader);
+                                data.Add(entityData);
+                            }
                         }
-                    }
-                }
+
+                        return data;
+                    },
+                    categoryId);
+
             }
             return data;
 
@@ -138,30 +135,39 @@ namespace Plato.Categories.Repositories
 
         public async Task<IPagedResults<CategoryData>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<CategoryData> output = null;
+            IPagedResults<CategoryData> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<CategoryData>>(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<CategoryData>();
+                            while (await reader.ReadAsync())
+                            {
+                                var data = new CategoryData();
+                                data.PopulateModel(reader);
+                                output.Data.Add(data);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                        }
+
+                        return output;
+                    },
                     inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<CategoryData>();
-                    while (await reader.ReadAsync())
-                    {
-                        var data = new CategoryData();
-                        data.PopulateModel(reader);
-                        output.Data.Add(data);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+              
             }
 
             return output;

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Abstract;
 using Microsoft.Extensions.Logging;
-using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 
@@ -70,91 +70,86 @@ namespace Plato.Internal.Repositories.Abstract
 
         public async Task<DictionaryEntry> SelectByIdAsync(int id)
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Selecting dictionary entry with id: {id}");
-            
+     
+            DictionaryEntry output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                    "SelectDictionaryEntryById", id);
-                if (reader != null)
-                {
-                    if (reader.HasRows)
+                output = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectDictionaryEntryById",
+                    async reader =>
                     {
-                        var entry = new DictionaryEntry();
-                        await reader.ReadAsync();
-                        entry.PopulateModel(reader);
-                        return entry;
-                    }
-                }
-          
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new DictionaryEntry();
+                            await reader.ReadAsync();
+                            output.PopulateModel(reader);
+                        }
+
+                        return output;
+                    },
+                    id);
             }
 
-            return null;
+            return output;
             
         }
 
         public async Task<IEnumerable<DictionaryEntry>> SelectEntries()
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation("Selecting all dictionary entries");
-
-            List<DictionaryEntry> entries = null;
+            IList<DictionaryEntry> output = null;
             if (_dbContext != null)
             {
                 using (var context = _dbContext)
                 {
-                    var reader = await context.ExecuteReaderAsync(
+                    output = await context.ExecuteReaderAsync<IList<DictionaryEntry>>(
                         CommandType.StoredProcedure,
-                        "SelectDictionaryEntries");
-                    if (reader != null)
-                    {
-                        if (reader.HasRows)
+                        "SelectDictionaryEntries",
+                        async reader =>
                         {
-                            entries = new List<DictionaryEntry>();
-                            while (await reader.ReadAsync())
+                            if ((reader != null) && (reader.HasRows))
                             {
-                                var entry = new DictionaryEntry();
-                                entry.PopulateModel(reader);
-                                entries.Add(entry);
+                                output = new List<DictionaryEntry>();
+                                while (await reader.ReadAsync())
+                                {
+                                    var entry = new DictionaryEntry();
+                                    entry.PopulateModel(reader);
+                                    output.Add(entry);
+                                }
                             }
-                        }
-                    }
+
+                            return output;
+
+                        });
                 }
             }
 
-            return entries;
+            return output;
 
         }
         
         public async Task<DictionaryEntry> SelectEntryByKey(string key)
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Selecting dictionary entry {key}");
-
             DictionaryEntry entry = null;
             if (_dbContext != null)
             {
                 using (var context = _dbContext)
                 {
-                    var reader = await context.ExecuteReaderAsync(
+                    entry = await context.ExecuteReaderAsync(
                         CommandType.StoredProcedure,
                         "SelectDictionaryEntryByKey",
-                        key);
-                    if (reader != null)
-                    {
-                        if (reader.HasRows)
+                        async reader =>
                         {
+                            if ((reader != null) && (reader.HasRows))
+                            {
+                                entry = new DictionaryEntry();
+                                await reader.ReadAsync();
+                                entry.PopulateModel(reader);
+                            }
+                            return entry;
+                        },
+                        key);
 
-                            entry = new DictionaryEntry();
-                            entry.PopulateModel(reader);
-
-                        }
-                    }
                 }
             }
 

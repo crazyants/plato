@@ -71,10 +71,12 @@ namespace Plato.Categories.Repositories
             TCategory category = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                category = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectCategoryById", id);
-                category = await BuildCategoryFromResultSets(reader);
+                    "SelectCategoryById",
+                    async reader => await BuildCategoryFromResultSets(reader),
+                    id);
+                
             }
 
             return category;
@@ -83,38 +85,39 @@ namespace Plato.Categories.Repositories
 
         public async Task<IPagedResults<TCategory>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<TCategory> output = null;
+            IPagedResults<TCategory> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<TCategory>>(
                     CommandType.StoredProcedure,
                     "SelectCategoriesPaged",
-                    inputParams
-                );
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<TCategory>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var category = ActivateInstanceOf<TCategory>.Instance();
-                        category.PopulateModel(reader);
-                        output.Data.Add(category);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<TCategory>();
+                            while (await reader.ReadAsync())
+                            {
+                                var category = ActivateInstanceOf<TCategory>.Instance();
+                                category.PopulateModel(reader);
+                                output.Data.Add(category);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    inputParams);
+
             }
 
             return output;
@@ -143,23 +146,30 @@ namespace Plato.Categories.Repositories
         public async Task<IEnumerable<TCategory>> SelectByFeatureIdAsync(int featureId)
         {
 
-            List<TCategory> output = null;
+            IList<TCategory> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<TCategory>>(
                     CommandType.StoredProcedure,
                     "SelectCategoriesByFeatureId",
-                    featureId);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<TCategory>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var category = ActivateInstanceOf<TCategory>.Instance();
-                        category.PopulateModel(reader);
-                        output.Add(category);
-                    }
-                }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<TCategory>();
+                            while (await reader.ReadAsync())
+                            {
+                                var category = ActivateInstanceOf<TCategory>.Instance();
+                                category.PopulateModel(reader);
+                                output.Add(category);
+                            }
+                        }
+
+                        return output;
+
+                    },
+                    featureId);
+               
             }
 
             return output;
@@ -186,13 +196,15 @@ namespace Plato.Categories.Repositories
                 // Data
                 if (await reader.NextResultAsync())
                 {
-                    var data = new List<CategoryData>();
-                    while (await reader.ReadAsync())
+                    if (reader.HasRows)
                     {
-                        data.Add(new CategoryData(reader));
+                        var data = new List<CategoryData>();
+                        while (await reader.ReadAsync())
+                        {
+                            data.Add(new CategoryData(reader));
+                        }
+                        model.Data = data;
                     }
-
-                    model.Data = data;
 
                 }
 

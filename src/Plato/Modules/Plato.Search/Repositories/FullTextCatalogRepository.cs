@@ -22,22 +22,29 @@ namespace Plato.Search.Repositories
         public async Task<IEnumerable<FullTextCatalog>> SelectCatalogsAsync()
         {
 
-            ICollection<FullTextCatalog> output = null;
+            IList<FullTextCatalog> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
-                    CommandType.Text, BySql);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<FullTextCatalog>();
-                    while (await reader.ReadAsync())
+                output = await context.ExecuteReaderAsync<IList<FullTextCatalog>>(
+                    CommandType.Text, 
+                    BySql,
+                    async reader =>
                     {
-                        var catalog = new FullTextCatalog();
-                        catalog.PopulateModel(reader);
-                        output.Add(catalog);
-                    }
-                 
-                }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<FullTextCatalog>();
+                            while (await reader.ReadAsync())
+                            {
+                                var catalog = new FullTextCatalog();
+                                catalog.PopulateModel(reader);
+                                output.Add(catalog);
+                            }
+
+                        }
+
+                        return output;
+                    });
+              
             }
 
             return output;

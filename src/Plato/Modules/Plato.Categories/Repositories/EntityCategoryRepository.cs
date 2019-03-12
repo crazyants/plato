@@ -54,15 +54,22 @@ namespace Plato.Categories.Repositories
             EntityCategory output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<EntityCategory>(
                     CommandType.StoredProcedure,
-                    "SelectEntityCategoryById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    output = new EntityCategory();
-                    output.PopulateModel(reader);
-                }
+                    "SelectEntityCategoryById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            output = new EntityCategory();
+                            output.PopulateModel(reader);
+                        }
+
+                        return output;
+                    },
+                    id);
+             
 
             }
 
@@ -72,33 +79,39 @@ namespace Plato.Categories.Repositories
 
         public async Task<IPagedResults<EntityCategory>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityCategory> output = null;
+            IPagedResults<EntityCategory> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityCategory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoriesPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<EntityCategory>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityCategory();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+
+                    },
                     inputParams
                 );
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<EntityCategory>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new EntityCategory();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+           
             }
 
             return output;
@@ -125,26 +138,32 @@ namespace Plato.Categories.Repositories
 
         public async Task<IEnumerable<EntityCategory>> SelectByEntityId(int entityId)
         {
-            List<EntityCategory> output = null;
+            IList<EntityCategory> output = null;
             using (var context = _dbContext)
             {
 
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<EntityCategory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoriesByEntityId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<EntityCategory>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityCategory();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+
+                        }
+
+                        return output;
+                    },
                     entityId);
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<EntityCategory>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new EntityCategory();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
-                    
-                }
+              
             }
 
             return output;

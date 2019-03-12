@@ -53,15 +53,22 @@ namespace Plato.Notifications.Repositories
             UserNotification output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<UserNotification>(
                     CommandType.StoredProcedure,
-                    "SelectUserNotificationById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    output = new UserNotification();
-                    output.PopulateModel(reader);
-                }
+                    "SelectUserNotificationById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new UserNotification();
+                            await reader.ReadAsync();
+                            output.PopulateModel(reader);
+                        }
+
+                        return output;
+                    },
+                    id);
+             
 
             }
 
@@ -71,31 +78,40 @@ namespace Plato.Notifications.Repositories
 
         public async Task<IPagedResults<UserNotification>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<UserNotification> output = null;
+            IPagedResults<UserNotification> output = null;
             using (var context = _dbContext)
             {
 
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<UserNotification>>(
                     CommandType.StoredProcedure,
                     "SelectUserNotificationsPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<UserNotification>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new UserNotification();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                        }
+
+                        return output;
+                    },
                     inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<UserNotification>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new UserNotification();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+              
             }
 
             return output;

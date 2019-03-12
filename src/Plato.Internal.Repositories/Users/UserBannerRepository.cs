@@ -112,15 +112,22 @@ namespace Plato.Internal.Repositories.Users
             UserBanner banner = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                banner = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserBanner", id);
+                    "plato_sp_SelectUserBanner",
+                    async reader =>
+                    {
+                        if ((reader != null) && reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            banner = new UserBanner(reader);
+                        }
 
-                if ((reader != null) && reader.HasRows)
-                {
-                    await reader.ReadAsync();
-                    banner = new UserBanner(reader);
-                }
+                        return banner;
+                    },
+                    id);
+
+              
             }
 
             return banner;
@@ -131,15 +138,21 @@ namespace Plato.Internal.Repositories.Users
             UserBanner banner = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                banner = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserBannerByUserId", userId);
+                    "plato_sp_SelectUserBannerByUserId",
+                    async reader =>
+                    {
+                        if ((reader != null) && reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            banner = new UserBanner(reader);
+                        }
 
-                if ((reader != null) && reader.HasRows)
-                {
-                    await reader.ReadAsync();
-                    banner = new UserBanner(reader);
-                }
+                        return banner;
+                    },
+                    userId);
+                
             }
 
             return banner;

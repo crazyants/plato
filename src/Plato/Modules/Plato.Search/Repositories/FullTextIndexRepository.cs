@@ -53,23 +53,30 @@ namespace Plato.Search.Repositories
 
         public async Task<IEnumerable<FullTextIndex>> SelectIndexesAsync()
         {
-            ICollection<FullTextIndex> output = null;
+            IList<FullTextIndex> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
-                    CommandType.Text, BySql);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<FullTextIndex>();
-                    while (await reader.ReadAsync())
+                output = await context.ExecuteReaderAsync<IList<FullTextIndex>>(
+                    CommandType.Text,
+                    BySql,
+                    async reader =>
                     {
-                        var index = new FullTextIndex();
-                        index.PopulateModel(reader);
-                        output.Add(index);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<FullTextIndex>();
+                            while (await reader.ReadAsync())
+                            {
+                                var index = new FullTextIndex();
+                                index.PopulateModel(reader);
+                                output.Add(index);
+                            }
 
-                }
+                        }
 
+                        return output;
+
+                    });
+              
                 // Remove table prefix from table names
                 if (output != null)
                 {
