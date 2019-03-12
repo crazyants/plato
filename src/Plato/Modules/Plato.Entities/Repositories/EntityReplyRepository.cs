@@ -77,10 +77,10 @@ namespace Plato.Entities.Repositories
             TModel output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
-                    "SelectEntityReplyById", id);
-                output = await BuildObjectFromResultSets(reader);
+                    "SelectEntityReplyById",
+                    async reader => await BuildObjectFromResultSets(reader), id);
             }
 
             return output;
@@ -90,35 +90,45 @@ namespace Plato.Entities.Repositories
 
         public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<TModel> output = null;
+            PagedResults<TModel> results = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                results = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityRepliesPaged",
-                    inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<TModel>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var reply = ActivateInstanceOf<TModel>.Instance();
-                        reply.PopulateModel(reader);
-                        output.Data.Add(reply);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        if (reader.HasRows)
+                        if ((reader != null) && (reader.HasRows))
                         {
-                            await reader.ReadAsync();
-                            output.PopulateTotal(reader);
+                            var output = new PagedResults<TModel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var reply = ActivateInstanceOf<TModel>.Instance();
+                                reply.PopulateModel(reader);
+                                output.Data.Add(reply);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                            return output;
+
                         }
-                    }
-                }
+
+                        return null;
+
+                    },
+                    inputParams);
+              
             }
 
-            return output;
+            return results;
         }
 
 

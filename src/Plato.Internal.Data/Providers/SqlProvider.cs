@@ -11,17 +11,11 @@ namespace Plato.Internal.Data.Providers
     
     public class SqlProvider : IDataProvider
     {
-
-        #region "Private Variables"
-
+        
         private readonly string _connectionString;
         private SqlConnection _dbConnection;
-        //private SqlDataReader _reader;
-
-        #endregion
-
-        #region "Constructors"
-
+        private SqlDataReader _reader;
+        
         public SqlProvider(IOptions<DbContextOptions> dbContextOptions)
         {
             _connectionString = dbContextOptions.Value.ConnectionString;
@@ -32,48 +26,38 @@ namespace Plato.Internal.Data.Providers
         //{
         //    _connectionString = connectionString;
         //}
-
-        #endregion
-
-        #region "Properties"
         
         public int CommandTimeout { get; set; }
 
         public IDbConnection Connection => _dbConnection;
-
-        #endregion
-
+        
         #region "Open / Close"
-
 
         public async Task OpenAsync()
         {
-            
+
             if (String.IsNullOrEmpty(_connectionString))
             {
                 throw new Exception("The connection string has not been initialized.");
             }
 
-            if (_dbConnection == null)
+            _dbConnection = new SqlConnection
             {
-                _dbConnection = new SqlConnection
-                {
-                    ConnectionString = _connectionString
-                };
-            }
-          
+                ConnectionString = _connectionString
+            };
+
             await _dbConnection.OpenAsync();
-            
+
         }
 
         public void Close()
         {
 
-            //if (_reader != null)
-            //{
-            //    _reader.Dispose();
-            //    _reader = null;
-            //}
+            if (_reader != null)
+            {
+                _reader.Dispose();
+                _reader = null;
+            }
 
             if (_dbConnection != null)
             {
@@ -85,16 +69,50 @@ namespace Plato.Internal.Data.Providers
         #endregion
 
         #region "Implementation"
-        
+
+        public async Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
+        {
+
+            T output = null;
+            using (var conn = new SqlConnection(_connectionString))
+            {
+            
+                try
+                {
+                    await conn.OpenAsync();
+                    using (var command = CreateCommand(conn, sql, args))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            OnExecutedCommand(command);
+                            output = await populate(reader);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+            
+            return output;
+
+        }
+
         public async Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args)
         {
-            SqlDataReader reader = null;
+            _reader = null;
             try
             {
                 await OpenAsync();
                 using (var command = CreateCommand(_dbConnection, sql, args))
                 {
-                    reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                    _reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                     OnExecutedCommand(command);
                 }
             }
@@ -104,7 +122,7 @@ namespace Plato.Internal.Data.Providers
             }
           
 
-            return reader;
+            return _reader;
 
         }
      
@@ -112,23 +130,28 @@ namespace Plato.Internal.Data.Providers
         {
 
             object output = null;
-            try
+            using (var conn = new SqlConnection(_connectionString))
             {
-                await OpenAsync();
-                using (var cmd = CreateCommand(_dbConnection, sql, args))
+
+                try
                 {
-                    output = await cmd.ExecuteScalarAsync();
-                    OnExecutedCommand(cmd);
+                    await conn.OpenAsync();
+                    using (var cmd = CreateCommand(conn, sql, args))
+                    {
+                        output = await cmd.ExecuteScalarAsync();
+                        OnExecutedCommand(cmd);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex);
+                }
+                finally
+                {
+                    conn.Close();
                 }
             }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-            }
-            finally
-            {
-                Close();
-            }
+
 
             if (output != null)
             {
@@ -143,34 +166,36 @@ namespace Plato.Internal.Data.Providers
         {
 
             var output = default(T);
-            try
+            using (var conn = new SqlConnection(_connectionString))
             {
-                await OpenAsync();
-                using (var cmd = CreateCommand(_dbConnection, sql, args))
+                try
                 {
-                    var retv = await cmd.ExecuteNonQueryAsync();
-                    OnExecutedCommand(cmd);
-                    output = (T)Convert.ChangeType(retv, typeof(T));
+                    await conn.OpenAsync();
+                    using (var cmd = CreateCommand(conn, sql, args))
+                    {
+                        var returnValue = await cmd.ExecuteNonQueryAsync();
+                        OnExecutedCommand(cmd);
+                        output = (T) Convert.ChangeType(returnValue, typeof(T));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex);
+                }
+                finally
+                {
+                    conn.Close();
                 }
             }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-            }
-            finally
-            {
-                Close();
-            }
-
 
             return output;
 
         }
         
-        public void Dispose()
-        {
-            Close();
-        }
+        //public void Dispose()
+        //{
+        //    Close();
+        //}
 
         #endregion
 
@@ -280,7 +305,13 @@ namespace Plato.Internal.Data.Providers
 
         public virtual void HandleException(Exception ex)
         {
-            OnException?.Invoke(this, new DbExceptionEventArgs(ex));
+            if (OnException == null)
+            {
+                throw ex;
+            }
+
+            OnException.Invoke(this, new DbExceptionEventArgs(ex));
+
         }
      
         #endregion

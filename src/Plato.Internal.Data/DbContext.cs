@@ -78,7 +78,16 @@ namespace Plato.Internal.Data
                 sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
             return await _provider.ExecuteReaderAsync(sql, commandParams);
         }
-        
+
+        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
+        {
+            if (_provider == null)
+                return null;
+            if (commandType == CommandType.StoredProcedure)
+                sql = GenerateExecuteStoredProcedureSql(sql, args);
+            return await _provider.ExecuteReaderAsync<T>(sql, populate, args);
+        }
+
         public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] args)
         {
             if (_provider == null)
@@ -99,7 +108,7 @@ namespace Plato.Internal.Data
 
         public void Dispose()
         {
-            _provider?.Dispose();
+            //_provider?.Dispose();
         }
 
 
@@ -214,7 +223,7 @@ namespace Plato.Internal.Data
 
         public void HandleException(Exception ex)
         {
-            _provider?.Dispose();
+            //_provider?.Dispose();
             throw ex;
         }
 

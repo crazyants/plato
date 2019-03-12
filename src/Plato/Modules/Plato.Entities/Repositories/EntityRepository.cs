@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Internal.Abstractions;
@@ -96,10 +97,11 @@ namespace Plato.Entities.Repositories
             TModel entity = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                entity = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
-                    "SelectEntityById", id);
-                entity = await BuildEntityFromResultSets(reader);
+                    "SelectEntityById",
+                    async reader => await BuildEntityFromResultSets(reader),
+                    id);
             }
 
             return entity;
@@ -108,37 +110,44 @@ namespace Plato.Entities.Repositories
         
         public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<TModel> output = null;
+            IPagedResults<TModel> results = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                results = await context.ExecuteReaderAsync<IPagedResults<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectEntitiesPaged",
-                    inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<TModel>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = ActivateInstanceOf<TModel>.Instance();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        if (reader.HasRows)
+                        if ((reader != null) && (reader.HasRows))
                         {
-                            await reader.ReadAsync();
-                            output.PopulateTotal(reader);
-                        }
-                    }
+                            var output = new PagedResults<TModel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = ActivateInstanceOf<TModel>.Instance();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
 
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                            return output;
+                        }
+
+                        return null;
+
+                    },
+                    inputParams);
+               
             }
 
-            return output;
+            return results;
         }
 
 

@@ -70,122 +70,129 @@ namespace Plato.Internal.Repositories.Shell
 
         public async Task<ShellFeature> SelectByIdAsync(int id)
         {
+
+            ShellFeature feature = null;
             using (var context = _dbContext)
             {
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            $"Selecting feature for Id {id} failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                feature = await context.ExecuteReaderAsync<ShellFeature>(
                     CommandType.StoredProcedure,
-                    "SelectShellFeatureById", id);
-
-                return await BuildObjectFromResultSets(reader);
+                    "SelectShellFeatureById",
+                    async reader => await BuildObjectFromResultSets(reader),
+                    id);
             }
+
+            return feature;
+
         }
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParameters) where T : class
         {
-            PagedResults<T> output = null;
+            PagedResults<T> results = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                
+                results = await context.ExecuteReaderAsync<PagedResults<T>>(
                     CommandType.StoredProcedure,
                     "SelectShellFeaturesPaged",
-                    inputParameters
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<T>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new ShellFeature();
-                        entity.PopulateModel(reader);
-                        output.Data.Add((T)Convert.ChangeType(entity, typeof(T)));
-                    }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            var output = new PagedResults<T>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new ShellFeature();
+                                entity.PopulateModel(reader);
+                                output.Data.Add((T)Convert.ChangeType(entity, typeof(T)));
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                            return output;
+                        }
+
+                        return null;
+                    },
+                    inputParameters);
+
+               
             }
 
-            return output;
+            return results;
         }
         
         public async Task<IPagedResults<ShellFeature>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<ShellFeature> output = null;
+            IPagedResults<ShellFeature> results = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                results = await context.ExecuteReaderAsync<IPagedResults<ShellFeature>>(
                     CommandType.StoredProcedure,
                     "SelectShellFeaturesPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            var output = new PagedResults<ShellFeature>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new ShellFeature();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                            return output;
+                        }
+
+                        return null;
+                    },
                     inputParams
                 );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<ShellFeature>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new ShellFeature();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                }
+                
             }
 
-            return output;
+            return results;
+
         }
 
         public async Task<IEnumerable<ShellFeature>> SelectFeatures()
         {
 
-            var data = new List<ShellFeature>();
+            List<ShellFeature> data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync<List<ShellFeature>>(
                     CommandType.StoredProcedure,
-                    "SelectShellFeatures");
-                if (reader != null)
-                {
-                    if (reader.HasRows)
+                    "SelectShellFeatures",
+                    async reader =>
                     {
-                        while (await reader.ReadAsync())
+                        if ((reader != null) && (reader.HasRows))
                         {
-                            var item = new ShellFeature();
-                            item.PopulateModel(reader);
-                            data.Add(item);
+                            data = new List<ShellFeature>();
+                            while (await reader.ReadAsync())
+                            {
+                                var item = new ShellFeature();
+                                item.PopulateModel(reader);
+                                data.Add(item);
+                            }
+                            return data;
                         }
-                    }
-                }
+
+                        return null;
+
+                    });
+
             }
 
             return data;

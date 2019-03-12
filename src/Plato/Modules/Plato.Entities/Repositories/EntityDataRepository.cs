@@ -45,18 +45,25 @@ namespace Plato.Entities.Repositories
             EntityData data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync<EntityData>(
                   CommandType.StoredProcedure,
-                    "SelectEntityDatumById", id);
-                if (reader != null)
-                {
-                    if (reader.HasRows)
-                    {
-                        data = new EntityData();
-                        await reader.ReadAsync();
-                        data.PopulateModel(reader);
-                    }
-                }
+                    "SelectEntityDatumById",
+                  async reader =>
+                  {
+                      if (reader != null)
+                      {
+                          if (reader.HasRows)
+                          {
+                              data = new EntityData();
+                              await reader.ReadAsync();
+                              data.PopulateModel(reader);
+                          }
+                      }
+
+                      return data;
+                  },
+                  id);
+              
 
             }
 
@@ -75,23 +82,30 @@ namespace Plato.Entities.Repositories
             List<EntityData> data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync<List<EntityData>>(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumByEntityId",
-                    entityId);
-                if (reader != null)
-                {
-                    if (reader.HasRows)
+                    async reader =>
                     {
-                        data = new List<EntityData>();
-                        while (await reader.ReadAsync())
+                        if (reader != null)
                         {
-                            var entityData = new EntityData();
-                            entityData.PopulateModel(reader);
-                            data.Add(entityData);
+                            if (reader.HasRows)
+                            {
+                                data = new List<EntityData>();
+                                while (await reader.ReadAsync())
+                                {
+                                    var entityData = new EntityData();
+                                    entityData.PopulateModel(reader);
+                                    data.Add(entityData);
+                                }
+                            }
                         }
-                    }
-                }
+
+                        return data;
+
+                    },
+                    entityId);
+              
             }
             return data;
 
@@ -138,33 +152,41 @@ namespace Plato.Entities.Repositories
     
         public async Task<IPagedResults<IEntityData>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<IEntityData> output = null;
+            IPagedResults<IEntityData> results = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                results = await context.ExecuteReaderAsync<PagedResults<IEntityData>>(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumPaged",
-                    inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<IEntityData>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var data = new EntityData();
-                        data.PopulateModel(reader);
-                        output.Data.Add(data);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            var output = new PagedResults<IEntityData>();
+                            while (await reader.ReadAsync())
+                            {
+                                var data = new EntityData();
+                                data.PopulateModel(reader);
+                                output.Data.Add(data);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                    
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                            return output;
+                        }
+
+                        return null;
+
+                    },
+                    inputParams);
+
             }
 
-            return output;
+            return results;
         }
 
         #endregion
