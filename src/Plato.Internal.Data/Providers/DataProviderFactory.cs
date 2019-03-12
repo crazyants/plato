@@ -1,73 +1,50 @@
-﻿using System;
-using Plato.Internal.Data.Abstractions;
+﻿using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data.Providers
 {
-    public class DataProviderFactory
-    {
+    //public class DataProviderFactory
+    //{
 
-        #region "Consts"
+    //    #region "Consts"
 
-        // System.Data.SqlClient
-        private const string SqlClient = "sqlclient";
+    //    // System.Data.SqlClient
+    //    private const string SqlClient = "sqlclient";
 
-        // System.Data.SqlClient
-        private const string SqlLite = "sqllite";
+    //    // System.Data.SqlClient
+    //    private const string SqlLite = "sqllite";
 
-        // System.Data.Odbc
-        private const string Odbc = "odbc";    
+    //    // System.Data.Odbc
+    //    private const string Odbc = "odbc";    
                     
-        // MySql.Data
-        private const string MySql = "mysql";
+    //    // MySql.Data
+    //    private const string MySql = "mysql";
 
-        // System.Data.OracleClient
-        private const string Oracle = "oracle";
+    //    // System.Data.OracleClient
+    //    private const string Oracle = "oracle";
 
-        #endregion
-
-        #region "Private Variables"
-
-        private readonly DbContextOptions _cfg;
-   
-        #endregion
-
-        #region "Public Properties"
+    //    #endregion
         
-        public string ConnectionString => _cfg.ConnectionString;
+    //    public IDataProvider Provider { get; private set; }
 
-        public IDataProvider Provider { get; private set; }
+    //    protected DataProviderFactory()
+    //    {
 
-        #endregion
+    //    }
 
-        #region "Constructor"
+    //    public DataProviderFactory(DbContextOptions cfg)
+    //    {
+           
+    //        switch (cfg.DatabaseProvider?.ToLower())
+    //        {
+    //            case SqlClient:
+    //            {
+    //                Provider = new SqlProvider(cfg.ConnectionString);
+    //                break;
+    //            }
+    //        }
+
+    //    }
         
-        public DataProviderFactory(DbContextOptions cfg)
-        {
-            _cfg = cfg;
-            BuildProvider();
-        }
-        
-        void BuildProvider()
-        {
-
-            if (Provider != null)
-            {
-                return;
-            }
-
-            switch (_cfg.DatabaseProvider?.ToLower())
-            {
-                case SqlClient:
-                    {
-                        Provider = new SqlProvider(_cfg.ConnectionString);
-                        break;
-                    }
-            }
-            
-        }
-        
-        #endregion
-
-    }
+    //}
 
 }

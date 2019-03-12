@@ -128,8 +128,11 @@ namespace Plato.Entities.Repositories
 
                     if (await reader.NextResultAsync())
                     {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
+                        if (reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            output.PopulateTotal(reader);
+                        }
                     }
 
                 }
@@ -179,13 +182,17 @@ namespace Plato.Entities.Repositories
                 if (await reader.NextResultAsync())
                 {
                     var data = new List<EntityData>();
-                    while (await reader.ReadAsync())
+                    if (reader.HasRows)
                     {
-                        var entityData = new EntityData(reader);
-                        data.Add(entityData);
+                        while (await reader.ReadAsync())
+                        {
+                            var entityData = new EntityData(reader);
+                            data.Add(entityData);
+                        }
                     }
-
+                  
                     model.Data = data;
+
                 }
 
             }

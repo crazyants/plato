@@ -98,14 +98,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
                 internalServices.AddSingleton<ICapturedRouterUrlHelper, CapturedRouterUrlHelper>();
                 internalServices.AddTransient<IContextFacade, ContextFacade>();
-                
-                // Action filters
-                internalServices.Configure<MvcOptions>(options =>
-                {
-                    options.Filters.Add(typeof(UpdateUserLastLoginDateFilter));
-                    options.Filters.Add(typeof(SignOutRequestIfUserNotFoundFilter));
-                });
-
+              
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
@@ -133,6 +126,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoDrawing();
                 internalServices.AddPlatoTasks();
                 internalServices.AddPlatoSearch();
+             
             });
 
         }
@@ -201,7 +195,16 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoMvc(this IServiceCollection services)
         {
-      
+
+
+            //Action filters
+            //services.Configure<MvcOptions>(options =>
+            //{
+            //    options.Filters.Add(typeof(UpdateUserLastLoginDateFilter));
+            //    options.Filters.Add(typeof(SignOutRequestIfUserNotFoundFilter));
+            //});
+
+
             // Add mvc core services
             // --------------
 
@@ -386,8 +389,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
             
-
-
         }
         
         private static void ListAllRegisteredServices(IApplicationBuilder app)

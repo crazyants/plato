@@ -113,18 +113,6 @@ namespace Plato.Internal.Hosting.Web.Filters
 
         }
         
-        async Task SignOutRequestIfUserNotFound(HttpContext context)
-        {
-
-            // Get context facade
-            var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
-            if (contextFacade == null)
-            {
-                return;
-            }
-
-
-        }
-        
     }
+
 }

@@ -14,9 +14,9 @@ namespace Plato.Internal.Data
         }
 
         public DbContextOptionsConfigure(
-            IServiceScopeFactory serivceScopeFactory)
+            IServiceScopeFactory serviceScopeFactory)
         {
-            _serviceScopeFactory = serivceScopeFactory;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public void Configure(DbContextOptions options)

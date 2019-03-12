@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -75,13 +73,6 @@ namespace Plato.Internal.Hosting.Web.Filters
             // If the request is authenticated but we didn't find a user attempt to sign out the request
             if (user == null)
             {
-                //// If the request is authenticated but we didn't find a user attempt to sign out the request
-                //var signInManager = context.RequestServices.GetRequiredService<SignInManager<User>>();
-                //if (signInManager != null)
-                //{
-                //    await signInManager.SignOutAsync();
-                //}
-                
                 await _signInManager.SignOutAsync();
             }
             

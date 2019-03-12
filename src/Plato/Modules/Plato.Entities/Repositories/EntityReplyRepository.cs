@@ -28,8 +28,7 @@ namespace Plato.Entities.Repositories
         }
 
         #endregion
-
-
+        
         #region "Implementation"
 
         public async Task<TModel> InsertUpdateAsync(TModel reply)
@@ -110,8 +109,11 @@ namespace Plato.Entities.Repositories
 
                     if (await reader.NextResultAsync())
                     {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
+                        if (reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            output.PopulateTotal(reader);
+                        }
                     }
                 }
             }
@@ -186,17 +188,6 @@ namespace Plato.Entities.Repositories
             var entityReplyId = 0;
             using (var context = _dbContext)
             {
-
-                context.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            id == 0
-                                ? $"Insert for entity reply with entityId '{entityId}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for entity reply with Id {id} failed with the following error {args.Exception.Message}");
-                    throw args.Exception;
-                };
-
                 entityReplyId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityReply",
@@ -229,8 +220,7 @@ namespace Plato.Entities.Repositories
             return entityReplyId;
 
         }
-
-
+        
         #endregion
 
     }

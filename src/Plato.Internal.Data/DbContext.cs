@@ -14,82 +14,57 @@ namespace Plato.Internal.Data
 {
     public class DbContext : IDbContext, IDisposable
     {
-        #region "Private Variables"
-
-        private IDataProvider _provider;
-        private DataProviderFactory _providerFactory;
-        private readonly ILogger<DbContext> _logger;
-
-        #endregion
-
-        #region "Public Properties"
-
+     
         public DbContextOptions Configuration { get; set; }
-
-        #endregion
-
-        #region "Events"
         
         public event DbEventHandlers.DbExceptionEventHandler OnException;
         
-        #endregion
-
-        #region "Dispose"
-
-        public void Dispose()
-        {
-            _provider?.Dispose();
-        }
-
-        #endregion
-
-        #region "Constructos"
+        private readonly ILogger<DbContext> _logger;
+        private readonly IDataProvider _provider;
 
         public DbContext(
             IOptions<DbContextOptions> dbContextOptions,
+            IDataProvider provider,
             ILogger<DbContext> logger)
         {
+            _provider = provider;
             _logger = logger;
-            ConfigureInternal(dbContextOptions.Value);
+            Configuration = dbContextOptions.Value;
+            //ConfigureInternal(dbContextOptions.Value);
         }
    
         public void Configure(Action<DbContextOptions> options)
         {
             var cfg = new DbContextOptions();
             options(cfg);
-            ConfigureInternal(cfg);
+            Configuration = cfg;
+            //ConfigureInternal(cfg);
         }
         
         private void ConfigureInternal(DbContextOptions cfg)
         {
-            if (_providerFactory == null)
-            {
-                _providerFactory = new DataProviderFactory(cfg);
-            }
-            
-            _provider = _providerFactory.Provider;
-            if (_provider != null)
-            {
-                // handle exceptions within the provider
-                if (this.OnException == null)
-                {
-                    _provider.OnException += (sender, args) =>
-                    {
-                        HandleException(args.Exception);
-                    };
-                }
-                else
-                {
-                    // dbContext has a explicit exception handler
-                    _provider.OnException += this.OnException;
-                }
+        
+            //_provider = new DataProviderFactory(cfg).Provider;
+            //if (_provider != null)
+            //{
+            //    // handle exceptions within the provider
+            //    if (this.OnException == null)
+            //    {
+            //        _provider.OnException += (sender, args) =>
+            //        {
+            //            HandleException(args.Exception);
+            //        };
+            //    }
+            //    else
+            //    {
+            //        // dbContext has a explicit exception handler
+            //        _provider.OnException += this.OnException;
+            //    }
                     
-            }
-            Configuration = cfg;
+            //}
+            //Configuration = cfg;
         }
-
-        #endregion
-
+        
         #region "Implementation"
 
         public async Task<DbDataReader> ExecuteReaderAsync(
@@ -121,9 +96,15 @@ namespace Plato.Internal.Data
                 sql = GenerateExecuteStoredProcedureSql(sql, args);
             return await _provider.ExecuteNonQueryAsync<T>(sql, args);
         }
-        
+
+        public void Dispose()
+        {
+            _provider?.Dispose();
+        }
+
+
         #endregion
-        
+
         #region "Private Methods"
 
         private string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)

@@ -1288,7 +1288,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
                 .ToList();
 
             var rnd = new Random();
-            var totalUsers = users?.Total - 1 ?? 0;
+            var totalUsers = users?.Data.Count - 1 ?? 0;
             var randomUser = users?.Data[rnd.Next(0, totalUsers)];
             var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
 

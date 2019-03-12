@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data.Providers
@@ -15,20 +16,22 @@ namespace Plato.Internal.Data.Providers
 
         private readonly string _connectionString;
         private SqlConnection _dbConnection;
-        private SqlDataReader _reader;
+        //private SqlDataReader _reader;
 
         #endregion
 
         #region "Constructors"
 
-        protected SqlProvider()
+        public SqlProvider(IOptions<DbContextOptions> dbContextOptions)
         {
+            _connectionString = dbContextOptions.Value.ConnectionString;
+          
         }
 
-        public SqlProvider(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+        //public SqlProvider(string connectionString)
+        //{
+        //    _connectionString = connectionString;
+        //}
 
         #endregion
 
@@ -45,18 +48,20 @@ namespace Plato.Internal.Data.Providers
 
         public async Task OpenAsync()
         {
-
-            Close();
-
+            
             if (String.IsNullOrEmpty(_connectionString))
             {
                 throw new Exception("The connection string has not been initialized.");
             }
 
-            _dbConnection = new SqlConnection
+            if (_dbConnection == null)
             {
-                ConnectionString = _connectionString
-            };
+                _dbConnection = new SqlConnection
+                {
+                    ConnectionString = _connectionString
+                };
+            }
+          
             await _dbConnection.OpenAsync();
             
         }
@@ -64,11 +69,11 @@ namespace Plato.Internal.Data.Providers
         public void Close()
         {
 
-            if (_reader != null)
-            {
-                _reader.Dispose();
-                _reader = null;
-            }
+            //if (_reader != null)
+            //{
+            //    _reader.Dispose();
+            //    _reader = null;
+            //}
 
             if (_dbConnection != null)
             {
@@ -83,14 +88,13 @@ namespace Plato.Internal.Data.Providers
         
         public async Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args)
         {
-
-            _reader = null;
+            SqlDataReader reader = null;
             try
             {
                 await OpenAsync();
                 using (var command = CreateCommand(_dbConnection, sql, args))
                 {
-                    _reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                    reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                     OnExecutedCommand(command);
                 }
             }
@@ -100,7 +104,7 @@ namespace Plato.Internal.Data.Providers
             }
           
 
-            return _reader;
+            return reader;
 
         }
      
