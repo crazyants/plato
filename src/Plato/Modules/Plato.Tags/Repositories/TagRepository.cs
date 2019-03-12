@@ -59,15 +59,22 @@ namespace Plato.Tags.Repositories
             Tag tag = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                tag = await context.ExecuteReaderAsync<Tag>(
                     CommandType.StoredProcedure,
-                    "SelectTagById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    tag = new Tag();
-                    tag.PopulateModel(reader);
-                }
+                    "SelectTagById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            tag = new Tag();
+                            tag.PopulateModel(reader);
+                        }
+
+                        return tag;
+                    },
+                    id);
+              
 
             }
 
@@ -77,30 +84,37 @@ namespace Plato.Tags.Repositories
 
         public async Task<IPagedResults<Tag>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Tag> output = null;
+            IPagedResults<Tag> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<Tag>>(
                     CommandType.StoredProcedure,
                     "SelectTagsPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<Tag>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new Tag();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+
+                    },
                     inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<Tag>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new Tag();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+            
             }
 
             return output;
@@ -128,33 +142,31 @@ namespace Plato.Tags.Repositories
         public async Task<IEnumerable<Tag>> SelectByFeatureIdAsync(int featureId)
         {
 
-            List<Tag> output = null;
+            IList<Tag> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<Tag>>(
                     CommandType.StoredProcedure,
                     "SelectTagsByFeatureId",
-                    featureId
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<Tag>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var label = new Tag();
-                        label.PopulateModel(reader);
-                        output.Add(label);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<Tag>();
+                            while (await reader.ReadAsync())
+                            {
+                                var tag = new Tag();
+                                tag.PopulateModel(reader);
+                                output.Add(tag);
+                            }
 
-                }
+                        }
+
+                        return output;
+
+                    },
+                    featureId);
+                
             }
 
             return output;

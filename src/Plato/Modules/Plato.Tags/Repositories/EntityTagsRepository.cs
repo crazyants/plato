@@ -55,15 +55,21 @@ namespace Plato.Tags.Repositories
             EntityTag output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityTagById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    output = new EntityTag();
-                    output.PopulateModel(reader);
-                }
+                    "SelectEntityTagById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            output = new EntityTag();
+                            output.PopulateModel(reader);
+                        }
+
+                        return output;
+                    },
+                    id);
 
             }
 
@@ -72,33 +78,37 @@ namespace Plato.Tags.Repositories
 
         public async Task<IPagedResults<EntityTag>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityTag> output = null;
+            IPagedResults<EntityTag> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<EntityTag>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new EntityTag();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<EntityTag>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityTag();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
 
-                }
+                        }
+
+                        return output;
+
+                    },
+                    inputParams);
+
             }
 
             return output;
@@ -124,26 +134,31 @@ namespace Plato.Tags.Repositories
 
         public async Task<IEnumerable<EntityTag>> SelectByEntityId(int entityId)
         {
-            List<EntityTag> output = null;
+            IList<EntityTag> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsByEntityId",
-                    entityId);
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<EntityTag>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new EntityTag();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<EntityTag>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityTag();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
 
-                }
+                        }
+
+                        return output;
+
+                    },
+                    entityId);
+              
             }
 
             return output;
@@ -151,26 +166,30 @@ namespace Plato.Tags.Repositories
 
         public async Task<IEnumerable<EntityTag>> SelectByEntityReplyId(int entityReplyId)
         {
-            List<EntityTag> output = null;
+            IList<EntityTag> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsByEntityReplyId",
-                    entityReplyId);
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<EntityTag>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new EntityTag();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<EntityTag>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityTag();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    entityReplyId);
+              
             }
 
             return output;

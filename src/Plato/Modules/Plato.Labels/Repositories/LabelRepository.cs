@@ -79,16 +79,22 @@ namespace Plato.Labels.Repositories
             TLabel label = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                label = await context.ExecuteReaderAsync<TLabel>(
                     CommandType.StoredProcedure,
-                    "SelectLabelById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    label = ActivateInstanceOf<TLabel>.Instance();
-                    label.PopulateModel(reader);
-                }
+                    "SelectLabelById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            label = ActivateInstanceOf<TLabel>.Instance();
+                            label.PopulateModel(reader);
+                        }
 
+                        return label;
+                    },
+                    id);
+             
             }
 
             return label;
@@ -97,39 +103,38 @@ namespace Plato.Labels.Repositories
 
         public async Task<IPagedResults<TLabel>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<TLabel> output = null;
+            IPagedResults<TLabel> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<TLabel>>(
                     CommandType.StoredProcedure,
                     "SelectLabelsPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<TLabel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var label = ActivateInstanceOf<TLabel>.Instance();
+                                label.PopulateModel(reader);
+                                output.Data.Add(label);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+                    },
                     inputParams
                 );
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<TLabel>();
-                    while (await reader.ReadAsync())
-                    {
-                        var Label = ActivateInstanceOf<TLabel>.Instance();
-                        Label.PopulateModel(reader);
-                        output.Data.Add(Label);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+            
             }
 
             return output;
@@ -158,33 +163,30 @@ namespace Plato.Labels.Repositories
         public async Task<IEnumerable<TLabel>> SelectByFeatureIdAsync(int featureId)
         {
 
-            List<TLabel> output = null;
+            IList<TLabel> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<TLabel>>(
                     CommandType.StoredProcedure,
                     "SelectLabelsByFeatureId",
-                    featureId
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<TLabel>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var label = ActivateInstanceOf<TLabel>.Instance();
-                        label.PopulateModel(reader);
-                        output.Add(label);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<TLabel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var label = ActivateInstanceOf<TLabel>.Instance();
+                                label.PopulateModel(reader);
+                                output.Add(label);
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    featureId);
+
             }
 
             return output;

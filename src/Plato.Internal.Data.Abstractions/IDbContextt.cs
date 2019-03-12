@@ -12,7 +12,7 @@ namespace Plato.Internal.Data.Abstractions
    
         DbContextOptions Configuration { get; set; }
 
-        //Task<DbDataReader> ExecuteReaderAsync(CommandType commandType, string sql, params object[] commandParams);
+        Task<DbDataReader> ExecuteReaderAsync(CommandType commandType, string sql, params object[] commandParams);
 
         Task<T> ExecuteReaderAsync<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class;
 

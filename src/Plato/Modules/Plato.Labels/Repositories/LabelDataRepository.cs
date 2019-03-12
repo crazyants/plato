@@ -36,62 +36,54 @@ namespace Plato.Labels.Repositories
 
         public async Task<LabelData> SelectByIdAsync(int id)
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Selecting entity data with id: {id}");
-            }
-
             LabelData data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                    "SelectLabelDatumById", id);
-                if (reader != null)
-                {
-                    if (reader.HasRows)
+                data = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectLabelDatumById",
+                    async reader =>
                     {
-                        data = new LabelData();
-                        await reader.ReadAsync();
-                        data.PopulateModel(reader);
-                    }
-                }
-
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            data = new LabelData();
+                            await reader.ReadAsync();
+                            data.PopulateModel(reader);
+                        }
+                        return data;
+                    },
+                    id);
             }
 
             return data;
 
         }
 
-        public async Task<IEnumerable<LabelData>> SelectByLabelIdAsync(int LabelId)
+        public async Task<IEnumerable<LabelData>> SelectByLabelIdAsync(int labelId)
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Selecting all Label data for id {LabelId}");
-            }
-
-            List<LabelData> data = null;
+            IList<LabelData> data = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync<IList<LabelData>>(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumByLabelId",
-                    LabelId);
-                if (reader != null)
-                {
-                    if (reader.HasRows)
+                    async reader =>
                     {
-                        data = new List<LabelData>();
-                        while (await reader.ReadAsync())
+                        if ((reader != null) && (reader.HasRows))
                         {
-                            var entityData = new LabelData();
-                            entityData.PopulateModel(reader);
-                            data.Add(entityData);
+                            data = new List<LabelData>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entityData = new LabelData();
+                                entityData.PopulateModel(reader);
+                                data.Add(entityData);
+                            }
                         }
-                    }
-                }
+
+                        return data;
+                    },
+                    labelId);
+              
             }
             return data;
 
@@ -138,33 +130,36 @@ namespace Plato.Labels.Repositories
 
         public async Task<IPagedResults<LabelData>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<LabelData> output = null;
+            IPagedResults<LabelData> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<LabelData>>(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<LabelData>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var data = new LabelData();
-                        data.PopulateModel(reader);
-                        output.Data.Add(data);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<LabelData>();
+                            while (await reader.ReadAsync())
+                            {
+                                var data = new LabelData();
+                                data.PopulateModel(reader);
+                                output.Data.Add(data);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    inputParams);
+
             }
 
             return output;

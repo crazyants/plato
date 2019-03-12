@@ -64,15 +64,22 @@ namespace Plato.Labels.Repositories
             LabelRole labelRole = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                labelRole = await context.ExecuteReaderAsync<LabelRole>(
                     CommandType.StoredProcedure,
-                    "SelectLabelRoleById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    labelRole = new LabelRole();
-                    labelRole.PopulateModel(reader);
-                }
+                    "SelectLabelRoleById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            labelRole = new LabelRole();
+                            labelRole.PopulateModel(reader);
+                        }
+
+                        return labelRole;
+                    },
+                    id);
+             
 
             }
 
@@ -82,39 +89,40 @@ namespace Plato.Labels.Repositories
 
         public async Task<IPagedResults<LabelRole>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<LabelRole> output = null;
+            IPagedResults<LabelRole> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                
+                output = await context.ExecuteReaderAsync<IPagedResults<LabelRole>>(
                     CommandType.StoredProcedure,
                     "SelectLabelRolesPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<LabelRole>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new LabelRole();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+
+                    },
                     inputParams
                 );
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<LabelRole>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new LabelRole();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+             
             }
 
             return output;
@@ -140,47 +148,44 @@ namespace Plato.Labels.Repositories
 
         }
 
-        public async Task<IEnumerable<LabelRole>> SelectByLabelIdAsync(int LabelId)
+        public async Task<IEnumerable<LabelRole>> SelectByLabelIdAsync(int labelId)
         {
 
             List<LabelRole> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectLabelRolesByLabelId",
-                    LabelId
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<LabelRole>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var Label = new LabelRole();
-                        Label.PopulateModel(reader);
-                        output.Add(Label);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<LabelRole>();
+                            while (await reader.ReadAsync())
+                            {
+                                var labelRole = new LabelRole();
+                                labelRole.PopulateModel(reader);
+                                output.Add(labelRole);
+                            }
 
-                }
+                        }
+
+                        return output;
+                    },
+                    labelId);
+
             }
 
             return output;
         }
 
-        public async Task<bool> DeleteByLabelIdAsync(int LabelId)
+        public async Task<bool> DeleteByLabelIdAsync(int labelId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting Label roles for Label Id: {LabelId}");
+                _logger.LogInformation($"Deleting Label roles for Label Id: {labelId}");
             }
 
             var success = 0;
@@ -188,19 +193,19 @@ namespace Plato.Labels.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteLabelRolesByLabelId", LabelId);
+                    "DeleteLabelRolesByLabelId", labelId);
             }
 
             return success > 0 ? true : false;
 
         }
 
-        public async Task<bool> DeleteByRoleIdAndLabelIdAsync(int roleId, int LabelId)
+        public async Task<bool> DeleteByRoleIdAndLabelIdAsync(int roleId, int labelId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting Label roles for Label Id: {LabelId}");
+                _logger.LogInformation($"Deleting Label roles for Label Id: {labelId}");
             }
 
             var success = 0;
@@ -210,7 +215,7 @@ namespace Plato.Labels.Repositories
                     CommandType.StoredProcedure,
                     "DeleteLabelRolesByRoleIdAndLabelId",
                     roleId,
-                    LabelId);
+                    labelId);
             }
 
             return success > 0 ? true : false;

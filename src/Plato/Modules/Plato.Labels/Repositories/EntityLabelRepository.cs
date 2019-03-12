@@ -56,15 +56,22 @@ namespace Plato.Labels.Repositories
             EntityLabel output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityLabelById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    output = new EntityLabel();
-                    output.PopulateModel(reader);
-                }
+                    "SelectEntityLabelById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            output = new EntityLabel();
+                            output.PopulateModel(reader);
+                        }
+
+                        return output;
+                    },
+                    id);
+            
 
             }
 
@@ -74,33 +81,40 @@ namespace Plato.Labels.Repositories
 
         public async Task<IPagedResults<EntityLabel>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityLabel> output = null;
+            IPagedResults<EntityLabel> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityLabel>>(
                     CommandType.StoredProcedure,
                     "SelectEntityLabelsPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<EntityLabel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityLabel();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                        }
+
+                        return output;
+                    },
                     inputParams
                 );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<EntityLabel>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new EntityLabel();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+                
             }
 
             return output;
@@ -127,26 +141,30 @@ namespace Plato.Labels.Repositories
 
         public async Task<IEnumerable<EntityLabel>> SelectByEntityId(int entityId)
         {
-            List<EntityLabel> output = null;
+            IList<EntityLabel> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<EntityLabel>>(
                     CommandType.StoredProcedure,
                     "SelectEntityLabelsByEntityId",
-                    entityId);
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<EntityLabel>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new EntityLabel();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
-                    
-                }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<EntityLabel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityLabel();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+
+                        }
+
+                        return output;
+                    },
+                    entityId);
+                
             }
 
             return output;
