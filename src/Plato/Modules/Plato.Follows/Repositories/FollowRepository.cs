@@ -55,15 +55,21 @@ namespace Plato.Follows.Repositories
             Follow follow = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                follow = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFollowById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    follow = new Follow();
-                    follow.PopulateModel(reader);
-                }
+                    "SelectFollowById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            follow = new Follow();
+                            follow.PopulateModel(reader);
+                        }
+
+                        return follow;
+                    },
+                    id);
 
             }
 
@@ -72,39 +78,42 @@ namespace Plato.Follows.Repositories
 
         public async Task<IPagedResults<Follow>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Follow> output = null;
+            IPagedResults<Follow> output = null;
             using (var context = _dbContext)
             {
 
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<Follow>>(
                     CommandType.StoredProcedure,
                     "SelectFollowsPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<Follow>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new Follow();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<Follow>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new Follow();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                    
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                        }
+
+                        return output;
+
+                    },
+                    inputParams);
+
+             
             }
 
             return output;
@@ -130,25 +139,31 @@ namespace Plato.Follows.Repositories
 
         public async Task<IEnumerable<Follow>> SelectByNameAndThingId(string name, int thingId)
         {
-            List<Follow> output = null;
+            IList<Follow> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<Follow>>(
                     CommandType.StoredProcedure,
                     "SelectFollowsByNameAndThingId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<Follow>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new Follow();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+
+                        }
+
+                        return output;
+                    },
                     name,
                     thingId);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<Follow>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new Follow();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
-                    
-                }
+
             }
 
             return output;
@@ -159,18 +174,25 @@ namespace Plato.Follows.Repositories
             Follow follow = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                follow = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFollowByNameThingIdAndCreatedUserId", 
+                    "SelectFollowByNameThingIdAndCreatedUserId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            follow = new Follow();
+                            follow.PopulateModel(reader);
+                        }
+
+                        return follow;
+
+                    },
                     name,
                     thingId,
                     createdUserId);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    follow = new Follow();
-                    follow.PopulateModel(reader);
-                }
+             
 
             }
 

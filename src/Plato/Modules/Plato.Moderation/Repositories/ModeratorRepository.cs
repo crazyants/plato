@@ -62,15 +62,21 @@ namespace Plato.Moderation.Repositories
             Moderator moderator = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                moderator = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectModeratorById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    moderator = new Moderator();
-                    moderator.PopulateModel(reader);
-                }
+                    "SelectModeratorById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            moderator = new Moderator();
+                            moderator.PopulateModel(reader);
+                        }
+
+                        return moderator;
+                    },
+                    id);
 
             }
 
@@ -80,30 +86,38 @@ namespace Plato.Moderation.Repositories
 
         public async Task<IPagedResults<Moderator>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Moderator> output = null;
+            IPagedResults<Moderator> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<Moderator>>(
                     CommandType.StoredProcedure,
                     "SelectModeratorsPaged",
+                    async reader =>
+                    {
+
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<Moderator>();
+                            while (await reader.ReadAsync())
+                            {
+                                var moderator = new Moderator();
+                                moderator.PopulateModel(reader);
+                                output.Data.Add(moderator);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+
+                    },
                     inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<Moderator>();
-                    while (await reader.ReadAsync())
-                    {
-                        var moderator = new Moderator();
-                        moderator.PopulateModel(reader);
-                        output.Data.Add(moderator);
-                    }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
             }
 
             return output;

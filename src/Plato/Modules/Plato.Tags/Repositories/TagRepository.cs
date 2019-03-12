@@ -165,19 +165,24 @@ namespace Plato.Tags.Repositories
             Tag tag = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                tag = await context.ExecuteReaderAsync<Tag>(
                     CommandType.StoredProcedure,
                     "SelectTagByName",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            tag = new Tag();
+                            tag.PopulateModel(reader);
+                        }
+
+                        return tag;
+                    },
                     name
                 );
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    tag = new Tag();
-                    tag.PopulateModel(reader);
-                }
+               
             }
 
             return tag;
@@ -188,22 +193,25 @@ namespace Plato.Tags.Repositories
             Tag tag = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                tag = await context.ExecuteReaderAsync<Tag>(
                     CommandType.StoredProcedure,
                     "SelectTagByNameNormalized",
-                    nameNormalized
-                );
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            tag = new Tag();
+                            tag.PopulateModel(reader);
+                        }
 
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    tag = new Tag();
-                    tag.PopulateModel(reader);
-                }
+                        return tag;
+                    },
+                    nameNormalized);
             }
 
             return tag;
+
         }
 
         #endregion

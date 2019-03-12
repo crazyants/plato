@@ -29,30 +29,37 @@ namespace Plato.Media.Repositories
 
         public async Task<IPagedResults<Models.Media>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Models.Media> output = null;
+            IPagedResults<Models.Media> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<Models.Media>>(
                     CommandType.StoredProcedure,
                     "SelectMediaPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<Models.Media>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new Models.Media();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+
+                    },
                     inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<Models.Media>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new Models.Media();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+             
             }
 
             return output;
@@ -101,15 +108,21 @@ namespace Plato.Media.Repositories
             Models.Media media = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                media = await context.ExecuteReaderAsync<Models.Media>(
                     CommandType.StoredProcedure,
-                    "SelectMediaById", id);
+                    "SelectMediaById",
+                    async reader =>
+                    {
+                        if ((reader != null) && reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            media = new Models.Media(reader);
+                        }
 
-                if ((reader != null) && reader.HasRows)
-                {
-                    await reader.ReadAsync();
-                    media = new Models.Media(reader);
-                }
+                        return media;
+                    },
+                    id);
+
             }
 
             return media;

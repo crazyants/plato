@@ -50,15 +50,21 @@ namespace Plato.Mentions.Repositories
             EntityMention output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<EntityMention>(
                     CommandType.StoredProcedure,
-                    "SelectEntityMentionById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    output = new EntityMention();
-                    output.PopulateModel(reader);
-                }
+                    "SelectEntityMentionById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            output = new EntityMention();
+                            output.PopulateModel(reader);
+                        }
+
+                        return output;
+                    },
+                    id);
 
             }
 
@@ -68,36 +74,39 @@ namespace Plato.Mentions.Repositories
 
         public async Task<IPagedResults<EntityMention>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityMention> output = null;
+            IPagedResults<EntityMention> output = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityMention>>(
                     CommandType.StoredProcedure,
                     "SelectEntityMentionsPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<EntityMention>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new EntityMention();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        if (reader.HasRows)
+                        if ((reader != null) && (reader.HasRows))
                         {
-                            await reader.ReadAsync();
-                            output.PopulateTotal(reader);
-                        }
-                    }
+                            output = new PagedResults<EntityMention>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityMention();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
 
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+                        }
+
+                        return output;
+
+                    },
+                    inputParams);
+                
             }
 
             return output;

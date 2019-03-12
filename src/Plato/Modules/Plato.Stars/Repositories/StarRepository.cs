@@ -55,16 +55,22 @@ namespace Plato.Stars.Repositories
             Star star = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                star = await context.ExecuteReaderAsync<Star>(
                     CommandType.StoredProcedure,
-                    "SelectStarById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    star = new Star();
-                    star.PopulateModel(reader);
-                }
+                    "SelectStarById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            star = new Star();
+                            star.PopulateModel(reader);
+                        }
 
+                        return star;
+                    },
+                    id);
+                
             }
 
             return star;
@@ -72,42 +78,50 @@ namespace Plato.Stars.Repositories
 
         public async Task<IPagedResults<Star>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Star> output = null;
+            IPagedResults<Star> results = null;
             using (var context = _dbContext)
             {
 
                 _dbContext.OnException += (sender, args) =>
                 {
                     if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
+                        _logger.LogInformation(
+                            $"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
                 };
 
-                var reader = await context.ExecuteReaderAsync(
+                results = await context.ExecuteReaderAsync<IPagedResults<Star>>(
                     CommandType.StoredProcedure,
                     "SelectStarsPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<Star>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new Star();
-                        entity.PopulateModel(reader);
-                        output.Data.Add(entity);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            var output = new PagedResults<Star>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new Star();
+                                entity.PopulateModel(reader);
+                                output.Data.Add(entity);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                    
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                            return output;
+                        }
+
+                        return null;
+                    },
+                    inputParams);
+
+
             }
 
-            return output;
+            return results;
+
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -130,28 +144,36 @@ namespace Plato.Stars.Repositories
 
         public async Task<IEnumerable<Star>> SelectByNameAndThingId(string name, int thingId)
         {
-            List<Star> output = null;
+            IList<Star> results = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                results = await context.ExecuteReaderAsync<List<Star>>(
                     CommandType.StoredProcedure,
                     "SelectStarsByNameAndThingId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            var output = new List<Star>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new Star();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+
+                            return output;
+                        }
+
+                        return null;
+
+                    },
                     name,
                     thingId);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<Star>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new Star();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
-                    
-                }
+
             }
 
-            return output;
+            return results;
         }
 
         public async Task<Star> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
@@ -159,19 +181,24 @@ namespace Plato.Stars.Repositories
             Star star = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                star = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectStarByNameThingIdAndCreatedUserId", 
+                    "SelectStarByNameThingIdAndCreatedUserId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            star = new Star();
+                            star.PopulateModel(reader);
+                        }
+
+                        return star;
+                    },
                     name,
                     thingId,
                     createdUserId);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    star = new Star();
-                    star.PopulateModel(reader);
-                }
-
+                
             }
 
             return star;

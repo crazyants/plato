@@ -127,18 +127,11 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            $"SelectUser for Id {id} failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
-                    "SelectUserById", id);
-
-                user = await BuildUserFromResultSets(reader);
+                    "SelectUserById",
+                    async reader => await BuildUserFromResultSets(reader),
+                    id);
             }
 
             return user;
@@ -149,17 +142,18 @@ namespace Plato.Internal.Repositories.Users
         {
 
             if (string.IsNullOrEmpty(userNameNormalized))
+            {
                 throw new ArgumentNullException(nameof(userNameNormalized));
-
+            }
+                
             User user = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameNormalized",
+                    async reader => await BuildUserFromResultSets(reader),
                     userNameNormalized.TrimToSize(255));
-
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
@@ -176,12 +170,11 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
-                    "SelectUserByEmail", 
+                    "SelectUserByEmail",
+                    async reader => await BuildUserFromResultSets(reader),
                     email.TrimToSize(255));
-
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
@@ -198,12 +191,11 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByEmailNormalized",
+                    async reader => await BuildUserFromResultSets(reader),
                     emailNormalized.TrimToSize(255));
-
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
@@ -219,11 +211,11 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
-                    "SelectUserByUserName", 
+                    "SelectUserByUserName",
+                    async reader => await BuildUserFromResultSets(reader),
                     userName.TrimToSize(255));
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
@@ -232,28 +224,26 @@ namespace Plato.Internal.Repositories.Users
 
         public async Task<User> SelectByUserNameAndPasswordAsync(string userName, string password)
         {
-            if (string.IsNullOrEmpty(userName))
-                throw new ArgumentNullException(nameof(userName));
-            if (string.IsNullOrEmpty(password))
-                throw new ArgumentNullException(nameof(password));
 
+            if (string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentNullException(nameof(userName));
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+                
             User user = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectUserByUserNameAndPassword failed with the following error {args.Exception.Message}");
-                };
-                
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameAndPassword",
+                    async reader => await BuildUserFromResultSets(reader),
                     userName.TrimToSize(255),
                     password.TrimToSize(255));
-
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
@@ -263,30 +253,28 @@ namespace Plato.Internal.Repositories.Users
         public async Task<User> SelectByEmailAndPasswordAsync(string email, string password)
         {
             if (string.IsNullOrEmpty(email))
+            {
                 throw new ArgumentNullException(nameof(email));
+            }
+
             if (string.IsNullOrEmpty(password))
+            {
                 throw new ArgumentNullException(nameof(password));
+            }
 
             User user = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectUserByEmailAndPassword failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserByEmailAndPassword",
+                    async reader => await BuildUserFromResultSets(reader),
                     email.TrimToSize(255),
                     password.TrimToSize(255));
-
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
+
         }
 
         public async Task<User> SelectByResetTokenAsync(string resetToken)
@@ -299,11 +287,11 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByResetToken",
+                    async reader => await BuildUserFromResultSets(reader),
                     resetToken.TrimToSize(255));
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
@@ -319,14 +307,15 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByConfirmationToken",
+                    async reader => await BuildUserFromResultSets(reader),
                     confirmationToken.TrimToSize(255));
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
+
         }
 
         public async Task<User> SelectByApiKeyAsync(string apiKey)
@@ -339,13 +328,11 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-
-                var reader = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByApiKey",
+                    async reader => await BuildUserFromResultSets(reader),
                     apiKey.TrimToSize(255));
-
-                user = await BuildUserFromResultSets(reader);
             }
 
             return user;
@@ -354,31 +341,45 @@ namespace Plato.Internal.Repositories.Users
         
         public async Task<IPagedResults<User>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<User> output = null;
+            IPagedResults<User> results = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                results = await context.ExecuteReaderAsync<IPagedResults<User>>(
                     CommandType.StoredProcedure,
                     "SelectUsersPaged",
+                    async reader =>
+                    {
+
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            var output = new PagedResults<User>();
+
+                            while (await reader.ReadAsync())
+                            {
+                                var user = new User();
+                                user.PopulateModel(reader);
+                                output.Data.Add(user);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                            return output;
+                        }
+
+                        return null;
+                    },
                     inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<User>();
-                    while (await reader.ReadAsync())
-                    {
-                        var user = new User();
-                        user.PopulateModel(reader);
-                        output.Data.Add(user);
-                    }
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                }
+              
             }
 
-            return output;
+            return results;
 
         }
 

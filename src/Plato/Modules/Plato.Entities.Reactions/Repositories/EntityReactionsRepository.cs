@@ -61,47 +61,63 @@ namespace Plato.Entities.Reactions.Repositories
             EntityReaction entityReaction = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                entityReaction = await context.ExecuteReaderAsync<EntityReaction>(
                     CommandType.StoredProcedure,
-                    "SelectEntityReactionById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    entityReaction = new EntityReaction();
-                    entityReaction.PopulateModel(reader);
-                }
+                    "SelectEntityReactionById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            entityReaction = new EntityReaction();
+                            entityReaction.PopulateModel(reader);
+                        }
+
+                        return entityReaction;
+                    },
+                    id);
 
             }
 
             return entityReaction;
+
         }
 
         public async Task<IPagedResults<EntityReaction>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityReaction> output = null;
+            IPagedResults<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsPaged",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<EntityReaction>();
+                            while (await reader.ReadAsync())
+                            {
+                                var reaction = new EntityReaction();
+                                reaction.PopulateModel(reader);
+                                output.Data.Add(reaction);
+                            }
+
+                            if (await reader.NextResultAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    await reader.ReadAsync();
+                                    output.PopulateTotal(reader);
+                                }
+                            }
+
+                        }
+
+                        return output;
+                    },
                     inputParams);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<EntityReaction>();
-                    while (await reader.ReadAsync())
-                    {
-                        var reaction = new EntityReaction();
-                        reaction.PopulateModel(reader);
-                        output.Data.Add(reaction);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-
-                }
+            
             }
 
             return output;
@@ -130,23 +146,29 @@ namespace Plato.Entities.Reactions.Repositories
         public async Task<IEnumerable<EntityReaction>> SelectEntityReactionsByEntityId(int entityId)
         {
 
-            List<EntityReaction> output = null;
+            IList<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsByEntityId",
-                    entityId);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<EntityReaction>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var entity = new EntityReaction();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
-                }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<EntityReaction>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityReaction();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+                        }
+
+                        return output;
+                    },
+                    entityId);
+            
             }
 
             return output;
@@ -156,25 +178,30 @@ namespace Plato.Entities.Reactions.Repositories
         public async Task<IEnumerable<EntityReaction>> SelectEntityReactionsByUserIdAndEntityId(int userId, int entityId)
         {
 
-            List<EntityReaction> output = null;
+            IList<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IList<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsByUserIdAndEntityId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<EntityReaction>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = new EntityReaction();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+                        }
+
+                        return output;
+                    },
                     userId,
                     entityId);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<EntityReaction>();
-                    while (await reader.ReadAsync())
-                    {
-                        var entity = new EntityReaction();
-                        entity.PopulateModel(reader);
-                        output.Add(entity);
-                    }
-                }
-
+            
             }
 
             return output;

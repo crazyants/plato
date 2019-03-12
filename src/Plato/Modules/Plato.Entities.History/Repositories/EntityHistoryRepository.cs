@@ -9,7 +9,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Entities.History.Repositories
 {
 
-    class EntityHistoryRepository : IEntityHistoryRepository<EntityHistory>
+    public class EntityHistoryRepository : IEntityHistoryRepository<EntityHistory>
     {
 
         private readonly IDbContext _dbContext;
@@ -54,59 +54,64 @@ namespace Plato.Entities.History.Repositories
 
         public async Task<EntityHistory> SelectByIdAsync(int id)
         {
+
             EntityHistory history = null;
             using (var context = _dbContext)
             {
-                var reader = await context.ExecuteReaderAsync(
+                history = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityHistoryById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    history = new EntityHistory();
-                    history.PopulateModel(reader);
-                }
+                    "SelectEntityHistoryById",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            history = new EntityHistory();
+                            history.PopulateModel(reader);
+                        }
 
+                        return history;
+                    },
+                    id);
             }
 
             return history;
+
         }
 
         public async Task<IPagedResults<EntityHistory>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityHistory> output = null;
+            IPagedResults<EntityHistory> output = null;
             using (var context = _dbContext)
             {
 
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
-                var reader = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityHistory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityHistoryPaged",
-                    inputParams
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new PagedResults<EntityHistory>();
-                    while (await reader.ReadAsync())
+                    async reader =>
                     {
-                        var history = new EntityHistory();
-                        history.PopulateModel(reader);
-                        output.Data.Add(history);
-                    }
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new PagedResults<EntityHistory>();
+                            while (await reader.ReadAsync())
+                            {
+                                var history = new EntityHistory();
+                                history.PopulateModel(reader);
+                                output.Data.Add(history);
+                            }
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
-                    }
-                    
-                }
+                            if (await reader.NextResultAsync())
+                            {
+                                await reader.ReadAsync();
+                                output.PopulateTotal(reader);
+                            }
+
+                        }
+
+                        return output;
+                    },
+                    inputParams);
+           
             }
 
             return output;
