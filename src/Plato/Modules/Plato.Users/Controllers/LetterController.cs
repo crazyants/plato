@@ -43,22 +43,15 @@ namespace Plato.Users.Controllers
         [HttpGet, ResponseCache(Duration = 1200)]
         public async Task Get(char letter, string color)
         {
-
-            if (!IsValidHex(color))
-            {
-                throw new InvalidEnumArgumentException(nameof(color));
-            }
-
-            var fileName = $"{letter}-{color}.png";
             
+            var fileName = $"{letter}-{color}.png";
             var r = Response;
             r.Clear();
-
-            var combinedPath = _fileStore.Combine(
+    
+            var existingFileBytes = await _fileStore.GetFileBytesAsync(_fileStore.Combine(
                 _uploadFolder.InternalRootPath,
                 _pathToAvatarFolder,
-                fileName);
-            var existingFileBytes = await _fileStore.GetFileBytesAsync(combinedPath);
+                fileName));
             if (existingFileBytes != null)
             {
                 r.ContentType = "image/png";
@@ -69,6 +62,12 @@ namespace Plato.Users.Controllers
             else
             {
 
+                // Ensure we have valid hex characters
+                if (!color.IsValidHex())
+                {
+                    throw new Exception("The supplied color is not a valid hexadecimal value.");
+                }
+                
                 // For the first request to the image generate the image,
                 // save the image to disk & serve the response. Subsequent requests
                 // for the same image will be served from disk to avoid creating
@@ -95,27 +94,11 @@ namespace Plato.Users.Controllers
                 }
 
             }
+
+            r.Body.Close();
             
         }
-
-        bool IsValidHex(string input)
-        {
-            foreach (var s in input)
-            {
-                var isHexChar = (s >= '0' && s <= '9') ||
-                                (s >= 'a' && s <= 'f') ||
-                                (s >= 'A' && s <= 'F');
-                if (!isHexChar)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-
-        }
-
-
+        
     }
 
 }

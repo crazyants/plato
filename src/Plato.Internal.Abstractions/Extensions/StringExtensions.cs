@@ -306,6 +306,27 @@ namespace Plato.Internal.Abstractions.Extensions
 
         }
 
+        public static bool IsValidHex(this string chars)
+        {
+
+            if (string.IsNullOrEmpty(chars))
+            {
+                return false;
+            }
+
+            foreach (var c in chars)
+            {
+                var isHex = ((c >= '0' && c <= '9') ||
+                             (c >= 'a' && c <= 'f') ||
+                             (c >= 'A' && c <= 'F'));
+                if (!isHex)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
         public static T ToEnum<T>(this string value, T defaultValue) where T : struct
         {
             if (string.IsNullOrEmpty(value))

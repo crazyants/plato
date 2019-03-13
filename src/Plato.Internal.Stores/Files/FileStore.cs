@@ -41,12 +41,6 @@ namespace Plato.Internal.Stores.Files
                 result = await _fileSystem.ReadFileBytesAsync(path);
                 if (result != null)
                 {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation(
-                            $"Adding entry to cache of type {_memoryCache.GetType().Name}. Entry key: {path}.");
-                    }
-                 
                     _memoryCache.Set(path, result, cacheEntryOptions);
                 }
             }
@@ -68,9 +62,6 @@ namespace Plato.Internal.Stores.Files
                 result = await _fileSystem.ReadFileAsync(path);
                 if (result != null)
                 {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, path);
                     _memoryCache.Set(path, result, cacheEntryOptions);
                 }
             }

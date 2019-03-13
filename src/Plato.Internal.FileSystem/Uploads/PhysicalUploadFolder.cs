@@ -12,9 +12,7 @@ namespace Plato.Internal.FileSystem.Uploads
     {
         
         private const int ByMaxFileNameLength = 32;
-
-   
-
+        
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalUploadFolder> _logger;
 
@@ -33,8 +31,7 @@ namespace Plato.Internal.FileSystem.Uploads
             _fileSystem = new PlatoFileSystem(root, new PhysicalFileProvider(root), _logger);
 
         }
-
-        // Saves a unique file and returns the file name
+        
         public string InternalRootPath => "wwwroot/uploads";
 
         public async Task<string> SaveUniqueFileAsync(
