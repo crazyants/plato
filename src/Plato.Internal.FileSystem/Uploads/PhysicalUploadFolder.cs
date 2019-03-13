@@ -22,17 +22,17 @@ namespace Plato.Internal.FileSystem.Uploads
         {
             _logger = logger;
 
-            if (!parentFileSystem.DirectoryExists(InternalRootPath))
+            if (!parentFileSystem.DirectoryExists(Path))
             {
-                parentFileSystem.CreateDirectory(InternalRootPath);
+                parentFileSystem.CreateDirectory(Path);
             }
 
-            var root = parentFileSystem.GetDirectoryInfo(InternalRootPath).FullName;
+            var root = parentFileSystem.GetDirectoryInfo(Path).FullName;
             _fileSystem = new PlatoFileSystem(root, new PhysicalFileProvider(root), _logger);
 
         }
         
-        public string InternalRootPath => "wwwroot/uploads";
+        public string Path => "wwwroot/uploads";
 
         public async Task<string> SaveUniqueFileAsync(
             Stream stream,

@@ -10,8 +10,7 @@ namespace Plato.Users.Middleware
 
     public class AuthenticatedUserMiddleware
     {
-        static readonly object SyncLock = new object();
-  
+     
         private readonly RequestDelegate _next;
 
         public AuthenticatedUserMiddleware(RequestDelegate next)
@@ -41,7 +40,7 @@ namespace Plato.Users.Middleware
             }
 
             // Get context facade
-                var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
+            var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
             if (contextFacade == null)
             {
                 return;
@@ -55,15 +54,12 @@ namespace Plato.Users.Middleware
             {
                 return;
             }
-
-            lock (SyncLock)
-            {
-                // Add authenticated user to features for subsequent use
-                context.Features[typeof(User)] = user;
-            }
-
+            
+            // Add authenticated user to features for subsequent use
+            context.Features[typeof(User)] = user;
+            
         }
-        
+
         #endregion
 
     }

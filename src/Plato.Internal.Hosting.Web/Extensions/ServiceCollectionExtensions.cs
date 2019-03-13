@@ -197,12 +197,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
 
 
-            //Action filters
-            //services.Configure<MvcOptions>(options =>
-            //{
-            //    options.Filters.Add(typeof(UpdateUserLastLoginDateFilter));
-            //    options.Filters.Add(typeof(SignOutRequestIfUserNotFoundFilter));
-            //});
+            // Action filters
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(typeof(UpdateUserLastLoginDateFilter));
+                options.Filters.Add(typeof(SignOutRequestIfUserNotFoundFilter));
+            });
 
 
             // Add mvc core services
@@ -302,38 +302,32 @@ namespace Plato.Internal.Hosting.Web.Extensions
             {
                 logger.AddConsole();
                 logger.AddDebug();
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 ListAllRegisteredServices(app);
             }
             else
-            {
-                //app.UseExceptionHandler("/error");
-
-                // Add custom error handling for specific status codes
-                // UseStatusCodePages should be called before request
-                // handling middle wares in the pipeline (for example,
-                // Static File Middleware and MVC Middleware).
-                app.UseStatusCodePages(context =>
-                {
-                    switch (context.HttpContext.Response.StatusCode)
-                    {
-                        case 401:
-                            context.HttpContext.Response.Redirect("/denied");
-                            break;
-                        case 404:
-                            context.HttpContext.Response.Redirect("/moved");
-                            break;
-                        case 500:
-                            context.HttpContext.Response.Redirect("/error");
-                            break;
-                    }
-                    return Task.CompletedTask;
-                });
-
+            {   
+                app.UseExceptionHandler("/error");
             }
 
-        
+            // Add custom error handling for specific status codes
+            // UseStatusCodePages should be called before request
+            // handling middle wares in the pipeline (for example,
+            // Static File Middleware and MVC Middleware).
+            app.UseStatusCodePages(context =>
+            {
+                switch (context.HttpContext.Response.StatusCode)
+                {
+                    case 401:
+                        context.HttpContext.Response.Redirect("/denied");
+                        break;
+                    case 404:
+                        context.HttpContext.Response.Redirect("/moved");
+                        break;
+                }
+                return Task.CompletedTask;
+            });
 
             // Add authentication middleware
             app.UseAuthentication();

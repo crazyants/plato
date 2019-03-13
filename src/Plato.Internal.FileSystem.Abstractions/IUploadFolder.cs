@@ -6,7 +6,7 @@ namespace Plato.Internal.FileSystem.Abstractions
     public interface IUploadFolder
     {
   
-        string InternalRootPath { get; }
+        string Path { get; }
 
         Task<string> SaveUniqueFileAsync(Stream stream, string fileName, string path);
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Data.Abstractions
 {
-    public interface IDataProvider
+    public interface IDataProvider 
     {
 
         Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class;

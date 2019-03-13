@@ -12,7 +12,7 @@ using Plato.Internal.Data.Providers;
 
 namespace Plato.Internal.Data
 {
-    public class DbContext : IDbContext, IDisposable
+    public class DbContext : IDbContext
     {
      
         public DbContextOptions Configuration { get; private set; }
@@ -66,6 +66,7 @@ namespace Plato.Internal.Data
 
         public void Dispose()
         {
+            
         }
         
         private string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)

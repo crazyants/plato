@@ -170,9 +170,9 @@ namespace Plato.Users.ViewProviders
             return result.Failed("An error occurred whilst attempting to send the email confirmation email.");
 
         }
-
-
+        
         #endregion
 
     }
+
 }

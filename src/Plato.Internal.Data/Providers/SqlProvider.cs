@@ -13,6 +13,9 @@ namespace Plato.Internal.Data.Providers
     public class SqlProvider : IDataProvider
     {
 
+
+        //private SqlConnection _connection;
+
         private readonly ILogger<SqlProvider> _logger;
         private readonly string _connectionString;
     
@@ -25,16 +28,65 @@ namespace Plato.Internal.Data.Providers
         }
         
         public int CommandTimeout { get; set; }
-        
-        #region "Implementation"
 
-        public async Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
+        //public async Task OpenAsync()
+        //{
+
+        
+        //    _connection = new SqlConnection(_connectionString);
+
+        //    if (_logger.IsEnabled(LogLevel.Information))
+        //    {
+        //        _logger.LogInformation("Creating SqlConnection object");
+        //    }
+
+        //    if (_connection.State != ConnectionState.Open)
+        //    {
+                
+        //        if (_logger.IsEnabled(LogLevel.Information))
+        //        {
+        //            _logger.LogInformation("Opening database connection");
+        //        }
+
+        //        await _connection.OpenAsync();
+
+        //        if (_logger.IsEnabled(LogLevel.Information))
+        //        {
+        //            _logger.LogInformation("Opened database connection");
+        //        }
+        //    }
+            
+        //}
+
+        //public void Close()
+        //{
+
+        //    if (_logger.IsEnabled(LogLevel.Information))
+        //    {
+        //        _logger.LogInformation("Closing database connection");
+        //    }
+
+        //    _connection?.Dispose();
+            
+        //    if (_logger.IsEnabled(LogLevel.Information))
+        //    {
+        //        _logger.LogInformation("Closed database connection");
+        //    }
+        //}
+
+        public async Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate,
+            params object[] args) where T : class
         {
 
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("SQL to execute: " + sql);
+            }
+            
             T output = null;
+
             using (var conn = new SqlConnection(_connectionString))
             {
-            
                 try
                 {
                     await conn.OpenAsync();
@@ -55,15 +107,21 @@ namespace Plato.Internal.Data.Providers
                 {
                     conn.Close();
                 }
-
             }
-            
+
+
             return output;
 
         }
-        
+
         public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
         {
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("SQL to execute: " + sql);
+            }
+
 
             object output = null;
             using (var conn = new SqlConnection(_connectionString))
@@ -87,7 +145,7 @@ namespace Plato.Internal.Data.Providers
                     conn.Close();
                 }
             }
-            
+
             if (output != null)
             {
                 return (T)Convert.ChangeType(output, typeof(T));
@@ -99,6 +157,12 @@ namespace Plato.Internal.Data.Providers
 
         public async Task<T> ExecuteNonQueryAsync<T>(string sql, params object[] args)
         {
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("SQL to execute: " + sql);
+            }
+
 
             var output = default(T);
             using (var conn = new SqlConnection(_connectionString))
@@ -127,10 +191,6 @@ namespace Plato.Internal.Data.Providers
 
         }
         
-        #endregion
-
-        #region "Private Methods"
-
         SqlCommand CreateCommand(
             SqlConnection connection,
             string sql, 
@@ -222,10 +282,6 @@ namespace Plato.Internal.Data.Providers
             
         }
         
-        #endregion
-
-        #region "Virtual Methods"
-
         // mainly used to hook in and override behaviour
 
         public virtual void OnExecutedCommand(IDbCommand cmd) { }
@@ -238,8 +294,6 @@ namespace Plato.Internal.Data.Providers
             }
             throw ex;
         }
-     
-        #endregion
 
     }
 
