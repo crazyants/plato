@@ -400,7 +400,7 @@ $(function (win, doc, $) {
     win.$.Plato = {
         // defaults
         defaults: {
-            debug: true,
+            debug: false,
             url: "",
             locale: "en-US",
             apiKey: "",

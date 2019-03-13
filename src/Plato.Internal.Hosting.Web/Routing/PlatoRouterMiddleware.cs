@@ -51,7 +51,7 @@ namespace Plato.Internal.Hosting.Web.Routing
                 httpContext.Request.Path = httpContext.Request.Path.ToString()
                     .Substring(httpContext.Request.PathBase.Value.Length);
             }
-
+            
             // Do we need to rebuild the pipeline ?
             var rebuildPipeline = httpContext.Items["BuildPipeline"] != null;
             lock (_pipelines)

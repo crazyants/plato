@@ -21,12 +21,6 @@ namespace Plato.Users.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-
-            // If the request is not authenticated move along
-            if (!context.User.Identity.IsAuthenticated)
-            {
-                await _next.Invoke(context);
-            }
             
             // Hydrate HttpContext.Features with our user
             await HydrateHttpContextFeature(context);
@@ -41,8 +35,13 @@ namespace Plato.Users.Middleware
         async Task HydrateHttpContextFeature(HttpContext context)
         {
 
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                return;
+            }
+
             // Get context facade
-            var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
+                var contextFacade = context.RequestServices.GetRequiredService<IContextFacade>();
             if (contextFacade == null)
             {
                 return;
@@ -57,11 +56,11 @@ namespace Plato.Users.Middleware
                 return;
             }
 
-            //lock (SyncLock)
-            //{
+            lock (SyncLock)
+            {
                 // Add authenticated user to features for subsequent use
                 context.Features[typeof(User)] = user;
-            //}
+            }
 
         }
         

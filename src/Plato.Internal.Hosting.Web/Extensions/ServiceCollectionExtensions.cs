@@ -287,13 +287,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return services;
 
         }
-
-        public static void AddTagHelpers(this IServiceProvider serviceProvider, Assembly assembly)
-        {
-            serviceProvider.GetRequiredService<ApplicationPartManager>()
-                .ApplicationParts.Add(new AssemblyPart(assembly));
-        }
-
+        
         // ----------------------
         // app
         // ----------------------
@@ -308,35 +302,38 @@ namespace Plato.Internal.Hosting.Web.Extensions
             {
                 logger.AddConsole();
                 logger.AddDebug();
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 ListAllRegisteredServices(app);
             }
             else
-            {   
-                app.UseExceptionHandler("/error");
+            {
+                //app.UseExceptionHandler("/error");
+
+                // Add custom error handling for specific status codes
+                // UseStatusCodePages should be called before request
+                // handling middle wares in the pipeline (for example,
+                // Static File Middleware and MVC Middleware).
+                app.UseStatusCodePages(context =>
+                {
+                    switch (context.HttpContext.Response.StatusCode)
+                    {
+                        case 401:
+                            context.HttpContext.Response.Redirect("/denied");
+                            break;
+                        case 404:
+                            context.HttpContext.Response.Redirect("/moved");
+                            break;
+                        case 500:
+                            context.HttpContext.Response.Redirect("/error");
+                            break;
+                    }
+                    return Task.CompletedTask;
+                });
+
             }
 
-            // Add custom error handling for specific status codes
-            // UseStatusCodePages should be called before request
-            // handling middle wares in the pipeline (for example,
-            // Static File Middleware and MVC Middleware).
-            app.UseStatusCodePages(context =>
-            {
-                switch (context.HttpContext.Response.StatusCode)
-                {
-                    case 401:
-                        context.HttpContext.Response.Redirect("/denied");
-                        break;
-                    case 404:
-                        context.HttpContext.Response.Redirect("/moved");
-                        break;
-                    case 500:
-                        context.HttpContext.Response.Redirect("/error");
-                        break;
-                }
-                return Task.CompletedTask;
-            });
+        
 
             // Add authentication middleware
             app.UseAuthentication();
