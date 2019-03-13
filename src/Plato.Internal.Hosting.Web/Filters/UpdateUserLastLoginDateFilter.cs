@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Models.Shell;
@@ -68,8 +66,8 @@ namespace Plato.Internal.Hosting.Web.Filters
                 await next();
                 return;
             }
-            
-            // If the tracking cookie still exists simply return - no additional work is needed 
+
+            // Tracking cookie already exists, simply execute the controller result
             if (_active)
             {
                 await next();
@@ -78,8 +76,11 @@ namespace Plato.Internal.Hosting.Web.Filters
 
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Not authenticated, simply execute the controller result
             if (user == null)
             {
+                await next();
                 return;
             }
 

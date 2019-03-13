@@ -29,7 +29,7 @@ namespace Plato.Core.Middleware
                 scriptManager?.RegisterScriptBlock(scriptBlock, ScriptSection.Footer);
             }
             
-            await _next(context);
+            await _next.Invoke(context);
 
         }
         

@@ -171,23 +171,6 @@ namespace Plato.Users
             // i.e. after app.UseAuthentication() above
             app.UseMiddleware<AuthenticatedUserMiddleware>();
             
-            //// Executes on every request, safe to modify response 
-            //app.Run(async context =>
-            //{
-            //    // If the request is not authenticated move along
-            //    if (!context.User.Identity.IsAuthenticated)
-            //    {
-
-            //        return;
-            //    }
-
-            //    // Sign out the request if the user is not found
-            //    await SignOutRequestIfUserNotFound(context);
-            //    // Attempt to update last login date
-            //    await UpdateAuthenticatedUsersLastLoginDateAsync(context);
-
-            //});
-            
             // --------------
             // Account
             // --------------

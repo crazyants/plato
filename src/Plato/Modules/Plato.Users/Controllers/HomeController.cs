@@ -139,7 +139,7 @@ namespace Plato.Users.Controllers
                 Pager = pager
             };
 
-            // Add view options to context for use within view adaptors
+            // Add view model to context
             HttpContext.Items[typeof(UserIndexViewModel)] = viewModel;
             
             // If we have a pager.page querystring value return paged results

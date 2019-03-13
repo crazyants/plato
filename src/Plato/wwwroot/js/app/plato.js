@@ -312,10 +312,16 @@ $(function (win, doc, $) {
                             if (onError) {
                                 onError(config, xhr, ajaxOptions, thrownError);
                             }
+                            if (config.onError) {
+                                config.onError(xhr, ajaxOptions, thrownError);
+                            }
                         })
                         .always(function(xhr, textStatus) {
                             if (onAlways) {
                                 onAlways(xhr, textStatus);
+                            }
+                            if (config.onAlways) {
+                                config.onAlways(xhr, textStatus);
                             }
                         });
                 }
