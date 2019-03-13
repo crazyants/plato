@@ -319,7 +319,7 @@ namespace Plato.Users.ViewProviders
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
 
             // Upload the new file
-            var fileName = await _uploadFolder.SaveFileAsync(stream, file.FileName, _pathToAvatarFolder);
+            var fileName = await _uploadFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
 
             // Ensure the new file was created
             if (!string.IsNullOrEmpty(fileName))

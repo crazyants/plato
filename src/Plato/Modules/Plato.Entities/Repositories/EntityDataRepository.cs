@@ -73,16 +73,11 @@ namespace Plato.Entities.Repositories
 
         public async Task<IEnumerable<IEntityData>> SelectByEntityIdAsync(int entityId)
         {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Selecting all entity data for id {entityId}");
-            }
-                
-            List<EntityData> data = null;
+            
+            IList<EntityData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<List<EntityData>>(
+                data = await context.ExecuteReaderAsync<IList<EntityData>>(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumByEntityId",
                     async reader =>

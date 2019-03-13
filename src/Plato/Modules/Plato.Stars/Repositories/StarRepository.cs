@@ -10,7 +10,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Stars.Repositories
 {
 
-    class StarRepository : IStarRepository<Star>
+    public class StarRepository : IStarRepository<Star>
     {
 
         private readonly IDbContext _dbContext;
@@ -81,14 +81,6 @@ namespace Plato.Stars.Repositories
             IPagedResults<Star> results = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            $"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
                 results = await context.ExecuteReaderAsync<IPagedResults<Star>>(
                     CommandType.StoredProcedure,
                     "SelectStarsPaged",
@@ -116,8 +108,7 @@ namespace Plato.Stars.Repositories
                         return null;
                     },
                     inputParams);
-
-
+                
             }
 
             return results;
@@ -198,7 +189,7 @@ namespace Plato.Stars.Repositories
                     name,
                     thingId,
                     createdUserId);
-                
+
             }
 
             return star;
@@ -239,4 +230,5 @@ namespace Plato.Stars.Repositories
         #endregion
         
     }
+
 }

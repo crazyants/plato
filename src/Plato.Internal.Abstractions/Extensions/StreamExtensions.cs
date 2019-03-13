@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Plato.Internal.Abstractions.Extensions
 {
@@ -19,14 +20,14 @@ namespace Plato.Internal.Abstractions.Extensions
                 return reader.ReadToEnd();
             }
         }
-        
+
         public static byte[] StreamToByteArray(this Stream stream)
         {
             
             // Important: Ensure we reset the stream position
             stream.Position = 0;
 
-            // Create a btye array buffer matching the stream size
+            // Create a byte array buffer matching the stream size
             var buffer = new byte[stream.Length];
 
             // Read the bytes from the steam

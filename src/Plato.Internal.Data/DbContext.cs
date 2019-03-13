@@ -15,9 +15,7 @@ namespace Plato.Internal.Data
     public class DbContext : IDbContext, IDisposable
     {
      
-        public DbContextOptions Configuration { get; set; }
-        
-        public event DbEventHandlers.DbExceptionEventHandler OnException;
+        public DbContextOptions Configuration { get; private set; }
         
         private readonly ILogger<DbContext> _logger;
         private readonly IDataProvider _provider;
@@ -39,8 +37,6 @@ namespace Plato.Internal.Data
             Configuration = cfg;
         }
   
-        #region "Implementation"
-        
         public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
         {
             if (_provider == null)
@@ -70,14 +66,8 @@ namespace Plato.Internal.Data
 
         public void Dispose()
         {
-            //_provider?.Dispose();
         }
-
-
-        #endregion
-
-        #region "Private Methods"
-
+        
         private string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)
         {
             // Execute procedure 
@@ -178,18 +168,10 @@ namespace Plato.Internal.Data
         
         private string GetProcedureName(string procedureName)
         {
-            return !string.IsNullOrEmpty(this.Configuration.TablePrefix)
-                ? this.Configuration.TablePrefix + procedureName
+            return !string.IsNullOrEmpty(Configuration.TablePrefix)
+                ? Configuration.TablePrefix + procedureName
                 : procedureName;
         }
-
-        public void HandleException(Exception ex)
-        {
-            //_provider?.Dispose();
-            throw ex;
-        }
-
-        #endregion
         
     }
 

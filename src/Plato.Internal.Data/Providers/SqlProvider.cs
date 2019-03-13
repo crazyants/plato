@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Abstractions;
 
@@ -11,63 +12,20 @@ namespace Plato.Internal.Data.Providers
     
     public class SqlProvider : IDataProvider
     {
-        
-        private readonly string _connectionString;
-        private SqlConnection _dbConnection;
-        private SqlDataReader _reader;
-        
-        public SqlProvider(IOptions<DbContextOptions> dbContextOptions)
-        {
-            _connectionString = dbContextOptions.Value.ConnectionString;
-          
-        }
 
-        //public SqlProvider(string connectionString)
-        //{
-        //    _connectionString = connectionString;
-        //}
+        private readonly ILogger<SqlProvider> _logger;
+        private readonly string _connectionString;
+    
+        public SqlProvider(
+            ILogger<SqlProvider> logger,
+            IOptions<DbContextOptions> dbContextOptions)
+        {
+            _logger = logger;
+            _connectionString = dbContextOptions.Value.ConnectionString;
+        }
         
         public int CommandTimeout { get; set; }
-
-        public IDbConnection Connection => _dbConnection;
         
-        #region "Open / Close"
-
-        public async Task OpenAsync()
-        {
-
-            if (String.IsNullOrEmpty(_connectionString))
-            {
-                throw new Exception("The connection string has not been initialized.");
-            }
-
-            _dbConnection = new SqlConnection
-            {
-                ConnectionString = _connectionString
-            };
-
-            await _dbConnection.OpenAsync();
-
-        }
-
-        public void Close()
-        {
-
-            if (_reader != null)
-            {
-                _reader.Dispose();
-                _reader = null;
-            }
-
-            if (_dbConnection != null)
-            {
-                _dbConnection.Dispose();
-                _dbConnection = null;
-            }
-        }
-
-        #endregion
-
         #region "Implementation"
 
         public async Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
@@ -103,29 +61,7 @@ namespace Plato.Internal.Data.Providers
             return output;
 
         }
-
-        public async Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args)
-        {
-            _reader = null;
-            try
-            {
-                await OpenAsync();
-                using (var command = CreateCommand(_dbConnection, sql, args))
-                {
-                    _reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
-                    OnExecutedCommand(command);
-                }
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-            }
-          
-
-            return _reader;
-
-        }
-     
+        
         public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
         {
 
@@ -151,8 +87,7 @@ namespace Plato.Internal.Data.Providers
                     conn.Close();
                 }
             }
-
-
+            
             if (output != null)
             {
                 return (T)Convert.ChangeType(output, typeof(T));
@@ -192,11 +127,6 @@ namespace Plato.Internal.Data.Providers
 
         }
         
-        //public void Dispose()
-        //{
-        //    Close();
-        //}
-
         #endregion
 
         #region "Private Methods"
@@ -289,8 +219,7 @@ namespace Plato.Internal.Data.Providers
             }
 
             cmd.Parameters.Add(p);
-
-
+            
         }
         
         #endregion
@@ -301,20 +230,17 @@ namespace Plato.Internal.Data.Providers
 
         public virtual void OnExecutedCommand(IDbCommand cmd) { }
                 
-        public event DbEventHandlers.DbExceptionEventHandler OnException;  
-
         public virtual void HandleException(Exception ex)
         {
-            if (OnException == null)
+            if (_logger.IsEnabled(LogLevel.Error))
             {
-                throw ex;
+                _logger.LogError(ex, ex.Message);
             }
-
-            OnException.Invoke(this, new DbExceptionEventArgs(ex));
-
+            throw ex;
         }
      
         #endregion
 
     }
+
 }

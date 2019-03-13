@@ -10,19 +10,17 @@ namespace Plato.Internal.FileSystem.Uploads
 {
     public class PhysicalUploadFolder : IUploadFolder
     {
+        
+        private const int ByMaxFileNameLength = 32;
+
+   
 
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalUploadFolder> _logger;
 
-        private static string _pathToUploadFolder;
-        private const int MaxFileNameLength = 32;
-
-        private static string InternalRootPath = "wwwroot/uploads";
-
         public PhysicalUploadFolder(
             IPlatoFileSystem parentFileSystem,
-            ILogger<PhysicalUploadFolder> logger,
-            IHostingEnvironment hostingEnvironment)
+            ILogger<PhysicalUploadFolder> logger)
         {
             _logger = logger;
 
@@ -34,23 +32,64 @@ namespace Plato.Internal.FileSystem.Uploads
             var root = parentFileSystem.GetDirectoryInfo(InternalRootPath).FullName;
             _fileSystem = new PlatoFileSystem(root, new PhysicalFileProvider(root), _logger);
 
-            if (_pathToUploadFolder == null)
-            {
-                _pathToUploadFolder = _fileSystem.Combine(hostingEnvironment.ContentRootPath,
-                    "wwwroot",
-                    "uploads");
-            }
         }
 
         // Saves a unique file and returns the file name
-  
+        public string InternalRootPath => "wwwroot/uploads";
 
-        public async Task<string> SaveFileAsync(
+        public async Task<string> SaveUniqueFileAsync(
             Stream stream,
             string fileName, 
             string path)
         {
+            
+            var parts = fileName.Split('.');
+            var extension = parts[parts.Length - 1];
 
+            if (string.IsNullOrEmpty(extension))
+            {
+                throw new Exception("Could not obtain a fie extension!");
+            }
+
+            if (extension.Length > 6)
+            {
+                throw new Exception("The file extension is not valid!");
+            }
+            
+            string fullPath;
+
+            if (!path.EndsWith("\\"))
+            {
+                path = path + "\\";
+            }
+
+            do
+            {
+                fileName = System.Guid.NewGuid().ToString();
+                fileName = fileName.Substring(0, ByMaxFileNameLength - extension.Length - 1);
+                fileName = fileName + "." + extension;
+                fullPath = path + fileName;
+            } while (_fileSystem.FileExists(fullPath));
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Attempting to save unique file to {fullPath}.");
+            }
+
+            // write the file 
+            await _fileSystem.CreateFileAsync(fullPath, stream);
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Successfully saved unique file at {fullPath}.");
+            }
+            
+            return fileName;
+            
+        }
+
+        public async Task<string> SaveFileAsync(Stream stream, string fileName, string path)
+        {
 
             var parts = fileName.Split('.');
             var extension = parts[parts.Length - 1];
@@ -64,39 +103,30 @@ namespace Plato.Internal.FileSystem.Uploads
             {
                 throw new Exception("The file extension is not valid!");
             }
-
-            //var extension = System.IO.File.getfi fileName.
-            string fullPath;
-
+            
             if (!path.EndsWith("\\"))
             {
                 path = path + "\\";
             }
 
-            do
-            {
-                fileName = System.Guid.NewGuid().ToString();
-                fileName = fileName.Substring(0, MaxFileNameLength - extension.Length - 1);
-                fileName = fileName + "." + extension;
-                fullPath = path + fileName;
-            } while (_fileSystem.FileExists(fullPath));
-
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Attrmpting to save unique file to {fullPath}.");
-            }
+            var fullPath = path + fileName;
 
             // write the file 
             await _fileSystem.CreateFileAsync(fullPath, stream);
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Successfully saveed unique file at {fullPath}.");
+                _logger.LogInformation($"Successfully saved unique file at {fullPath}.");
             }
 
-
             return fileName;
-            
+
+
+        }
+
+        public async Task CreateFileAsync(string path, Stream steam)
+        {
+            await _fileSystem.CreateFileAsync(path, steam);
         }
 
         public bool DeleteFile(string fileName, string path)

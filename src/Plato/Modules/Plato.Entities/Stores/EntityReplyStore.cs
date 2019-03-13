@@ -39,7 +39,6 @@ namespace Plato.Entities.Stores
                     _logger.LogInformation("Added entity reply with id {0} for entity { 1}",
                         newReply.Id, newReply.EntityId);
                 }
-                //_cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
                 _cacheManager.CancelTokens(typeof(EntityReplyStore<TModel>), reply.EntityId);
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(this.GetType(), reply.Id);
@@ -91,21 +90,7 @@ namespace Plato.Entities.Stores
         public async Task<TModel> GetByIdAsync(int id)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-                var reply = await _entityReplyRepository.SelectByIdAsync(id);
-                if (reply != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation("Selecting entity reply for key '{0}' with id {1}",
-                            token.ToString(), id);
-                    }
-                }
-
-                return reply;
-            });
-
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityReplyRepository.SelectByIdAsync(id));
         }
 
         public IQuery<TModel> QueryAsync()
@@ -117,22 +102,9 @@ namespace Plato.Entities.Stores
         public async Task<IPagedResults<TModel>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting entity replies for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
-                }
-
-                return await _entityReplyRepository.SelectAsync(args);
-
-            });
-
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityReplyRepository.SelectAsync(args));
         }
-
-
+        
     }
 
 }

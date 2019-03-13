@@ -131,10 +131,8 @@ namespace Plato.Labels.Repositories
 
                         return output;
                     },
-                    inputParams
-                );
+                    inputParams);
 
-            
             }
 
             return output;
@@ -222,17 +220,6 @@ namespace Plato.Labels.Repositories
             var labelId = 0;
             using (var context = _dbContext)
             {
-
-                context.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            id == 0
-                                ? $"Insert for Label with name '{name}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for Label with Id {id} failed with the following error {args.Exception.Message}");
-                    throw args.Exception;
-                };
-
                 labelId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabel",

@@ -10,19 +10,14 @@ namespace Plato.Internal.Data.Abstractions
 
         void Configure(Action<DbContextOptions> options);
    
-        DbContextOptions Configuration { get; set; }
+        DbContextOptions Configuration { get; }
 
         Task<T> ExecuteReaderAsync<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class;
 
         Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] commandParams);
    
         Task<T> ExecuteNonQueryAsync<T>(CommandType commandType, string sql, params object[] commandParams);
-        
-        void HandleException(Exception x);
-
-        event DbEventHandlers.DbExceptionEventHandler OnException;
-        
+    
     }
-
-
+    
 }

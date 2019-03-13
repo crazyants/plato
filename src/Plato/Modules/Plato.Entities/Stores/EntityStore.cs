@@ -151,13 +151,6 @@ namespace Plato.Entities.Stores
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting entities for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
-                }
-
                 var results = await _entityRepository.SelectAsync(args);
                 if (results != null)
                 {

@@ -169,10 +169,10 @@ namespace Plato.Internal.Repositories.Shell
         public async Task<IEnumerable<ShellFeature>> SelectFeatures()
         {
 
-            List<ShellFeature> data = null;
+            IList<ShellFeature> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<List<ShellFeature>>(
+                data = await context.ExecuteReaderAsync<IList<ShellFeature>>(
                     CommandType.StoredProcedure,
                     "SelectShellFeatures",
                     async reader =>
@@ -210,10 +210,7 @@ namespace Plato.Internal.Repositories.Shell
             {
                 feature = new ShellFeature();
                 await reader.ReadAsync();
-                if (reader.HasRows)
-                {
-                    feature.PopulateModel(reader);
-                }
+                 feature.PopulateModel(reader);
             }
             return feature;
         }
@@ -238,17 +235,6 @@ namespace Plato.Internal.Repositories.Shell
             
             using (var context = _dbContext)
             {
-
-                context.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            id == 0
-                                ? $"Insert for shell feature '{moduleId}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for shell feature with Id {moduleId} failed with the following error {args.Exception.Message}");
-                    throw args.Exception;
-                };
-
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateShellFeature",
@@ -256,9 +242,7 @@ namespace Plato.Internal.Repositories.Shell
                     moduleId.ToEmptyIfNull(),
                     version.ToEmptyIfNull(),
                     settings.ToEmptyIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
-                );
-
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
         }
 
