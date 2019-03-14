@@ -70,7 +70,8 @@ namespace Plato.Users
 
             // Stores
             services.TryAddScoped<IUserStore<User>, UserStore>();
-     
+            services.TryAddScoped<IUserSecurityStampStore<User>, UserStore>();
+
             // Managers
             services.TryAddScoped<UserManager<User>>();
             services.TryAddScoped<SignInManager<User>>();

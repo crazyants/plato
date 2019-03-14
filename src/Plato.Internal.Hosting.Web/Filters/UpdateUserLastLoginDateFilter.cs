@@ -12,6 +12,10 @@ using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Hosting.Web.Filters
 {
+
+    /// <summary>
+    /// Periodically updates the current authenticated users last login date based on the existence of the plato_active client side cookie.
+    /// </summary>
     public class UpdateUserLastLoginDateFilter : IActionFilter, IAsyncResultFilter
     {
 

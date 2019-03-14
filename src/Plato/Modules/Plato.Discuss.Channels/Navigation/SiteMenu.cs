@@ -22,18 +22,18 @@ namespace Plato.Discuss.Channels.Navigation
                 return;
             }
 
-            builder
-                .Add(T["Discuss"], configuration => configuration
-                    .Add(T["Channels"], 1, installed => installed
-                        .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
-                        {
-                            ["opts.id"] = "",
-                            ["opts.alias"] = ""
-                        })
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    )
-                );
+            //builder
+            //    .Add(T["Discuss"], configuration => configuration
+            //        .Add(T["Channels"], 1, installed => installed
+            //            .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
+            //            {
+            //                ["opts.id"] = "",
+            //                ["opts.alias"] = ""
+            //            })
+            //            //.Permission(Permissions.ManageRoles)
+            //            .LocalNav()
+            //        )
+            //    );
 
         }
     }

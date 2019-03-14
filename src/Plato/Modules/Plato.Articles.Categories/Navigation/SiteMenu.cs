@@ -21,18 +21,18 @@ namespace Plato.Articles.Categories.Navigation
                 return;
             }
 
-            builder
-                .Add(T["Articles"], configuration => configuration
-                    .Add(T["Categories"], 1, categories => categories
-                        .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
-                        {
-                            ["opts.categoryId"] = null,
-                            ["opts.alias"] = null
-                        })
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    )
-                );
+            //builder
+            //    .Add(T["Articles"], configuration => configuration
+            //        .Add(T["Categories"], 1, categories => categories
+            //            .Action("Index", "Home", "Plato.Articles.Categories", new RouteValueDictionary()
+            //            {
+            //                ["opts.categoryId"] = null,
+            //                ["opts.alias"] = null
+            //            })
+            //            //.Permission(Permissions.ManageRoles)
+            //            .LocalNav()
+            //        )
+            //    );
 
         }
     }

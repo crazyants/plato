@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +27,7 @@ namespace Plato.Users.Services
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IPlatoUserStore<TUser> _platoUserStore;
         private readonly IUserColorProvider _userColorProvider;
-
+        private readonly IUserSecurityStampStore<TUser> _securityStampStore;
         private readonly IStringLocalizer<PlatoUserManager<TUser>> T;
 
         public PlatoUserManager(
@@ -37,7 +38,8 @@ namespace Plato.Users.Services
             IPlatoUserStore<TUser> platoUserStore,
             IUserColorProvider userColorProvider, 
             IClientIpAddress clientIpAddress,
-            IBroker broker)
+            IBroker broker, 
+            IUserSecurityStampStore<TUser> securityStampStore)
         {
             _siteSettingsStore = siteSettingsStore;
             _platoUserStore = platoUserStore;
@@ -45,6 +47,7 @@ namespace Plato.Users.Services
             _userColorProvider = userColorProvider;
             _clientIpAddress = clientIpAddress;
             _broker = broker;
+            _securityStampStore = securityStampStore;
 
             T = stringLocalizer;
 
@@ -136,7 +139,7 @@ namespace Plato.Users.Services
             {
                 model.TimeZone = settings.TimeZone;
             }
-
+            
             model.PhotoColor = _userColorProvider.GetColor();
             model.SignatureHtml = await ParseSignatureHtml(model.Signature);
 
@@ -158,6 +161,9 @@ namespace Plato.Users.Services
                     await _userManager.AddToRoleAsync(model, role);
                 }
             }
+
+            // Add security stamp
+            await _securityStampStore.SetSecurityStampAsync(model, System.Guid.NewGuid().ToString(), new CancellationToken());
 
             // Invoke UserCreating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this, "UserCreating"))
