@@ -22,18 +22,18 @@ namespace Plato.Discuss.Tags.Navigation
                 return;
             }
 
-            builder
-                .Add(T["Discuss"], configuration => configuration
-                    .Add(T["Tags"], 4, installed => installed
-                        .Action("Index", "Home", "Plato.Discuss.Tags", new RouteValueDictionary()
-                        {
-                            ["opts.id"] = "",
-                            ["opts.alias"] = ""
-                        })
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    )
-                );
+            //builder
+            //    .Add(T["Discuss"], configuration => configuration
+            //        .Add(T["Tags"], 4, installed => installed
+            //            .Action("Index", "Home", "Plato.Discuss.Tags", new RouteValueDictionary()
+            //            {
+            //                ["opts.id"] = "",
+            //                ["opts.alias"] = ""
+            //            })
+            //            //.Permission(Permissions.ManageRoles)
+            //            .LocalNav()
+            //        )
+            //    );
 
         }
     }

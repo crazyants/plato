@@ -728,7 +728,7 @@
 /* Labels */
 /* ------------------------- */
 
-.label { background-color: #E4ECF5; color: #007bff; border-radius: 0.25rem !important; }
+.label { background-color: #E4ECF5; color: #007bff; border-radius: 0.25rem; }
 .label-outline { border: 1px solid #CBDCFF; }
 a.label:hover, .label.active { background: #007bff; color: #fff; }
 

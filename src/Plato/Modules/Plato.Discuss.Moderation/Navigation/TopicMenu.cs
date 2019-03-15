@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 
@@ -24,7 +19,6 @@ namespace Plato.Discuss.Moderation.Navigation
 
         public TopicMenu(
             IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor,
             IModeratorStore<Moderator> moderatorStore)
         {
             T = localizer;

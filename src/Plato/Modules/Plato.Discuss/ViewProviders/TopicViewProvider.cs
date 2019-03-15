@@ -80,7 +80,10 @@ namespace Plato.Discuss.ViewProviders
                 {
                     EntityId = topic.Id,
                     EditorHtmlName = EditorHtmlName
-                }).Zone("footer")
+                }).Zone("footer").Order(int.MinValue),
+                View<EntityViewModel<Topic, Reply>>("Home.Display.Actions", model => viewModel)
+                    .Zone("actions")
+                    .Order(int.MaxValue)
             );
 
         }

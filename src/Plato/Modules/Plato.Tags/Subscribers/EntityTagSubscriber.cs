@@ -13,6 +13,7 @@ namespace Plato.Tags.Subscribers
         private readonly ITagStore<Tag> _tagStore;
         private readonly ITagManager<Tag> _tagManager;
         private readonly IBroker _broker;
+        private readonly IEntityTagStore<EntityTag> _entityTagStore;
 
         /// <summary>
         /// Updates tag metadata whenever a entity & tag relationship is added or removed.
@@ -23,11 +24,13 @@ namespace Plato.Tags.Subscribers
         public EntityTagSubscriber(
             ITagManager<Tag> tagManager,
             ITagStore<Tag> tagStore,
-            IBroker broker)
+            IBroker broker, 
+            IEntityTagStore<EntityTag> entityTagStore)
         {
             _tagManager = tagManager;
             _tagStore = tagStore;
             _broker = broker;
+            _entityTagStore = entityTagStore;
         }
 
         #region "Implementation"
@@ -97,11 +100,20 @@ namespace Plato.Tags.Subscribers
                 return entityTag;
             }
 
-            // Update tag
-            tag.TotalEntities = tag.TotalEntities + 1;
+            // Get count for entities & replies tagged with this tag
+            var entityTags = await _entityTagStore.QueryAsync()
+                .Take(1)
+                .Select<EntityTagQueryParams>(q =>
+                {
+                    q.TagId.Equals(tag.Id);
+                })
+                .ToList();
+            
+            // Update 
+            tag.TotalEntities = entityTags?.Total ?? 0;
             tag.LastSeenDate = DateTimeOffset.Now;
 
-            // Persist label updates
+            // Persist 
             await _tagManager.UpdateAsync(tag);
 
             return entityTag;

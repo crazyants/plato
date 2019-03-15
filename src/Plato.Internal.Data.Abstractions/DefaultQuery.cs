@@ -43,7 +43,7 @@ namespace Plato.Internal.Data.Abstractions
         public abstract IQuery<TModel> Select<T>(Action<T> configure) where T : new();
         
         public abstract Task<IPagedResults<TModel>> ToList();
-
+        
         public IQuery<TModel> OrderBy(string columnName, OrderBy sortOrder = Abstractions.OrderBy.Asc)
         {
             // We always need a key

@@ -2,9 +2,11 @@
 {
     public interface IQueryBuilder
     {
+
         string BuildSqlPopulate();
 
         string BuildSqlCount();
+
     }
 
 }

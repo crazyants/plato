@@ -1,10 +1,10 @@
 
 /* replies */
 
-.topic-reply-left { float: left; }
-.topic-reply-left + .topic-reply-body { position: relative; margin-left: 56px; }
+.topic-reply-left { }
+.topic-reply-left + .topic-reply-body { position: relative; }
 .topic-reply-right { float: right; }
-.topic-reply-right + .topic-reply-body { position: relative; margin-right: 56px; }
+.topic-reply-right + .topic-reply-body { position: relative; }
 
 .topic-reply-left a.avatar-link { float: left; margin-top: 1.1rem; }
 .topic-reply-left  .avatar { width: 36px; height: 36px; }

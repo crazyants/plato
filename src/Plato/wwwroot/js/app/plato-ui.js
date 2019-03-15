@@ -4238,8 +4238,7 @@ $(function (win, doc, $) {
             },
             getIndex: function ($caller, item) {
                 var ensureUnique = $caller.data("tagIt").ensureUnique,
-                    tagit = $caller.data("tagIt"),
-                    items = tagit.items,
+                    items = $caller.data("tagIt").items,
                     index = -1;
                 if (ensureUnique === false) {
                     return index;

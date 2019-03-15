@@ -43,13 +43,12 @@ namespace Plato.Tags.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.LabelId.Value,
-                Params.EntityId.Value
+                Params.Keywords.Value
             );
 
             return data;
         }
-
+        
     }
 
     #endregion
@@ -59,14 +58,21 @@ namespace Plato.Tags.Stores
     public class EntityTagQueryParams
     {
 
-        private WhereInt _labelId;
+        private WhereString _keywords;
+        private WhereInt _tagId;
         private WhereInt _entityId;
         private WhereInt _entityReplyId;
 
-        public WhereInt LabelId
+        public WhereString Keywords
         {
-            get => _labelId ?? (_labelId = new WhereInt());
-            set => _labelId = value;
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
+        }
+        
+        public WhereInt TagId
+        {
+            get => _tagId ?? (_tagId = new WhereInt());
+            set => _tagId = value;
         }
 
         public WhereInt EntityId
@@ -81,7 +87,6 @@ namespace Plato.Tags.Stores
             set => _entityReplyId = value;
         }
         
-
     }
 
     #endregion
@@ -126,7 +131,7 @@ namespace Plato.Tags.Stores
             sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
-
+        
         public string BuildSqlCount()
         {
             var whereClause = BuildWhereClause();
@@ -179,12 +184,21 @@ namespace Plato.Tags.Stores
         {
             var sb = new StringBuilder();
 
-            // LabelId
-            if (_query.Params.LabelId.Value > -1)
+            // TagId
+            if (_query.Params.TagId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.LabelId.Operator);
-                sb.Append(_query.Params.LabelId.ToSqlString("et.Id"));
+                    sb.Append(_query.Params.TagId.Operator);
+                sb.Append(_query.Params.TagId.ToSqlString("et.TagId"));
+            }
+
+
+            // TagId
+            if (_query.Params.TagId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TagId.Operator);
+                sb.Append(_query.Params.TagId.ToSqlString("et.TagId"));
             }
 
             // EntityId
@@ -203,6 +217,15 @@ namespace Plato.Tags.Stores
                 sb.Append(_query.Params.EntityReplyId.ToSqlString("et.EntityReplyId"));
             }
 
+            // Keywords
+            if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("t.[Name]", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("t.Description", "Keywords"));
+            }
 
             return sb.ToString();
 

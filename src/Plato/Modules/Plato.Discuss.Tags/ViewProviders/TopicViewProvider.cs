@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Models;
@@ -85,9 +86,15 @@ namespace Plato.Discuss.Tags.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Topic topic, IViewProviderContext context)
         {
-            return Task.FromResult(default(IViewProviderResult));
+            return Task.FromResult(Views(
+                View<EditTopicTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditTopicTagsViewModel()
+                    {
+                        HtmlName = TagsHtmlName
+                    }).Zone("footer")
+                    .Order(int.MaxValue)
+            ));
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext context)
@@ -149,18 +156,16 @@ namespace Plato.Discuss.Tags.ViewProviders
                 }
 
             }
-            
-            var viewModel = new EditTopicTagsViewModel()
-            {
-                Tags = tagsJson,
-                HtmlName = TagsHtmlName
-            };
 
             return Views(
-                View<EditTopicTagsViewModel>("Topic.Tags.Edit.Footer", model => viewModel).Zone("content")
+                View<EditTopicTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditTopicTagsViewModel()
+                    {
+                        Tags = tagsJson,
+                        HtmlName = TagsHtmlName
+                    }).Zone("content")
                     .Order(int.MaxValue)
             );
-            
+
         }
         
         public override Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
@@ -188,11 +193,16 @@ namespace Plato.Discuss.Tags.ViewProviders
                 // Build tags to remove
                 var tagsToRemove = new List<EntityTag>();
 
-                // Iterate over existing tags
+                // Get all existing tags for entity
                 var existingTags = await GetEntityTagsByEntityIdAsync(topic.Id);
-                if (existingTags != null)
+
+                // Exclude replies
+                var existingTagsList = existingTags?.Where(t => t.EntityReplyId == 0).ToList();
+                
+                // Iterate over existing tags reducing our tags to add
+                if (existingTagsList != null)
                 {
-                    foreach (var entityTag in existingTags)
+                    foreach (var entityTag in existingTagsList)
                     {
                         // Is our existing tag in our list of tags to add
                         var existingTag = tagsToAdd.FirstOrDefault(t => t.Id == entityTag.TagId);
@@ -224,7 +234,7 @@ namespace Plato.Discuss.Tags.ViewProviders
                 // Get authenticated user
                 var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-                // Add new entity labels
+                // Add new entity tags
                 foreach (var tag in tagsToAdd)
                 {
                     var result = await _entityTagManager.CreateAsync(new EntityTag()
@@ -337,7 +347,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             if (entityId == 0)
             {
-                // return empty collection for new topics
+                // return null for new entities
                 return null;
             }
             

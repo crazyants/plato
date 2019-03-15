@@ -1,65 +1,31 @@
 ﻿@model EditEntityReplyViewModel
 
-
-
-<div class="resizable resizable-bottom resizable-hidden transition" data-provide="resizeable">
-    <div class="resizable-bar">
-        <i class="fal fa-bars"></i>
-    </div>
-    <div class="resizable-container">    
-        <div class="resizable-header">
-            <h6 class="d-inline-block text-uppercase">@T["Post a reply"]</h6>
-            <a href="#" data-toggle="tooltip" title="@T["Close Reply"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
-        </div>
-        <div class="resizable-body">
-
-            <div id="postReply">
-
-                <div class="topic-reply-left">
-                    @if (this.CurrentUser != null)
-                    {
-                        <a href="#" class="avatar-link">
-                            <avatar data-toggle="tooltip" title="@this.CurrentUser.DisplayName" class="avatar" url="@this.CurrentUser.Avatar.Url" />
-                        </a>
-                    }
-                </div>
-                <div class="topic-reply-body">
-
-                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
-
-                        <card>
-                            <card-body>
-
-                                <input type="hidden" asp-for="EntityId" />
-
-                                @await DisplayAsync(new View("Editor", new
-                                {
-                                    value = string.Empty,
-                                    placeHolderText = T["Post a reply..."],
-                                    htmlName = @Model.EditorHtmlName,
-                                    autoFocus = false
-                                }))
-
-                            </card-body>
-                        </card>
-
-                        <card>
-                            <card-body>
-
-                                <div class="float-right">
-                                    <a href="#" class="btn btn-lg btn-secondary resizable-close">@T["Cancel"]</a>
-                                    <button type="submit" class="btn btn-lg btn-primary">
-                                        @T["Post Reply"]
-                                    </button>
-                                </div>
-                            </card-body>
-                        </card>
-
-                    </form>
-
-                </div>
-            </div>
-            
-        </div>
-    </div>
+<div class="list-left topic-reply-left">
+    @if (this.CurrentUser != null)
+    {
+        <a href="#" class="avatar-link">
+            <avatar data-toggle="tooltip" title="@this.CurrentUser.DisplayName" class="avatar" url="@this.CurrentUser.Avatar.Url" />
+        </a>
+    }
 </div>
+<div class="list-body topic-reply-body">
+
+        <card>
+            <card-body>
+
+                <input type="hidden" asp-for="EntityId" />
+
+                @await DisplayAsync(new View("Editor", new
+                {
+                    value = string.Empty,
+                    placeHolderText = T["Post a reply..."],
+                    htmlName = @Model.EditorHtmlName,
+                    autoFocus = false
+                }))
+
+            </card-body>
+        </card>
+    
+
+</div>
+
