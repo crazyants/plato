@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities.Services;
@@ -11,9 +8,6 @@ using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss.ViewProviders
 {

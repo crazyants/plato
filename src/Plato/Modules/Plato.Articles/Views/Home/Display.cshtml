@@ -1,10 +1,8 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Topic";
+    ViewData["Title"] = "Article";
 }
-
 <div class="layout">
-
     <div class="layout-header">
         @if (Model.Alerts != null)
         {
@@ -31,7 +29,6 @@
             </div>
         }
     </div>
-
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
@@ -40,19 +37,35 @@
                 {
                     <view model="@Model.Content"></view>
                 }
-                <div class="layout-footer">
-                    @if (Model.Actions != null)
-                    {
-                        <div class="float-right layout-actions">
-                            <view model="@Model.Actions" />
+                <div class="resizable resizable-bottom resizable-hidden transition" data-provide="resizeable">
+                    <div class="resizable-bar">
+                        <i class="fal fa-bars"></i>
+                    </div>
+                    <div class="resizable-container">
+                        <div class="resizable-header">
+                            <h6 class="d-inline-block text-uppercase">@T["Post a reply"]</h6>
+                            <a href="#" data-toggle="tooltip" title="@T["Close Reply"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
                         </div>
-                    }
-                    @if (Model.Footer != null)
-                    {
-                        <div class="layout-footer-item">
-                            <view model="@Model.Footer"></view>
+                        <div class="resizable-body">
+
+                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
+                                <div id="postReply">
+                                    @if (Model.Footer != null)
+                                    {
+                                        <div>
+                                            <view model="@Model.Footer"></view>
+                                        </div>
+                                    }
+                                    @if (Model.Actions != null)
+                                    {
+                                        <div>
+                                            <view model="@Model.Actions" />
+                                        </div>
+                                    }
+                                </div>
+                            </form>
                         </div>
-                    }
+                    </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-12">
@@ -66,25 +79,38 @@
     else
     {
         @if (Model.Content != null)
-         {
-             <view model="@Model.Content"></view>
-         }
-        <div class="layout-footer">
-            @if (Model.Actions != null)
-            {
-                <div class="float-right layout-actions">
-                    <view model="@Model.Actions" />
+        {
+            <view model="@Model.Content"></view>
+        }
+        <div class="resizable resizable-bottom resizable-hidden transition" data-provide="resizeable">
+            <div class="resizable-bar">
+                <i class="fal fa-bars"></i>
+            </div>
+            <div class="resizable-container">
+                <div class="resizable-header">
+                    <h6 class="d-inline-block text-uppercase">@T["Post a reply"]</h6>
+                    <a href="#" data-toggle="tooltip" title="@T["Close Reply"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
                 </div>
-            }
-            @if (Model.Footer != null)
-            {
-                <div class="layout-footer-item">
-                    <view model="@Model.Footer"></view>
-                </div>
-            }
-        </div>
-    }
+                <div class="resizable-body">
 
-    
+                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
+                        @if (Model.Footer != null)
+                        {
+                            <div>
+                                <view model="@Model.Footer"></view>
+                            </div>
+                        }
+                        @if (Model.Actions != null)
+                        {
+                            <div>
+                                <view model="@Model.Actions" />
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
 
 </div>

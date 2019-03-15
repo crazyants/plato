@@ -76,7 +76,11 @@ namespace Plato.Articles.ViewProviders
                 {
                     EntityId = article.Id,
                     EditorHtmlName = EditorHtmlName
-                }).Zone("footer")
+                }).Zone("footer"),
+                View<EntityViewModel<Article, Comment>>("Home.Display.Actions", model => viewModel)
+                    .Zone("actions")
+                    .Order(int.MaxValue)
+
             );
 
         }

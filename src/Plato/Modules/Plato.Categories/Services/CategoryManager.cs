@@ -85,22 +85,24 @@ namespace Plato.Categories.Services
                 model.SortOrder = await GetNextAvailableSortOrder(model);
             }
             
-            // Publish CategoryCreating event
-            _broker.Pub<TCategory>(this, new MessageOptions()
+            // Invoke CategoryCreating subscriptions
+            foreach (var handler in _broker.Pub<TCategory>(this, "CategoryCreating"))
             {
-                Key = "CategoryCreating"
-            }, model);
-
+                model = await handler.Invoke(new Message<TCategory>(model, this));
+            }
+            
             var result = new CommandResult<TCategory>();
 
             var category = await _categoryStore.CreateAsync(model);
             if (category != null)
             {
-                // Publish CategoryCreated event
-                _broker.Pub<TCategory>(this, new MessageOptions()
+             
+                // Invoke CategoryCreated subscriptions
+                foreach (var handler in _broker.Pub<TCategory>(this, "CategoryCreated"))
                 {
-                    Key = "CategoryCreated"
-                }, category);
+                    category = await handler.Invoke(new Message<TCategory>(category, this));
+                }
+
                 // Return success
                 return result.Success(category);
             }
@@ -139,23 +141,25 @@ namespace Plato.Categories.Services
             model.ModifiedUserId = user?.Id ?? 0;
             model.ModifiedDate = DateTime.UtcNow;
             model.Alias = await ParseAlias(model.Name);
-            
-            // Publish CategoryUpdating event
-            _broker.Pub<TCategory>(this, new MessageOptions()
+         
+            // Invoke CategoryUpdating subscriptions
+            foreach (var handler in _broker.Pub<TCategory>(this, "CategoryUpdating"))
             {
-                Key = "CategoryUpdating"
-            }, model);
-
+                model = await handler.Invoke(new Message<TCategory>(model, this));
+            }
+            
             var result = new CommandResult<TCategory>();
 
             var category = await _categoryStore.UpdateAsync(model);
             if (category != null)
             {
-                // Publish CategoryUpdated event
-                _broker.Pub<TCategory>(this, new MessageOptions()
+
+                // Invoke CategoryUpdated subscriptions
+                foreach (var handler in _broker.Pub<TCategory>(this, "CategoryUpdated"))
                 {
-                    Key = "CategoryUpdated"
-                }, category);
+                    model = await handler.Invoke(new Message<TCategory>(model, this));
+                }
+                
                 // Return success
                 return result.Success(category);
             }
@@ -172,12 +176,12 @@ namespace Plato.Categories.Services
             {
                 throw new ArgumentNullException(nameof(model));
             }
-
+            
             // Publish CategoryDeleting event
-            _broker.Pub<TCategory>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TCategory>(this, "CategoryDeleting"))
             {
-                Key = "CategoryDeleting"
-            }, model);
+                model = await handler.Invoke(new Message<TCategory>(model, this));
+            }
 
             var result = new CommandResult<TCategory>();
             if (await _categoryStore.DeleteAsync(model))
@@ -197,10 +201,10 @@ namespace Plato.Categories.Services
                 }
 
                 // Publish CategoryDeleted event
-                _broker.Pub<TCategory>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<TCategory>(this, "CategoryDeleted"))
                 {
-                    Key = "CategoryDeleted"
-                }, model);
+                    model = await handler.Invoke(new Message<TCategory>(model, this));
+                }
 
                 // Return success
                 return result.Success();
@@ -208,8 +212,7 @@ namespace Plato.Categories.Services
             }
             
             return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the category"));
-
-
+            
         }
 
         public async Task<ICommandResult<TCategory>> AddToRoleAsync(TCategory model, string roleName)
@@ -313,8 +316,6 @@ namespace Plato.Categories.Services
                 throw new ArgumentNullException(nameof(roleName));
             }
 
-            var result = new CommandResult<TCategory>();
-
             var role = await _roleStore.GetByNameAsync(roleName);
             if (role == null)
             {
@@ -329,7 +330,7 @@ namespace Plato.Categories.Services
 
             foreach (var localRole in roles)
             {
-                if (localRole.Id == role.Id)
+                if (localRole.RoleId == role.Id)
                 {
                     return true;
                 }

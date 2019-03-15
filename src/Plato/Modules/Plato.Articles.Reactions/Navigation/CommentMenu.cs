@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Entities.Reactions.ViewModels;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Reactions.Navigation
@@ -42,7 +41,7 @@ namespace Plato.Articles.Reactions.Navigation
                     {
                         model = new ReactionMenuViewModel()
                         {
-                            ModuleId = "Plato Articles Reactions",
+                            ModuleId = "Plato.Articles.Reactions",
                             Entity = entity,
                             Reply = reply
                         }

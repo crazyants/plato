@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
@@ -32,17 +31,13 @@ namespace Plato.Categories.Stores
             _logger = logger;
             _dbQuery = dbQuery;
         }
-
-        #region "Implementation"
-
+        
         public async Task<CategoryRole> CreateAsync(CategoryRole model)
         {
             var result = await _categoryRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByCategoryIdKey, model.CategoryId);
+                ClearCache(model);
             }
 
             return result;
@@ -53,9 +48,7 @@ namespace Plato.Categories.Stores
             var result = await _categoryRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByCategoryIdKey, model.CategoryId);
+                ClearCache(model);
             }
 
             return result;
@@ -73,9 +66,7 @@ namespace Plato.Categories.Stores
                     _logger.LogInformation("Deleted category role for category '{0}' with id {1}",
                         model.CategoryId, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByCategoryIdKey, model.CategoryId);
+                ClearCache(model);
             }
 
             return success;
@@ -99,38 +90,13 @@ namespace Plato.Categories.Stores
         public async Task<IPagedResults<CategoryRole>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting entities for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
-                }
-
-                return await _categoryRoleRepository.SelectAsync(args);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryRoleRepository.SelectAsync(args));
         }
-
-        #endregion
-        
+      
         public async Task<IEnumerable<CategoryRole>> GetByCategoryIdAsync(int categoryId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByCategoryIdKey, categoryId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting roles for category Id '{0}'",
-                        categoryId);
-                }
-
-                return await _categoryRoleRepository.SelectByCategoryIdAsync(categoryId);
-           
-            });
-
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryRoleRepository.SelectByCategoryIdAsync(categoryId));
         }
 
         public async Task<bool> DeleteByCategoryIdAsync(int categoryId)
@@ -169,6 +135,13 @@ namespace Plato.Categories.Stores
             }
 
             return success;
+        }
+
+        void ClearCache(CategoryRole model)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+            _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
+            _cacheManager.CancelTokens(this.GetType(), ByCategoryIdKey, model.CategoryId);
         }
     }
 

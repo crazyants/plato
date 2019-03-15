@@ -166,9 +166,9 @@ namespace Plato.Categories.Repositories
                             output = new List<CategoryRole>();
                             while (await reader.ReadAsync())
                             {
-                                var category = new CategoryRole();
-                                category.PopulateModel(reader);
-                                output.Add(category);
+                                var categoryRole = new CategoryRole();
+                                categoryRole.PopulateModel(reader);
+                                output.Add(categoryRole);
                             }
 
                         }
@@ -176,7 +176,7 @@ namespace Plato.Categories.Repositories
                         return output;
                     },
                     categoryId);
-                
+
             }
 
             return output;

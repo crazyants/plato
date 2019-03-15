@@ -62,7 +62,11 @@ namespace Plato.Discuss.Channels
             // Admin view providers
             services.AddScoped<IViewProviderManager<ChannelAdmin>, ViewProviderManager<ChannelAdmin>>();
             services.AddScoped<IViewProvider<ChannelAdmin>, AdminViewProvider>();
-            
+         
+            // Category role view providers
+            services.AddScoped<IViewProviderManager<ChannelAdmin>, ViewProviderManager<ChannelAdmin>>();
+            services.AddScoped<IViewProvider<ChannelAdmin>, ChannelRolesViewProvider>();
+
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
 
