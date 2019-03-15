@@ -1,14 +1,14 @@
-﻿@model EditLabelViewModel
+﻿@model EditTagViewModel
 
-@if (Model.IsNewLabel)
+@if (Model.IsNewTag)
 {
-    <h4>@T["Add Label"]</h4>
-    <span class="text-muted">@T["Channels help group & organize conversations."]</span>
+    <h4>@T["Add Tag"]</h4>
+    <span class="text-muted">@T["Tags help relate similar conversations."]</span>
 }
 else
 {
-    <h4>@T["Edit Label"]</h4>
-    <span class="text-muted">@T["Edit an existing channel."]</span>
+    <h4>@T["Edit Tag"]</h4>
+    <span class="text-muted">@T["Edit an existing tag."]</span>
 }
 
 <hr />

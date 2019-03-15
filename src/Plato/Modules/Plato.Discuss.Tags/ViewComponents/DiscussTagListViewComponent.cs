@@ -18,32 +18,32 @@ namespace Plato.Discuss.Tags.ViewComponents
             new SortColumn()
             {
                 Text = "Popular",
-                Value = SortBy.Entities
+                Value = TagSortBy.Entities
             },
             new SortColumn()
             {
                 Text = "Follows",
-                Value =  SortBy.Follows
+                Value =  TagSortBy.Follows
             },
             new SortColumn()
             {
                 Text = "Views",
-                Value = SortBy.Views
+                Value = TagSortBy.Views
             },
             new SortColumn()
             {
                 Text = "First Use",
-                Value =  SortBy.Created
+                Value =  TagSortBy.Created
             },
             new SortColumn()
             {
                 Text = "Last Use",
-                Value = SortBy.LastEntity
+                Value = TagSortBy.LastEntity
             },
             new SortColumn()
             {
                 Text = "Modified",
-                Value = SortBy.Modified
+                Value = TagSortBy.Modified
             }
         };
 

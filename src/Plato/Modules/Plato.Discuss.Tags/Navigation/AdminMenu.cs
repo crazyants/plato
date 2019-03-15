@@ -22,7 +22,7 @@ namespace Plato.Discuss.Tags.Navigation
 
             builder
                 .Add(T["Discuss"], 1, users => users
-                    .Add(T["Tags"], 3, manage => manage
+                    .Add(T["Tags"], 4, manage => manage
                         .Action("Index", "Admin", "Plato.Discuss.Tags")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

@@ -25,7 +25,7 @@
                             }
 
                         }
-                        var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
+                        var iconCss = option.Value == Model.Options.TagSort ? "fal fa-fw fa-check" : "fal fa-fw";
                         <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
                             <i class="@iconCss"></i>
                             @T[option.Text]
@@ -36,7 +36,7 @@
                     {
                         var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
                         {
-                            ["opts.sort"] = Model.Options.Sort,
+                            ["opts.sort"] = Model.Options.TagSort,
                             ["opts.order"] = option.Value
                         };
                         var iconCss = option.Value == Model.Options.Order ? "fal fa-fw fa-check" : "fal fa-fw";

@@ -47,6 +47,10 @@ namespace Plato.Discuss.Tags
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
             services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
+        
+            // Admin view providers
+            services.AddScoped<IViewProviderManager<TagAdmin>, ViewProviderManager<TagAdmin>>();
+            services.AddScoped<IViewProvider<TagAdmin>, AdminViewProvider>();
 
             // Tag view providers
             services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();

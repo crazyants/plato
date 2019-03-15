@@ -27,7 +27,7 @@ namespace Plato.Tags.ViewModels
 
         public string Search { get; set; }
         
-        public SortBy Sort { get; set; } = SortBy.Entities;
+        public TagSortBy TagSort { get; set; } = TagSortBy.Entities;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;
         
@@ -39,7 +39,7 @@ namespace Plato.Tags.ViewModels
     {
         public string Text { get; set; }
 
-        public SortBy Value { get; set; }
+        public TagSortBy Value { get; set; }
         
     }
     
@@ -51,7 +51,8 @@ namespace Plato.Tags.ViewModels
 
     }
 
-    public enum SortBy {
+    public enum TagSortBy {
+        Auto,
         Id,
         Name,
         Description,
