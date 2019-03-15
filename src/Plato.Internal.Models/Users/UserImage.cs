@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Internal.Models.Users
 {
 
-    public class UserImage : IModel<UserImage>
+    public class UserImage : IDbModel<UserImage>
     {
 
         #region "Public Properties"

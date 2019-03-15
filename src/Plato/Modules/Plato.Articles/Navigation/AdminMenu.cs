@@ -23,8 +23,8 @@ namespace Plato.Articles.Navigation
             builder
                 .Add(T["Articles"], 2, users => users
                     .IconCss("fal fa-copy")
-                    .Add(T["Settings"], 999, create => create
-                        .Action("Index", "Admin", "Plato.Discuss")
+                    .Add(T["Overview"], int.MinValue, home => home
+                        .Action("Index", "Admin", "Plato.Articles")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));

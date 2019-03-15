@@ -78,8 +78,10 @@ namespace Plato.Discuss.Channels.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Admin", "Plato.Admin")
                     .LocalNav()
-                );
-
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Admin", "Plato.Discuss")
+                    .LocalNav());
+            
                 if (parents == null)
                 {
                     builder.Add(S["Channels"]);
@@ -131,12 +133,15 @@ namespace Plato.Discuss.Channels.Controllers
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Channels"], channels => channels
-                    .Action("Index", "Admin", "Plato.Discuss.Channels")
-                    .LocalNav()
-                ).Add(S["Add Channel"]);
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Channels"], channels => channels
+                        .Action("Index", "Admin", "Plato.Discuss.Channels")
+                        .LocalNav()
+                    ).Add(S["Add Channel"]);
             });
             
             // We need to pass along the featureId
@@ -211,12 +216,15 @@ namespace Plato.Discuss.Channels.Controllers
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Channels"], channels => channels
-                    .Action("Index", "Admin", "Plato.Discuss.Channels")
-                    .LocalNav()
-                ).Add(S["Edit Channel"]);
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Channels"], channels => channels
+                        .Action("Index", "Admin", "Plato.Discuss.Channels")
+                        .LocalNav()
+                    ).Add(S["Edit Channel"]);
             });
             
             var category = await _categoryStore.GetByIdAsync(id);

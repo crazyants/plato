@@ -7,7 +7,7 @@ using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Models.Users
 {
-    public class UserRole : IdentityUserRole<int>, IModel<UserRole>
+    public class UserRole : IdentityUserRole<int>, IDbModel<UserRole>
     {
         public int Id { get; set; }
 

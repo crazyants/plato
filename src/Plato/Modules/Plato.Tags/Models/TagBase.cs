@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Tags.Models
 {
     
-    public class Tag : IModel<Tag>, ITag
+    public class TagBase : ITag
     {
 
         public int Id { get; set; }

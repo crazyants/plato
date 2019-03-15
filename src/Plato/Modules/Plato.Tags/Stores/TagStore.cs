@@ -12,22 +12,21 @@ using Plato.Tags.Repositories;
 namespace Plato.Tags.Stores
 {
 
-    public class TagStore : ITagStore<Tag>
+    public class TagStore<TModel> : ITagStore<TModel> where TModel : class, ITag
     {
-
-
+        
         public const string ByName = "ByName";
         public const string ByNameNormalized = "ByNameNormalized";
 
-        private readonly ITagRepository<Tag> _tagRepository;
+        private readonly ITagRepository<TModel> _tagRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly ILogger<TagStore> _logger;
+        private readonly ILogger<TModel> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public TagStore(
-            ITagRepository<Tag> tagRepository,
+            ITagRepository<TModel> tagRepository,
             ICacheManager cacheManager,
-            ILogger<TagStore> logger,
+            ILogger<TModel> logger,
             IDbQueryConfiguration dbQuery)
         {
             _tagRepository = tagRepository;
@@ -35,33 +34,31 @@ namespace Plato.Tags.Stores
             _logger = logger;
             _dbQuery = dbQuery;
         }
-        
-        #region "Implementation
-        
-        public async Task<Tag> CreateAsync(Tag model)
+  
+        public async Task<TModel> CreateAsync(TModel model)
         {
             var result = await _tagRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return result;
         }
 
-        public async Task<Tag> UpdateAsync(Tag model)
+        public async Task<TModel> UpdateAsync(TModel model)
         {
 
             var result = await _tagRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return result;
         }
 
-        public async Task<bool> DeleteAsync(Tag model)
+        public async Task<bool> DeleteAsync(TModel model)
         {
             var success = await _tagRepository.DeleteAsync(model.Id);
             if (success)
@@ -71,13 +68,13 @@ namespace Plato.Tags.Stores
                     _logger.LogInformation("Deleted email '{0}' with id {1}",
                         model.Name, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return success;
         }
         
-        public async Task<Tag> GetByIdAsync(int id)
+        public async Task<TModel> GetByIdAsync(int id)
         {
             if (id <= 0)
             {
@@ -88,13 +85,13 @@ namespace Plato.Tags.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagRepository.SelectByIdAsync(id));
         }
         
-        public IQuery<Tag> QueryAsync()
+        public IQuery<TModel> QueryAsync()
         {
-            var query = new TagQuery(this);
-            return _dbQuery.ConfigureQuery<Tag>(query); ;
+            var query = new TagQuery<TModel>(this);
+            return _dbQuery.ConfigureQuery<TModel>(query); ;
         }
 
-        public async Task<IPagedResults<Tag>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<TModel>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -111,24 +108,13 @@ namespace Plato.Tags.Stores
             });
         }
 
-        public async Task<IEnumerable<Tag>> GetByFeatureIdAsync(int featureId)
+        public async Task<IEnumerable<TModel>> GetByFeatureIdAsync(int featureId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), featureId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting tags for feature with Id '{0}'",
-                        featureId);
-                }
-
-                return await _tagRepository.SelectByFeatureIdAsync(featureId);
-                
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagRepository.SelectByFeatureIdAsync(featureId));
         }
 
-        public async Task<Tag> GetByNameAsync(string name)
+        public async Task<TModel> GetByNameAsync(string name)
         {
             if (String.IsNullOrEmpty(name))
             {
@@ -140,7 +126,7 @@ namespace Plato.Tags.Stores
 
         }
 
-        public async Task<Tag> GetByNameNormalizedAsync(string nameNormalized)
+        public async Task<TModel> GetByNameNormalizedAsync(string nameNormalized)
         {
             if (String.IsNullOrEmpty(nameNormalized))
             {
@@ -152,7 +138,18 @@ namespace Plato.Tags.Stores
 
         }
 
-        #endregion
+        void CancelTokens(TModel model)
+        {
+            // Current type
+            _cacheManager.CancelTokens(this.GetType());
+
+            // Base type
+            if (this.GetType() != typeof(TagStore<TagBase>))
+            {
+                _cacheManager.CancelTokens(typeof(TagStore<TagBase>));
+            }
+            
+        }
 
     }
 

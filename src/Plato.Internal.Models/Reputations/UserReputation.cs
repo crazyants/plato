@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Internal.Models.Reputations
 {
 
-    public class UserReputation : IModel<UserReputation>
+    public class UserReputation : IDbModel<UserReputation>
     {
 
         public int Id { get; set; }

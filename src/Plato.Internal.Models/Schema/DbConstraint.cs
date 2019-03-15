@@ -9,7 +9,7 @@ namespace Plato.Internal.Models.Schema
     /// <summary>
     /// Models a constraint type in the database.
     /// </summary>
-    public class DbConstraint : IModel<DbConstraint>
+    public class DbConstraint : IDbModel<DbConstraint>
     {
 
         // PRIMARY KEY - A combination of a NOT NULL and UNIQUE. Uniquely identifies each row in a table

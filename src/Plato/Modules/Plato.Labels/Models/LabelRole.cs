@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Labels.Models
 {
-    public class LabelRole : IModel<LabelRole>
+    public class LabelRole : IDbModel<LabelRole>
     {
 
         public int Id { get; set; }

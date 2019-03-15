@@ -7,7 +7,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Moderation.Models
 {
-    public class Moderator : IModel<Moderator>
+    public class Moderator : IDbModel<Moderator>
     {
         
         public int Id { get; set; }

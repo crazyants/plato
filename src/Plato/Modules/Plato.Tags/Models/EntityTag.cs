@@ -2,12 +2,11 @@
 using System.Data;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models;
 
 namespace Plato.Tags.Models
 {
 
-    public class EntityTag : Tag, IModel<EntityTag>
+    public class EntityTag : TagBase, IDbModel<EntityTag>
     {
 
         public int EntityId { get; set; }

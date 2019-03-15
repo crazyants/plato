@@ -78,10 +78,14 @@ namespace Plato.Discuss.Labels.Controllers
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Labels"]);
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Labels"]);
             });
             
             // Get default options
@@ -123,13 +127,17 @@ namespace Plato.Discuss.Labels.Controllers
 
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Labels"], labels => labels
-                    .Action("Index", "Admin", "Plato.Discuss.Labels")
-                    .LocalNav()
-                ).Add(S["Add Label"]);
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Labels"], labels => labels
+                        .Action("Index", "Admin", "Plato.Discuss.Labels")
+                        .LocalNav())
+                    .Add(S["Add Label"]);
             });
             
             // We need to pass along the featureId
@@ -190,12 +198,15 @@ namespace Plato.Discuss.Labels.Controllers
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Labels"], labels => labels
-                    .Action("Index", "Admin", "Plato.Discuss.Labels")
-                    .LocalNav()
-                ).Add(S["Edit Label"]);
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Labels"], labels => labels
+                        .Action("Index", "Admin", "Plato.Discuss.Labels")
+                        .LocalNav())
+                    .Add(S["Edit Label"]);
             });
             
             var category = await _labelStore.GetByIdAsync(id);

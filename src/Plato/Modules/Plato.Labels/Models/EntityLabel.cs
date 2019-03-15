@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Labels.Models
 {
-    public class EntityLabel : IModel<EntityLabel>
+    public class EntityLabel : IDbModel<EntityLabel>
     {
 
         public int Id { get; set; }

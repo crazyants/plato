@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Routing
 @using Plato.Internal.Data.Abstractions
-@model TagIndexViewModel
+@model TagIndexViewModel<Tag>
 
 <card class="card card-body-flush">
     <card-title>
@@ -70,9 +70,9 @@
                             : "infinite-scroll-item";
                         <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12">
                             <div class="@css" data-infinite-scroll-offset="@rowOffset" data-infinite-scroll-highlight="@rowOffset">
-                                @await DisplayAsync(new View("TagListItem", new
+                                @await DisplayAsync(new View("DiscussTagListItem", new
                                 {
-                                    model = new TagListItemViewModel()
+                                    model = new TagListItemViewModel<Tag>()
                                     {
                                         Tag = tag,
                                         EnableEdit = Model.Options.EnableEdit

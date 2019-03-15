@@ -1,9 +1,9 @@
-﻿@model TagIndexViewModel
+﻿@model TagIndexViewModel<Tag>
 @{
     Layout = null;
 }
 
-@await DisplayAsync(new View("GetTagList", new
+@await DisplayAsync(new View("DiscussGetTagList", new
 {
     options = @Model.Options,
     pager = @Model.Pager

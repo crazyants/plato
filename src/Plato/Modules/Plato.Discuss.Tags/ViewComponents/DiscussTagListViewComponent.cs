@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Discuss.Tags.Services;
-using Plato.Discuss.Tags.ViewModels;
+using Plato.Discuss.Tags.Models;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Tags.ViewModels;
+using Plato.Tags.Services;
 
 namespace Plato.Discuss.Tags.ViewComponents
 {
 
-    public class TagListViewComponent : ViewComponent
+    public class DiscussTagListViewComponent : ViewComponent
     {
 
         private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
@@ -62,17 +62,15 @@ namespace Plato.Discuss.Tags.ViewComponents
         };
 
 
-        private readonly ITagService _tagService;
+        private readonly ITagService<Tag> _tagService;
         
-        public TagListViewComponent(
-            ITagService tagService)
+        public DiscussTagListViewComponent(
+            ITagService<Tag> tagService)
         {
             _tagService = tagService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            TagIndexOptions options,
-            PagerOptions pager)
+        public async Task<IViewComponentResult> InvokeAsync(TagIndexOptions options, PagerOptions pager)
         {
 
             if (options == null)
@@ -89,19 +87,18 @@ namespace Plato.Discuss.Tags.ViewComponents
 
         }
 
-        async Task<TagIndexViewModel> GetViewModel(
-            TagIndexOptions options,
-            PagerOptions pager)
+        async Task<TagIndexViewModel<Tag>> GetViewModel(TagIndexOptions options, PagerOptions pager)
         {
 
             // Get tags
-            var results = await _tagService.GetTagsAsunc(options, pager);
+            var results = await _tagService
+                .GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
 
             // Return view model
-            return new TagIndexViewModel
+            return new TagIndexViewModel<Tag>
             {
                 SortColumns = _defaultSortColumns,
                 SortOrder = _defaultSortOrder,

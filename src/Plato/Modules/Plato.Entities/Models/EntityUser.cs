@@ -6,7 +6,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
-    public class EntityUser : SimpleUser, IModel<EntityUser>
+    public class EntityUser : SimpleUser, IDbModel<EntityUser>
     {
 
         public int LastReplyId { get; set; }

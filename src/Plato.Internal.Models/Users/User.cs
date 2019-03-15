@@ -10,7 +10,7 @@ using Plato.Internal.Abstractions;
 namespace Plato.Internal.Models.Users
 {
     
-    public class User : IdentityUser<int>, IUser, IModel<User>
+    public class User : IdentityUser<int>, IUser, IDbModel<User>
     {
         
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;

@@ -7,15 +7,15 @@ using Plato.Discuss.Tags.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
+using Plato.Tags.ViewModels;
 
 namespace Plato.Discuss.Tags.ViewProviders
 {
-    public class TagViewProvider : BaseViewProvider<DiscussTag>
+    public class TagViewProvider : BaseViewProvider<Tag>
     {
 
         private readonly ITagStore<Tag> _tagStore;
@@ -37,25 +37,25 @@ namespace Plato.Discuss.Tags.ViewProviders
         
         #region "Imlementation"
         
-        public override Task<IViewProviderResult> BuildIndexAsync(DiscussTag tag, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Tag tag, IViewProviderContext context)
         {
 
             // Get index view model from context
-            var viewModel = context.Controller.HttpContext.Items[typeof(TagIndexViewModel)] as TagIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(TagIndexViewModel<Tag>)] as TagIndexViewModel<Tag>;
             if (viewModel == null)
             {
-                throw new Exception($"A view model of type {typeof(TagIndexViewModel).ToString()} has not been registered on the HttpContext!");
+                throw new Exception($"A view model of type {typeof(TagIndexViewModel<Tag>).ToString()} has not been registered on the HttpContext!");
             }
 
             return Task.FromResult(Views(
-                View<TagIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
-                View<TagIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
-                View<TagIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content").Order(1)
+                View<TagIndexViewModel<Tag>>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
+                View<TagIndexViewModel<Tag>>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
+                View<TagIndexViewModel<Tag>>("Home.Index.Content", model => viewModel).Zone("content").Order(1)
             ));
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussTag tag, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
         {
 
             // Get topic index view model from context
@@ -90,10 +90,10 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             // Build view
             return Views(
-                View<Tag>("Home.Display.Header", model => tag).Zone("header").Order(1),
-                View<Tag>("Home.Display.Tools", model => tag).Zone("tools").Order(1),
+                View<TagBase>("Home.Display.Header", model => tag).Zone("header").Order(1),
+                View<TagBase>("Home.Display.Tools", model => tag).Zone("tools").Order(1),
                 View<TagDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<TagsViewModel>("Topic.Tags.Index.Sidebar", model =>
+                View<TagsViewModel<Tag>>("Topic.Tags.Index.Sidebar", model =>
                 {
                     model.SelectedTagId = tag?.Id ?? 0;
                     model.Tags = tags?.Data;
@@ -103,12 +103,12 @@ namespace Plato.Discuss.Tags.ViewProviders
             
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(DiscussTag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Tag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(DiscussTag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Tag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

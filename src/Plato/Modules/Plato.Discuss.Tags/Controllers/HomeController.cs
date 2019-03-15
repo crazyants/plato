@@ -10,9 +10,9 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Stores;
-using Plato.Discuss.Tags.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Tags.ViewModels;
 
 namespace Plato.Discuss.Tags.Controllers
 {
@@ -20,8 +20,8 @@ namespace Plato.Discuss.Tags.Controllers
     public class HomeController : Controller, IUpdateModel
     {
         
-        private readonly IViewProviderManager<DiscussTag> _tagViewProvider;
-        private readonly ITagStore<Tag> _tagStore;
+        private readonly IViewProviderManager<Tag> _tagViewProvider;
+        private readonly ITagStore<TagBase> _tagStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
@@ -31,10 +31,10 @@ namespace Plato.Discuss.Tags.Controllers
         public IStringLocalizer S { get; }
         
         public HomeController(
-            IViewProviderManager<DiscussTag> tagViewProvider,
+            IViewProviderManager<Tag> tagViewProvider,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            ITagStore<Tag> tagStore,
+            ITagStore<TagBase> tagStore,
             IContextFacade contextFacade,
             IAlerter alerter,
             IBreadCrumbManager breadCrumbManager, 
@@ -101,14 +101,14 @@ namespace Plato.Discuss.Tags.Controllers
                 this.RouteData.Values.Add("pager.size", pager.Size);
 
             // Build view model
-            var viewModel = new TagIndexViewModel()
+            var viewModel = new TagIndexViewModel<Tag>()
             {
                 Options = opts,
                 Pager = pager
             };
 
             // Add view model to context
-            HttpContext.Items[typeof(TagIndexViewModel)] = viewModel;
+            HttpContext.Items[typeof(TagIndexViewModel<Tag>)] = viewModel;
             
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -118,7 +118,7 @@ namespace Plato.Discuss.Tags.Controllers
             }
             
             // Return view
-            return View(await _tagViewProvider.ProvideIndexAsync(new DiscussTag(), this));
+            return View(await _tagViewProvider.ProvideIndexAsync(new Tag(), this));
 
         }
         
@@ -200,7 +200,7 @@ namespace Plato.Discuss.Tags.Controllers
             }
             
             // Return view
-            return View(await _tagViewProvider.ProvideDisplayAsync(new DiscussTag(tag), this));
+            return View(await _tagViewProvider.ProvideDisplayAsync(new Tag(tag), this));
 
         }
         

@@ -11,19 +11,19 @@ namespace Plato.Tags.Stores
 
     #region "TagQuery"
 
-    public class TagQuery : DefaultQuery<Tag>
+    public class TagQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore<Tag> _store;
+        private readonly IStore<TModel> _store;
 
-        public TagQuery(IStore<Tag> store)
+        public TagQuery(IStore<TModel> store)
         {
             _store = store;
         }
 
         public TagQueryParams Params { get; set; }
 
-        public override IQuery<Tag> Select<T>(Action<T> configure)
+        public override IQuery<TModel> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -31,10 +31,10 @@ namespace Plato.Tags.Stores
             return this;
         }
 
-        public override async Task<IPagedResults<Tag>> ToList()
+        public override async Task<IPagedResults<TModel>> ToList()
         {
 
-            var builder = new TagQueryBuilder(this);
+            var builder = new TagQueryBuilder<TModel>(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
@@ -102,16 +102,16 @@ namespace Plato.Tags.Stores
 
     #region "TagQueryBuilder"
 
-    public class TagQueryBuilder : IQueryBuilder
+    public class TagQueryBuilder<TModel> : IQueryBuilder where TModel : class
     {
         #region "Constructor"
 
         private readonly string _tagsTableName;
         private readonly string _entityTagsTableName;
 
-        private readonly TagQuery _query;
+        private readonly TagQuery<TModel> _query;
 
-        public TagQueryBuilder(TagQuery query)
+        public TagQueryBuilder(TagQuery<TModel> query)
         {
             _query = query;
             _tagsTableName = GetTableNameWithPrefix("Tags");

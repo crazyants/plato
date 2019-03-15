@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Media.Models
 {
 
-    public class Media : IModel<Media>
+    public class Media : IDbModel<Media>
     {
 
         #region "Public Properties"

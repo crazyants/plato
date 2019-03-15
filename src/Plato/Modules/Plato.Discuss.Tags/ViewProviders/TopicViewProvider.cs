@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Models;
+using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
@@ -17,6 +17,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
+using Plato.Tags.ViewModels;
 
 namespace Plato.Discuss.Tags.ViewProviders
 {
@@ -76,7 +77,7 @@ namespace Plato.Discuss.Tags.ViewProviders
                 .ToList();
 
             return Views(
-                View<TagsViewModel>("Topic.Tags.Index.Sidebar", model =>
+                View<TagsViewModel<Tag>>("Topic.Tags.Index.Sidebar", model =>
                 {
                     model.Tags = tags?.Data;
                     return model;
@@ -89,7 +90,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         public override Task<IViewProviderResult> BuildDisplayAsync(Topic topic, IViewProviderContext context)
         {
             return Task.FromResult(Views(
-                View<EditTopicTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditTopicTagsViewModel()
+                View<EditEntityTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         HtmlName = TagsHtmlName
                     }).Zone("footer")
@@ -158,7 +159,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             }
 
             return Views(
-                View<EditTopicTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditTopicTagsViewModel()
+                View<EditEntityTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         Tags = tagsJson,
                         HtmlName = TagsHtmlName
@@ -263,10 +264,10 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         #region "Private Methods"
 
-        async Task<List<Tag>> GetTagsToAddAsync(Topic topic)
+        async Task<List<TagBase>> GetTagsToAddAsync(Topic topic)
         {
          
-            var tagsToAdd = new List<Tag>();
+            var tagsToAdd = new List<TagBase>();
             foreach (var key in _request.Form.Keys)
             {
                 if (key.Equals(TagsHtmlName))
@@ -320,7 +321,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         }
 
-        async Task<Tag> CreateTag(string name, int entityId)
+        async Task<TagBase> CreateTag(string name, int entityId)
         {
 
             // Get feature for tag

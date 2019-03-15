@@ -1,8 +1,9 @@
 ﻿using System;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Tags.Models
 {
-    public interface ITag
+    public interface ITag : IDbModel<TagBase>
     {
 
         int Id { get; set; }

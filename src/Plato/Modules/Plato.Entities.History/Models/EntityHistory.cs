@@ -6,7 +6,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.History.Models
 {
-    public class EntityHistory : IModel<EntityHistory>
+    public class EntityHistory : IDbModel<EntityHistory>
     {
 
         public int Id { get; set; }

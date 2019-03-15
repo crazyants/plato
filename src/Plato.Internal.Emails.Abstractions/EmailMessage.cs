@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Emails.Abstractions
 {
-    public class EmailMessage : IModel<EmailMessage>
+    public class EmailMessage : IDbModel<EmailMessage>
     {
         
         public int Id { get; set; }

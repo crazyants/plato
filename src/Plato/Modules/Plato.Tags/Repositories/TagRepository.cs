@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Tags.Models;
 
 namespace Plato.Tags.Repositories
 {
-    public class TagRepository : ITagRepository<Tag>
+    public class TagRepository<TModel> : ITagRepository<TModel> where TModel : class, ITag
     {
         
         private readonly IDbContext _dbContext;
-        private readonly ILogger<TagRepository> _logger;
+        private readonly ILogger<TagRepository<TModel>> _logger;
 
         public TagRepository(
             IDbContext dbContext,
-            ILogger<TagRepository> logger)
+            ILogger<TagRepository<TModel>> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -25,7 +26,7 @@ namespace Plato.Tags.Repositories
 
         #region "Implementation"
 
-        public async Task<Tag> InsertUpdateAsync(Tag tag)
+        public async Task<TModel> InsertUpdateAsync(TModel tag)
         {
             if (tag == null)
             {
@@ -54,12 +55,13 @@ namespace Plato.Tags.Repositories
 
         }
 
-        public async Task<Tag> SelectByIdAsync(int id)
+   
+        public async Task<TModel> SelectByIdAsync(int id)
         {
-            Tag tag = null;
+            TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync<Tag>(
+                tag = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagById",
                     async reader =>
@@ -67,7 +69,7 @@ namespace Plato.Tags.Repositories
                         if ((reader != null) && (reader.HasRows))
                         {
                             await reader.ReadAsync();
-                            tag = new Tag();
+                            tag = ActivateInstanceOf<TModel>.Instance();
                             tag.PopulateModel(reader);
                         }
 
@@ -82,24 +84,24 @@ namespace Plato.Tags.Repositories
 
         }
 
-        public async Task<IPagedResults<Tag>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
         {
-            IPagedResults<Tag> output = null;
+            IPagedResults<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<Tag>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectTagsPaged",
                     async reader =>
                     {
                         if ((reader != null) && (reader.HasRows))
                         {
-                            output = new PagedResults<Tag>();
+                            output = new PagedResults<TModel>();
                             while (await reader.ReadAsync())
                             {
-                                var entity = new Tag();
-                                entity.PopulateModel(reader);
-                                output.Data.Add(entity);
+                                var tag = ActivateInstanceOf<TModel>.Instance();
+                                tag.PopulateModel(reader);
+                                output.Data.Add(tag);
                             }
 
                             if (await reader.NextResultAsync())
@@ -139,23 +141,23 @@ namespace Plato.Tags.Repositories
             return success > 0 ? true : false;
         }
 
-        public async Task<IEnumerable<Tag>> SelectByFeatureIdAsync(int featureId)
+        public async Task<IEnumerable<TModel>> SelectByFeatureIdAsync(int featureId)
         {
 
-            IList<Tag> output = null;
+            IList<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<Tag>>(
+                output = await context.ExecuteReaderAsync<IList<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectTagsByFeatureId",
                     async reader =>
                     {
                         if ((reader != null) && (reader.HasRows))
                         {
-                            output = new List<Tag>();
+                            output = new List<TModel>();
                             while (await reader.ReadAsync())
                             {
-                                var tag = new Tag();
+                                var tag = ActivateInstanceOf<TModel>.Instance();
                                 tag.PopulateModel(reader);
                                 output.Add(tag);
                             }
@@ -172,12 +174,12 @@ namespace Plato.Tags.Repositories
             return output;
         }
 
-        public async Task<Tag> SelectByNameAsync(string name)
+        public async Task<TModel> SelectByNameAsync(string name)
         {
-            Tag tag = null;
+            TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync<Tag>(
+                tag = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagByName",
                     async reader =>
@@ -185,7 +187,7 @@ namespace Plato.Tags.Repositories
                         if ((reader != null) && (reader.HasRows))
                         {
                             await reader.ReadAsync();
-                            tag = new Tag();
+                            tag = ActivateInstanceOf<TModel>.Instance();
                             tag.PopulateModel(reader);
                         }
 
@@ -200,12 +202,12 @@ namespace Plato.Tags.Repositories
             return tag;
         }
 
-        public async Task<Tag> SelectByNameNormalizedAsync(string nameNormalized)
+        public async Task<TModel> SelectByNameNormalizedAsync(string nameNormalized)
         {
-            Tag tag = null;
+            TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync<Tag>(
+                tag = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagByNameNormalized",
                     async reader =>
@@ -213,7 +215,7 @@ namespace Plato.Tags.Repositories
                         if ((reader != null) && (reader.HasRows))
                         {
                             await reader.ReadAsync();
-                            tag = new Tag();
+                            tag = ActivateInstanceOf<TModel>.Instance();
                             tag.PopulateModel(reader);
                         }
 

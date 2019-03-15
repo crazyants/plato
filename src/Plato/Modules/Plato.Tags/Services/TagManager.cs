@@ -10,16 +10,16 @@ using Plato.Tags.Stores;
 namespace Plato.Tags.Services
 {
     
-    public class TagManager : ITagManager<Tag>
+    public class TagManager<TModel> : ITagManager<TModel> where TModel : class, ITag
     {
 
-        private readonly ITagStore<Tag> _tagStore;
+        private readonly ITagStore<TModel> _tagStore;
         private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
         private readonly IAliasCreator _aliasCreator;
 
         public TagManager(
-            ITagStore<Tag> tagStore,
+            ITagStore<TModel> tagStore,
             IContextFacade contextFacade,
             IBroker broker,
             IAliasCreator aliasCreator)
@@ -32,7 +32,7 @@ namespace Plato.Tags.Services
 
         #region "Implementation"
 
-        public async Task<ICommandResult<Tag>> CreateAsync(Tag model)
+        public async Task<ICommandResult<TModel>> CreateAsync(TModel model)
         {
 
             // Validate
@@ -66,13 +66,13 @@ namespace Plato.Tags.Services
             
 
             // Invoke TagCreating subscriptions
-            foreach (var handler in _broker.Pub<Tag>(this, "TagCreating"))
+            foreach (var handler in _broker.Pub<TModel>(this, "TagCreating"))
             {
-                model = await handler.Invoke(new Message<Tag>(model, this));
+                model = await handler.Invoke(new Message<TModel>(model, this));
             }
 
             // Create result
-            var result = new CommandResult<Tag>();
+            var result = new CommandResult<TModel>();
 
             // Persist to database
             var newEntityTag = await _tagStore.CreateAsync(model);
@@ -80,9 +80,9 @@ namespace Plato.Tags.Services
             {
 
                 // Invoke TagCreated subscriptions
-                foreach (var handler in _broker.Pub<Tag>(this, "TagCreated"))
+                foreach (var handler in _broker.Pub<TModel>(this, "TagCreated"))
                 {
-                    newEntityTag = await handler.Invoke(new Message<Tag>(newEntityTag, this));
+                    newEntityTag = await handler.Invoke(new Message<TModel>(newEntityTag, this));
                 }
 
                 // Return success
@@ -94,7 +94,7 @@ namespace Plato.Tags.Services
 
         }
 
-        public async Task<ICommandResult<Tag>> UpdateAsync(Tag model)
+        public async Task<ICommandResult<TModel>> UpdateAsync(TModel model)
         {
 
             // Validate
@@ -125,13 +125,13 @@ namespace Plato.Tags.Services
             model.Alias = await ParseAlias(model.Name);
 
             // Invoke TagUpdating subscriptions
-            foreach (var handler in _broker.Pub<Tag>(this, "TagUpdating"))
+            foreach (var handler in _broker.Pub<TModel>(this, "TagUpdating"))
             {
-                model = await handler.Invoke(new Message<Tag>(model, this));
+                model = await handler.Invoke(new Message<TModel>(model, this));
             }
 
             // Create result
-            var result = new CommandResult<Tag>();
+            var result = new CommandResult<TModel>();
 
             // Persist to database
             var updatedEntityTag = await _tagStore.UpdateAsync(model);
@@ -139,9 +139,9 @@ namespace Plato.Tags.Services
             {
 
                 // Invoke TagUpdated subscriptions
-                foreach (var handler in _broker.Pub<Tag>(this, "TagUpdated"))
+                foreach (var handler in _broker.Pub<TModel>(this, "TagUpdated"))
                 {
-                    updatedEntityTag = await handler.Invoke(new Message<Tag>(updatedEntityTag, this));
+                    updatedEntityTag = await handler.Invoke(new Message<TModel>(updatedEntityTag, this));
                 }
 
                 // Return success
@@ -153,7 +153,7 @@ namespace Plato.Tags.Services
 
         }
 
-        public async Task<ICommandResult<Tag>> DeleteAsync(Tag model)
+        public async Task<ICommandResult<TModel>> DeleteAsync(TModel model)
         {
 
             // Validate
@@ -163,19 +163,19 @@ namespace Plato.Tags.Services
             }
 
             // Invoke TagDeleting subscriptions
-            foreach (var handler in _broker.Pub<Tag>(this, "TagDeleting"))
+            foreach (var handler in _broker.Pub<TModel>(this, "TagDeleting"))
             {
-                model = await handler.Invoke(new Message<Tag>(model, this));
+                model = await handler.Invoke(new Message<TModel>(model, this));
             }
 
-            var result = new CommandResult<Tag>();
+            var result = new CommandResult<TModel>();
             if (await _tagStore.DeleteAsync(model))
             {
 
                 // Invoke TagDeleted subscriptions
-                foreach (var handler in _broker.Pub<Tag>(this, "TagDeleted"))
+                foreach (var handler in _broker.Pub<TModel>(this, "TagDeleted"))
                 {
-                    model = await handler.Invoke(new Message<Tag>(model, this));
+                    model = await handler.Invoke(new Message<TModel>(model, this));
                 }
 
                 // Return success

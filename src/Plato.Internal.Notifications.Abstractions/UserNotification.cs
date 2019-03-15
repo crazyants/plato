@@ -7,7 +7,7 @@ using Plato.Internal.Models.Users;
 namespace Plato.Internal.Notifications.Abstractions
 {
     
-    public class UserNotification : IModel<UserNotification>
+    public class UserNotification : IDbModel<UserNotification>
     {
 
         public int Id { get; set; }

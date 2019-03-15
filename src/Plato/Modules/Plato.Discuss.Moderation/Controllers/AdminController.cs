@@ -85,10 +85,14 @@ namespace Plato.Discuss.Moderation.Controllers
 
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Moderators"]);
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Moderators"]);
             });
 
             var model = await _viewProvider.ProvideIndexAsync(new Moderator(), this);
@@ -101,14 +105,17 @@ namespace Plato.Discuss.Moderation.Controllers
 
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Moderators"], moderators => moderators
-                    .Action("Index", "Admin", "Plato.Discuss.Moderation")
-                    .LocalNav()
-                ).Add(S["Add Moderator"]);
-                ;
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Moderators"], moderators => moderators
+                        .Action("Index", "Admin", "Plato.Discuss.Moderation")
+                        .LocalNav())
+                    .Add(S["Add Moderator"]);
             });
 
             var model = await _viewProvider.ProvideEditAsync(new Moderator(), this);
@@ -208,16 +215,20 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 return NotFound();
             }
-            
+
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Moderators"], moderators => moderators
-                    .Action("Index", "Admin", "Plato.Discuss.Moderation")
-                    .LocalNav()
-                ).Add(S["Edit Moderator"]);
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Moderators"], moderators => moderators
+                        .Action("Index", "Admin", "Plato.Discuss.Moderation")
+                        .LocalNav())
+                    .Add(S["Edit Moderator"]);
             });
             
             var result = await _viewProvider.ProvideEditAsync(moderator, this);

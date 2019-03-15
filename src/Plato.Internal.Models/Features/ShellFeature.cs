@@ -8,7 +8,7 @@ using Plato.Internal.Models.Shell;
 
 namespace Plato.Internal.Models.Features
 {
-    public class ShellFeature : IShellFeature, IModel<ShellFeature>
+    public class ShellFeature : IShellFeature, IDbModel<ShellFeature>
     {
 
         public int Id { get; set; }

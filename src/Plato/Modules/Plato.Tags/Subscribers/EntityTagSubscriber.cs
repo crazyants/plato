@@ -10,8 +10,8 @@ namespace Plato.Tags.Subscribers
     public class EntityTagSubscriber : IBrokerSubscriber
     {
 
-        private readonly ITagStore<Tag> _tagStore;
-        private readonly ITagManager<Tag> _tagManager;
+        private readonly ITagStore<TagBase> _tagStore;
+        private readonly ITagManager<TagBase> _tagManager;
         private readonly IBroker _broker;
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
 
@@ -22,8 +22,8 @@ namespace Plato.Tags.Subscribers
         /// <param name="tagStore"></param>
         /// <param name="broker"></param>
         public EntityTagSubscriber(
-            ITagManager<Tag> tagManager,
-            ITagStore<Tag> tagStore,
+            ITagManager<TagBase> tagManager,
+            ITagStore<TagBase> tagStore,
             IBroker broker, 
             IEntityTagStore<EntityTag> entityTagStore)
         {

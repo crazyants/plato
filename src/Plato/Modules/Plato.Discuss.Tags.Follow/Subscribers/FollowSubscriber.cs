@@ -11,14 +11,14 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
     public class FollowSubscriber : IBrokerSubscriber
     {
 
-        private readonly ITagStore<Tag> _tagStore;
+        private readonly ITagStore<TagBase> _tagStore;
         private readonly IBroker _broker;
         private readonly IUserReputationAwarder _reputationAwarder;
 
         public FollowSubscriber(
             IBroker broker,
             IUserReputationAwarder reputationAwarder,
-            ITagStore<Tag> tagStore)
+            ITagStore<TagBase> tagStore)
         {
             _broker = broker;
             _reputationAwarder = reputationAwarder;

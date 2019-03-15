@@ -1,4 +1,4 @@
-﻿@model TagIndexViewModel
+﻿@model TagIndexViewModel<Tag>
 
 @if (Model.Results?.Data != null)
 {
@@ -11,9 +11,9 @@
              : "infinite-scroll-item";
          <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12 p-0">
              <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
-                 @await DisplayAsync(new View("TagListItem", new
+                 @await DisplayAsync(new View("DiscussTagListItem", new
                  {
-                     model = new TagListItemViewModel()
+                     model = new TagListItemViewModel<Tag>()
                      {
                          Tag = tag,
                          EnableEdit = Model.Options.EnableEdit

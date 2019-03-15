@@ -43,8 +43,8 @@ namespace Plato.Discuss.Tags.Follow
             services.AddScoped<INotificationProvider<Topic>, NewTagWeb>();
             
             // View providers
-            services.AddScoped<IViewProviderManager<DiscussTag>, ViewProviderManager<DiscussTag>>();
-            services.AddScoped<IViewProvider<DiscussTag>, TagViewProvider>();
+            services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
+            services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
 
             // Subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();

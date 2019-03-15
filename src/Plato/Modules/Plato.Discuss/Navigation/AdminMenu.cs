@@ -23,7 +23,7 @@ namespace Plato.Discuss.Navigation
             builder
                 .Add(T["Discuss"], 1, users => users
                     .IconCss("fal fa-comment-alt fa-flip-y")
-                    .Add(T["Settings"], 999, create => create
+                    .Add(T["Overview"], int.MinValue, home => home
                         .Action("Index", "Admin", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

@@ -7,7 +7,7 @@ using Plato.Internal.Models.Users;
 namespace Plato.Entities.Reactions.Models
 {
     
-    public class EntityReaction : IModel<EntityReaction>
+    public class EntityReaction : IDbModel<EntityReaction>
     {
 
         public int Id { get; set; }

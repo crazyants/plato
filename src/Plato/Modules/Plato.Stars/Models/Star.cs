@@ -6,7 +6,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Stars.Models
 {
-    public class Star : IModel<Star>
+    public class Star : IDbModel<Star>
     {
 
         public int Id { get; set; }

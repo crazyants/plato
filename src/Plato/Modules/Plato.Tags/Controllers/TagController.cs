@@ -17,13 +17,13 @@ namespace Plato.Tags.Controllers
     public class TagController : BaseWebApiController
     {
 
-        private readonly ITagStore<Tag> _entityStore;
+        private readonly ITagStore<TagBase> _entityStore;
         private readonly IContextFacade _contextFacade;
 
         public TagController(
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
-            ITagStore<Tag> entityStore)
+            ITagStore<TagBase> entityStore)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
@@ -110,7 +110,7 @@ namespace Plato.Tags.Controllers
 
         #region "Private Methods"
 
-        async Task<IPagedResults<Tag>> GetTags(
+        async Task<IPagedResults<TagBase>> GetTags(
             int page,
             int pageSize,
             string keywords,

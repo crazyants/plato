@@ -7,7 +7,7 @@ using Plato.Internal.Models;
 namespace Plato.Mentions.Models
 {
 
-    public class EntityMention : IModel<EntityMention>
+    public class EntityMention : IDbModel<EntityMention>
     {
 
         public int Id { get; set; }

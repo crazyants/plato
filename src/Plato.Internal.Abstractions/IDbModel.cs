@@ -2,7 +2,8 @@
 
 namespace Plato.Internal.Abstractions
 {
-    public interface IModel<T> where T : class
+    
+    public interface IDbModel<T> where T : class
     {
         
         void PopulateModel(IDataReader dr);

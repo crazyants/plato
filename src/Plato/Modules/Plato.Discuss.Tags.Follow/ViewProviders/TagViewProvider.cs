@@ -9,15 +9,15 @@ using Plato.Tags.Stores;
 
 namespace Plato.Discuss.Tags.Follow.ViewProviders
 {
-    public class TagViewProvider : BaseViewProvider<DiscussTag>
+    public class TagViewProvider : BaseViewProvider<Tag>
     {
 
-        private readonly ITagStore<Tag> _tagStore;
+        private readonly ITagStore<TagBase> _tagStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
 
         public TagViewProvider(
-            ITagStore<Tag> tagStore, 
+            ITagStore<TagBase> tagStore, 
             IContextFacade contextFacade,
             IFollowStore<Follows.Models.Follow> followStore)
         {
@@ -26,7 +26,7 @@ namespace Plato.Discuss.Tags.Follow.ViewProviders
             _followStore = followStore;
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussTag tag, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
         {
 
             var existingTag = await _tagStore.GetByIdAsync(tag.Id);
@@ -63,17 +63,17 @@ namespace Plato.Discuss.Tags.Follow.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(DiscussTag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Tag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(DiscussTag discussUser, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Tag user, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(DiscussTag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Tag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

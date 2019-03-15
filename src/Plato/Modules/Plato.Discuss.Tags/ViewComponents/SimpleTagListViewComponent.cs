@@ -21,9 +21,7 @@ namespace Plato.Discuss.Tags.ViewComponents
             _tagStore = tagStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            Topic topic,
-            Reply reply)
+        public async Task<IViewComponentResult> InvokeAsync(Topic topic, Reply reply)
         {
 
             // We always need a topic to display tags

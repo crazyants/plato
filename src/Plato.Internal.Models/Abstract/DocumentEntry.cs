@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Abstract
 {
-    public class DocumentEntry : IModel<DocumentEntry>
+    public class DocumentEntry : IDbModel<DocumentEntry>
     {
 
         #region "Public Properties"

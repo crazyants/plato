@@ -16,6 +16,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Models;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
+using Plato.Tags.ViewModels;
 
 namespace Plato.Discuss.Tags.ViewProviders
 {
@@ -28,8 +29,8 @@ namespace Plato.Discuss.Tags.ViewProviders
         private readonly IEntityReplyStore<Reply> _replyStore;
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
         private readonly IEntityTagManager<EntityTag> _entityTagManager;
-        private readonly ITagStore<Tag> _tagStore;
-        private readonly ITagManager<Tag> _tagManager;
+        private readonly ITagStore<TagBase> _tagStore;
+        private readonly ITagManager<TagBase> _tagManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IContextFacade _contextFacade;
 
@@ -43,9 +44,9 @@ namespace Plato.Discuss.Tags.ViewProviders
             
             IEntityReplyStore<Reply> replyStore,
             IEntityTagStore<EntityTag> entityTagStore, 
-            ITagStore<Tag> tagStore, 
+            ITagStore<TagBase> tagStore, 
             IEntityTagManager<EntityTag> entityTagManager,
-            ITagManager<Tag> tagManager,
+            ITagManager<TagBase> tagManager,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade)
         {
@@ -110,14 +111,14 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             }
 
-            var viewModel = new EditTopicTagsViewModel()
+            var viewModel = new EditEntityTagsViewModel()
             {
                 Tags = tagsJson,
                 HtmlName = TagsHtmlName
             };
 
             return Views(
-                View<EditTopicTagsViewModel>("Topic.Tags.Edit.Footer", model => viewModel).Zone("content")
+                View<EditEntityTagsViewModel>("Topic.Tags.Edit.Footer", model => viewModel).Zone("content")
                     .Order(int.MaxValue)
             );
 
@@ -216,10 +217,10 @@ namespace Plato.Discuss.Tags.ViewProviders
         
         #region "Private Methods"
 
-        async Task<List<Tag>> GetTagsToAddAsync(Reply reply)
+        async Task<List<TagBase>> GetTagsToAddAsync(Reply reply)
         {
 
-            var tagsToAdd = new List<Tag>();
+            var tagsToAdd = new List<TagBase>();
             foreach (var key in _request.Form.Keys)
             {
                 if (key.Equals(TagsHtmlName))
@@ -272,7 +273,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         }
 
-        async Task<Tag> CreateTag(string name, int entityId, int replyId)
+        async Task<TagBase> CreateTag(string name, int entityId, int replyId)
         {
 
             // Get authenticated user
@@ -282,7 +283,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
 
             // Create tag
-            var tagManagerResult = await _tagManager.CreateAsync(new Tag()
+            var tagManagerResult = await _tagManager.CreateAsync(new TagBase()
             {
                 FeatureId = feature?.Id ?? 0,
                 Name = name,

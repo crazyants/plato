@@ -3,12 +3,12 @@ using Plato.Tags.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Tags.ViewModels
+namespace Plato.Tags.ViewModels
 {
-    public class TagIndexViewModel
+    public class TagIndexViewModel<TModel> where TModel : class, ITag
     {
         
-        public IPagedResults<Tag> Results { get; set; }
+        public IPagedResults<TModel> Results { get; set; }
 
         public TagIndexOptions Options { get; set; }
 
@@ -22,6 +22,9 @@ namespace Plato.Discuss.Tags.ViewModels
 
     public class TagIndexOptions
     {
+
+        public int FeatureId { get; set; }
+
         public string Search { get; set; }
         
         public SortBy Sort { get; set; } = SortBy.Entities;
@@ -60,4 +63,5 @@ namespace Plato.Discuss.Tags.ViewModels
         Created,
         Modified
     }
+
 }

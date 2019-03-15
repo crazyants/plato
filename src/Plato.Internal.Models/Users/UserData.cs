@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Internal.Models.Users
 {
     
-    public class UserData : IModel<UserData>
+    public class UserData : IDbModel<UserData>
     {
 
         #region "Public Properties"

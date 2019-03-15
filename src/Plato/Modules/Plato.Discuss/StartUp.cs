@@ -82,7 +82,11 @@ namespace Plato.Discuss
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
-            
+         
+            // Register admin view providers
+            services.AddScoped<IViewProviderManager<AdminHome>, ViewProviderManager<AdminHome>>();
+            services.AddScoped<IViewProvider<AdminHome>, AdminViewProvider>();
+
             // Register view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();

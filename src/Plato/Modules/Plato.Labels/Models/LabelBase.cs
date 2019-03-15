@@ -7,7 +7,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Labels.Models
 {
-    public class LabelBase  : IModel<LabelBase>, ILabel
+    public class LabelBase  : IDbModel<LabelBase>, ILabel
     {
 
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;

@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Categories.Models
 {
     
-    public class CategoryData : IModel<CategoryData>
+    public class CategoryData : IDbModel<CategoryData>
     {
 
         #region "Public Properties"

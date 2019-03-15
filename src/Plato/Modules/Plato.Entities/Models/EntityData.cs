@@ -7,7 +7,7 @@ using Plato.Internal.Models;
 namespace Plato.Entities.Models
 {
     
-    public class EntityData : IModel<EntityData>, IEntityData
+    public class EntityData : IDbModel<EntityData>, IEntityData
     {
 
         #region "Public Properties"

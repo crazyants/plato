@@ -34,8 +34,8 @@ namespace Plato.Articles.Categories.Controllers
         public IStringLocalizer S { get; }
 
         public AdminController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             ICategoryStore<Category> categoryStore,
             IViewProviderManager<CategoryAdmin> viewProvider,
             IBreadCrumbManager breadCrumbManager,
@@ -130,13 +130,14 @@ namespace Plato.Articles.Categories.Controllers
 
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Channels"], channels => channels
-                    .Action("Index", "Admin", "Plato.Articles.Categories")
-                    .LocalNav()
-                ).Add(S["Add Channel"]);
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Channels"], channels => channels
+                        .Action("Index", "Admin", "Plato.Articles.Categories")
+                        .LocalNav())
+                    .Add(S["Add Channel"]);
             });
             
             // We need to pass along the featureId
@@ -210,13 +211,14 @@ namespace Plato.Articles.Categories.Controllers
 
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Channels"], channels => channels
-                    .Action("Index", "Admin", "Plato.Articles.Categories")
-                    .LocalNav()
-                ).Add(S["Edit Channel"]);
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Channels"], channels => channels
+                        .Action("Index", "Admin", "Plato.Articles.Categories")
+                        .LocalNav())
+                    .Add(S["Edit Channel"]);
             });
             
             var category = await _categoryStore.GetByIdAsync(id);

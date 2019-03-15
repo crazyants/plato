@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Categories.Models
 {
-    public class CategoryRole : IModel<CategoryRole>
+    public class CategoryRole : IDbModel<CategoryRole>
     {
 
         public int Id { get; set; }

@@ -14,6 +14,7 @@ using Plato.Tags.Repositories;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
 using Plato.Tags.Subscribers;
+using YamlDotNet.Core.Tokens;
 
 namespace Plato.Tags
 {
@@ -33,17 +34,20 @@ namespace Plato.Tags
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
             
             // Repositories
-            services.AddScoped<ITagRepository<Tag>, TagRepository>();
+            services.AddScoped<ITagRepository<TagBase>, TagRepository<TagBase>>();
             services.AddScoped<IEntityTagsRepository<EntityTag>, EntityTagsRepository>();
 
             // Stores
-            services.AddScoped<ITagStore<Tag>, TagStore>();
+            services.AddScoped<ITagStore<TagBase>, TagStore<TagBase>>();
             services.AddScoped<IEntityTagStore<EntityTag>, EntityTagStore>();
 
             // Managers
-            services.AddScoped<ITagManager<Tag>, TagManager>();
+            services.AddScoped<ITagManager<TagBase>, TagManager<TagBase>>();
             services.AddScoped<IEntityTagManager<EntityTag>, EntityTagManager>();
-
+         
+            // Services
+            services.AddScoped<ITagService<TagBase>, TagService<TagBase>>();
+            
             // Register client assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 

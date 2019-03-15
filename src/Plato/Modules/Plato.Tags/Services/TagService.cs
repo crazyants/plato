@@ -1,35 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Discuss.Tags.ViewModels;
+
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
+using Plato.Tags.ViewModels;
 
-namespace Plato.Discuss.Tags.Services
+namespace Plato.Tags.Services
 {
 
-    public interface ITagService
-    {
-        Task<IPagedResults<Tag>> GetTagsAsunc(TagIndexOptions options, PagerOptions pager);
-    }
 
-    public class TagService : ITagService
+    public class TagService<TModel> : ITagService<TModel> where TModel : class, ITag
     {
-        private readonly ITagStore<Tag> _tagStore;
+        private readonly ITagStore<TModel> _tagStore;
         private readonly IFeatureFacade _featureFacade;
 
         public TagService(
-            ITagStore<Tag> tagStore,
+            ITagStore<TModel> tagStore,
             IFeatureFacade featureFacade)
         {
             _tagStore = tagStore;
             _featureFacade = featureFacade;
         }
 
-        public async Task<IPagedResults<Tag>> GetTagsAsunc(TagIndexOptions options, PagerOptions pager)
+        public async Task<IPagedResults<TModel>> GetResultsAsync(TagIndexOptions options, PagerOptions pager)
         {
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");

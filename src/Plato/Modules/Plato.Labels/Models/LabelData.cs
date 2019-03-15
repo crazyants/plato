@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Labels.Models
 {
     
-    public class LabelData : IModel<LabelData>
+    public class LabelData : IDbModel<LabelData>
     {
 
         #region "Public Properties"

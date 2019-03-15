@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Badges
 {
-    public class UserBadge : IModel<UserBadge>
+    public class UserBadge : IDbModel<UserBadge>
     {
 
         public int Id { get; set; }

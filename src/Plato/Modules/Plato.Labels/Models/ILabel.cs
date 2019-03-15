@@ -7,7 +7,7 @@ using Plato.Internal.Models;
 namespace Plato.Labels.Models
 {
 
-    public interface ILabel : ILabelBase
+    public interface ILabel : ILabelBase, IDbModel<LabelBase>
     {
 
         int ParentId { get; set; }
@@ -43,8 +43,6 @@ namespace Plato.Labels.Models
         void AddOrUpdate(Type type, ISerializable obj);
 
         T GetOrCreate<T>() where T : class;
-
-        void PopulateModel(IDataReader dr);
 
     }
 

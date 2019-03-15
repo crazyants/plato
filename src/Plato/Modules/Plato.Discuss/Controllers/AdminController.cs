@@ -1,35 +1,63 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using Plato.Internal.Abstractions.Settings;
 using System.Threading.Tasks;
-using Plato.Entities.Models;
-using Plato.Entities.Repositories;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
+using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
-using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Discuss.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : Controller, IUpdateModel
     {
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
-   
+        private readonly IViewProviderManager<AdminHome> _viewProvider;
+        private readonly IBreadCrumbManager _breadCrumbManager;
+
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
+
         public AdminController(
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             ISiteSettingsStore settingsStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IViewProviderManager<AdminHome> viewProvider,
+            IBreadCrumbManager breadCrumbManager)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
+            _viewProvider = viewProvider;
+            _breadCrumbManager = breadCrumbManager;
+
+            T = htmlLocalizer;
+            S = stringLocalizer;
+
         }
         
-        public Task<IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            return Task.FromResult((IActionResult)View());
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .LocalNav());
+            });
+
+            // Return view
+            return View(await _viewProvider.ProvideIndexAsync(new AdminHome(), this));
+            
         }
 
-        
+
 
     }
 

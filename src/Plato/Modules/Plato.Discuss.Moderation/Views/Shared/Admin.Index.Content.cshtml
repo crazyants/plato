@@ -1,8 +1,5 @@
 ﻿@model ModeratorIndexViewModel
 
-@Html.Raw(ViewData["claims"])
-
-
 @await DisplayAsync(new View("ModeratorList", new
 {
     filterOpts = @Model.FilterOpts,

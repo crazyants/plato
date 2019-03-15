@@ -9,7 +9,7 @@ namespace Plato.Internal.Models.Users
 {
 
     [TableName("Plato_UserSecret")]
-    public class UserSecret : IModel<UserSecret>
+    public class UserSecret : IDbModel<UserSecret>
     {
 
         #region "Public Properties"

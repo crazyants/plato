@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Search.Models
 {
 
-    public class FullTextCatalog : IModel<FullTextCatalog>
+    public class FullTextCatalog : IDbModel<FullTextCatalog>
     {
 
         public int Id { get; set; }

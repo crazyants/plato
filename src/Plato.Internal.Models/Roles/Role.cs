@@ -8,7 +8,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Internal.Models.Roles
 {
 
-    public class Role : IdentityRole<int>, IModel<Role>
+    public class Role : IdentityRole<int>, IDbModel<Role>
     {
 
         #region "Public Properties"

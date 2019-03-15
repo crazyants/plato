@@ -1,4 +1,4 @@
-﻿@model TagListItemViewModel
+﻿@model TagListItemViewModel<Tag>
 
 <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@Model.Tag.Id" asp-route-opts.alias="@Model.Tag.Alias" class="list-group-item-action d-block p-3">
     <span class="float-right">
