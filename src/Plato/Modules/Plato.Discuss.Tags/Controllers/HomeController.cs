@@ -11,6 +11,8 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Stores;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Tags.ViewModels;
 
@@ -25,6 +27,7 @@ namespace Plato.Discuss.Tags.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,13 +41,15 @@ namespace Plato.Discuss.Tags.Controllers
             IContextFacade contextFacade,
             IAlerter alerter,
             IBreadCrumbManager breadCrumbManager, 
-            IContextFacade contextFacade1)
+            IContextFacade contextFacade1,
+            IFeatureFacade featureFacade)
         {
             _tagStore = tagStore;
             _tagViewProvider = tagViewProvider;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade1;
+            _featureFacade = featureFacade;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -68,21 +73,6 @@ namespace Plato.Discuss.Tags.Controllers
             {
                 pager = new PagerOptions();
             }
-
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                        .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Discuss")
-                        .LocalNav()
-                    ).Add(S["Tags"]);
-            });
             
             // Get default options
             var defaultViewOptions = new TagIndexOptions();
@@ -91,21 +81,17 @@ namespace Plato.Discuss.Tags.Controllers
             // Add non default route data for pagination purposes
             if (opts.Search != defaultViewOptions.Search)
                 this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.TagSort != defaultViewOptions.TagSort)
-                this.RouteData.Values.Add("opts.sort", opts.TagSort);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
             if (opts.Order != defaultViewOptions.Order)
                 this.RouteData.Values.Add("opts.order", opts.Order);
             if (pager.Page != defaultPagerOptions.Page)
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.Size != defaultPagerOptions.Size)
                 this.RouteData.Values.Add("pager.size", pager.Size);
-
+            
             // Build view model
-            var viewModel = new TagIndexViewModel<Tag>()
-            {
-                Options = opts,
-                Pager = pager
-            };
+            var viewModel = await GetIndexViewModelAsync(opts, pager);
 
             // Add view model to context
             HttpContext.Items[typeof(TagIndexViewModel<Tag>)] = viewModel;
@@ -117,6 +103,18 @@ namespace Plato.Discuss.Tags.Controllers
                     return View("GetTags", viewModel);
             }
             
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                ).Add(S["Tags"]);
+            });
+
             // Return view
             return View(await _tagViewProvider.ProvideIndexAsync(new Tag(), this));
 
@@ -145,25 +143,7 @@ namespace Plato.Discuss.Tags.Controllers
             {
                 return NotFound();
             }
-
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                        .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Discuss")
-                        .LocalNav()
-                    ).Add(S["Tags"], labels => labels
-                        .Action("Index", "Home", "Plato.Discuss.Tags")
-                        .LocalNav()
-                    ).Add(S[tag.Name]);
-            });
-
+            
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -183,11 +163,7 @@ namespace Plato.Discuss.Tags.Controllers
                 this.RouteData.Values.Add("pager.size", pager.Size);
 
             // Build view model
-            var viewModel = new EntityIndexViewModel<Topic>()
-            {
-                Options = opts,
-                Pager = pager
-            };
+            var viewModel =  await GetDisplayViewModelAsync(opts, pager);
 
             // Add view model to context
             HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] = viewModel;
@@ -199,13 +175,84 @@ namespace Plato.Discuss.Tags.Controllers
                     return View("GetTopics", viewModel);
             }
             
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                ).Add(S["Tags"], labels => labels
+                    .Action("Index", "Home", "Plato.Discuss.Tags")
+                    .LocalNav()
+                ).Add(S[tag.Name]);
+            });
+
             // Return view
             return View(await _tagViewProvider.ProvideDisplayAsync(new Tag(tag), this));
 
         }
-        
+
         #endregion
-        
+
+        async Task<TagIndexViewModel<Tag>> GetIndexViewModelAsync(TagIndexOptions options, PagerOptions pager)
+        {
+
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+
+            if (options.Sort == TagSortBy.Auto)
+            {
+                options.Sort = TagSortBy.Entities;
+                options.Order = OrderBy.Desc;
+            }
+
+            // Indicate administrator view
+            options.EnableEdit = true;
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+
+            return new TagIndexViewModel<Tag>()
+            {
+                Options = options,
+                Pager = pager
+            };
+
+        }
+
+
+        async Task<EntityIndexViewModel<Topic>> GetDisplayViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        {
+            
+            // Get current feature
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+
+            // Restrict results to current feature
+            if (feature != null)
+            {
+                options.FeatureId = feature.Id;
+            }
+
+            // Set pager call back Url
+            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+            
+            return new EntityIndexViewModel<Topic>()
+            {
+                Options = options,
+                Pager = pager
+            };
+
+        }
+
     }
 
 }

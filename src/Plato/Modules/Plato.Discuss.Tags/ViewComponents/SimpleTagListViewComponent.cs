@@ -21,20 +21,20 @@ namespace Plato.Discuss.Tags.ViewComponents
             _tagStore = tagStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(Topic topic, Reply reply)
+        public async Task<IViewComponentResult> InvokeAsync(Topic entity, Reply reply)
         {
 
-            // We always need a topic to display tags
-            if (topic == null)
+            // We always need a entity to display tags
+            if (entity == null)
             {
-                throw new ArgumentNullException(nameof(topic));
+                throw new ArgumentNullException(nameof(entity));
             }
 
             // Get tags and return view
-            var tags = await _tagStore.GetByEntityId(topic.Id);
+            var tags = await _tagStore.GetByEntityId(entity.Id);
             return View(new TagListViewModel()
             {
-                Topic = topic,
+                Topic = entity,
                 Reply = reply,
                 Tags = tags?
                     .Where(t => t.EntityReplyId == (reply?.Id ?? 0))

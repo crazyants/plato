@@ -17,7 +17,7 @@ namespace Plato.Discuss.Tags.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Popular",
+                Text = "Occurrences",
                 Value = TagSortBy.Entities
             },
             new SortColumn()
@@ -27,24 +27,24 @@ namespace Plato.Discuss.Tags.ViewComponents
             },
             new SortColumn()
             {
-                Text = "Views",
-                Value = TagSortBy.Views
-            },
-            new SortColumn()
-            {
-                Text = "First Use",
+                Text = "Created",
                 Value =  TagSortBy.Created
             },
             new SortColumn()
             {
-                Text = "Last Use",
+                Text = "Last Used",
                 Value = TagSortBy.LastEntity
             },
             new SortColumn()
             {
-                Text = "Modified",
+                Text = "Last Modified",
                 Value = TagSortBy.Modified
-            }
+            },
+            new SortColumn()
+            {
+                Text = "Name",
+                Value = TagSortBy.Name
+            },
         };
 
         private readonly IEnumerable<SortOrder> _defaultSortOrder = new List<SortOrder>()

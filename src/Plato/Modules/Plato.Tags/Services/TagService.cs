@@ -45,7 +45,7 @@ namespace Plato.Tags.Services
                         q.Keywords.Like(options.Search);
                     }
                 })
-                .OrderBy(options.TagSort.ToString(), options.Order)
+                .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
         }
     }

@@ -146,13 +146,13 @@ namespace Plato.Internal.Stores.Roles
         public async Task<IEnumerable<string>> GetRoleNamesByUserIdAsync(int userId)
         {
             var roles = await GetRolesByUserIdAsync(userId);
-            return roles.Select(r => r.Name).OrderBy(r => r).ToList();
+            return roles?.Select(r => r.Name).OrderBy(r => r).ToList();
         }
 
         public async Task<IEnumerable<int>> GetRoleIdsByUserIdAsync(int userId)
         {
             var roles = await GetRolesByUserIdAsync(userId);
-            return roles.Select(r => r.Id).OrderBy(r => r).ToList();
+            return roles?.Select(r => r.Id).OrderBy(r => r).ToList();
         }
 
         void ClearCache(User user)

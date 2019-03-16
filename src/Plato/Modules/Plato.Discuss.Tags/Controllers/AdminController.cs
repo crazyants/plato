@@ -57,6 +57,10 @@ namespace Plato.Discuss.Tags.Controllers
             S = stringLocalizer;
         }
 
+        // ------------
+        // Index
+        // ------------
+
         public async Task<IActionResult> Index(TagIndexOptions opts, PagerOptions pager)
         {
 
@@ -75,19 +79,6 @@ namespace Plato.Discuss.Tags.Controllers
                 pager = new PagerOptions();
             }
 
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder
-                    .Add(S["Home"], home => home
-                        .Action("Index", "Admin", "Plato.Admin")
-                        .LocalNav())
-                    .Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Admin", "Plato.Discuss")
-                        .LocalNav())
-                    .Add(S["Tags"]);
-            });
-            
             // Get default options
             var defaultViewOptions = new TagIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -95,8 +86,8 @@ namespace Plato.Discuss.Tags.Controllers
             // Add non default route data for pagination purposes
             if (opts.Search != defaultViewOptions.Search)
                 this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.TagSort != defaultViewOptions.TagSort)
-                this.RouteData.Values.Add("opts.sort", opts.TagSort);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
             if (opts.Order != defaultViewOptions.Order)
                 this.RouteData.Values.Add("opts.order", opts.Order);
             if (pager.Page != defaultPagerOptions.Page)
@@ -116,12 +107,29 @@ namespace Plato.Discuss.Tags.Controllers
                 if (page > 0)
                     return View("GetTags", viewModel);
             }
-
+            
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Tags"]);
+            });
+            
             // Return view
             return View(await _viewProvider.ProvideIndexAsync(new Tag(), this));
 
         }
-        
+
+        // ------------
+        // Create
+        // ------------
+
         public async Task<IActionResult> Create()
         {
 
@@ -150,8 +158,7 @@ namespace Plato.Discuss.Tags.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(Create))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditTagViewModel viewModel)
         {
 
@@ -189,7 +196,11 @@ namespace Plato.Discuss.Tags.Controllers
             return View(viewModel);
             
         }
-        
+
+        // ------------
+        // Edit
+        // ------------
+
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -213,8 +224,7 @@ namespace Plato.Discuss.Tags.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public  async Task<IActionResult> EditPost(int id)
         {
 
@@ -237,7 +247,11 @@ namespace Plato.Discuss.Tags.Controllers
 
         }
 
-        [HttpPost]
+        // ------------
+        // Delete
+        // ------------
+
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
             
@@ -269,6 +283,8 @@ namespace Plato.Discuss.Tags.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // ------------
+
         async Task<TagIndexViewModel<Tag>> GetIndexViewModelAsync(TagIndexOptions options, PagerOptions pager)
         {
 
@@ -281,9 +297,9 @@ namespace Plato.Discuss.Tags.Controllers
                 options.FeatureId = feature.Id;
             }
 
-            if (options.TagSort == TagSortBy.Auto)
+            if (options.Sort == TagSortBy.Auto)
             {
-                options.TagSort = TagSortBy.Created;
+                options.Sort = TagSortBy.Created;
                 options.Order = OrderBy.Desc;
             }
 

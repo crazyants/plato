@@ -60,7 +60,7 @@ namespace Plato.Roles.ViewProviders
             return Views(
                 View<EditUserRolesViewModel>("User.Roles.Edit.Content", model =>
                     {
-                        model.SelectedRoles = selectedRoles;
+                        model.SelectedRoles = selectedRoles ?? new List<string>();
                         model.HtmlName = HtmlName;
                         return model;
                     }).Order(2)
@@ -70,10 +70,7 @@ namespace Plato.Roles.ViewProviders
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IViewProviderContext context)
         {
-
-            // Get available role names
-            var roleNames = await _platoRoleStore.GetRoleNamesAsync();
-
+   
             // Build selected roles
             var rolesToAdd = new List<string>();
             foreach (var key in _request.Form.Keys)

@@ -72,35 +72,35 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Index(int offset, UserIndexOptions opts, PagerOptions pager)
         {
 
-            var claims = "";
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user?.UserRoles != null)
-            {
-                foreach (var role in user.UserRoles)
-                {
+            //var claims = "";
+            //var user = await _contextFacade.GetAuthenticatedUserAsync();
+            //if (user?.UserRoles != null)
+            //{
+            //    foreach (var role in user.UserRoles)
+            //    {
 
-                    foreach (var claim in role.RoleClaims)
-                    {
-                        //if (claim.Type == ClaimTypes.Role)
-                        //{
-                        claims += claim.ClaimType + " - " + claim.ClaimValue + "<br>";
-                        //}
-                    }
+            //        foreach (var claim in role.RoleClaims)
+            //        {
+            //            //if (claim.Type == ClaimTypes.Role)
+            //            //{
+            //            claims += claim.ClaimType + " - " + claim.ClaimValue + "<br>";
+            //            //}
+            //        }
 
-                }
+            //    }
 
-            }
+            //}
 
 
-            claims += "<br><br>----------<br><br>";
+            //claims += "<br><br>----------<br><br>";
 
-            foreach (var claim in HttpContext.User.Claims)
-            {
-                //if (claim.Type == ClaimTypes.Role)
-                //{
-                    claims += claim.Type + " - " + claim.Value + "<br>";
-                //}
-            }
+            //foreach (var claim in HttpContext.User.Claims)
+            //{
+            //    //if (claim.Type == ClaimTypes.Role)
+            //    //{
+            //        claims += claim.Type + " - " + claim.Value + "<br>";
+            //    //}
+            //}
 
             //ViewData["claims"] = claims;
 
@@ -109,15 +109,6 @@ namespace Plato.Users.Controllers
             //    return Unauthorized();
             //}
 
-            // Build breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Users"]);
-            });
-            
             // default options
             if (opts == null)
             {
@@ -167,6 +158,15 @@ namespace Plato.Users.Controllers
                 if (page > 0)
                     return View("GetUsers", viewModel);
             }
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Users"]);
+            });
 
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new User(), this);
@@ -317,9 +317,8 @@ namespace Plato.Users.Controllers
                     .LocalNav()
                 ).Add(S[user.DisplayName]);
             });
-
-            var result = await _viewProvider.ProvideEditAsync(user, this);
-            return View(result);
+            
+            return View(await _viewProvider.ProvideEditAsync(user, this));
 
         }
         

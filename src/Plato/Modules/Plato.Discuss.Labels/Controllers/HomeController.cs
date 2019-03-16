@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Stores.Abstractions.Settings;
-using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Features.Abstractions;
@@ -22,10 +20,8 @@ namespace Plato.Discuss.Labels.Controllers
     {
 
         private readonly IViewProviderManager<Label> _labelViewProvider;
-        private readonly ISiteSettingsStore _settingsStore;
         private readonly ILabelStore<Label> _labelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
@@ -38,17 +34,12 @@ namespace Plato.Discuss.Labels.Controllers
             IStringLocalizer stringLocalizer,
             IViewProviderManager<Label> labelViewProvider,
             ILabelStore<Label> labelStore,
-            ISiteSettingsStore settingsStore,
-            IContextFacade contextFacade,
-            IAlerter alerter,
             IBreadCrumbManager breadCrumbManager,
             IContextFacade contextFacade1,
             IFeatureFacade featureFacade)
         {
-            _settingsStore = settingsStore;
             _labelStore = labelStore;
             _labelViewProvider = labelViewProvider;
-            _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;

@@ -57,6 +57,10 @@ namespace Plato.Discuss.Labels.Controllers
             S = stringLocalizer;
         }
 
+        // ------------
+        // Index
+        // ------------
+
         public async Task<IActionResult> Index(LabelIndexOptions opts, PagerOptions pager)
         {
 
@@ -75,19 +79,6 @@ namespace Plato.Discuss.Labels.Controllers
                 pager = new PagerOptions();
             }
 
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder
-                    .Add(S["Home"], home => home
-                        .Action("Index", "Admin", "Plato.Admin")
-                        .LocalNav())
-                    .Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Admin", "Plato.Discuss")
-                        .LocalNav())
-                    .Add(S["Labels"]);
-            });
-            
             // Get default options
             var defaultViewOptions = new LabelIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -116,12 +107,29 @@ namespace Plato.Discuss.Labels.Controllers
                 if (page > 0)
                     return View("GetLabels", viewModel);
             }
-
+            
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["Labels"]);
+            });
+            
             // Return view
             return View(await _viewProvider.ProvideIndexAsync(new Label(), this));
 
         }
-        
+
+        // ------------
+        // Create
+        // ------------
+
         public async Task<IActionResult> Create()
         {
 
@@ -150,8 +158,7 @@ namespace Plato.Discuss.Labels.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(Create))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditLabelViewModel viewModel)
         {
 
@@ -191,7 +198,11 @@ namespace Plato.Discuss.Labels.Controllers
             return View(viewModel);
             
         }
-        
+
+        // ------------
+        // Edit
+        // ------------
+
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -215,8 +226,7 @@ namespace Plato.Discuss.Labels.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public  async Task<IActionResult> EditPost(int id)
         {
 
@@ -239,11 +249,15 @@ namespace Plato.Discuss.Labels.Controllers
 
         }
 
-        [HttpPost]
+        // ------------
+        // Delete
+        // ------------
+
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
             
-            var ok = int.TryParse(id, out int categoryId);
+            var ok = int.TryParse(id, out var categoryId);
             if (!ok)
             {
                 return NotFound();
@@ -270,6 +284,8 @@ namespace Plato.Discuss.Labels.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        // ------------
 
         async Task<LabelIndexViewModel<Label>> GetIndexViewModelAsync(LabelIndexOptions options, PagerOptions pager)
         {

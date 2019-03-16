@@ -2,7 +2,7 @@
 
 @if (!Model.IsNewTag)
 {
-    <button type="submit" asp-controller="Admin" asp-action="Delete" asp-route-id="@Model.Id.ToString()" class="btn btn-danger btn-sm">
+    <button type="submit" asp-controller="Admin" asp-action="Delete" asp-route-id="@Model.Id.ToString()" data-provide="confirm" class="btn btn-danger btn-sm">
         <i class="fal fa-trash"></i>
         @T["Delete"]
     </button>

@@ -27,7 +27,7 @@ namespace Plato.Tags.ViewModels
 
         public string Search { get; set; }
         
-        public TagSortBy TagSort { get; set; } = TagSortBy.Entities;
+        public TagSortBy Sort { get; set; } = TagSortBy.Auto;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;
         
@@ -59,7 +59,6 @@ namespace Plato.Tags.ViewModels
         SortOrder,
         Entities,
         Follows,
-        Views,
         LastEntity,
         Created,
         Modified
