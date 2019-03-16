@@ -3,10 +3,10 @@ using Plato.Discuss.Models;
 using Plato.Entities.Services;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Discuss.Services
 {
+
     public class TopicManager : IPostManager<Topic>
     {
 
@@ -56,4 +56,5 @@ namespace Plato.Discuss.Services
         }
 
     }
+
 }

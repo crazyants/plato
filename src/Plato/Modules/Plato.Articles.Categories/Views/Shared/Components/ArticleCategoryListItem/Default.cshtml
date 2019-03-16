@@ -16,7 +16,7 @@
             @if (!String.IsNullOrEmpty(Model.Category.IconCss))
             {
 
-                <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+                <span class="category-icon category-icon-lg" style="background-color: @childBgColor; color: @childForeColor">
                     <i class="@Model.Category.IconCss"></i>
                 </span>
 
@@ -24,7 +24,7 @@
             else
             {
 
-                <span class="channel-icon channel-icon-md bg-info text-light">
+                <span class="category-icon category-icon-lg bg-info text-light">
                     <i class="fal fa-folder"></i>
                 </span>
 
@@ -54,19 +54,15 @@ else
         <div class="p-3">
             @if (!String.IsNullOrEmpty(Model.Category.IconCss))
             {
-
-                <div class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+                <div class="category-icon category-icon-lg" style="background-color: @childBgColor; color: @childForeColor">
                     <i class="@Model.Category.IconCss"></i>
                 </div>
-
             }
             else
             {
-
-                <div class="channel-icon channel-icon-md bg-info text-light">
+                <div class="category-icon category-icon-lg bg-info text-light">
                     <i class="fal fa-folder"></i>
                 </div>
-
             }
             <h6 class="d-block mt-2">
                 @Model.Category.Name
@@ -87,7 +83,7 @@ else
     @if (!String.IsNullOrEmpty(Model.Category.IconCss))
     {
         <div class="col-1 text-center">
-            <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+            <span class="category-icon category-icon-md" style="background-color: @childBgColor; color: @childForeColor">
                 <i class="@Model.Category.IconCss"></i>
             </span>
         </div>
@@ -95,7 +91,7 @@ else
     else
     {
         <div class="col-1 text-center">
-            <span class="channel-icon channel-icon-md bg-info text-light">
+            <span class="category-icon category-icon-md bg-info text-light">
                 <i class="fal fa-folder"></i>
             </span>
         </div>

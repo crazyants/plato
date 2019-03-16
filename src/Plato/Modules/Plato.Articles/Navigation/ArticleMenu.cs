@@ -14,19 +14,11 @@ namespace Plato.Articles.Navigation
     public class ArticleMenu : INavigationProvider
     {
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IContextFacade _contextFacade;
-
         public IStringLocalizer T { get; set; }
 
-        public ArticleMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor,
-            IContextFacade contextFacade)
+        public ArticleMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
-            _contextFacade = contextFacade;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)

@@ -11,17 +11,13 @@ namespace Plato.Articles.Services
     {
 
         private readonly IEntityManager<Article> _entityManager;
-        private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
-
-
+        
         public ArticleManager(
             IEntityManager<Article> entityManager, 
-            IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
             _entityManager = entityManager;
-            _contextFacade = contextFacade;
             _featureFacade = featureFacade;
         }
 

@@ -13,20 +13,12 @@ namespace Plato.Discuss.Navigation
 {
     public class TopicMenu : INavigationProvider
     {
-
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IContextFacade _contextFacade;
-
+        
         public IStringLocalizer T { get; set; }
 
-        public TopicMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor,
-            IContextFacade contextFacade)
+        public TopicMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
-            _contextFacade = contextFacade;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)

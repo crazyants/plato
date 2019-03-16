@@ -46,7 +46,7 @@ namespace Plato.Articles.Handlers
             {
                 feature.FeatureSettings = new FeatureSettings()
                 {
-                    Title = "Discuss",
+                    Title = "Articles",
                     Description = ""
                 };
 

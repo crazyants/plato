@@ -15,7 +15,7 @@ namespace Plato.Articles.Controllers
     {
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly IViewProviderManager<AdminHome> _viewProvider;
+        private readonly IViewProviderManager<AdminIndex> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IHtmlLocalizer T { get; }
@@ -28,7 +28,7 @@ namespace Plato.Articles.Controllers
             IStringLocalizer stringLocalizer,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade, 
-            IViewProviderManager<AdminHome> viewProvider,
+            IViewProviderManager<AdminIndex> viewProvider,
             IBreadCrumbManager breadCrumbManager)
         {
             _settingsStore = settingsStore;
@@ -54,7 +54,7 @@ namespace Plato.Articles.Controllers
             });
 
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new AdminHome(), this));
+            return View(await _viewProvider.ProvideIndexAsync(new AdminIndex(), this));
 
         }
 

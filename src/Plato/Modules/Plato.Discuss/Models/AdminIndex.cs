@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Plato.Discuss.Models
 {
-    public class AdminHome
+    public class AdminIndex
     {
     }
 }

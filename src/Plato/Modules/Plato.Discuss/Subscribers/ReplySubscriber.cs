@@ -9,6 +9,7 @@ using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Discuss.Subscribers
 {
+
     public class ReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 

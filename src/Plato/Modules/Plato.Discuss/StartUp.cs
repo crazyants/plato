@@ -84,8 +84,8 @@ namespace Plato.Discuss
             services.AddScoped<IAssetProvider, AssetProvider>();
          
             // Register admin view providers
-            services.AddScoped<IViewProviderManager<AdminHome>, ViewProviderManager<AdminHome>>();
-            services.AddScoped<IViewProvider<AdminHome>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<AdminIndex>, ViewProviderManager<AdminIndex>>();
+            services.AddScoped<IViewProvider<AdminIndex>, AdminViewProvider>();
 
             // Register view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();

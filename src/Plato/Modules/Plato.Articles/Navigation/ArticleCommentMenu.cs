@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
@@ -14,17 +13,12 @@ namespace Plato.Articles.Navigation
 
     public class ArticleCommentMenu : INavigationProvider
     {
-
-        private readonly IActionContextAccessor _actionContextAccessor;
-    
+        
         public IStringLocalizer T { get; set; }
 
-        public ArticleCommentMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+        public ArticleCommentMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -85,7 +79,7 @@ namespace Plato.Articles.Navigation
                                 Permissions.EditOwnComment :
                                 Permissions.EditAnyComment)
                             .LocalNav())
-                        .Add(T["Report"], int.MaxValue - 10, report => report
+                        .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
                                 ["opts.id"] = topic.Id,
@@ -100,6 +94,10 @@ namespace Plato.Articles.Navigation
                             })
                             .Permission(Permissions.ReportComments)
                             .LocalNav()
+                        )
+                        .Add(T["Divider"], int.MaxValue - 1, divider => divider
+                            .Permission(deletePermission)
+                            .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(reply.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
                                 .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Articles",

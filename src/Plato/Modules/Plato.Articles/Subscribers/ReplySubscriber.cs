@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Articles.Models;
 using Plato.Entities.Models;
@@ -9,6 +8,7 @@ using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Articles.Subscribers
 {
+
     public class ReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 
