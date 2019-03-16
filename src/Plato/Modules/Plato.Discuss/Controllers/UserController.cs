@@ -14,6 +14,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Discuss.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 
 namespace Plato.Discuss.Controllers
 {
@@ -24,7 +25,6 @@ namespace Plato.Discuss.Controllers
         private readonly IViewProviderManager<UserIndex> _userViewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public IHtmlLocalizer T { get; }
@@ -32,19 +32,17 @@ namespace Plato.Discuss.Controllers
         public IStringLocalizer S { get; }
 
         public UserController(
-            IStringLocalizer<HomeController> stringLocalizer,
-            IHtmlLocalizer<HomeController> localizer,
+            IStringLocalizer stringLocalizer,
+            IHtmlLocalizer localizer,
             IContextFacade contextFacade,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService,
             IViewProviderManager<UserIndex> userViewProvider,
             IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
-            _authorizationService = authorizationService;
             _userViewProvider = userViewProvider;
             _featureFacade = featureFacade;
 
@@ -126,15 +124,13 @@ namespace Plato.Discuss.Controllers
                     .LocalNav()
                 ).Add(S["Topics"]);
             });
-
-            // Build view
-            var result = await _userViewProvider.ProvideDisplayAsync(new UserIndex()
-            {
-                Id = user.Id
-            }, this);
+            
 
             //// Return view
-            return View(result);
+            return View((LayoutViewModel) await _userViewProvider.ProvideDisplayAsync(new UserIndex()
+            {
+                Id = user.Id
+            }, this));
 
         }
 

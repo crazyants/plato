@@ -16,15 +16,16 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Internal.Layout;
 
 namespace Plato.Discuss.Channels.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
-     
-        private readonly ICategoryStore<Channel> _categoryStore;
-        private readonly ICategoryManager<Channel> _categoryManager;
+
         private readonly IViewProviderManager<ChannelAdmin> _viewProvider;
+        private readonly ICategoryManager<Channel> _categoryManager;
+        private readonly ICategoryStore<Channel> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
@@ -34,21 +35,21 @@ namespace Plato.Discuss.Channels.Controllers
         public IStringLocalizer S { get; }
 
         public AdminController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
-            ICategoryStore<Channel> categoryStore,
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IViewProviderManager<ChannelAdmin> viewProvider,
-            IBreadCrumbManager breadCrumbManager,
             ICategoryManager<Channel> categoryManager,
+            ICategoryStore<Channel> categoryStore,
+            IBreadCrumbManager breadCrumbManager,
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
-    
-            _categoryStore = categoryStore;
-            _viewProvider = viewProvider;
+
+            _breadCrumbManager = breadCrumbManager;
             _categoryManager = categoryManager;
             _featureFacade = featureFacade;
-            _breadCrumbManager = breadCrumbManager;
+            _categoryStore = categoryStore;
+            _viewProvider = viewProvider;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -119,7 +120,7 @@ namespace Plato.Discuss.Channels.Controllers
             }
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new ChannelAdmin(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(currentCategory ?? new ChannelAdmin(), this));
 
         }
 
@@ -145,14 +146,16 @@ namespace Plato.Discuss.Channels.Controllers
             });
             
             // We need to pass along the featureId
-            var feature = await GetCurrentFeature();
-            var model = await _viewProvider.ProvideEditAsync(new Channel
+            var feature =  await GetCurrentFeature();
+         
+            // Build view model
+            var viewModel = new Channel
             {
                 ParentId = id,
                 FeatureId = feature.Id
+            };
 
-            }, this);
-            return View(model);
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(viewModel, this));
 
         }
 
@@ -228,8 +231,8 @@ namespace Plato.Discuss.Channels.Controllers
             });
             
             var category = await _categoryStore.GetByIdAsync(id);
-            var model = await _viewProvider.ProvideEditAsync(category, this);
-            return View(model);
+            
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(category, this));
 
         }
         
@@ -296,6 +299,7 @@ namespace Plato.Discuss.Channels.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+
         }
 
         // --------------

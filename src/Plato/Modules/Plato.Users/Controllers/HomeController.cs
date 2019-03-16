@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -30,14 +31,14 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditSignatureViewModel> _editSignatureViewProvider;
 
         private readonly IViewProviderManager<Profile> _viewProvider;
+        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly ITimeZoneProvider _timeZoneProvider;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
-        private readonly IAlerter _alerter;
-        private readonly ITimeZoneProvider _timeZoneProvider;
-        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IUserEmails _userEmails;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -46,34 +47,35 @@ namespace Plato.Users.Controllers
         public HomeController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IViewProviderManager<Profile> viewProvider,
-            IPlatoUserStore<User> platoUserStore,
-            IContextFacade contextFacade, 
-            UserManager<User> userManager, 
-            IAlerter alerter,
-            ITimeZoneProvider timeZoneProvider,
             IViewProviderManager<EditProfileViewModel> editProfileViewProvider,
             IViewProviderManager<EditAccountViewModel> editAccountViewProvider,
             IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
             IViewProviderManager<EditSignatureViewModel> editSignatureViewProvider,
+            IViewProviderManager<Profile> viewProvider,
+            IPlatoUserManager<User> platoUserManager,
+            IPlatoUserStore<User> platoUserStore,
             IBreadCrumbManager breadCrumbManager,
-            IPlatoUserManager<User> platoUserManager, 
-            IUserEmails userEmails)
+            ITimeZoneProvider timeZoneProvider,
+            UserManager<User> userManager,
+            IContextFacade contextFacade,
+            IUserEmails userEmails,
+            IAlerter alerter)
         {
-            _viewProvider = viewProvider;
-            _platoUserStore = platoUserStore;
-            _contextFacade = contextFacade;
-            _userManager = userManager;
-            _alerter = alerter;
-            _timeZoneProvider = timeZoneProvider;
+
             _editProfileViewProvider = editProfileViewProvider;
             _editAccountViewProvider = editAccountViewProvider;
             _editSettingsViewProvider = editSettingsViewProvider;
-            _breadCrumbManager = breadCrumbManager;
-            _platoUserManager = platoUserManager;
-            _userEmails = userEmails;
             _editSignatureViewProvider = editSignatureViewProvider;
-
+            _breadCrumbManager = breadCrumbManager;
+            _timeZoneProvider = timeZoneProvider;
+            _platoUserManager = platoUserManager;
+            _platoUserStore = platoUserStore;
+            _contextFacade = contextFacade;
+            _viewProvider = viewProvider;
+            _userManager = userManager;
+            _alerter = alerter;
+            
+            _userEmails = userEmails;
             T = htmlLocalizer;
             S = stringLocalizer;
         }
@@ -106,15 +108,6 @@ namespace Plato.Users.Controllers
 
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Users"]);
-            });
 
             // Get default options
             var defaultViewOptions = new UserIndexOptions();
@@ -149,8 +142,17 @@ namespace Plato.Users.Controllers
                     return View("GetUsers", viewModel);
             }
             
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Users"]);
+            });
+            
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new Profile(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new Profile(), this));
 
         }
 
@@ -183,15 +185,15 @@ namespace Plato.Users.Controllers
 
             // Add user to context
             HttpContext.Items[typeof(User)] = user;
-
-            // Build view
-            var result = await _viewProvider.ProvideDisplayAsync(new Profile()
+            
+            // Build view model
+            var viewModel = new Profile()
             {
                 Id = user.Id
-            }, this);
+            };
 
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _viewProvider.ProvideDisplayAsync(viewModel, this));
 
         }
 
@@ -211,8 +213,10 @@ namespace Plato.Users.Controllers
                 return Unauthorized();
             }
             
-            // Build model
+            // Meta data
             var data = user.GetOrCreate<UserDetail>();
+
+            // Build view model
             var editProfileViewModel = new EditProfileViewModel()
             {
                 Id = user.Id,
@@ -223,11 +227,8 @@ namespace Plato.Users.Controllers
                 Avatar = user.Avatar
             };
 
-            // Build view
-            var result = await _editProfileViewProvider.ProvideEditAsync(editProfileViewModel, this);
-
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _editProfileViewProvider.ProvideEditAsync(editProfileViewModel, this));
 
         }
 
@@ -294,12 +295,9 @@ namespace Plato.Users.Controllers
                 UserName = user.UserName,
                 Email = user.Email
             };
-
-            // Build view
-            var result = await _editAccountViewProvider.ProvideEditAsync(viewModel, this);
-
+            
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _editAccountViewProvider.ProvideEditAsync(viewModel, this));
 
         }
 
@@ -414,17 +412,17 @@ namespace Plato.Users.Controllers
             var data = user.GetOrCreate<UserDetail>();
 
             // Build view model
-            var result = await _editSettingsViewProvider.ProvideEditAsync(new EditSettingsViewModel()
+            var viewModel = new EditSettingsViewModel()
             {
                 Id = user.Id,
                 TimeZone = user.TimeZone,
                 ObserveDst = user.ObserveDst,
                 Culture = user.Culture,
                 AvailableTimeZones = await GetAvailableTimeZonesAsync()
-            }, this);
+            };
 
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _editSettingsViewProvider.ProvideEditAsync(viewModel, this));
 
         }
 
@@ -486,14 +484,14 @@ namespace Plato.Users.Controllers
             var data = user.GetOrCreate<UserDetail>();
 
             // Build view model
-            var result = await _editSignatureViewProvider.ProvideEditAsync(new EditSignatureViewModel()
+            var viewModel = new EditSignatureViewModel()
             {
                 Id = user.Id,
                 Signature = user.Signature
-            }, this);
+            };
 
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _editSignatureViewProvider.ProvideEditAsync(viewModel, this));
 
         }
 
@@ -535,14 +533,14 @@ namespace Plato.Users.Controllers
             return await EditSignature();
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
 
         async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
         {
+
             // Build timezones 
             var timeZones = new List<SelectListItem>
             {

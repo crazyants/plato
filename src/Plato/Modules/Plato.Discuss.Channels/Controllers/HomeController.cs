@@ -12,6 +12,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -44,12 +45,13 @@ namespace Plato.Discuss.Channels.Controllers
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
-            _channelStore = channelStore;
+      
             _channelViewProvider = channelViewProvider;
             _breadCrumbManager = breadCrumbManager;
-            _alerter = alerter;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
+            _channelStore = channelStore;
+            _alerter = alerter;
 
             T = localizer;
             S = stringLocalizer;
@@ -167,7 +169,7 @@ namespace Plato.Discuss.Channels.Controllers
             });
             
             // Return view
-            return View(await _channelViewProvider.ProvideIndexAsync(category, this));
+            return View((LayoutViewModel) await _channelViewProvider.ProvideIndexAsync(category, this));
 
         }
 

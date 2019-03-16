@@ -5,17 +5,17 @@ using Plato.Entities.Repositories;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Discuss.Subscribers
+namespace Plato.Articles.Subscribers
 {
     
-    public class TopicSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
+    public class ArticleSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
 
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly IUserReputationAwarder _reputationAwarder;
         private readonly IBroker _broker;
 
-        public TopicSubscriber(
+        public ArticleSubscriber(
             IUserReputationAwarder reputationAwarder,
             IEntityRepository<TEntity> entityRepository,
             IBroker broker)
@@ -73,7 +73,7 @@ namespace Plato.Discuss.Subscribers
             }
 
             // Award reputation
-            await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic posted");
+            await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId, "Created an article");
 
             // Return
             return entity;
@@ -98,7 +98,7 @@ namespace Plato.Discuss.Subscribers
                 // If the existing entity was not already hidden revoke reputation
                 if (!existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.RevokeAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic deleted or hidden");
+                    await _reputationAwarder.RevokeAsync(Reputations.NewArticle, entity.CreatedUserId, "Article deleted or hidden");
                 }
             }
             else
@@ -106,7 +106,7 @@ namespace Plato.Discuss.Subscribers
                 // If the existing entity was already hidden award reputation
                 if (existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic approved or made visible");
+                    await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId, "Article approved or made visible");
                 }
             }
 

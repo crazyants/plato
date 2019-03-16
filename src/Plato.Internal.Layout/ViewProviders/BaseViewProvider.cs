@@ -8,12 +8,9 @@ using Plato.Internal.Layout.Views;
 namespace Plato.Internal.Layout.ViewProviders
 {
 
-    public abstract class BaseViewProvider<TModel>
-        : IViewProvider<TModel> where TModel : class
+    public abstract class BaseViewProvider<TModel> : IViewProvider<TModel> where TModel : class
     {
-
-        #region "Abstract Medthods"
-
+  
         public abstract Task<IViewProviderResult> BuildDisplayAsync(TModel viewModel, IViewProviderContext context);
 
         public abstract Task<IViewProviderResult> BuildIndexAsync(TModel viewModel, IViewProviderContext context);
@@ -26,7 +23,7 @@ namespace Plato.Internal.Layout.ViewProviders
         {
             // We don't always need to implement ValidateModelAsync for certain views
             // For example views that don't perform any updates. We'll leave this method
-            // virtual to allow us to override if needed
+            // virtual to allow us to override if needed within view provider implementations
             return Task.FromResult(true);
         }
 
@@ -35,16 +32,9 @@ namespace Plato.Internal.Layout.ViewProviders
             return Task.CompletedTask;
         }
 
-        #endregion
-
-        #region "Helper Methods"
-
         public IViewProviderResult Views(params IView[] views)
         {
-            // TODO: // Implement a context object allowing uss to pass the service provider along
-            return new LayoutViewModel(
-                new ViewProviderResult(views)
-            );
+            return new LayoutViewModel(new ViewProviderResult(views));
         }
 
         public IPositionedView View<TViewModel>(string viewName, Func<TViewModel, TViewModel> configure) where TViewModel : class
@@ -67,14 +57,12 @@ namespace Plato.Internal.Layout.ViewProviders
             return new PositionedView(viewName, arguments);
         }
         
-        public IPositionedView View(IEmbeddedView enbeddedView)
+        public IPositionedView View(IEmbeddedView embeddedView)
         {
             // Return a view we can optionally position
-            return new PositionedView(enbeddedView);
+            return new PositionedView(embeddedView);
         }
-
-        #endregion
-
+        
     }
 
 }

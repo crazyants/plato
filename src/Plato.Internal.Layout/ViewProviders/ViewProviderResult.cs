@@ -3,31 +3,22 @@ using Plato.Internal.Layout.Views;
 
 namespace Plato.Internal.Layout.ViewProviders
 {
-    public interface IViewProviderResult
-    {
-        IEnumerable<IView> Views { get; }
-    }
-
+ 
     public class ViewProviderResult : IViewProviderResult
     {
 
-        private IEnumerable<IView> _views;
+        public IEnumerable<IView> Views { get; private set; }
 
         public ViewProviderResult(params IView[] views)
         {
-            _views = views;
+            Views = views ?? ((IEnumerable<IView>) new List<IView>());
         }
 
         public ViewProviderResult(params IPositionedView[] views)
         {
-            _views = views;
+            Views = views ?? ((IEnumerable<IView>)new List<IView>());
         }
-
-        public IEnumerable<IView> Views
-        {
-            get => _views ?? (_views = new List<IView>());
-        }
-
+        
     }
 
 }

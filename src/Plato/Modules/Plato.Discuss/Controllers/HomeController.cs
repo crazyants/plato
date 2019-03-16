@@ -26,6 +26,7 @@ using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Discuss.Controllers
@@ -34,7 +35,7 @@ namespace Plato.Discuss.Controllers
     {
 
         #region "Constructor"
-        
+
         private readonly IAuthorizationService _authorizationService;
         private readonly IViewProviderManager<Topic> _topicViewProvider;
         private readonly IViewProviderManager<Reply> _replyViewProvider;
@@ -150,7 +151,7 @@ namespace Plato.Discuss.Controllers
                 if (page > 0)
                     return View("GetTopics", viewModel);
             }
-            
+
             // Return Url for authentication purposes
             ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
@@ -169,7 +170,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View(await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
+            return View((LayoutViewModel) await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
 
         }
 
@@ -219,19 +220,19 @@ namespace Plato.Discuss.Controllers
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Discuss"], discuss => discuss
-                    .Action("Index", "Home", "Plato.Discuss")
-                    .LocalNav()
-                ).Add(S["New Post"], post => post
-                    .LocalNav()
-                );
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Home", "Plato.Discuss")
+                        .LocalNav())
+                    .Add(S["New Post"], post => post
+                        .LocalNav());
             });
 
             // Return view
-            return View(await _topicViewProvider.ProvideEditAsync(topic, this));
+            return View((LayoutViewModel) await _topicViewProvider.ProvideEditAsync(topic, this));
 
         }
 
@@ -274,7 +275,7 @@ namespace Plato.Discuss.Controllers
 
                     // Execute view providers ProvideUpdateAsync method
                     await _topicViewProvider.ProvideUpdateAsync(newEntity.Response, this);
-                    
+
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
 
@@ -382,7 +383,7 @@ namespace Plato.Discuss.Controllers
                     }));
                 }
             }
-            
+
             // Maintain previous route data when generating page links
             var defaultViewOptions = new EntityViewModel<Topic, Reply>();
             var defaultPagerOptions = new PagerOptions();
@@ -421,7 +422,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View(await _topicViewProvider.ProvideDisplayAsync(entity, this));
+            return View((LayoutViewModel) await _topicViewProvider.ProvideDisplayAsync(entity, this));
 
         }
 
@@ -480,7 +481,7 @@ namespace Plato.Discuss.Controllers
                     {
                         ["opts.id"] = entity.Id,
                         ["opts.alias"] = entity.Alias,
-                        ["opts.replyId"] = result.Response.Id 
+                        ["opts.replyId"] = result.Response.Id
                     });
 
                 }
@@ -569,7 +570,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View(await _topicViewProvider.ProvideEditAsync(entity, this));
+            return View((LayoutViewModel) await _topicViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -614,7 +615,7 @@ namespace Plato.Discuss.Controllers
 
                 // Execute view providers ProvideUpdateAsync method
                 await _topicViewProvider.ProvideUpdateAsync(entity, this);
-                
+
                 // Everything was OK
                 _alerter.Success(T["Topic Updated Successfully!"]);
 
@@ -696,10 +697,8 @@ namespace Plato.Discuss.Controllers
                     );
             });
 
-            var result = await _replyViewProvider.ProvideEditAsync(reply, this);
-
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _replyViewProvider.ProvideEditAsync(reply, this));
 
         }
 
@@ -818,7 +817,7 @@ namespace Plato.Discuss.Controllers
 
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            
+
             // Invoke report manager and compile results
             if (reply != null)
             {
@@ -827,24 +826,24 @@ namespace Plato.Discuss.Controllers
                 {
                     Who = user,
                     What = reply,
-                    Why = (ReportReasons.Reason)model.ReportReason
+                    Why = (ReportReasons.Reason) model.ReportReason
                 });
             }
             else
             {
                 // Report entity
-               await _reportEntityManager.ReportAsync(new ReportSubmission<Topic>()
-               {
-                   Who = user,
-                   What = entity,
-                   Why = (ReportReasons.Reason)model.ReportReason
-               });
+                await _reportEntityManager.ReportAsync(new ReportSubmission<Topic>()
+                {
+                    Who = user,
+                    What = entity,
+                    Why = (ReportReasons.Reason) model.ReportReason
+                });
             }
-            
+
             _alerter.Success(reply != null
                 ? T["Thank You. Reply Reported Successfully!"]
                 : T["Thank You. Topic Reported Successfully!"]);
-   
+
             // Redirect
             return RedirectToAction(nameof(Reply), new RouteValueDictionary()
             {
@@ -1057,9 +1056,11 @@ namespace Plato.Discuss.Controllers
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
+
             }));
 
         }
@@ -1123,14 +1124,15 @@ namespace Plato.Discuss.Controllers
                 _alerter.Danger(T["Could not restore the reply"]);
             }
 
-            // Redirect back to topic
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
+
             }));
 
         }

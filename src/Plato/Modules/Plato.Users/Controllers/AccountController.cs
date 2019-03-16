@@ -11,6 +11,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -129,11 +130,8 @@ namespace Plato.Users.Controllers
             // Persist returnUrl
             ViewData["ReturnUrl"] = returnUrl;
 
-            // Build view
-            var result = await _loginViewProvider.ProvideIndexAsync(new UserLogin(), this);
-
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _loginViewProvider.ProvideIndexAsync(new UserLogin(), this));
           
         }
 
@@ -283,12 +281,9 @@ namespace Plato.Users.Controllers
                 Password = "H4s#32ffw1" + rnd.Next(0, 10000),
                 ConfirmPassword = "H4s#32ffw1" + rnd.Next(0, 10000)
             };
-
-            // Build view
-            var result = await _registerViewProvider.ProvideIndexAsync(model, this);
-
+            
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _registerViewProvider.ProvideIndexAsync(model, this));
 
         }
 

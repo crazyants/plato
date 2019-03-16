@@ -102,6 +102,7 @@ namespace Plato.Articles
             services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();
 
             // Register message broker subscribers
+            services.AddScoped<IBrokerSubscriber, ArticleSubscriber<Article>>();
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Comment>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
 

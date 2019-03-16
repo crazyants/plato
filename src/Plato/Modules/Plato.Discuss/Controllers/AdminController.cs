@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
@@ -53,7 +54,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new AdminIndex(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new AdminIndex(), this));
             
         }
 

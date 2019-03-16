@@ -18,6 +18,7 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -171,7 +172,7 @@ namespace Plato.Articles.Controllers
             });
             
             // Return view
-            return View(await _entityViewProvider.ProvideIndexAsync(new Article(), this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideIndexAsync(new Article(), this));
 
         }
 
@@ -233,7 +234,7 @@ namespace Plato.Articles.Controllers
             });
 
             // Return view
-            return View(await _entityViewProvider.ProvideEditAsync(topic, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(topic, this));
 
         }
 
@@ -422,7 +423,7 @@ namespace Plato.Articles.Controllers
             });
 
             // Return view
-            return View(await _entityViewProvider.ProvideDisplayAsync(entity, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideDisplayAsync(entity, this));
 
         }
 
@@ -567,7 +568,7 @@ namespace Plato.Articles.Controllers
             });
 
             // Return view
-            return View(await _entityViewProvider.ProvideEditAsync(entity, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -690,11 +691,9 @@ namespace Plato.Articles.Controllers
                         .LocalNav()
                     );
             });
-            
-            var result = await _replyViewProvider.ProvideEditAsync(reply, this);
-
+           
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _replyViewProvider.ProvideEditAsync(reply, this));
 
         }
 

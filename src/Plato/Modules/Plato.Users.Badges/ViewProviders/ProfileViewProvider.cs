@@ -5,19 +5,19 @@ using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Stores.Badges;
 using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewProviders
 {
-    public class UserViewProvider : BaseViewProvider<Profile>
+
+    public class ProfileViewProvider : BaseViewProvider<Profile>
     {
 
         private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IBadgesManager<Badge> _badgesManager;
 
-        public UserViewProvider(
+        public ProfileViewProvider(
             IPlatoUserStore<User> platoUserStore,
             IUserBadgeStore<UserBadge> userBadgeStore,
             IBadgesManager<Badge> badgesManager)
@@ -65,5 +65,7 @@ namespace Plato.Users.Badges.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
     }
+
 }

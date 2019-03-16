@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -168,11 +169,8 @@ namespace Plato.Users.Controllers
                 ).Add(S["Users"]);
             });
 
-            // Build view
-            var result = await _viewProvider.ProvideIndexAsync(new User(), this);
-
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new User(), this));
 
         }
         
@@ -199,9 +197,9 @@ namespace Plato.Users.Controllers
                     .LocalNav()
                 ).Add(S["Add User"]);
             });
+            
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(new User(), this));
 
-            var result = await _viewProvider.ProvideEditAsync(new User(), this);
-            return View(result);
         }
         
         [HttpPost, ActionName(nameof(Create))]
@@ -318,7 +316,7 @@ namespace Plato.Users.Controllers
                 ).Add(S[user.DisplayName]);
             });
             
-            return View(await _viewProvider.ProvideEditAsync(user, this));
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(user, this));
 
         }
         
@@ -710,6 +708,7 @@ namespace Plato.Users.Controllers
             {
                 ["id"] = id
             });
+
         }
 
         public async Task<IActionResult> RemoveBan(string id)
@@ -759,6 +758,7 @@ namespace Plato.Users.Controllers
             {
                 ["id"] = id
             });
+
         }
 
         // ------------
@@ -812,6 +812,7 @@ namespace Plato.Users.Controllers
             {
                 ["id"] = id
             });
+
         }
 
         public async Task<IActionResult> RemoveSpam(string id)
@@ -861,6 +862,7 @@ namespace Plato.Users.Controllers
             {
                 ["id"] = id
             });
+
         }
         
         #endregion

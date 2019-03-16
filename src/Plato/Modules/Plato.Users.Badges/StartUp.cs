@@ -50,7 +50,7 @@ namespace Plato.Users.Badges
 
             // User profile view providers
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
-            services.AddScoped<IViewProvider<Profile>, UserViewProvider>();
+            services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
 
             // Badge view providers
             services.AddScoped<IViewProviderManager<Badge>, ViewProviderManager<Badge>>();
