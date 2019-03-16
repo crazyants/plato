@@ -79,7 +79,7 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditOwnReplies :
                                 Permissions.EditAnyReply)
                             .LocalNav())
-                        .Add(T["Report"], int.MaxValue - 10, report => report
+                        .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
                                 ["opts.id"] = topic.Id,
@@ -94,6 +94,10 @@ namespace Plato.Discuss.Navigation
                             })
                             .Permission(Permissions.ReportReplies)
                             .LocalNav()
+                        )
+                        .Add(T["Divider"], int.MaxValue - 1, divider => divider
+                            .Permission(deletePermission)
+                            .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(reply.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
                                 .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Discuss",

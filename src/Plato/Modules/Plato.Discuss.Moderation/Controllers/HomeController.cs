@@ -101,7 +101,7 @@ namespace Plato.Discuss.Moderation.Controllers
             
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic hidden successfully"]);
+                _alerter.Success(T["Topic Hidden Successfully"]);
             }
             else
             {
@@ -124,7 +124,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -157,7 +157,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic made visible"]);
+                _alerter.Success(T["Topic Made Public Successfully"]);
             }
             else
             {
@@ -212,7 +212,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic closed successfully"]);
+                _alerter.Success(T["Topic Closed Successfully"]);
             }
             else
             {
@@ -235,7 +235,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -268,7 +268,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic opened successfully"]);
+                _alerter.Success(T["Topic Opened Successfully"]);
             }
             else
             {
@@ -323,7 +323,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic marked as SPAM"]);
+                _alerter.Success(T["Topic Marked as SPAM"]);
             }
             else
             {
@@ -346,7 +346,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -378,7 +378,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic removed from SPAM"]);
+                _alerter.Success(T["Topic Removed from SPAM"]);
             }
             else
             {
@@ -433,7 +433,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic deleted successfully"]);
+                _alerter.Success(T["Topic Deleted Successfully"]);
             }
             else
             {
@@ -488,7 +488,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic restored successfully"]);
+                _alerter.Success(T["Topic Restored Successfully"]);
             }
             else
             {
@@ -511,7 +511,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -543,7 +543,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic pinned successfully"]);
+                _alerter.Success(T["Topic Pinned Successfully"]);
             }
             else
             {
@@ -566,7 +566,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -598,7 +598,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Pin removed successfully"]);
+                _alerter.Success(T["Pin Removed Successfully"]);
             }
             else
             {
@@ -625,7 +625,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
@@ -663,21 +663,22 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply hidden successfully"]);
+                _alerter.Success(T["Reply Hidden Successfully"]);
             }
             else
             {
                 _alerter.Danger(T["Could not hide the reply"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to reply
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
             }));
 
         }
@@ -686,7 +687,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
@@ -725,22 +726,23 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply marked public successfully"]);
+                _alerter.Success(T["Reply Made Public Successfully"]);
             }
             else
             {
                 _alerter.Danger(T["Could not make the reply public"]);
             }
-
-            // Redirect back to topic
+            // Redirect back to reply
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
             }));
+
 
         }
 
@@ -748,7 +750,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
@@ -787,22 +789,24 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply marked as SPAM"]);
+                _alerter.Success(T["Reply Marked as SPAM"]);
             }
             else
             {
                 _alerter.Danger(T["Could not mark the reply as SPAM"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to reply
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
             }));
+
 
         }
 
@@ -810,7 +814,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
@@ -849,22 +853,24 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply removed from SPAM"]);
+                _alerter.Success(T["Reply Removed from SPAM"]);
             }
             else
             {
                 _alerter.Danger(T["Could not remove the reply from SPAM"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to reply
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
             }));
+
 
         }
 
@@ -872,7 +878,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
@@ -911,22 +917,24 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply deleted successfully"]);
+                _alerter.Success(T["Reply Deleted Successfully"]);
             }
             else
             {
                 _alerter.Danger(T["Could not delete the reply"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to reply
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
             }));
+
 
         }
 
@@ -934,7 +942,7 @@ namespace Plato.Discuss.Moderation.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
+            var ok = int.TryParse(id, out var replyId);
             if (!ok)
             {
                 return NotFound();
@@ -973,26 +981,27 @@ namespace Plato.Discuss.Moderation.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply restored successfully"]);
+                _alerter.Success(T["Reply Restored Successfully"]);
             }
             else
             {
                 _alerter.Danger(T["Could not restore the reply"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to reply
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
-                ["action"] = "Display",
+                ["action"] = "Reply",
                 ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
+                ["opts.alias"] = topic.Alias,
+                ["opts.replyId"] = reply.Id
             }));
 
+
         }
-
-
+        
         #endregion
 
     }

@@ -1,29 +1,11 @@
 ﻿@model Topic
-@{
-    var viewText = Model.TotalViews == 1
-        ? "view"
-        : "views";
-}
-<card class="card card-body-flush">
-    <card-title>
-        <h6 class="card-title">@T["Details"]</h6>
-    </card-title>
-    <card-body>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                @T["Posted"]: <date utc="@Model.CreatedDate"></date>
-            </li>
-            <li class="list-group-item">
-                @T["Latest Reply"]: <date utc="@Model.LastReplyDate"></date>
-            </li>
-            <li class="list-group-item">
-                @Model.TotalViews @T[viewText], @Model.DailyViews @T["daily"]
-            </li>
-        </ul>
-    </card-body>
-</card>
 
-@await DisplayAsync(new View("TopPosters", new
+@await DisplayAsync(new View("EntityDetails", new
+{
+    id = @Model.Id
+}))
+
+@await DisplayAsync(new View("EntityParticipants", new
 {
     id = @Model.Id
 }))

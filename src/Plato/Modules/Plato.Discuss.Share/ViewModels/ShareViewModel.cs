@@ -3,9 +3,7 @@
     public class ShareViewModel
     {
 
-        public string EntityUrl { get; set; }
-
-        public string EntityReplyUrl { get; set; }
-
+        public string Url { get; set; }
+        
     }
 }

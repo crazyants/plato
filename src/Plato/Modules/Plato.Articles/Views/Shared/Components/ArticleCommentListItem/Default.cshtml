@@ -6,12 +6,12 @@
     var quoteId = "quote" + Model.Reply.Id;
 }
 
-<div class="list-left topic-reply-left">
+<div class="list-left reply-left">
     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
         <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
     </a>
 </div>
-<div class="list-body topic-reply-body">
+<div class="list-body reply-body">
     <card class="card card-body-flush">
         <card-title>
             <div data-infinite-scroll-offset="@Model.Reply.RowOffset">

@@ -1,9 +1,11 @@
 ﻿using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 
-namespace Plato.Articles.ViewModels
+namespace Plato.Entities.ViewModels
 {
-    public class TopPostersViewModel
+    
+
+    public class EntityParticipantsViewModel
     {
 
         public IPagedResults<EntityUser> Users { get; set; }

@@ -1,28 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Articles.Models;
-using Plato.Articles.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 
-namespace Plato.Articles.ViewComponents
+namespace Plato.Entities.ViewComponents
 {
 
-    public class ArticlePostersViewComponent : ViewComponent
+    public class EntityParticipantsViewComponent : ViewComponent
     {
 
-        private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<Comment> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
 
-        public ArticlePostersViewComponent(
-            IEntityReplyStore<Comment> entityReplyStore,
-            IEntityStore<Article> entityStore,
+        public EntityParticipantsViewComponent(
             IEntityUsersStore entityUsersStore)
         {
-            _entityReplyStore = entityReplyStore;
-            _entityStore = entityStore;
             _entityUsersStore = entityUsersStore;
         }
 
@@ -38,10 +31,10 @@ namespace Plato.Articles.ViewComponents
 
         }
 
-        async Task<TopPostersViewModel> GetViewModel(int id)
+        async Task<EntityParticipantsViewModel> GetViewModel(int id)
         {
             
-            // Get top 20 participants
+            // Get top X participants
             var users = await _entityUsersStore.QueryAsync()
                 .Take(1, 10)
                 .Select<EntityUserQueryParams>(q =>
@@ -51,10 +44,11 @@ namespace Plato.Articles.ViewComponents
                 .OrderBy("t.TotalReplies", OrderBy.Desc)
                 .ToList();
 
-            return new TopPostersViewModel()
+            return new EntityParticipantsViewModel()
             {
                 Users = users
             };
+
         }
 
     }

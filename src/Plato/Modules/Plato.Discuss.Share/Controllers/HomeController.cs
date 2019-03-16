@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
 using Plato.Discuss.Share.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 
@@ -26,17 +27,17 @@ namespace Plato.Discuss.Share.Controllers
 
         // Share dialog
 
-        public async Task<IActionResult> Share(int id, int replyId = 0)
+        public async Task<IActionResult> Index(EntityOptions opts)
         {
 
             // We always need an entity Id
-            if (id <= 0)
+            if (opts.Id <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(id));
+                throw new ArgumentOutOfRangeException(nameof(opts.Id));
             }
 
             // We always need an entity
-            var entity = await _topicStore.GetByIdAsync(id);
+            var entity = await _topicStore.GetByIdAsync(opts.Id);
             if (entity == null)
             {
                 return NotFound();
@@ -47,7 +48,7 @@ namespace Plato.Discuss.Share.Controllers
             RouteValueDictionary routeValues = null;
 
             // Append offset
-            if (replyId > 0)
+            if (opts.ReplyId > 0)
             {
                 routeValues = new RouteValueDictionary()
                 {
@@ -56,7 +57,7 @@ namespace Plato.Discuss.Share.Controllers
                     ["action"] = "Reply",
                     ["opts.id"] = entity.Id,
                     ["opts.alias"] = entity.Alias,
-                    ["opts.replyId"] = replyId
+                    ["opts.replyId"] = opts.ReplyId
                 };
             }
             else
@@ -75,7 +76,7 @@ namespace Plato.Discuss.Share.Controllers
             var baseUrl = await _contextFacade.GetBaseUrlAsync();
             var viewModel = new ShareViewModel
             {
-                EntityUrl = baseUrl + _contextFacade.GetRouteUrl(routeValues)
+                Url = baseUrl + _contextFacade.GetRouteUrl(routeValues)
             };
 
             return View(viewModel);

@@ -1,54 +1,5 @@
+/* CSs allowing for additional customization of this feature */
 
-/* replies */
-
-.topic-reply-left { }
-.topic-reply-left + .topic-reply-body { position: relative; }
-.topic-reply-right { float: right; }
-.topic-reply-right + .topic-reply-body { position: relative; }
-
-.topic-reply-left a.avatar-link { float: left; margin-top: 1.1rem; }
-.topic-reply-left  .avatar { width: 36px; height: 36px; }
-
-/* reply body arrow */
-
-.topic-reply-left + .topic-reply-body:before,
-.topic-reply-left + .topic-reply-body:after {
-    content: "";
-    display: inline-block;
-    position: absolute;
-    pointer-events: none;
+.articles {
+    display: block;
 }
-
-.topic-reply-left + .topic-reply-body:before { left: -18px; top: 24px; }
-.topic-reply-left + .topic-reply-body:after { left: -16px; top: 25px; }
-
-/* arrow border */
-.topic-reply-left + .topic-reply-body:before {
-    border: 10px solid transparent;
-    border-right-color: #ddd;
-}
-
-/* arrow background */
-.topic-reply-left + .topic-reply-body:after {
-    border: 9px solid transparent;
-    border-right-color: #f8f8f8;
-}
-
-/* disable avatar column for smaller devices */
-@media only screen and (max-width : 1124px) 
-{   
-    .topic-reply-left { display: none; }
-    .topic-reply-left + .topic-reply-body { margin-left: 0; }
-    .topic-reply-right { display: none; }
-    .topic-reply-right + .topic-reply-body { margin-right: 0; }
-}
-
-/* channels */
-
-.channel-icon { vertical-align: middle; text-align: center; display: inline-block; border-radius: 100%; }
-.channel-icon-sm { width: 24px; height: 24px; line-height: 21px; }
-.channel-icon-sm i { font-size: 10pt; }
-.channel-icon-md { width: 40px; height: 40px; line-height: 40px; }
-.channel-icon-md i { font-size: 12pt; }
-.channel-icon-lg { width: 62px; height: 62px; line-height: 32px; }
-.channel-icon-lg i { font-size: 16pt; }

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Share.Navigation
@@ -55,8 +54,8 @@ namespace Plato.Discuss.Share.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(T["Share"], share => share
-                            .Action("Share", "Home", "Plato.Discuss.Share", new RouteValueDictionary()
+                        .Add(T["Share"], int.MaxValue - 3, share => share
+                            .Action("Index", "Home", "Plato.Discuss.Share", new RouteValueDictionary()
                             {
                                 ["opts.id"] = reply.EntityId.ToString(),
                                 ["opts.alias"] = topic.Alias,

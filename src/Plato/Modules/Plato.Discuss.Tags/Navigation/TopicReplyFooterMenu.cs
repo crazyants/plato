@@ -32,8 +32,10 @@ namespace Plato.Discuss.Tags.Navigation
             }
 
             // Get model from navigation builder
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+
+            // We need an entity
+            if (entity == null)
             {
                 return;
             }
@@ -46,7 +48,7 @@ namespace Plato.Discuss.Tags.Navigation
                 .Add(T["Tags"], react => react
                     .View("SimpleTagList", new
                     {
-                        topic,
+                        entity,
                         reply
                     })
                 );
