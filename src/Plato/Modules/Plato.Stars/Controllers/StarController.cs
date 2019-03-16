@@ -25,8 +25,7 @@ namespace Plato.Stars.Controllers
             _starManager = starManager;
         }
 
-        [HttpGet]
-        [ResponseCache(NoStore = true)]
+        [HttpGet, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(int id)
         {
             var follow = await _starStore.GetByIdAsync(id);
@@ -37,8 +36,7 @@ namespace Plato.Stars.Controllers
             return base.NotFound();
         }
         
-        [HttpPost, ValidateClientAntiForgeryToken]
-        [ResponseCache(NoStore = true)]
+        [HttpPost, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Post([FromBody] Star follow)
         {
      
@@ -49,7 +47,7 @@ namespace Plato.Stars.Controllers
                 return base.UnauthorizedException();
             }
 
-            // Is the user already following the thing?
+            // Has the user already starred the thing?
             var existingStar = await _starStore.SelectByNameThingIdAndCreatedUserId(
                 follow.Name,
                 follow.ThingId,
@@ -61,7 +59,7 @@ namespace Plato.Stars.Controllers
             }
 
             // Build a new subscription
-            var followToAdd = new Star()
+            var starToAdd = new Star()
             {
                 Name = follow.Name,
                 ThingId = follow.ThingId,
@@ -70,14 +68,13 @@ namespace Plato.Stars.Controllers
             };
 
             // Add and return result
-            var result = await _starManager.CreateAsync(followToAdd);
+            var result = await _starManager.CreateAsync(starToAdd);
             if (result != null)
             {
-
                 // Award reputation
-
               
                 return base.Result(result);
+
             }
 
             // We should not reach here
@@ -85,16 +82,9 @@ namespace Plato.Stars.Controllers
 
         }
 
-        [HttpPut]
-        [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Put(Star follow)
-        {
-            throw new NotImplementedException();
-        }
-        
         [HttpDelete]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Delete([FromBody] Star follow)
+        public async Task<IActionResult> Delete([FromBody] Star star)
         {
 
             var user = await base.GetAuthenticatedUserAsync();
@@ -103,16 +93,16 @@ namespace Plato.Stars.Controllers
                 return base.UnauthorizedException();
             }
             
-            var existingFollow = await _starStore.SelectByNameThingIdAndCreatedUserId(
-                follow.Name,
-                follow.ThingId,
+            var existingStar = await _starStore.SelectByNameThingIdAndCreatedUserId(
+                star.Name,
+                star.ThingId,
                 user.Id);
-            if (existingFollow != null)
+            if (existingStar != null)
             {
-                var result = await _starManager.DeleteAsync(existingFollow);
+                var result = await _starManager.DeleteAsync(existingStar);
                 if (result.Succeeded)
                 {
-                    return base.Result(existingFollow);
+                    return base.Result(existingStar);
                 }
 
             }

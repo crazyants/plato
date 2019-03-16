@@ -9,7 +9,7 @@ using Plato.Internal.Messaging.Abstractions;
 namespace Plato.Articles.Subscribers
 {
 
-    public class ReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
+    public class CommentSubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 
         private readonly IBroker _broker;
@@ -17,7 +17,7 @@ namespace Plato.Articles.Subscribers
         private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
 
-        public ReplySubscriber(
+        public CommentSubscriber(
             IBroker broker,
             IEntityStore<Article> entityStore,
             IEntityReplyStore<TEntityReply> entityReplyStore,
@@ -136,7 +136,7 @@ namespace Plato.Articles.Subscribers
             }
             
             // Get entity details to update
-            var details = entity.GetOrCreate<PostDetails>();
+            var details = entity.GetOrCreate<ArticleDetails>();
 
             // Get last 5 unique users & total unique user count
             var users = await _entityUsersStore.QueryAsync()
@@ -155,7 +155,7 @@ namespace Plato.Articles.Subscribers
             entity.TotalParticipants = users?.Total ?? 0;
 
             // Add updated data to entity
-            entity.AddOrUpdate<PostDetails>(details);
+            entity.AddOrUpdate<ArticleDetails>(details);
 
             // Persist the updates
             await _entityStore.UpdateAsync(entity);

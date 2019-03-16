@@ -4,7 +4,7 @@ using Plato.Internal.Models.Badges;
 
 namespace Plato.Articles.Badges
 {
-    public class ReplyBadges : IBadgesProvider<Badge>
+    public class CommentBadges : IBadgesProvider<Badge>
     {
 
         public static readonly Badge First =

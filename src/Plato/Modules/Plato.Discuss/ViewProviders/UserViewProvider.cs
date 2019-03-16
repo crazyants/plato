@@ -9,6 +9,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Discuss.ViewProviders
 {
+
     public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
@@ -61,5 +62,7 @@ namespace Plato.Discuss.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
     }
+
 }

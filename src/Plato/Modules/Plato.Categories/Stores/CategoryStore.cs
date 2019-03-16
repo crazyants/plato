@@ -171,13 +171,6 @@ namespace Plato.Categories.Stores
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByFeatureId, featureId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting categories for feature with Id '{0}'",
-                        featureId);
-                }
-
                 var results = await _categoryRepository.SelectByFeatureIdAsync(featureId);
                 if (results != null)
                 {

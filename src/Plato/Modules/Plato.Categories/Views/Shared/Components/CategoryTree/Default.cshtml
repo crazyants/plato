@@ -92,28 +92,36 @@
                     {
                         sb.Append("<i class=\"fal mr-2 check-icon\"></i>");
                     }
+                  
+                    sb.Append("<span class=\"category-icon category-icon-sm mr-2\" style=\"");
 
-                    var foreColor = channel.Value.ForeColor;
-                    if (String.IsNullOrEmpty(foreColor))
+                    if (!String.IsNullOrEmpty(channel.Value.BackColor))
                     {
-                        foreColor = "#fff";
+                        sb.Append("background-color: ")
+                            .Append(channel.Value.BackColor)
+                            .Append(";");
                     }
-
-                    var bgColor = channel.Value.BackColor;
-                    if (String.IsNullOrEmpty(bgColor))
+                    if (!String.IsNullOrEmpty(channel.Value.ForeColor))
                     {
-                        bgColor = "rgba(125, 125, 125, .5)";
+                        sb.Append("color: ")
+                            .Append(channel.Value.ForeColor)
+                            .Append(";");
                     }
+                    
+                    sb.Append("\">");
 
-                    sb.Append("<span class=\"category-icon category-icon-sm mr-2\" style=\"background-color: ")
-                        .Append(bgColor)
-                        .Append("; color: ")
-                        .Append(foreColor)
-                        .Append(";\">")
-                        .Append("<i class=\"")
-                        .Append(channel.Value.IconCss)
-                        .Append("\"></i>")
-                        .Append("</span>");
+                    if (!String.IsNullOrEmpty(channel.Value.IconCss))
+                    {
+                        sb.Append("<i class=\"")
+                            .Append(channel.Value.IconCss)
+                            .Append("\"></i>");
+                    }
+                    else
+                    {
+                        sb.Append("<i class=\"fal fa-folder\"></i>");
+                    }
+                    
+                    sb.Append("</span>");
 
                     sb.Append(channel.Value.Name);
 
@@ -136,7 +144,7 @@
                     sb.Append("</li>");
 
                 }
-                
+
             }
         }
         else

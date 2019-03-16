@@ -5,25 +5,18 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Categories.ViewComponents
 {
     public class CategoryTreeViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<CategoryBase> _channelStore;
-        private readonly IContextFacade _contextFacade;
-        private readonly IFeatureFacade _featureFacade;
 
+        private readonly ICategoryStore<CategoryBase> _categoryStore;
+        
         public CategoryTreeViewComponent(
-            ICategoryStore<CategoryBase> channelStore,
-            IContextFacade contextFacade, 
-            IFeatureFacade featureFacade)
+            ICategoryStore<CategoryBase> categoryStore)
         {
-            _channelStore = channelStore;
-            _contextFacade = contextFacade;
-            _featureFacade = featureFacade;
+            _categoryStore = categoryStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(CategoryTreeOptions options)
@@ -40,7 +33,6 @@ namespace Plato.Categories.ViewComponents
             }
 
             var selected = await BuildSelectionsAsync(options);
-
             return View(new CategoryTreeViewModel
             {
                 HtmlName = options.HtmlName,
@@ -52,11 +44,11 @@ namespace Plato.Categories.ViewComponents
 
         }
 
-        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(
-            CategoryTreeOptions options)
+        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(CategoryTreeOptions options)
         {
             
-            var channels = await _channelStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId);
+            var channels = await _categoryStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId);
+
             return channels?.Select(c => new Selection<CategoryBase>
                 {
                     IsSelected = options.SelectedCategories.Any(v => v == c.Id),

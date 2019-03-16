@@ -12,17 +12,16 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Notifications.Extensions;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
 using Plato.Internal.Badges.NotificationTypes;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Notifications.Extensions;
-using Plato.Notifications.Services;
 
 namespace Plato.Articles.Tasks
 {
-    public class TopicBadgesAwarder : IBackgroundTaskProvider
+    public class ArticleBadgesAwarder : IBackgroundTaskProvider
     {
 
         private const string Sql = @"                       
@@ -38,7 +37,7 @@ namespace Plato.Articles.Tasks
                 );
                 DECLARE MSGCURSOR CURSOR FOR SELECT e.CreatedUserId, COUNT(e.Id) AS Total 
                 FROM {prefix}_Entities e
-                WHERE NOT EXISTS (
+                WHERE  e.FeatureId = {featureId} AND NOT EXISTS (
                    SELECT Id FROM {prefix}_UserBadges ub 
                    WHERE ub.UserId = e.CreatedUserId AND ub.BadgeName = @badgeName
                  )
@@ -68,38 +67,47 @@ namespace Plato.Articles.Tasks
 
         public IEnumerable<Badge> Badges => new[]
         {
-            TopicBadges.First,
-            TopicBadges.Bronze,
-            TopicBadges.Silver,
-            TopicBadges.Gold
+            ArticleBadges.First,
+            ArticleBadges.Bronze,
+            ArticleBadges.Silver,
+            ArticleBadges.Gold
         };
         
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbHelper _dbHelper;
-        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IFeatureFacade _featureFacade;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDbHelper _dbHelper;
 
-        public TopicBadgesAwarder(
-            ICacheManager cacheManager,
-            IDbHelper dbHelper,
-            IPlatoUserStore<User> userStore,
+        public ArticleBadgesAwarder(
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<Badge> notificationManager,
             IUserReputationAwarder userReputationAwarder,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults)
+            IPlatoUserStore<User> userStore,
+            IFeatureFacade featureFacade,
+            ICacheManager cacheManager,
+            IDbHelper dbHelper)
         {
-            _cacheManager = cacheManager;
-            _dbHelper = dbHelper;
-            _userStore = userStore;
-            _notificationManager = notificationManager;
-            _userReputationAwarder = userReputationAwarder;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _userReputationAwarder = userReputationAwarder;
+            _notificationManager = notificationManager;
+            _featureFacade = featureFacade;
+            _cacheManager = cacheManager;
+            _userStore = userStore;
+            _dbHelper = dbHelper;
         }
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
 
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
+            if (feature == null)
+            {
+                return;
+            }
+            
             var bot = await _userStore.GetPlatoBotAsync();
             foreach (var badge in this.Badges)
             {
@@ -108,7 +116,8 @@ namespace Plato.Articles.Tasks
                 var replacements = new Dictionary<string, string>()
                 {
                     ["{name}"] = badge.Name,
-                    ["{threshold}"] = badge.Threshold.ToString()
+                    ["{threshold}"] = badge.Threshold.ToString(),
+                    ["{featureId}"] = feature.Id.ToString()
                 };
 
                 var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>

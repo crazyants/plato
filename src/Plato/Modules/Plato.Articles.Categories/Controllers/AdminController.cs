@@ -16,15 +16,16 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.ViewModels;
+using Plato.Internal.Layout;
 
 namespace Plato.Articles.Categories.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
      
-        private readonly ICategoryStore<Category> _categoryStore;
-        private readonly ICategoryManager<Category> _categoryManager;
         private readonly IViewProviderManager<CategoryAdmin> _viewProvider;
+        private readonly ICategoryManager<Category> _categoryManager;
+        private readonly ICategoryStore<Category> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
@@ -38,17 +39,16 @@ namespace Plato.Articles.Categories.Controllers
             IStringLocalizer stringLocalizer,
             ICategoryStore<Category> categoryStore,
             IViewProviderManager<CategoryAdmin> viewProvider,
-            IBreadCrumbManager breadCrumbManager,
             ICategoryManager<Category> categoryManager,
+            IBreadCrumbManager breadCrumbManager,
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
-    
-            _categoryStore = categoryStore;
-            _viewProvider = viewProvider;
+            _breadCrumbManager = breadCrumbManager;
             _categoryManager = categoryManager;
             _featureFacade = featureFacade;
-            _breadCrumbManager = breadCrumbManager;
+            _categoryStore = categoryStore;
+            _viewProvider = viewProvider;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -117,7 +117,7 @@ namespace Plato.Articles.Categories.Controllers
             }
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(currentCategory ?? new Category(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(currentCategory ?? new Category(), this));
 
         }
 
@@ -222,8 +222,8 @@ namespace Plato.Articles.Categories.Controllers
             });
             
             var category = await _categoryStore.GetByIdAsync(id);
-            var model = await _viewProvider.ProvideEditAsync(category, this);
-            return View(model);
+    
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(category, this));
 
         }
         

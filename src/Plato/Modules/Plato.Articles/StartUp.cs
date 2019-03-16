@@ -103,16 +103,16 @@ namespace Plato.Articles
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ArticleSubscriber<Article>>();
-            services.AddScoped<IBrokerSubscriber, ReplySubscriber<Comment>>();
+            services.AddScoped<IBrokerSubscriber, CommentSubscriber<Comment>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
 
             // Badge providers
-            services.AddScoped<IBadgesProvider<Badge>, TopicBadges>();
-            services.AddScoped<IBadgesProvider<Badge>, ReplyBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, ArticleBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, CommentBadges>();
 
             // Background tasks
-            services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
-            services.AddScoped<IBackgroundTaskProvider, ReplyBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, ArticleBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, CommentBadgesAwarder>();
 
 
             // Notification types

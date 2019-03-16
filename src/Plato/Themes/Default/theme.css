@@ -136,3 +136,9 @@
 .resizable-bar.active,
 .resizable-bar:hover { background-color: #007bff; }
 
+/* ------------------- */
+/* Category Icon */
+/* ------------------- */
+
+.list-group-item-action:hover .category-icon { color: white; }
+.category-icon { background-color: #aaa; color: white; }

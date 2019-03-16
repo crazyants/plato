@@ -15,16 +15,14 @@
         <div class="p-3">
             @if (!String.IsNullOrEmpty(Model.Category.IconCss))
             {
-
                 <span class="category-icon category-icon-lg" style="background-color: @childBgColor; color: @childForeColor">
                     <i class="@Model.Category.IconCss"></i>
                 </span>
-
             }
             else
             {
 
-                <span class="category-icon category-icon-lg bg-info text-light">
+                <span class="category-icon category-icon-lg">
                     <i class="fal fa-folder"></i>
                 </span>
 
@@ -60,7 +58,7 @@ else
             }
             else
             {
-                <div class="category-icon category-icon-lg bg-info text-light">
+                <div class="category-icon category-icon-lg">
                     <i class="fal fa-folder"></i>
                 </div>
             }

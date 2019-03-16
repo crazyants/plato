@@ -13,7 +13,6 @@ using Plato.Categories.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Features;
 
 namespace Plato.Articles.Categories.ViewProviders
 {

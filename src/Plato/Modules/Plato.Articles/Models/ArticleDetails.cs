@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions;
 namespace Plato.Articles.Models
 {
 
-    public class PostDetails : Serializable
+    public class ArticleDetails : Serializable
     {
         public IEnumerable<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
     }
