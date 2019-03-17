@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Plato.Internal.Models.Tags;
 using Plato.Internal.Repositories;
 using Plato.Tags.Models;
 

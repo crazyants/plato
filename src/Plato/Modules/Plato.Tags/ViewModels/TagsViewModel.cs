@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Tags.Models;
+﻿using System.Collections.Generic;
+using Plato.Internal.Models.Tags;
 
 namespace Plato.Tags.ViewModels
 {

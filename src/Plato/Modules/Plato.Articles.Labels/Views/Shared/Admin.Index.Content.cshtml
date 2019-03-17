@@ -1,56 +1,7 @@
-﻿@model LabelIndexViewModel<Label>
+﻿@model LabelIndexViewModel<Plato.Articles.Labels.Models.Label>
 
 @await DisplayAsync(new View("ArticleLabelList", new
 {
     options = @Model.Options,
     pager = @Model.Pager
 }))
-
-@*<card class="card card-body-flush">
-    <card-title>
-        <h6 class="card-title">@T["Labels"]</h6>
-    </card-title>
-    <card-body>
-        @if (Model.Labels != null)
-        {
-            <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var label in Model.Labels)
-                {
-                    <li class="list-group-item list-group-item-action">
-
-                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@label.Id" class="btn btn-secondary float-right">
-                            <i class="fal fa-pencil"></i>
-                            @T["Edit"]
-                        </a>
-
-                        <div class="float-left">
-                            <h6 class="d-md-inline align-middle">
-                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@label.Id" class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
-                                    @label.Name
-                                </a>
-                                @if (!String.IsNullOrEmpty(label.Description))
-                                {
-                                    <span class="ml-3 text-muted">
-                                        @label.Description
-                                    </span>
-                                }
-                            </h6>
-
-                        </div>
-
-                    </li>
-                }
-            </ul>
-        }
-        else
-        {
-            <ul class="list-group list-group-flush list-group-hover">
-                <li class="list-group-item">
-                    @T["No labels found"]
-                </li>
-            </ul>
-        }
-    </card-body>
-</card>*@
-
-

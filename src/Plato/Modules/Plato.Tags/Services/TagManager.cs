@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Tags;
 using Plato.Internal.Text.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;

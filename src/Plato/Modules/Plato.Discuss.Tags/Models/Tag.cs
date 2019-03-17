@@ -1,4 +1,4 @@
-﻿using Plato.Tags.Models;
+﻿using Plato.Internal.Models.Tags;
 
 namespace Plato.Discuss.Tags.Models
 {

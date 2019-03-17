@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Models.Tags;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Tags.Models;

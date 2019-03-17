@@ -21,8 +21,8 @@ namespace Plato.Articles.Labels.Controllers
     {
 
         private readonly IViewProviderManager<Label> _labelViewProvider;
-        private readonly ILabelStore<Label> _labelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly ILabelStore<Label> _labelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
@@ -34,16 +34,17 @@ namespace Plato.Articles.Labels.Controllers
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IViewProviderManager<Label> labelViewProvider,
-            ILabelStore<Label> labelStore,
             IBreadCrumbManager breadCrumbManager,
+            ILabelStore<Label> labelStore,
             IContextFacade contextFacade1,
             IFeatureFacade featureFacade)
         {
-            _labelStore = labelStore;
+        
             _labelViewProvider = labelViewProvider;
             _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
+            _labelStore = labelStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;

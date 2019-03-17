@@ -116,14 +116,14 @@ namespace Plato.Articles.Labels.Controllers
                     .Add(S["Home"], home => home
                         .Action("Index", "Admin", "Plato.Admin")
                         .LocalNav())
-                    .Add(S["Discuss"], discuss => discuss
+                    .Add(S["Articles"], articles => articles
                         .Action("Index", "Admin", "Plato.Articles")
                         .LocalNav())
                     .Add(S["Labels"]);
             });
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new Label(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new Label(), this));
 
         }
 
@@ -140,7 +140,7 @@ namespace Plato.Articles.Labels.Controllers
                     .Add(S["Home"], home => home
                         .Action("Index", "Admin", "Plato.Admin")
                         .LocalNav())
-                    .Add(S["Discuss"], discuss => discuss
+                    .Add(S["Articles"], articles => articles
                         .Action("Index", "Admin", "Plato.Articles")
                         .LocalNav())
                     .Add(S["Labels"], labels => labels
@@ -211,7 +211,7 @@ namespace Plato.Articles.Labels.Controllers
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Admin", "Plato.Admin")
                         .LocalNav())
-                    .Add(S["Discuss"], discuss => discuss
+                    .Add(S["Articles"], articles => articles
                         .Action("Index", "Admin", "Plato.Articles")
                         .LocalNav())
                     .Add(S["Labels"], labels => labels
@@ -221,8 +221,8 @@ namespace Plato.Articles.Labels.Controllers
             });
             
             var category = await _labelStore.GetByIdAsync(id);
-            var model = await _viewProvider.ProvideEditAsync(category, this);
-            return View(model);
+            
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(category, this));
 
         }
 

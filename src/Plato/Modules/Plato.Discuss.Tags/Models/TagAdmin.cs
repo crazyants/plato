@@ -1,4 +1,5 @@
-﻿using Plato.Tags.Models;
+﻿using Plato.Internal.Models.Tags;
+using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags.Models
 {
@@ -14,19 +15,19 @@ namespace Plato.Discuss.Tags.Models
         {
         }
         
-        public TagAdmin(TagBase tagBase)
+        public TagAdmin(ITag tag)
         {
-            Id = tagBase.Id;
-            FeatureId = tagBase.FeatureId;
-            Name = tagBase.Name;
-            NameNormalized = tagBase.NameNormalized;
-            Description = tagBase.Description;
-            Alias = tagBase.Alias;
-            TotalEntities = tagBase.TotalEntities;
-            TotalFollows = tagBase.TotalFollows;
-            LastSeenDate = tagBase.LastSeenDate;
-            CreatedUserId = tagBase.CreatedUserId;
-            CreatedDate = tagBase.CreatedDate;
+            Id = tag.Id;
+            FeatureId = tag.FeatureId;
+            Name = tag.Name;
+            NameNormalized = tag.NameNormalized;
+            Description = tag.Description;
+            Alias = tag.Alias;
+            TotalEntities = tag.TotalEntities;
+            TotalFollows = tag.TotalFollows;
+            LastSeenDate = tag.LastSeenDate;
+            CreatedUserId = tag.CreatedUserId;
+            CreatedDate = tag.CreatedDate;
         }
 
     }

@@ -18,6 +18,7 @@ using Plato.Labels.Stores;
 using Plato.Labels.Services;
 using Plato.Discuss.Models;
 using Plato.Labels.ViewModels;
+using Label = Plato.Discuss.Labels.Models.Label;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {

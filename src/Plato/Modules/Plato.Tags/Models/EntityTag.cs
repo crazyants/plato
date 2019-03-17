@@ -2,6 +2,7 @@
 using System.Data;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models.Tags;
 
 namespace Plato.Tags.Models
 {

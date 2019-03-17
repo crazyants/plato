@@ -175,11 +175,11 @@ namespace Plato.Labels.Stores
 
         #region "Private Methods"
 
-        async Task<IEnumerable<LabelData>> SerializeMetaDataAsync(TLabel Label)
+        async Task<IEnumerable<LabelData>> SerializeMetaDataAsync(TLabel label)
         {
 
             // Get all existing label data
-            var data = await _labelDataStore.GetByLabelIdAsync(Label.Id);
+            var data = await _labelDataStore.GetByLabelIdAsync(label.Id);
 
             // Prepare list to search, use dummy list if needed
             var dataList = data?.ToList() ?? new List<LabelData>();
@@ -187,7 +187,7 @@ namespace Plato.Labels.Stores
             // Iterate all meta data on the supplied object,
             // check if a key already exists, if so update existing key 
             var output = new List<LabelData>();
-            foreach (var item in Label.MetaData)
+            foreach (var item in label.MetaData)
             {
                 var key = item.Key.FullName;
                 var entityData = dataList.FirstOrDefault(d => d.Key == key);

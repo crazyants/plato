@@ -21,9 +21,9 @@ namespace Plato.Articles.Labels.Navigation
             }
 
             builder
-                .Add(T["Discuss"], 1, users => users
+                .Add(T["Articles"], 1, users => users
                     .Add(T["Labels"], 3, manage => manage
-                        .Action("Index", "Admin", "Plato.Article.Labels")
+                        .Action("Index", "Admin", "Plato.Articles.Labels")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models;
 
 namespace Plato.Labels.Models
 {
 
-    public interface ILabel : ILabelBase, IDbModel<LabelBase>
+    public interface ILabel : 
+        ILabelBase,
+        IMetaData<LabelData>,
+        IDbModel<LabelBase>
     {
 
         int ParentId { get; set; }
@@ -33,17 +34,7 @@ namespace Plato.Labels.Models
         int ModifiedUserId { get; set; }
 
         DateTimeOffset? ModifiedDate { get; set; }
-
-        IEnumerable<LabelData> Data { get; set; } 
-
-        IDictionary<Type, ISerializable> MetaData { get; }
         
-        void AddOrUpdate<T>(T obj) where T : class;
-
-        void AddOrUpdate(Type type, ISerializable obj);
-
-        T GetOrCreate<T>() where T : class;
-
     }
 
 }

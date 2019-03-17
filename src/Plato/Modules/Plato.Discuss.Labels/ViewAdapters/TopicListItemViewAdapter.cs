@@ -14,6 +14,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Labels.Models;
 using Plato.Labels.Stores;
+using Label = Plato.Discuss.Labels.Models.Label;
 
 namespace Plato.Discuss.Labels.ViewAdapters
 {

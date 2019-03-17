@@ -1,11 +1,77 @@
 ﻿@model AdminIndex
-
 <card>
     <card-title>
-        <h6 class="card-title">@T["Categories"]</h6>
+        <h6 class="card-title">@T["Overview"]</h6>
     </card-title>
     <card-body>
-      
+
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <i class="fal fa-comment fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-9">
+                        <h1 class="d-inline-block" data-toggle="tooltip">
+                            23
+                        </h1><br />
+                        <span class="text-muted">
+                            @T["public topics"]
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <i class="fal fa-reply fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-9">
+                        <h1 class="d-inline-block" data-toggle="tooltip">
+                            23
+                        </h1><br />
+                        <span class="text-muted">
+                            @T["private topics"]
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <i class="fal fa-heart fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-9">
+                        <h1 class="d-inline-block" data-toggle="tooltip">
+                            11
+                        </h1><br />
+                        <span class="text-muted">
+                            @T["public replies:"]
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <i class="fal fa-heart fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-9">
+                        <h1 class="d-inline-block" data-toggle="tooltip">
+                            11
+                        </h1><br />
+                        <span class="text-muted">
+                            @T["private replies"]
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </card-body>
 </card>
-
+<ul>
+    <li>Enhance Your Knowledgebase</li>
+    <li>Article Settings</li>
+    <li>Article Reports</li>
+</ul>

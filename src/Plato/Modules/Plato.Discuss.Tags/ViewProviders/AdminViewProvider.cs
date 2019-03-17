@@ -13,17 +13,16 @@ namespace Plato.Discuss.Tags.ViewProviders
     public class AdminViewProvider : BaseViewProvider<TagAdmin>
     {
 
-        private readonly ITagStore<Tag> _labelStore;
-        private readonly ITagManager<Tag> _labelManager;
+
+        private readonly ITagManager<Tag> _tagManager;
         private readonly IFeatureFacade _featureFacade;
 
         public AdminViewProvider(
-            ITagStore<Tag> labelStore,
-            ITagManager<Tag> labelManager,
+            ITagManager<Tag> tagManager,
             IFeatureFacade featureFacade)
         {
-            _labelStore = labelStore;
-            _labelManager = labelManager;
+  
+            _tagManager = tagManager;
             _featureFacade = featureFacade;
         }
 
@@ -96,7 +95,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
 
-                var result = await _labelManager.UpdateAsync(new Tag()
+                var result = await _tagManager.UpdateAsync(new Tag()
                 {
                     Id = label.Id,
                     FeatureId = label.FeatureId,

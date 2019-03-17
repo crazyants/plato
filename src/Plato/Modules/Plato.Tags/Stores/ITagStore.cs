@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Plato.Internal.Models.Tags;
 using Plato.Internal.Stores.Abstractions;
-using Plato.Tags.Models;
 
 namespace Plato.Tags.Stores
 {

@@ -49,7 +49,7 @@ namespace Plato.Articles.Labels
             services.AddScoped<IViewProvider<LabelAdmin>, AdminViewProvider>();
        
             // Register view adapters
-            services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
+            services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();
 
             // Labels view providers
             services.AddScoped<IViewProviderManager<Label>, ViewProviderManager<Label>>();
@@ -69,14 +69,14 @@ namespace Plato.Articles.Labels
             routes.MapAreaRoute(
                 name: "ArticlesLabelIndex",
                 areaName: "Plato.Articles.Labels",
-                template: "discuss/labels/{pager.offset:int?}",
+                template: "articles/labels/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
             routes.MapAreaRoute(
                 name: "ArticlesLabelDisplay",
                 areaName: "Plato.Articles.Labels",
-                template: "discuss/label/{opts.labelId:int}/{opts.alias?}/{pager.offset:int?}",
+                template: "articles/label/{opts.labelId:int}/{opts.alias?}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 

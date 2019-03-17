@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
-using Plato.Tags.Models;
 using Plato.Tags.Stores;
-using Plato.Discuss.Tags.Follow;
+using Plato.Internal.Models.Tags;
 
 namespace Plato.Discuss.Tags.Follow.Subscribers
 {

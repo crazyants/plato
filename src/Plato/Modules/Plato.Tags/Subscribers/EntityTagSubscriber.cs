@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Tags;
 using Plato.Tags.Models;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;

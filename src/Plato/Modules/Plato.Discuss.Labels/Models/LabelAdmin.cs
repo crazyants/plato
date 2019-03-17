@@ -2,7 +2,7 @@
 
 namespace Plato.Discuss.Labels.Models
 {
-    public class LabelAdmin : LabelBase
+    public class LabelAdmin : Plato.Labels.Models.LabelBase
     {
     }
 
