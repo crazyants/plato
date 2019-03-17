@@ -1,0 +1,17 @@
+Name: Plato Articles Labels
+Description: Adds the ability to label articles.
+Category: Articles
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Labels",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Articles",
+		Version: "1.0.0"
+	}
+]

@@ -185,6 +185,7 @@ namespace Plato.Discuss.Tasks
                             }
 
                         }
+
                     }
 
                     _cacheManager.CancelTokens(typeof(UserBadgeStore));

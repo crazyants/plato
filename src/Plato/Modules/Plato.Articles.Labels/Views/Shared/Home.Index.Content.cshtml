@@ -1,0 +1,7 @@
+﻿@model LabelIndexViewModel<Label>
+
+@await DisplayAsync(new View("ArticleLabelList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
