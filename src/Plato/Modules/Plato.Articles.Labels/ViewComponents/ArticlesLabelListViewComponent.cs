@@ -10,7 +10,7 @@ using Plato.Articles.Labels.Models;
 namespace Plato.Articles.Labels.ViewComponents
 {
 
-    public class ArticleLabelListViewComponent : ViewComponent
+    public class ArticlesLabelListViewComponent : ViewComponent
     {
 
         private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
@@ -63,7 +63,7 @@ namespace Plato.Articles.Labels.ViewComponents
         
         private readonly ILabelService<Label> _labelService;
 
-        public ArticleLabelListViewComponent(
+        public ArticlesLabelListViewComponent(
             ILabelService<Label> labelService)
         {
             _labelService = labelService;

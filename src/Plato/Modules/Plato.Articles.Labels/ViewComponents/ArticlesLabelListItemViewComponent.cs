@@ -6,10 +6,10 @@ using Plato.Labels.ViewModels;
 namespace Plato.Articles.Labels.ViewComponents
 {
  
-    public class ArticleLabelListItemViewComponent : ViewComponent
+    public class ArticlesLabelListItemViewComponent : ViewComponent
     {
         
-        public ArticleLabelListItemViewComponent()
+        public ArticlesLabelListItemViewComponent()
         {
         }
 

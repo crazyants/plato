@@ -30,7 +30,7 @@ namespace Plato.Internal.Net
             return await GetAsync(url, null);
         }
 
-        public async Task<string> GetAsync(Uri url, Dictionary<string, string> parameters)
+        public async Task<string> GetAsync(Uri url, IDictionary<string, string> parameters)
         {
             return await RequestAsync(HttpMethod.Get, url, parameters);
         }
@@ -40,12 +40,12 @@ namespace Plato.Internal.Net
             return await PostAsync(url, null);
         }
 
-        public async Task<string> PostAsync(Uri url, Dictionary<string, string> parameters)
+        public async Task<string> PostAsync(Uri url, IDictionary<string, string> parameters)
         {
             return await RequestAsync(HttpMethod.Post, url, parameters);
         }
         
-        public async Task<string> RequestAsync(HttpMethod method, Uri url, Dictionary<string, string> parameters)
+        public async Task<string> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters)
         {
             var encoding = new UTF8Encoding();
             var data = string.Empty;
@@ -113,7 +113,7 @@ namespace Plato.Internal.Net
 
         #region "Private Methods"
 
-        string BuildParameterString(Dictionary<string, string> parameters)
+        string BuildParameterString(IDictionary<string, string> parameters)
         {
             var output = string.Empty;
             foreach (var pair in parameters)
