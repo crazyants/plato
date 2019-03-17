@@ -19,7 +19,6 @@ namespace Plato.Articles.Tags.ViewProviders
     {
 
         private readonly ITagStore<Tag> _tagStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
 
@@ -30,7 +29,6 @@ namespace Plato.Articles.Tags.ViewProviders
             IActionContextAccessor actionContextAccessor)
         {
             _tagStore = tagStore;
-            _contextFacade = contextFacade;
             _featureFacade = featureFacade;
             _actionContextAccessor = actionContextAccessor;
         }

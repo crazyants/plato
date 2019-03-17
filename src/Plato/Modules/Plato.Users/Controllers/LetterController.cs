@@ -43,6 +43,11 @@ namespace Plato.Users.Controllers
         public async Task Get(char letter, string color)
         {
             
+            if (string.IsNullOrEmpty(color))
+            {
+                throw new ArgumentNullException(nameof(color));
+            }
+
             var fileName = $"{letter}-{color}.png";
             var r = Response;
             r.Clear();
@@ -61,8 +66,10 @@ namespace Plato.Users.Controllers
             else
             {
 
-                // Ensure we have valid hex characters
-                if (!color.IsValidHex())
+                // Validate supplied input as this input is used by the letter renderer
+                var isCorrectChars = color.IsValidHex();
+                var isCorrectLength = color.Length <= 6;
+                if (!isCorrectChars | !isCorrectLength)
                 {
                     throw new Exception("The supplied color is not a valid hexadecimal value.");
                 }

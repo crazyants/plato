@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.FileSystem.Abstractions
 {
+    /// <summary>
+    /// Isolates the uploads folder within Plato.
+    /// </summary>
     public interface IUploadFolder
     {
   
@@ -17,4 +20,5 @@ namespace Plato.Internal.FileSystem.Abstractions
         bool DeleteFile(string fileName, string path);
 
     }
+
 }

@@ -60,8 +60,7 @@ namespace Plato.Discuss.Tags.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-
-
+        
         private readonly ITagService<Tag> _tagService;
         
         public DiscussTagListViewComponent(

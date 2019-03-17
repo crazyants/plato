@@ -201,7 +201,7 @@ namespace Plato.Articles.Tags.Controllers
         {
 
             // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
 
             // Restrict results to current feature
             if (feature != null)

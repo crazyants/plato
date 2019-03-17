@@ -25,18 +25,11 @@ namespace Plato.Tags.Services
 
         public async Task<IPagedResults<TModel>> GetResultsAsync(TagIndexOptions options, PagerOptions pager)
         {
-
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-            if (feature == null)
-            {
-                return null;
-            }
-
             return await _tagStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
                 .Select<TagQueryParams>(q =>
                 {
-                   q.FeatureId.Equals(feature.Id);
+                   q.FeatureId.Equals(options.FeatureId);
                     if (!String.IsNullOrEmpty(options.Search))
                     {
                         q.Keywords.Like(options.Search);

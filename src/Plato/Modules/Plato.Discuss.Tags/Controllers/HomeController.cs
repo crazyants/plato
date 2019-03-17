@@ -12,6 +12,7 @@ using Plato.Tags.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.ViewModels;
@@ -23,33 +24,33 @@ namespace Plato.Discuss.Tags.Controllers
     {
         
         private readonly IViewProviderManager<Tag> _tagViewProvider;
-        private readonly ITagStore<TagBase> _tagStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
+        private readonly ITagStore<TagBase> _tagStore;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
         
         public HomeController(
-            IViewProviderManager<Tag> tagViewProvider,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
+            IViewProviderManager<Tag> tagViewProvider,
+            IBreadCrumbManager breadCrumbManager,
             ITagStore<TagBase> tagStore,
             IContextFacade contextFacade,
-            IAlerter alerter,
-            IBreadCrumbManager breadCrumbManager, 
-            IContextFacade contextFacade1,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IAlerter alerter)
         {
-            _tagStore = tagStore;
-            _tagViewProvider = tagViewProvider;
-            _alerter = alerter;
+            
             _breadCrumbManager = breadCrumbManager;
-            _contextFacade = contextFacade1;
+            _tagViewProvider = tagViewProvider;
+            _contextFacade = contextFacade;
             _featureFacade = featureFacade;
+            _tagStore = tagStore;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -116,7 +117,7 @@ namespace Plato.Discuss.Tags.Controllers
             });
 
             // Return view
-            return View(await _tagViewProvider.ProvideIndexAsync(new Tag(), this));
+            return View((LayoutViewModel) await _tagViewProvider.ProvideIndexAsync(new Tag(), this));
 
         }
         
@@ -191,7 +192,7 @@ namespace Plato.Discuss.Tags.Controllers
             });
 
             // Return view
-            return View(await _tagViewProvider.ProvideDisplayAsync(new Tag(tag), this));
+            return View((LayoutViewModel) await _tagViewProvider.ProvideDisplayAsync(new Tag(tag), this));
 
         }
 
@@ -201,7 +202,7 @@ namespace Plato.Discuss.Tags.Controllers
         {
 
             // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
 
             // Restrict results to current feature
             if (feature != null)
