@@ -1,17 +1,18 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Articles.Models;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Tags.Navigation
+namespace Plato.Articles.Tags.Navigation
 {
 
-    public class TopicReplyFooterMenu : INavigationProvider
+    public class ArticleReplyFooterMenu : INavigationProvider
     {
         
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyFooterMenu(IStringLocalizer localizer)
+        public ArticleReplyFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -19,13 +20,13 @@ namespace Plato.Discuss.Tags.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-reply-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article-reply-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get model from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
 
             // We need an entity
             if (entity == null)
@@ -34,12 +35,12 @@ namespace Plato.Discuss.Tags.Navigation
             }
 
             // Replies are optional
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
 
             // Add reaction list to topic reply footer navigation
             builder
                 .Add(T["Tags"], react => react
-                    .View("TopicTags", new
+                    .View("ArticleTags", new
                     {
                         entity,
                         reply

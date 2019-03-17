@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Internal.Data.Abstractions
+@model TagIndexViewModel<Tag>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title d-inline">@T["Tags"]</h6>
+        <ul class="nav navbar p-0 float-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="sortByDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @T["Sort By"]
+                </a>
+                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="sortByDropdown">
+                    @foreach (var option in Model.SortColumns)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = option.Value
+                        };
+                        if (Model.Options.Order != OrderBy.Desc)
+                        {
+                            if (!routeValues.ContainsKey("opts.order"))
+                            {
+                                routeValues.Add("opts.order", Model.Options.Order);
+                            }
+
+                        }
+                        var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                    <div class="dropdown-divider"></div>
+                    @foreach (var option in Model.SortOrder)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = Model.Options.Sort,
+                            ["opts.order"] = option.Value
+                        };
+                        var iconCss = option.Value == Model.Options.Order ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                </div>
+            </li>
+        </ul>
+    </card-title>
+    <card-body>
+        @if (Model.Results != null)
+        {
+            var offset = Model.Pager.Offset;
+            var rowOffset = Model.Pager.RowOffset;
+            <div data-provide="infiniteScroll"
+                 data-infinite-scroll-url="@Model.Pager.Url"
+                 data-infinite-scroll-offset="@offset"
+                 data-infinite-scroll-row-offset="@rowOffset"
+                 data-infinite-scroll-page="@Model.Pager.Page"
+                 data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
+                 class="list-group list-group-flush list-group-hover infinite-scroll">
+                <div class="row no-gutters">
+                    <div class="list-group-item infinite-scroll-loader col-12" data-type="previous"></div>
+                    @foreach (var tag in Model.Results.Data)
+                    {
+                        var css = rowOffset == offset
+                            ? "infinite-scroll-item infinite-scroll-item-active"
+                            : "infinite-scroll-item";
+                        <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12">
+                            <div class="@css" data-infinite-scroll-offset="@rowOffset" data-infinite-scroll-highlight="@rowOffset">
+                                @await DisplayAsync(new View("ArticlesTagListItem", new
+                                {
+                                    model = new TagListItemViewModel<Tag>()
+                                    {
+                                        Tag = tag,
+                                        EnableEdit = Model.Options.EnableEdit
+                                    }
+                                }))
+                            </div>
+                        </div>
+                        {
+                            rowOffset++;
+                        }
+                    }
+                    <div class="infinite-scroll-loader col-12" data-type="next"></div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No tags found"]
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>
+
+@if (Model.Pager.Enabled)
+{
+    <div class="mt-4 mb-4">
+        <pager model="@Model.Pager"></pager>
+    </div>
+}

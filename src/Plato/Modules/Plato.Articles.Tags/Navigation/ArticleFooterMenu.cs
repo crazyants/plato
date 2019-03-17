@@ -1,16 +1,17 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Articles.Models;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Tags.Navigation
+namespace Plato.Articles.Tags.Navigation
 {
-    public class TopicFooterMenu : INavigationProvider
+    public class ArticleFooterMenu : INavigationProvider
     {
         
         public IStringLocalizer T { get; set; }
 
-        public TopicFooterMenu(IStringLocalizer localizer)
+        public ArticleFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -18,13 +19,13 @@ namespace Plato.Discuss.Tags.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get model from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
 
             // We always need a topic
             if (entity == null)
@@ -33,11 +34,11 @@ namespace Plato.Discuss.Tags.Navigation
             }
 
             // Replies are options
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
             
             builder
                 .Add(T["Tags"], react => react
-                    .View("TopicTags", new
+                    .View("ArticleTags", new
                     {
                         entity,
                         reply
