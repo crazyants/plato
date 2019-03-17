@@ -43,7 +43,7 @@ namespace Plato.Discuss.Tags.Navigation
             
             builder
                 .Add(T["Tags"], react => react
-                    .View("SimpleTagList", new
+                    .View("TopicTags", new
                     {
                         entity,
                         reply

@@ -18,18 +18,15 @@ namespace Plato.Articles.Labels.ViewProviders
     {
 
         private readonly ILabelStore<Label> _labelStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
 
         public LabelViewProvider(
             ILabelStore<Label> labelStore,
-            IContextFacade contextFacade,
             IFeatureFacade featureFacade,
             IActionContextAccessor actionContextAccessor)
         {
             _labelStore = labelStore;
-            _contextFacade = contextFacade;
             _featureFacade = featureFacade;
             _actionContextAccessor = actionContextAccessor;
         }
@@ -89,7 +86,7 @@ namespace Plato.Articles.Labels.ViewProviders
                 View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Display.Tools", model => label).Zone("tools").Order(1),
                 View<EntityIndexViewModel<Article>>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<LabelsViewModel<Label>>("Topic.Labels.Index.Sidebar", model =>
+                View<LabelsViewModel<Label>>("Article.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
                     model.Labels = labels?.Data;

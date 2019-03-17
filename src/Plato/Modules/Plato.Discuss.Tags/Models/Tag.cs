@@ -1,4 +1,4 @@
-﻿using Plato.Internal.Models.Tags;
+﻿using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags.Models
 {
@@ -12,7 +12,7 @@ namespace Plato.Discuss.Tags.Models
         {
         }
 
-        public Tag(TagBase tag) : base(tag)
+        public Tag(ITag tag) : base(tag)
         {
         }
 

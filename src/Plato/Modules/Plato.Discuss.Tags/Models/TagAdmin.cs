@@ -1,5 +1,4 @@
-﻿using Plato.Internal.Models.Tags;
-using Plato.Tags.Models;
+﻿using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags.Models
 {
@@ -9,8 +8,7 @@ namespace Plato.Discuss.Tags.Models
     /// </summary>
     public class TagAdmin : TagBase
     {
-
-
+        
         public TagAdmin()
         {
         }

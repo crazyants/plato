@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models.Tags;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Tags.Models;
 
 namespace Plato.Tags.ViewModels
 {

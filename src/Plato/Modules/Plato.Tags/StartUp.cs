@@ -7,7 +7,6 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Models.Tags;
 using Plato.Tags.Assets;
 using Plato.Tags.Handlers;
 using Plato.Tags.Models;

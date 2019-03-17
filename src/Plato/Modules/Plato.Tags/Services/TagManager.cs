@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Models.Tags;
 using Plato.Internal.Text.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
@@ -16,19 +15,19 @@ namespace Plato.Tags.Services
 
         private readonly ITagStore<TModel> _tagStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IBroker _broker;
         private readonly IAliasCreator _aliasCreator;
+        private readonly IBroker _broker;
 
         public TagManager(
             ITagStore<TModel> tagStore,
             IContextFacade contextFacade,
-            IBroker broker,
-            IAliasCreator aliasCreator)
+            IAliasCreator aliasCreator,
+            IBroker broker)
         {
+            _contextFacade = contextFacade;
+            _aliasCreator = aliasCreator;
             _tagStore = tagStore;
             _broker = broker;
-            _aliasCreator = aliasCreator;
-            _contextFacade = contextFacade;
         }
 
         #region "Implementation"

@@ -6,7 +6,8 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models.Tags;
+using Plato.Tags.Models;
+
 
 namespace Plato.Tags.Repositories
 {

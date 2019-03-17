@@ -56,6 +56,7 @@ $(function (win, doc, $) {
 
                 // init tagIt
                 $caller.tagIt($.extend({
+                        maxItems: 5,
                         itemTemplate:
                             '<li class="tagit-list-item"><div class="btn-group"><div class="btn btn-sm label label-outline font-weight-bold">{name}</div><div class="btn btn-sm label label-outline dropdown-toggle-split tagit-list-item-delete"><i class="fal fa-times"></i></div></div></li>',
                         parseItemTemplate: function(html, result) {

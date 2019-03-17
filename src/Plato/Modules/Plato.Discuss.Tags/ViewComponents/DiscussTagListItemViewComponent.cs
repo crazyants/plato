@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Discuss.Tags.ViewModels;
 using Plato.Discuss.Tags.Models;
 using Plato.Tags.ViewModels;
 

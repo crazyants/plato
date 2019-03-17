@@ -12,8 +12,8 @@ using Plato.Tags.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Models.Tags;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Tags.Models;
 using Plato.Tags.ViewModels;
 
 namespace Plato.Discuss.Tags.Controllers

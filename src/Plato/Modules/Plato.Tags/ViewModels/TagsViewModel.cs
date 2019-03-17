@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plato.Internal.Models.Tags;
+using Plato.Tags.Models;
 
 namespace Plato.Tags.ViewModels
 {

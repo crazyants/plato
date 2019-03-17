@@ -1,33 +1,26 @@
 ﻿using System;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Models;
 
 namespace Plato.Tags.Models
 {
-    //public interface ITag : IDbModel<TagBase>
-    //{
+    public interface ITag : ITagBase, IDbModel
+    {
 
-    //    int Id { get; set; }
+        int FeatureId { get; set; }
 
-    //    int FeatureId { get; set; }
-        
-    //    string Name { get; set; }
+        string NameNormalized { get; set; }
 
-    //    string NameNormalized { get; set; }
+        int TotalEntities { get; set; }
 
-    //    string Description { get; set; }
+        int TotalFollows { get; set; }
 
-    //    string Alias { get; set; }
+        DateTimeOffset? LastSeenDate { get; set; }
 
-    //    int TotalEntities { get; set; }
+        int CreatedUserId { get; set; }
 
-    //    int TotalFollows { get; set; }
+        DateTimeOffset? CreatedDate { get; set; }
 
-    //    DateTimeOffset? LastSeenDate { get; set; }
+    }
 
-    //    int CreatedUserId { get; set; }
-
-    //    DateTimeOffset? CreatedDate { get; set; }
-        
-    //}
-    
 }

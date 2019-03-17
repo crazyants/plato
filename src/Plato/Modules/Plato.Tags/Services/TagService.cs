@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Models.Tags;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
@@ -11,8 +9,7 @@ using Plato.Tags.ViewModels;
 
 namespace Plato.Tags.Services
 {
-
-
+    
     public class TagService<TModel> : ITagService<TModel> where TModel : class, ITag
     {
         private readonly ITagStore<TModel> _tagStore;

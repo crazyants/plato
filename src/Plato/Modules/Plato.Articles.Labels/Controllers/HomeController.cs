@@ -157,7 +157,7 @@ namespace Plato.Articles.Labels.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], discuss => discuss
+                ).Add(S["Articles"], discuss => discuss
                     .Action("Index", "Home", "Plato.Articles")
                     .LocalNav()
                 ).Add(S["Labels"], labels => labels

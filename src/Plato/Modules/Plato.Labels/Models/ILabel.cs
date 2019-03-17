@@ -8,7 +8,7 @@ namespace Plato.Labels.Models
     public interface ILabel : 
         ILabelBase,
         IMetaData<LabelData>,
-        IDbModel<LabelBase>
+        IDbModel
     {
 
         int ParentId { get; set; }

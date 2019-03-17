@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Tags;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
 using Plato.WebApi.Controllers;

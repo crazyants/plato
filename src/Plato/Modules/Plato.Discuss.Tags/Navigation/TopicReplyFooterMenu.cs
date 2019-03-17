@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Tags.Navigation
@@ -46,7 +45,7 @@ namespace Plato.Discuss.Tags.Navigation
             // Add reaction list to topic reply footer navigation
             builder
                 .Add(T["Tags"], react => react
-                    .View("SimpleTagList", new
+                    .View("TopicTags", new
                     {
                         entity,
                         reply

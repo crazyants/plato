@@ -10,13 +10,12 @@ using Plato.Tags.Stores;
 namespace Plato.Discuss.Tags.ViewComponents
 {
 
-    public class SimpleTagListViewComponent : ViewComponent
+    public class TopicTagsViewComponent : ViewComponent
     {
 
         private readonly IEntityTagStore<EntityTag> _tagStore;
 
-        public SimpleTagListViewComponent(
-            IEntityTagStore<EntityTag> tagStore)
+        public TopicTagsViewComponent(IEntityTagStore<EntityTag> tagStore)
         {
             _tagStore = tagStore;
         }
