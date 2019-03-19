@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
@@ -64,18 +65,6 @@ namespace Plato.Articles.Labels.Controllers
                 pager = new PagerOptions();
             }
             
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                        .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Articles"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Articles")
-                        .LocalNav()
-                    ).Add(S["Labels"]);
-            });
-            
             // Get default options
             var defaultViewOptions = new LabelIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -104,6 +93,18 @@ namespace Plato.Articles.Labels.Controllers
                 if (page > 0)
                     return View("GetLabels", viewModel);
             }
+            
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Articles"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Articles")
+                    .LocalNav()
+                ).Add(S["Labels"]);
+            });
             
             // Return view
             return View((LayoutViewModel) await _labelViewProvider.ProvideIndexAsync(new Label(), this));
@@ -174,14 +175,8 @@ namespace Plato.Articles.Labels.Controllers
         async Task<LabelIndexViewModel<Label>> GetIndexViewModelAsync(LabelIndexOptions options, PagerOptions pager)
         {
 
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
+            // Get articles feature
+            options.FeatureId = await GetFeatureIdAsync();
 
             if (options.Sort == LabelSortBy.Auto)
             {
@@ -203,15 +198,9 @@ namespace Plato.Articles.Labels.Controllers
         async Task<EntityIndexViewModel<Article>> GetDisplayViewModelAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
-            // Get discuss feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
+            // Get articles feature
+            options.FeatureId = await GetFeatureIdAsync();
 
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-            
             // Ensure results are sorted
             if (options.Sort  == SortBy.Auto)
             {
@@ -228,6 +217,17 @@ namespace Plato.Articles.Labels.Controllers
                 Pager = pager
             };
 
+        }
+
+        async Task<int> GetFeatureIdAsync()
+        {
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
+            if (feature != null)
+            {
+                return feature.Id;
+            }
+
+            throw new Exception($"Could not find required feature registration for Plato.Articles");
         }
         
     }

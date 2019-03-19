@@ -99,7 +99,7 @@ namespace Plato.Labels.Subscribers
             
             // Update label
             label.TotalEntities = label.TotalEntities + 1;
-            label.LastEntityDate = DateTimeOffset.Now;
+            label.LastEntityDate = DateTimeOffset.UtcNow;
 
             // Persist label updates
             await _labelManager.UpdateAsync(label);

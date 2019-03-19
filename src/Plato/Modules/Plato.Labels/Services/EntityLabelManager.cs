@@ -12,7 +12,6 @@ namespace Plato.Labels.Services
     {
 
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
-
         private readonly IBroker _broker;
 
         public EntityLabelManager(
@@ -108,6 +107,16 @@ namespace Plato.Labels.Services
             if (model.LabelId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.LabelId));
+            }
+            
+            if (model.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
+
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
             }
 
             if (model.ModifiedUserId <= 0)

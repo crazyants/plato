@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Data.Abstractions;
 using Plato.Labels.Stores;
@@ -64,20 +63,13 @@ namespace Plato.Articles.Labels.ViewProviders
                 Options = viewModel?.Options,
                 Pager = viewModel?.Pager
             };
-
-            // Ensure we explicitly set the featureId
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles.Labels");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
             
             // Get labels for feature
             var labels = await _labelStore.QueryAsync()
                 .Take(1, 10)
-                .Select<LabelQueryParams>(q =>
+                .Select<LabelQueryParams>(async q =>
                 {
-                    q.FeatureId.Equals(feature.Id);
+                    q.FeatureId.Equals(await GetFeatureIdAsync());
                 })
                 .OrderBy("Entities", OrderBy.Desc)
                 .ToList();
@@ -104,6 +96,17 @@ namespace Plato.Articles.Labels.ViewProviders
         public override Task<IViewProviderResult> BuildUpdateAsync(Label model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
+        }
+
+        async Task<int> GetFeatureIdAsync()
+        {
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
+            if (feature != null)
+            {
+                return feature.Id;
+            }
+
+            throw new Exception($"Could not find required feature registration for Plato.Articles");
         }
         
     }

@@ -205,7 +205,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                         EntityId = topic.Id,
                         LabelId = labelId,
                         CreatedUserId = user?.Id ?? 0,
-                        CreatedDate = DateTime.UtcNow
+                        CreatedDate = DateTimeOffset.UtcNow
                     });
                     if (!result.Succeeded)
                     {
@@ -217,7 +217,6 @@ namespace Plato.Discuss.Labels.ViewProviders
 
                     // Ensure we clear our labels cache to return new associations
                     _cacheManager.CancelTokens(typeof(LabelStore<Label>));
-                    //_cacheManager.CancelTokens(typeof(EntityLabelStore));
 
                 }
 

@@ -162,28 +162,44 @@ namespace Plato.Articles.Labels.Controllers
         public async Task<IActionResult> CreatePost(EditLabelViewModel viewModel)
         {
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
             
-            var category =  new Label()
+            var label =  new Label()
             {
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,
                 ForeColor = viewModel.ForeColor,
-                BackColor = viewModel.BackColor
+                BackColor = viewModel.BackColor,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTimeOffset.UtcNow
             };
 
-            var result = await _labelManager.CreateAsync(category);
+            var result = await _labelManager.CreateAsync(label);
             if (result.Succeeded)
             {
 
+                // Indicate new label
+                result.Response.IsNewLabel = true;
+
+                // Execute view providers
                 await _viewProvider.ProvideUpdateAsync(result.Response, this);
 
+                // Add confirmation
                 _alerter.Success(T["Label Added Successfully!"]);
 
+                // Return
                 return RedirectToAction(nameof(Index));
 
             }
@@ -230,13 +246,23 @@ namespace Plato.Articles.Labels.Controllers
         public  async Task<IActionResult> EditPost(int id)
         {
 
-            var currentCategory = await _labelStore.GetByIdAsync(id);
-            if (currentCategory == null)
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var currentLabel = await _labelStore.GetByIdAsync(id);
+            if (currentLabel == null)
             {
                 return NotFound();
             }
 
-            var result = await _viewProvider.ProvideUpdateAsync(currentCategory, this);
+            currentLabel.ModifiedUserId = user.Id;
+            currentLabel.ModifiedDate = DateTimeOffset.UtcNow;
+
+            var result = await _viewProvider.ProvideUpdateAsync(currentLabel, this);
 
             if (!ModelState.IsValid)
             {
@@ -290,15 +316,9 @@ namespace Plato.Articles.Labels.Controllers
         async Task<LabelIndexViewModel<Label>> GetIndexViewModelAsync(LabelIndexOptions options, PagerOptions pager)
         {
 
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+            // Get articles feature
+            options.FeatureId = await GetFeatureIdAsync();
+       
             if (options.Sort == LabelSortBy.Auto)
             {
                 options.Sort = LabelSortBy.Modified;
@@ -321,13 +341,13 @@ namespace Plato.Articles.Labels.Controllers
 
         async Task<int> GetFeatureIdAsync()
         {
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
             if (feature != null)
             {
                 return feature.Id;
             }
 
-            throw new Exception($"Could not find required feature registration for Plato.Articles.Labels");
+            throw new Exception($"Could not find required feature registration for Plato.Articles");
         }
         
     }

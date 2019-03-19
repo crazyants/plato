@@ -69,7 +69,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             };
 
             // Ensure we explicitly set the featureId
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature == null)
             {
                 return default(IViewProviderResult);

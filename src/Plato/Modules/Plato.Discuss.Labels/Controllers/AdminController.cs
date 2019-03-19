@@ -284,7 +284,14 @@ namespace Plato.Discuss.Labels.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
-            
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             var ok = int.TryParse(id, out var categoryId);
             if (!ok)
             {
