@@ -23,14 +23,14 @@ namespace Plato.Tags.Subscribers
         /// <param name="broker"></param>
         public EntityTagSubscriber(
             ITagManager<TagBase> tagManager,
-            ITagStore<TagBase> tagStore,
-            IBroker broker, 
-            IEntityTagStore<EntityTag> entityTagStore)
+            ITagStore<TagBase> tagStore, 
+            IEntityTagStore<EntityTag> entityTagStore,
+            IBroker broker)
         {
             _tagManager = tagManager;
             _tagStore = tagStore;
-            _broker = broker;
             _entityTagStore = entityTagStore;
+            _broker = broker;
         }
 
         #region "Implementation"

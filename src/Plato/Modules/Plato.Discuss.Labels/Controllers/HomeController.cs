@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
@@ -13,6 +14,7 @@ using Plato.Discuss.Labels.Models;
 using Plato.Labels.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Layout;
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -62,18 +64,6 @@ namespace Plato.Discuss.Labels.Controllers
                 pager = new PagerOptions();
             }
             
-            // Breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                        .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Discuss")
-                        .LocalNav()
-                    ).Add(S["Labels"]);
-            });
-            
             // Get default options
             var defaultViewOptions = new LabelIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -103,8 +93,20 @@ namespace Plato.Discuss.Labels.Controllers
                     return View("GetLabels", viewModel);
             }
             
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                ).Add(S["Labels"]);
+            });
+
             // Return view
-            return View(await _labelViewProvider.ProvideIndexAsync(new Label(), this));
+            return View((LayoutViewModel) await _labelViewProvider.ProvideIndexAsync(new Label(), this));
 
         }
 
@@ -165,26 +167,19 @@ namespace Plato.Discuss.Labels.Controllers
             });
             
             // Return view
-            return View(await _labelViewProvider.ProvideDisplayAsync(label, this));
+            return View((LayoutViewModel) await _labelViewProvider.ProvideDisplayAsync(label, this));
 
         }
 
         async Task<LabelIndexViewModel<Label>> GetIndexViewModelAsync(LabelIndexOptions options, PagerOptions pager)
         {
 
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+            // Get discuss feature
+            options.FeatureId = await GetFeatureIdAsync();
+       
             if (options.Sort == LabelSortBy.Auto)
             {
                 options.Sort = LabelSortBy.Entities;
-                options.Order = OrderBy.Desc;
             }
 
             // Set pager call back Url
@@ -202,13 +197,7 @@ namespace Plato.Discuss.Labels.Controllers
         {
 
             // Get discuss feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
+            options.FeatureId = await GetFeatureIdAsync();
             
             // Ensure results are sorted
             if (options.Sort  == SortBy.Auto)
@@ -227,7 +216,19 @@ namespace Plato.Discuss.Labels.Controllers
             };
 
         }
-        
+
+        async Task<int> GetFeatureIdAsync()
+        {
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            if (feature != null)
+            {
+                return feature.Id;
+            }
+
+            throw new Exception($"Could not find required feature registration for Plato.Discuss");
+        }
+
+
     }
 
 }

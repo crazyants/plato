@@ -301,9 +301,9 @@ namespace Plato.Labels.Stores
                 case "createddate":
                     return "l.CreatedDate";
                 case "modified":
-                    return "l.ModifiedDate";
+                    return "IsNull(l.ModifiedDate, l.CreatedDate)";
                 case "modifieddate":
-                    return "l.ModifiedDate";
+                    return "IsNull(l.ModifiedDate, l.CreatedDate)";
                 case "lastentity":
                     return "l.LastEntityDate";
                 case "lastentitydate":

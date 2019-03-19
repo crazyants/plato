@@ -15,6 +15,7 @@ using Plato.Labels.ViewModels;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Layout;
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -122,7 +123,7 @@ namespace Plato.Discuss.Labels.Controllers
             });
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new Label(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new Label(), this));
 
         }
 
@@ -162,28 +163,45 @@ namespace Plato.Discuss.Labels.Controllers
         public async Task<IActionResult> CreatePost(EditLabelViewModel viewModel)
         {
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
             
-            var category =  new Label()
+            // Create label
+            var label =  new Label()
             {
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,
                 ForeColor = viewModel.ForeColor,
-                BackColor = viewModel.BackColor
+                BackColor = viewModel.BackColor,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTimeOffset.UtcNow
             };
 
-            var result = await _labelManager.CreateAsync(category);
+            // Persist label
+            var result = await _labelManager.CreateAsync(label);
             if (result.Succeeded)
             {
 
+                // Indicate new label
+                result.Response.IsNewLabel = true;
+
+                // Execute view providers
                 await _viewProvider.ProvideUpdateAsync(result.Response, this);
 
+                // Add confirmation
                 _alerter.Success(T["Label Added Successfully!"]);
 
+                // Return
                 return RedirectToAction(nameof(Index));
 
             }
@@ -230,13 +248,23 @@ namespace Plato.Discuss.Labels.Controllers
         public  async Task<IActionResult> EditPost(int id)
         {
 
-            var currentCategory = await _labelStore.GetByIdAsync(id);
-            if (currentCategory == null)
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var currentLabel = await _labelStore.GetByIdAsync(id);
+            if (currentLabel == null)
             {
                 return NotFound();
             }
 
-            var result = await _viewProvider.ProvideUpdateAsync(currentCategory, this);
+            currentLabel.ModifiedUserId = user.Id;
+            currentLabel.ModifiedDate = DateTimeOffset.UtcNow;
+            
+            var result = await _viewProvider.ProvideUpdateAsync(currentLabel, this);
 
             if (!ModelState.IsValid)
             {
@@ -291,17 +319,11 @@ namespace Plato.Discuss.Labels.Controllers
         {
 
             // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+            options.FeatureId = await GetFeatureIdAsync();
+       
             if (options.Sort == LabelSortBy.Auto)
             {
-                options.Sort = LabelSortBy.Created;
+                options.Sort = LabelSortBy.Modified;
                 options.Order = OrderBy.Desc;
             }
 
@@ -321,13 +343,13 @@ namespace Plato.Discuss.Labels.Controllers
 
         async Task<int> GetFeatureIdAsync()
         {
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature != null)
             {
                 return feature.Id;
             }
 
-            throw new Exception($"Could not find required feature registration for Plato.Discuss.Labels");
+            throw new Exception($"Could not find required feature registration for Plato.Discuss");
         }
         
     }

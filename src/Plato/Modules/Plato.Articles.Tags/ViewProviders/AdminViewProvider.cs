@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Services;
-using Plato.Tags.Stores;
 using Plato.Tags.ViewModels;
 using Plato.Articles.Tags.Models;
 using Plato.Articles.Tags.ViewModels;
@@ -12,7 +10,6 @@ namespace Plato.Articles.Tags.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<TagAdmin>
     {
-
 
         private readonly ITagManager<Tag> _tagManager;
    
@@ -23,7 +20,7 @@ namespace Plato.Articles.Tags.ViewProviders
             _tagManager = tagManager;
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(TagAdmin label, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(TagAdmin tag, IViewProviderContext context)
         {
 
             // Get index view model from context
@@ -41,17 +38,17 @@ namespace Plato.Articles.Tags.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(TagAdmin label, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(TagAdmin tag, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(TagAdmin label, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(TagAdmin tag, IViewProviderContext updater)
         {
 
             EditTagViewModel editLabelViewModel = null;
-            if (label.Id == 0)
+            if (tag.Id == 0)
             {
                 editLabelViewModel = new EditTagViewModel()
                 {
@@ -62,9 +59,9 @@ namespace Plato.Articles.Tags.ViewProviders
             {
                 editLabelViewModel = new EditTagViewModel()
                 {
-                    Id = label.Id,
-                    Name = label.Name,
-                    Description = label.Description
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    Description = tag.Description
                 };
             }
 
@@ -76,14 +73,25 @@ namespace Plato.Articles.Tags.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(TagAdmin label, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(TagAdmin tag, IViewProviderContext context)
         {
+
+            if (tag == null)
+            {
+                throw new ArgumentNullException(nameof(tag));
+            }
+
+            if (tag.IsNewTag)
+            {
+                return await BuildEditAsync(tag, context);
+            }
+
 
             var model = new EditTagViewModel();
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(label, context);
+                return await BuildEditAsync(tag, context);
             }
 
             model.Name = model.Name?.Trim();
@@ -92,13 +100,11 @@ namespace Plato.Articles.Tags.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
 
-                var result = await _tagManager.UpdateAsync(new Tag()
-                {
-                    Id = label.Id,
-                    FeatureId = label.FeatureId,
-                    Name = model.Name,
-                    Description = model.Description
-                });
+                // Update tag
+                tag.Name = model.Name;
+                tag.Description = model.Description;
+                
+                var result = await _tagManager.UpdateAsync((Tag) tag);
 
                 foreach (var error in result.Errors)
                 {
@@ -107,9 +113,8 @@ namespace Plato.Articles.Tags.ViewProviders
 
             }
 
-            return await BuildEditAsync(label, context);
-
-
+            return await BuildEditAsync(tag, context);
+            
         }
 
     }

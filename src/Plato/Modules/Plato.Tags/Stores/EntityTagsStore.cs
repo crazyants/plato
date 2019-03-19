@@ -17,18 +17,18 @@ namespace Plato.Tags.Stores
         private const string ByEntityId = "ByEntityId";
         private const string ByEntityReplyId = "ByEntityReplyId";
 
-        private readonly IEntityTagsRepository<EntityTag> _entityLabelRepository;
+        private readonly IEntityTagsRepository<EntityTag> _entityTagsRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<EntityTagStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public EntityTagStore(
-            IEntityTagsRepository<EntityTag> entityLabelRepository,
+            IEntityTagsRepository<EntityTag> entityTagsRepository,
             ICacheManager cacheManager,
             ILogger<EntityTagStore> logger,
             IDbQueryConfiguration dbQuery)
         {
-            _entityLabelRepository = entityLabelRepository;
+            _entityTagsRepository = entityTagsRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
@@ -59,7 +59,7 @@ namespace Plato.Tags.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
 
-            var result = await _entityLabelRepository.InsertUpdateAsync(model);
+            var result = await _entityTagsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -91,7 +91,7 @@ namespace Plato.Tags.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
 
-            var result = await _entityLabelRepository.InsertUpdateAsync(model);
+            var result = await _entityTagsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -102,7 +102,7 @@ namespace Plato.Tags.Stores
 
         public async Task<bool> DeleteAsync(EntityTag model)
         {
-            var success = await _entityLabelRepository.DeleteAsync(model.Id);
+            var success = await _entityTagsRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -120,7 +120,7 @@ namespace Plato.Tags.Stores
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token,
-                async (cacheEntry) => await _entityLabelRepository.SelectByIdAsync(id));
+                async (cacheEntry) => await _entityTagsRepository.SelectByIdAsync(id));
         }
 
         public IQuery<EntityTag> QueryAsync()
@@ -132,18 +132,7 @@ namespace Plato.Tags.Stores
         public async Task<IPagedResults<EntityTag>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting entity labels for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
-                }
-
-                return await _entityLabelRepository.SelectAsync(args);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityTagsRepository.SelectAsync(args));
         }
 
         public async Task<IEnumerable<EntityTag>> GetByEntityId(int entityId)
@@ -155,18 +144,7 @@ namespace Plato.Tags.Stores
             }
 
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityId, entityId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting entity tags for entity Id '{0}'.",
-                        entityId);
-                }
-
-                return await _entityLabelRepository.SelectByEntityId(entityId);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityTagsRepository.SelectByEntityId(entityId));
         }
 
         public async Task<IEnumerable<EntityTag>> GetByEntityReplyId(int entityReplyId)
@@ -178,18 +156,7 @@ namespace Plato.Tags.Stores
             }
 
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityReplyId, entityReplyId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting entity tags for entity reply Id '{0}'.",
-                        entityReplyId);
-                }
-
-                return await _entityLabelRepository.SelectByEntityReplyId(entityReplyId);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityTagsRepository.SelectByEntityReplyId(entityReplyId));
         }
 
 
@@ -201,7 +168,7 @@ namespace Plato.Tags.Stores
                 throw new ArgumentOutOfRangeException(nameof(entityId));
             }
 
-            var success = await _entityLabelRepository.DeleteByEntityId(entityId);
+            var success = await _entityTagsRepository.DeleteByEntityId(entityId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -218,7 +185,7 @@ namespace Plato.Tags.Stores
         public async Task<bool> DeleteByEntityIdAndTagIdId(int entityId, int tagId)
         {
 
-            var success = await _entityLabelRepository.DeleteByEntityIdAndTagId(entityId, tagId);
+            var success = await _entityTagsRepository.DeleteByEntityIdAndTagId(entityId, tagId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))

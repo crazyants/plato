@@ -65,20 +65,13 @@ namespace Plato.Discuss.Labels.ViewProviders
         
         public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IViewProviderContext updater)
         {
-
-            // Ensure we explicitly set the featureId
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
-
+            
             // Get top 10 labels
             var labels = await _labelStore.QueryAsync()
                 .Take(1, 10)
-                .Select<LabelQueryParams>(q =>
+                .Select<LabelQueryParams>(async q =>
                 {
-                    q.FeatureId.Equals(feature.Id);
+                    q.FeatureId.Equals(await GetFeatureIdAsync());
                 })
                 .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();
@@ -94,13 +87,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext updater)
         {
-
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
-            
+          
             // Get entity labels
             var labels = await _labelStore.QueryAsync()
                 .Take(1, 10)
@@ -124,13 +111,6 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
         {
 
-            // Ensure we explicitly set the featureId
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
-
             List<int> selectedLabels;
             // Persist state on post back
             if (_request.Method == "POST")
@@ -148,7 +128,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             {
                 Options = new LabelIndexOptions()
                 {
-                    FeatureId = feature.Id
+                    FeatureId = await GetFeatureIdAsync()
                 },
                 HtmlName = LabelHtmlName,
                 SelectedLabels = selectedLabels?.ToArray()
@@ -291,6 +271,17 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
         
+        async Task<int> GetFeatureIdAsync()
+        {
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            if (feature != null)
+            {
+                return feature.Id;
+            }
+
+            throw new Exception($"Could not find required feature registration for Plato.Discuss");
+        }
+
     }
 
 }

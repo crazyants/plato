@@ -15,16 +15,13 @@ namespace Plato.Discuss.Labels.ViewProviders
  
         private readonly ILabelStore<Label> _labelStore;
         private readonly ILabelManager<Label> _labelManager;
-        private readonly IFeatureFacade _featureFacade;
-
+     
         public AdminViewProvider(
             ILabelStore<Label> labelStore,
-            ILabelManager<Label> labelManager,
-            IFeatureFacade featureFacade)
+            ILabelManager<Label> labelManager)
         {
             _labelStore = labelStore;
             _labelManager = labelManager;
-            _featureFacade = featureFacade;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(LabelAdmin label, IViewProviderContext context)
@@ -48,7 +45,6 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override Task<IViewProviderResult> BuildDisplayAsync(LabelAdmin label, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
-
         }
         
         public override Task<IViewProviderResult> BuildEditAsync(LabelAdmin label, IViewProviderContext updater)
@@ -80,10 +76,21 @@ namespace Plato.Discuss.Labels.ViewProviders
                 View<EditLabelViewModel>("Admin.Edit.Actions", model => editLabelViewModel).Zone("actions").Order(1),
                 View<EditLabelViewModel>("Admin.Edit.Footer", model => editLabelViewModel).Zone("footer").Order(1)
             ));
+
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(LabelAdmin label, IViewProviderContext context)
         {
+
+            if (label == null)
+            {
+                throw new ArgumentNullException(nameof(label));
+            }
+
+            if (label.IsNewLabel)
+            {
+                return await BuildEditAsync(label, context);
+            }
 
             var model = new EditLabelViewModel();
 
@@ -97,16 +104,13 @@ namespace Plato.Discuss.Labels.ViewProviders
             
             if (context.Updater.ModelState.IsValid)
             {
-                
-                var result = await _labelManager.UpdateAsync(new Label()
-                {
-                    Id = label.Id,
-                    FeatureId = label.FeatureId,
-                    Name = model.Name,
-                    Description = model.Description,
-                    ForeColor = model.ForeColor,
-                    BackColor = model.BackColor
-                });
+
+                label.Name = model.Name;
+                label.Description = model.Description;
+                label.ForeColor = model.ForeColor;
+                label.BackColor = model.BackColor;
+
+                var result = await _labelManager.UpdateAsync((Label) label);
 
                 foreach (var error in result.Errors)
                 {
@@ -116,8 +120,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             }
 
             return await BuildEditAsync(label, context);
-
-
+            
         }
         
     }

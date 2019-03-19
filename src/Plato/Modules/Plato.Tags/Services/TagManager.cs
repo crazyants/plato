@@ -128,16 +128,6 @@ namespace Plato.Tags.Services
                 throw new ArgumentNullException(nameof(model.CreatedDate));
             }
             
-            if (model.ModifiedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
-            }
-
-            if (model.ModifiedDate == null)
-            {
-                throw new ArgumentNullException(nameof(model.ModifiedDate));
-            }
-            
             model.NameNormalized = model.Name.Normalize();
             model.Alias = await ParseAlias(model.Name);
             

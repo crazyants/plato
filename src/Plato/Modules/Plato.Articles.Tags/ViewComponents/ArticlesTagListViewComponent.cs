@@ -37,7 +37,7 @@ namespace Plato.Articles.Tags.ViewComponents
             },
             new SortColumn()
             {
-                Text = "Last Modified",
+                Text = "Modified",
                 Value = TagSortBy.Modified
             },
             new SortColumn()

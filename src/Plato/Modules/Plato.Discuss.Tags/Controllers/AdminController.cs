@@ -246,13 +246,23 @@ namespace Plato.Discuss.Tags.Controllers
         public  async Task<IActionResult> EditPost(int id)
         {
 
-            var currentCategory = await _tagStore.GetByIdAsync(id);
-            if (currentCategory == null)
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var currentTag = await _tagStore.GetByIdAsync(id);
+            if (currentTag == null)
             {
                 return NotFound();
             }
 
-            var result = await _viewProvider.ProvideUpdateAsync(currentCategory, this);
+            currentTag.ModifiedUserId = user.Id;
+            currentTag.ModifiedDate = DateTimeOffset.UtcNow;
+            
+            var result = await _viewProvider.ProvideUpdateAsync(currentTag, this);
 
             if (!ModelState.IsValid)
             {

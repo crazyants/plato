@@ -302,9 +302,9 @@ namespace Plato.Tags.Stores
                 case "modifieduserid":
                     return "t.ModifiedUserId";
                 case "modifieddate":
-                    return "t.ModifiedDate";
+                    return "IsNull(t.ModifiedDate, t.CreatedDate)";
                 case "modified":
-                    return "t.ModifiedDate";
+                    return "IsNull(t.ModifiedDate, t.CreatedDate)";
             }
 
             return string.Empty;

@@ -111,9 +111,7 @@ namespace Plato.Discuss.Tags.ViewProviders
                 // Update tag
                 tag.Name = model.Name;
                 tag.Description = model.Description;
-                tag.ModifiedUserId = user.Id;
-                tag.ModifiedDate = DateTimeOffset.UtcNow;
-
+         
                 // Persist changes
                 var result = await _tagManager.UpdateAsync((Tag) tag);
 

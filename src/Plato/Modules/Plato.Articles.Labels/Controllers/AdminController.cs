@@ -301,7 +301,7 @@ namespace Plato.Articles.Labels.Controllers
 
             if (options.Sort == LabelSortBy.Auto)
             {
-                options.Sort = LabelSortBy.Created;
+                options.Sort = LabelSortBy.Modified;
                 options.Order = OrderBy.Desc;
             }
 

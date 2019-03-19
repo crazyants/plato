@@ -162,6 +162,14 @@ namespace Plato.Articles.Tags.Controllers
         public async Task<IActionResult> CreatePost(EditTagViewModel viewModel)
         {
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
@@ -172,21 +180,30 @@ namespace Plato.Articles.Tags.Controllers
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTimeOffset.UtcNow
             };
 
             var result = await _tagManager.CreateAsync(tag);
             if (result.Succeeded)
             {
 
+                // Indicate new tag so UpdateAsync does not execute within our view provider
+                result.Response.IsNewTag = true;
+
+                // Execute view providers
                 await _viewProvider.ProvideUpdateAsync(result.Response, this);
 
+                // Add confirmation
                 _alerter.Success(T["Tag Added Successfully!"]);
 
+                // Return
                 return RedirectToAction(nameof(Index));
 
             }
             else
             {
+                // Report any errors
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -228,12 +245,22 @@ namespace Plato.Articles.Tags.Controllers
         public  async Task<IActionResult> EditPost(int id)
         {
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             var currentTag = await _tagStore.GetByIdAsync(id);
             if (currentTag == null)
             {
                 return NotFound();
             }
 
+            currentTag.ModifiedUserId = user.Id;
+            currentTag.ModifiedDate = DateTimeOffset.UtcNow;
+            
             var result = await _viewProvider.ProvideUpdateAsync(currentTag, this);
 
             if (!ModelState.IsValid)
