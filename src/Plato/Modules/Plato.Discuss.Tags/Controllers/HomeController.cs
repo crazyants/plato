@@ -215,10 +215,7 @@ namespace Plato.Discuss.Tags.Controllers
                 options.Sort = TagSortBy.Entities;
                 options.Order = OrderBy.Desc;
             }
-
-            // Indicate administrator view
-            options.EnableEdit = true;
-
+            
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 

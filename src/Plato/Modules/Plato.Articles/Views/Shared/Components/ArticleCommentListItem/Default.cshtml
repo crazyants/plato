@@ -61,7 +61,7 @@
             </div>
             <div class="hidden" 
                  id="@quoteId"
-                 data-reply-url="@Url.Action("Jump", "Home", new { id = Model.Entity.Id, alias = Model.Entity.Alias, replyId = Model.Reply.Id })"
+                 data-reply-url="@Url.Action("Reply", "Home", new { id = Model.Entity.Id, alias = Model.Entity.Alias, replyId = Model.Reply.Id })"
                  data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
            
             <navigation name="article-comment-footer"

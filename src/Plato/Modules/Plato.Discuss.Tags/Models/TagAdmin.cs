@@ -9,6 +9,8 @@ namespace Plato.Discuss.Tags.Models
     public class TagAdmin : TagBase
     {
         
+        public bool IsNewTag { get; set; }
+
         public TagAdmin()
         {
         }

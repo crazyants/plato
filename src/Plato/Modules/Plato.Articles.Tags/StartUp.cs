@@ -40,7 +40,7 @@ namespace Plato.Articles.Tags
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, ArticleFooterMenu>();
-            services.AddScoped<INavigationProvider, ArticleReplyFooterMenu>();
+            services.AddScoped<INavigationProvider, ArticleCommentFooterMenu>();
             
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();

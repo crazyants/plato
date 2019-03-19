@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Services;
-using Plato.Tags.Stores;
 using Plato.Tags.ViewModels;
 using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.ViewModels;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Discuss.Tags.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<TagAdmin>
     {
-
-
+        
         private readonly ITagManager<Tag> _tagManager;
-        private readonly IFeatureFacade _featureFacade;
+        private readonly IContextFacade _contextFacade;
 
         public AdminViewProvider(
             ITagManager<Tag> tagManager,
-            IFeatureFacade featureFacade)
+            IContextFacade contextFacade)
         {
-  
             _tagManager = tagManager;
-            _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(TagAdmin label, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(TagAdmin tag, IViewProviderContext context)
         {
 
             // Get index view model from context
@@ -44,17 +41,17 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(TagAdmin label, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(TagAdmin tag, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(TagAdmin label, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(TagAdmin tag, IViewProviderContext updater)
         {
 
             EditTagViewModel editLabelViewModel = null;
-            if (label.Id == 0)
+            if (tag.Id == 0)
             {
                 editLabelViewModel = new EditTagViewModel()
                 {
@@ -65,9 +62,9 @@ namespace Plato.Discuss.Tags.ViewProviders
             {
                 editLabelViewModel = new EditTagViewModel()
                 {
-                    Id = label.Id,
-                    Name = label.Name,
-                    Description = label.Description
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    Description = tag.Description
                 };
             }
 
@@ -79,14 +76,24 @@ namespace Plato.Discuss.Tags.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(TagAdmin label, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(TagAdmin tag, IViewProviderContext context)
         {
+
+            if (tag == null)
+            {
+                throw new ArgumentNullException(nameof(tag));
+            }
+
+            if (tag.IsNewTag)
+            {
+                return await BuildEditAsync(tag, context);
+            }
 
             var model = new EditTagViewModel();
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(label, context);
+                return await BuildEditAsync(tag, context);
             }
 
             model.Name = model.Name?.Trim();
@@ -95,13 +102,20 @@ namespace Plato.Discuss.Tags.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
 
-                var result = await _tagManager.UpdateAsync(new Tag()
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                if (user == null)
                 {
-                    Id = label.Id,
-                    FeatureId = label.FeatureId,
-                    Name = model.Name,
-                    Description = model.Description
-                });
+                    return await BuildEditAsync(tag, context);
+                }
+
+                // Update tag
+                tag.Name = model.Name;
+                tag.Description = model.Description;
+                tag.ModifiedUserId = user.Id;
+                tag.ModifiedDate = DateTimeOffset.UtcNow;
+
+                // Persist changes
+                var result = await _tagManager.UpdateAsync((Tag) tag);
 
                 foreach (var error in result.Errors)
                 {
@@ -110,9 +124,8 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             }
 
-            return await BuildEditAsync(label, context);
-
-
+            return await BuildEditAsync(tag, context);
+            
         }
 
     }

@@ -15,15 +15,12 @@ namespace Plato.Articles.Tags.ViewProviders
 
 
         private readonly ITagManager<Tag> _tagManager;
-        private readonly IFeatureFacade _featureFacade;
-
+   
         public AdminViewProvider(
-            ITagManager<Tag> tagManager,
-            IFeatureFacade featureFacade)
+            ITagManager<Tag> tagManager)
         {
   
             _tagManager = tagManager;
-            _featureFacade = featureFacade;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(TagAdmin label, IViewProviderContext context)

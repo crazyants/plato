@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Text.Abstractions;
 using Plato.Tags.Models;
@@ -14,17 +13,14 @@ namespace Plato.Tags.Services
     {
 
         private readonly ITagStore<TModel> _tagStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IAliasCreator _aliasCreator;
         private readonly IBroker _broker;
 
         public TagManager(
             ITagStore<TModel> tagStore,
-            IContextFacade contextFacade,
             IAliasCreator aliasCreator,
             IBroker broker)
         {
-            _contextFacade = contextFacade;
             _aliasCreator = aliasCreator;
             _tagStore = tagStore;
             _broker = broker;
@@ -55,16 +51,20 @@ namespace Plato.Tags.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.Name));
             }
-        
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (model.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
+
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
             
             model.NameNormalized = model.Name.Normalize();
             model.Alias = await ParseAlias(model.Name);
-            model.CreatedUserId = user?.Id ?? 0;
-            model.CreatedDate = DateTime.UtcNow;
-            
-
+  
             // Invoke TagCreating subscriptions
             foreach (var handler in _broker.Pub<TModel>(this, "TagCreating"))
             {
@@ -75,18 +75,18 @@ namespace Plato.Tags.Services
             var result = new CommandResult<TModel>();
 
             // Persist to database
-            var newEntityTag = await _tagStore.CreateAsync(model);
-            if (newEntityTag != null)
+            var newTag = await _tagStore.CreateAsync(model);
+            if (newTag != null)
             {
 
                 // Invoke TagCreated subscriptions
                 foreach (var handler in _broker.Pub<TModel>(this, "TagCreated"))
                 {
-                    newEntityTag = await handler.Invoke(new Message<TModel>(newEntityTag, this));
+                    newTag = await handler.Invoke(new Message<TModel>(newTag, this));
                 }
 
                 // Return success
-                return result.Success(newEntityTag);
+                return result.Success(newTag);
 
             }
 
@@ -117,13 +117,30 @@ namespace Plato.Tags.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.Name));
             }
+            
+            if (model.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
 
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
+            
+            if (model.ModifiedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
+            }
 
+            if (model.ModifiedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.ModifiedDate));
+            }
+            
             model.NameNormalized = model.Name.Normalize();
             model.Alias = await ParseAlias(model.Name);
-
+            
             // Invoke TagUpdating subscriptions
             foreach (var handler in _broker.Pub<TModel>(this, "TagUpdating"))
             {
@@ -134,18 +151,18 @@ namespace Plato.Tags.Services
             var result = new CommandResult<TModel>();
 
             // Persist to database
-            var updatedEntityTag = await _tagStore.UpdateAsync(model);
-            if (updatedEntityTag != null)
+            var updatedTag = await _tagStore.UpdateAsync(model);
+            if (updatedTag != null)
             {
 
                 // Invoke TagUpdated subscriptions
                 foreach (var handler in _broker.Pub<TModel>(this, "TagUpdated"))
                 {
-                    updatedEntityTag = await handler.Invoke(new Message<TModel>(updatedEntityTag, this));
+                    updatedTag = await handler.Invoke(new Message<TModel>(updatedTag, this));
                 }
 
                 // Return success
-                return result.Success(updatedEntityTag);
+                return result.Success(updatedTag);
 
             }
 

@@ -45,7 +45,9 @@ namespace Plato.Tags.Repositories
                 tag.TotalFollows,
                 tag.LastSeenDate,
                 tag.CreatedUserId,
-                tag.CreatedDate);
+                tag.CreatedDate,
+                tag.ModifiedUserId,
+                tag.ModifiedDate);
 
             if (id > 0)
             {
@@ -244,7 +246,9 @@ namespace Plato.Tags.Repositories
             int totalFollows,
             DateTimeOffset? lastSeenDate,
             int createdUserId,
-            DateTimeOffset? createdDate)
+            DateTimeOffset? createdDate,
+            int modifiedUserId,
+            DateTimeOffset? modifiedDate)
         {
 
             var tagId = 0;
@@ -264,6 +268,8 @@ namespace Plato.Tags.Repositories
                     lastSeenDate.ToDateIfNull(),
                     createdUserId,
                     createdDate.ToDateIfNull(),
+                    modifiedUserId,
+                    modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 

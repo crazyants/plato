@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
-using Plato.Tags.Models;
 
 namespace Plato.Tags.Stores
 {
@@ -116,7 +115,6 @@ namespace Plato.Tags.Stores
             _query = query;
             _tagsTableName = GetTableNameWithPrefix("Tags");
             _entityTagsTableName = GetTableNameWithPrefix("EntityTags");
-            ;
         }
 
         #endregion
@@ -284,19 +282,29 @@ namespace Plato.Tags.Stores
             switch (columnName.ToLower())
             {
                 case "id":
-                    return "Id";
+                    return "t.Id";
                 case "name":
-                    return "[Name]";
+                    return "t.[Name]";
                 case "entities":
-                    return "TotalEntities";
+                    return "t.TotalEntities";
                 case "totalentities":
-                    return "TotalEntities";
+                    return "t.TotalEntities";
                 case "follows":
-                    return "TotalFollows";
+                    return "t.TotalFollows";
                 case "totalfollows":
-                    return "TotalFollows";
+                    return "t.TotalFollows";
+                case "createduserid":
+                    return "t.CreatedUserId";
                 case "createddate":
-                    return "CreatedDate";
+                    return "t.CreatedDate";
+                case "created":
+                    return "t.CreatedDate";
+                case "modifieduserid":
+                    return "t.ModifiedUserId";
+                case "modifieddate":
+                    return "t.ModifiedDate";
+                case "modified":
+                    return "t.ModifiedDate";
             }
 
             return string.Empty;

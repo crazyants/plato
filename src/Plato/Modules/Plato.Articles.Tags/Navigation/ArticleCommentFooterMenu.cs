@@ -7,12 +7,12 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Articles.Tags.Navigation
 {
 
-    public class ArticleReplyFooterMenu : INavigationProvider
+    public class ArticleCommentFooterMenu : INavigationProvider
     {
         
         public IStringLocalizer T { get; set; }
 
-        public ArticleReplyFooterMenu(IStringLocalizer localizer)
+        public ArticleCommentFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -20,7 +20,7 @@ namespace Plato.Articles.Tags.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "article-reply-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article-comment-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

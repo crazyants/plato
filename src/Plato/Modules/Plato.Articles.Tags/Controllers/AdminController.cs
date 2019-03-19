@@ -167,14 +167,14 @@ namespace Plato.Articles.Tags.Controllers
                 return View(viewModel);
             }
             
-            var category =  new Tag()
+            var tag =  new Tag()
             {
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,
             };
 
-            var result = await _tagManager.CreateAsync(category);
+            var result = await _tagManager.CreateAsync(tag);
             if (result.Succeeded)
             {
 
@@ -228,13 +228,13 @@ namespace Plato.Articles.Tags.Controllers
         public  async Task<IActionResult> EditPost(int id)
         {
 
-            var currentCategory = await _tagStore.GetByIdAsync(id);
-            if (currentCategory == null)
+            var currentTag = await _tagStore.GetByIdAsync(id);
+            if (currentTag == null)
             {
                 return NotFound();
             }
 
-            var result = await _viewProvider.ProvideUpdateAsync(currentCategory, this);
+            var result = await _viewProvider.ProvideUpdateAsync(currentTag, this);
 
             if (!ModelState.IsValid)
             {
@@ -287,19 +287,13 @@ namespace Plato.Articles.Tags.Controllers
 
         async Task<TagIndexViewModel<Tag>> GetIndexViewModelAsync(TagIndexOptions options, PagerOptions pager)
         {
-
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+            
+            // Get feature
+            options.FeatureId = await GetFeatureIdAsync();
+        
             if (options.Sort == TagSortBy.Auto)
             {
-                options.Sort = TagSortBy.Created;
+                options.Sort = TagSortBy.Modified;
                 options.Order = OrderBy.Desc;
             }
 
@@ -319,13 +313,13 @@ namespace Plato.Articles.Tags.Controllers
 
         async Task<int> GetFeatureIdAsync()
         {
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles.Tags");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
             if (feature != null)
             {
                 return feature.Id;
             }
 
-            throw new Exception($"Could not find required feature registration for Plato.Articles.Tags");
+            throw new Exception($"Could not find required feature registration for Plato.Articles");
         }
         
     }

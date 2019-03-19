@@ -15,6 +15,7 @@ using Plato.Tags.ViewModels;
 using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Layout;
 
 namespace Plato.Discuss.Tags.Controllers
 {
@@ -122,7 +123,7 @@ namespace Plato.Discuss.Tags.Controllers
             });
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new Tag(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new Tag(), this));
 
         }
 
@@ -149,12 +150,11 @@ namespace Plato.Discuss.Tags.Controllers
             });
             
             // We need to pass along the featureId
-            var model = await _viewProvider.ProvideEditAsync(new Tag
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(new Tag
             {
-                FeatureId = await GetFeatureIdAsync() 
+                FeatureId = await GetFeatureIdAsync()
 
-            }, this);
-            return View(model);
+            }, this));
 
         }
 
@@ -162,31 +162,49 @@ namespace Plato.Discuss.Tags.Controllers
         public async Task<IActionResult> CreatePost(EditTagViewModel viewModel)
         {
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
             
-            var category =  new Tag()
+            // Create tag
+            var tag =  new Tag()
             {
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTimeOffset.UtcNow
             };
 
-            var result = await _tagManager.CreateAsync(category);
+            // Persist tag
+            var result = await _tagManager.CreateAsync(tag);
             if (result.Succeeded)
             {
 
+                // Indicate new tag so UpdateAsync does not execute within our view provider
+                result.Response.IsNewTag = true;
+
+                // Execute view providers
                 await _viewProvider.ProvideUpdateAsync(result.Response, this);
 
+                // Add confirmation
                 _alerter.Success(T["Tag Added Successfully!"]);
 
+                // Return
                 return RedirectToAction(nameof(Index));
 
             }
             else
             {
+                // Report any errors
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -218,9 +236,9 @@ namespace Plato.Discuss.Tags.Controllers
                     .Add(S["Edit Tag"]);
             });
             
-            var category = await _tagStore.GetByIdAsync(id);
-            var model = await _viewProvider.ProvideEditAsync(category, this);
-            return View(model);
+            var tag = await _tagStore.GetByIdAsync(id);
+            
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(tag, this));
 
         }
 
@@ -289,17 +307,11 @@ namespace Plato.Discuss.Tags.Controllers
         {
 
             // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+            options.FeatureId = await GetFeatureIdAsync();
+          
             if (options.Sort == TagSortBy.Auto)
             {
-                options.Sort = TagSortBy.Created;
+                options.Sort = TagSortBy.Modified;
                 options.Order = OrderBy.Desc;
             }
 
@@ -319,13 +331,13 @@ namespace Plato.Discuss.Tags.Controllers
 
         async Task<int> GetFeatureIdAsync()
         {
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Tags");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature != null)
             {
                 return feature.Id;
             }
 
-            throw new Exception($"Could not find required feature registration for Plato.Discuss.Tags");
+            throw new Exception($"Could not find required feature registration for Plato.Discuss");
         }
         
     }

@@ -252,7 +252,7 @@ namespace Plato.Articles.Tags.ViewProviders
                                 else
                                 {
                                     // Create tag
-                                    var newTag = await CreateTag(item.Name, reply.EntityId, reply.Id);
+                                    var newTag = await CreateTag(item.Name);
                                     if (newTag != null)
                                     {
                                         tagsToAdd.Add(newTag);
@@ -272,27 +272,39 @@ namespace Plato.Articles.Tags.ViewProviders
 
         }
 
-        async Task<TagBase> CreateTag(string name, int entityId, int replyId)
+        async Task<TagBase> CreateTag(string name)
         {
 
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
+            // We need to be authenticated to add tags
+            if (user == null)
+            {
+                return null;
+            }
+
             // Get feature for tag
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+
+            // We always need a feature
+            if (feature == null)
+            {
+                return null;
+            }
 
             // Create tag
-            var tagManagerResult = await _tagManager.CreateAsync(new TagBase()
+            var result = await _tagManager.CreateAsync(new TagBase()
             {
-                FeatureId = feature?.Id ?? 0,
+                FeatureId = feature.Id,
                 Name = name,
-                CreatedUserId = user?.Id ?? 0,
+                CreatedUserId = user.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
-            if (tagManagerResult.Succeeded)
+            if (result.Succeeded)
             {
-                return tagManagerResult.Response;
+                return result.Response;
             }
 
             return null;

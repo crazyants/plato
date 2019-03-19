@@ -30,6 +30,10 @@ namespace Plato.Tags.Models
 
         public DateTimeOffset? CreatedDate { get; set; }
 
+        public int ModifiedUserId { get; set; }
+
+        public DateTimeOffset? ModifiedDate { get; set; }
+
         public virtual void PopulateModel(IDataReader dr)
         {
 
@@ -65,6 +69,12 @@ namespace Plato.Tags.Models
 
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = (DateTimeOffset)dr["CreatedDate"];
+
+            if (dr.ColumnIsNotNull("ModifiedUserId"))
+                ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+
+            if (dr.ColumnIsNotNull("ModifiedDate"))
+                ModifiedDate = (DateTimeOffset)dr["ModifiedDate"];
 
         }
 

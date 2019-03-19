@@ -299,7 +299,7 @@ namespace Plato.Articles.Tags.ViewProviders
                                 else
                                 {
                                     // Create tag
-                                    var newTag = await CreateTag(item.Name, topic.Id);
+                                    var newTag = await CreateTag(item.Name);
                                     if (newTag != null)
                                     {
                                         tagsToAdd.Add(newTag);
@@ -319,22 +319,33 @@ namespace Plato.Articles.Tags.ViewProviders
 
         }
 
-        async Task<TagBase> CreateTag(string name, int entityId)
+        async Task<TagBase> CreateTag(string name)
         {
+
+            // Current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // We need to be authenticated to add tags
+            if (user == null)
+            {
+                return null;
+            }
 
             // Get feature for tag
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
       
             // Create tag
-            var tagManagerResult = await _tagManager.CreateAsync(new Tag()
+            var result = await _tagManager.CreateAsync(new Tag()
             {
                 FeatureId = feature?.Id ?? 0,
-                Name = name
+                Name = name,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTimeOffset.UtcNow
             });
             
-            if (tagManagerResult.Succeeded)
+            if (result.Succeeded)
             {
-                return tagManagerResult.Response;
+                return result.Response;
             }
 
             return null;
