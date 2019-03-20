@@ -5,6 +5,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Tags.ViewModels
 {
+    // TODO refactor into Plato.Tags
     public class TagDisplayViewModel
     {
 
