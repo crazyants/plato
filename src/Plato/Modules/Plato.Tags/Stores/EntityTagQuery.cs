@@ -154,7 +154,11 @@ namespace Plato.Tags.Stores
                 .Append("t.Alias,")
                 .Append("t.TotalEntities,")
                 .Append("t.TotalFollows,")
-                .Append("t.LastSeenDate");
+                .Append("t.LastSeenDate,")
+                .Append("t.CreatedUserId,")
+                .Append("t.CreatedDate,")
+                .Append("t.ModifiedUserId,")
+                .Append("t.ModifiedDate");
             return sb.ToString();
         }
 
@@ -250,7 +254,7 @@ namespace Plato.Tags.Stores
 
         IDictionary<string, OrderBy> GetSafeSortColumns()
         {
-            var ourput = new Dictionary<string, OrderBy>();
+            var output = new Dictionary<string, OrderBy>();
             foreach (var sortColumn in _query.SortColumns)
             {
                 var columnName = GetSortColumn(sortColumn.Key);
@@ -258,11 +262,11 @@ namespace Plato.Tags.Stores
                 {
                     throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
                 }
-                ourput.Add(columnName, sortColumn.Value);
+                output.Add(columnName, sortColumn.Value);
 
             }
 
-            return ourput;
+            return output;
         }
 
 
@@ -282,16 +286,6 @@ namespace Plato.Tags.Stores
                     return "[Name]";
                 case "description":
                     return "Description";
-                case "follows":
-                    return "TotalFollows";
-                case "totalfollows":
-                    return "TotalFollows";
-                case "entities":
-                    return "TotalEntities";
-                case "createddate":
-                    return "CreatedDate";
-                case "lastlogindate":
-                    return "LastLoginDate";
             }
 
             return string.Empty;

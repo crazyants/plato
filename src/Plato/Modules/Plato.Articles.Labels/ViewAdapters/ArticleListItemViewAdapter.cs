@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Articles.Models;
 using Plato.Entities.Services;
@@ -20,34 +19,31 @@ namespace Plato.Articles.Labels.ViewAdapters
     public class ArticleListItemViewAdapter : BaseAdapterProvider
     {
         
+        private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IEntityService<Article> _entityService;
         private readonly ILabelStore<Label> _labelStore;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
-        private readonly IEntityService<Article> _entityService;
-        private readonly IActionContextAccessor _actionContextAccessor;
 
         public ArticleListItemViewAdapter(
-            ILabelStore<Label> labelStore,
-            IFeatureFacade featureFacade,
-            IEntityService<Article> entityService, 
             IEntityLabelStore<EntityLabel> entityLabelStore,
-            IHttpContextAccessor httpContextAccessor,
-            IActionContextAccessor actionContextAccessor)
+            IActionContextAccessor actionContextAccessor,
+            IEntityService<Article> entityService,
+            ILabelStore<Label> labelStore,
+            IFeatureFacade featureFacade)
         {
-            _labelStore = labelStore;
-            _featureFacade = featureFacade;
-            _entityService = entityService;
-            _entityLabelStore = entityLabelStore;
-            _httpContextAccessor = httpContextAccessor;
             _actionContextAccessor = actionContextAccessor;
+            _entityLabelStore = entityLabelStore;
+            _entityService = entityService;
+            _featureFacade = featureFacade;
+            _labelStore = labelStore;
         }
 
         public override async Task<IViewAdapterResult> ConfigureAsync()
         {
             
             // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
             if (feature == null)
             {
                 // Feature not found

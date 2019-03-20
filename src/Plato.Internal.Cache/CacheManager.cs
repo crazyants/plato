@@ -16,13 +16,14 @@ namespace Plato.Internal.Cache
         public static ConcurrentDictionary<CacheToken, Type> Tokens { get; } =
             new ConcurrentDictionary<CacheToken, Type>();
 
-        private readonly IMemoryCache _memoryCache;
         private readonly ICacheDependency _cacheDependency;
         private readonly ILogger<CacheManager> _logger;
+        private readonly IMemoryCache _memoryCache;
 
-        public CacheManager(ICacheDependency cacheDependency,
-            IMemoryCache memoryCache,
-            ILogger<CacheManager> logger)
+        public CacheManager(
+            ICacheDependency cacheDependency,
+            ILogger<CacheManager> logger,
+            IMemoryCache memoryCache)
         {
             _cacheDependency = cacheDependency;
             _memoryCache = memoryCache;
@@ -108,12 +109,12 @@ namespace Plato.Internal.Cache
             }
           
             _cacheDependency.CancelToken(token.ToString());
-            
-            //if (_logger.IsEnabled(LogLevel.Information))
-            //{
-            //    _logger.LogInformation("Invalidated cache entry with key '{0}'",
-            //        token.ToString());
-            //}
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Invalidated cache entry with key '{0}'",
+                    token.ToString());
+            }
 
         }
 

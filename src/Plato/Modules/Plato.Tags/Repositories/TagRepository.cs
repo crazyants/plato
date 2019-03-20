@@ -13,13 +13,13 @@ namespace Plato.Tags.Repositories
 {
     public class TagRepository<TModel> : ITagRepository<TModel> where TModel : class, ITag
     {
-        
-        private readonly IDbContext _dbContext;
-        private readonly ILogger<TagRepository<TModel>> _logger;
 
+        private readonly ILogger<TagRepository<TModel>> _logger;
+        private readonly IDbContext _dbContext;
+ 
         public TagRepository(
-            IDbContext dbContext,
-            ILogger<TagRepository<TModel>> logger)
+            ILogger<TagRepository<TModel>> logger,
+            IDbContext dbContext)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -79,7 +79,6 @@ namespace Plato.Tags.Repositories
                         return tag;
                     },
                     id);
-              
 
             }
 

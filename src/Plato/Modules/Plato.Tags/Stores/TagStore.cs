@@ -15,19 +15,19 @@ namespace Plato.Tags.Stores
     public class TagStore<TModel> : ITagStore<TModel> where TModel : class, ITag
     {
         
-        public const string ByName = "ByName";
-        public const string ByNameNormalized = "ByNameNormalized";
+        public const string Name = "ByName";
+        public const string NameNormalized = "ByNameNormalized";
 
         private readonly ITagRepository<TModel> _tagRepository;
+        private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<TModel> _logger;
-        private readonly IDbQueryConfiguration _dbQuery;
-
+       
         public TagStore(
             ITagRepository<TModel> tagRepository,
+            IDbQueryConfiguration dbQuery,
             ICacheManager cacheManager,
-            ILogger<TModel> logger,
-            IDbQueryConfiguration dbQuery)
+            ILogger<TModel> logger)
         {
             _tagRepository = tagRepository;
             _cacheManager = cacheManager;
@@ -121,7 +121,7 @@ namespace Plato.Tags.Stores
                 throw new InvalidEnumArgumentException(nameof(name));
             }
 
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByName, name);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), Name, name);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagRepository.SelectByNameAsync(name));
 
         }
@@ -133,7 +133,7 @@ namespace Plato.Tags.Stores
                 throw new InvalidEnumArgumentException(nameof(nameNormalized));
             }
 
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByNameNormalized, nameNormalized);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), NameNormalized, nameNormalized);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagRepository.SelectByNameNormalizedAsync(nameNormalized));
 
         }

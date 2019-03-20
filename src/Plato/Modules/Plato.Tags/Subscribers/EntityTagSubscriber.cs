@@ -9,27 +9,22 @@ namespace Plato.Tags.Subscribers
 {
     public class EntityTagSubscriber : IBrokerSubscriber
     {
-
-        private readonly ITagStore<TagBase> _tagStore;
-        private readonly ITagManager<TagBase> _tagManager;
-        private readonly IBroker _broker;
+        
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
-
-        /// <summary>
-        /// Updates tag metadata whenever a entity & tag relationship is added or removed.
-        /// </summary>
-        /// <param name="tagManager"></param>
-        /// <param name="tagStore"></param>
-        /// <param name="broker"></param>
+        private readonly ITagManager<TagBase> _tagManager;
+        private readonly ITagStore<TagBase> _tagStore;
+        private readonly IBroker _broker;
+        
+        // Updates tag metadata whenever a entity & tag relationship is added or removed.
         public EntityTagSubscriber(
-            ITagManager<TagBase> tagManager,
-            ITagStore<TagBase> tagStore, 
             IEntityTagStore<EntityTag> entityTagStore,
+            ITagManager<TagBase> tagManager,
+            ITagStore<TagBase> tagStore,
             IBroker broker)
         {
+            _entityTagStore = entityTagStore;
             _tagManager = tagManager;
             _tagStore = tagStore;
-            _entityTagStore = entityTagStore;
             _broker = broker;
         }
 

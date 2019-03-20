@@ -12,7 +12,6 @@ namespace Plato.Tags.Services
     {
 
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
-    
         private readonly IBroker _broker;
 
         public EntityTagManager(

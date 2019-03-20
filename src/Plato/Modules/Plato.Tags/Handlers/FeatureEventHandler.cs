@@ -322,7 +322,11 @@ namespace Plato.Tags.Handlers
                                 t.Alias,
                                 t.TotalEntities,
                                 t.TotalFollows,
-                                t.LastSeenDate
+                                t.LastSeenDate,
+                                t.CreatedUserId,
+                                t.CreatedDate,
+                                t.ModifiedUserId,
+                                t.ModifiedDate
                                 FROM {prefix}_Tags t WITH (nolock) 
                                     INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
                                 WHERE (
@@ -342,7 +346,11 @@ namespace Plato.Tags.Handlers
                                 t.Alias,
                                 t.TotalEntities,
                                 t.TotalFollows,
-                                t.LastSeenDate
+                                t.LastSeenDate,
+                                t.CreatedUserId,
+                                t.CreatedDate,
+                                t.ModifiedUserId,
+                                t.ModifiedDate
                                 FROM {prefix}_Tags t WITH (nolock) 
                                     INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
                                 WHERE (
@@ -362,7 +370,11 @@ namespace Plato.Tags.Handlers
                                 t.Alias,
                                 t.TotalEntities,
                                 t.TotalFollows,
-                                t.LastSeenDate
+                                t.LastSeenDate,
+                                t.CreatedUserId,
+                                t.CreatedDate,
+                                t.ModifiedUserId,
+                                t.ModifiedDate
                                 FROM {prefix}_Tags t WITH (nolock) 
                                     INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
                                 WHERE (

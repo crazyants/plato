@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Services;
-using Plato.Labels.Stores;
 using Plato.Labels.ViewModels;
 using Plato.Articles.Labels.Models;
 using Plato.Articles.Labels.ViewModels;
@@ -12,14 +11,11 @@ namespace Plato.Articles.Labels.ViewProviders
     public class AdminViewProvider : BaseViewProvider<LabelAdmin>
     {
  
-        private readonly ILabelStore<Label> _labelStore;
         private readonly ILabelManager<Label> _labelManager;
       
         public AdminViewProvider(
-            ILabelStore<Label> labelStore,
             ILabelManager<Label> labelManager)
         {
-            _labelStore = labelStore;
             _labelManager = labelManager;
         }
         

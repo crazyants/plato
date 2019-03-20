@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
@@ -49,7 +47,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
         {
             
             // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature == null)
             {
                 // Feature not found
