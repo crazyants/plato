@@ -23,7 +23,7 @@ namespace Plato.Articles.Labels.Navigation
             //builder
             //    .Add(T["Discuss"], configuration => configuration
             //        .Add(T["Labels"], 2, installed => installed
-            //            .Action("Index", "Home", "Plato.Discuss.Labels", new RouteValueDictionary()
+            //            .Action("Index", "Home", "Plato.Articles.Labels", new RouteValueDictionary()
             //            {
             //                ["opts.id"] = "",
             //                ["opts.alias"] = ""

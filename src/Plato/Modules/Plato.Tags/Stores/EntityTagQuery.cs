@@ -58,17 +58,20 @@ namespace Plato.Tags.Stores
     public class EntityTagQueryParams
     {
 
-        private WhereString _keywords;
+
+        private WhereInt _id;
         private WhereInt _tagId;
         private WhereInt _entityId;
         private WhereInt _entityReplyId;
+        private WhereString _keywords;
 
-        public WhereString Keywords
+
+        public WhereInt Id
         {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
+            get => _id ?? (_id = new WhereInt());
+            set => _id = value;
         }
-        
+
         public WhereInt TagId
         {
             get => _tagId ?? (_tagId = new WhereInt());
@@ -86,7 +89,13 @@ namespace Plato.Tags.Stores
             get => _entityReplyId ?? (_entityReplyId = new WhereInt());
             set => _entityReplyId = value;
         }
-        
+
+        public WhereString Keywords
+        {
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
+        }
+
     }
 
     #endregion
@@ -187,6 +196,14 @@ namespace Plato.Tags.Stores
         private string BuildWhereClause()
         {
             var sb = new StringBuilder();
+            
+            // Id
+            if (_query.Params.Id.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Id.Operator);
+                sb.Append(_query.Params.Id.ToSqlString("el.Id"));
+            }
 
             // TagId
             if (_query.Params.TagId.Value > -1)

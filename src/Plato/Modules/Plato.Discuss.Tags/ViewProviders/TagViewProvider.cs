@@ -17,22 +17,17 @@ namespace Plato.Discuss.Tags.ViewProviders
 {
     public class TagViewProvider : BaseViewProvider<Tag>
     {
-
-        private readonly ITagStore<Tag> _tagStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ITagStore<Tag> _tagStore;
+
+    
 
         public TagViewProvider(
             ITagStore<Tag> tagStore,
-            IContextFacade contextFacade,
-            IFeatureFacade featureFacade,
-            IActionContextAccessor actionContextAccessor)
+            IFeatureFacade featureFacade)
         {
             _tagStore = tagStore;
-            _contextFacade = contextFacade;
             _featureFacade = featureFacade;
-            _actionContextAccessor = actionContextAccessor;
         }
         
         #region "Imlementation"
@@ -59,7 +54,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         {
 
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
             if (viewModel == null)
             {
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
@@ -103,12 +98,12 @@ namespace Plato.Discuss.Tags.ViewProviders
             
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Tag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Tag tag, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Tag model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Tag tag, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

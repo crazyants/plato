@@ -58,9 +58,16 @@ namespace Plato.Labels.Stores
     public class EntityLabelQueryParams
     {
 
+        private WhereInt _id;
         private WhereInt _labelId;
         private WhereInt _entityId;
-        
+
+        public WhereInt Id
+        {
+            get => _id ?? (_id = new WhereInt());
+            set => _id = value;
+        }
+
         public WhereInt LabelId
         {
             get => _labelId ?? (_labelId = new WhereInt());
@@ -162,12 +169,20 @@ namespace Plato.Labels.Stores
         {
             var sb = new StringBuilder();
 
+            // Id
+            if (_query.Params.Id.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Id.Operator);
+                sb.Append(_query.Params.Id.ToSqlString("el.Id"));
+            }
+            
             // LabelId
             if (_query.Params.LabelId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.LabelId.Operator);
-                sb.Append(_query.Params.LabelId.ToSqlString("el.Id"));
+                sb.Append(_query.Params.LabelId.ToSqlString("el.LabelId"));
             }
 
             // EntityId

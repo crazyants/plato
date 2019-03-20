@@ -19,65 +19,65 @@ using Plato.Tags.ViewModels;
 
 namespace Plato.Articles.Tags.ViewProviders
 {
-    public class ReplyViewProvider : BaseViewProvider<Comment>
+    public class CommentViewProvider : BaseViewProvider<Comment>
     {
 
         private const string TagsHtmlName = "tags";
 
-
-        private readonly IEntityReplyStore<Comment> _replyStore;
-        private readonly IEntityTagStore<EntityTag> _entityTagStore;
         private readonly IEntityTagManager<EntityTag> _entityTagManager;
-        private readonly ITagStore<TagBase> _tagStore;
+        private readonly IEntityTagStore<EntityTag> _entityTagStore;
+        private readonly IEntityReplyStore<Comment> _replyStore;
         private readonly ITagManager<TagBase> _tagManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IContextFacade _contextFacade;
+        private readonly ITagStore<TagBase> _tagStore;
 
         private readonly IStringLocalizer T;
 
         private readonly HttpRequest _request;
 
-        public ReplyViewProvider(
+        public CommentViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IStringLocalizer stringLocalize,
-            
-            IEntityReplyStore<Comment> replyStore,
-            IEntityTagStore<EntityTag> entityTagStore, 
-            ITagStore<TagBase> tagStore, 
             IEntityTagManager<EntityTag> entityTagManager,
+            IEntityTagStore<EntityTag> entityTagStore,
+            IEntityReplyStore<Comment> replyStore,
             ITagManager<TagBase> tagManager,
             IFeatureFacade featureFacade,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            ITagStore<TagBase> tagStore)
         {
-            _replyStore = replyStore;
-            _entityTagStore = entityTagStore;
-            _tagStore = tagStore;
+
+            _request = httpContextAccessor.HttpContext.Request;
             _entityTagManager = entityTagManager;
-            _tagManager = tagManager;
+            _entityTagStore = entityTagStore;
             _featureFacade = featureFacade;
             _contextFacade = contextFacade;
-            _request = httpContextAccessor.HttpContext.Request;
+            _tagManager = tagManager;
+            _tagStore = tagStore;
+            _replyStore = replyStore;
 
             T = stringLocalize;
+
         }
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Comment model, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Comment comment, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Comment model, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Comment comment, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Comment reply, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Comment comment, IViewProviderContext updater)
         {
 
             var tagsJson = "";
-            var entityTags = await GetEntityTagsByEntityReplyIdAsync(reply.Id);
+            var entityTags = await GetEntityTagsByEntityReplyIdAsync(comment.Id);
             if (entityTags != null)
             {
 
@@ -124,34 +124,34 @@ namespace Plato.Articles.Tags.ViewProviders
 
         }
 
-        public override Task<bool> ValidateModelAsync(Comment reply, IUpdateModel updater)
+        public override Task<bool> ValidateModelAsync(Comment comment, IUpdateModel updater)
         {
             // ensure tags are optional
             return Task.FromResult(true);
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Comment reply, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Comment comment, IViewProviderContext context)
         {
 
             // Ensure entity reply exists before attempting to update
-            var entity = await _replyStore.GetByIdAsync(reply.Id);
+            var entity = await _replyStore.GetByIdAsync(comment.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(reply, context);
+                return await BuildIndexAsync(comment, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(reply, context.Updater))
+            if (await ValidateModelAsync(comment, context.Updater))
             {
 
                 // Get selected tags
-                var tagsToAdd = await GetTagsToAddAsync(reply);
+                var tagsToAdd = await GetTagsToAddAsync();
 
                 // Build tags to remove
                 var tagsToRemove = new List<EntityTag>();
 
                 // Iterate over existing tags
-                var existingTags = await GetEntityTagsByEntityReplyIdAsync(reply.Id);
+                var existingTags = await GetEntityTagsByEntityReplyIdAsync(comment.Id);
                 if (existingTags != null)
                 {
                     foreach (var entityTag in existingTags)
@@ -191,8 +191,8 @@ namespace Plato.Articles.Tags.ViewProviders
                 {
                     var result = await _entityTagManager.CreateAsync(new EntityTag()
                     {
-                        EntityId = reply.EntityId,
-                        EntityReplyId = reply.Id,
+                        EntityId = comment.EntityId,
+                        EntityReplyId = comment.Id,
                         TagId = tag.Id,
                         CreatedUserId = user?.Id ?? 0,
                         CreatedDate = DateTime.UtcNow
@@ -208,7 +208,7 @@ namespace Plato.Articles.Tags.ViewProviders
 
             }
 
-            return await BuildEditAsync(reply, context);
+            return await BuildEditAsync(comment, context);
 
         }
 
@@ -216,7 +216,7 @@ namespace Plato.Articles.Tags.ViewProviders
         
         #region "Private Methods"
 
-        async Task<List<TagBase>> GetTagsToAddAsync(Comment reply)
+        async Task<List<TagBase>> GetTagsToAddAsync()
         {
 
             var tagsToAdd = new List<TagBase>();
@@ -285,7 +285,7 @@ namespace Plato.Articles.Tags.ViewProviders
             }
 
             // Get feature for tag
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
 
             // We always need a feature
             if (feature == null)

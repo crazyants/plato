@@ -23,7 +23,7 @@ namespace Plato.Articles.Tags.Navigation
             //builder
             //    .Add(T["Discuss"], configuration => configuration
             //        .Add(T["Tags"], 4, installed => installed
-            //            .Action("Index", "Home", "Plato.Discuss.Tags", new RouteValueDictionary()
+            //            .Action("Index", "Home", "Plato.Articles.Tags", new RouteValueDictionary()
             //            {
             //                ["opts.id"] = "",
             //                ["opts.alias"] = ""

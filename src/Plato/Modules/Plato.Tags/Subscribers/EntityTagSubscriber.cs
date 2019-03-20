@@ -133,26 +133,29 @@ namespace Plato.Tags.Subscribers
                 return entityLabel;
             }
 
-            // Get label
-            var label = await _tagStore.GetByIdAsync(entityLabel.TagId);
+            // Get tag
+            var tag = await _tagStore.GetByIdAsync(entityLabel.TagId);
 
             // No tag found no further work needed
-            if (label == null)
+            if (tag == null)
             {
                 return entityLabel;
             }
+            
+            // Get count for entities & replies tagged with this tag
+            var entityTags = await _entityTagStore.QueryAsync()
+                .Take(1)
+                .Select<EntityTagQueryParams>(q =>
+                {
+                    q.TagId.Equals(tag.Id);
+                })
+                .ToList();
 
             // Update tag
-            label.TotalEntities = label.TotalEntities - 1;
-
-            // Ensure we never go negative
-            if (label.TotalEntities < 0)
-            {
-                label.TotalEntities = 0;
-            }
-
+            tag.TotalEntities = entityTags?.Total ?? 0;
+            
             // Persist updates
-            await _tagManager.UpdateAsync(label);
+            await _tagManager.UpdateAsync(tag);
 
             return entityLabel;
 

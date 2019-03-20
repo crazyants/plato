@@ -43,24 +43,26 @@
                     @if (Model.Actions != null || Model.Footer != null)
                     {
                         <div class="layout-footer">
-
-                            <card>
-                                <card-body>
-                                    @if (Model.Actions != null)
-                                    {
-                                        <div class="float-right layout-actions">
-                                            <view model="@Model.Actions" />
-                                        </div>
-                                    }
-                                    @if (Model.Footer != null)
-                                    {
-                                        <div class="layout-footer-item">
-                                            <view model="@Model.Footer"></view>
-                                        </div>
-                                    }
-                                </card-body>
-                            </card>
-
+                            
+                            <div class="list-left"></div>
+                            <div class="list-body">
+                                <card>
+                                    <card-body>
+                                        @if (Model.Actions != null)
+                                        {
+                                            <div class="float-right layout-actions">
+                                                <view model="@Model.Actions" />
+                                            </div>
+                                        }
+                                        @if (Model.Footer != null)
+                                        {
+                                            <div class="layout-footer-item">
+                                                <view model="@Model.Footer"></view>
+                                            </div>
+                                        }
+                                    </card-body>
+                                </card>
+                            </div>
                         </div>
                     }
                 </div>
@@ -81,25 +83,27 @@
                 }
                 @if (Model.Actions != null || Model.Footer != null)
                 {
-                    <card>
-                        <card-body>
-                            <div class="layout-footer">
-                                @if (Model.Actions != null)
-                                {
-                                    <div class="float-right layout-actions">
-                                        <view model="@Model.Actions" />
-                                    </div>
-                                }
-                                @if (Model.Footer != null)
-                                {
-                                    <div class="layout-footer-item">
-                                        <view model="@Model.Footer"></view>
-                                    </div>
-                                }
-                            </div>
-                        </card-body>
-                    </card>
-
+                    <div class="list-left"></div>
+                    <div class="list-body">
+                        <card>
+                            <card-body>
+                                <div class="layout-footer">
+                                    @if (Model.Actions != null)
+                                    {
+                                        <div class="float-right layout-actions">
+                                            <view model="@Model.Actions" />
+                                        </div>
+                                    }
+                                    @if (Model.Footer != null)
+                                    {
+                                        <div class="layout-footer-item">
+                                            <view model="@Model.Footer"></view>
+                                        </div>
+                                    }
+                                </div>
+                            </card-body>
+                        </card>
+                    </div>
                 }
             </div>
         }

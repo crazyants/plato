@@ -10,21 +10,19 @@ namespace Plato.Labels.Subscribers
     public class EntityLabelSubscriber : IBrokerSubscriber
     {
 
-        private readonly ILabelStore<LabelBase> _labelStore;
+        private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly ILabelManager<LabelBase> _labelManager;
+        private readonly ILabelStore<LabelBase> _labelStore;
         private readonly IBroker _broker;
-
-        /// <summary>
-        /// Updates label metadata whenever a entity & label relationship is added or removed.
-        /// </summary>
-        /// <param name="labelManager"></param>
-        /// <param name="labelStore"></param>
-        /// <param name="broker"></param>
+        
+        // Updates label metadata whenever a entity & label relationship is added or removed.
         public EntityLabelSubscriber(
+            IEntityLabelStore<EntityLabel> entityLabelStore,
             ILabelManager<LabelBase> labelManager,
             ILabelStore<LabelBase> labelStore,
             IBroker broker)
         {
+            _entityLabelStore = entityLabelStore;
             _labelManager = labelManager;
             _labelStore = labelStore;
             _broker = broker;
@@ -40,7 +38,7 @@ namespace Plato.Labels.Subscribers
             {
                 Key = "EntityLabelCreated"
             }, async message => await EntityLabelCreated(message.What));
-
+            
             // Deleted
             _broker.Sub<EntityLabel>(new MessageOptions()
             {
@@ -96,9 +94,18 @@ namespace Plato.Labels.Subscribers
             {
                 return entityLabel;
             }
+
+            // Get count for entities labeled with this label
+            var entityLabels = await _entityLabelStore.QueryAsync()
+                .Take(1)
+                .Select<EntityLabelQueryParams>(q =>
+                {
+                    q.LabelId.Equals(label.Id);
+                })
+                .ToList();
             
             // Update label
-            label.TotalEntities = label.TotalEntities + 1;
+            label.TotalEntities = entityLabels?.Total ?? 0;
             label.LastEntityDate = DateTimeOffset.UtcNow;
 
             // Persist label updates
@@ -134,16 +141,19 @@ namespace Plato.Labels.Subscribers
             {
                 return entityLabel;
             }
+            
+            // Get count for entities labeled with this label
+            var entityLabels = await _entityLabelStore.QueryAsync()
+                .Take(1)
+                .Select<EntityLabelQueryParams>(q =>
+                {
+                    q.LabelId.Equals(label.Id);
+                })
+                .ToList();
 
             // Update label
-            label.TotalEntities = label.TotalEntities - 1;
-
-            // Ensure we never go negative
-            if (label.TotalEntities < 0)
-            {
-                label.TotalEntities = 0;
-            }
-
+            label.TotalEntities = entityLabels?.Total ?? 0;
+            
             // Persist label updates
             await _labelManager.UpdateAsync(label);
 

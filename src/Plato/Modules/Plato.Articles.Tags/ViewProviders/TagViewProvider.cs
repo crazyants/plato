@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Articles.Models;
 using Plato.Articles.Tags.Models;
 using Plato.Articles.Tags.ViewModels;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
@@ -17,22 +15,18 @@ namespace Plato.Articles.Tags.ViewProviders
 {
     public class TagViewProvider : BaseViewProvider<Tag>
     {
-
-        private readonly ITagStore<Tag> _tagStore;
+        
         private readonly IFeatureFacade _featureFacade;
-        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ITagStore<Tag> _tagStore;
 
         public TagViewProvider(
-            ITagStore<Tag> tagStore,
-            IContextFacade contextFacade,
             IFeatureFacade featureFacade,
-            IActionContextAccessor actionContextAccessor)
+            ITagStore<Tag> tagStore)
         {
-            _tagStore = tagStore;
             _featureFacade = featureFacade;
-            _actionContextAccessor = actionContextAccessor;
+            _tagStore = tagStore;
         }
-        
+
         #region "Imlementation"
         
         public override Task<IViewProviderResult> BuildIndexAsync(Tag tag, IViewProviderContext context)
@@ -56,8 +50,8 @@ namespace Plato.Articles.Tags.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
         {
 
-            // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
+            // Get index view model from context
+            var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
             if (viewModel == null)
             {
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Article>).ToString()} has not been registered on the HttpContext!");

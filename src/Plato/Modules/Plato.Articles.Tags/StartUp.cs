@@ -46,7 +46,7 @@ namespace Plato.Articles.Tags
             services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
             services.AddScoped<IViewProvider<Article>, ArticleViewProvider>();
             services.AddScoped<IViewProviderManager<Comment>, ViewProviderManager<Comment>>();
-            services.AddScoped<IViewProvider<Comment>, ReplyViewProvider>();
+            services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
         
             // Admin view providers
             services.AddScoped<IViewProviderManager<TagAdmin>, ViewProviderManager<TagAdmin>>();
