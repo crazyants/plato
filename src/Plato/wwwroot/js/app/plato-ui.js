@@ -3147,7 +3147,7 @@ $(function (win, doc, $) {
             maxItems: 0, // the maximum number of allowed selected items - 0 = no limit
             store: null, // optional selector for dom element which will store the JSON representing selected items
             itemTemplate: '<li class="list-group-item select-dropdown-item">{text} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
-            itemTemplateEmpty: '<li class="list-group-item">No Results</li>',
+            itemTemplateEmpty: '<li class="list-group-item">No results</li>',
             parseItemTemplate: function (html, data) {
                 if (data.text) {
                     html = html.replace(/\{text}/g, data.text);
@@ -3229,8 +3229,14 @@ $(function (win, doc, $) {
                         $preview.append(this.buildItem($caller, items[i], i));
                     }
                 } else {
-                    $preview
-                        .append($($caller.data(dataKey).itemTemplateEmpty));
+                    if ($preview.data("emptyPreviewText")) {
+                        var $li = $("<li class=\"list-group-item\">")
+                            .append($preview.data("emptyPreviewText"));
+                        $preview.append($li);
+                    } else {
+                        $preview
+                            .append($($caller.data(dataKey).itemTemplateEmpty));
+                    }
                 }
 
                 // Serialize items to hidden field

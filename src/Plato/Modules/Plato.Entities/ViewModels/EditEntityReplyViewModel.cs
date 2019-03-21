@@ -13,6 +13,7 @@ namespace Plato.Entities.ViewModels
 
         [Required]
         [MinLength(5)]
+        [DataType(DataType.MultilineText)]
         [Display(Name = "message")]
         public string Message { get; set; }
 

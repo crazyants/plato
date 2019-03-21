@@ -14,7 +14,7 @@ namespace Plato.Discuss.ViewProviders
     public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
-        private const string EditorHtmlName = "message";
+        public const string EditorHtmlName = "message";
         
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IPostManager<Topic> _topicManager;

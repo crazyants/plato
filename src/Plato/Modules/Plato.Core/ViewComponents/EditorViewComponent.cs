@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Plato.Core.ViewModels;
 
 namespace Plato.Core.ViewComponents
 {
@@ -13,7 +14,7 @@ namespace Plato.Core.ViewComponents
         }
 
         public Task<IViewComponentResult> InvokeAsync(
-            int id,
+            string id,
             string value,
             LocalizedHtmlString placeHolderText,
             string htmlName,
@@ -33,30 +34,6 @@ namespace Plato.Core.ViewComponents
         }
 
     }
-
-    public class Selection<T>
-    {
-
-        public bool IsSelected { get; set; }
-
-        public T Value { get; set; }
-
-    }
-
-    public class EditorViewModel
-    {
-
-        public int Id { get; set; }
-
-        public string Value { get; set; }
-
-        public string PlaceHolderText { get; set; }
-
-        public string HtmlName { get; set; }
-
-        public bool AutoFocus { get; set; }
-
-    }
-
+    
 }
 

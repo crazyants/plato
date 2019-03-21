@@ -25,13 +25,13 @@ namespace Plato.Discuss.Channels.ViewProviders
         private const string CategoryHtmlName = "channel";
 
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly HttpRequest _request;
+        private readonly IEntityStore<Topic> _entityStore;
+        private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
-    
+        private readonly HttpRequest _request;
+
         public IStringLocalizer T;
 
         public IStringLocalizer S { get; }

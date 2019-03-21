@@ -6,7 +6,7 @@
 
         public string HtmlName { get; set; }
 
-        public bool IsPrivate { get; set; }
+        public bool Published { get; set; }
 
     }
 }

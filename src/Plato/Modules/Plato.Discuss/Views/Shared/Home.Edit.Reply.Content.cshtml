@@ -3,7 +3,9 @@
 <input type="hidden" asp-for="Id"/>
 <input type="hidden" asp-for="EntityId" />
 
-<div class="mt-0" id="postReply">
+<div asp-validation-summary="All"></div>
+
+<div class="mt-0">
 
     <div class="list-left reply-left">
         @if (base.CurrentUser != null)

@@ -3,10 +3,9 @@
 <span asp-validation-for="Value" class="text-danger"></span>
 
 <textarea value="@Model.Value"
-          id="@Model.HtmlName"
+          id="@Model.Id"
           name="@Model.HtmlName"
-          asp-for="@Model.Value"
-          asp-autofocus="@Model.AutoFocusw"
+          asp-autofocus="@Model.AutoFocus"
           data-provide="markdown"
           tabindex="@Model.TabIndex"
           class="form-control md-textarea"

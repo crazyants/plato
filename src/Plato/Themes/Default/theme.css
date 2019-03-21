@@ -101,6 +101,11 @@
     border-color:#007bff;
 }
 
+.switch input:checked  + .switch-slider:before {
+    color: #007bff;
+}
+
+
 /* ------------------- */
 /* Tree */
 /* ------------------- */

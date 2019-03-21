@@ -1,10 +1,11 @@
 ﻿@model EditEntityReplyViewModel
 
-<input type="hidden" asp-for="Id"/>
+<input type="hidden" asp-for="Id" />
 <input type="hidden" asp-for="EntityId" />
 
-<div class="mt-0" id="postReply">
+<div asp-validation-summary="All"></div>
 
+<div class="mt-0">
     <div class="list-left reply-left">
         @if (base.CurrentUser != null)
         {
@@ -16,12 +17,11 @@
     <div class="list-body reply-body">
         <card class="card mt-0">
             <card-body>
-                
-                <div asp-validation-summary="ModelOnly"></div>
 
+                <div asp-validation-summary="ModelOnly"></div>
                 <fieldset>
                     <div class="form-group">
-                        
+
                         @await DisplayAsync(new View("Editor", new
                         {
                             value = @Model.Message,
@@ -29,12 +29,9 @@
                             htmlName = @Model.EditorHtmlName,
                             tabIndex = 2
                         }))
-
                     </div>
                 </fieldset>
-
             </card-body>
         </card>
     </div>
-
 </div>

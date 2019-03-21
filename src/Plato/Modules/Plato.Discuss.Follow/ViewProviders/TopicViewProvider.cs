@@ -18,7 +18,7 @@ namespace Plato.Discuss.Follow.ViewProviders
         
         private readonly IContextFacade _contextFacade;
         private readonly IFollowStore<Plato.Follows.Models.Follow> _followStore;
-        private readonly IFollowManager<Plato.Follows.Models.Follow> _followManager;
+        private readonly IFollowManager<Follows.Models.Follow> _followManager;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly HttpRequest _request;
  

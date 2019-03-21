@@ -32,7 +32,7 @@ namespace Plato.Markdown.ViewComponents
                 HtmlName = htmlName,
                 PlaceHolderText = placeHolderText?.Value ?? string.Empty,
                 Value = value,
-                AutoFocusw = autoFocus,
+                AutoFocus = autoFocus,
                 TabIndex = tabIndex
             };
 
@@ -53,7 +53,7 @@ namespace Plato.Markdown.ViewComponents
 
         public string HtmlName { get; set; }
         
-        public bool AutoFocusw { get; set; }
+        public bool AutoFocus { get; set; }
         
         public int TabIndex { get; set; }
 

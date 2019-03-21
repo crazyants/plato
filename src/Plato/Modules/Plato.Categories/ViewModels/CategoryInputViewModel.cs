@@ -37,7 +37,7 @@ namespace Plato.Categories.ViewModels
     {
 
         public bool IsSelected { get; set; }
-
+        
         public TModel Value { get; set; }
 
     }

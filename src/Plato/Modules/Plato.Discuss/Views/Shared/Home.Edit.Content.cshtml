@@ -1,6 +1,8 @@
 ﻿@model EditEntityViewModel
 
-<div class="mt-0" id="postReply">
+<div asp-validation-summary="All"></div>
+
+<div class="mt-0">
     <div class="list-left reply-left">
         @if (this.CurrentUser != null)
         {
@@ -45,6 +47,7 @@
                     </div>
                     <div class="form-group">
 
+                        <span asp-validation-for="@Model.EditorHtmlName" class="text-danger"></span>
                         @await DisplayAsync(new View("Editor", new
                         {
                             value = @Model.Message,
@@ -52,7 +55,6 @@
                             htmlName = @Model.EditorHtmlName,
                             tabIndex = 2
                         }))
-
                     </div>
                 </fieldset>
 

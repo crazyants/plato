@@ -1,7 +1,9 @@
-﻿@model Plato.Core.ViewComponents.EditorViewModel
+﻿@model EditorViewModel
 
 <textarea 
+    id="@Model.Id" 
     name="@Model.HtmlName" 
+    data-val-required="The message field is required"
     class="form-control md-textarea" 
     placeholder="@Model.PlaceHolderText" 
     asp-autofocus="@Model.AutoFocus"

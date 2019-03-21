@@ -1,5 +1,6 @@
 ﻿@model EditEntityViewModel
 
+<div asp-validation-summary="All"></div>
 <div class="mt-0" id="postReply">
     <div class="list-left reply-left">
         @if (this.CurrentUser != null)
@@ -36,7 +37,7 @@
             <card-body>
 
                 <div asp-validation-summary="ModelOnly"></div>
-                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Id"/>
 
                 <fieldset>
                     <div class="form-group">
