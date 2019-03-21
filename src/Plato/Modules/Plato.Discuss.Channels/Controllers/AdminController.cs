@@ -77,11 +77,11 @@ namespace Plato.Discuss.Channels.Controllers
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Discuss"], discuss => discuss
-                    .Action("Index", "Admin", "Plato.Discuss")
-                    .LocalNav());
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        .LocalNav());
             
                 if (parents == null)
                 {
