@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Plato.Questions</AssemblyName>
+    <PackageId>Plato.Articles</PackageId>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>Plato.Questions</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Content\css\articles.css" />
+    <None Remove="Locales\en-US\emails.json" />
+    <None Remove="Locales\en-US\strings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Content\css\articles.css">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Locales\en-US\emails.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Locales\en-US\strings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Plato.Internal.Badges\Plato.Internal.Badges.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Notifications.Abstractions\Plato.Internal.Notifications.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Reputations.Abstractions\Plato.Internal.Reputations.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Tasks.Abstractions\Plato.Internal.Tasks.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Entities\Plato.Entities.csproj" />
+    <ProjectReference Include="..\Plato.Notifications\Plato.Notifications.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>

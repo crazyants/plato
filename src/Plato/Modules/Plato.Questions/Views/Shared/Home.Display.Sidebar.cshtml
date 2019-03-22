@@ -1,0 +1,11 @@
+﻿@model Question
+
+@await DisplayAsync(new View("EntityDetails", new
+{
+    id = @Model.Id
+}))
+
+@await DisplayAsync(new View("EntityParticipants", new
+{
+    id = @Model.Id
+}))

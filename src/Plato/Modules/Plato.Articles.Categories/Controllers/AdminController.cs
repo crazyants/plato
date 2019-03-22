@@ -88,7 +88,7 @@ namespace Plato.Articles.Categories.Controllers
                 }
                 else
                 {
-                    builder.Add(S["Categories"], channels => channels
+                    builder.Add(S["Categories"], categories => categories
                         .Action("Index", "Admin", "Plato.Articles.Categories", new RouteValueDictionary { ["Id"] = 0 })
                         .LocalNav()
                     );
@@ -96,7 +96,7 @@ namespace Plato.Articles.Categories.Controllers
                     {
                         if (parent.Id != id)
                         {
-                            builder.Add(S[parent.Name], channel => channel
+                            builder.Add(S[parent.Name], categories => categories
                                 .Action("Index", "Admin", "Plato.Articles.Categories", new RouteValueDictionary { ["Id"] = parent.Id })
                                 .LocalNav()
                             );
@@ -139,7 +139,7 @@ namespace Plato.Articles.Categories.Controllers
                     .Add(S["Articles"], articles => articles
                         .Action("Index", "Admin", "Plato.Articles")
                         .LocalNav())
-                    .Add(S["Categories"], channels => channels
+                    .Add(S["Categories"], categories => categories
                         .Action("Index", "Admin", "Plato.Articles.Categories")
                         .LocalNav())
                     .Add(S["Add Category"]);
@@ -190,7 +190,7 @@ namespace Plato.Articles.Categories.Controllers
 
                 await _viewProvider.ProvideUpdateAsync(result.Response, this);
 
-                _alerter.Success(T["Channel Added Successfully!"]);
+                _alerter.Success(T["Category Added Successfully!"]);
 
                 return RedirectToAction(nameof(Index));
 
@@ -223,7 +223,7 @@ namespace Plato.Articles.Categories.Controllers
                     .Add(S["Articles"], articles => articles
                         .Action("Index", "Admin", "Plato.Articles")
                         .LocalNav())
-                    .Add(S["Categories"], channels => channels
+                    .Add(S["Categories"], categories => categories
                         .Action("Index", "Admin", "Plato.Articles.Categories")
                         .LocalNav())
                     .Add(S["Edit Category"]);
@@ -252,7 +252,7 @@ namespace Plato.Articles.Categories.Controllers
                 return View(result);
             }
 
-            _alerter.Success(T["Channel Updated Successfully!"]);
+            _alerter.Success(T["Category Updated Successfully!"]);
 
             return RedirectToAction(nameof(Index));
 
@@ -286,7 +286,7 @@ namespace Plato.Articles.Categories.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Channel Deleted Successfully"]);
+                _alerter.Success(T["Category Deleted Successfully"]);
             }
             else
             {
@@ -316,7 +316,7 @@ namespace Plato.Articles.Categories.Controllers
             var result = await _categoryManager.Move(category, MoveDirection.Up);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Channel Updated Successfully"]);
+                _alerter.Success(T["Category Updated Successfully"]);
             }
             else
             {
@@ -342,7 +342,7 @@ namespace Plato.Articles.Categories.Controllers
             var result = await _categoryManager.Move(category, MoveDirection.Down);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Channel Updated Successfully"]);
+                _alerter.Success(T["Category Updated Successfully"]);
             }
             else
             {

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Reactions.ViewModels;
@@ -21,6 +22,13 @@ namespace Plato.Entities.Reactions.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(IEntity entity, IEntityReply reply)
         {
 
+            // We always need an entity
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            // Return view
             return View(new ReactionListViewModel()
             {
                 Entity = entity,

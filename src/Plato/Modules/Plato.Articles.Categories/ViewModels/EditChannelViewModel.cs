@@ -37,9 +37,8 @@ namespace Plato.Articles.Categories.ViewModels
         [StringLength(255)]
         public string IconCss { get; set; }
         
-     
         public DefaultIcons ChannelIcons { get; set; }
-
-
+        
     }
+
 }

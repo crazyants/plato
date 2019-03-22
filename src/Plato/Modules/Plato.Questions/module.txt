@@ -1,0 +1,13 @@
+Name: Plato Questions
+Description: Adds public Q&A capabilities to Plato.
+Category: Questions
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Entities",
+		Version: "1.0.0"
+	}
+]
