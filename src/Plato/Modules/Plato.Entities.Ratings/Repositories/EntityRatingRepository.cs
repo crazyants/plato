@@ -205,7 +205,7 @@ namespace Plato.Entities.Ratings.Repositories
             return output;
 
         }
-        
+
         #endregion
 
         #region "Private Methods"

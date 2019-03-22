@@ -3,6 +3,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Ratings.Models
 {
+    
     public class RatingEntry : IRatingEntry
     {
 

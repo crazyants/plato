@@ -4,9 +4,12 @@
     <a href="#" data-rating="1">
         Vote Up
     </a>
-    <div class="mean-rating">
+    <h6 class="total-ratings">
+        @Model.Entity.TotalRatings
+    </h6>
+    <h6 class="mean-rating">
         @Model.Entity.MeanRating
-    </div>
+    </h6>
     <a href="#" data-rating="-1">
         Vote Down
     </a>

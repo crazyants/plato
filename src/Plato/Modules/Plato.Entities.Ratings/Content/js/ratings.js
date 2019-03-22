@@ -113,63 +113,23 @@ $(function (win, doc, $) {
             },
             refresh: function($caller) {
 
-                console.log(JSON.stringify(results));
+            
+                var result = $caller.data(dataKey).data;
+                var $totalRatings = $caller.find(".total-ratings");
+                var $meanRating = $caller.find(".mean-ratings");
 
-                var results = $caller.data(dataKey).data;
-                var $target = this.getTarget($caller);
-                if ($target) {
-
-                    // empty target
-                    $target.empty();
-
-                    if (results.length > 0) {
-
-                        for (var i = 0; i < results.length; i++) {
-
-                            var result = results[i],
-                                $li = $("<li>",
-                                    {
-                                        "class": "bg-light border-right border-secondary"
-                                    }),
-                                $a = $("<a>",
-                                    {
-                                        "href": "#",
-                                        "class": "list-group-item list-group-item-action py-2 px-3 border-0",
-                                        "data-toggle": "tooltip",
-                                        "title": result.toolTip,
-                                        "data-reaction-name": result.name
-                                    }),
-                                $emoji = $("<span>",
-                                    {
-                                        "class": "d-inline-block mx-1"
-                                    }).html(result.emoji),
-                                $total = $("<span>",
-                                    {
-                                        "class": "d-inline-block mx-1"
-                                    }).html(result.total);
-
-                            $a.append($emoji).append($total);
-                            $li.append($a);
-                            $target.append($li);
-                        }
-
-                        // ensure target is visible
-                        if ($target.hasClass("hidden")) {
-                            $target.removeClass("hidden");
-                        }
-
-                    } else {
-
-                        // ensure target is hidden
-                        if (!$target.hasClass("hidden")) {
-                            $target.addClass("hidden");
-                        }
-
-                    }
-
-                    methods.bind($target);
+                console.log(JSON.stringify(result));
+                
+                if ($totalRatings.length > 0) {
+                    $totalRatings
+                        .empty()
+                        .text(result.totalRatings);
                 }
-
+                if ($meanRating.length > 0) {
+                    $meanRating
+                        .empty()
+                        .text(result.meanRating);
+                }
             },
             getEntityId: function($caller) {
                 var entityId = 0;
@@ -188,16 +148,7 @@ $(function (win, doc, $) {
                 }
                 return replyId;
             },
-            getTarget: function($caller) {
-                var target = $caller.attr("data-reactions-target");
-                if (target) {
-                    var $target = $(target);
-                    if ($target.length > 0) {
-                        return $target;
-                    }
-                }
-                return null;
-            }
+         
         };
 
         return {

@@ -14,7 +14,9 @@ namespace Plato.Entities.Ratings.Controllers
 
     public class RateController : BaseWebApiController
     {
-        
+
+        private readonly IEntityRatingsUpdater _entityRatingsUpdater;
+
         private readonly IEntityRatingsManager<EntityRating> _entityRatingManager;
         private readonly IEntityRatingsStore<EntityRating> _entityRatingsStore;
         private readonly ISimpleRatingsStore _simpleRatingsStore;
@@ -24,12 +26,14 @@ namespace Plato.Entities.Ratings.Controllers
             IEntityRatingsManager<EntityRating> entityRatingManager,
             IEntityRatingsStore<EntityRating> entityRatingsStore,
             ISimpleRatingsStore simpleRatingsStore,
-            IClientIpAddress clientIpAddress)
+            IClientIpAddress clientIpAddress, 
+            IEntityRatingsUpdater entityRatingsUpdater)
         {
             _simpleRatingsStore = simpleRatingsStore;
             _entityRatingManager = entityRatingManager;
             _entityRatingsStore = entityRatingsStore;
             _clientIpAddress = clientIpAddress;
+            _entityRatingsUpdater = entityRatingsUpdater;
         }
 
         [HttpPost, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
@@ -49,7 +53,11 @@ namespace Plato.Entities.Ratings.Controllers
             {
                 foreach (var rating in existingRatings.Where(r => r.EntityReplyId == model.EntityReplyId))
                 {
-                    existingRating = rating;
+                    if (model.Rating == rating.Rating)
+                    {
+                        existingRating = rating;
+                    }
+                    
                     break;
                 }
             }
@@ -61,7 +69,7 @@ namespace Plato.Entities.Ratings.Controllers
                 if (delete.Succeeded)
                 {
                     // return 202 accepted to confirm delete
-                    return base.AcceptedDelete(await _simpleRatingsStore.GetSimpleRatingsAsync(model.EntityId, model.EntityReplyId));
+                    return base.AcceptedDelete(await _entityRatingsUpdater.UpdateEntityRating(model.EntityId, model.EntityReplyId));
                 }
             }
             
@@ -80,7 +88,7 @@ namespace Plato.Entities.Ratings.Controllers
             if (result.Succeeded)
             { 
                 // return 201 created
-                return base.Created(await _simpleRatingsStore.GetSimpleRatingsAsync(model.EntityId, model.EntityReplyId));
+                return base.Created(await _entityRatingsUpdater.UpdateEntityRating(model.EntityId, model.EntityReplyId));
             }
 
             // We should not reach here
