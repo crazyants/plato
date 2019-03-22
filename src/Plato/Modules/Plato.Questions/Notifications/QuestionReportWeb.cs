@@ -82,7 +82,7 @@ namespace Plato.Questions.Notifications
             });
 
             // Get reason given text
-            var reasonText = S["Article Reported"];
+            var reasonText = S["Question Reported"];
             if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
             {
                 reasonText = S[ReportReasons.Reasons[context.Model.Why]];
@@ -94,7 +94,7 @@ namespace Plato.Questions.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = reasonText.Value,
-                Message = S["An article has been reported!"],
+                Message = S["A question has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow

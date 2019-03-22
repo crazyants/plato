@@ -41,7 +41,11 @@ namespace Plato.Entities.Models
         public int TotalReactions { get; set; }
 
         public int TotalReports { get; set; }
-        
+
+        public int TotalRatings { get; set; }
+
+        public int MeanRating { get; set; }
+
         public int TotalLinks { get; set; }
 
         public int TotalImages { get; set; }
@@ -107,6 +111,27 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("IsClosed"))
                 IsClosed = Convert.ToBoolean(dr["IsClosed"]);
+
+            if (dr.ColumnIsNotNull("IsAnswer"))
+                IsAnswer = Convert.ToBoolean(dr["IsAnswer"]);
+
+            if (dr.ColumnIsNotNull("TotalReactions"))
+                TotalReactions = Convert.ToInt32(dr["TotalReactions"]);
+
+            if (dr.ColumnIsNotNull("TotalReports"))
+                TotalReports = Convert.ToInt32(dr["TotalReports"]);
+            
+            if (dr.ColumnIsNotNull("TotalRatings"))
+                TotalRatings = Convert.ToInt32(dr["TotalRatings"]);
+
+            if (dr.ColumnIsNotNull("MeanRating"))
+                MeanRating = Convert.ToInt32(dr["MeanRating"]);
+
+            if (dr.ColumnIsNotNull("TotalLinks"))
+                TotalLinks = Convert.ToInt32(dr["TotalLinks"]);
+            
+            if (dr.ColumnIsNotNull("TotalImages"))
+                TotalImages = Convert.ToInt32(dr["TotalImages"]);
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);

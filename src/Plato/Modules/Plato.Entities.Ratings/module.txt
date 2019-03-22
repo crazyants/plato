@@ -1,0 +1,17 @@
+Name: Plato Entities Ratings
+Description: Adds core services to support voting and rating of entities within Plato.
+Category: Core
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.WebApi",
+		Version: "1.0.0"
+	},
+		{
+		Id: "Plato.Entities",
+		Version: "1.0.0"
+	}
+]

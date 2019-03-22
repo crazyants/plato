@@ -42,10 +42,12 @@ namespace Plato.Entities.Models
         public bool IsDeleted { get; set; }
 
         public bool IsClosed { get; set; }
-
+        
         public int TotalViews { get; set; }
 
         public int TotalReplies { get; set; }
+
+        public int TotalAnswers { get; set; }
 
         public int TotalParticipants { get; set; }
 
@@ -57,9 +59,19 @@ namespace Plato.Entities.Models
 
         public int TotalStars { get; set; }
 
+        public int TotalRatings { get; set; }
+
+        public int MeanRating { get; set; }
+
+        public int TotalLinks { get; set; }
+
+        public int TotalImages { get; set; }
+
         public double DailyViews { get; set; }
 
         public double DailyReplies { get; set; }
+
+        public double DailyAnswers { get; set; }
 
         public double DailyReactions { get; set; }
 
@@ -68,7 +80,8 @@ namespace Plato.Entities.Models
         public double DailyReports { get; set; }
 
         public double DailyStars { get; set; }
-        
+        public double DailyRatings { get; set; }
+
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
@@ -200,13 +213,16 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("IsClosed"))
                 IsClosed = Convert.ToBoolean(dr["IsClosed"]);
-            
+
             if (dr.ColumnIsNotNull("TotalViews"))
                 TotalViews = Convert.ToInt32(dr["TotalViews"]);
 
             if (dr.ColumnIsNotNull("TotalReplies"))
                 TotalReplies = Convert.ToInt32(dr["TotalReplies"]);
             
+            if (dr.ColumnIsNotNull("TotalAnswers"))
+                TotalAnswers = Convert.ToInt32(dr["TotalAnswers"]);
+
             if (dr.ColumnIsNotNull("TotalParticipants"))
                 TotalParticipants = Convert.ToInt32(dr["TotalParticipants"]);
 
@@ -222,13 +238,27 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("TotalStars"))
                 TotalStars = Convert.ToInt32(dr["TotalStars"]);
 
+            if (dr.ColumnIsNotNull("TotalRatings"))
+                TotalRatings = Convert.ToInt32(dr["TotalRatings"]);
+
+            if (dr.ColumnIsNotNull("MeanRating"))
+                MeanRating = Convert.ToInt32(dr["MeanRating"]);
+            
+            if (dr.ColumnIsNotNull("TotalLinks"))
+                TotalLinks = Convert.ToInt32(dr["TotalLinks"]);
+            
+            if (dr.ColumnIsNotNull("TotalImages"))
+                TotalImages = Convert.ToInt32(dr["TotalImages"]);
+            
             if (dr.ColumnIsNotNull("DailyViews"))
                 DailyViews = Convert.ToDouble(dr["DailyViews"]);
-
-
+            
             if (dr.ColumnIsNotNull("DailyReplies"))
                 DailyReplies = Convert.ToDouble(dr["DailyReplies"]);
 
+            if (dr.ColumnIsNotNull("DailyAnswers"))
+                DailyAnswers = Convert.ToDouble(dr["DailyAnswers"]);
+            
             if (dr.ColumnIsNotNull("DailyReactions"))
                 DailyReactions = Convert.ToDouble(dr["DailyReactions"]);
 
@@ -240,7 +270,10 @@ namespace Plato.Entities.Models
             
             if (dr.ColumnIsNotNull("DailyStars"))
                 DailyStars = Convert.ToDouble(dr["DailyStars"]);
-            
+
+            if (dr.ColumnIsNotNull("DailyRatings"))
+                DailyRatings = Convert.ToDouble(dr["DailyRatings"]);
+
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 

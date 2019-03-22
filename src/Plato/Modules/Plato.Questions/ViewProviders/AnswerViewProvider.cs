@@ -12,7 +12,7 @@ using Plato.Internal.Layout.ViewProviders;
 namespace Plato.Questions.ViewProviders
 {
 
-    public class CommentViewProvider : BaseViewProvider<Answer>
+    public class AnswerViewProvider : BaseViewProvider<Answer>
     {
 
         private const string EditorHtmlName = "message";
@@ -24,9 +24,9 @@ namespace Plato.Questions.ViewProviders
 
         private readonly HttpRequest _request;
 
-        public CommentViewProvider(
+        public AnswerViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IStringLocalizer<ArticleViewProvider> stringLocalize,
+            IStringLocalizer<QuestionViewProvider> stringLocalize,
             IPostManager<Answer> replyManager, 
             IEntityReplyStore<Answer> replyStore)
         {
@@ -78,7 +78,6 @@ namespace Plato.Questions.ViewProviders
                 View<EditEntityReplyViewModel>("Home.Edit.Reply.Content", model => viewModel).Zone("content"),
                 View<EditEntityReplyViewModel>("Home.Edit.Reply.Footer", model => viewModel).Zone("Footer")
             ));
-
 
         }
 

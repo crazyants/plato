@@ -1,5 +1,17 @@
 ﻿@model EntityViewModel<Question, Answer>
 
+<div class="rating" data-provide="rating" data-entity-id="@Model.Entity.Id">
+    <a href="#" data-rating="1">
+        Vote Up
+    </a>
+    <div class="mean-rating">
+        @Model.Entity.MeanRating
+    </div>
+    <a href="#" data-rating="-1">
+        Vote Down
+    </a>
+</div>
+
 <card>
     <card-title>
         <h6 class="card-title d-inline-block">@T["Article"]</h6>

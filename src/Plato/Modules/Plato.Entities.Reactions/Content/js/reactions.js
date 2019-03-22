@@ -41,7 +41,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName]) {
@@ -56,9 +56,9 @@ $(function (win, doc, $) {
                 methods.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
-                $caller.find("a").each(function () {
+                $caller.find("a").each(function() {
 
                     var event = "";
 
@@ -84,7 +84,7 @@ $(function (win, doc, $) {
                     event = $caller.data(dataKey).event;
                     if (event) {
                         $(this).unbind(event).bind(event,
-                            function (e) {
+                            function(e) {
                                 e.preventDefault();
                                 if ($(this).attr("data-toggle")) {
                                     $(this).tooltip("hide");
@@ -94,9 +94,9 @@ $(function (win, doc, $) {
                             });
                     }
                 });
-                
+
             },
-            unbind: function ($caller) {
+            unbind: function($caller) {
 
                 // Unbind events
                 $caller.find("a").each(function() {
@@ -111,17 +111,17 @@ $(function (win, doc, $) {
                 });
 
             },
-            post: function ($caller) {
+            post: function($caller) {
 
                 var params = $caller.data(dataKey).params;
                 params.entityId = this.getEntityId($caller);
                 params.entityReplyId = this.getEntityReplyId($caller);
-            
+
                 app.http({
                     url: "api/reactions/react/post",
                     method: "POST",
                     data: JSON.stringify(params)
-                }).done(function (data) {
+                }).done(function(data) {
                     // Created or deleted response
                     if (data.statusCode === 201 || data.statusCode === 202) {
                         if (data.result) {
@@ -132,14 +132,14 @@ $(function (win, doc, $) {
                 });
             },
             refresh: function($caller) {
-                
+
                 var results = $caller.data(dataKey).data;
                 var $target = this.getTarget($caller);
                 if ($target) {
 
                     // empty target
                     $target.empty();
-                    
+
                     if (results.length > 0) {
 
                         for (var i = 0; i < results.length; i++) {
@@ -175,7 +175,7 @@ $(function (win, doc, $) {
                         if ($target.hasClass("hidden")) {
                             $target.removeClass("hidden");
                         }
-                        
+
                     } else {
 
                         // ensure target is hidden
@@ -189,7 +189,7 @@ $(function (win, doc, $) {
                 }
 
             },
-            getEntityId: function ($caller) {
+            getEntityId: function($caller) {
                 var entityId = 0;
                 if ($caller.attr("data-entity-id")) {
                     entityId = parseInt($caller.attr("data-entity-id"));
@@ -199,7 +199,7 @@ $(function (win, doc, $) {
                 }
                 return entityId;
             },
-            getEntityReplyId: function ($caller) {
+            getEntityReplyId: function($caller) {
                 var replyId = 0;
                 if ($caller.attr("data-entity-reply-id")) {
                     replyId = parseInt($caller.attr("data-entity-reply-id"));
@@ -216,7 +216,7 @@ $(function (win, doc, $) {
                 }
                 return null;
             }
-        }
+        };
 
         return {
             init: function() {
@@ -244,7 +244,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).reactionMenu
+                    // $(selector).reactions
                     return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -256,7 +256,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().reactionMenu
+                    // $().reactions
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");

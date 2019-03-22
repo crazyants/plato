@@ -58,7 +58,7 @@ namespace Plato.Articles.ViewProviders
             var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Article, Comment>)] as EntityViewModel<Article, Comment>;
             if (viewModel == null)
             {
-                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Article>).ToString()} has not been registered on the HttpContext!");
+                throw new Exception($"A view model of type {typeof(EntityViewModel<Article, Comment>).ToString()} has not been registered on the HttpContext!");
             }
 
             // Increment entity views
@@ -79,7 +79,6 @@ namespace Plato.Articles.ViewProviders
                 View<EntityViewModel<Article, Comment>>("Home.Display.Actions", model => viewModel)
                     .Zone("actions")
                     .Order(int.MaxValue)
-
             );
 
         }

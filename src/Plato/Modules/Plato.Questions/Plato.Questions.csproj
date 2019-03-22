@@ -13,13 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Content\css\articles.css" />
+    <None Remove="Content\css\questions.css" />
     <None Remove="Locales\en-US\emails.json" />
     <None Remove="Locales\en-US\strings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Content\css\articles.css">
+    <Content Include="Content\css\questions.css">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="Locales\en-US\emails.json">

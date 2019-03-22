@@ -7,9 +7,23 @@
 }
 
 <div class="list-left reply-left">
+    
     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
-        <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
+        <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url"/>
     </a>
+    
+    <div class="rating" data-provide="rating" data-entity-id="@Model.Entity.Id" data-entity-reply-id="@Model.Entity.Id">
+        <a href="#" data-rating="1">
+            Vote Up
+        </a>
+        <div class="mean-rating">
+            @Model.Reply.MeanRating
+        </div>
+        <a href="#" data-rating="-1">
+            Vote Down
+        </a>
+    </div>
+
 </div>
 <div class="list-body reply-body">
     <card class="card card-body-flush">

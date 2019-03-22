@@ -18,13 +18,13 @@ namespace Plato.Questions.Assets
                 {
                     new Asset()
                     {
-                        Url = "/Plato.Questions/content/css/articles.css",
+                        Url = "/plato.questions/content/css/questions.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/Plato.Questions/content/js/articles.js",
+                        Url = "/plato.questions/content/js/questions.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -35,13 +35,13 @@ namespace Plato.Questions.Assets
                 {
                     new Asset()
                     {
-                        Url = "/Plato.Questions/content/css/articles.css",
+                        Url = "/plato.questions/content/css/questions.min.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/Plato.Questions/content/js/articles.js",
+                        Url = "/plato.questions/content/js/questions.min.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -52,13 +52,13 @@ namespace Plato.Questions.Assets
                 {
                     new Asset()
                     {
-                        Url = "/Plato.Questions/content/css/articles.css",
+                        Url = "/plato.questions/content/css/questions.min.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/Plato.Questions/content/js/articles.js",
+                        Url = "/plato.questions/content/js/questions.min.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }

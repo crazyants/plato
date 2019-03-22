@@ -89,9 +89,9 @@ namespace Plato.Questions
 
             // Register view providers
             services.AddScoped<IViewProviderManager<Question>, ViewProviderManager<Question>>();
-            services.AddScoped<IViewProvider<Question>, ArticleViewProvider>();
+            services.AddScoped<IViewProvider<Question>, QuestionViewProvider>();
             services.AddScoped<IViewProviderManager<Answer>, ViewProviderManager<Answer>>();
-            services.AddScoped<IViewProvider<Answer>, CommentViewProvider>();
+            services.AddScoped<IViewProvider<Answer>, AnswerViewProvider>();
 
             // Add profile views
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();

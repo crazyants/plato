@@ -57,16 +57,15 @@ else
                 <span class="text-muted ml-2">
                     @if (base.CurrentUser == null)
                     {
-                        @T["No replies have been posted yet."]
+                        @T["No comments have been posted yet."]
                         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                         @T["or"]
                         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                        @T["to post your reply"]
+                        @T["to post a comment"]
                     }
                     else
                     {
-                        @T["No replies have been posted yet."]
-                        <a href="#" data-provide="postReply">@T["Be the first"]</a>
+                        @T["Need more help?"] <a href="#" data-provide="postComment">@T["Post a comment"]</a>
                     }
                 </span>
             </card-body>

@@ -107,6 +107,3 @@ namespace Plato.Questions.ViewComponents
     }
 
 }
- }
-
-}

@@ -12,7 +12,7 @@ using Plato.Entities.Services;
 
 namespace Plato.Questions.ViewProviders
 {
-    public class ArticleViewProvider : BaseViewProvider<Question>
+    public class QuestionViewProvider : BaseViewProvider<Question>
     {
 
         private const string EditorHtmlName = "message";
@@ -23,7 +23,7 @@ namespace Plato.Questions.ViewProviders
 
         private readonly HttpRequest _request;
         
-        public ArticleViewProvider(
+        public QuestionViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IEntityStore<Question> entityStore,
             IPostManager<Question> articleManager,
@@ -58,7 +58,7 @@ namespace Plato.Questions.ViewProviders
             var viewModel = context.Controller.HttpContext.Items[typeof(EntityViewModel<Question, Answer>)] as EntityViewModel<Question, Answer>;
             if (viewModel == null)
             {
-                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Question>).ToString()} has not been registered on the HttpContext!");
+                throw new Exception($"A view model of type {typeof(EntityViewModel<Question, Answer>).ToString()} has not been registered on the HttpContext!");
             }
 
             // Increment entity views

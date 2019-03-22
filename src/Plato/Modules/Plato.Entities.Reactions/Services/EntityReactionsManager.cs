@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Entities.Models;
 using Plato.Entities.Reactions.Models;
 using Plato.Entities.Reactions.Stores;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities.Reactions.Services
@@ -14,22 +12,19 @@ namespace Plato.Entities.Reactions.Services
 
     public class EntityReactionsManager : IEntityReactionsManager<EntityReaction>
     {
-        
-        private readonly IEntityStore<Entity> _entityStore;
-        private readonly IContextFacade _contextFacade;
+
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
+        private readonly IEntityStore<Entity> _entityStore;
         private readonly IBroker _broker;
 
         public EntityReactionsManager(
             IEntityReactionsStore<EntityReaction> entityReactionsStore,
-            IContextFacade contextFacade,
-            IBroker broker,
-            IEntityStore<Entity> entityStore)
+            IEntityStore<Entity> entityStore,
+            IBroker broker)
         {
             _entityReactionsStore = entityReactionsStore;
-            _contextFacade = contextFacade;
-            _broker = broker;
             _entityStore = entityStore;
+            _broker = broker;
         }
 
         public async Task<ICommandResult<EntityReaction>> CreateAsync(EntityReaction model)

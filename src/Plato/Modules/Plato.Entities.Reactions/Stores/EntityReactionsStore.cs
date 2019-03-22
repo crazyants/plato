@@ -103,7 +103,7 @@ namespace Plato.Entities.Reactions.Stores
             });
         }
         
-        public async Task<IEnumerable<EntityReaction>> SelectEntityReacotinsByEntityId(int entityId)
+        public async Task<IEnumerable<EntityReaction>> SelectEntityReactionsByEntityId(int entityId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

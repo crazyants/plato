@@ -43,6 +43,8 @@ namespace Plato.Entities.Models
 
         int TotalReplies { get; set; }
 
+        int TotalAnswers { get; set; }
+        
         int TotalParticipants { get; set; }
 
         int TotalReactions { get; set; }
@@ -52,10 +54,20 @@ namespace Plato.Entities.Models
         int TotalReports { get; set; }
 
         int TotalStars { get; set; }
-        
+
+        int TotalRatings { get; set; }
+
+        int MeanRating { get; set; }
+
+        int TotalLinks { get; set; }
+
+        int TotalImages { get; set; }
+
         double DailyViews { get; set; }
 
         double DailyReplies { get; set; }
+
+        double DailyAnswers { get; set; }
 
         double DailyReactions { get; set; }
 
@@ -64,6 +76,8 @@ namespace Plato.Entities.Models
         double DailyReports { get; set; }
 
         double DailyStars { get; set; }
+
+        double DailyRatings { get; set; }
         
         int CreatedUserId { get; set; }
 

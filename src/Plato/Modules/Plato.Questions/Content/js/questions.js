@@ -22,17 +22,17 @@ $(function (win, doc, $) {
 
     // --------
 
-    var articles = {
+    var questions = {
         init: function () {
             this.bind();
         },
         bind: function () {
             
             // -------------
-            // Comment
+            // Answer
             // -------------
 
-            $('[data-provide="postComment"]').bind("click", function (e) {
+            $('[data-provide="postAnswer"]').bind("click", function (e) {
 
                 e.preventDefault();
 
@@ -54,7 +54,7 @@ $(function (win, doc, $) {
     // --------
 
     app.ready(function () {
-        articles.init();
+        questions.init();
     });
 
 }(window, document, jQuery));

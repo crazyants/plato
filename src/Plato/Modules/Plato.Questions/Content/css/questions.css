@@ -1,0 +1,40 @@
+/* CSs allowing for additional customization of this feature */
+
+/* extend list for counter group */
+.list-left.counter-group {
+    width: 172px;
+}
+
+.list-left.counter-group + .list-body {
+    margin-left: 172px;
+}
+
+/* counter */
+.counter-group .counter {
+    display: inline-block;
+    width: 48px;
+    height: 52px;
+    font-size: 11px;
+    text-align:center;
+    padding: 0.25rem 0;
+    margin: 0 3px 0 0; 
+    background:#eee;
+    border-radius: 3px;   
+    color:#888;
+}
+
+.counter h6 {
+    font-size: 17px;    
+    padding:0;
+    margin:0;
+    color:#666;    
+    display: block;    
+}
+
+.counter-group .counter:first-child { margin-left:0; }
+.counter-group .counter:last-child { margin-right:0; }
+
+.votes { 
+    min-width: 38px;
+       
+}

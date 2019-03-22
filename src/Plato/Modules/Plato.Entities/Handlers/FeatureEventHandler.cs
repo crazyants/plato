@@ -113,6 +113,11 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "TotalAnswers",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "TotalParticipants",
                         DbType = DbType.Int32
                     },
@@ -138,12 +143,37 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "TotalRatings",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanRating",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalLinks",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalImages",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "DailyViews",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
                         Name = "DailyReplies",
+                        DbType = DbType.Double
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "DailyAnswers",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
@@ -164,6 +194,11 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "DailyStars",
+                        DbType = DbType.Double
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "DailyRatings",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
@@ -352,6 +387,16 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "TotalReports",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalRatings",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanRating",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
