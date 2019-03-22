@@ -147,3 +147,20 @@
 
 .list-group-item-action:hover .category-icon { color: white; }
 .category-icon { background-color: #aaa; color: white; }
+
+
+/* ------------------- */
+/* Vote Toggle */
+/* ------------------- */
+
+.vote-toggle a.btn-vote-up:hover,
+.vote-toggle a.btn-vote-down:hover,
+.vote-toggle a.btn-vote-up:focus,
+.vote-toggle a.btn-vote-down:focus {
+    color: white;
+    background-color: #007bff;
+}
+
+.vote-toggle h6 {
+    color: #666;
+}

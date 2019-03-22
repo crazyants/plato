@@ -1,0 +1,13 @@
+﻿@model VoteToggleViewModel
+
+<div class="vote-toggle" data-provide="rating" data-entity-id="@Model.Entity.Id">
+    <a href="#" data-rating="1" class="btn btn-vote-up" role="button">
+        <i class="fal fa-chevron-up"></i>
+    </a>
+    <h6>
+        @Model.Entity.MeanRating
+    </h6>
+    <a href="#" data-rating="-1" class="btn btn-vote-down" role="button">
+        <i class="fal fa-chevron-down"></i>
+    </a>
+</div>

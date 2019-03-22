@@ -21,10 +21,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewComponents\" />
-    <Folder Include="ViewModels\" />
-    <Folder Include="Views\Shared\Components\" />
-  </ItemGroup>
-
 </Project>

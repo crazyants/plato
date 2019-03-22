@@ -1,33 +1,31 @@
 ﻿
-/* reaction dropdown */
-.react-dropdown-menu {
+.vote-toggle {
+    display: block;
     text-align: center;
+    margin-top: 12px;
 }
 
-.react-dropdown-menu .dropdown-item {
-    display: inline-block;
-    width: auto;
-    clear: none;
-    padding: 0.50rem;
+.vote-toggle .btn-vote-up,
+.vote-toggle .btn-vote-down {
+    display: block;
+    color: #aaa;
+    border-radius: 3px;
 }
 
-.react-dropdown-menu .dropdown-item:hover {
-    animation: pulseOutLrg 0.40s 0s none; 
-}
-
-/* reaction list (displayed below topics) */
-
-.reaction-list {
-    padding: 0; 
-    margin: 0;
-    list-style: none;
+.vote-toggle .btn-vote-up i,
+.vote-toggle .btn-vote-down i {
     display: block;
 }
 
-.reaction-list > li {
-    float: left;
-    padding: 0; 
-    margin: 0;
+.vote-toggle a.btn-vote-up:hover,
+.vote-toggle a.btn-vote-down:hover,
+.vote-toggle a.btn-vote-up:focus,
+.vote-toggle a.btn-vote-down:focus {
+    color: white;
+    background-color: #007bff;
 }
 
-.reaction-list a { text-decoration: none; }
+.vote-toggle h6 {
+    padding: 0.20rem 0;
+    color: #666;
+}

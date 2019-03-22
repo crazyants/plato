@@ -85,57 +85,23 @@ namespace Plato.Entities.Ratings.Stores
         public async Task<IPagedResults<EntityRating>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting reactions for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
-                }
-
-                return await _entityRatingRepository.SelectAsync(args);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityRatingRepository.SelectAsync(args));
         }
         
         public async Task<IEnumerable<EntityRating>> SelectEntityRatingsByEntityId(int entityId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Adding reactions for entity {0} to cache with key {1}",
-                        entityId, token.ToString());
-                }
-
-                return await _entityRatingRepository.SelectEntityRatingsByEntityId(entityId);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityRatingRepository.SelectEntityRatingsByEntityId(entityId));
         }
 
         public async Task<IEnumerable<EntityRating>> SelectEntityRatingsByUserIdAndEntityId(int userId, int entityId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), userId, entityId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Adding reaction for userId {0} and entityId {1} to cache with key {2}",
-                        userId, entityId, token.ToString());
-                }
-
-                return await _entityRatingRepository.SelectEntityRatingsByUserIdAndEntityId(userId, entityId);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityRatingRepository.SelectEntityRatingsByUserIdAndEntityId(userId, entityId));
         }
 
         #endregion
-
-
+        
     }
 }
 

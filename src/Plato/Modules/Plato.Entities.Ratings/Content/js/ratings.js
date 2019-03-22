@@ -94,9 +94,7 @@ $(function (win, doc, $) {
                 var params = $caller.data(dataKey).params;
                 params.entityId = this.getEntityId($caller);
                 params.entityReplyId = this.getEntityReplyId($caller);
-
-                console.log(JSON.stringify(params));
-
+                
                 app.http({
                     url: "api/ratings/rate/post",
                     method: "POST",
@@ -115,18 +113,12 @@ $(function (win, doc, $) {
 
             
                 var result = $caller.data(dataKey).data;
-                var $totalRatings = $caller.find(".total-ratings");
-                var $meanRating = $caller.find(".mean-ratings");
+                var $header = $caller.find("h6");
 
                 console.log(JSON.stringify(result));
                 
-                if ($totalRatings.length > 0) {
-                    $totalRatings
-                        .empty()
-                        .text(result.totalRatings);
-                }
-                if ($meanRating.length > 0) {
-                    $meanRating
+                if ($header.length > 0) {
+                    $header
                         .empty()
                         .text(result.meanRating);
                 }

@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Entities.Models;
 using Plato.Entities.Ratings.Models;
 using Plato.Entities.Ratings.Services;
 using Plato.Entities.Ratings.Stores;
+using Plato.Entities.Stores;
 using Plato.Internal.Net.Abstractions;
 using Plato.WebApi.Attributes;
 using Plato.WebApi.Controllers;
@@ -15,25 +17,23 @@ namespace Plato.Entities.Ratings.Controllers
     public class RateController : BaseWebApiController
     {
 
-        private readonly IEntityRatingsUpdater _entityRatingsUpdater;
 
+        private readonly IEntityStore<Entity> _entityStore;
         private readonly IEntityRatingsManager<EntityRating> _entityRatingManager;
         private readonly IEntityRatingsStore<EntityRating> _entityRatingsStore;
-        private readonly ISimpleRatingsStore _simpleRatingsStore;
         private readonly IClientIpAddress _clientIpAddress;
 
         public RateController(
             IEntityRatingsManager<EntityRating> entityRatingManager,
             IEntityRatingsStore<EntityRating> entityRatingsStore,
-            ISimpleRatingsStore simpleRatingsStore,
             IClientIpAddress clientIpAddress, 
-            IEntityRatingsUpdater entityRatingsUpdater)
+            IEntityStore<Entity> entityStore)
         {
-            _simpleRatingsStore = simpleRatingsStore;
+     
             _entityRatingManager = entityRatingManager;
             _entityRatingsStore = entityRatingsStore;
             _clientIpAddress = clientIpAddress;
-            _entityRatingsUpdater = entityRatingsUpdater;
+            _entityStore = entityStore;
         }
 
         [HttpPost, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
@@ -68,8 +68,18 @@ namespace Plato.Entities.Ratings.Controllers
                 var delete = await _entityRatingManager.DeleteAsync(existingRating);
                 if (delete.Succeeded)
                 {
-                    // return 202 accepted to confirm delete
-                    return base.AcceptedDelete(await _entityRatingsUpdater.UpdateEntityRating(model.EntityId, model.EntityReplyId));
+
+                    // Get updated entity
+                    var entity = await _entityStore.GetByIdAsync(existingRating.EntityId);
+
+                    // return 202 accepted to confirm delete with updated response
+                    return base.AcceptedDelete(new AggregateRating()
+                    {
+                        TotalRatings = entity.TotalRatings,
+                        MeanRating = entity.MeanRating,
+                        DailyRatings = entity.DailyRatings
+                    });
+
                 }
             }
             
@@ -86,9 +96,17 @@ namespace Plato.Entities.Ratings.Controllers
             // Add and return results
             var result = await _entityRatingManager.CreateAsync(model);
             if (result.Succeeded)
-            { 
+            {
+
+                var entity = await _entityStore.GetByIdAsync(result.Response.EntityId);
+
                 // return 201 created
-                return base.Created(await _entityRatingsUpdater.UpdateEntityRating(model.EntityId, model.EntityReplyId));
+                return base.Created(new AggregateRating()
+                {
+                    TotalRatings = entity.TotalRatings,
+                    MeanRating = entity.MeanRating,
+                    DailyRatings = entity.DailyRatings
+                });
             }
 
             // We should not reach here

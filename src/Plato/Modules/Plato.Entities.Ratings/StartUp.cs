@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Entities.Models;
 using Plato.Entities.Ratings.Assets;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
@@ -12,6 +13,8 @@ using Plato.Entities.Ratings.Models;
 using Plato.Entities.Ratings.Repositories;
 using Plato.Entities.Ratings.Services;
 using Plato.Entities.Ratings.Stores;
+using Plato.Internal.Messaging.Abstractions;
+using Plato.Entities.Ratings.Subscribers;
 
 namespace Plato.Entities.Ratings
 {
@@ -37,18 +40,16 @@ namespace Plato.Entities.Ratings
 
             // Stores
             services.AddScoped<IEntityRatingsStore<EntityRating>, EntityRatingsStore>();
-            services.AddScoped<ISimpleRatingsStore, SimpleRatingsStore>();
-            
+            services.AddScoped<IEntityRatingsAggregateStore, EntityRatingsAggregateStore>();
+
             // Managers
             services.AddScoped<IEntityRatingsManager<EntityRating>, EntityRatingsManager>();
-
-            // Services
-            services.AddScoped<IEntityRatingsUpdater, EntityRatingsUpdater>();
-
             
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
 
+            // Register message broker subscribers
+            services.AddScoped<IBrokerSubscriber, EntityRatingSubscriber<Entity>>();
 
 
         }

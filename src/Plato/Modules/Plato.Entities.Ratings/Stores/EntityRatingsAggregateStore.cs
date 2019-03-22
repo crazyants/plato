@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Ratings.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 
-namespace Plato.Entities.Ratings.Services
+namespace Plato.Entities.Ratings.Stores
 {
 
-    public class EntityRatingsUpdater : IEntityRatingsUpdater
+    public class EntityRatingsAggregateStore : IEntityRatingsAggregateStore
     {
 
-        private const string ByEntitySql = @"SET NOCOUNT ON 
+        private const string BySql = @"SET NOCOUNT ON 
 
                     -- get total & summed ratings
 
@@ -60,76 +59,28 @@ namespace Plato.Entities.Ratings.Services
 		                    SET @dayDiff = (@totalRatings / @dayDiff);
 	                    END
                     END
-
-                    -- update entity
-                    UPDATE {prefix}_Entities SET 
-	                    TotalRatings = @totalRatings, 
-	                    MeanRating = @meanRating,
-	                    DailyRatings = @dailyRatings
-                    WHERE (Id = {entityId});
-
+                  
                     -- return updated details
-                    SELECT TotalRatings, MeanRating, DailyRatings FROM 
-	                    {prefix}_Entities
-                    WHERE (Id = {entityId});
+                    SELECT @totalRatings AS TotalRatings,
+                            @meanRating AS MeanRating, 
+                            @meanRating AS DailyRatings;
+	                 
         ";
-
-        private const string ByReplySql = @"SET NOCOUNT ON 
-
-                    -- get total & summed ratings
-
-                    DECLARE @totalRatings int, 
-		                    @summedRatings int;
-
-                    SET @totalRatings = (
-	                    SELECT COUNT(Id) FROM {prefix}_EntityRatings WITH (nolock) WHERE (EntityId = {entityId} AND EntityReplyId = {replyId})
-                    );
-                    SET @summedRatings =  (
-	                    SELECT SUM(Rating) FROM {prefix}_EntityRatings WITH (nolock) WHERE (EntityId = {entityId} AND EntityReplyId = {replyId})
-                    );
-
-                    -- accomodate for nulls within our counts
-                    SET @totalRatings = IsNull(@totalRatings, 0)
-                    SET @summedRatings = IsNull(@summedRatings, 0)
-
-                    -- calculate mean rating
-
-                    DECLARE @meanRating int
-                    IF(@totalRatings > 0)
-                    BEGIN
-	                    SET @meanRating = (@summedRatings / @totalRatings)
-                    END
-                    ELSE
-                    BEGIN
-	                    SET @meanRating = 0
-                    END
-                    
-                    -- update entity replies
-                    UPDATE {prefix}_EntityReplies SET 
-	                    TotalRatings = @totalRatings, 
-	                    MeanRating = @meanRating
-                    WHERE (Id = {entityId});
-
-                    -- return updated details
-                    SELECT TotalRatings, MeanRating, 0 AS DailyRatings FROM 
-	                    {prefix}_EntityReplies
-                    WHERE (Id = {entityId});
-            ";
-
 
         private readonly IDbHelper _dbHelper;
 
-        public EntityRatingsUpdater(
+        public EntityRatingsAggregateStore(
             IDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
-        public async Task<UpdatedRating> UpdateEntityRating(int entityId)
+
+        public async Task<AggregateRating> SelectAggregateRating(int entityId)
         {
-            return await UpdateEntityRating(entityId, 0);
+            return await SelectAggregateRating(entityId, 0);
         }
 
-        public async Task<UpdatedRating> UpdateEntityRating(int entityId, int replyId)
+        public async Task<AggregateRating> SelectAggregateRating(int entityId, int replyId)
         {
             
             // Replacements for SQL script
@@ -139,12 +90,12 @@ namespace Plato.Entities.Ratings.Services
                 ["{replyId}"] = replyId.ToString()
             };
 
-            return await _dbHelper.ExecuteReaderAsync<UpdatedRating>(
-                replyId == 0 ? ByEntitySql : ByReplySql,
+            return await _dbHelper.ExecuteReaderAsync<AggregateRating>(
+                BySql,
                 replacements,
                 async reader =>
                 {
-                    var rating = new UpdatedRating();
+                    var rating = new AggregateRating();
                     while (await reader.ReadAsync())
                     {
                         if (reader.ColumnIsNotNull("TotalRatings"))

@@ -12,17 +12,9 @@
         <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url"/>
     </a>
     
-    <div class="rating" data-provide="rating" data-entity-id="@Model.Entity.Id" data-entity-reply-id="@Model.Entity.Id">
-        <a href="#" data-rating="1">
-            Vote Up
-        </a>
-        <div class="mean-rating">
-            @Model.Reply.MeanRating
-        </div>
-        <a href="#" data-rating="-1">
-            Vote Down
-        </a>
-    </div>
+    <navigation name="answer-details"
+                model="Model.Reply"
+                class="list-inline p-0" />
 
 </div>
 <div class="list-body reply-body">

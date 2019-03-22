@@ -1,0 +1,22 @@
+Name: Plato Questions Votes
+Description: Adds the ability to up vote & down vote questions & answers.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Questions
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Questions",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Entities.Ratings",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.WebAPI",
+		Version: "1.0.0"
+	}
+]
