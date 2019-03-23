@@ -1,9 +1,20 @@
 ﻿@model EntityViewModel<Question, Answer>
+@{
+    var answerText = T["answer"];
+    var answersText = T["answers"];
+}
 
 @if (Model.Replies != null)
 {
     var offset = Model.Pager.Offset;
     var rowOffset = Model.Pager.RowOffset;
+    var title = Model.Pager.Total == 1
+        ? $"{Model.Pager.Total.ToPrettyInt()} {answerText.Value}"
+        : $"{Model.Pager.Total.ToPrettyInt()} {answersText.Value}";
+  
+    <h6>@title</h6>
+    <hr/>
+
     <div data-provide="infiniteScroll"
          data-infinite-scroll-url="@Model.Pager.Url"
          data-infinite-scroll-offset="@offset"
@@ -11,16 +22,16 @@
          data-infinite-scroll-page="@Model.Pager.Page"
          data-infinite-scroll-total-pages="@Model.Pager.TotalPages">
         <div class="infinite-scroll-loader" data-type="previous"></div>
-        @foreach (var comment in Model.Replies.Data)
+        @foreach (var answer in Model.Replies.Data)
         {
-            comment.RowOffset = rowOffset;
-            comment.Offset = offset;
+            answer.RowOffset = rowOffset;
+            answer.Offset = offset;
             @await DisplayAsync(new View("QuestionAnswerListItem", new
             {
                 model = new EntityReplyListItemViewModel<Question, Answer>()
                 {
                     Entity = Model.Entity,
-                    Reply = comment,
+                    Reply = answer,
                 }
             }))
             {
@@ -36,11 +47,11 @@
                 <span class="text-muted">
                     @if (base.CurrentUser == null)
                     {
-                       @T["Enjoying the conversation?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your reply"]
+                       @T["Have the answer?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your answer"]
                     }
                     else
                     {
-                        <a href="#" data-provide="postReply">@T["Post a reply"]</a>
+                        <a href="#" data-provide="postAnswer">@T["Post an answer"]</a>
                     }
                 </span>
             </card-body>

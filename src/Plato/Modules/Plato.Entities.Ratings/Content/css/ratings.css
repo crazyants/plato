@@ -1,6 +1,5 @@
 ﻿
 .vote-toggle {
-    display: block;
     text-align: center;
     margin-top: 12px;
 }
@@ -9,7 +8,6 @@
 .vote-toggle .btn-vote-down {
     display: block;
     color: #aaa;
-    border-radius: 3px;
 }
 
 .vote-toggle .btn-vote-up i,
@@ -25,7 +23,7 @@
     background-color: #007bff;
 }
 
-.vote-toggle h6 {
-    padding: 0.20rem 0;
-    color: #666;
-}
+.vote-toggle h6 { color: #666; }
+
+
+.list-left .vote-toggle {  width: 36px; }

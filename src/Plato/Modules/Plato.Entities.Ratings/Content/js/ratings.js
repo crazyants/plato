@@ -22,20 +22,20 @@ $(function (win, doc, $) {
 
     // --------
 
+    /* base rating */
     var rating = function () {
 
         var dataKey = "rating",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            tooltipEvent: "mouseenter",
             event: "click",
             params: {
                 rating: 0,
                 entityId: 0,
                 entityReplyId: 0
             },
-            data: {}
+            onUpdated: function ($el, results) {}
         };
 
         var methods = {
@@ -103,25 +103,12 @@ $(function (win, doc, $) {
                     // Created or deleted response
                     if (data.statusCode === 201 || data.statusCode === 202) {
                         if (data.result) {
-                            $caller.data(dataKey).data = data.result;
-                            methods.refresh($caller);
+                            if ($caller.data(dataKey).onUpdated) {
+                                $caller.data(dataKey).onUpdated($caller, data.result);
+                            }
                         }
                     }
                 });
-            },
-            refresh: function($caller) {
-
-            
-                var result = $caller.data(dataKey).data;
-                var $header = $caller.find("h6");
-
-                console.log(JSON.stringify(result));
-                
-                if ($header.length > 0) {
-                    $header
-                        .empty()
-                        .text(result.meanRating);
-                }
             },
             getUrl: function($caller) {
                 if ($caller.attr("data-rating-url") && $caller.attr("data-rating-url") !== "") {
@@ -135,7 +122,7 @@ $(function (win, doc, $) {
                     entityId = parseInt($caller.attr("data-entity-id"));
                 }
                 if (entityId === 0) {
-                    throw new Error("A entity id is required in order to react to an entity");
+                    throw new Error("A entity id is required in order to rate an entity");
                 }
                 return entityId;
             },
@@ -145,8 +132,7 @@ $(function (win, doc, $) {
                     replyId = parseInt($caller.attr("data-entity-reply-id"));
                 }
                 return replyId;
-            },
-         
+            }
         };
 
         return {
@@ -204,9 +190,138 @@ $(function (win, doc, $) {
         };
 
     }();
+
+    /* vote toggle */
+    var voteToggle = function (options) {
+
+        var dataKey = "voteToggle",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {};
+
+        var methods = {
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName]) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                // Bind events
+                methods.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                // Initialize rating plug-in overriding onUpdated event
+                $caller.rating($.extend({
+                        onUpdated: function($el, result) {
+                            var $header = $el.find("h6");
+                            if ($header.length > 0) {
+
+                                // Update total votes tooltip
+                                var total = result.totalRatings;
+                                if (total !== null && typeof total !== "undefined") {
+
+                                    // Strings
+                                    var title = app.T("Based on {0}"),
+                                        vote = app.T("vote"),
+                                        votes = app.T("votes"),
+                                        text = total === 1
+                                            ? total + " " + vote
+                                            : total + " " + votes;
+
+                                    title = title.replace("{0}", text);
+
+                                    // update title
+                                    if ($header.attr("title")) {
+                                        $header.attr("title", title);
+                                    }
+
+                                    // accomodate for twitter bootstrap
+                                    if ($header.attr("data-original-title")) {
+                                        $header.attr("data-original-title", title);
+                                    }
+
+                                }
+
+                                // Update summed rating text
+                                $header.empty().text(result.summedRating);
+                            }
+                        }
+                    },
+                    defaults,
+                    options));
+
+            },
+            unbind: function ($caller) {
+                $caller.rating("unbind");
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).voteToggle
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().voteToggle
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
     
     $.fn.extend({
-        rating: rating.init
+        rating: rating.init,
+        voteToggle: voteToggle.init
     });
 
     // Initial load
@@ -215,11 +330,22 @@ $(function (win, doc, $) {
         $('[data-provide="rating"]')
             .rating();
 
+        $('[data-provide="vote-toggle"]')
+            .voteToggle();
+
+        
+
     });
 
     // infinite scroll load
     $().infiniteScroll(function ($ele) {
-        $ele.find('[data-provide="rating"]').rating();
+
+        $ele.find('[data-provide="rating"]')
+            .rating();
+        
+        $ele.find('[data-provide="vote-toggle"]')
+            .voteToggle();
+
     }, "ready");
 
 }(window, document, jQuery));

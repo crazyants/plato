@@ -1,9 +1,20 @@
 ﻿@model EntityViewModel<Topic, Reply>
+@{
+    var replyText = T["reply"];
+    var repliesText = T["replies"];
+}
 
 @if (Model.Replies != null)
 {
     var offset = Model.Pager.Offset;
     var rowOffset = Model.Pager.RowOffset;
+    var title = Model.Pager.Total == 1
+        ? $"{Model.Pager.Total.ToPrettyInt()} {replyText.Value}"
+        : $"{Model.Pager.Total.ToPrettyInt()} {repliesText.Value}";
+
+    <h6>@title</h6>
+    <hr />
+
     <div data-provide="infiniteScroll"
          data-infinite-scroll-url="@Model.Pager.Url"
          data-infinite-scroll-offset="@offset"
@@ -36,7 +47,7 @@
                 <span class="text-muted">
                     @if (base.CurrentUser == null)
                     {
-                       @T["Enjoying the conversation?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your reply"]
+                        @T["Enjoying the conversation?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your reply"]
                     }
                     else
                     {
@@ -47,7 +58,7 @@
         </card>
     </div>
 
-    }
+}
 else
 {
     <div class="my-4">

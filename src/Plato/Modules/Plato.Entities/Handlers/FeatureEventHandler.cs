@@ -148,6 +148,11 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "SummedRating",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "MeanRating",
                         DbType = DbType.Int32
                     },
@@ -392,6 +397,11 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "TotalRatings",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "SummedRating",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()

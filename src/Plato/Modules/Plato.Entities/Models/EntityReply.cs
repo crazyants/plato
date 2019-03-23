@@ -44,6 +44,8 @@ namespace Plato.Entities.Models
 
         public int TotalRatings { get; set; }
 
+        public int SummedRating { get; set; }
+
         public int MeanRating { get; set; }
 
         public int TotalLinks { get; set; }
@@ -123,6 +125,9 @@ namespace Plato.Entities.Models
             
             if (dr.ColumnIsNotNull("TotalRatings"))
                 TotalRatings = Convert.ToInt32(dr["TotalRatings"]);
+            
+            if (dr.ColumnIsNotNull("SummedRating"))
+                SummedRating = Convert.ToInt32(dr["SummedRating"]);
 
             if (dr.ColumnIsNotNull("MeanRating"))
                 MeanRating = Convert.ToInt32(dr["MeanRating"]);

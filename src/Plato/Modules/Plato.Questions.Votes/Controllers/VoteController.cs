@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Entities.Models;
 using Plato.Entities.Ratings.Models;
 using Plato.Entities.Ratings.Services;
 using Plato.Entities.Ratings.Stores;
@@ -18,7 +17,8 @@ namespace Plato.Questions.Votes.Controllers
     public class VoteController : BaseWebApiController
     {
 
-        private readonly IEntityRatingsAggregateStore _entityRatingsAggregateStore;
+        private readonly IEntityReplyRatingAggregator<Answer> _entityReplyRatingsAggregator;
+        private readonly IEntityRatingAggregator<Question> _entityRatingsAggregator;
         private readonly IEntityRatingsManager<EntityRating> _entityRatingManager;
         private readonly IEntityRatingsStore<EntityRating> _entityRatingsStore;
         private readonly IEntityReplyStore<Answer> _entityReplyStore;
@@ -26,14 +26,16 @@ namespace Plato.Questions.Votes.Controllers
         private readonly IClientIpAddress _clientIpAddress;
 
         public VoteController(
-            IEntityRatingsAggregateStore entityRatingsAggregateStore,
+            IEntityReplyRatingAggregator<Answer> entityReplyRatingsAggregator,
+            IEntityRatingAggregator<Question> entityRatingsAggregator,
             IEntityRatingsManager<EntityRating> entityRatingManager,
             IEntityRatingsStore<EntityRating> entityRatingsStore,
             IEntityReplyStore<Answer> entityReplyStore,
             IEntityStore<Question> entityStore,
             IClientIpAddress clientIpAddress)
         {
-            _entityRatingsAggregateStore = entityRatingsAggregateStore;
+            _entityReplyRatingsAggregator = entityReplyRatingsAggregator;
+            _entityRatingsAggregator = entityRatingsAggregator;
             _entityRatingManager = entityRatingManager;
             _entityRatingsStore = entityRatingsStore;
             _clientIpAddress = clientIpAddress;
@@ -68,13 +70,14 @@ namespace Plato.Questions.Votes.Controllers
             
             if (deleted)
             {
-
+                // Update reply
                 if (model.EntityReplyId > 0)
                 {
                     // return 202 accepted to confirm delete with updated response
                     return base.AcceptedDelete(await UpdateEntityReplyRating(model.EntityReplyId));
                 }
-                
+
+                // Update entity
                 if (model.EntityId > 0)
                 {
                     // return 202 accepted to confirm delete with updated response
@@ -98,13 +101,14 @@ namespace Plato.Questions.Votes.Controllers
             if (result.Succeeded)
             {
 
+                // Update reply
                 if (model.EntityReplyId > 0)
                 {
                     // return 201 created
                     return base.Created(await UpdateEntityReplyRating(model.EntityReplyId));
-
                 }
                 
+                // Update entity
                 if (model.EntityId > 0)
                 {
                     // return 201 created
@@ -122,6 +126,7 @@ namespace Plato.Questions.Votes.Controllers
         async Task<AggregateRating> UpdateEntityRating(int entityId)
         {
 
+            // Get entity
             var entity = await _entityStore.GetByIdAsync(entityId);
 
             // Ensure we found the reply
@@ -129,23 +134,17 @@ namespace Plato.Questions.Votes.Controllers
             {
                 return null;
             }
-            
-            // Get aggregate rating
-            var aggregateRating = await _entityRatingsAggregateStore.SelectAggregateRating(entity.Id);
 
-            // Update entity
-            entity.TotalRatings = aggregateRating?.TotalRatings ?? 0;
-            entity.MeanRating = aggregateRating?.MeanRating ?? 0;
-            entity.DailyRatings = aggregateRating?.DailyRatings ?? 0;
-
-            // Get updated entity
-            var updatedEntity = await _entityStore.GetByIdAsync(entity.Id);
-
+            // Aggregate ratings
+            var updatedEntity = await _entityRatingsAggregator.UpdateAsync(entity);
+          
+            // Return aggregated results
             return new AggregateRating()
             {
-                TotalRatings = entity?.TotalRatings ?? 0,
-                MeanRating = entity?.MeanRating ?? 0,
-                DailyRatings = entity?.DailyRatings ?? 0
+                TotalRatings = updatedEntity?.TotalRatings ?? 0,
+                SummedRating = updatedEntity?.SummedRating ?? 0,
+                MeanRating = updatedEntity?.MeanRating ?? 0,
+                DailyRatings = updatedEntity?.DailyRatings ?? 0
             };
 
         }
@@ -161,20 +160,15 @@ namespace Plato.Questions.Votes.Controllers
             {
                 return null;
             }
+            
+            // Aggregate ratings
+            var updatedReply = await _entityReplyRatingsAggregator.UpdateAsync(reply);
 
-            // Get aggregate rating
-            var aggregateRating = await _entityRatingsAggregateStore.SelectAggregateRating(reply.EntityId, reply.Id);
-
-            // Update entity
-            reply.TotalRatings = aggregateRating?.TotalRatings ?? 0;
-            reply.MeanRating = aggregateRating?.MeanRating ?? 0;
-
-            // Persist label updates
-            var updatedReply = await _entityReplyStore.UpdateAsync(reply);
-
+            // Return aggregated results
             return new AggregateRating()
             {
                 TotalRatings = updatedReply?.TotalRatings ?? 0,
+                SummedRating = updatedReply?.SummedRating ?? 0,
                 MeanRating = updatedReply?.MeanRating ?? 0
             };
 

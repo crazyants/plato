@@ -42,6 +42,8 @@ namespace Plato.Entities.Models
 
         int TotalRatings { get; set; }
 
+        int SummedRating { get; set; }
+        
         int MeanRating { get; set; }
         
         int TotalLinks { get; set; }

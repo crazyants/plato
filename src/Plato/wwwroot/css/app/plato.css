@@ -589,7 +589,7 @@
 /* Lists */
 /* ------------------------- */
 
-.list-left { float: left; }
+.list-left { float: left; width: 56px; }
 .list-left + .list-body { display: block; margin-left: 56px; }
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
@@ -901,9 +901,8 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
 /* Reply arrow */
 /* ------------------------- */
 
-.reply-left { text-align: center; }
 .reply-left + .reply-body { position: relative; }
-.reply-left a.avatar-link { display: block; margin-top: 1.1rem; }
+.reply-left a.avatar-link { margin-top: 16px; }
 .reply-left .avatar { width: 36px; height: 36px; }
 
 /* reply body arrow */

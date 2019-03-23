@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Entities.Ratings.Services;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Questions.Models;
 using Plato.Questions.Votes.Navigation;
 
 namespace Plato.Questions.Votes
@@ -25,6 +27,12 @@ namespace Plato.Questions.Votes
             // Register navigation provider
             services.AddScoped<INavigationProvider, QuestionDetailsMenu>();
             services.AddScoped<INavigationProvider, AnswerDetailsMenu>();
+
+            // Entity rating aggregator
+            services.AddScoped<IEntityRatingAggregator<Question>, EntityRatingAggregator<Question>>();
+            services.AddScoped<IEntityReplyRatingAggregator<Answer>, EntityReplyRatingAggregator<Answer>>();
+            
+
 
         }
 

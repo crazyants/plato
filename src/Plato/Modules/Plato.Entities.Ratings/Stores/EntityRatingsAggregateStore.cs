@@ -62,6 +62,7 @@ namespace Plato.Entities.Ratings.Stores
                   
                     -- return updated details
                     SELECT @totalRatings AS TotalRatings,
+                            @summedRatings AS SummedRating,
                             @meanRating AS MeanRating, 
                             @meanRating AS DailyRatings;
 	                 
@@ -101,6 +102,11 @@ namespace Plato.Entities.Ratings.Stores
                         if (reader.ColumnIsNotNull("TotalRatings"))
                         {
                             rating.TotalRatings = Convert.ToInt32(reader["TotalRatings"]);
+                        }
+
+                        if (reader.ColumnIsNotNull("SummedRating"))
+                        {
+                            rating.SummedRating = Convert.ToInt32(reader["SummedRating"]);
                         }
 
                         if (reader.ColumnIsNotNull("MeanRating"))
