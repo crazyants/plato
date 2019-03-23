@@ -96,7 +96,7 @@ $(function (win, doc, $) {
                 params.entityReplyId = this.getEntityReplyId($caller);
                 
                 app.http({
-                    url: "api/ratings/rate/post",
+                    url: methods.getUrl($caller),
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function(data) {
@@ -122,6 +122,12 @@ $(function (win, doc, $) {
                         .empty()
                         .text(result.meanRating);
                 }
+            },
+            getUrl: function($caller) {
+                if ($caller.attr("data-rating-url") && $caller.attr("data-rating-url") !== "") {
+                    return $caller.attr("data-rating-url");
+                }
+                return "api/ratings/rate/post";
             },
             getEntityId: function($caller) {
                 var entityId = 0;

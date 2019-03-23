@@ -14,7 +14,6 @@ using Plato.Entities.Ratings.Repositories;
 using Plato.Entities.Ratings.Services;
 using Plato.Entities.Ratings.Stores;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Entities.Ratings.Subscribers;
 
 namespace Plato.Entities.Ratings
 {
@@ -47,10 +46,7 @@ namespace Plato.Entities.Ratings
             
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
-
-            // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntityRatingSubscriber<Entity>>();
-
+            
 
         }
 

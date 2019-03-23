@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Entities.Stores;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Questions.Models;
 using Plato.Entities.Ratings.ViewModels;
@@ -14,19 +10,13 @@ namespace Plato.Questions.Votes.Navigation
     public class AnswerDetailsMenu : INavigationProvider
     {
 
-        private readonly IEntityStore<Question> _entityStore;
-        private readonly IActionContextAccessor _actionContextAccessor;
 
         public IStringLocalizer T { get; set; }
 
         public AnswerDetailsMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor,
-            IEntityStore<Question> entityStore)
+            IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
-            _entityStore = entityStore;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -59,7 +49,8 @@ namespace Plato.Questions.Votes.Navigation
                             model = new VoteToggleViewModel()
                             {
                                 Entity = entity,
-                                Reply = reply
+                                Reply = reply,
+                                ApiUrl = "api/questions/vote/post"
                             }
                         })
                     //.Permission(Permissions.ReactToTopics)
