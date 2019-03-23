@@ -6,7 +6,7 @@
     var quoteId = "quote" + Model.Reply.Id;
 }
 
-<div class="float-left col-12">
+<div class="list-row">
     <div class="list-left reply-left">
 
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
@@ -79,4 +79,5 @@
         </card>
     </div>
 </div>
+
 

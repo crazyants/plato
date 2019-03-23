@@ -589,10 +589,14 @@
 /* Lists */
 /* ------------------------- */
 
+
 .list-left { float: left; width: 56px; }
 .list-left + .list-body { display: block; margin-left: 56px; }
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
+
+.list-row { float: left; width: 100%; }
+.list-row + .list-body { margin-left: 0; }
 
 /* ------------------------- */
 /* Select Dropdown */

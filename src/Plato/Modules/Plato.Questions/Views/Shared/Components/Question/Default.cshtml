@@ -1,16 +1,9 @@
 ﻿@model EntityViewModel<Question, Answer>
 
-<div class="float-left col-12">
-    <div class="list-left reply-left">
-
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias" class="avatar-link">
-            <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url" />
-        </a>
-        <navigation name="question-details"
-                    model="Model.Entity"
-                    class="list-inline p-0" />
-
-    </div>
+<div class="list-row">
+    <navigation name="question-details"
+                model="Model.Entity"
+                class="list-left list-inline p-0" />
     <div class="list-body reply-body">
         <card>
             <card-title>
@@ -47,6 +40,12 @@
             <card-body class="card-body-flush">
                 <div class="markdown-body m-3" data-provide="markdownBody">
                     @Html.Raw(@Model.Entity.Html)
+                    @if (!String.IsNullOrEmpty(Model.Entity.CreatedBy.SignatureHtml))
+                    {
+                        <div>
+                            @Html.Raw(@Model.Entity.CreatedBy.SignatureHtml)
+                        </div>
+                    }
                 </div>
                 <navigation name="question-footer"
                             model="Model.Entity"

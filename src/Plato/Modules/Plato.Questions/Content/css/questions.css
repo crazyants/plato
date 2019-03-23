@@ -33,8 +33,3 @@
 
 .counter-group .counter:first-child { margin-left:0; }
 .counter-group .counter:last-child { margin-right:0; }
-
-.votes { 
-    min-width: 38px;
-       
-}

@@ -93,12 +93,16 @@ namespace Plato.Internal.Layout.TagHelpers
             // Build navigation
             var sb = new StringBuilder();
             var items = _navigationManager.BuildMenu(this.Name, actionContext);
-            if (items != null)
+            var itemsList = items.ToList();
+            if (itemsList.Any())
             {
-                await BuildNavigationRecursivelyAsync(items.ToList(), sb);
+                await BuildNavigationRecursivelyAsync(itemsList, sb);
+                output.PreContent.SetHtmlContent(sb.ToString());
             }
-            
-            output.PreContent.SetHtmlContent(sb.ToString());
+            else
+            {
+                output.SuppressOutput();
+            }
             
         }
 

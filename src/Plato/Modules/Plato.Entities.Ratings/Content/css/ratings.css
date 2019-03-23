@@ -2,28 +2,30 @@
 .vote-toggle {
     text-align: center;
     margin-top: 12px;
+    background: #eee;
 }
 
 .vote-toggle .btn-vote-up,
 .vote-toggle .btn-vote-down {
     display: block;
-    color: #aaa;
+    border-color: transparent;
 }
 
 .vote-toggle .btn-vote-up i,
 .vote-toggle .btn-vote-down i {
     display: block;
+    line-height: normal;
 }
 
 .vote-toggle a.btn-vote-up:hover,
-.vote-toggle a.btn-vote-down:hover,
-.vote-toggle a.btn-vote-up:focus,
-.vote-toggle a.btn-vote-down:focus {
+.vote-toggle a.btn-vote-down:hover {
     color: white;
     background-color: #007bff;
 }
 
-.vote-toggle h6 { color: #666; }
-
+.vote-toggle h6 {
+    margin: 6px 0;
+    color: #666;
+}
 
 .list-left .vote-toggle {  width: 36px; }

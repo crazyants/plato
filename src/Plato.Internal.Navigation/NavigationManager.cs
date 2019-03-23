@@ -59,7 +59,7 @@ namespace Plato.Internal.Navigation
             };
 
             // Processes all navigation builders to create a flat list of menu items.
-            // If a navigation builder fails, it is ignored.
+            // If a navigation builder fails, it is logged but ignored.
             foreach (var navigationProvider in _navigationProviders)
             {
                 try
