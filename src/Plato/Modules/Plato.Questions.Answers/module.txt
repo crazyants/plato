@@ -1,0 +1,14 @@
+Name: Plato Questions Answers
+Description: Adds the ability flag replies as answers to questions.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Questions
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Questions",
+		Version: "1.0.0"
+	}
+]

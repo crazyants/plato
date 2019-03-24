@@ -6,69 +6,73 @@
     var quoteId = "quote" + Model.Reply.Id;
 }
 
-<div class="list-left reply-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
-        <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
-    </a>
-</div>
-<div class="list-body reply-body">
-    <card class="card card-body-flush">
-        <card-title>
-            <div data-infinite-scroll-offset="@Model.Reply.RowOffset">
-                <div class="card-title float-left">
-                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
-                        @Model.Reply.CreatedBy.DisplayName
-                    </a>
-                    @T["posted "]
-                    <span data-toggle="tooltip" title="@Model.Reply.CreatedDate">
-                        @Model.Reply.CreatedDate.ToPrettyDate()
-                    </span>
-                    @if (Model.Reply.IsSpam)
-                    {
-                        <span class="badge badge-info" data-toggle="tooltip" title="@T["This reply has been flagged as SPAM and is only visible to you as you have permission to view replies flagged as SPAM"]">@T["SPAM"]</span>
-                    }
-                    @if (Model.Reply.IsPrivate)
-                    {
-                        <span data-toggle="tooltip" title="@T["This reply is private and only visible to you as you have permission to view private replies"]" class="badge badge-primary">@T["Private"]</span>
-                    }
-                    @if (Model.Reply.IsDeleted)
-                    {
-                        <span class="badge badge-danger" data-toggle="tooltip" title="@T["This reply has been deleted and is only visible to you as you have permission to view deleted replies"]">@T["Deleted"]</span>
-                    }
-                    @if (Model.Reply.IsClosed)
-                    {
-                        <span class="badge badge-success">
-                            @T["Closed"]
+<div class="list-row">
+    <div class="list-left reply-left">
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
+            <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
+        </a>
+        <navigation name="article-comment-details"
+                    model="Model.Reply"
+                    class="list-inline p-0" />
+    </div>
+    <div class="list-body reply-body">
+        <card class="card card-body-flush">
+            <card-title>
+                <div data-infinite-scroll-offset="@Model.Reply.RowOffset">
+                    <div class="card-title float-left">
+                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
+                            @Model.Reply.CreatedBy.DisplayName
+                        </a>
+                        @T["posted "]
+                        <span data-toggle="tooltip" title="@Model.Reply.CreatedDate">
+                            @Model.Reply.CreatedDate.ToPrettyDate()
                         </span>
+                        @if (Model.Reply.IsSpam)
+                        {
+                            <span class="badge badge-info" data-toggle="tooltip" title="@T["This reply has been flagged as SPAM and is only visible to you as you have permission to view replies flagged as SPAM"]">@T["SPAM"]</span>
+                        }
+                        @if (Model.Reply.IsPrivate)
+                        {
+                            <span data-toggle="tooltip" title="@T["This reply is private and only visible to you as you have permission to view private replies"]" class="badge badge-primary">@T["Private"]</span>
+                        }
+                        @if (Model.Reply.IsDeleted)
+                        {
+                            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This reply has been deleted and is only visible to you as you have permission to view deleted replies"]">@T["Deleted"]</span>
+                        }
+                        @if (Model.Reply.IsClosed)
+                        {
+                            <span class="badge badge-success">
+                                @T["Closed"]
+                            </span>
+                        }
+                    </div>
+                    <navigation name="article-comment"
+                                model="Model.Reply"
+                                class="nav navbar p-0 float-right"
+                                arrow-css="dropdown-arrow"
+                                child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+                </div>
+            </card-title>
+            <card-body>
+                <div class="@css" data-infinite-scroll-highlight="@Model.Reply.RowOffset" data-provide="markdownBody">
+                    @Html.Raw(@Model.Reply.Html)
+                    @if (!String.IsNullOrEmpty(Model.Reply.CreatedBy.SignatureHtml))
+                    {
+                        <div>
+                            @Html.Raw(@Model.Reply.CreatedBy.SignatureHtml)
+                        </div>
                     }
                 </div>
-                <navigation name="article-comment"
-                            model="Model.Reply"
-                            class="nav navbar p-0 float-right"
-                            arrow-css="dropdown-arrow"
-                            child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in"/>
-            </div>
-        </card-title>
-        <card-body>
-            <div class="@css" data-infinite-scroll-highlight="@Model.Reply.RowOffset" data-provide="markdownBody">
-                @Html.Raw(@Model.Reply.Html)
-                @if (!String.IsNullOrEmpty(Model.Reply.CreatedBy.SignatureHtml))
-                {
-                    <div>
-                        @Html.Raw(@Model.Reply.CreatedBy.SignatureHtml)
-                    </div>
-                }
-            </div>
-            <div class="hidden" 
-                 id="@quoteId"
-                 data-reply-url="@Url.Action("Reply", "Home", new { id = Model.Entity.Id, alias = Model.Entity.Alias, replyId = Model.Reply.Id })"
-                 data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
-           
-            <navigation name="article-comment-footer"
-                        model="Model.Reply"
-                        enable-list="false" />
-           
-        </card-body>
-    </card>
-</div>
+                <div class="hidden"
+                     id="@quoteId"
+                     data-reply-url="@Url.Action("Reply", "Home", new { id = Model.Entity.Id, alias = Model.Entity.Alias, replyId = Model.Reply.Id })"
+                     data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
 
+                    <navigation name="article-comment-footer"
+                                model="Model.Reply"
+                                enable-list="false" />
+
+                </card-body>
+            </card>
+        </div>
+</div>

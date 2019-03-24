@@ -1,44 +1,51 @@
 ﻿@model EntityViewModel<Article, Comment>
 
-<card>
-    <card-title>
-        <h6 class="card-title d-inline-block">@T["Article"]</h6>
-        @if (Model.Entity.IsPinned)
-        {
-            <span title="@T["This article is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-thumbtack"></i>
-            </span>
-        }
-        @if (Model.Entity.IsLocked)
-        {
-            <span title="@T["This article is locked and is not accepting comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-lock"></i>
-            </span>
-        }
-        @if (Model.Entity.IsPrivate)
-        {
-            <span data-toggle="tooltip" title="@T["This article is private and only visible to you as you have permission to view private articles"]" class="badge badge-primary">@T["Private"]</span>
-        }
-        @if (Model.Entity.IsSpam)
-        {
-            <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible to you as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
-        }
-        @if (Model.Entity.IsDeleted)
-        {
-            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible to you as you have permission to view deleted articles"]">@T["Deleted"]</span>
-        }
-        <navigation name="article"
-                    model="Model.Entity"
-                    class="nav navbar p-0 float-right"
-                    child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
-    </card-title>
-    <card-body class="card-body-flush">
-        <div class="markdown-body m-3" data-provide="markdownBody">
-            @Html.Raw(@Model.Entity.Html)
-        </div>
-        <navigation name="article-footer"
-                    model="Model.Entity"
-                    enable-list="false" />
-    </card-body>
+<div class="list-row">
+    <navigation name="article-details"
+                model="Model.Entity"
+                class="list-left list-inline p-0" />
+    <div class="list-body reply-body">
+        <card>
+            <card-title>
+                <h6 class="card-title d-inline-block">@T["Article"]</h6>
+                @if (Model.Entity.IsPinned)
+                {
+                    <span title="@T["This article is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                        <i class="fal fa-thumbtack"></i>
+                    </span>
+                }
+                @if (Model.Entity.IsLocked)
+                {
+                    <span title="@T["This article is locked and is not accepting comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                        <i class="fal fa-lock"></i>
+                    </span>
+                }
+                @if (Model.Entity.IsPrivate)
+                {
+                    <span data-toggle="tooltip" title="@T["This article is private and only visible to you as you have permission to view private articles"]" class="badge badge-primary">@T["Private"]</span>
+                }
+                @if (Model.Entity.IsSpam)
+                {
+                    <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible to you as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
+                }
+                @if (Model.Entity.IsDeleted)
+                {
+                    <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible to you as you have permission to view deleted articles"]">@T["Deleted"]</span>
+                }
+                <navigation name="article"
+                            model="Model.Entity"
+                            class="nav navbar p-0 float-right"
+                            child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+            </card-title>
+            <card-body class="card-body-flush">
+                <div class="markdown-body m-3" data-provide="markdownBody">
+                    @Html.Raw(@Model.Entity.Html)
+                </div>
+                <navigation name="article-footer"
+                            model="Model.Entity"
+                            enable-list="false" />
+            </card-body>
 
-</card>
+        </card>
+    </div>
+</div>

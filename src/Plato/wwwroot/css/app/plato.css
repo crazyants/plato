@@ -590,6 +590,8 @@
 /* ------------------------- */
 
 .list-left { float: left; width: 56px; }
+.list-left .nav-item { margin: 8px 0; }
+
 .list-left + .list-body { display: block; margin-left: 56px; }
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
@@ -934,13 +936,16 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
     border-right-color: #f8f8f8;
 }
 
-/* disable avatar column for smaller devices */
+/* disable list-left smaller devices */
 @media only screen and (max-width : 1124px) 
 {   
-    .reply-left { display: none; }
-    .reply-left + .reply-body { margin-left: 0; }
-    .topic-reply-right { display: none; }
-    .topic-reply-right + .reply-body { margin-right: 0; }
+
+    .list-left { display: none; }
+    .list-left + .list-body { margin-left: 0; }
+
+    .reply-left + .reply-body:before,
+    .reply-left + .reply-body:after { display: none; }
+
 }
 
 /* --------------------------- */
@@ -1336,4 +1341,20 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
     transform: perspective(1000px) translate3d(0,50vh,0) rotateX(30deg);
     pointer-events: none;
     overflow: hidden;
+}
+
+
+
+
+/* Answers */
+
+.list-left .nav-link { padding: 0; text-align: center; }
+.list-left .accepted-answer { width: 36px; }
+.accepted-answer .nav-text { display: none; }
+
+
+a.accepted-answer {
+    background: #28a745;
+    color: white;
+
 }

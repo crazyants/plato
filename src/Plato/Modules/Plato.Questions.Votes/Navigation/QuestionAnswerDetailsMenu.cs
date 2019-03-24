@@ -7,14 +7,13 @@ using Plato.Entities.Ratings.ViewModels;
 namespace Plato.Questions.Votes.Navigation
 {
     
-    public class AnswerDetailsMenu : INavigationProvider
+    public class QuestionAnswerDetailsMenu : INavigationProvider
     {
 
 
         public IStringLocalizer T { get; set; }
 
-        public AnswerDetailsMenu(
-            IStringLocalizer localizer)
+        public QuestionAnswerDetailsMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -22,7 +21,7 @@ namespace Plato.Questions.Votes.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "answer-details", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "question-answer-details", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

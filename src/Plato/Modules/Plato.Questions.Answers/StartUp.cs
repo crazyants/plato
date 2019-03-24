@@ -2,14 +2,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Entities.Ratings.Services;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Questions.Models;
-using Plato.Questions.Votes.Navigation;
+using Plato.Questions.Answers.Navigation;
 
-namespace Plato.Questions.Votes
+namespace Plato.Questions.Answers
 {
     public class Startup : StartupBase
     {
@@ -23,13 +21,9 @@ namespace Plato.Questions.Votes
         public override void ConfigureServices(IServiceCollection services)
         {
           
-            // Register navigation provider
-            services.AddScoped<INavigationProvider, QuestionDetailsMenu>();
+            // Register navigation providers
+            services.AddScoped<INavigationProvider, QuestionAnswerMenu>();
             services.AddScoped<INavigationProvider, QuestionAnswerDetailsMenu>();
-
-            // Entity rating aggregator
-            services.AddScoped<IEntityRatingAggregator<Question>, EntityRatingAggregator<Question>>();
-            services.AddScoped<IEntityReplyRatingAggregator<Answer>, EntityReplyRatingAggregator<Answer>>();
             
         }
 
@@ -40,13 +34,12 @@ namespace Plato.Questions.Votes
         {
 
             routes.MapAreaRoute(
-                name: "QuestionVotesWebApi",
-                areaName: "Plato.Questions.Votes",
+                name: "QuestionAnswersWebApi",
+                areaName: "Plato.Questions.Answers",
                 template: "api/questions/{controller}/{action}/{id?}",
                 defaults: new { controller = "Entity", action = "Get" }
             );
-
-
+            
         }
     }
 }

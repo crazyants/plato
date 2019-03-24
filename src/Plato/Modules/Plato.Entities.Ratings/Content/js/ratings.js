@@ -104,16 +104,13 @@ $(function (win, doc, $) {
                 var params = $caller.data(dataKey).params;
                 params.entityId = this.getEntityId($caller);
                 params.entityReplyId = this.getEntityReplyId($caller);
-
-                console.log("params to post: " + JSON.stringify(params));
-
+                
                 // Post
                 app.http({
                     url: methods.getUrl($caller),
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function (data) {
-                    console.log(JSON.stringify(data))
                     // Created or deleted response
                     if (data.statusCode === 201 || data.statusCode === 202) {
                         // No longer loading

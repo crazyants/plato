@@ -61,28 +61,32 @@
 }
 else
 {
-    <div class="my-4">
-        <card>
-            <card-body>
-                <i class="fal fa-reply"></i>
-                <span class="text-muted ml-2">
-                    @if (base.CurrentUser == null)
-                    {
-                        @T["No replies have been posted yet."]
-                        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                        @T["or"]
-                        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                        @T["to post your reply"]
-                    }
-                    else
-                    {
-                        @T["No replies have been posted yet."]
-                        <a href="#" data-provide="postReply">@T["Be the first"]</a>
-                    }
-                </span>
-            </card-body>
-        </card>
-    </div>
+    @if (!Model.Entity.IsLocked)
+     {
+         <div class="my-4">
+             <card>
+                 <card-body>
+                     <i class="fal fa-reply"></i>
+                     <span class="text-muted ml-2">
+                         @if (base.CurrentUser == null)
+                         {
+                             @T["No replies have been posted yet."]
+                             <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                             @T["or"]
+                             <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
+                             @T["to post your reply"]
+                         }
+                         else
+                         {
+                             @T["No replies have been posted yet."]
+                             <a href="#" data-provide="postReply">@T["Be the first"]</a>
+                         }
+                     </span>
+                 </card-body>
+             </card>
+         </div>
+     }
+
 }
 
 @if (Model.Pager.Enabled)

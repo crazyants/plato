@@ -6,10 +6,10 @@ using Plato.Entities.Ratings.Services;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Questions.Models;
-using Plato.Questions.Votes.Navigation;
+using Plato.Discuss.Models;
+using Plato.Discuss.Votes.Navigation;
 
-namespace Plato.Questions.Votes
+namespace Plato.Discuss.Votes
 {
     public class Startup : StartupBase
     {
@@ -23,13 +23,13 @@ namespace Plato.Questions.Votes
         public override void ConfigureServices(IServiceCollection services)
         {
           
-            // Register navigation provider
-            services.AddScoped<INavigationProvider, QuestionDetailsMenu>();
-            services.AddScoped<INavigationProvider, QuestionAnswerDetailsMenu>();
+            // Register navigation providers
+            services.AddScoped<INavigationProvider, TopicDetailsMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyDetailsMenu>();
 
             // Entity rating aggregator
-            services.AddScoped<IEntityRatingAggregator<Question>, EntityRatingAggregator<Question>>();
-            services.AddScoped<IEntityReplyRatingAggregator<Answer>, EntityReplyRatingAggregator<Answer>>();
+            services.AddScoped<IEntityRatingAggregator<Topic>, EntityRatingAggregator<Topic>>();
+            services.AddScoped<IEntityReplyRatingAggregator<Reply>, EntityReplyRatingAggregator<Reply>>();
             
         }
 
@@ -40,13 +40,14 @@ namespace Plato.Questions.Votes
         {
 
             routes.MapAreaRoute(
-                name: "QuestionVotesWebApi",
-                areaName: "Plato.Questions.Votes",
-                template: "api/questions/{controller}/{action}/{id?}",
-                defaults: new { controller = "Entity", action = "Get" }
+                name: "DiscussVotesWebApi",
+                areaName: "Plato.Discuss.Votes",
+                template: "api/discuss/{controller}/{action}/{id?}",
+                defaults: new { controller = "Vote", action = "Get" }
             );
-
-
+            
         }
+
     }
+
 }
