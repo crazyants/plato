@@ -44,7 +44,7 @@
             <i class="fal fa-thumbtack"></i>
         </span>
     }
-    @if (Model.Entity.IsClosed)
+    @if (Model.Entity.IsLocked)
     {
         <span title="@T["This article is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-lock"></i>

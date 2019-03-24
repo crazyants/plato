@@ -408,6 +408,16 @@ namespace Plato.Questions.Controllers
                 }
             }
             
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            });
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

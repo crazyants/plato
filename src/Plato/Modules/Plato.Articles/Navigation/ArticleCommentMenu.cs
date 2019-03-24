@@ -114,7 +114,7 @@ namespace Plato.Articles.Navigation
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
-            if (!topic.IsClosed)
+            if (!topic.IsLocked)
             {
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options

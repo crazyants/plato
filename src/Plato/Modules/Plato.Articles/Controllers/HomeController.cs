@@ -157,7 +157,7 @@ namespace Plato.Articles.Controllers
             // Return Url for authentication purposes
             ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["area"] = "Plato.Discuss",
+                ["area"] = "Plato.Articles",
                 ["controller"] = "Home",
                 ["action"] = "Index"
             });
@@ -408,6 +408,16 @@ namespace Plato.Articles.Controllers
                 }
             }
             
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            });
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

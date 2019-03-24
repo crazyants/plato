@@ -41,8 +41,11 @@ namespace Plato.Entities.Models
 
         public bool IsDeleted { get; set; }
 
+        public bool IsLocked { get; set; }
+
         public bool IsClosed { get; set; }
-        
+
+
         public int TotalViews { get; set; }
 
         public int TotalReplies { get; set; }
@@ -212,6 +215,9 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("IsDeleted"))
                 IsDeleted = Convert.ToBoolean(dr["IsDeleted"]);
+
+            if (dr.ColumnIsNotNull("IsLocked"))
+                IsLocked = Convert.ToBoolean(dr["IsLocked"]);
 
             if (dr.ColumnIsNotNull("IsClosed"))
                 IsClosed = Convert.ToBoolean(dr["IsClosed"]);

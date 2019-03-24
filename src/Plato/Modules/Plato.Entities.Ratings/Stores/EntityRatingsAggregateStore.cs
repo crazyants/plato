@@ -16,25 +16,25 @@ namespace Plato.Entities.Ratings.Stores
                     -- get total & summed ratings
 
                     DECLARE @totalRatings int, 
-		                    @summedRatings int;
+		                    @summedRating int;
 
                     SET @totalRatings = (
 	                    SELECT COUNT(Id) FROM {prefix}_EntityRatings WITH (nolock) WHERE (EntityId = {entityId} AND EntityReplyId = {replyId})
                     );
-                    SET @summedRatings =  (
+                    SET @summedRating =  (
 	                    SELECT SUM(Rating) FROM {prefix}_EntityRatings WITH (nolock) WHERE (EntityId = {entityId} AND EntityReplyId = {replyId})
                     );
 
                     -- accomodate for nulls within our counts
                     SET @totalRatings = IsNull(@totalRatings, 0)
-                    SET @summedRatings = IsNull(@summedRatings, 0)
+                    SET @summedRating = IsNull(@summedRating, 0)
 
                     -- calculate mean rating
 
                     DECLARE @meanRating int
                     IF(@totalRatings > 0)
                     BEGIN
-	                    SET @meanRating = (@summedRatings / @totalRatings)
+	                    SET @meanRating = (@summedRating / @totalRatings)
                     END
                     ELSE
                     BEGIN
@@ -62,7 +62,7 @@ namespace Plato.Entities.Ratings.Stores
                   
                     -- return updated details
                     SELECT @totalRatings AS TotalRatings,
-                            @summedRatings AS SummedRating,
+                            @summedRating AS SummedRating,
                             @meanRating AS MeanRating, 
                             @meanRating AS DailyRatings;
 	                 
@@ -96,9 +96,13 @@ namespace Plato.Entities.Ratings.Stores
                 replacements,
                 async reader =>
                 {
+
                     var rating = new AggregateRating();
-                    while (await reader.ReadAsync())
+
+                    if ((reader) != null && (reader.HasRows))
                     {
+                        await reader.ReadAsync();
+
                         if (reader.ColumnIsNotNull("TotalRatings"))
                         {
                             rating.TotalRatings = Convert.ToInt32(reader["TotalRatings"]);

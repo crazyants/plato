@@ -39,6 +39,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
+            _loading: false,
             init: function($caller, methodName) {
 
                 if (methodName) {
@@ -91,26 +92,41 @@ $(function (win, doc, $) {
             },
             post: function($caller) {
 
+                // Ensure we are not already posting
+                if (methods._loading) {
+                    return;
+                }
+
+                // Indicate post
+                methods._loading = true;
+
+                // Build post params
                 var params = $caller.data(dataKey).params;
                 params.entityId = this.getEntityId($caller);
                 params.entityReplyId = this.getEntityReplyId($caller);
-                
+
+                console.log("params to post: " + JSON.stringify(params));
+
+                // Post
                 app.http({
                     url: methods.getUrl($caller),
                     method: "POST",
                     data: JSON.stringify(params)
-                }).done(function(data) {
+                }).done(function (data) {
+                    console.log(JSON.stringify(data))
                     // Created or deleted response
                     if (data.statusCode === 201 || data.statusCode === 202) {
-                        if (data.result) {
-                            if ($caller.data(dataKey).onUpdated) {
-                                $caller.data(dataKey).onUpdated($caller, data.result);
-                            }
+                        // No longer loading
+                        methods._loading = false;
+                        // Call onUpdated delegate
+                        if ($caller.data(dataKey).onUpdated) {
+                            $caller.data(dataKey).onUpdated($caller, data.result);
                         }
                     }
                 });
             },
-            getUrl: function($caller) {
+            getUrl: function ($caller) {
+                // Allow API end point to be customized
                 if ($caller.attr("data-rating-url") && $caller.attr("data-rating-url") !== "") {
                     return $caller.attr("data-rating-url");
                 }

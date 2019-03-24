@@ -37,6 +37,8 @@ namespace Plato.Entities.Models
 
         bool IsDeleted { get; set; }
 
+        bool IsLocked { get; set; }
+
         bool IsClosed { get; set; }
         
         int TotalViews { get; set; }

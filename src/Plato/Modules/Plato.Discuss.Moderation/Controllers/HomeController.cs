@@ -205,7 +205,7 @@ namespace Plato.Discuss.Moderation.Controllers
             // Update topic
             topic.ModifiedUserId = user?.Id ?? 0;
             topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsClosed = true;
+            topic.IsLocked = true;
 
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(topic);
@@ -261,7 +261,7 @@ namespace Plato.Discuss.Moderation.Controllers
             // Update topic
             topic.ModifiedUserId = user?.Id ?? 0;
             topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsClosed = false;
+            topic.IsLocked = false;
 
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(topic);

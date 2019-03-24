@@ -89,14 +89,14 @@ namespace Plato.Discuss.Moderation.Navigation
                                 : ModeratorPermissions.PinTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsClosed ? T["Unlock"] : T["Lock"], 2, edit => edit
-                            .Action(topic.IsClosed ? "OpenTopic" : "CloseTopic", "Home", "Plato.Discuss.Moderation",
+                        .Add(topic.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
+                            .Action(topic.IsLocked ? "OpenTopic" : "CloseTopic", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = topic.Id
                                 })
                             .Resource(topic.CategoryId)
-                            .Permission(topic.IsClosed
+                            .Permission(topic.IsLocked
                                 ? ModeratorPermissions.OpenTopics
                                 : ModeratorPermissions.CloseTopics)
                             .LocalNav()

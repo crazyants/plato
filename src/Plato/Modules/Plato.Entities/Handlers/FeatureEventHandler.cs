@@ -98,6 +98,11 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "IsLocked",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "IsClosed",
                         DbType = DbType.Boolean
                     },

@@ -399,6 +399,7 @@ namespace Plato.Discuss.Controllers
             // Add models to context 
             HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] = viewModel;
             HttpContext.Items[typeof(Topic)] = entity;
+            
 
             // If we have a pager.page querystring value return paged view
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
@@ -406,6 +407,16 @@ namespace Plato.Discuss.Controllers
                 if (page > 0)
                     return View("GetTopicReplies", viewModel);
             }
+            
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            });
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
