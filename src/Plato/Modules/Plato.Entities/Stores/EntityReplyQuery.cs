@@ -66,7 +66,9 @@ namespace Plato.Entities.Stores
         private WhereBool _showSpam;
         private WhereBool _hideDeleted;
         private WhereBool _showDeleted;
-        private WhereBool _isClosed;
+        private WhereBool _hideAnswers;
+        private WhereBool _showAnswers;
+        
         private WhereInt _createdUserId;
         private WhereDate _createdDate;
         private WhereInt _modifiedUserId;
@@ -131,11 +133,17 @@ namespace Plato.Entities.Stores
             get => _showDeleted ?? (_showDeleted = new WhereBool());
             set => _showDeleted = value;
         }
-        
-        public WhereBool IsClosed
+
+        public WhereBool HideAnswers
         {
-            get => _isClosed ?? (_isClosed = new WhereBool());
-            set => _isClosed = value;
+            get => _hideAnswers ?? (_hideAnswers = new WhereBool());
+            set => _hideAnswers = value;
+        }
+
+        public WhereBool ShowAnswers
+        {
+            get => _showAnswers ?? (_showAnswers = new WhereBool());
+            set => _showAnswers = value;
         }
 
         public WhereInt CreatedUserId
@@ -373,7 +381,30 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowDeleted.Operator);
                 sb.Append("r.IsDeleted = 1");
             }
-            
+
+            // -----------------
+            // answers 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideAnswers.Value && !_query.Params.ShowAnswers.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideAnswers.Operator);
+                sb.Append("r.IsAnswer = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowAnswers.Value && !_query.Params.HideAnswers.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowAnswers.Operator);
+                sb.Append("r.IsAnswer = 1");
+            }
+
+
+
+
             return sb.ToString();
 
         }

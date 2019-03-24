@@ -1,20 +1,32 @@
 ﻿@model EntityListItemViewModel<Question>
 @{
     var details = Model.Entity.GetOrCreate<QuestionDetails>();
+    var voteCss = "votes";
+    var answerCss = "answers";
+    var rateCss = "rating";
+
+    if (Model.Entity.TotalReplies > 0)
+    {
+        answerCss =  "answers replies";
+    }
+    if (Model.Entity.TotalAnswers > 0)
+    {
+        answerCss =  "answers accepted";
+    }
 }
 
 <div class="list-left counter-group">
 
-    <div class="counter votes">
+    <div class="counter @voteCss">
         <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @T["votes"]
     </div>
 
-    <div class="counter answers">
+    <div class="counter @answerCss">
         <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @T["answers"]
     </div>
 
-    <div class="counter views">
-        <h6>@Model.Entity.TotalViews.ToPrettyInt()</h6> @T["views"]
+    <div class="counter @rateCss">
+        <h6>@Model.Entity.SummedRating.ToPrettyInt()</h6> @T["rating"]
     </div>
     
 </div>

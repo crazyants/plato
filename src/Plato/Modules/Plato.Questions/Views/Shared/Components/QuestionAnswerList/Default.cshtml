@@ -12,7 +12,9 @@
         ? $"{Model.Pager.Total.ToPrettyInt()} {answerText.Value}"
         : $"{Model.Pager.Total.ToPrettyInt()} {answersText.Value}";
   
-    <h6>@title</h6>
+    <h6>
+        @title, @Model.Entity.TotalAnswers @T["accepted"]
+    </h6>
     <hr/>
 
     <div data-provide="infiniteScroll"

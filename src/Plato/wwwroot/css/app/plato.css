@@ -590,7 +590,6 @@
 /* ------------------------- */
 
 .list-left { float: left; width: 56px; }
-.list-left .nav-item { margin: 8px 0; }
 
 .list-left + .list-body { display: block; margin-left: 56px; }
 .list-right { float: left; }
@@ -599,6 +598,10 @@
 /* remove list-body margin if it's the next element after list-row' */
 .list-row { float: left; width: 100%; }
 .list-row + .list-body { margin-left: 0; }
+
+/* details navigation within list-left */
+.list-left .nav-item { margin: 12px 0; }
+.list-left .nav-link { padding: 0; text-align: center; }
 
 /* ------------------------- */
 /* Select Dropdown */
@@ -1348,13 +1351,6 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
 
 /* Answers */
 
-.list-left .nav-link { padding: 0; text-align: center; }
 .list-left .accepted-answer { width: 36px; }
 .accepted-answer .nav-text { display: none; }
-
-
-a.accepted-answer {
-    background: #28a745;
-    color: white;
-
-}
+a.accepted-answer { color: #28a745; }

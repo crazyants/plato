@@ -58,8 +58,6 @@ namespace Plato.Questions.Answers.Controllers
 
         }
         
-        #region "Replies"
-
         public async Task<IActionResult> ToAnswer(string id)
         {
 
@@ -89,20 +87,20 @@ namespace Plato.Questions.Answers.Controllers
             //{
             //    return Unauthorized();
             //}
-
+            
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Update topic
+            // Update reply
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
             reply.IsAnswer = true;
 
             // Save changes and return results
             var result = await _replyManager.UpdateAsync(reply);
-
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply Marked As Answer Successfully"]);
+                await UpdateEntityAsync(entity);
+                _alerter.Success(T["Marked As Answer Successfully"]);
             }
             else
             {
@@ -165,6 +163,7 @@ namespace Plato.Questions.Answers.Controllers
 
             if (result.Succeeded)
             {
+                await UpdateEntityAsync(entity);
                 _alerter.Success(T["Answer Removed Successfully"]);
             }
             else
@@ -184,8 +183,28 @@ namespace Plato.Questions.Answers.Controllers
 
 
         }
-        
-        #endregion
+
+
+        async Task<Question> UpdateEntityAsync(Question entity)
+        {
+
+            // Get a count of all replies marked as an answer
+            var answers = await _entityReplyStore.QueryAsync()
+                .Take(1)
+                .Select<EntityReplyQueryParams>(q =>
+                {
+                    q.EntityId.Equals(entity.Id);
+                    q.ShowAnswers.True();
+                })
+                .ToList();
+            
+            // Update answer count 
+            entity.TotalAnswers = answers?.Total ?? 0;
+
+            // Update entity
+            return await _entityStore.UpdateAsync(entity);
+
+        }
 
     }
 

@@ -34,12 +34,19 @@ namespace Plato.Questions.Answers
         {
 
             routes.MapAreaRoute(
-                name: "QuestionAnswersWebApi",
+                name: "QuestionsAddAnswer",
                 areaName: "Plato.Questions.Answers",
-                template: "api/questions/{controller}/{action}/{id?}",
-                defaults: new { controller = "Entity", action = "Get" }
+                template: "questions/answer/add/{id}",
+                defaults: new { controller = "Home", action = "ToAnswer" }
             );
-            
+
+            routes.MapAreaRoute(
+                name: "QuestionsDeleteAnswer",
+                areaName: "Plato.Questions.Answers",
+                template: "questions/answer/delete/{id}",
+                defaults: new { controller = "Home", action = "FromAnswer" }
+            );
+
         }
     }
 }
