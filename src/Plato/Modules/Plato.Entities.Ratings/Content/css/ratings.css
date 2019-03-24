@@ -23,9 +23,6 @@
     background-color: #007bff;
 }
 
-.vote-toggle h6 {
-    margin: 6px 0;
-    color: #666;
-}
+.vote-toggle h6 { margin: 6px 0; color: #666; }
 
-.list-left .vote-toggle {  width: 36px; }
+.list-left .vote-toggle { width: 36px; }

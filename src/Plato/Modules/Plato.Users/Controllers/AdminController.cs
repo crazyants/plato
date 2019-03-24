@@ -73,39 +73,42 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Index(int offset, UserIndexOptions opts, PagerOptions pager)
         {
 
-            //var claims = "";
-            //var user = await _contextFacade.GetAuthenticatedUserAsync();
-            //if (user?.UserRoles != null)
-            //{
-            //    foreach (var role in user.UserRoles)
-            //    {
+            var claims = "";
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user?.UserRoles != null)
+            {
+                foreach (var role in user.UserRoles)
+                {
 
-            //        foreach (var claim in role.RoleClaims)
-            //        {
-            //            //if (claim.Type == ClaimTypes.Role)
-            //            //{
-            //            claims += claim.ClaimType + " - " + claim.ClaimValue + "<br>";
-            //            //}
-            //        }
+                    foreach (var claim in role.RoleClaims)
+                    {
+                        //if (claim.Type == ClaimTypes.Role)
+                        //{
+                        claims += claim.ClaimType + " - " + claim.ClaimValue + "<br>";
+                        //}
+                    }
 
-            //    }
+                }
 
-            //}
+            }
 
 
-            //claims += "<br><br>----------<br><br>";
+            claims += "<br><br>----------<br><br>";
 
-            //foreach (var claim in HttpContext.User.Claims)
-            //{
-            //    //if (claim.Type == ClaimTypes.Role)
-            //    //{
-            //        claims += claim.Type + " - " + claim.Value + "<br>";
-            //    //}
-            //}
+            foreach (var claim in HttpContext.User.Claims)
+            {
+                //if (claim.Type == ClaimTypes.Role)
+                //{
+                claims += claim.Type + " - " + claim.Value + "<br>";
+                //}
+            }
 
-            //ViewData["claims"] = claims;
+            ViewData["claims"] = claims;
 
-            //if (!await _authorizationService.AuthorizeAsync<Permission>(HttpContext.User, Permissions.ManageUsers))
+
+            // ----------------------------------
+
+            //if (!await _authorizationService.AuthorizeAsync(HttpContext.User, Permissions.ManageUsers))
             //{
             //    return Unauthorized();
             //}

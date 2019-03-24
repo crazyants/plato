@@ -157,7 +157,7 @@ namespace Plato.Questions.Controllers
             // Return Url for authentication purposes
             ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["area"] = "Plato.Discuss",
+                ["area"] = "Plato.Questions",
                 ["controller"] = "Home",
                 ["action"] = "Index"
             });

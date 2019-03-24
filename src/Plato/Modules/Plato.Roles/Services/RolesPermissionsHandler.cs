@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Security.Abstractions;
 
@@ -12,11 +13,16 @@ namespace Plato.Roles.Services
 {
     public class RolesPermissionsHandler : AuthorizationHandler<PermissionRequirement>
     {
+
+        private readonly IContextFacade _contextFacade;
         private readonly RoleManager<Role> _roleManager;
 
-        public RolesPermissionsHandler(RoleManager<Role> roleManager)
+        public RolesPermissionsHandler(
+            RoleManager<Role> roleManager,
+            IContextFacade contextFacade)
         {
             _roleManager = roleManager;
+            _contextFacade = contextFacade;
         }
 
         #region "Implementation"
@@ -36,21 +42,17 @@ namespace Plato.Roles.Services
 
             PermissionNames(requirement.Permission, grantingNames);
 
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
             // Determine what set of roles should be examined by the access check
-            var rolesToExamine = new List<string> { DefaultRoles.Anonymous };
-            if (context.User.Identity.IsAuthenticated)
+            var rolesToExamine = new List<string>();
+            if (user != null)
             {
-                foreach (var claim in context.User.Claims)
-                {
-                    if (claim.Type == ClaimTypes.Role)
-                    {
-                        rolesToExamine.Add(claim.Value);
-                    }
-                }
+                rolesToExamine.AddRange(user.RoleNames);
             }
             else
             {
-                // Examine anonymous role claims for the current permission
                 rolesToExamine.Add(DefaultRoles.Anonymous);
             }
 

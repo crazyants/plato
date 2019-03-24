@@ -47,7 +47,9 @@ namespace Plato.Internal.Layout.TagHelpers
             var content = await output.GetChildContentAsync();
             
             // Find permission
-            var permission = _permissionManager.GetPermissions()?.FirstOrDefault(p => p.Name.Equals(Permission, StringComparison.OrdinalIgnoreCase));
+            var permission = _permissionManager
+                .GetPermissions()?
+                .FirstOrDefault(p => p.Name.Equals(Permission, StringComparison.OrdinalIgnoreCase));
 
             // We always need a permission
             if (permission == null)
