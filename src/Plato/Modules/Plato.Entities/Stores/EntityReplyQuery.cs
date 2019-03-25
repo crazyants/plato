@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
@@ -482,6 +481,10 @@ namespace Plato.Entities.Stores
                     return "r.IsSpam";
                 case "isspam":
                     return "r.IsSpam";
+                case "answer":
+                    return "r.IsAnswer";
+                case "isanswer":
+                    return "r.IsAnswer";
                 case "pinned":
                     return "r.IsPinned";
                 case "ispinned":

@@ -107,15 +107,15 @@
         }
         @if (Model.Entity.IsPrivate)
         {
-            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
+            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This question is private and only visible to you as you have permission to view private questions"]">@T["Private"]</span>
         }
         @if (Model.Entity.IsSpam)
         {
-            <span class="badge badge-info" data-toggle="tooltip" title="@T["This discussion has been flagged as SPAM and is only visible to you as you have permission to view topics flagged as SPAM"]">@T["SPAM"]</span>
+            <span class="badge badge-info" data-toggle="tooltip" title="@T["This question has been flagged as SPAM and is only visible to you as you have permission to view questions flagged as SPAM"]">@T["SPAM"]</span>
         }
         @if (Model.Entity.IsDeleted)
         {
-            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This discussion has been deleted and is only visible to you as you have permission to view deleted topics"]">@T["Deleted"]</span>
+            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This question has been deleted and is only visible to you as you have permission to view deleted questions"]">@T["Deleted"]</span>
         }
     </div>
 

@@ -26,8 +26,6 @@ namespace Plato.Discuss.Moderation.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
-        private readonly IPlatoUserStore<User> _userStore;
-        private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IAlerter _alerter;
         private readonly IAuthorizationService _authorizationService;
 
@@ -38,8 +36,7 @@ namespace Plato.Discuss.Moderation.Controllers
         public HomeController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            IPlatoUserStore<User> userStore, 
-            IModeratorStore<Moderator> moderatorStore,
+     
             IEntityStore<Topic> entityStore,
             IContextFacade contextFacade,
             IAuthorizationService authorizationService,
@@ -48,8 +45,6 @@ namespace Plato.Discuss.Moderation.Controllers
             IEntityReplyStore<Reply> entityReplyStore,
             IPostManager<Reply> replyManager)
         {
-            _userStore = userStore;
-            _moderatorStore = moderatorStore;
             _entityStore = entityStore;
             _contextFacade = contextFacade;
             _authorizationService = authorizationService;

@@ -1,9 +1,9 @@
-﻿@model EntityViewModel<Question, Comment>
+﻿@model EntityViewModel<Question, Answer>
 @{
     Layout = null;
 }
 
-@await DisplayAsync(new View("GetQuestionCommentList", new
+@await DisplayAsync(new View("GetQuestionAnswerList", new
 {
     options = @Model.Options,
     pager = @Model.Pager

@@ -25,23 +25,23 @@ namespace Plato.Questions.Answers.Navigation
             {
                 return;
             }
-
-            // Get entity from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
-            if (entity == null)
-            {
-                return;
-            }
-
+            
             // Get authenticated user
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
-            
+
             // We need to be authenticated to flag replies as accepted answers
             if (user == null)
             {
                 return;
             }
 
+            // Get entity from context
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
+            if (entity == null)
+            {
+                return;
+            }
+            
             // Get reply from navigation builder
             var reply = builder.ActionContext.HttpContext.Items[typeof(Answer)] as Answer;
             if (reply == null)

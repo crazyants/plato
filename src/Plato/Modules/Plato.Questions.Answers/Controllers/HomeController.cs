@@ -6,27 +6,24 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Questions.Models;
 using Plato.Questions.Services;
-
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Questions.Answers.Controllers
 {
     public class HomeController : Controller
     {
         
-        private readonly IPostManager<Question> _topicManager;
+        private readonly IEntityReplyStore<Answer> _entityReplyStore;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IEntityStore<Question> _entityStore;
         private readonly IPostManager<Answer> _replyManager;
         private readonly IContextFacade _contextFacade;
-        private readonly IEntityStore<Question> _entityStore;
-        private readonly IEntityReplyStore<Answer> _entityReplyStore;
-        private readonly IPlatoUserStore<User> _userStore;
         private readonly IAlerter _alerter;
-        private readonly IAuthorizationService _authorizationService;
 
         public IHtmlLocalizer T { get; }
 
@@ -35,23 +32,20 @@ namespace Plato.Questions.Answers.Controllers
         public HomeController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IPlatoUserStore<User> userStore, 
             IEntityStore<Question> entityStore,
             IContextFacade contextFacade,
             IAuthorizationService authorizationService,
-            IPostManager<Question> topicManager,
-            IAlerter alerter,
             IEntityReplyStore<Answer> entityReplyStore,
-            IPostManager<Answer> replyManager)
+            IPostManager<Answer> replyManager,
+            IAlerter alerter)
         {
-            _userStore = userStore;
+      
             _entityStore = entityStore;
             _contextFacade = contextFacade;
             _authorizationService = authorizationService;
-            _topicManager = topicManager;
-            _alerter = alerter;
             _entityReplyStore = entityReplyStore;
             _replyManager = replyManager;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -60,6 +54,15 @@ namespace Plato.Questions.Answers.Controllers
         
         public async Task<IActionResult> ToAnswer(string id)
         {
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // We need to be authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
 
             // Ensure we have a valid id
             var ok = int.TryParse(id, out var replyId);
@@ -82,14 +85,17 @@ namespace Plato.Questions.Answers.Controllers
                 return NotFound();
             }
 
-            // Ensure we have permission
-            //if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, ModeratorPermissions.HideReplies))
-            //{
-            //    return Unauthorized();
-            //}
-            
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            // Get permission
+            var permission = entity.CreatedUserId == user.Id
+                ? Permissions.MarkOwnRepliesAnswer
+                : Permissions.MarkAnyReplyAnswer;
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, permission))
+            {
+                return Unauthorized();
+            }
+            
             // Update reply
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
@@ -104,7 +110,7 @@ namespace Plato.Questions.Answers.Controllers
             }
             else
             {
-                _alerter.Danger(T["Could not mark the reply as an asnwer"]);
+                _alerter.Danger(T["Could not mark the reply as an answer"]);
             }
 
             // Redirect back to reply
@@ -123,6 +129,15 @@ namespace Plato.Questions.Answers.Controllers
         public async Task<IActionResult> FromAnswer(string id)
         {
 
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // We need to be authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            
             // Ensure we have a valid id
             var ok = int.TryParse(id, out var replyId);
             if (!ok)
@@ -130,13 +145,16 @@ namespace Plato.Questions.Answers.Controllers
                 return NotFound();
             }
 
+            // Get reply
             var reply = await _entityReplyStore.GetByIdAsync(replyId);
 
+            // Ensure reply exists
             if (reply == null)
             {
                 return NotFound();
             }
 
+            // Get entity
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
 
             // Ensure the entity exists
@@ -144,16 +162,19 @@ namespace Plato.Questions.Answers.Controllers
             {
                 return NotFound();
             }
+            
+            // Get permission
+            var permission = entity.CreatedUserId == user.Id
+                ? Permissions.MarkOwnRepliesAnswer
+                : Permissions.MarkAnyReplyAnswer;
 
-            //// Ensure we have permission
-            //if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, ModeratorPermissions.ShowReplies))
-            //{
-            //    return Unauthorized();
-            //}
-
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Update topic
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, permission))
+            {
+                return Unauthorized();
+            }
+            
+            // Update reply
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
             reply.IsAnswer = false;
@@ -170,6 +191,7 @@ namespace Plato.Questions.Answers.Controllers
             {
                 _alerter.Danger(T["Could not remove the answer"]);
             }
+
             // Redirect back to reply
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
@@ -180,11 +202,9 @@ namespace Plato.Questions.Answers.Controllers
                 ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = reply.Id
             }));
-
-
+            
         }
-
-
+        
         async Task<Question> UpdateEntityAsync(Question entity)
         {
 
@@ -198,8 +218,9 @@ namespace Plato.Questions.Answers.Controllers
                 })
                 .ToList();
             
-            // Update answer count 
+            // Update answer details on entity 
             entity.TotalAnswers = answers?.Total ?? 0;
+            entity.DailyAnswers = entity.TotalAnswers.ToSafeDevision(DateTimeOffset.Now.DayDifference(entity.CreatedDate));
 
             // Update entity
             return await _entityStore.UpdateAsync(entity);

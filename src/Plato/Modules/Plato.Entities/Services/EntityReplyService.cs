@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -50,6 +51,19 @@ namespace Plato.Entities.Services
             var principal = _httpContextAccessor.HttpContext.User;
 
 
+            var sortColumns = new Dictionary<string, OrderBy>();
+            switch (options.Sort.ToLower())
+            {
+                case "isanswer":
+                    sortColumns.Add("IsAnswer", OrderBy.Desc);
+                    sortColumns.Add("CreatedDate", OrderBy.Asc);
+                    break;
+                default:
+                    sortColumns.Add(options.Sort, options.Order);
+                    break;
+            }
+
+
             return await _entityReplyStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
                 .Select<EntityReplyQueryParams>(q =>
@@ -80,7 +94,8 @@ namespace Plato.Entities.Services
                     
 
                 })
-                .OrderBy(options.Sort, options.Order)
+                .OrderBy(sortColumns)
+                //.OrderBy(options.Sort, options.Order)
                 .ToList();
 
         }

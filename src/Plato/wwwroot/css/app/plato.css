@@ -1349,5 +1349,7 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
 /* Answers */
 
 .list-left .accepted-answer { width: 36px; }
-.accepted-answer .nav-text { display: none; }
-a.accepted-answer { color: #28a745; }
+.list-left .accepted-answer .nav-text { display: none; }
+
+a.accepted-answer {  color: #28a745; }
+a.accepted-answer i { font-size: 18pt; }

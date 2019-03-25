@@ -1,5 +1,5 @@
 Name: Plato Questions Answers
-Description: Adds the ability flag replies as answers to questions.
+Description: Adds the ability mark answers as accepted answers.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Questions

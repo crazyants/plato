@@ -33,8 +33,7 @@ namespace Plato.Questions.Answers
            
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
-
-
+            
         }
 
         public override void Configure(

@@ -20,6 +20,8 @@ namespace Plato.Internal.Data.Abstractions
 
         IQuery<TModel> OrderBy(string columnName, OrderBy sortOrder = Abstractions.OrderBy.Asc);
 
+        IQuery<TModel> OrderBy(IDictionary<string, OrderBy> columns);
+        
         Task<IPagedResults<TModel>> ToList();
 
         IDictionary<string, OrderBy> SortColumns { get; }

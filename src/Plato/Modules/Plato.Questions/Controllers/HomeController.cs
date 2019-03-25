@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -316,7 +317,19 @@ namespace Plato.Questions.Controllers
 
         public async Task<IActionResult> Display(EntityOptions opts, PagerOptions pager)
         {
+            
+            // Default options
+            if (opts == null)
+            {
+                opts = new EntityOptions();
+            }
 
+            // Default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+            
             // Get entity to display
             var entity = await _entityStore.GetByIdAsync(opts.Id);
 
@@ -369,18 +382,6 @@ namespace Plato.Questions.Controllers
                         ["Action"] = "Index"
                     }));
                 }
-            }
-
-            // Default options
-            if (opts == null)
-            {
-                opts = new EntityOptions();
-            }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
             }
 
             // Maintain previous route data when generating page links
@@ -1248,6 +1249,9 @@ namespace Plato.Questions.Controllers
 
             // Ensure view model is aware of the entity we are displaying
             options.Id = entity.Id;
+
+
+            options.Sort = "IsAnswer";
 
             // Return updated view model
             return new EntityViewModel<Question, Answer>()
