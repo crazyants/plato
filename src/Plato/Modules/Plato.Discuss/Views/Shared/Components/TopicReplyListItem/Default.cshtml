@@ -71,7 +71,10 @@
                     }
                 </div>
 
-                <div class="hidden" id="@quoteId" data-reply-url="@replyUrl" data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
+                <div class="hidden" 
+                     id="@quoteId" 
+                     data-reply-url="@replyUrl" 
+                     data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
                 <navigation name="topic-reply-footer"
                             model="Model.Reply"
                             enable-list="false" />

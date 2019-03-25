@@ -146,8 +146,7 @@
 /* ------------------- */
 
 .list-group-item-action:hover .category-icon { color: white; }
-.category-icon { background-color: #aaa; color: white; }
-
+.category-icon { background-color: #bbb; color: white; }
 
 /* ------------------- */
 /* Vote Toggle */

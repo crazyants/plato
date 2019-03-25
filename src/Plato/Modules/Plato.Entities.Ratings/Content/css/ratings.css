@@ -4,6 +4,8 @@
     background: #eee;
 }
 
+.list-left .vote-toggle { width: 36px; }
+
 .vote-toggle .btn-vote-up,
 .vote-toggle .btn-vote-down {
     display: block;
@@ -23,5 +25,3 @@
 }
 
 .vote-toggle h6 { margin: 6px 0; color: #666; }
-
-.list-left .vote-toggle { width: 36px; }

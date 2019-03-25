@@ -1,9 +1,9 @@
 ﻿@model EntityListItemViewModel<Question>
 @{
     var details = Model.Entity.GetOrCreate<QuestionDetails>();
-    var voteCss = "votes";
-    var answerCss = "answers";
-    var rateCss = "rating";
+    var voteText = Model.Entity.TotalRatings == 1 ? T["vote"] : T["votes"];
+    var answersText = Model.Entity.TotalReplies == 1 ? T["answer"] : T["answers"];
+    string voteCss = "votes", answerCss = "answers", ratingCss = "rating";
 
     if (Model.Entity.TotalReplies > 0)
     {
@@ -13,22 +13,27 @@
     {
         answerCss =  "answers accepted";
     }
+    if (Model.Entity.SummedRating > 0)
+    {
+        ratingCss = "rating positive";
+    }
+    if (Model.Entity.SummedRating < 0)
+    {
+        ratingCss = "rating negative";
+    }
+
 }
 
 <div class="list-left counter-group">
-
     <div class="counter @voteCss">
-        <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @T["votes"]
+        <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @voteText.Value
     </div>
-
     <div class="counter @answerCss">
-        <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @T["answers"]
+        <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @answersText.Value
     </div>
-
-    <div class="counter @rateCss">
+    <div class="counter @ratingCss">
         <h6>@Model.Entity.SummedRating.ToPrettyInt()</h6> @T["rating"]
     </div>
-    
 </div>
 <div class="list-body">
     
@@ -45,9 +50,7 @@
                 </span>
             </li>
         </ol>
-        <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
-            <date utc="@Model.Entity.LastReplyDate"></date>
-        </a>
+     
     </div>
     <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
@@ -58,7 +61,7 @@
     }
     @if (Model.Entity.IsLocked)
     {
-        <span title="@T["This article is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
+        <span title="@T["This question is locked and is not accepting new answers"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-lock"></i>
         </span>
     }
@@ -74,9 +77,13 @@
         </span>
     }
     <div>
+    
         @if (details?.LatestUsers != null)
         {
             <div class="avatar-group float-right">
+                <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
+                    <date utc="@Model.Entity.LastReplyDate"></date>
+                </a>
                 @foreach (var user in details.LatestUsers)
                 {
                     var replies = user.TotalReplies == 1
@@ -100,7 +107,7 @@
         }
         @if (Model.Entity.IsPrivate)
         {
-            <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
+            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
         }
         @if (Model.Entity.IsSpam)
         {

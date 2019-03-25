@@ -21,6 +21,7 @@
     background:#eee;
     border-radius: 3px;   
     color:#888;
+    border: 1px solid transparent;
 }
 
 .counter h6 {
@@ -33,14 +34,8 @@
 .counter-group .counter:first-child { margin-left:0; }
 .counter-group .counter:last-child { margin-right:0; }
 
+.counter.answers.replies { border-color: #28a745; color: #28a745; }
+.counter.answers.accepted { background-color: #28a745; color: white; }
+.counter.rating.positive { border-color: #8C8FF2; color: #007bff; }
+.counter.rating.negative { border-color: #EE7E6F; color: #dc3545; }
 
-
-.counter.answers.replies {
-    background-color: #28a745;
-    color: white;
-}
-
-.counter.answers.accepted {
-    background-color: #28a745;
-    color: white;
-}

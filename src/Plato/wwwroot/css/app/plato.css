@@ -1346,9 +1346,6 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
     overflow: hidden;
 }
 
-
-
-
 /* Answers */
 
 .list-left .accepted-answer { width: 36px; }

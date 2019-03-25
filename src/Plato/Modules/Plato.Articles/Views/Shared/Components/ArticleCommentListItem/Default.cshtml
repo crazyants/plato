@@ -1,9 +1,17 @@
-﻿@model EntityReplyListItemViewModel<Article, Comment>
+﻿@using Microsoft.AspNetCore.Routing
+@model EntityReplyListItemViewModel<Article, Comment>
 @{
     var css = Model.Reply.RowOffset == Model.Reply.Offset
         ? "markdown-body p-3 infinite-scroll-item infinite-scroll-item-active"
         : "markdown-body p-3 infinite-scroll-item";
     var quoteId = "quote" + Model.Reply.Id;
+    var replyUrl = Url.Action("Reply", "Home", new RouteValueDictionary()
+    {
+        ["opts.id"] = Model.Entity.Id,
+        ["opts.alias"] = Model.Entity.Alias,
+        ["opts.replyId"] = Model.Reply.Id
+    });
+}
 }
 
 <div class="list-row">
@@ -65,7 +73,7 @@
                 </div>
                 <div class="hidden"
                      id="@quoteId"
-                     data-reply-url="@Url.Action("Reply", "Home", new { id = Model.Entity.Id, alias = Model.Entity.Alias, replyId = Model.Reply.Id })"
+                     data-reply-url="@replyUrl"
                      data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
 
                     <navigation name="article-comment-footer"
