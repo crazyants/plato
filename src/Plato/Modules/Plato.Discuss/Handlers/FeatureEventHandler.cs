@@ -28,8 +28,6 @@ namespace Plato.Discuss.Handlers
             _defaultRolesManager = defaultRolesManager;
         }
         
-        #region "Implementation"
-
         public override Task InstallingAsync(IFeatureEventContext context)
         {
             return Task.CompletedTask;
@@ -69,12 +67,7 @@ namespace Plato.Discuss.Handlers
         {
             return Task.CompletedTask;
         }
-
-        #endregion
-
-        #region "Private Methods"
-
-        #endregion
         
     }
+
 }

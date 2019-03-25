@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Questions.Answers.Navigation;
+using Plato.Questions.Answers.Handlers;
 
 namespace Plato.Questions.Answers
 {
@@ -20,11 +23,18 @@ namespace Plato.Questions.Answers
 
         public override void ConfigureServices(IServiceCollection services)
         {
-          
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // Register navigation providers
             services.AddScoped<INavigationProvider, QuestionAnswerMenu>();
             services.AddScoped<INavigationProvider, QuestionAnswerDetailsMenu>();
-            
+           
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
+
         }
 
         public override void Configure(

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Entities.Ratings.ViewModels;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Questions.Models;
@@ -12,12 +10,10 @@ namespace Plato.Questions.Answers.Navigation
 {
     public class QuestionAnswerMenu : INavigationProvider
     {
-
-
+        
         public IStringLocalizer T { get; set; }
 
-        public QuestionAnswerMenu(
-            IStringLocalizer localizer)
+        public QuestionAnswerMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -40,6 +36,12 @@ namespace Plato.Questions.Answers.Navigation
             // Get authenticated user
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
             
+            // We need to be authenticated to flag replies as accepted answers
+            if (user == null)
+            {
+                return;
+            }
+
             // Get reply from navigation builder
             var reply = builder.ActionContext.HttpContext.Items[typeof(Answer)] as Answer;
             if (reply == null)
@@ -47,6 +49,11 @@ namespace Plato.Questions.Answers.Navigation
                 return;
             }
 
+            // Get permission
+            var permission = entity.CreatedUserId == user.Id
+                ? Permissions.MarkOwnRepliesAnswer
+                : Permissions.MarkAnyReplyAnswer;
+                             
             builder
                 .Add(T["Answer"], int.MinValue, options => options
                         .IconCss(reply.IsAnswer ? "fa fa-times" : "fa fa-check")
@@ -60,7 +67,7 @@ namespace Plato.Questions.Answers.Navigation
                             {
                                 ["Id"] = reply.Id
                             })
-                        //.Permission(Permissions.PostReplies)
+                        .Permission(permission)
                         .LocalNav()
                     , new List<string>() { "topic-answer", "text-muted", "text-hidden" }
                 );

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
@@ -37,9 +36,7 @@ namespace Plato.Discuss.ViewProviders
 
             T = stringLocalize;
         }
-
-
-
+        
         public override Task<IViewProviderResult> BuildDisplayAsync(Reply model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
