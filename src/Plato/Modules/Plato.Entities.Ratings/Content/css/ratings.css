@@ -9,7 +9,7 @@
 .vote-toggle .btn-vote-up,
 .vote-toggle .btn-vote-down {
     display: block;
-    border-color: transparent;
+    border-color: transparent !important;
 }
 
 .vote-toggle .btn-vote-up i,

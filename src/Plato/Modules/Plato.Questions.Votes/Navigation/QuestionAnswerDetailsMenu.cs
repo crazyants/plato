@@ -1,8 +1,10 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Questions.Models;
 using Plato.Entities.Ratings.ViewModels;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Questions.Votes.Navigation
 {
@@ -12,10 +14,13 @@ namespace Plato.Questions.Votes.Navigation
 
 
         public IStringLocalizer T { get; set; }
-
-        public QuestionAnswerDetailsMenu(IStringLocalizer localizer)
+        private readonly IAuthorizationService _authorizationService;
+        public QuestionAnswerDetailsMenu(
+            IStringLocalizer localizer,
+            IAuthorizationService authorizationService)
         {
             T = localizer;
+            _authorizationService = authorizationService;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -39,9 +44,9 @@ namespace Plato.Questions.Votes.Navigation
             {
                 return;
             }
-
-            // Add reaction menu view to navigation
-            builder
+            
+                // Add reaction menu view to navigation
+                builder
                 .Add(T["Vote"], react => react
                         .View("VoteToggle", new
                         {
@@ -49,10 +54,11 @@ namespace Plato.Questions.Votes.Navigation
                             {
                                 Entity = entity,
                                 Reply = reply,
+                                Permission = Permissions.VoteAnswers,
                                 ApiUrl = "api/questions/vote/post"
                             }
                         })
-                    //.Permission(Permissions.ReactToTopics)
+                        //.Permission(Permissions.VoteAnswers)
                 );
 
         }

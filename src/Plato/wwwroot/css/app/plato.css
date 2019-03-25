@@ -229,6 +229,7 @@
 /* button used with bootstrap collapse to rotate chevron on active state */
 .btn-expand i { transition: transform .15s ease-in; }
 .btn-expand.active i { transform: rotate(90deg); } 
+.btn.disabled { opacity: 0.5; cursor: not-allowed !important; }
 
 /* ------------------------- */
 /* Card */

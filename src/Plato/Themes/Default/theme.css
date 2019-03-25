@@ -29,10 +29,9 @@
 .btn { border-radius: 3px; }
 .btn-sm { border-radius: 1px; }
 
-.btn-secondary { background: #f8f8f8; }
 .btn-secondary,
-.btn-outline-secondary { border-color: #ccc; color: #000;  }
-
+.btn-secondary.disabled { color: #000;  border-color: #ccc; background: #f8f8f8; }
+.btn-outline-secondary {  border-color: #ccc; color: #000;  }
 .btn-secondary:hover {  background: #f2f2f2; border-color: #aaa; color: #000;  }
 .btn-outline-secondary:hover { background: #aaa; border-color: #aaa; color: #fff; }
 

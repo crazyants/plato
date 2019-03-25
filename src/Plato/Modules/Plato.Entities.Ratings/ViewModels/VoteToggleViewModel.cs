@@ -1,4 +1,5 @@
 ﻿using Plato.Entities.Models;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Entities.Ratings.ViewModels
 {
@@ -10,6 +11,8 @@ namespace Plato.Entities.Ratings.ViewModels
         public IEntityReply Reply { get; set; }
 
         public string ApiUrl { get; set; }
+
+        public IPermission Permission { get; set; }
 
     }
 
