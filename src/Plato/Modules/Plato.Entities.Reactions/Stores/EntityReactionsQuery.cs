@@ -42,7 +42,10 @@ namespace Plato.Entities.Reactions.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.ReactionName.Value
+                Params.ReactionName.Value,
+                Params.IpV4Address.Value,
+                Params.IpV6Address.Value,
+                Params.UserAgent.Value
             );
 
             return data;
@@ -63,6 +66,10 @@ namespace Plato.Entities.Reactions.Stores
         private WhereInt _featureId;
         private WhereInt _entityId;
         private WhereString _reactionName;
+        private WhereString _ipV4Address;
+        private WhereString _ipV6Address;
+        private WhereString _userAgent;
+        private WhereInt _createdUserId;
 
 
         public WhereInt Id
@@ -82,13 +89,37 @@ namespace Plato.Entities.Reactions.Stores
             get => _entityId ?? (_entityId = new WhereInt());
             set => _entityId = value;
         }
-
-
+        
         public WhereString ReactionName
         {
             get => _reactionName ?? (_reactionName = new WhereString());
             set => _reactionName = value;
         }
+
+        public WhereString IpV4Address
+        {
+            get => _ipV4Address ?? (_ipV4Address = new WhereString());
+            set => _ipV4Address = value;
+        }
+
+        public WhereString IpV6Address
+        {
+            get => _ipV6Address ?? (_ipV6Address = new WhereString());
+            set => _ipV6Address = value;
+        }
+
+        public WhereString UserAgent
+        {
+            get => _userAgent ?? (_userAgent = new WhereString());
+            set => _userAgent = value;
+        }
+
+        public WhereInt CreatedUserId
+        {
+            get => _createdUserId ?? (_createdUserId = new WhereInt());
+            set => _createdUserId = value;
+        }
+
 
 
     }
@@ -223,7 +254,42 @@ namespace Plato.Entities.Reactions.Stores
                     sb.Append(_query.Params.EntityId.Operator);
                 sb.Append(_query.Params.EntityId.ToSqlString("er.EntityId"));
             }
-            
+
+
+            // IpV4Address
+            if (!String.IsNullOrEmpty(_query.Params.IpV4Address.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.IpV4Address.Operator);
+                sb.Append(_query.Params.IpV4Address.ToSqlString("er.IpV4Address", "IpV4Address"));
+            }
+
+            // IpV4Address
+            if (!String.IsNullOrEmpty(_query.Params.IpV6Address.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.IpV6Address.Operator);
+                sb.Append(_query.Params.IpV6Address.ToSqlString("er.IpV6Address", "IpV6Address"));
+            }
+
+            // UserAgent
+            if (!String.IsNullOrEmpty(_query.Params.UserAgent.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.UserAgent.Operator);
+                sb.Append(_query.Params.UserAgent.ToSqlString("er.UserAgent", "UserAgent"));
+            }
+
+            // CreatedUserId
+            if (_query.Params.CreatedUserId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.CreatedUserId.Operator);
+                sb.Append(_query.Params.CreatedUserId.ToSqlString("er.CreatedUserId"));
+            }
+
+
+
             return sb.ToString();
 
         }

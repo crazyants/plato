@@ -281,6 +281,24 @@ namespace Plato.Entities.Reactions.Handlers
                             Name = "Keywords",
                             DbType = DbType.String,
                             Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "IpV4Address",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "IpV6Address",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "UserAgent",
+                            DbType = DbType.String,
+                            Length = "255"
                         }
                     }));
 

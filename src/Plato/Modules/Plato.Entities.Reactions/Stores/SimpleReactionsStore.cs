@@ -38,6 +38,7 @@ namespace Plato.Entities.Reactions.Stores
 
             var text1 = _localizer["reacted with the"].Value;
             var text2 = _localizer["emoji"].Value;
+            var anonymous = _localizer["anonymous"].Value;
 
             var output = new List<SimpleReaction>();
             foreach (var reaction in await GetReactionsAsync(entityId, entityReplyId))
@@ -47,10 +48,20 @@ namespace Plato.Entities.Reactions.Stores
                 var sb = new StringBuilder();
                 foreach (var user in reaction.Value.Users)
                 {
-                    sb.Append(user.DisplayName);
+                    sb.Append(!string.IsNullOrEmpty(user.DisplayName) 
+                        ? user.DisplayName 
+                        : anonymous);
                     if (i < reaction.Value.Users.Count - 1)
                     {
-                        sb.Append(", ");
+                        if (i == reaction.Value.Users.Count - 2)
+                        {
+                            sb.Append(" & ");
+                        }
+                        else
+                        {
+                            sb.Append(reaction.Value.Users.Count == 2 ? " & " : ", ");
+                        }
+                        
                     }
                     if (i >= ByMax)
                     {

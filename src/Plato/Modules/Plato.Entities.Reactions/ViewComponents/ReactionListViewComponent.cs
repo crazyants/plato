@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Entities.Models;
 using Plato.Entities.Reactions.ViewModels;
 using Plato.Entities.Reactions.Stores;
 
@@ -19,22 +18,25 @@ namespace Plato.Entities.Reactions.ViewComponents
             _simpleReactionsStore = simpleReactionsStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(IEntity entity, IEntityReply reply)
+        public async Task<IViewComponentResult> InvokeAsync(ReactionListViewModel model)
         {
 
             // We always need an entity
-            if (entity == null)
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                throw new ArgumentNullException(nameof(model));
             }
 
-            // Return view
-            return View(new ReactionListViewModel()
+            if (model.Entity == null)
             {
-                Entity = entity,
-                Reply = reply,
-                Reactions = await _simpleReactionsStore.GetSimpleReactionsAsync(entity.Id, reply?.Id ?? 0)
-            });
+                throw new ArgumentNullException(nameof(model.Entity));
+            }
+            
+            model.Reactions =
+                await _simpleReactionsStore.GetSimpleReactionsAsync(model.Entity.Id, model.Reply?.Id ?? 0);
+
+            // Return view
+            return View(model);
 
         }
 

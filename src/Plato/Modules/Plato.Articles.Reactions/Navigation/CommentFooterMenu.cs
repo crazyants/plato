@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
+using Plato.Entities.Reactions.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Reactions.Navigation
@@ -32,14 +33,17 @@ namespace Plato.Articles.Reactions.Navigation
             // Get model from navigation builder
             var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
-            
-            // Add reaction list to topic reply footer navigation
+
+            // Add reaction list to navigation
             builder
                 .Add(T["React"], int.MaxValue, react => react
                     .View("ReactionList", new
                     {
-                        entity,
-                        reply
+                        model = new ReactionListViewModel()
+                        {
+                            Entity = entity,
+                            Reply = reply
+                        }
                     })
                     .Permission(Permissions.ViewCommentReactions)
                 );
