@@ -14,18 +14,18 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Articles.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 
 namespace Plato.Articles.Controllers
 {
     public class UserController : Controller, IUpdateModel
     {
-
-        private readonly IFeatureFacade _featureFacade;
+        
         private readonly IViewProviderManager<UserIndex> _userViewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IContextFacade _contextFacade;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -34,19 +34,17 @@ namespace Plato.Articles.Controllers
         public UserController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IContextFacade contextFacade,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
-            IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService,
             IViewProviderManager<UserIndex> userViewProvider,
+            IPlatoUserStore<User> platoUserStore,
+            IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
-            _contextFacade = contextFacade;
             _breadCrumbManager = breadCrumbManager;
-            _platoUserStore = platoUserStore;
-            _authorizationService = authorizationService;
             _userViewProvider = userViewProvider;
+            _platoUserStore = platoUserStore;
             _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
 
             T = localizer;
             S = stringLocalizer;
@@ -126,15 +124,12 @@ namespace Plato.Articles.Controllers
                     .LocalNav()
                 ).Add(S["Articles"]);
             });
-
-            // Build view
-            var result = await _userViewProvider.ProvideDisplayAsync(new UserIndex()
+            
+            //// Return view
+            return View((LayoutViewModel) await _userViewProvider.ProvideDisplayAsync(new UserIndex()
             {
                 Id = user.Id
-            }, this);
-
-            //// Return view
-            return View(result);
+            }, this));
 
         }
 

@@ -14,19 +14,19 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Questions.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 
 namespace Plato.Questions.Controllers
 {
     public class UserController : Controller, IUpdateModel
     {
-
-        private readonly IFeatureFacade _featureFacade;
+        
         private readonly IViewProviderManager<UserIndex> _userViewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IContextFacade _contextFacade;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IPlatoUserStore<User> _platoUserStore;
-
+        private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
+        
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -34,17 +34,15 @@ namespace Plato.Questions.Controllers
         public UserController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IContextFacade contextFacade,
-            IAlerter alerter, IBreadCrumbManager breadCrumbManager,
-            IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService,
+            IBreadCrumbManager breadCrumbManager,
             IViewProviderManager<UserIndex> userViewProvider,
+            IPlatoUserStore<User> platoUserStore,
+            IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
-            _authorizationService = authorizationService;
             _userViewProvider = userViewProvider;
             _featureFacade = featureFacade;
 
@@ -105,7 +103,7 @@ namespace Plato.Questions.Controllers
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
-                    return View("GetArticles", viewModel);
+                    return View("GetQuestions", viewModel);
             }
             
             // Build breadcrumb
@@ -124,17 +122,14 @@ namespace Plato.Questions.Controllers
                         ["opts.alias"] = user.Alias
                     })
                     .LocalNav()
-                ).Add(S["Articles"]);
+                ).Add(S["Questions"]);
             });
 
-            // Build view
-            var result = await _userViewProvider.ProvideDisplayAsync(new UserIndex()
+            //// Return view
+            return View((LayoutViewModel)await _userViewProvider.ProvideDisplayAsync(new UserIndex()
             {
                 Id = user.Id
-            }, this);
-
-            //// Return view
-            return View(result);
+            }, this));
 
         }
 

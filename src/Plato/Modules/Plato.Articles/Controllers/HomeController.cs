@@ -1163,7 +1163,10 @@ namespace Plato.Articles.Controllers
             {
                 return NotFound();
             }
-            
+
+            // Configure options
+            opts = ConfigureEntityDisplayOptions(entity, opts);
+
             // Get offset for given reply
             var offset = 0;
             if (opts.ReplyId > 0)
@@ -1240,14 +1243,15 @@ namespace Plato.Articles.Controllers
 
         }
 
+
         EntityViewModel<Article, Comment> GetDisplayViewModel(Article entity, EntityOptions options, PagerOptions pager)
         {
 
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
-            // Ensure view model is aware of the entity we are displaying
-            options.Id = entity.Id;
+            // Configure options
+            options = ConfigureEntityDisplayOptions(entity, options);
 
             // Return updated view model
             return new EntityViewModel<Article, Comment>()
@@ -1256,6 +1260,21 @@ namespace Plato.Articles.Controllers
                 Options = options,
                 Pager = pager
             };
+        }
+        
+        EntityOptions ConfigureEntityDisplayOptions(Article entity, EntityOptions options)
+        {
+
+            // Ensure view model is aware of the entity we are displaying
+            options.Id = entity.Id;
+
+            // Ensure replies marked as an answer appear first
+            options.SortColumns = new Dictionary<string, OrderBy>(); ;
+            options.SortColumns.Add("IsAnswer", OrderBy.Desc);
+            options.SortColumns.Add("CreatedDate", OrderBy.Asc);
+
+            return options;
+
         }
 
         IEnumerable<SelectListItem> GetReportReasons()

@@ -61,7 +61,9 @@ namespace Plato.Articles.ViewProviders
             };
 
             return Views(
-                    View<EntityIndexViewModel<Article>>("Profile.Articles.Display.Content", model => viewModel).Zone("content")
+                    View<EntityIndexViewModel<Article>>("Profile.Articles.Display.Content", model => viewModel)
+                        .Zone("content")
+                        .Order(2)
                 );
 
         }

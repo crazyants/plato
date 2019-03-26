@@ -121,7 +121,7 @@ namespace Plato.Questions.Controllers
                 pager = new PagerOptions();
             }
             
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -1163,7 +1163,10 @@ namespace Plato.Questions.Controllers
             {
                 return NotFound();
             }
-            
+
+            // Configure options
+            opts = ConfigureEntityDisplayOptions(entity, opts);
+
             // Get offset for given reply
             var offset = 0;
             if (opts.ReplyId > 0)
@@ -1246,14 +1249,9 @@ namespace Plato.Questions.Controllers
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
-            // Ensure view model is aware of the entity we are displaying
-            options.Id = entity.Id;
-            
-            // Ensure answers are sorted by most helpful by default
-            options.SortColumns = new Dictionary<string, OrderBy>();;
-            options.SortColumns.Add("IsAnswer", OrderBy.Desc);
-            options.SortColumns.Add("CreatedDate", OrderBy.Asc);
- 
+            // Configure options
+            options = ConfigureEntityDisplayOptions(entity, options);
+
             // Return updated view model
             return new EntityViewModel<Question, Answer>()
             {
@@ -1261,6 +1259,21 @@ namespace Plato.Questions.Controllers
                 Options = options,
                 Pager = pager
             };
+        }
+
+        EntityOptions ConfigureEntityDisplayOptions(Question entity, EntityOptions options)
+        {
+
+            // Ensure view model is aware of the entity we are displaying
+            options.Id = entity.Id;
+            
+            // Ensure replies marked as an answer appear first
+            options.SortColumns = new Dictionary<string, OrderBy>(); ;
+            options.SortColumns.Add("IsAnswer", OrderBy.Desc);
+            options.SortColumns.Add("CreatedDate", OrderBy.Asc);
+
+            return options;
+
         }
 
         IEnumerable<SelectListItem> GetReportReasons()
