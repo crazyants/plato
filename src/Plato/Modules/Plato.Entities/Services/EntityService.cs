@@ -20,20 +20,14 @@ namespace Plato.Entities.Services
 
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<TModel> _entityStore;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPlatoRoleStore _roleStore;
-
+  
         public EntityService(
             IContextFacade contextFacade,
-            IEntityStore<TModel> entityStore,
-            IHttpContextAccessor httpContextAccessor,
-            IPlatoRoleStore roleStore)
+            IEntityStore<TModel> entityStore)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
-            _httpContextAccessor = httpContextAccessor;
-            _roleStore = roleStore;
-
+      
             // Default options delegate
             _configureDb = options => options.SearchType = SearchTypes.Tsql;
 
@@ -73,9 +67,7 @@ namespace Plato.Entities.Services
             // Get authenticated user 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Get principal
-            var principal = _httpContextAccessor.HttpContext.User;
-
+          
             // Return tailored results
             return await _entityStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
@@ -163,7 +155,7 @@ namespace Plato.Entities.Services
                     // ----------------
 
                     _configureParams?.Invoke(q);
-
+                    
                     // Restrict results via user role if the channels feature is enabled
                     //if (channelFeature != null)
                     //{
@@ -180,26 +172,6 @@ namespace Plato.Entities.Services
                     //    }
                     //}
 
-                    //// Hide private?
-                    //if (!await _authorizationService.AuthorizeAsync(principal,
-                    //    Permissions.ViewPrivateTopics))
-                    //{
-                    //    q.HidePrivate.True();
-                    //}
-
-                    //// Hide spam?
-                    //if (!await _authorizationService.AuthorizeAsync(principal,
-                    //    Permissions.ViewSpamTopics))
-                    //{
-                    //    q.HideSpam.True();
-                    //}
-
-                    //// Hide deleted?
-                    //if (!await _authorizationService.AuthorizeAsync(principal,
-                    //    Permissions.ViewDeletedTopics))
-                    //{
-                    //    q.HideDeleted.True();
-                    //}
 
                     //q.IsPinned.True();
                     //if (!string.IsNullOrEmpty(filterOptions.Search))

@@ -4,14 +4,12 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Questions.Models;
 using Plato.Entities.Ratings.ViewModels;
-using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Questions.Votes.Navigation
 {
     
     public class QuestionAnswerDetailsMenu : INavigationProvider
     {
-
 
         public IStringLocalizer T { get; set; }
         private readonly IAuthorizationService _authorizationService;
@@ -45,7 +43,7 @@ namespace Plato.Questions.Votes.Navigation
                 return;
             }
             
-                // Add reaction menu view to navigation
+                // Add vote toggle view to navigation
                 builder
                 .Add(T["Vote"], react => react
                         .View("VoteToggle", new
@@ -58,7 +56,6 @@ namespace Plato.Questions.Votes.Navigation
                                 ApiUrl = "api/questions/vote/post"
                             }
                         })
-                        //.Permission(Permissions.VoteAnswers)
                 );
 
         }

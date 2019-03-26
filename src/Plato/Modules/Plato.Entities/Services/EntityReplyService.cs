@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Entities.Stores;
@@ -19,17 +17,14 @@ namespace Plato.Entities.Services
         private Action<EntityReplyQueryParams> _configureParams = null;
 
         private readonly IEntityReplyStore<TModel> _entityReplyStore;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
+  
         public EntityReplyService(
-            IEntityReplyStore<TModel> entityReplyStore,
-            IAuthorizationService authorizationService,
-            IHttpContextAccessor httpContextAccessor)
+            IEntityReplyStore<TModel> entityReplyStore)
         {
             _entityReplyStore = entityReplyStore;
-            _authorizationService = authorizationService;
-            _httpContextAccessor = httpContextAccessor;
+
+            // Default options delegate
+            _configureDb = options => options.SearchType = SearchTypes.Tsql;
         }
 
         public IEntityReplyService<TModel> ConfigureDb(Action<QueryOptions> configure)
@@ -46,56 +41,33 @@ namespace Plato.Entities.Services
         
         public async Task<IPagedResults<TModel>> GetResultsAsync(EntityOptions options, PagerOptions pager)
         {
-
-            // Get principal
-            var principal = _httpContextAccessor.HttpContext.User;
-
-
+            
+            // Build sort columns from model
             var sortColumns = new Dictionary<string, OrderBy>();
-            switch (options.Sort.ToLower())
+            if (options.SortColumns != null)
             {
-                case "isanswer":
-                    sortColumns.Add("IsAnswer", OrderBy.Desc);
-                    sortColumns.Add("CreatedDate", OrderBy.Asc);
-                    break;
-                default:
-                    sortColumns.Add(options.Sort, options.Order);
-                    break;
+                foreach (var column in options.SortColumns)
+                {
+                    sortColumns.Add(column.Key, column.Value);
+                }
             }
-
-
+            else
+            {
+                sortColumns.Add(options.Sort, options.Order);
+            }
+            
             return await _entityReplyStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
+                .Configure(_configureDb)
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(options.Id);
-
-                    //// Hide private?
-                    //if (!await _authorizationService.AuthorizeAsync(principal,
-                    //    Permissions.ViewPrivateReplies))
-                    //{
-                    //    q.HidePrivate.True();
-                    //}
-
-                    //// Hide spam?
-                    //if (!await _authorizationService.AuthorizeAsync(principal,
-                    //    Permissions.ViewSpamReplies))
-                    //{
-                    //    q.HideSpam.True();
-                    //}
-
-
-                    //// Hide deleted?
-                    //if (!await _authorizationService.AuthorizeAsync(principal,
-                    //    Permissions.ViewDeletedReplies))
-                    //{
-                    //    q.HideDeleted.True();
-                    //}
                     
-
+                    // Additional parameter configuration
+                    _configureParams?.Invoke(q);
+                    
                 })
                 .OrderBy(sortColumns)
-                //.OrderBy(options.Sort, options.Order)
                 .ToList();
 
         }

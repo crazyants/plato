@@ -267,7 +267,19 @@ namespace Plato.Entities.Ratings.Handlers
                     {
                         new SchemaColumn()
                         {
-                            Name = "Keywords",
+                            Name = "IpV4Address",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "IpV6Address",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "UserAgent",
                             DbType = DbType.String,
                             Length = "255"
                         }

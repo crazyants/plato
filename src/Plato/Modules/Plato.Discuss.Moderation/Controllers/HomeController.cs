@@ -109,7 +109,7 @@ namespace Plato.Discuss.Moderation.Controllers
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
                 ["action"] = "Display",
-                ["opts.d"] = topic.Id,
+                ["opts.id"] = topic.Id,
                 ["opts.alias"] = topic.Alias
             }));
 

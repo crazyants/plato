@@ -42,7 +42,9 @@ namespace Plato.Entities.Ratings.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.ReactionName.Value
+                Params.IpV4Address.Value,
+                Params.IpV6Address.Value,
+                Params.UserAgent.Value
             );
 
             return data;
@@ -62,8 +64,11 @@ namespace Plato.Entities.Ratings.Stores
         private WhereInt _id;
         private WhereInt _featureId;
         private WhereInt _entityId;
-        private WhereString _reactionName;
-
+        private WhereInt _entityReplyId;
+        private WhereString _ipV4Address;
+        private WhereString _ipV6Address;
+        private WhereString _userAgent;
+        private WhereInt _createdUserId;
 
         public WhereInt Id
         {
@@ -83,11 +88,35 @@ namespace Plato.Entities.Ratings.Stores
             set => _entityId = value;
         }
 
-
-        public WhereString ReactionName
+        public WhereInt EntityReplyId
         {
-            get => _reactionName ?? (_reactionName = new WhereString());
-            set => _reactionName = value;
+            get => _entityReplyId ?? (_entityReplyId = new WhereInt());
+            set => _entityReplyId = value;
+        }
+
+
+        public WhereString IpV4Address
+        {
+            get => _ipV4Address ?? (_ipV4Address = new WhereString());
+            set => _ipV4Address = value;
+        }
+
+        public WhereString IpV6Address
+        {
+            get => _ipV6Address ?? (_ipV6Address = new WhereString());
+            set => _ipV6Address = value;
+        }
+
+        public WhereString UserAgent
+        {
+            get => _userAgent ?? (_userAgent = new WhereString());
+            set => _userAgent = value;
+        }
+
+        public WhereInt CreatedUserId
+        {
+            get => _createdUserId ?? (_createdUserId = new WhereInt());
+            set => _createdUserId = value;
         }
 
 
@@ -208,14 +237,6 @@ namespace Plato.Entities.Ratings.Stores
                 sb.Append(_query.Params.FeatureId.ToSqlString("er.FeatureId"));
             }
 
-            // ReactionName
-            if (!String.IsNullOrEmpty(_query.Params.ReactionName.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.ReactionName.Operator);
-                sb.Append(_query.Params.ReactionName.ToSqlString("ReactionName", "Keywords"));
-            }
-            
             // EntityId
             if (_query.Params.EntityId.Value > -1)
             {
@@ -224,11 +245,51 @@ namespace Plato.Entities.Ratings.Stores
                 sb.Append(_query.Params.EntityId.ToSqlString("er.EntityId"));
             }
             
+            // EntityReplyId
+            if (_query.Params.EntityReplyId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityReplyId.Operator);
+                sb.Append(_query.Params.EntityReplyId.ToSqlString("er.EntityReplyId"));
+            }
+
+            // IpV4Address
+            if (!String.IsNullOrEmpty(_query.Params.IpV4Address.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.IpV4Address.Operator);
+                sb.Append(_query.Params.IpV4Address.ToSqlString("er.IpV4Address", "IpV4Address"));
+            }
+
+            // IpV4Address
+            if (!String.IsNullOrEmpty(_query.Params.IpV6Address.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.IpV6Address.Operator);
+                sb.Append(_query.Params.IpV6Address.ToSqlString("er.IpV6Address", "IpV6Address"));
+            }
+
+            // UserAgent
+            if (!String.IsNullOrEmpty(_query.Params.UserAgent.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.UserAgent.Operator);
+                sb.Append(_query.Params.UserAgent.ToSqlString("er.UserAgent", "UserAgent"));
+            }
+
+            // CreatedUserId
+            if (_query.Params.CreatedUserId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.CreatedUserId.Operator);
+                sb.Append(_query.Params.CreatedUserId.ToSqlString("er.CreatedUserId"));
+            }
+
+
             return sb.ToString();
 
         }
-
-
+        
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)
@@ -259,6 +320,7 @@ namespace Plato.Entities.Ratings.Stores
         }
 
         #endregion
+
     }
 
     #endregion

@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
@@ -35,6 +37,9 @@ namespace Plato.Entities.ViewModels
 
         [DataMember(Name = "sort")]
         public string Sort { get; set; } = "CreatedDate";
+
+        [JsonIgnore]
+        public IDictionary<string, OrderBy> SortColumns { get; set; } 
 
         [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Asc;

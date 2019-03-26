@@ -43,7 +43,6 @@ namespace Plato.Questions.Votes.Navigation
                             ApiUrl = "api/questions/vote/post"
                         }
                     })
-                    //.Permission(Permissions.VoteQuestions)
                 );
 
         }

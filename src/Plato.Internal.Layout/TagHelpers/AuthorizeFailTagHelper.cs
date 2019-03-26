@@ -12,6 +12,11 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+
+            // Suppress tag
+            output.TagName = "";
+            output.TagMode = TagMode.StartTagAndEndTag;
+
             var childContent = await output.GetChildContentAsync();
             var authorizeContext = (AuthorizeContext)context.Items[typeof(AuthorizeContext)];
             authorizeContext.Fail = new AuthorizeSection()

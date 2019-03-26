@@ -39,6 +39,10 @@ namespace Plato.Internal.Layout.TagHelpers
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
+            // Suppress tag
+            output.TagName = "";
+            output.TagMode = TagMode.StartTagAndEndTag;
+
             // Create a context for our success and failure tag helpers
             var authorizeContext = new AuthorizeContext();
             context.Items.Add(typeof(AuthorizeContext), authorizeContext);
@@ -68,32 +72,20 @@ namespace Plato.Internal.Layout.TagHelpers
             {
                 if (authorizeContext.Success != null)
                 {
-                    var success = new TagBuilder("div");
-                    if (!string.IsNullOrEmpty(authorizeContext.Success.CssClass))
-                    {
-                        success.AddCssClass(authorizeContext.Success.CssClass);
-                    }
-
-                    success.InnerHtml.AppendHtml(authorizeContext.Success.Content);
-                    output.Content.AppendHtml(success);
+                    //success.InnerHtml.AppendHtml(authorizeContext.Success.Content);
+                    output.Content.AppendHtml(authorizeContext.Success.Content);
                 }
             }
             else
             {
                 if (authorizeContext.Fail != null)
                 {
-                    var fail = new TagBuilder("div");
-                    if (!string.IsNullOrEmpty(authorizeContext.Fail.CssClass))
-                    {
-                        fail.AddCssClass(authorizeContext.Fail.CssClass);
-                    }
-                    fail.InnerHtml.AppendHtml(authorizeContext.Fail.Content);
-                    output.Content.AppendHtml(fail);
+                    output.Content.AppendHtml(authorizeContext.Fail.Content);
                 }
                 else
                 {
                     // Suppress output if authorization failed and we have no failure content
-                    //output.SuppressOutput();
+                    output.SuppressOutput();
                 }
             }
 

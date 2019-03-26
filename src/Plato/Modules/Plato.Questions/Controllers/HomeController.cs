@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -122,7 +121,7 @@ namespace Plato.Questions.Controllers
                 pager = new PagerOptions();
             }
             
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -1249,10 +1248,12 @@ namespace Plato.Questions.Controllers
 
             // Ensure view model is aware of the entity we are displaying
             options.Id = entity.Id;
-
-
-            options.Sort = "IsAnswer";
-
+            
+            // Ensure answers are sorted by most helpful by default
+            options.SortColumns = new Dictionary<string, OrderBy>();;
+            options.SortColumns.Add("IsAnswer", OrderBy.Desc);
+            options.SortColumns.Add("CreatedDate", OrderBy.Asc);
+ 
             // Return updated view model
             return new EntityViewModel<Question, Answer>()
             {

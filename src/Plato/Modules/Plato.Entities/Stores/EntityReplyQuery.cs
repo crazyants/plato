@@ -440,7 +440,7 @@ namespace Plato.Entities.Stores
 
         IDictionary<string, OrderBy> GetSafeSortColumns()
         {
-            var ourput = new Dictionary<string, OrderBy>();
+            var output = new Dictionary<string, OrderBy>();
             foreach (var sortColumn in _query.SortColumns)
             {
                 var columnName = GetSortColumn(sortColumn.Key);
@@ -448,11 +448,11 @@ namespace Plato.Entities.Stores
                 {
                     throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
                 }
-                ourput.Add(columnName, sortColumn.Value);
+                output.Add(columnName, sortColumn.Value);
 
             }
 
-            return ourput;
+            return output;
         }
 
         string GetSortColumn(string columnName)
@@ -493,10 +493,28 @@ namespace Plato.Entities.Stores
                     return "r.IsClosed";
                 case "isclosed":
                     return "r.IsClosed";
+                case "totalreactions":
+                    return "r.TotalReactions";
+                case "totalreports":
+                    return "r.TotalReports";
+                case "totalratings":
+                    return "r.TotalRatings";
+                case "summedrating":
+                    return "r.SummedRating";
+                case "meanrating":
+                    return "r.MeanRating";
+                case "totallinks":
+                    return "r.TotalLinks";
+                case "totalimages":
+                    return "r.TotalImages";
                 case "created":
                     return "r.CreatedDate";
                 case "createddate":
                     return "r.CreatedDate";
+                case "edited":
+                    return "r.EditedDate";
+                case "editeddate":
+                    return "r.EditedDate";
                 case "modified":
                     return "r.ModifiedDate";
                 case "modifieddate":

@@ -2172,12 +2172,9 @@ $(function (win, doc, $) {
                 var url = methods.getUrl($caller),
                     pageLoaded = methods.isPageLoaded($caller, page);
                 if (url === "" || pageLoaded || methods._loading === true) {
-                    console.log("already loading");
                     return;
                 }
-
-                console.log("loading users");
-
+                
                 // Indicate load
                 methods._loading = true;
 
