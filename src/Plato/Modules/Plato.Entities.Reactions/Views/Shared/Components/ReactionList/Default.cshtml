@@ -14,9 +14,18 @@
     @foreach (var reaction in Model.Reactions)
     {
         <li>
-            <a href="#" class="list-group-item list-group-item-action py-2 px-3 border-0" data-reaction-name="@reaction.Name" data-toggle="tooltip" title="@reaction.ToolTip">
-                <span class="d-inline-block mx-1">@reaction.Emoji</span><span class="d-inline-block mx-1">@reaction.Total</span>
-            </a>
+            <authorize asp-permission="@Model.Permission.Name">
+                <authorize-success>
+                    <a href="#" class="list-group-item list-group-item-action py-2 px-3 border-0" data-reaction-name="@reaction.Name" data-toggle="tooltip" title="@reaction.ToolTip">
+                        <span class="d-inline-block mx-1">@reaction.Emoji</span><span class="d-inline-block mx-1">@reaction.Total</span>
+                    </a>
+                </authorize-success>
+                <authorize-fail>
+                    <span class="list-group-item py-2 px-3 border-0" data-toggle="tooltip" title="@reaction.ToolTip">
+                        <span class="d-inline-block mx-1">@reaction.Emoji</span><span class="d-inline-block mx-1">@reaction.Total</span>
+                    </span>
+                </authorize-fail>
+            </authorize>
         </li>
     }
 </ul>

@@ -3,13 +3,29 @@
     var details = Model.Entity.GetOrCreate<ArticleDetails>();
 }
 
-<div class="list-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">
-        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url" />
-    </a>
-</div>
+@if (Model.Channel != null)
+{
+    <div class="list-left">
+        <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias" data-toggle="tooltip" title="@Model.Channel.Name">
+            @if (!String.IsNullOrWhiteSpace(Model.Channel.IconCss))
+            {
+                <span class="category-icon category-icon-md" style="background-color: @Model.Channel.BackColor; color: @Model.Channel.ForeColor">
+                    <i class="@Model.Channel.IconCss"></i>
+                </span>
+            }
+            else
+            {
+                <span class="category-icon category-icon-md">
+                    <i class="fal fa-folder"></i>
+                </span>
+            }
+        </a>
+    </div>
+}
+
+
 <div class="list-body">
-    
+
     <div class="float-right text-right">
         <ol class="list-inline text-muted">
             <li class="list-inline-item">
@@ -64,15 +80,15 @@
                         ? "reply"
                         : "replies";
                     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias">
-                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/>
+                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" />
                     </a>
                 }
             </div>
         }
         @T["By"]
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
-        @if (@Model.Channel != null)
+        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        @if (Model.Channel != null)
         {
             <span>@T["in"]</span>
             <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
@@ -81,7 +97,7 @@
         }
         @if (Model.Entity.IsPrivate)
         {
-            <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
+            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
         }
         @if (Model.Entity.IsSpam)
         {
@@ -92,5 +108,4 @@
             <span class="badge badge-danger" data-toggle="tooltip" title="@T["This discussion has been deleted and is only visible to you as you have permission to view deleted topics"]">@T["Deleted"]</span>
         }
     </div>
-
 </div>

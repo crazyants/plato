@@ -9,6 +9,7 @@ using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Articles.Categories.Models;
+using Plato.Articles.Categories.ViewModels;
 using Plato.Articles.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
@@ -72,14 +73,15 @@ namespace Plato.Articles.Categories.ViewProviders
             }
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return Views(View<CategoryListViewModel<Category>>("Article.Categories.Index.Sidebar", model =>
+
+            return Views(
+                View<CategoryListViewModel<Category>>("Article.Categories.Index.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.ParentId == 0);
                     return model;
                 }).Zone("sidebar").Order(1)
             );
             
-
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Article entity, IViewProviderContext updater)

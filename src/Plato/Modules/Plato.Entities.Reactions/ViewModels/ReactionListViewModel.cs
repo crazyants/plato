@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Security;
 using Plato.Entities.Models;
 using Plato.Entities.Reactions.Models;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Entities.Reactions.ViewModels
 {

@@ -37,7 +37,8 @@ namespace Plato.Discuss.Reactions.Navigation
                         model = new ReactionListViewModel()
                         {
                             Entity = entity,
-                            Reply = reply
+                            Reply = reply,
+                            Permission = Permissions.ReactToTopics
                         }
                     })
                     .Permission(Permissions.ViewTopicReactions)

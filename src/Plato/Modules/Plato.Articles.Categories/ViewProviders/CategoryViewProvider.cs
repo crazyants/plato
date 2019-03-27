@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Categories.Models;
-using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Articles.Categories.Models;
@@ -20,22 +18,16 @@ namespace Plato.Articles.Categories.ViewProviders
 
         private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Category> _categoryStore;
-        private readonly ICategoryManager<Category> _categoryManager;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IActionContextAccessor _actionContextAccessor;
-
+        
         public CategoryViewProvider(
             IContextFacade contextFacade,
             ICategoryStore<Category> categoryStore,
-            ICategoryManager<Category> categoryManager,
-            IFeatureFacade featureFacade,
-            IActionContextAccessor actionContextAccessor)
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
-            _categoryManager = categoryManager;
             _featureFacade = featureFacade;
-            _actionContextAccessor = actionContextAccessor;
         }
 
         public override async Task<IViewProviderResult> BuildIndexAsync(Category category, IViewProviderContext context)
@@ -80,14 +72,7 @@ namespace Plato.Articles.Categories.ViewProviders
             return Views(
                 View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
-                View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<CategoryListViewModel<Category>>("Article.Categories.Index.Sidebar", model =>
-                {
-                    //model.SelectedChannelId = channel?.Id ?? 0;
-                    model.Options = channelViewOpts;
-                    model.Categories = categories;
-                    return model;
-                }).Zone("sidebar").Order(1)
+                View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1)
             );
 
         }
