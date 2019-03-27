@@ -186,8 +186,7 @@ namespace Plato.Questions.Votes.Controllers
             return base.InternalServerError();
 
         }
-
-
+        
         async Task<AggregateRating> UpdateEntityRating(int entityId)
         {
 

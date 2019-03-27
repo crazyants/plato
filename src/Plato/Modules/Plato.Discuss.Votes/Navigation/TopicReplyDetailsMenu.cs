@@ -9,12 +9,10 @@ namespace Plato.Discuss.Votes.Navigation
     
     public class TopicReplyDetailsMenu : INavigationProvider
     {
-
-
+        
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyDetailsMenu(
-            IStringLocalizer localizer)
+        public TopicReplyDetailsMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -50,6 +48,7 @@ namespace Plato.Discuss.Votes.Navigation
                             {
                                 Entity = entity,
                                 Reply = reply,
+                                Permission = Permissions.VoteTopicReplies,
                                 ApiUrl = "api/discuss/vote/post"
                             }
                         })

@@ -39,10 +39,10 @@ namespace Plato.Discuss.Votes.Navigation
                         model = new VoteToggleViewModel()
                         {                     
                             Entity = entity,
+                            Permission = Permissions.VoteTopics,
                             ApiUrl = "api/discuss/vote/post"
                         }
                     })
-                    //.Permission(Permissions.ReactToTopics)
                 );
 
         }

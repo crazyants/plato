@@ -39,7 +39,7 @@
             <fieldset>
 
                 <div class="accordion" id="permissionsAccordion" role="tablist">
-                    @foreach (var category in Model.CategorizedPermissions.Keys)
+                    @foreach (var category in Model.CategorizedPermissions.Keys.OrderBy(s => s))
                     {
                         var headerId = category.Replace(" ", "") + "Header";
                         var contentId = category.Replace(" ", "") + "Permissions";

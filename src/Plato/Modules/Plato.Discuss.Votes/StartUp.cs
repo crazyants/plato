@@ -8,6 +8,9 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Discuss.Models;
 using Plato.Discuss.Votes.Navigation;
+using Plato.Discuss.Votes.Handlers;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Votes
 {
@@ -22,7 +25,9 @@ namespace Plato.Discuss.Votes
 
         public override void ConfigureServices(IServiceCollection services)
         {
-          
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // Register navigation providers
             services.AddScoped<INavigationProvider, TopicDetailsMenu>();
             services.AddScoped<INavigationProvider, TopicReplyDetailsMenu>();
@@ -30,7 +35,10 @@ namespace Plato.Discuss.Votes
             // Entity rating aggregator
             services.AddScoped<IEntityRatingAggregator<Topic>, EntityRatingAggregator<Topic>>();
             services.AddScoped<IEntityReplyRatingAggregator<Reply>, EntityReplyRatingAggregator<Reply>>();
-            
+         
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
         }
 
         public override void Configure(
