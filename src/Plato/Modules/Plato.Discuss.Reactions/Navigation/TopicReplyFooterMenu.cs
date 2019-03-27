@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Entities.Reactions.ViewModels;
@@ -10,16 +9,11 @@ namespace Plato.Discuss.Reactions.Navigation
     public class TopicReplyFooterMenu : INavigationProvider
     {
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-    
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyFooterMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+        public TopicReplyFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
         }
         
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -42,7 +36,8 @@ namespace Plato.Discuss.Reactions.Navigation
                         model = new ReactionListViewModel()
                         {
                             Entity = entity,
-                            Reply = reply
+                            Reply = reply,
+                            Permission = Permissions.ReactToReplies
                         }
                     })
                     .Permission(Permissions.ViewReplyReactions)

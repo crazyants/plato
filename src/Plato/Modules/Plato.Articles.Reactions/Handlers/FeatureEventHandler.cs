@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
@@ -8,15 +7,11 @@ namespace Plato.Articles.Reactions.Handlers
     
     public class FeatureEventHandler : BaseFeatureEventHandler
     {
-
-        private readonly ISchemaBuilder _schemaBuilder;
+        
         private readonly IDefaultRolesManager _defaultRolesManager;
 
-        public FeatureEventHandler(
-            ISchemaBuilder schemaBuilder,
-            IDefaultRolesManager defaultRolesManager)
+        public FeatureEventHandler(IDefaultRolesManager defaultRolesManager)
         {
-            _schemaBuilder = schemaBuilder;
             _defaultRolesManager = defaultRolesManager;
         }
         

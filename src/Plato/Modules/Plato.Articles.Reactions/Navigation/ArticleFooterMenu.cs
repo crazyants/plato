@@ -9,17 +9,12 @@ namespace Plato.Articles.Reactions.Navigation
 {
     public class ArticleFooterMenu : INavigationProvider
     {
-
-        private readonly IActionContextAccessor _actionContextAccessor;
-
+        
         public IStringLocalizer T { get; set; }
 
-        public ArticleFooterMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+        public ArticleFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -42,7 +37,8 @@ namespace Plato.Articles.Reactions.Navigation
                         model = new ReactionListViewModel()
                         {
                             Entity = entity,
-                            Reply = reply
+                            Reply = reply,
+                            Permission = Permissions.ReactToArticles
                         }
                     })
                     .Permission(Permissions.ViewArticleReactions)
