@@ -44,7 +44,8 @@ namespace Plato.Categories
 
             // Managers
             services.AddScoped<ICategoryManager<CategoryBase>, CategoryManager<CategoryBase>>();
-         
+            services.AddScoped<IEntityCategoryManager, EntityCategoryManager>();
+
             // Client assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 

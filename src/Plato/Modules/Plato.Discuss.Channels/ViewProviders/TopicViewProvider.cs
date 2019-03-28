@@ -9,7 +9,10 @@ using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Channels.Services;
 using Plato.Discuss.Models;
+using Plato.Discuss.Services;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -24,10 +27,14 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         private const string CategoryHtmlName = "channel";
 
+
+
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
+        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IEntityStore<Topic> _entityStore;
+        private readonly IPostManager<Topic> _entityManager;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly HttpRequest _request;
@@ -44,7 +51,9 @@ namespace Plato.Discuss.Channels.ViewProviders
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
             IBreadCrumbManager breadCrumbManager,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IPostManager<Topic> entityManager,
+            IChannelDetailsUpdater channelDetailsUpdater)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
@@ -53,6 +62,8 @@ namespace Plato.Discuss.Channels.ViewProviders
             _request = httpContextAccessor.HttpContext.Request;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
+            _entityManager = entityManager;
+            _channelDetailsUpdater = channelDetailsUpdater;
 
             T = stringLocalizer;
             S = stringLocalizer;
@@ -301,34 +312,60 @@ namespace Plato.Discuss.Channels.ViewProviders
                     }
 
                     // Remove categories
-                    foreach (var categoryId in categoriesToRemove)
+                    foreach (var id in categoriesToRemove)
                     {
-                        await _entityCategoryStore.DeleteByEntityIdAndCategoryId(topic.Id, categoryId);
+                        await _entityCategoryStore.DeleteByEntityIdAndCategoryId(topic.Id, id);
                     }
-                    
+
                     // Get current user
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                     // Add new entity category relationship
-                    foreach (var categoryId in categoriesToAdd)
+                    foreach (var id in categoriesToAdd)
                     {
                         await _entityCategoryStore.CreateAsync(new EntityCategory()
                         {
                             EntityId = topic.Id,
-                            CategoryId = categoryId,
+                            CategoryId = id,
                             CreatedUserId = user?.Id ?? 0,
                             ModifiedUserId = user?.Id ?? 0,
                         });
                     }
 
-                    // Update primary category
-                    foreach (var categoryId in categoriesToAdd)
+                    //  Get primary category
+                    var categoryId = 0;
+                    foreach (var id in categoriesToAdd)
                     {
+                        if (id <= 0) continue;
+                        categoryId = id;
+                        break;
+                    }
+
+                    // Ensure the category was updated / changed
+                    if (entity.CategoryId != categoryId)
+                    {
+
+                        // First update the entity
+                        topic.CategoryId = categoryId;
+
+                        // Persist
+                        await _entityStore.UpdateAsync(topic);
+
+                        // Next update the meta data associated with the source
+                        // and target categories involved in any move
+
+                        // Update source
+                        if (entity.CategoryId > 0)
+                        {
+                            // The channel we may be moving from
+                            await _channelDetailsUpdater.UpdateAsync(entity.CategoryId);
+                        }
+
+                        // Update target
                         if (categoryId > 0)
                         {
-                            topic.CategoryId = categoryId;
-                            await _entityStore.UpdateAsync(topic);
-                            break;
+                            // The channel we may be moving to
+                            await _channelDetailsUpdater.UpdateAsync(categoryId);
                         }
 
                     }

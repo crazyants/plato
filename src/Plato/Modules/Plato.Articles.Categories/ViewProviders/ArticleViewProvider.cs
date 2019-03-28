@@ -9,8 +9,10 @@ using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Articles.Categories.Models;
+using Plato.Articles.Categories.Services;
 using Plato.Articles.Categories.ViewModels;
 using Plato.Articles.Models;
+using Plato.Articles.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -27,10 +29,12 @@ namespace Plato.Articles.Categories.ViewProviders
         private const string CategoryHtmlName = "category";
 
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
+        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
+        private readonly ICategoryStore<Category> _categoryStore;
+        private readonly IPostManager<Article> _entityManager;
+        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Category> _categoryStore;
-        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
         private readonly IFeatureFacade _featureFacade;
     
@@ -39,22 +43,26 @@ namespace Plato.Articles.Categories.ViewProviders
         public IStringLocalizer S { get; }
         
         public ArticleViewProvider(
-            IStringLocalizer<ArticleViewProvider> stringLocalizer,
-            IContextFacade contextFacade,
-            ICategoryStore<Category> categoryStore, 
-            IEntityStore<Article> entityStore,
-            IHttpContextAccessor httpContextAccessor,
+            IStringLocalizer stringLocalizer,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
+            IChannelDetailsUpdater channelDetailsUpdater,
+            IHttpContextAccessor httpContextAccessor,
+            ICategoryStore<Category> categoryStore,
             IBreadCrumbManager breadCrumbManager,
+            IPostManager<Article> entityManager,
+            IEntityStore<Article> entityStore,
+            IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
-            _entityStore = entityStore;
-            _entityCategoryStore = entityCategoryStore;
             _request = httpContextAccessor.HttpContext.Request;
+            _channelDetailsUpdater = channelDetailsUpdater;
+            _entityCategoryStore = entityCategoryStore;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
+            _entityManager = entityManager;
+            _entityStore = entityStore;
 
             T = stringLocalizer;
             S = stringLocalizer;
@@ -323,14 +331,40 @@ namespace Plato.Articles.Categories.ViewProviders
                         });
                     }
 
-                    // Update primary category
-                    foreach (var channelId in categoriesToAdd)
+                    //  Get primary category
+                    var categoryId = 0;
+                    foreach (var id in categoriesToAdd)
                     {
-                        if (channelId > 0)
+                        if (id <= 0) continue;
+                        categoryId = id;
+                        break;
+                    }
+
+                    // Ensure the category was updated / changed
+                    if (entity.CategoryId != categoryId)
+                    {
+
+                        // First update the entity
+                        article.CategoryId = categoryId;
+
+                        // Persist
+                        await _entityStore.UpdateAsync(article);
+
+                        // Next update the meta data associated with the source
+                        // and target categories involved in any move
+
+                        // Update source
+                        if (entity.CategoryId > 0)
                         {
-                            article.CategoryId = channelId;
-                            await _entityStore.UpdateAsync(article);
-                            break;
+                            // The channel we may be moving from
+                            await _channelDetailsUpdater.UpdateAsync(entity.CategoryId);
+                        }
+
+                        // Update target
+                        if (categoryId > 0)
+                        {
+                            // The channel we may be moving to
+                            await _channelDetailsUpdater.UpdateAsync(categoryId);
                         }
 
                     }

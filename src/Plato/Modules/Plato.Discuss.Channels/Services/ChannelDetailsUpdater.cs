@@ -49,7 +49,7 @@ namespace Plato.Discuss.Channels.Services
                     .Select<EntityQueryParams>(q =>
                     {
 
-                        // If the channel has children also include all child topics
+                        // Include topics from child channels?
                         if (children != null)
                         {
                             var channelIds = children
