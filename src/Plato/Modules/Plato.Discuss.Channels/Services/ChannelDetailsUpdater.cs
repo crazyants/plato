@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
@@ -13,10 +14,10 @@ namespace Plato.Discuss.Channels.Services
     public class ChannelDetailsUpdater : IChannelDetailsUpdater
     {
 
-        private readonly ICategoryStore<Channel> _channelStore;
         private readonly ICategoryManager<Channel> _channelManager;
-        private readonly IEntityStore<Topic> _topicStore;
+        private readonly ICategoryStore<Channel> _channelStore;
         private readonly IEntityReplyStore<Reply> _replyStore;
+        private readonly IEntityStore<Topic> _topicStore;
 
         public ChannelDetailsUpdater(
             ICategoryStore<Channel> channelStore, 
@@ -49,7 +50,7 @@ namespace Plato.Discuss.Channels.Services
                     .Select<EntityQueryParams>(q =>
                     {
 
-                        // Include topics from child channels?
+                        // Include entities from child channels?
                         if (children != null)
                         {
                             var channelIds = children
@@ -77,7 +78,7 @@ namespace Plato.Discuss.Channels.Services
                     .Select<EntityReplyQueryParams>(q =>
                     {
 
-                        // If the channel has children also include all child replies
+                        // Include entities from child channels?
                         if (children != null)
                         {
                             var channelIds = children
@@ -99,12 +100,12 @@ namespace Plato.Discuss.Channels.Services
                     .OrderBy("CreatedDate", OrderBy.Desc)
                     .ToList();
                 
-                var totalTopics = 0;
-                Topic latestTopic = null;
+                var totalEntities = 0;
+                Topic latestEntity = null;
                 if (topics?.Data != null)
                 {
-                    totalTopics = topics.Total;
-                    latestTopic = topics.Data[0];
+                    totalEntities = topics.Total;
+                    latestEntity = topics.Data[0];
                 }
 
                 var totalReplies = 0;
@@ -117,22 +118,22 @@ namespace Plato.Discuss.Channels.Services
 
                 // Update channel details with latest entity details
                 var details = parent.GetOrCreate<ChannelDetails>();
-                details.TotalTopics = totalTopics;
+                details.TotalEntities = totalEntities;
                 details.TotalReplies = totalReplies;
 
-                if (latestTopic != null)
+                if (latestEntity != null)
                 {
-                    details.LastTopic.Id = latestTopic.Id;
-                    details.LastTopic.Alias = latestTopic.Alias;
-                    details.LastTopic.CreatedBy = latestTopic.CreatedBy;
-                    details.LastTopic.CreatedDate = latestTopic.CreatedDate;
+                    details.LatestEntity.Id = latestEntity.Id;
+                    details.LatestEntity.Alias = latestEntity.Alias;
+                    details.LatestEntity.CreatedBy = latestEntity.CreatedBy;
+                    details.LatestEntity.CreatedDate = latestEntity.CreatedDate;
                 }
 
                 if (latestReply != null)
                 {
-                    details.LastReply.Id = latestReply.Id;
-                    details.LastReply.CreatedBy = latestReply.CreatedBy;
-                    details.LastReply.CreatedDate = latestReply.CreatedDate;
+                    details.LatestReply.Id = latestReply.Id;
+                    details.LatestReply.CreatedBy = latestReply.CreatedBy;
+                    details.LatestReply.CreatedDate = latestReply.CreatedDate;
                 }
 
                 parent.AddOrUpdate<ChannelDetails>(details);

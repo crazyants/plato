@@ -10,7 +10,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Articles.Categories.Services
 {
     
-    public class ChannelDetailsUpdater : IChannelDetailsUpdater
+    public class CategoryDetailsUpdater : ICategoryDetailsUpdater
     {
 
         private readonly ICategoryStore<Category> _channelStore;
@@ -18,7 +18,7 @@ namespace Plato.Articles.Categories.Services
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<Comment> _replyStore;
 
-        public ChannelDetailsUpdater(
+        public CategoryDetailsUpdater(
             ICategoryStore<Category> channelStore, 
             ICategoryManager<Category> channelManager,
             IEntityStore<Article> entityStore, 

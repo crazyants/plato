@@ -7,17 +7,17 @@ namespace Plato.Discuss.Channels.Models
 
     public class ChannelDetails : Serializable
     {
-        public int TotalTopics { get; set; }
+        public int TotalEntities { get; set; }
 
         public int TotalReplies { get; set; }
 
-        public LastPost LastTopic { get; set; } = new LastPost();
+        public LatestPost LatestEntity { get; set; } = new LatestPost();
 
-        public LastPost LastReply { get; set; } = new LastPost();
+        public LatestPost LatestReply { get; set; } = new LatestPost();
 
     }
     
-    public class LastPost
+    public class LatestPost
     {
         public int Id { get; set; }
 

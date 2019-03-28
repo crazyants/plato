@@ -3,9 +3,9 @@
 namespace Plato.Articles.Categories.Services
 {
 
-    public interface IChannelDetailsUpdater
+    public interface ICategoryDetailsUpdater
     {
-        Task UpdateAsync(int channelId);
+        Task UpdateAsync(int categoryId);
     }
 
 }

@@ -136,7 +136,7 @@ namespace Plato.Categories.Repositories
 
         }
 
-        public async Task<IEnumerable<EntityCategory>> SelectByEntityId(int entityId)
+        public async Task<IEnumerable<EntityCategory>> SelectByEntityIdAsync(int entityId)
         {
             IList<EntityCategory> output = null;
             using (var context = _dbContext)
@@ -169,7 +169,35 @@ namespace Plato.Categories.Repositories
             return output;
         }
 
-        public async Task<bool> DeleteByEntityId(int entityId)
+        public async Task<EntityCategory> SelectByEntityIdAndCategoryIdAsync(int entityId, int categoryId)
+        {
+            EntityCategory output = null;
+            using (var context = _dbContext)
+            {
+
+                output = await context.ExecuteReaderAsync<EntityCategory>(
+                    CommandType.StoredProcedure,
+                    "SelectEntityCategoryByEntityIdAndCategoryId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            await reader.ReadAsync();
+                            output = new EntityCategory();
+                            output.PopulateModel(reader);
+                        }
+
+                        return output;
+                    },
+                    entityId,
+                    categoryId);
+                
+            }
+
+            return output;
+        }
+
+        public async Task<bool> DeleteByEntityIdAsync(int entityId)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
@@ -187,7 +215,7 @@ namespace Plato.Categories.Repositories
             return success > 0 ? true : false;
         }
 
-        public async Task<bool> DeleteByEntityIdAndCategoryId(int entityId, int categoryId)
+        public async Task<bool> DeleteByEntityIdAndCategoryIdAsync(int entityId, int categoryId)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {

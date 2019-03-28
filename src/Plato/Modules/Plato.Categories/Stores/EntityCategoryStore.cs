@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
@@ -17,11 +15,12 @@ namespace Plato.Categories.Stores
 
         private const string ById = "ById";
         private const string ByEntityId = "ByEntityId";
+        private const string ByEntityIdAndCategoryId = "ByEntityIdAndCategoryId";
 
         private readonly IEntityCategoryRepository<EntityCategory> _entityCategoryRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<CategoryRoleStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public EntityCategoryStore(
             IEntityCategoryRepository<EntityCategory> entityCategoryRepository,
@@ -31,8 +30,8 @@ namespace Plato.Categories.Stores
         {
             _entityCategoryRepository = entityCategoryRepository;
             _cacheManager = cacheManager;
-            _logger = logger;
             _dbQuery = dbQuery;
+            _logger = logger;
         }
         
         #region "Implementation"
@@ -135,40 +134,24 @@ namespace Plato.Categories.Stores
         public async Task<IPagedResults<EntityCategory>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting entities for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
-                }
-
-                return await _entityCategoryRepository.SelectAsync(args);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityCategoryRepository.SelectAsync(args));
         }
 
-        public async Task<IEnumerable<EntityCategory>> GetByEntityId(int entityId)
+        public async Task<IEnumerable<EntityCategory>> GetByEntityIdAsync(int entityId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityId, entityId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting roles for category Id '{0}'",
-                        entityId);
-                }
-
-                return await _entityCategoryRepository.SelectByEntityId(entityId);
-
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityCategoryRepository.SelectByEntityIdAsync(entityId));
         }
 
-        public async Task<bool> DeleteByEntityId(int entityId)
+        public async Task<EntityCategory> GetByEntityIdAndCategoryIdAsync(int entityId, int categoryId)
         {
-            var success = await _entityCategoryRepository.DeleteByEntityId(entityId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityIdAndCategoryId, entityId, categoryId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityCategoryRepository.SelectByEntityIdAndCategoryIdAsync(entityId, categoryId));
+        }
+
+        public async Task<bool> DeleteByEntityIdAsync(int entityId)
+        {
+            var success = await _entityCategoryRepository.DeleteByEntityIdAsync(entityId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -182,10 +165,10 @@ namespace Plato.Categories.Stores
             return success;
         }
 
-        public async Task<bool> DeleteByEntityIdAndCategoryId(int entityId, int categoryId)
+        public async Task<bool> DeleteByEntityIdAndCategoryIdAsync(int entityId, int categoryId)
         {
 
-            var success = await _entityCategoryRepository.DeleteByEntityIdAndCategoryId(entityId, categoryId);
+            var success = await _entityCategoryRepository.DeleteByEntityIdAndCategoryIdAsync(entityId, categoryId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))

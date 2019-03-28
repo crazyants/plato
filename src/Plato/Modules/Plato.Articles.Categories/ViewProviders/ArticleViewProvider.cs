@@ -13,6 +13,7 @@ using Plato.Articles.Categories.Services;
 using Plato.Articles.Categories.ViewModels;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
+using Plato.Categories.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -29,7 +30,8 @@ namespace Plato.Articles.Categories.ViewProviders
         private const string CategoryHtmlName = "category";
 
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
-        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
+        private readonly IEntityCategoryManager _entityCategoryManager;
+        private readonly ICategoryDetailsUpdater _categoryDetailsUpdater;
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly IPostManager<Article> _entityManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -45,22 +47,24 @@ namespace Plato.Articles.Categories.ViewProviders
         public ArticleViewProvider(
             IStringLocalizer stringLocalizer,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
-            IChannelDetailsUpdater channelDetailsUpdater,
+            ICategoryDetailsUpdater categoryDetailsUpdater,
             IHttpContextAccessor httpContextAccessor,
             ICategoryStore<Category> categoryStore,
             IBreadCrumbManager breadCrumbManager,
             IPostManager<Article> entityManager,
             IEntityStore<Article> entityStore,
             IContextFacade contextFacade,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IEntityCategoryManager entityCategoryManager)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _request = httpContextAccessor.HttpContext.Request;
-            _channelDetailsUpdater = channelDetailsUpdater;
+            _categoryDetailsUpdater = categoryDetailsUpdater;
             _entityCategoryStore = entityCategoryStore;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
+            _entityCategoryManager = entityCategoryManager;
             _entityManager = entityManager;
             _entityStore = entityStore;
 
@@ -311,41 +315,46 @@ namespace Plato.Articles.Categories.ViewProviders
                     }
 
                     // Remove categories
-                    foreach (var channelId in categoriesToRemove)
+                    foreach (var categoryId in categoriesToRemove)
                     {
-                        await _entityCategoryStore.DeleteByEntityIdAndCategoryId(article.Id, channelId);
+                        var entityCategory = await _entityCategoryStore.GetByEntityIdAndCategoryIdAsync(article.Id, categoryId);
+                        if (entityCategory != null)
+                        {
+                            await _entityCategoryManager.DeleteAsync(entityCategory);
+                        }
+                        //await _entityCategoryStore.DeleteByEntityIdAndCategoryIdAsync(article.Id, channelId);
                     }
                     
                     // Get current user
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                     // Add new entity category relationship
-                    foreach (var channelId in categoriesToAdd)
+                    foreach (var categoryId in categoriesToAdd)
                     {
-                        await _entityCategoryStore.CreateAsync(new EntityCategory()
+                        await _entityCategoryManager.CreateAsync(new EntityCategory()
                         {
                             EntityId = article.Id,
-                            CategoryId = channelId,
+                            CategoryId = categoryId,
                             CreatedUserId = user?.Id ?? 0,
                             ModifiedUserId = user?.Id ?? 0,
                         });
                     }
 
                     //  Get primary category
-                    var categoryId = 0;
+                    var primaryCategoryId = 0;
                     foreach (var id in categoriesToAdd)
                     {
                         if (id <= 0) continue;
-                        categoryId = id;
+                        primaryCategoryId = id;
                         break;
                     }
 
                     // Ensure the category was updated / changed
-                    if (entity.CategoryId != categoryId)
+                    if (entity.CategoryId != primaryCategoryId)
                     {
 
                         // First update the entity
-                        article.CategoryId = categoryId;
+                        article.CategoryId = primaryCategoryId;
 
                         // Persist
                         await _entityStore.UpdateAsync(article);
@@ -353,19 +362,19 @@ namespace Plato.Articles.Categories.ViewProviders
                         // Next update the meta data associated with the source
                         // and target categories involved in any move
 
-                        // Update source
-                        if (entity.CategoryId > 0)
-                        {
-                            // The channel we may be moving from
-                            await _channelDetailsUpdater.UpdateAsync(entity.CategoryId);
-                        }
+                        //// Update source
+                        //if (entity.CategoryId > 0)
+                        //{
+                        //    // The channel we may be moving from
+                        //    await _channelDetailsUpdater.UpdateAsync(entity.CategoryId);
+                        //}
 
-                        // Update target
-                        if (categoryId > 0)
-                        {
-                            // The channel we may be moving to
-                            await _channelDetailsUpdater.UpdateAsync(categoryId);
-                        }
+                        //// Update target
+                        //if (primaryCategoryId > 0)
+                        //{
+                        //    // The channel we may be moving to
+                        //    await _channelDetailsUpdater.UpdateAsync(primaryCategoryId);
+                        //}
 
                     }
 
@@ -428,7 +437,7 @@ namespace Plato.Articles.Categories.ViewProviders
 
             }
 
-            var categories = await _entityCategoryStore.GetByEntityId(entity.Id);;
+            var categories = await _entityCategoryStore.GetByEntityIdAsync(entity.Id);;
             if (categories != null)
             {
                 return categories.Select(s => s.CategoryId).ToArray();

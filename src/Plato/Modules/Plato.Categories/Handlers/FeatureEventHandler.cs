@@ -348,6 +348,7 @@ namespace Plato.Categories.Handlers
                 builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityCategories)
                     .DropProcedure(new SchemaProcedure("SelectEntityCategoriesByEntityId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityCategoryByEntityIdAndCategoryId"))
                     .DropProcedure(new SchemaProcedure("DeleteEntityCategoriesByEntityId"))
                     .DropProcedure(new SchemaProcedure("DeleteEntityCategoryByEntityIdAndCategoryId"))
                     .DropProcedure(new SchemaProcedure("SelectEntityCategoriesPaged"));
@@ -556,6 +557,32 @@ namespace Plato.Categories.Handlers
                                 )")
                         .ForTable(_entityCategories)
                         .WithParameter(new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32}))
+
+                .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectEntityCategoryByEntityIdAndCategoryId",
+                            @" SELECT ec.*, c.[Name] AS CategoryName
+                                FROM {prefix}_Categories c WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
+                                WHERE (
+                                   ec.EntityId = @EntityId AND ec.CategoryId = @CategoryId
+                                )")
+                        .ForTable(_entityCategories)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "EntityId",
+                                DbType = DbType.Int32
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "CategoryId",
+                                DbType = DbType.Int32
+                            }
+                        }))
+                        
+
 
                 .CreateProcedure(
                     new SchemaProcedure("DeleteEntityCategoriesByEntityId", StoredProcedureType.DeleteByKey)

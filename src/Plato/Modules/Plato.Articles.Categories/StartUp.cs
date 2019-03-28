@@ -70,9 +70,10 @@ namespace Plato.Articles.Categories
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Article>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
+            services.AddScoped<IBrokerSubscriber, EntityCategorySubscriber>();
 
             // Channel details updater
-            services.AddScoped<IChannelDetailsUpdater, ChannelDetailsUpdater>();
+            services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
 
         }
 
