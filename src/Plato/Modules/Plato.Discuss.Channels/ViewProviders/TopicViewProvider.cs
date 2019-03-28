@@ -13,7 +13,6 @@ using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.Services;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
-using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -28,8 +27,10 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         private const string CategoryHtmlName = "channel";
         
+
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityCategoryManager _entityCategoryManager;
+        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IEntityStore<Topic> _entityStore;
@@ -46,6 +47,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             IStringLocalizer stringLocalizer,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
             IEntityCategoryManager entityCategoryManager,
+            IChannelDetailsUpdater channelDetailsUpdater,
             IHttpContextAccessor httpContextAccessor,
             ICategoryStore<Channel> categoryStore, 
             IBreadCrumbManager breadCrumbManager,
@@ -56,6 +58,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
             _request = httpContextAccessor.HttpContext.Request;
             _entityCategoryManager = entityCategoryManager;
+            _channelDetailsUpdater = channelDetailsUpdater;
             _entityCategoryStore = entityCategoryStore;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
@@ -302,22 +305,14 @@ namespace Plato.Discuss.Channels.ViewProviders
                     
                     // Build categories to remove
                     var categoriesToRemove = new List<int>();
-                    foreach (var channel in await GetCategoryIdsByEntityIdAsync(topic))
+                    foreach (var categoryId in await GetCategoryIdsByEntityIdAsync(topic))
                     {
-                        if (!categoriesToAdd.Contains(channel))
+                        if (!categoriesToAdd.Contains(categoryId))
                         {
-                            categoriesToRemove.Add(channel);
+                            categoriesToRemove.Add(categoryId);
                         }
                     }
 
-                    // Update entity with first found category to add
-                    foreach (var id in categoriesToAdd)
-                    {
-                        topic.CategoryId = id;
-                        await _entityStore.UpdateAsync(topic);
-                        break;
-                    }
-                    
                     // Remove categories
                     foreach (var categoryId in categoriesToRemove)
                     {
@@ -334,15 +329,41 @@ namespace Plato.Discuss.Channels.ViewProviders
                     // Add new entity category relationships
                     foreach (var categoryId in categoriesToAdd)
                     {
-                        await _entityCategoryManager.CreateAsync(new EntityCategory()
+                        // Ensure relationship does not already exist
+                        var entityCategory = await _entityCategoryStore.GetByEntityIdAndCategoryIdAsync(topic.Id, categoryId);
+                        if (entityCategory == null)
                         {
-                            EntityId = topic.Id,
-                            CategoryId = categoryId,
-                            CreatedUserId = user?.Id ?? 0,
-                            ModifiedUserId = user?.Id ?? 0,
-                        });
+                            // Add relationship
+                            await _entityCategoryManager.CreateAsync(new EntityCategory()
+                            {
+                                EntityId = topic.Id,
+                                CategoryId = categoryId,
+                                CreatedUserId = user?.Id ?? 0,
+                                ModifiedUserId = user?.Id ?? 0,
+                            });
+                        }
                     }
                     
+                    // Update entity with first found category 
+                    foreach (var id in categoriesToAdd)
+                    {
+                        topic.CategoryId = id;
+                        await _entityStore.UpdateAsync(topic);
+                        break;
+                    }
+                    
+                    // Update added category meta data
+                    foreach (var id in categoriesToAdd)
+                    {
+                        await _channelDetailsUpdater.UpdateAsync(id);
+                    }
+
+                    // Update removed category meta data
+                    foreach (var id in categoriesToRemove)
+                    {
+                        await _channelDetailsUpdater.UpdateAsync(id);
+                    }
+
                 }
 
             }

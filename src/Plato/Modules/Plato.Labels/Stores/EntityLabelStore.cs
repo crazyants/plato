@@ -145,7 +145,7 @@ namespace Plato.Labels.Stores
             });
         }
 
-        public async Task<IEnumerable<EntityLabel>> GetByEntityId(int entityId)
+        public async Task<IEnumerable<EntityLabel>> GetByEntityIdAsync(int entityId)
         {
 
             if (entityId <= 0)
@@ -163,12 +163,12 @@ namespace Plato.Labels.Stores
                         entityId);
                 }
 
-                return await _entityLabelRepository.SelectByEntityId(entityId);
+                return await _entityLabelRepository.SelectByEntityIdAsync(entityId);
 
             });
         }
 
-        public async Task<bool> DeleteByEntityId(int entityId)
+        public async Task<bool> DeleteByEntityIdAsync(int entityId)
         {
 
             if (entityId <= 0)
@@ -176,7 +176,7 @@ namespace Plato.Labels.Stores
                 throw new ArgumentOutOfRangeException(nameof(entityId));
             }
 
-            var success = await _entityLabelRepository.DeleteByEntityId(entityId);
+            var success = await _entityLabelRepository.DeleteByEntityIdAsync(entityId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -190,10 +190,10 @@ namespace Plato.Labels.Stores
             return success;
         }
 
-        public async Task<bool> DeleteByEntityIdAndLabelId(int entityId, int labelId)
+        public async Task<bool> DeleteByEntityIdAndLabelIdAsync(int entityId, int labelId)
         {
 
-            var success = await _entityLabelRepository.DeleteByEntityIdAndLabelId(entityId, labelId);
+            var success = await _entityLabelRepository.DeleteByEntityIdAndLabelIdAsync(entityId, labelId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))

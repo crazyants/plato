@@ -7,11 +7,11 @@ namespace Plato.Labels.Stores
     public interface IEntityLabelStore<TModel> : IStore<TModel> where TModel : class
     {
 
-        Task<IEnumerable<TModel>> GetByEntityId(int entityId);
+        Task<IEnumerable<TModel>> GetByEntityIdAsync(int entityId);
 
-        Task<bool> DeleteByEntityId(int entityId);
+        Task<bool> DeleteByEntityIdAsync(int entityId);
 
-        Task<bool> DeleteByEntityIdAndLabelId(int entityId, int LabelId);
+        Task<bool> DeleteByEntityIdAndLabelIdAsync(int entityId, int LabelId);
 
     }
 

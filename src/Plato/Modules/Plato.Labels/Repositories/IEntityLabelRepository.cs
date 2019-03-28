@@ -6,11 +6,11 @@ namespace Plato.Labels.Repositories
 {
     public interface IEntityLabelRepository<T> : IRepository<T> where T : class
     {
-        Task<IEnumerable<T>> SelectByEntityId(int entityId);
+        Task<IEnumerable<T>> SelectByEntityIdAsync(int entityId);
 
-        Task<bool> DeleteByEntityId(int entityId);
+        Task<bool> DeleteByEntityIdAsync(int entityId);
 
-        Task<bool> DeleteByEntityIdAndLabelId(int entityId, int labelId);
+        Task<bool> DeleteByEntityIdAndLabelIdAsync(int entityId, int labelId);
 
     }
 

@@ -31,17 +31,17 @@ namespace Plato.Discuss.Channels.Services
             _replyStore = replyStore;
         }
         
-        public async Task UpdateAsync(int channelId)
+        public async Task UpdateAsync(int categoryId)
         {
             
-            // Get supplied channel and all parent channels
-            var parents = await _channelStore.GetParentsByIdAsync(channelId);
+            // Get supplied category and all parent categories
+            var parents = await _channelStore.GetParentsByIdAsync(categoryId);
 
             // Update details within current and all parents
             foreach (var parent in parents)
             {
                 
-                // Get all children for current channel
+                // Get all children for current category
                 var children = await _channelStore.GetChildrenByIdAsync(parent.Id);
 
                 // Get latest topic & total topic count for current channel

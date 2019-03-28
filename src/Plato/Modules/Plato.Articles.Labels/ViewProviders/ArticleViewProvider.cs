@@ -263,7 +263,7 @@ namespace Plato.Articles.Labels.ViewProviders
                 return new List<EntityLabel>();
             }
 
-            return await _entityLabelStore.GetByEntityId(entityId) ?? new List<EntityLabel>();
+            return await _entityLabelStore.GetByEntityIdAsync(entityId) ?? new List<EntityLabel>();
 
         }
         

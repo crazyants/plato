@@ -10,7 +10,6 @@ using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.Services;
-using Plato.Articles.Categories.ViewModels;
 using Plato.Articles.Models;
 using Plato.Articles.Services;
 using Plato.Categories.Services;
@@ -304,13 +303,13 @@ namespace Plato.Articles.Categories.ViewProviders
                 if (categoriesToAdd != null)
                 {
 
-                    // Build channels to remove
+                    // Build categories to remove
                     var categoriesToRemove = new List<int>();
-                    foreach (var channel in await GetCategoryIdsByEntityIdAsync(article))
+                    foreach (var categoryId in await GetCategoryIdsByEntityIdAsync(article))
                     {
-                        if (!categoriesToAdd.Contains(channel))
+                        if (!categoriesToAdd.Contains(categoryId))
                         {
-                            categoriesToRemove.Add(channel);
+                            categoriesToRemove.Add(categoryId);
                         }
                     }
 
@@ -322,60 +321,47 @@ namespace Plato.Articles.Categories.ViewProviders
                         {
                             await _entityCategoryManager.DeleteAsync(entityCategory);
                         }
-                        //await _entityCategoryStore.DeleteByEntityIdAndCategoryIdAsync(article.Id, channelId);
                     }
-                    
+
                     // Get current user
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-                    // Add new entity category relationship
+                    // Add new entity category relationships
                     foreach (var categoryId in categoriesToAdd)
                     {
-                        await _entityCategoryManager.CreateAsync(new EntityCategory()
+                        // Ensure relationship does not already exist
+                        var entityCategory = await _entityCategoryStore.GetByEntityIdAndCategoryIdAsync(article.Id, categoryId);
+                        if (entityCategory == null)
                         {
-                            EntityId = article.Id,
-                            CategoryId = categoryId,
-                            CreatedUserId = user?.Id ?? 0,
-                            ModifiedUserId = user?.Id ?? 0,
-                        });
+                            // Add relationship
+                            await _entityCategoryManager.CreateAsync(new EntityCategory()
+                            {
+                                EntityId = article.Id,
+                                CategoryId = categoryId,
+                                CreatedUserId = user?.Id ?? 0,
+                                ModifiedUserId = user?.Id ?? 0,
+                            });
+                        }
                     }
 
-                    //  Get primary category
-                    var primaryCategoryId = 0;
+                    // Update entity with first found category 
                     foreach (var id in categoriesToAdd)
                     {
-                        if (id <= 0) continue;
-                        primaryCategoryId = id;
+                        article.CategoryId = id;
+                        await _entityStore.UpdateAsync(article);
                         break;
                     }
 
-                    // Ensure the category was updated / changed
-                    if (entity.CategoryId != primaryCategoryId)
+                    // Update added category meta data
+                    foreach (var id in categoriesToAdd)
                     {
+                        await _categoryDetailsUpdater.UpdateAsync(id);
+                    }
 
-                        // First update the entity
-                        article.CategoryId = primaryCategoryId;
-
-                        // Persist
-                        await _entityStore.UpdateAsync(article);
-
-                        // Next update the meta data associated with the source
-                        // and target categories involved in any move
-
-                        //// Update source
-                        //if (entity.CategoryId > 0)
-                        //{
-                        //    // The channel we may be moving from
-                        //    await _channelDetailsUpdater.UpdateAsync(entity.CategoryId);
-                        //}
-
-                        //// Update target
-                        //if (primaryCategoryId > 0)
-                        //{
-                        //    // The channel we may be moving to
-                        //    await _channelDetailsUpdater.UpdateAsync(primaryCategoryId);
-                        //}
-
+                    // Update removed category meta data
+                    foreach (var id in categoriesToRemove)
+                    {
+                        await _categoryDetailsUpdater.UpdateAsync(id);
                     }
 
                 }

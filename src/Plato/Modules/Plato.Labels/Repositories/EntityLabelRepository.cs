@@ -139,7 +139,7 @@ namespace Plato.Labels.Repositories
 
         }
 
-        public async Task<IEnumerable<EntityLabel>> SelectByEntityId(int entityId)
+        public async Task<IEnumerable<EntityLabel>> SelectByEntityIdAsync(int entityId)
         {
             IList<EntityLabel> output = null;
             using (var context = _dbContext)
@@ -170,7 +170,7 @@ namespace Plato.Labels.Repositories
             return output;
         }
 
-        public async Task<bool> DeleteByEntityId(int entityId)
+        public async Task<bool> DeleteByEntityIdAsync(int entityId)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
@@ -188,7 +188,7 @@ namespace Plato.Labels.Repositories
             return success > 0 ? true : false;
         }
 
-        public async Task<bool> DeleteByEntityIdAndLabelId(int entityId, int LabelId)
+        public async Task<bool> DeleteByEntityIdAndLabelIdAsync(int entityId, int LabelId)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {

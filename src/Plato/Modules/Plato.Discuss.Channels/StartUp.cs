@@ -72,8 +72,8 @@ namespace Plato.Discuss.Channels
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
-            services.AddScoped<IBrokerSubscriber, EntityCategorySubscriber>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
+            //services.AddScoped<IBrokerSubscriber, EntityCategorySubscriber>();
 
             // Channel details updater
             services.AddScoped<IChannelDetailsUpdater, ChannelDetailsUpdater>();
