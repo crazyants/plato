@@ -1,19 +1,19 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Articles.Labels.Models;
+using Plato.Questions.Labels.Models;
 using Plato.Labels.Services;
 using Plato.Labels.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Articles.Labels.ViewComponents
+namespace Plato.Questions.Labels.ViewComponents
 {
 
-    public class ArticlesGetLabelListViewComponent : ViewComponent
+    public class GetQuestionsLabelListViewComponent : ViewComponent
     {
         
         private readonly ILabelService<Label> _labelService;
 
-        public ArticlesGetLabelListViewComponent(
+        public GetQuestionsLabelListViewComponent(
             ILabelService<Label> labelService)
         {
             _labelService = labelService;

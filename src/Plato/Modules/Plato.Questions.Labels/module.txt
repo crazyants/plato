@@ -1,0 +1,17 @@
+Name: Plato Questions Labels
+Description: Adds the ability to label quesitons.
+Category: Questions
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Labels",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Questions",
+		Version: "1.0.0"
+	}
+]

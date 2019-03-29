@@ -7,10 +7,12 @@ using Plato.Articles.Tags.Badges;
 using Plato.Articles.Tags.Models;
 using Plato.Articles.Tags.Navigation;
 using Plato.Articles.Tags.Tasks;
+using Plato.Articles.Tags.ViewAdapters;
 using Plato.Articles.Tags.ViewProviders;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
@@ -55,7 +57,10 @@ namespace Plato.Articles.Tags
             // Tag view providers
             services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
-            
+         
+            // Register view adapters
+            services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();
+
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();
 

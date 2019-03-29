@@ -60,8 +60,7 @@ namespace Plato.Discuss.Tags
          
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
-
-
+            
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();
 

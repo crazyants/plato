@@ -69,9 +69,20 @@
         @Model.Entity.Abstract
     </div>
     <div>
+        @if (Model.Tags != null)
+        {
+            <span class="float-right">
+                @foreach (var tag in Model.Tags)
+                {
+                    <a asp-route-area="Plato.Articles.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.Id" asp-route-opts.alias="@tag.Alias" title="@tag.Description" class="btn btn-sm label font-weight-bold">
+                        @tag.Name
+                    </a>
+                }
+            </span>
+        }
         @T["By"]
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
         @if (Model.Channel != null)
         {
             <span>@T["in"]</span>
