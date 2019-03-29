@@ -1,0 +1,13 @@
+Name: Plato Ideas
+Description: Adds public ideation capabilities to Plato.
+Category: Ideas
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Entities",
+		Version: "1.0.0"
+	}
+]

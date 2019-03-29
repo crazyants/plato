@@ -11,7 +11,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Discuss.Channels.Services
 {
     
-    public class ChannelDetailsUpdater : IChannelDetailsUpdater
+    public class CategoryDetailsUpdater : ICategoryDetailsUpdater
     {
 
         private readonly ICategoryManager<Channel> _channelManager;
@@ -19,7 +19,7 @@ namespace Plato.Discuss.Channels.Services
         private readonly IEntityReplyStore<Reply> _replyStore;
         private readonly IEntityStore<Topic> _topicStore;
 
-        public ChannelDetailsUpdater(
+        public CategoryDetailsUpdater(
             ICategoryStore<Channel> channelStore, 
             ICategoryManager<Channel> channelManager,
             IEntityStore<Topic> topicStore, 
@@ -117,7 +117,7 @@ namespace Plato.Discuss.Channels.Services
                 }
 
                 // Update channel details with latest entity details
-                var details = parent.GetOrCreate<ChannelDetails>();
+                var details = parent.GetOrCreate<CategoryDetails>();
                 details.TotalEntities = totalEntities;
                 details.TotalReplies = totalReplies;
 
@@ -136,7 +136,7 @@ namespace Plato.Discuss.Channels.Services
                     details.LatestReply.CreatedDate = latestReply.CreatedDate;
                 }
 
-                parent.AddOrUpdate<ChannelDetails>(details);
+                parent.AddOrUpdate<CategoryDetails>(details);
 
                 // Save the updated details 
                 await _channelManager.UpdateAsync(parent);

@@ -20,18 +20,18 @@ namespace Plato.Discuss.Channels.Subscribers
         private readonly IBroker _broker;
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IEntityStore<Topic> _topicStore;
-        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
+        private readonly ICategoryDetailsUpdater _categoryDetailsUpdater;
 
         public EntityReplySubscriber(
             IBroker broker,
             ICategoryStore<Channel> channelStore,
             IEntityStore<Topic> topicStore,
-            IChannelDetailsUpdater channelDetailsUpdater)
+            ICategoryDetailsUpdater categoryDetailsUpdater)
         {
             _broker = broker;
             _channelStore = channelStore;
             _topicStore = topicStore;
-            _channelDetailsUpdater = channelDetailsUpdater;
+            _categoryDetailsUpdater = categoryDetailsUpdater;
         }
 
         #region "Implementation"
@@ -115,7 +115,7 @@ namespace Plato.Discuss.Channels.Subscribers
             }
 
             // Update channel details
-            await _channelDetailsUpdater.UpdateAsync(channel.Id);
+            await _categoryDetailsUpdater.UpdateAsync(channel.Id);
             
             // return 
             return reply;
@@ -146,7 +146,7 @@ namespace Plato.Discuss.Channels.Subscribers
             }
 
             // Update channel details
-            await _channelDetailsUpdater.UpdateAsync(channel.Id);
+            await _categoryDetailsUpdater.UpdateAsync(channel.Id);
 
             // return 
             return reply;

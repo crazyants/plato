@@ -5,7 +5,7 @@ using Plato.Internal.Models.Users;
 namespace Plato.Discuss.Channels.Models
 {
 
-    public class ChannelDetails : Serializable
+    public class CategoryDetails : Serializable
     {
         public int TotalEntities { get; set; }
 

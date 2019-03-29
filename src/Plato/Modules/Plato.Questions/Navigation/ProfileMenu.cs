@@ -45,7 +45,7 @@ namespace Plato.Questions.Navigation
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ).Add(T["Favorites"], 999, favorites => favorites
-                        .Action("Channels", "Admin", "Plato.Discuss")
+                        .Action("Channels", "Admin", "Plato.Questions")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));

@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Plato.Categories.Models;
 
 namespace Plato.Discuss.Channels.Services
 {
 
-    public interface IChannelDetailsUpdater
+    public interface ICategoryDetailsUpdater
     {
         Task UpdateAsync(int categoryId);
     }

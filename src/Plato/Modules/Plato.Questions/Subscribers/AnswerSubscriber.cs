@@ -9,7 +9,7 @@ using Plato.Internal.Messaging.Abstractions;
 namespace Plato.Questions.Subscribers
 {
 
-    public class CommentSubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
+    public class AnswerSubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 
         private readonly IBroker _broker;
@@ -17,7 +17,7 @@ namespace Plato.Questions.Subscribers
         private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
 
-        public CommentSubscriber(
+        public AnswerSubscriber(
             IBroker broker,
             IEntityStore<Question> entityStore,
             IEntityReplyStore<TEntityReply> entityReplyStore,

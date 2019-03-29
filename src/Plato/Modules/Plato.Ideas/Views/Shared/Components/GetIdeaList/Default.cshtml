@@ -1,0 +1,30 @@
+﻿@model EntityIndexViewModel<Idea>
+
+@if (Model.Results != null)
+{
+    var offset = Model.Pager.Offset;
+    var rowOffset = Model.Pager.RowOffset;
+    @foreach (var entity in Model.Results.Data)
+     {
+         var css = rowOffset == offset
+             ? "p-3 infinite-scroll-item infinite-scroll-item-active"
+             : "p-3 infinite-scroll-item";
+         <li class="list-group-item list-group-item-action p-0">
+             <div class="@css" data-infinite-scroll-offset="@rowOffset" data-infinite-scroll-highlight="@rowOffset">
+                 @await DisplayAsync(new View("IdeaListItem", new
+                 {
+                     model = new EntityListItemViewModel<Idea>()
+                     {
+                         Entity = entity,
+                         Options = Model.Options
+                     }
+                 }))
+                 @{
+                     rowOffset++;
+                 }
+             </div>
+         </li>
+     }
+}
+
+

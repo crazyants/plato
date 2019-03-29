@@ -63,12 +63,16 @@ namespace Plato.Articles.Categories
             // Admin view providers
             services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
             services.AddScoped<IViewProvider<CategoryAdmin>, AdminViewProvider>();
+
+            // Category role view providers
+            services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
+            services.AddScoped<IViewProvider<CategoryAdmin>, CategoryRolesViewProvider>();
             
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Article>>();
+            //services.AddScoped<IBrokerSubscriber, EntitySubscriber<Article>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
             //services.AddScoped<IBrokerSubscriber, EntityCategorySubscriber>();
 

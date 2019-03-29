@@ -1,0 +1,12 @@
+﻿@model EntityIndexViewModel<Idea>
+
+@await DisplayAsync(new View("QuestionList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
+
+     
+
+
+

@@ -5,17 +5,17 @@ using Plato.Entities.Repositories;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Questions.Subscribers
+namespace Plato.Ideas.Subscribers
 {
     
-    public class ArticleSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
+    public class IdeaSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
 
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly IUserReputationAwarder _reputationAwarder;
         private readonly IBroker _broker;
 
-        public ArticleSubscriber(
+        public IdeaSubscriber(
             IUserReputationAwarder reputationAwarder,
             IEntityRepository<TEntity> entityRepository,
             IBroker broker)

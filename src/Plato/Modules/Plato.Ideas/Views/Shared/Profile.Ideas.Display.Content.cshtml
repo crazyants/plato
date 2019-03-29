@@ -1,0 +1,26 @@
+﻿@model EntityIndexViewModel<Idea>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title float-left">
+            @T["My Questions"]
+        </h6>
+        <a class="btn btn-secondary float-right" asp-route-area="Plato.Ideas" asp-route-controller="User" asp-route-action="Index" asp-route-opts.createdByUserId="@ViewContext.RouteData.Values["opts.id"]" asp-route-opts.alias="@ViewContext.RouteData.Values["opts.alias"]">
+            @T["All Questions"]
+        </a>
+    </card-title>
+    <card-body>
+        <ul class="list-group list-group-flush list-group-hover">
+            @await DisplayAsync(new View("GetQuestionList", new
+            {
+                options = @Model.Options,
+                pager = @Model.Pager
+            }))
+        </ul>
+</card-body>
+</card>
+
+     
+
+
+

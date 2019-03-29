@@ -27,10 +27,9 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         private const string CategoryHtmlName = "channel";
         
-
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityCategoryManager _entityCategoryManager;
-        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
+        private readonly ICategoryDetailsUpdater _categoryDetailsUpdater;
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IEntityStore<Topic> _entityStore;
@@ -47,7 +46,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             IStringLocalizer stringLocalizer,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
             IEntityCategoryManager entityCategoryManager,
-            IChannelDetailsUpdater channelDetailsUpdater,
+            ICategoryDetailsUpdater categoryDetailsUpdater,
             IHttpContextAccessor httpContextAccessor,
             ICategoryStore<Channel> categoryStore, 
             IBreadCrumbManager breadCrumbManager,
@@ -58,7 +57,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
             _request = httpContextAccessor.HttpContext.Request;
             _entityCategoryManager = entityCategoryManager;
-            _channelDetailsUpdater = channelDetailsUpdater;
+            _categoryDetailsUpdater = categoryDetailsUpdater;
             _entityCategoryStore = entityCategoryStore;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
@@ -355,13 +354,13 @@ namespace Plato.Discuss.Channels.ViewProviders
                     // Update added category meta data
                     foreach (var id in categoriesToAdd)
                     {
-                        await _channelDetailsUpdater.UpdateAsync(id);
+                        await _categoryDetailsUpdater.UpdateAsync(id);
                     }
 
                     // Update removed category meta data
                     foreach (var id in categoriesToRemove)
                     {
-                        await _channelDetailsUpdater.UpdateAsync(id);
+                        await _categoryDetailsUpdater.UpdateAsync(id);
                     }
 
                 }

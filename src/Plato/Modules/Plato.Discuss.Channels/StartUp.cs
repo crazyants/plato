@@ -71,12 +71,12 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
+            //services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
             //services.AddScoped<IBrokerSubscriber, EntityCategorySubscriber>();
 
             // Channel details updater
-            services.AddScoped<IChannelDetailsUpdater, ChannelDetailsUpdater>();
+            services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
 
         }
 

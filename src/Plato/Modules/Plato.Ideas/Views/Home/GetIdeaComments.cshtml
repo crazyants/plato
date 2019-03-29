@@ -1,0 +1,11 @@
+﻿@model EntityViewModel<Idea, IdeaComment>
+@{
+    Layout = null;
+}
+
+@await DisplayAsync(new View("GetIdeaCommentList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
+

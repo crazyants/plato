@@ -1,0 +1,95 @@
+﻿@model EntityViewModel<Idea, IdeaComment>
+@{
+    var answerText = T["answer"];
+    var answersText = T["answers"];
+}
+
+@if (Model.Replies != null)
+{
+    var offset = Model.Pager.Offset;
+    var rowOffset = Model.Pager.RowOffset;
+    var title = Model.Pager.Total == 1
+        ? $"{Model.Pager.Total.ToPrettyInt()} {answerText.Value}"
+        : $"{Model.Pager.Total.ToPrettyInt()} {answersText.Value}";
+  
+    <h6>
+        @title, @Model.Entity.TotalAnswers @T["accepted"]
+    </h6>
+    <hr/>
+
+    <div data-provide="infiniteScroll"
+         data-infinite-scroll-url="@Model.Pager.Url"
+         data-infinite-scroll-offset="@offset"
+         data-infinite-scroll-row-offset="@rowOffset"
+         data-infinite-scroll-page="@Model.Pager.Page"
+         data-infinite-scroll-total-pages="@Model.Pager.TotalPages">
+        <div class="infinite-scroll-loader" data-type="previous"></div>
+        @foreach (var answer in Model.Replies.Data)
+        {
+            answer.RowOffset = rowOffset;
+            answer.Offset = offset;
+            @await DisplayAsync(new View("IdeaCommentListItem", new
+            {
+                model = new EntityReplyListItemViewModel<Idea, IdeaComment>()
+                {
+                    Entity = Model.Entity,
+                    Reply = answer,
+                }
+            }))
+            {
+                rowOffset++;
+            }
+        }
+        <div class="infinite-scroll-loader" data-type="next"></div>
+    </div>
+
+    <div class="my-4">
+        <card>
+            <card-body>
+                <span class="text-muted">
+                    @if (base.CurrentUser == null)
+                    {
+                       @T["Have the answer?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your answer"]
+                    }
+                    else
+                    {
+                        <a href="#" data-provide="postAnswer">@T["Post an answer"]</a>
+                    }
+                </span>
+            </card-body>
+        </card>
+    </div>
+
+    }
+else
+{
+    <div class="my-4">
+        <card>
+            <card-body>
+                <i class="fal fa-reply"></i>
+                <span class="text-muted ml-2">
+                    @if (base.CurrentUser == null)
+                    {
+                        @T["No answers have been posted yet."]
+                        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                        @T["or"]
+                        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
+                        @T["to post your answer"]
+                    }
+                    else
+                    {
+                        @T["No answers have been posted yet."]
+                        <a href="#" data-provide="postAnswer">@T["Answer this question"]</a>
+                    }
+                </span>
+            </card-body>
+        </card>
+    </div>
+}
+
+@if (Model.Pager.Enabled)
+{
+    <div class="mt-4">
+        <pager model="@Model.Pager"></pager>
+    </div>
+}

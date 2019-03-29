@@ -47,23 +47,23 @@ namespace Plato.Articles.Categories.ViewProviders
             IStringLocalizer stringLocalizer,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
             ICategoryDetailsUpdater categoryDetailsUpdater,
+            IEntityCategoryManager entityCategoryManager,
             IHttpContextAccessor httpContextAccessor,
             ICategoryStore<Category> categoryStore,
             IBreadCrumbManager breadCrumbManager,
             IPostManager<Article> entityManager,
             IEntityStore<Article> entityStore,
             IContextFacade contextFacade,
-            IFeatureFacade featureFacade,
-            IEntityCategoryManager entityCategoryManager)
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _request = httpContextAccessor.HttpContext.Request;
             _categoryDetailsUpdater = categoryDetailsUpdater;
+            _entityCategoryManager = entityCategoryManager;
             _entityCategoryStore = entityCategoryStore;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
-            _entityCategoryManager = entityCategoryManager;
             _entityManager = entityManager;
             _entityStore = entityStore;
 

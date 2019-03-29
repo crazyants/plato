@@ -1,0 +1,29 @@
+﻿@model Idea
+
+@if (Model.IsLocked)
+{
+    <div class="btn btn-danger" title="@T["This question is locked and is not accepting new replies"]" data-toggle="tooltip">
+        <i class="fal fa-fw fa-lock"></i>
+        @T["Locked"]
+    </div>
+}
+else
+{
+    <div asp-permission="PostAnswers">
+        <authorize-success>
+            <a asp-route-action="Create" class="btn btn-primary" data-provide="postReply" title="@T["Add Reply"]">
+                <i class="fal fa-fw fa-plus"></i>
+                @T["Add Answer"]
+            </a>
+        </authorize-success>
+        <authorize-fail>
+            @if (base.CurrentUser == null)
+            {
+                <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary" title="@T["New Topic"]">
+                    <i class="fal fa-fw fa-lock"></i>
+                    @T["Login to Answer"]
+                </a>
+            }
+        </authorize-fail>
+    </div>
+}

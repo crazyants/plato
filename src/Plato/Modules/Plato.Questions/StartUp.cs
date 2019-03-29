@@ -102,8 +102,8 @@ namespace Plato.Questions
             services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, ArticleSubscriber<Question>>();
-            services.AddScoped<IBrokerSubscriber, CommentSubscriber<Answer>>();
+            services.AddScoped<IBrokerSubscriber, QuestionSubscriber<Question>>();
+            services.AddScoped<IBrokerSubscriber, AnswerSubscriber<Answer>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Answer>>();
 
             // Badge providers
