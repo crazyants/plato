@@ -65,7 +65,7 @@ namespace Plato.Discuss.Navigation
                     indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "topics"
                         ? new string[] {"active"}
                         : null
-                ).Add(T["Replies"], 3, f => f
+                ).Add(T["Topic Replies"], 5, f => f
                         .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                         {
                             ["opts.featureId"] = feature.Id,

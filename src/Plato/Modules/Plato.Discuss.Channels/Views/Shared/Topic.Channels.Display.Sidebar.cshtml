@@ -15,12 +15,19 @@
                 {
                     var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
                     <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
-
                         @if (!String.IsNullOrWhiteSpace(channel.IconCss))
                         {
                             <div class="float-left mr-3">
                                 <span class="category-icon category-icon-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
                                     <i class="@channel.IconCss"></i>
+                                </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="float-left mr-3">
+                                <span class="category-icon category-icon-sm">
+                                    <i class="fal fa-folder"></i>
                                 </span>
                             </div>
                         }

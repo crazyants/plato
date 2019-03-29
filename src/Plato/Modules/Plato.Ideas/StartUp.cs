@@ -54,8 +54,8 @@ namespace Plato.Ideas
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
-            services.AddScoped<INavigationProvider, QuestionMenu>();
-            services.AddScoped<INavigationProvider, QuestionAnswerMenu>();
+            services.AddScoped<INavigationProvider, IdeaMenu>();
+            services.AddScoped<INavigationProvider, IdeaCommentMenu>();
 
             // Stores
             services.AddScoped<IEntityRepository<Idea>, EntityRepository<Idea>>();

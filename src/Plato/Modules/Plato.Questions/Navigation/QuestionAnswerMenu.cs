@@ -28,9 +28,9 @@ namespace Plato.Questions.Navigation
                 return;
             }
 
-            // Get topic from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
-            if (topic == null)
+            // Get entity from context
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
+            if (entity == null)
             {
                 return;
             }
@@ -81,8 +81,8 @@ namespace Plato.Questions.Navigation
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Questions", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias,
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias,
                                 ["opts.replyId"] = reply.Id
                             })
                             .Attributes(new Dictionary<string, object>()
@@ -113,7 +113,7 @@ namespace Plato.Questions.Navigation
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
-            if (!topic.IsLocked)
+            if (!entity.IsLocked)
             {
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options

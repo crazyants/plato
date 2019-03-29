@@ -7,6 +7,5 @@ namespace Plato.Ideas.Models
         public bool IsNewIdea { get; set; }
         
     }
-}
-}
+
 }

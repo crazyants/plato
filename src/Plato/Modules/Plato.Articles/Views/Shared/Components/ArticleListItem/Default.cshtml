@@ -29,7 +29,7 @@
     <div class="float-right text-right">
         <ol class="list-inline text-muted">
             <li class="list-inline-item">
-                <span title="@T["Replies"]" data-toggle="tooltip">
+                <span title="@T["Comments"]" data-toggle="tooltip">
                     @Model.Entity.TotalReplies <i class="fal fa-comment-alt-lines"></i>
                 </span>
             </li>
@@ -39,9 +39,7 @@
                 </span>
             </li>
         </ol>
-        <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
-            <date utc="@Model.Entity.LastReplyDate"></date>
-        </a>
+
     </div>
     <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
@@ -52,7 +50,7 @@
     }
     @if (Model.Entity.IsLocked)
     {
-        <span title="@T["This article is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
+        <span title="@T["This article is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-lock"></i>
         </span>
     }
@@ -71,20 +69,6 @@
         @Model.Entity.Abstract
     </div>
     <div>
-        @if (details?.LatestUsers != null)
-        {
-            <div class="avatar-group float-right">
-                @foreach (var user in details.LatestUsers)
-                {
-                    var replies = user.TotalReplies == 1
-                        ? "reply"
-                        : "replies";
-                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias">
-                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" />
-                    </a>
-                }
-            </div>
-        }
         @T["By"]
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
         <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
@@ -97,15 +81,15 @@
         }
         @if (Model.Entity.IsPrivate)
         {
-            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
+            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This article is private and only visible to you as you have permission to view private articles"]">@T["Private"]</span>
         }
         @if (Model.Entity.IsSpam)
         {
-            <span class="badge badge-info" data-toggle="tooltip" title="@T["This discussion has been flagged as SPAM and is only visible to you as you have permission to view topics flagged as SPAM"]">@T["SPAM"]</span>
+            <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible to you as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
         }
         @if (Model.Entity.IsDeleted)
         {
-            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This discussion has been deleted and is only visible to you as you have permission to view deleted topics"]">@T["Deleted"]</span>
+            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible to you as you have permission to view deleted articles"]">@T["Deleted"]</span>
         }
     </div>
 </div>

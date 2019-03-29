@@ -1,13 +1,10 @@
 /* CSs allowing for additional customization of this feature */
 
-/* extend list for counter group */
-.list-left.counter-group {
-    width: 172px;
-}
-
-.list-left.counter-group + .list-body {
-    margin-left: 172px;
-}
+/* extend lists for counter groups */
+.list-left.counter-group-2x { width: 116px; }
+.list-left.counter-group-2x + .list-body { margin-left: 116px; }
+.list-left.counter-group-3x { width: 172px; }
+.list-left.counter-group-3x + .list-body { margin-left: 172px; }
 
 /* counter */
 .counter-group .counter {
@@ -17,10 +14,8 @@
     font-size: 11px;
     text-align:center;
     padding: 0.25rem 0;
-    margin: 0 3px 0 0; 
-    background:#eee;
-    border-radius: 3px;   
-    color:#888;
+    margin: 0 3px 0 0;
+    border-radius: 2px;
     border: 1px solid transparent;
 }
 
@@ -34,8 +29,10 @@
 .counter-group .counter:first-child { margin-left:0; }
 .counter-group .counter:last-child { margin-right:0; }
 
+/* Colors */
+.counter-group .counter { background:#f8f8f8; color:#888; }
 .counter.answers.replies { border-color: #28a745; color: #28a745; }
 .counter.answers.accepted { background-color: #28a745; color: white; }
-.counter.rating.positive { border-color: #8C8FF2; color: #007bff; }
+.counter.rating.positive { border-color: #A5A7E9; color: #007bff; }
 .counter.rating.negative { border-color: #EE7E6F; color: #dc3545; }
 

@@ -1,7 +1,6 @@
 ﻿@model UserIndexViewModel
 
-<nav class="navbar navbar-light bg-light justify-content-between">
-    
+<nav class="navbar p-0">
     <form class="form-inline" asp-route-controller="Admin" asp-route-action="Index" method="get" enctype="multipart/form-data">
         <div class="input-group">
             <input class="form-control" name="opts.search" value="@Model.Options.Search" type="search" placeholder="@T["Search tags..."]" aria-label="Search">
@@ -12,10 +11,8 @@
             </div>
         </div>
     </form>
-
     <a asp-route-controller="Admin" asp-route-action="Create" class="btn btn-primary ml-sm-2">
         <i class="fal fa-plus"></i>
         @T["Add User"]
     </a>
-
 </nav>

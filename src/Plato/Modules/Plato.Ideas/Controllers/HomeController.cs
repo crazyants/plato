@@ -33,26 +33,23 @@ namespace Plato.Ideas.Controllers
     {
 
         #region "Constructor"
-
-        private readonly IViewProviderManager<UserIndex> _userIndexProvider;
+        
         private readonly IViewProviderManager<Idea> _entityViewProvider;
         private readonly IViewProviderManager<IdeaComment> _replyViewProvider;
+        private readonly IReportEntityManager<Idea> _reportEntityManager;
+        private readonly IReportEntityManager<IdeaComment> _reportReplyManager;
+        private readonly IEntityReplyStore<IdeaComment> _ideaCommentManager;
+        private readonly IPostManager<Idea> _ideaManager;
         private readonly IEntityStore<Idea> _entityStore;
-        private readonly IEntityReplyStore<IdeaComment> _entityReplyStore;
-        private readonly IPostManager<Idea> _topicManager;
         private readonly IPostManager<IdeaComment> _replyManager;
-        private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyService<IdeaComment> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
-
-
-        private readonly IReportEntityManager<Idea> _reportEntityManager;
-        private readonly IReportEntityManager<IdeaComment> _reportReplyManager;
-
+        private readonly IAlerter _alerter;
+  
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -63,15 +60,14 @@ namespace Plato.Ideas.Controllers
             IContextFacade contextFacade,
             IEntityStore<Idea> entityStore,
             IViewProviderManager<Idea> entityViewProvider,
-            IEntityReplyStore<IdeaComment> entityReplyStore,
+            IEntityReplyStore<IdeaComment> ideaCommentManager,
             IViewProviderManager<IdeaComment> replyViewProvider,
-            IPostManager<Idea> topicManager,
+            IPostManager<Idea> ideaManager,
             IPostManager<IdeaComment> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
             IEntityReplyService<IdeaComment> replyService,
-            IViewProviderManager<UserIndex> userIndexProvider,
             IFeatureFacade featureFacade,
             IReportEntityManager<Idea> reportEntityManager,
             IReportEntityManager<IdeaComment> reportReplyManager)
@@ -80,15 +76,14 @@ namespace Plato.Ideas.Controllers
             _replyViewProvider = replyViewProvider;
             _entityStore = entityStore;
             _contextFacade = contextFacade;
-            _entityReplyStore = entityReplyStore;
-            _topicManager = topicManager;
+            _ideaCommentManager = ideaCommentManager;
+            _ideaManager = ideaManager;
             _replyManager = replyManager;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
             _replyService = replyService;
-            _userIndexProvider = userIndexProvider;
             _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
@@ -265,7 +260,7 @@ namespace Plato.Ideas.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newTopic = await _topicManager.CreateAsync(entity);
+                var newTopic = await _ideaManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
                 if (newTopic.Succeeded)
@@ -530,7 +525,7 @@ namespace Plato.Ideas.Controllers
 
         public async Task<IActionResult> Edit(EntityOptions opts)
         {
-            // Get topic we are editing
+            // Get entity we are editing
             var entity = await _entityStore.GetByIdAsync(opts.Id);
             if (entity == null)
             {
@@ -586,8 +581,8 @@ namespace Plato.Ideas.Controllers
         public async Task<IActionResult> EditPost(EditEntityViewModel model)
         {
             // Get entity we are editing 
-            var topic = await _entityStore.GetByIdAsync(model.Id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(model.Id);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -604,31 +599,31 @@ namespace Plato.Ideas.Controllers
                 var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                 // Only update edited information if the message changes
-                if (model.Message != topic.Message)
+                if (model.Message != entity.Message)
                 {
-                    topic.EditedUserId = user?.Id ?? 0;
-                    topic.EditedDate = DateTimeOffset.UtcNow;
+                    entity.EditedUserId = user?.Id ?? 0;
+                    entity.EditedDate = DateTimeOffset.UtcNow;
                 }
 
                 // Always update modified information
-                topic.ModifiedUserId = user?.Id ?? 0;
-                topic.ModifiedDate = DateTimeOffset.UtcNow;
+                entity.ModifiedUserId = user?.Id ?? 0;
+                entity.ModifiedDate = DateTimeOffset.UtcNow;
                 
                 // Update title & message
-                topic.Title = model.Title;
-                topic.Message = model.Message;
+                entity.Title = model.Title;
+                entity.Message = model.Message;
 
                 // Execute view providers ProvideUpdateAsync method
-                await _entityViewProvider.ProvideUpdateAsync(topic, this);
+                await _entityViewProvider.ProvideUpdateAsync(entity, this);
 
                 // Everything was OK
-                _alerter.Success(T["Topic Updated Successfully!"]);
+                _alerter.Success(T["Idea Updated Successfully!"]);
 
-                // Redirect to topic
+                // Redirect to entity
                 return RedirectToAction(nameof(Display), new
                 {
-                    Id = topic.Id,
-                    Alias = topic.Alias
+                    Id = entity.Id,
+                    Alias = entity.Alias
                 });
 
             }
@@ -655,15 +650,15 @@ namespace Plato.Ideas.Controllers
         {
 
             // Get reply we are editing
-            var reply = await _entityReplyStore.GetByIdAsync(id);
+            var reply = await _ideaCommentManager.GetByIdAsync(id);
             if (reply == null)
             {
                 return NotFound();
             }
 
             // Get reply entity
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -672,7 +667,7 @@ namespace Plato.Ideas.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Do we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                 user?.Id == reply.CreatedUserId
                     ? Permissions.EditOwnIdeaComments
                     : Permissions.EditAnyIdeaComment))
@@ -689,15 +684,15 @@ namespace Plato.Ideas.Controllers
                     ).Add(S["Ideas"], ideas => ideas
                         .Action("Index", "Home", "Plato.Ideas")
                         .LocalNav()
-                    ).Add(S[topic.Title.TrimToAround(75)], post => post
+                    ).Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Ideas", new RouteValueDictionary()
                         {
-                            ["opts.id"] = topic.Id,
-                            ["opts.alias"] = topic.Alias
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias
                         })
                         .LocalNav()
                     )
-                    .Add(S["Edit Reply"], post => post
+                    .Add(S["Edit Comment"], post => post
                         .LocalNav()
                     );
             });
@@ -712,7 +707,7 @@ namespace Plato.Ideas.Controllers
         {
 
             // Ensure the reply exists
-            var reply = await _entityReplyStore.GetByIdAsync(model.Id);
+            var reply = await _ideaCommentManager.GetByIdAsync(model.Id);
             if (reply == null)
             {
                 return NotFound();
@@ -814,7 +809,7 @@ namespace Plato.Ideas.Controllers
             IdeaComment reply = null;
             if (model.Options.ReplyId > 0)
             {
-                reply = await _entityReplyStore.GetByIdAsync(model.Options.ReplyId);
+                reply = await _ideaCommentManager.GetByIdAsync(model.Options.ReplyId);
                 if (reply == null)
                 {
                     return NotFound();
@@ -886,7 +881,7 @@ namespace Plato.Ideas.Controllers
             // Get entity
             var entity = await _entityStore.GetByIdAsync(entityId);
 
-            // Ensure the topic exists
+            // Ensure the entity exists
             if (entity == null)
             {
                 return NotFound();
@@ -901,13 +896,13 @@ namespace Plato.Ideas.Controllers
                 return Unauthorized();
             }
             
-            // Update topic
+            // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
             entity.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _ideaManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -973,7 +968,7 @@ namespace Plato.Ideas.Controllers
             topic.IsDeleted = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(topic);
+            var result = await _ideaManager.UpdateAsync(topic);
 
             if (result.Succeeded)
             {
@@ -1020,7 +1015,7 @@ namespace Plato.Ideas.Controllers
             }
 
             // Ensure the reply exists
-            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            var reply = await _ideaCommentManager.GetByIdAsync(replyId);
             if (reply == null)
             {
                 return NotFound();
@@ -1091,7 +1086,7 @@ namespace Plato.Ideas.Controllers
             }
 
             // Ensure the reply exists
-            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            var reply = await _ideaCommentManager.GetByIdAsync(replyId);
             if (reply == null)
             {
                 return NotFound();
@@ -1329,7 +1324,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
             };
 
             // create topic
-            var data = await _topicManager.CreateAsync(topic);
+            var data = await _ideaManager.CreateAsync(topic);
             if (data.Succeeded)
             {
                 for (var i = 0; i < 25; i++)

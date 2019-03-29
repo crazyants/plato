@@ -9,13 +9,12 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Ideas.Navigation
 {
-
-    public class QuestionAnswerMenu : INavigationProvider
+    public class IdeaMenu : INavigationProvider
     {
-        
+
         public IStringLocalizer T { get; set; }
 
-        public QuestionAnswerMenu(IStringLocalizer localizer)
+        public IdeaMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -23,44 +22,38 @@ namespace Plato.Ideas.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "question-answer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "idea", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
-            // Get topic from context
+            // Get model from context
             var topic = builder.ActionContext.HttpContext.Items[typeof(Idea)] as Idea;
             if (topic == null)
             {
                 return;
             }
             
-            // Get reply from context
-            var reply = builder.ActionContext.HttpContext.Items[typeof(IdeaComment)] as IdeaComment;
-            if (reply == null)
-            {
-                return;
-            }
-
-            //// Get authenticated user from features
+            // Get authenticated user from context
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
-
-            // Get delete / restore permission
+            
             Permission deletePermission = null;
-            if (reply.IsDeleted)
+            if (topic.IsDeleted)
             {
-                deletePermission = user?.Id == reply.CreatedUserId
-                    ? Permissions.RestoreOwnIdeaComments
-                    : Permissions.RestoreAnyIdeaComment;
+                // Do we have restore permissions?
+                deletePermission = user?.Id == topic.CreatedUserId
+                    ? Permissions.RestoreOwnIdeas
+                    : Permissions.RestoreAnyIdea;
             }
             else
             {
-                deletePermission = user?.Id == reply.CreatedUserId
-                    ? Permissions.DeleteOwnIdeaComments
+                // Do we have delete permissions?
+                deletePermission = user?.Id == topic.CreatedUserId
+                    ? Permissions.DeleteOwnIdeas
                     : Permissions.DeleteAnyIdeaComment;
             }
-            
-            // Options
+
+            // Add topic options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
@@ -70,20 +63,21 @@ namespace Plato.Ideas.Navigation
                             {"title", T["Options"]}
                         })
                         .Add(T["Edit"], int.MinValue, edit => edit
-                            .Action("EditReply", "Home", "Plato.Ideas", new RouteValueDictionary()
+                            .Action("Edit", "Home", "Plato.Ideas", new RouteValueDictionary()
                             {
-                                ["id"] = reply?.Id ?? 0
+                                ["opts.id"] = topic.Id,
+                                ["opts.alias"] = topic.Alias
                             })
-                            .Permission(user?.Id == reply.CreatedUserId ?
-                                Permissions.EditOwnIdeaComments :
-                                Permissions.EditAnyIdeaComment)
-                            .LocalNav())
+                            .Permission(user?.Id == topic.CreatedUserId
+                                ? Permissions.EditOwnIdeas
+                                : Permissions.EditAnyIdea)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Ideas", new RouteValueDictionary()
                             {
                                 ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias,
-                                ["opts.replyId"] = reply.Id
+                                ["opts.alias"] = topic.Alias
                             })
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -91,24 +85,24 @@ namespace Plato.Ideas.Navigation
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })
-                            .Permission(Permissions.ReportIdeaComments)
+                            .Permission(Permissions.ReportIdeas)
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider
                             .Permission(deletePermission)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(reply.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Ideas",
+                        .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Action(topic.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Ideas",
                                     new RouteValueDictionary()
                                     {
-                                        ["id"] = reply.Id
+                                        ["id"] = topic.Id
                                     })
                                 .Permission(deletePermission)
                                 .LocalNav(),
-                            reply.IsDeleted
-                                ? new List<string>() { "dropdown-item", "dropdown-item-success" }
-                                : new List<string>() { "dropdown-item", "dropdown-item-danger" }
+                            topic.IsDeleted
+                                ? new List<string>() {"dropdown-item", "dropdown-item-success"}
+                                : new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
@@ -126,8 +120,7 @@ namespace Plato.Ideas.Navigation
                                 }
                                 : new Dictionary<string, object>()
                                 {
-                                    {"data-provide", "postQuote"},
-                                    {"data-quote-selector", "#quote" + reply.Id.ToString()},
+                                    {"data-provide", "postIdeaComment"},
                                     {"data-toggle", "tooltip"},
                                     {"title", T["Reply"]}
                                 })
@@ -138,16 +131,13 @@ namespace Plato.Ideas.Navigation
                                 })
                             .Permission(Permissions.PostIdeaComments)
                             .LocalNav()
-                        , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
+                        , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
                     );
 
             }
-
-
 
         }
 
     }
 
 }
-

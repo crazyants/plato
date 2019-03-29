@@ -48,7 +48,7 @@ namespace Plato.Questions.Navigation
             }
 
             builder
-                .Add(T["Questions"], 2, topics => topics
+                .Add(T["Questions"], 3, topics => topics
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
                         ["opts.featureId"] = feature.Id,
@@ -64,7 +64,7 @@ namespace Plato.Questions.Navigation
                     indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "articles"
                         ? new string[] { "active" }
                         : null
-                ).Add(T["Answers"], 4, f => f
+                ).Add(T["Question Answers"], 7, f => f
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
                         ["opts.featureId"] = feature.Id,

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -30,8 +28,8 @@ namespace Plato.Articles.Navigation
             }
 
             // Get model from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
+            if (entity == null)
             {
                 return;
             }
@@ -40,17 +38,17 @@ namespace Plato.Articles.Navigation
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
             
             Permission deletePermission = null;
-            if (topic.IsDeleted)
+            if (entity.IsDeleted)
             {
                 // Do we have restore permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.RestoreOwnArticles
                     : Permissions.RestoreAnyArticle;
             }
             else
             {
                 // Do we have delete permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.DeleteOwnArticles
                     : Permissions.DeleteAnyArticle;
             }
@@ -67,10 +65,10 @@ namespace Plato.Articles.Navigation
                         .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("Edit", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
-                            .Permission(user?.Id == topic.CreatedUserId
+                            .Permission(user?.Id == entity.CreatedUserId
                                 ? Permissions.EditOwnArticles
                                 : Permissions.EditAnyArticle)
                             .LocalNav()
@@ -78,8 +76,8 @@ namespace Plato.Articles.Navigation
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -94,22 +92,22 @@ namespace Plato.Articles.Navigation
                             .Permission(deletePermission)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(topic.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Articles",
+                        .Add(entity.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Action(entity.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Articles",
                                     new RouteValueDictionary()
                                     {
-                                        ["id"] = topic.Id
+                                        ["id"] = entity.Id
                                     })
                                 .Permission(deletePermission)
                                 .LocalNav(),
-                            topic.IsDeleted
+                            entity.IsDeleted
                                 ? new List<string>() {"dropdown-item", "dropdown-item-success"}
                                 : new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
-            if (!topic.IsLocked)
+            if (!entity.IsLocked)
             {
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options

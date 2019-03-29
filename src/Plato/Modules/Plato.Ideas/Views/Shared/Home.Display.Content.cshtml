@@ -1,11 +1,11 @@
 ﻿@model EntityViewModel<Idea, IdeaComment>
 
-@await DisplayAsync(new View("Question", new
+@await DisplayAsync(new View("Idea", new
 {
     options = @Model.Options
 }))
 
-@await DisplayAsync(new View("QuestionAnswerList", new
+@await DisplayAsync(new View("IdeaCommentList", new
 {
     options = @Model.Options,
     pager = @Model.Pager

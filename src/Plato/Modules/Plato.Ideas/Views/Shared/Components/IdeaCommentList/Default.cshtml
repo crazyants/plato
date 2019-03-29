@@ -1,7 +1,7 @@
 ﻿@model EntityViewModel<Idea, IdeaComment>
 @{
-    var answerText = T["answer"];
-    var answersText = T["answers"];
+    var answerText = T["comment"];
+    var answersText = T["comments"];
 }
 
 @if (Model.Replies != null)
@@ -13,7 +13,7 @@
         : $"{Model.Pager.Total.ToPrettyInt()} {answersText.Value}";
   
     <h6>
-        @title, @Model.Entity.TotalAnswers @T["accepted"]
+        @title
     </h6>
     <hr/>
 
@@ -24,16 +24,16 @@
          data-infinite-scroll-page="@Model.Pager.Page"
          data-infinite-scroll-total-pages="@Model.Pager.TotalPages">
         <div class="infinite-scroll-loader" data-type="previous"></div>
-        @foreach (var answer in Model.Replies.Data)
+        @foreach (var comment in Model.Replies.Data)
         {
-            answer.RowOffset = rowOffset;
-            answer.Offset = offset;
+            comment.RowOffset = rowOffset;
+            comment.Offset = offset;
             @await DisplayAsync(new View("IdeaCommentListItem", new
             {
                 model = new EntityReplyListItemViewModel<Idea, IdeaComment>()
                 {
                     Entity = Model.Entity,
-                    Reply = answer,
+                    Reply = comment,
                 }
             }))
             {
@@ -49,11 +49,11 @@
                 <span class="text-muted">
                     @if (base.CurrentUser == null)
                     {
-                       @T["Have the answer?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your answer"]
+                       @T["Would you like to contribute to this idea?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your comments"]
                     }
                     else
                     {
-                        <a href="#" data-provide="postAnswer">@T["Post an answer"]</a>
+                        <a href="#" data-provide="postIdeaComment">@T["Post a Comment"]</a>
                     }
                 </span>
             </card-body>
@@ -70,16 +70,16 @@ else
                 <span class="text-muted ml-2">
                     @if (base.CurrentUser == null)
                     {
-                        @T["No answers have been posted yet."]
+                        @T["No comments have been posted yet."]
                         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                         @T["or"]
                         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                        @T["to post your answer"]
+                        @T["to post your comments"]
                     }
                     else
                     {
-                        @T["No answers have been posted yet."]
-                        <a href="#" data-provide="postAnswer">@T["Answer this question"]</a>
+                        @T["No feedback has been posted yet."]
+                        <a href="#" data-provide="postIdeaComment">@T["Help improve this idea"]</a>
                     }
                 </span>
             </card-body>

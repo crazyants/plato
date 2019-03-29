@@ -7,10 +7,12 @@ using Plato.Discuss.Tags.Badges;
 using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.Navigation;
 using Plato.Discuss.Tags.Tasks;
+using Plato.Discuss.Tags.ViewAdapters;
 using Plato.Discuss.Tags.ViewProviders;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
@@ -55,7 +57,11 @@ namespace Plato.Discuss.Tags
             // Tag view providers
             services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
-            
+         
+            // Register view adapters
+            services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
+
+
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();
 

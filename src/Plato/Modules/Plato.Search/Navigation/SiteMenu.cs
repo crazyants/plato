@@ -25,7 +25,7 @@ namespace Plato.Search.Navigation
             
             // Add reaction menu view to navigation
             builder
-                .Add(T["SearchMenu"], 3, react => react
+                .Add(T["SearchMenu"], int.MaxValue - 20, react => react
                     .View("SearchMenu", new
                     {
                         options = new EntityIndexOptions()

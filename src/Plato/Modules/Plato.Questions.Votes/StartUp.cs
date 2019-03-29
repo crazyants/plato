@@ -25,6 +25,7 @@ namespace Plato.Questions.Votes
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 

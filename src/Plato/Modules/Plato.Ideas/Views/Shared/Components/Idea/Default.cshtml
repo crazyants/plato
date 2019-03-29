@@ -1,22 +1,22 @@
 ﻿@model EntityViewModel<Idea, IdeaComment>
 
 <div class="list-row">
-    <navigation name="question-details"
+    <navigation name="idea-details"
                 model="Model.Entity"
                 class="list-left list-inline p-0" />
     <div class="list-body reply-body">
         <card>
             <card-title>
-                <h6 class="card-title d-inline-block">@T["Question"]</h6>
+                <h6 class="card-title d-inline-block">@T["Idea"]</h6>
                 @if (Model.Entity.IsPinned)
                 {
-                    <span title="@T["This question is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                    <span title="@T["This idea is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
                         <i class="fal fa-thumbtack"></i>
                     </span>
                 }
                 @if (Model.Entity.IsLocked)
                 {
-                    <span title="@T["This question is locked and is not accepting new answers"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                    <span title="@T["This idea is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
                         <i class="fal fa-lock"></i>
                     </span>
                 }
@@ -32,7 +32,7 @@
                 {
                     <span class="badge badge-danger" data-toggle="tooltip" title="@T["This question has been deleted and is only visible to you as you have permission to view deleted questions"]">@T["Deleted"]</span>
                 }
-                <navigation name="question"
+                <navigation name="idea"
                             model="Model.Entity"
                             class="nav navbar p-0 float-right"
                             child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
@@ -47,7 +47,7 @@
                         </div>
                     }
                 </div>
-                <navigation name="question-footer"
+                <navigation name="idea-footer"
                             model="Model.Entity"
                             enable-list="false" />
             </card-body>
