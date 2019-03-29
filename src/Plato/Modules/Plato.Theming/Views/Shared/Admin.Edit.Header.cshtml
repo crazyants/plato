@@ -1,0 +1,16 @@
+﻿@model EditThemeViewModel
+
+@if (Model.IsNewTheme)
+{
+    <h4>@T["Add Theme"]</h4>
+    <span class="text-muted">@T["Create a theme to customize Plato."]</span>
+}
+else
+{
+    <h4>@T["Edit Theme"]</h4>
+    <span class="text-muted">@T["Edit an existing theme."]</span>
+}
+<hr />
+
+
+

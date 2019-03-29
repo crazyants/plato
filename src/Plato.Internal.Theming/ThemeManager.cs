@@ -16,7 +16,7 @@ namespace Plato.Internal.Theming
         IEnumerable<IThemeDescriptor> _themeDescriptors;
 
         readonly string _contentRootPath;
-        readonly string _virtualPathToModules;
+        readonly string _virtualPathToThemesFolder;
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace Plato.Internal.Theming
         {
             _themeLocator = moduleLocator;
             _contentRootPath = hostingEnvironment.ContentRootPath;
-            _virtualPathToModules = themeOptions.Value.VirtualPathToThemesFolder;
+            _virtualPathToThemesFolder = themeOptions.Value.VirtualPathToThemesFolder;
             InitializeThemes();
         }
 
@@ -62,7 +62,7 @@ namespace Plato.Internal.Theming
         void LoadThemeDescriptors()
         {
             _themeDescriptors = _themeLocator.LocateThemes(
-                new string[] {_contentRootPath + "\\" + _virtualPathToModules},
+                new string[] {_contentRootPath + "\\" + _virtualPathToThemesFolder},
                 "Themes", "theme.txt", false);
         }
 

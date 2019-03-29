@@ -1,0 +1,27 @@
+﻿@model EditThemeViewModel
+
+<card>
+    <card-title>
+        @if (Model.IsNewTheme)
+        {
+            <h6 class="card-title">@T["Add Theme"]</h6>
+        }
+        else
+        {
+            <h6 class="card-title">@T["Edit Theme"]</h6>
+        }
+    </card-title>
+    <card-body>
+     
+        <fieldset>
+            <div class="form-group" asp-validation-class-for="Name">
+                <label asp-for="Name"><strong>@T["Tag"]</strong></label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <div class="input-group">
+                    <input placeholder="@T["a short name for your theme..."]" asp-for="Name" class="form-control" autofocus />
+                </div>
+            </div>
+        </fieldset>
+     
+    </card-body>
+</card>

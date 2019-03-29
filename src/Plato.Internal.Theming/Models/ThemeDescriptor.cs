@@ -21,6 +21,8 @@ namespace Plato.Internal.Theming.Models
 
         public string Category { get; set; }
 
+        public string Location { get; set; }
+
     }
 
 }

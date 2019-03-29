@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

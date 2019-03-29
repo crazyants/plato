@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Features.ViewModels;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Features.ViewProviders
 {
     
-    public class FeaturesIndexViewProvider : BaseViewProvider<FeaturesViewModel>
+    public class AdminViewProvider : BaseViewProvider<FeaturesViewModel>
     {
 
         public override Task<IViewProviderResult> BuildDisplayAsync(FeaturesViewModel model, IViewProviderContext updater)
@@ -19,13 +16,10 @@ namespace Plato.Features.ViewProviders
 
         public override Task<IViewProviderResult> BuildIndexAsync(FeaturesViewModel viewModel, IViewProviderContext updater)
         {
-
             return Task.FromResult(Views(
-                View<FeaturesViewModel>("Features.Index.Header", model => viewModel).Zone("header"),
-                View<FeaturesViewModel>("Features.Index.Content", model => viewModel).Zone("content")
+                View<FeaturesViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),
+                View<FeaturesViewModel>("Admin.Index.Content", model => viewModel).Zone("content")
             ));
-
-
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(FeaturesViewModel model, IViewProviderContext updater)

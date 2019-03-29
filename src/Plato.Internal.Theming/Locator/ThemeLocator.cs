@@ -148,7 +148,7 @@ namespace Plato.Internal.Theming.Locator
 
             var manifest = ParseManifest(manifestText);
          
-            var moduleDescriptor = new ThemeDescriptor
+            var themeDescriptor = new ThemeDescriptor
             {
                 Name = GetValue(manifest, NameSection) ?? moduleId,
                 Description = GetValue(manifest, DescriptionSection),
@@ -158,7 +158,7 @@ namespace Plato.Internal.Theming.Locator
                 WebSite = GetValue(manifest, WebsiteSection)
             };
             
-            return moduleDescriptor;
+            return themeDescriptor;
 
         }
 

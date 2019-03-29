@@ -1,0 +1,22 @@
+Name: Plato Ideas Votes
+Description: Adds the ability to up vote & down vote ideas & comments.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Ideas
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Ideas",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Entities.Ratings",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.WebAPI",
+		Version: "1.0.0"
+	}
+]

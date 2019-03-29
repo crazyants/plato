@@ -27,12 +27,12 @@ namespace Plato.Features.Navigation
                     .Add(T["Manage Features"], "15", manage => manage
                         .Action("Index", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ).Add(T["Feature Gallery"], "16", gallary => gallary
-                        .Action("Create", "Admin", "Plato.Features")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ));
+                        .LocalNav())
+                    //.Add(T["Feature Gallery"], "16", gallary => gallary
+                    //    .Action("Create", "Admin", "Plato.Features")
+                    //    //.Permission(Permissions.ManageRoles)
+                    //    .LocalNav())
+                );
 
 
         }

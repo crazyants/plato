@@ -5,6 +5,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Navigation
 {
+
     public class SiteMenu : INavigationProvider
     {
         public SiteMenu(IStringLocalizer localizer)
@@ -20,11 +21,10 @@ namespace Plato.Articles.Navigation
             {
                 return;
             }
-
-
+            
             builder
                 .Add(T["Articles"], 2, discuss => discuss
-                        .IconCss("fal fa-book-open")
+                        .IconCss("fal fa-copy") // fa-book-open
                         .Action("Index", "Home", "Plato.Articles")
                         .Attributes(new Dictionary<string, object>()
                         {

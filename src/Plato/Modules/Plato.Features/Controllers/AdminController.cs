@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Features.ViewModels;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -12,34 +13,33 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Features.Controllers
 {
-
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IViewProviderManager<FeaturesViewModel> _featuresIndexViewProvider;
-        private readonly IShellFeatureManager _shellFeatureManager;
+        private readonly IViewProviderManager<FeaturesViewModel> _viewProvider;
         private readonly IShellDescriptorManager _shellDescriptorManager;
-        private readonly IAlerter _alerter;
+        private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
         
         public AdminController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IShellFeatureManager shellFeatureManager,
             IShellDescriptorManager shellDescriptorManager,
-            IAlerter alerter,
-            IViewProviderManager<FeaturesViewModel> featuresIndexViewProvider, 
-            IBreadCrumbManager breadCrumbManager)
+            IViewProviderManager<FeaturesViewModel> viewProvider, 
+            IBreadCrumbManager breadCrumbManager,
+            IAlerter alerter)
         {
             _shellFeatureManager = shellFeatureManager;
+            _viewProvider = viewProvider;
             _shellDescriptorManager = shellDescriptorManager;
-            _alerter = alerter;
-            _featuresIndexViewProvider = featuresIndexViewProvider;
             _breadCrumbManager = breadCrumbManager;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -65,10 +65,7 @@ namespace Plato.Features.Controllers
                 Features = features
             };
             
-
-            var result = await _featuresIndexViewProvider.ProvideIndexAsync(model, this);
-            return View(result);
-
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
             
         }
 

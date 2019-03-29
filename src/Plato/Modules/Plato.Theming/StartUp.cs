@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Assets.Abstractions;
-using Plato.Internal.Navigation;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Theming.Assets;
 using Plato.Theming.Navigation;
+using Plato.Theming.Models;
+using Plato.Theming.ViewProviders;
 
 namespace Plato.Theming
 {
@@ -30,6 +32,10 @@ namespace Plato.Theming
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
+            // View providers
+            services.AddScoped<IViewProviderManager<ThemeAdmin>, ViewProviderManager<ThemeAdmin>>();
+            services.AddScoped<IViewProvider<ThemeAdmin>, AdminViewProvider>();
+            
         }
 
         public override void Configure(

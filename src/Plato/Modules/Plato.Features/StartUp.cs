@@ -26,7 +26,7 @@ namespace Plato.Features
             
             // View providers
             services.AddScoped<IViewProviderManager<FeaturesViewModel>, ViewProviderManager<FeaturesViewModel>>();
-            services.AddScoped<IViewProvider<FeaturesViewModel>, FeaturesIndexViewProvider>();
+            services.AddScoped<IViewProvider<FeaturesViewModel>, AdminViewProvider>();
 
         }
 
