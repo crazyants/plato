@@ -15,7 +15,7 @@ namespace Plato.Internal.FileSystem
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalSitesFolder> _logger;
 
-        private const string _defaultPath = "wwwroot/sites";
+        private static string InternalRootPath = "wwwroot/sites";
 
         public PhysicalSitesFolder(
             IPlatoFileSystem parentFileSystem,
@@ -23,17 +23,17 @@ namespace Plato.Internal.FileSystem
         {
             _logger = logger;
 
-            if (!parentFileSystem.DirectoryExists(_defaultPath))
+            if (!parentFileSystem.DirectoryExists(InternalRootPath))
             {
-                parentFileSystem.CreateDirectory(_defaultPath);
+                parentFileSystem.CreateDirectory(InternalRootPath);
             }
 
-            RootPath = parentFileSystem.GetDirectoryInfo(_defaultPath).FullName;
-            _fileSystem = new PlatoFileSystem(RootPath, new PhysicalFileProvider(RootPath), _logger);
+            var root = parentFileSystem.GetDirectoryInfo(InternalRootPath).FullName;
+            _fileSystem = new PlatoFileSystem(root, new PhysicalFileProvider(root), _logger);
 
         }
-        
-        public string RootPath { get; private set; }
+
+        public string RootPath => _fileSystem.RootPath;
 
         public async Task<string> SaveUniqueFileAsync(
             Stream stream,

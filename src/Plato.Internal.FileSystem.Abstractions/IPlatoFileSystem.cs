@@ -52,5 +52,8 @@ namespace Plato.Internal.FileSystem.Abstractions
 
         bool FileExists(string path);
 
+        string MapPath(string path);
+
     }
+
 }

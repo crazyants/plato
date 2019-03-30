@@ -45,7 +45,7 @@ namespace Plato.Internal.Shell
             {
                 foreach (var module in modules)
                 {
-                    var types = module.Assmeblies.SelectMany(assembly =>
+                    var types = module.Assemblies.SelectMany(assembly =>
                         assembly.ExportedTypes.Where(IsComponentType));
                     foreach (var type in types)
                     {

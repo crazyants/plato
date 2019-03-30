@@ -288,5 +288,11 @@ namespace Plato.Internal.FileSystem
         {
             return GetFileInfo(path).Exists;
         }
+
+        public string MapPath(string path)
+        {
+            return GetFileInfo(path).PhysicalPath;
+        }
+        
     }
 }

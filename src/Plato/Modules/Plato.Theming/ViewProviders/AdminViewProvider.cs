@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Theming.Models;
 using Plato.Theming.ViewModels;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Theming.Services;
@@ -18,6 +15,8 @@ namespace Plato.Theming.ViewProviders
     public class AdminViewProvider : BaseViewProvider<ThemeAdmin>
     {
 
+        private readonly ISiteThemeManager _siteThemeManager;
+
         private readonly IThemeManager _themeManager;
         
         public IHtmlLocalizer T { get; }
@@ -27,9 +26,10 @@ namespace Plato.Theming.ViewProviders
         public AdminViewProvider(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer, 
-            IThemeManager themeManager)
+            IThemeManager themeManager, ISiteThemeManager siteThemeManager)
         {
             _themeManager = themeManager;
+            _siteThemeManager = siteThemeManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -43,7 +43,10 @@ namespace Plato.Theming.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(ThemeAdmin model, IViewProviderContext updater)
         {
 
-            var indexViewModel = new ThemingIndexViewModel();
+            var indexViewModel = new ThemingIndexViewModel()
+            {
+                Themes = _siteThemeManager.AvailableThemes
+            };
 
             return Task.FromResult(Views(
                 View<ThemingIndexViewModel>("Admin.Index.Header", viewModel => indexViewModel).Zone("header"),

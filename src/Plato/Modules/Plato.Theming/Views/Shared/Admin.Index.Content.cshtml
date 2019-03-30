@@ -2,13 +2,29 @@
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title">Manage Features</h6>
+        <h6 class="card-title">Manage Themes</h6>
     </card-title>
     <card-body>
-        <ul class="list-group list-group-flush list-group-hover">
-
-      
-        </ul>
+        
+        @if (Model.Themes.Any())
+        {
+            <div class="list-group list-group-flush list-group-hover">
+                @foreach (var theme in Model.Themes)
+                {
+                    <a href="#" class="list-group-item list-group-item-action">
+                        @theme.Name
+                    </a>}
+            </div>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No custom themes"]
+                </li>
+            </ul>
+        }
+        
     </card-body>
 </card>
 

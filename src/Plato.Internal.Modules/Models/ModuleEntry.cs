@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Plato.Internal.Models.Modules;
-using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Modules.Models
 {
@@ -10,12 +9,12 @@ namespace Plato.Internal.Modules.Models
     {
         public ModuleEntry()
         {
-            Assmeblies = new List<Assembly>();
+            Assemblies = new List<Assembly>();
         }
 
         public IModuleDescriptor Descriptor { get; set; }
 
-        public IEnumerable<Assembly> Assmeblies { get; set; }
+        public IEnumerable<Assembly> Assemblies { get; set; }
 
         public Assembly Assembly { get; set; }
 

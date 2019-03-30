@@ -92,7 +92,7 @@ namespace Plato.Internal.Modules
             foreach (var moduleEntry in moduleEntries)
             {
                 // Get all valid types from module
-                var types = moduleEntry.Assmeblies.SelectMany(assembly =>
+                var types = moduleEntry.Assemblies.SelectMany(assembly =>
                     assembly.ExportedTypes.Where(IsComponentType));
                 foreach (var type in types)
                 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
@@ -53,11 +54,12 @@ namespace Plato.Theming.Services
 
             try
             {
-                
+
+                var newThemeId = newThemeName.ToSafeFileName();
+
                 // Path to the new directory for our theme
                 var targetPath = _platoFileSystem.Combine(
-                    _siteThemeManager.RootPath,
-                    newThemeName.ToSafeFileName());
+                    _siteThemeManager.RootPath, newThemeId);
 
                 // Copy base theme to new directory
                 _platoFileSystem.CopyDirectory(
@@ -65,17 +67,24 @@ namespace Plato.Theming.Services
                     targetPath,
                     true);
 
-
-
+                // Update theme name 
+                baseTheme.Name = newThemeName;
+            
+                // Update YAML 
+                var update = _siteThemeManager.SaveDescriptor(newThemeId, baseTheme);
+                if (!update.Succeeded)
+                {
+                    return result.Failed(update.Errors.ToArray());
+                }
 
             }
             catch (Exception e)
             {
                 return result.Failed(e.Message);
             }
-            
+
             return result.Success(baseTheme);
-            
+
         }
 
     }

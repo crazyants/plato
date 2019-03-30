@@ -274,7 +274,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             foreach (var module in modules)
             {
                 // add modules as application parts
-                foreach (var assembly in module.Assmeblies)
+                foreach (var assembly in module.Assemblies)
                 {
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }

@@ -88,7 +88,7 @@ namespace Plato.Internal.Modules
                 {
                     Descriptor = descriptor,
                     Assembly = assembly,
-                    Assmeblies = assemblies
+                    Assemblies = assemblies
                 });
                 loadedAssemblies.AddRange(assemblies);
 
@@ -176,7 +176,7 @@ namespace Plato.Internal.Modules
                 {
                     Descriptor = descriptor,
                     Assembly = moduleAssembly,
-                    Assmeblies = assemblies
+                    Assemblies = assemblies
                 });
 
                 // Add all located assemblies to local for query next time round

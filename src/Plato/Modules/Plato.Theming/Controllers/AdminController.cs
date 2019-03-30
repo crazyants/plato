@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -112,7 +113,19 @@ namespace Plato.Theming.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+
+                // Add model state errors 
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _alerter.Danger(T[error.ErrorMessage]);
+                    }
+                }
+
+                // Return
+                return RedirectToAction(nameof(Index));
+
             }
 
             // Create theme

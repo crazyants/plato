@@ -9,7 +9,7 @@ namespace Plato.Internal.Models.Modules
 
         IModuleDescriptor Descriptor { get; set; }
 
-        IEnumerable<Assembly> Assmeblies { get; set; }
+        IEnumerable<Assembly> Assemblies { get; set; }
 
         Assembly Assembly { get; set; }
         

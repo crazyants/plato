@@ -1,4 +1,6 @@
-﻿namespace Plato.Internal.Theming.Abstractions.Models
+﻿using System.Collections.Generic;
+
+namespace Plato.Internal.Theming.Abstractions.Models
 {
     public interface IThemeDescriptor
     {
@@ -20,6 +22,14 @@
         string Category { get; set; }
 
         string FullPath { get; set; }
+
+
+
+        string this[string key] { get; }
+
+        IEnumerable<string> Keys { get; }
+
+        IDictionary<string, string> Configuration { get; }
 
     }
 }
