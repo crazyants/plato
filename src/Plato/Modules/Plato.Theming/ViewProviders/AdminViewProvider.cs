@@ -46,6 +46,7 @@ namespace Plato.Theming.ViewProviders
 
             return Task.FromResult(Views(
                 View<ThemingIndexViewModel>("Admin.Index.Header", viewModel => indexViewModel).Zone("header"),
+                View<ThemingIndexViewModel>("Admin.Index.Tools", viewModel => indexViewModel).Zone("tools"),
                 View<ThemingIndexViewModel>("Admin.Index.Content", viewModel => indexViewModel).Zone("content")
             ));
 
@@ -57,6 +58,7 @@ namespace Plato.Theming.ViewProviders
 
             var editThemeViewModel = new EditThemeViewModel()
             {
+                IsNewTheme = model.IsNewTheme,
                 AvailableThemes = GetAvailableThemes()
             };
 
@@ -78,24 +80,17 @@ namespace Plato.Theming.ViewProviders
         IEnumerable<SelectListItem> GetAvailableThemes()
         {
             // Build timezones 
-            var timeZones = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = S["-"],
-                    Value = ""
-                }
-            };
+            var themes = new List<SelectListItem>();
             foreach (var z in _themeManager.AvailableThemes)
             {
-                timeZones.Add(new SelectListItem
+                themes.Add(new SelectListItem
                 {
                     Text = z.Name,
                     Value = z.Location
                 });
             }
 
-            return timeZones;
+            return themes;
         }
 
 

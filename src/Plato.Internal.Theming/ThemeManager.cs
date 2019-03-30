@@ -13,15 +13,15 @@ namespace Plato.Internal.Theming
 
         #region "Private Variables"
 
-        readonly IThemeLocator _themeLocator;
-        IEnumerable<IThemeDescriptor> _themeDescriptors;
+        private readonly IThemeLocator _themeLocator;
 
-        readonly string _contentRootPath;
-        readonly string _virtualPathToThemesFolder;
+        private  IEnumerable<IThemeDescriptor> _themeDescriptors;
+        private  readonly string _contentRootPath;
+        private  readonly string _virtualPathToThemesFolder;
 
         #endregion
 
-        #region "Public ReadOnly Propertoes"
+        #region "Implementation"
 
         public IEnumerable<IThemeDescriptor> AvailableThemes
         {
