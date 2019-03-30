@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Internal.Theming.Models
+﻿namespace Plato.Internal.Theming.Abstractions.Models
 {
     public interface IThemeDescriptor
     {
@@ -20,6 +16,8 @@ namespace Plato.Internal.Theming.Models
         string PlatoVersion { get; set; }
 
         string Category { get; set; }
+
+        string Location { get; set; }
 
     }
 }

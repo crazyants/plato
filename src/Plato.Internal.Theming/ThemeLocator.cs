@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
-using Plato.Internal.Theming.Models;
+using Plato.Internal.Theming.Abstractions.Locator;
+using Plato.Internal.Theming.Abstractions.Models;
 
-namespace Plato.Internal.Theming.Locator
+namespace Plato.Internal.Theming
 {
     public class ThemeLocator : IThemeLocator
     {
@@ -155,7 +156,8 @@ namespace Plato.Internal.Theming.Locator
                 Version = GetValue(manifest, VersionSection),
                 PlatoVersion = GetValue(manifest, PlatoVersionSection),
                 Author = GetValue(manifest, AuthorSection),
-                WebSite = GetValue(manifest, WebsiteSection)
+                WebSite = GetValue(manifest, WebsiteSection),
+                Location = rootPath
             };
             
             return themeDescriptor;

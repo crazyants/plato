@@ -8,6 +8,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Theming.Abstractions\Plato.Internal.Theming.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

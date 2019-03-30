@@ -13,6 +13,15 @@
     </card-title>
     <card-body>
      
+        
+        <div class="form-group" asp-validation-class-for="TimeZone">
+            <label asp-for="AvailableThemes"><strong>@T["Your Time Zone"]</strong></label>
+            <span asp-validation-for="AvailableThemes" class="text-danger"></span>
+            <select class="form-control"
+                    asp-for="Theme"
+                    asp-items="@Model.AvailableThemes"></select>
+        </div>
+
         <fieldset>
             <div class="form-group" asp-validation-class-for="Name">
                 <label asp-for="Name"><strong>@T["Tag"]</strong></label>

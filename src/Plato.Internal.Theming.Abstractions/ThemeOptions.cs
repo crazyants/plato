@@ -1,4 +1,4 @@
-﻿namespace Plato.Internal.Theming
+﻿namespace Plato.Internal.Theming.Abstractions
 {
 
     public class ThemeOptions

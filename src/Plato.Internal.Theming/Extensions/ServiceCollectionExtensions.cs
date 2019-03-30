@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Abstractions.Settings;
-using Plato.Internal.Theming.Locator;
+using Plato.Internal.Theming.Abstractions;
+using Plato.Internal.Theming.Abstractions.Locator;
 
 namespace Plato.Internal.Theming.Extensions
 {
@@ -20,7 +19,6 @@ namespace Plato.Internal.Theming.Extensions
             services.AddSingleton<IConfigureOptions<ThemeOptions>, ThemeOptionsConfigure>();
             services.AddSingleton<IThemeLocator, ThemeLocator>();
             services.AddSingleton<IThemeManager, ThemeManager>();
-
             return services;
         }
 

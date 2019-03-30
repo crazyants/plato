@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
@@ -108,25 +110,21 @@ namespace Plato.Theming.Controllers
             }
 
             // Create tag
-            var tag = new Tag()
+            var model = new ThemeAdmin()
             {
-                FeatureId = await GetFeatureIdAsync(),
-                Name = viewModel.Name,
-                Description = viewModel.Description,
-                CreatedUserId = user.Id,
-                CreatedDate = DateTimeOffset.UtcNow
+                IsNewTheme = true
             };
 
-            // Persist tag
-            var result = await _tagManager.CreateAsync(tag);
-            if (result.Succeeded)
-            {
+            //// Persist tag
+            //var result = await _tagManager.CreateAsync(tag);
+            //if (result.Succeeded)
+            //{
 
                 // Indicate new tag so UpdateAsync does not execute within our view provider
-                result.Response.IsNewTag = true;
+                //result.Response.IsNewTag = true;
 
                 // Execute view providers
-                await _viewProvider.ProvideUpdateAsync(result.Response, this);
+                await _viewProvider.ProvideUpdateAsync(model, this);
 
                 // Add confirmation
                 _alerter.Success(T["Tag Added Successfully!"]);
@@ -134,20 +132,20 @@ namespace Plato.Theming.Controllers
                 // Return
                 return RedirectToAction(nameof(Index));
 
-            }
-            else
-            {
-                // Report any errors
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
+            //}
+            //else
+            //{
+            //    // Report any errors
+            //    foreach (var error in result.Errors)
+            //    {
+            //        ModelState.AddModelError(string.Empty, error.Description);
+            //    }
+            //}
 
             return View(viewModel);
 
         }
 
-
+       
     }
 }

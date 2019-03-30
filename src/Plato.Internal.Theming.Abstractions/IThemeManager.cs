@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Plato.Internal.Theming.Models;
+using Plato.Internal.Theming.Abstractions.Models;
 
-namespace Plato.Internal.Theming
+namespace Plato.Internal.Theming.Abstractions
 {
     public interface IThemeManager
     {

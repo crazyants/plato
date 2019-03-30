@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Theming.Locator;
-using Plato.Internal.Theming.Models;
+using Plato.Internal.Theming.Abstractions;
+using Plato.Internal.Theming.Abstractions.Locator;
+using Plato.Internal.Theming.Abstractions.Models;
 
 namespace Plato.Internal.Theming
 {
@@ -38,9 +39,9 @@ namespace Plato.Internal.Theming
         public ThemeManager(
             IHostingEnvironment hostingEnvironment,
             IOptions<ThemeOptions> themeOptions,
-            IThemeLocator moduleLocator)
+            IThemeLocator themeLocator)
         {
-            _themeLocator = moduleLocator;
+            _themeLocator = themeLocator;
             _contentRootPath = hostingEnvironment.ContentRootPath;
             _virtualPathToThemesFolder = themeOptions.Value.VirtualPathToThemesFolder;
             InitializeThemes();

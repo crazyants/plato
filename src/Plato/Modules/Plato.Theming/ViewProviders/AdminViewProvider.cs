@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using Plato.Theming.Models;
 using Plato.Theming.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Theming.Abstractions;
 
 namespace Plato.Theming.ViewProviders
 {
@@ -13,6 +17,23 @@ namespace Plato.Theming.ViewProviders
     public class AdminViewProvider : BaseViewProvider<ThemeAdmin>
     {
 
+        private readonly IThemeManager _themeManager;
+
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
+
+        public AdminViewProvider(
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer, 
+            IThemeManager themeManager)
+        {
+            _themeManager = themeManager;
+
+            T = htmlLocalizer;
+            S = stringLocalizer;
+
+        }
         public override Task<IViewProviderResult> BuildDisplayAsync(ThemeAdmin model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
@@ -34,7 +55,10 @@ namespace Plato.Theming.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(ThemeAdmin model, IViewProviderContext updater)
         {
 
-            var editThemeViewModel = new EditThemeViewModel();
+            var editThemeViewModel = new EditThemeViewModel()
+            {
+                AvailableThemes = GetAvailableThemes()
+            };
 
             return Task.FromResult(Views(
                 View<EditThemeViewModel>("Admin.Edit.Header", viewModel => editThemeViewModel).Zone("header").Order(1),
@@ -49,6 +73,32 @@ namespace Plato.Theming.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
+
+        IEnumerable<SelectListItem> GetAvailableThemes()
+        {
+            // Build timezones 
+            var timeZones = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["-"],
+                    Value = ""
+                }
+            };
+            foreach (var z in _themeManager.AvailableThemes)
+            {
+                timeZones.Add(new SelectListItem
+                {
+                    Text = z.Name,
+                    Value = z.Location
+                });
+            }
+
+            return timeZones;
+        }
+
+
     }
 
 }
