@@ -38,8 +38,9 @@ namespace Plato.Theming
             services.AddScoped<IViewProvider<ThemeAdmin>, AdminViewProvider>();
 
             // Tenant theme manager
-            services.AddScoped<ITenantThemeManager, TenantThemeManager>();
-            
+            services.AddScoped<ISiteThemeManager, SiteThemeManager>();
+            services.AddScoped<ISiteThemeCreator, SiteThemeCreator>();
+
         }
 
         public override void Configure(

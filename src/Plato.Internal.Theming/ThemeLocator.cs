@@ -74,7 +74,7 @@ namespace Plato.Internal.Theming
 
         private IEnumerable<IThemeDescriptor> AvailableThemesInFolder(
             string path,
-            string moduleType,
+            string themeType,
             string manifestName,
             bool manifestIsOptional)
         {
@@ -89,14 +89,14 @@ namespace Plato.Internal.Theming
             foreach (var subfolder in subfolders)
             {
 
-                var moduleId = subfolder.Name;
-                var manifestPath = _fileSystem.Combine(path, moduleId, manifestName);
+                var themeId = subfolder.Name;
+                var manifestPath = _fileSystem.Combine(path, themeId, manifestName);
                 try
                 {
                     var descriptor = GetThemeDescriptor(
                         path,
-                        moduleId,
-                        moduleType,
+                        themeId,
+                        themeType,
                         manifestPath,
                         manifestIsOptional);
 
@@ -118,8 +118,8 @@ namespace Plato.Internal.Theming
 
         private IThemeDescriptor GetThemeDescriptor(
             string locationPath,
-            string moduleId,
-            string moduleType,
+            string themeId,
+            string themeType,
             string manifestPath,
             bool manifestIsOptional)
         {
@@ -127,23 +127,23 @@ namespace Plato.Internal.Theming
             if (manifestText == null)
             {
                 if (manifestIsOptional)
-                    manifestText = $"Id: {moduleId}";
+                    manifestText = $"Id: {themeId}";
                 else
                     return null;
             }
 
             return GetThemeDescriptorFromManifest(
                 locationPath,
-                moduleId,
-                moduleType,
+                themeId,
+                themeType,
                 manifestText);
 
         }
 
         private IThemeDescriptor GetThemeDescriptorFromManifest(
             string rootPath,
-            string moduleId,
-            string moduleType,
+            string themeId,
+            string themeType,
             string manifestText)
         {
 
@@ -151,13 +151,14 @@ namespace Plato.Internal.Theming
          
             var themeDescriptor = new ThemeDescriptor
             {
-                Name = GetValue(manifest, NameSection) ?? moduleId,
+                Id = themeId,
+                Name = GetValue(manifest, NameSection) ?? themeType,
                 Description = GetValue(manifest, DescriptionSection),
                 Version = GetValue(manifest, VersionSection),
                 PlatoVersion = GetValue(manifest, PlatoVersionSection),
                 Author = GetValue(manifest, AuthorSection),
                 WebSite = GetValue(manifest, WebsiteSection),
-                Location = rootPath
+                FullPath = _fileSystem.Combine(rootPath, themeId)
             };
             
             return themeDescriptor;

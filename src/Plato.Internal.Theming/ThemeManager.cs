@@ -11,17 +11,28 @@ namespace Plato.Internal.Theming
     public class ThemeManager : IThemeManager
     {
 
-        #region "Private Variables"
-
         private readonly IThemeLocator _themeLocator;
 
         private  IEnumerable<IThemeDescriptor> _themeDescriptors;
-        private  readonly string _contentRootPath;
-        private  readonly string _virtualPathToThemesFolder;
 
-        #endregion
+        public ThemeManager(
+            IHostingEnvironment hostingEnvironment,
+            IOptions<ThemeOptions> themeOptions,
+            IThemeLocator themeLocator)
+        {
+            _themeLocator = themeLocator;
+
+            var contentRootPath = hostingEnvironment.ContentRootPath;
+            var virtualPathToThemesFolder = themeOptions.Value.VirtualPathToThemesFolder;
+            RootPath = contentRootPath + "\\" + virtualPathToThemesFolder;
+
+            InitializeThemes();
+        }
+
 
         #region "Implementation"
+
+        public string RootPath { get; private set; }
 
         public IEnumerable<IThemeDescriptor> AvailableThemes
         {
@@ -34,20 +45,6 @@ namespace Plato.Internal.Theming
 
         #endregion
 
-        #region "Constructor"
-
-        public ThemeManager(
-            IHostingEnvironment hostingEnvironment,
-            IOptions<ThemeOptions> themeOptions,
-            IThemeLocator themeLocator)
-        {
-            _themeLocator = themeLocator;
-            _contentRootPath = hostingEnvironment.ContentRootPath;
-            _virtualPathToThemesFolder = themeOptions.Value.VirtualPathToThemesFolder;
-            InitializeThemes();
-        }
-
-        #endregion
 
         #region "Private Methods"
 
@@ -63,7 +60,7 @@ namespace Plato.Internal.Theming
         void LoadThemeDescriptors()
         {
             _themeDescriptors = _themeLocator.LocateThemes(
-                new string[] {_contentRootPath + "\\" + _virtualPathToThemesFolder},
+                new string[] { RootPath },
                 "Themes", "theme.txt", false);
         }
 

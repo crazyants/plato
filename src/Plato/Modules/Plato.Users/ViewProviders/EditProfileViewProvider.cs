@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -26,7 +25,7 @@ namespace Plato.Users.ViewProviders
         
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly IUploadFolder _uploadFolder;
+        private readonly ISitesFolder _sitesFolder;
         private readonly IPlatoUserManager<User> _platoUserManager;
 
         public EditProfileViewProvider(
@@ -35,17 +34,17 @@ namespace Plato.Users.ViewProviders
             IHostingEnvironment hostEnvironment,
             IFileStore fileStore,
             IUserPhotoStore<UserPhoto> userPhotoStore,
-            IUploadFolder uploadFolder,
+            ISitesFolder sitesFolder,
             IPlatoUserManager<User> platoUserManager)
         {
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
-            _uploadFolder = uploadFolder;
+            _sitesFolder = sitesFolder;
             _platoUserManager = platoUserManager;
 
             // paths
-            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars" );
-            _urlToAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
+            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
+            _urlToAvatarFolder = $"/sites/{shellSettings.Location}/images/";
             
         }
 
@@ -168,7 +167,7 @@ namespace Plato.Users.ViewProviders
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
 
             // Upload the new file
-            var fileName = await _uploadFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
+            var fileName = await _sitesFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
            
             // Ensure the new file was created
             if (!string.IsNullOrEmpty(fileName))
@@ -176,7 +175,7 @@ namespace Plato.Users.ViewProviders
                 // Delete any existing file
                 if (existingPhoto != null)
                 {
-                    _uploadFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
+                    _sitesFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
                 }
             }
 

@@ -17,7 +17,7 @@ namespace Plato.Users.Controllers
 
         private readonly IFileStore _fileStore;
         private readonly IInMemoryLetterRenderer _letterRenderer;
-        private readonly IUploadFolder _uploadFolder;
+        private readonly ISitesFolder _sitesFolder;
         private readonly IHostingEnvironment _hostEnvironment;
 
         private static string _pathToAvatarFolder;
@@ -27,16 +27,17 @@ namespace Plato.Users.Controllers
             IInMemoryLetterRenderer letterRenderer,
             IFileStore fileStore,
             IShellSettings shellSettings,
-            IUploadFolder uploadFolder,
+            ISitesFolder sitesFolder,
             IHostingEnvironment hostEnvironment)
         {
             _letterRenderer = letterRenderer;
             _fileStore = fileStore;
-            _uploadFolder = uploadFolder;
+            _sitesFolder = sitesFolder;
             _hostEnvironment = hostEnvironment;
 
-            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars");
-            _urlToAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
+            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
+            _urlToAvatarFolder = $"/sites/{shellSettings.Location}/images/";
+
         }
 
         [HttpGet, ResponseCache(Duration = 1200)]
@@ -53,7 +54,7 @@ namespace Plato.Users.Controllers
             r.Clear();
     
             var existingFileBytes = await _fileStore.GetFileBytesAsync(_fileStore.Combine(
-                _uploadFolder.Path,
+                _sitesFolder.RootPath,
                 _pathToAvatarFolder,
                 fileName));
             if (existingFileBytes != null)
@@ -89,7 +90,7 @@ namespace Plato.Users.Controllers
                     
                     using (var stream = new MemoryStream(fileBytes))
                     {
-                       await _uploadFolder.SaveFileAsync(stream, fileName, _pathToAvatarFolder);
+                       await _sitesFolder.SaveFileAsync(stream, fileName, _pathToAvatarFolder);
                     }
 
                     r.ContentType = "image/png";

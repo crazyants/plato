@@ -6,10 +6,12 @@ using System.IO;
 using System.Threading.Tasks;
 using Plato.Internal.FileSystem.Abstractions;
 
-namespace Plato.Internal.FileSystem.AppData
+namespace Plato.Internal.FileSystem
 {
+
     public class PhysicalAppDataFolder : IAppDataFolder
     {
+
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalAppDataFolder> _logger;
 

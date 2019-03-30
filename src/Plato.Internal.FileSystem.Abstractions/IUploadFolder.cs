@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 namespace Plato.Internal.FileSystem.Abstractions
 {
     /// <summary>
-    /// Isolates the uploads folder within Plato.
+    /// Provides isolation for the uploads folder within Plato.
     /// </summary>
-    public interface IUploadFolder
+    public interface ISitesFolder
     {
   
-        string Path { get; }
+        string RootPath { get; }
 
         Task<string> SaveUniqueFileAsync(Stream stream, string fileName, string path);
 
@@ -18,6 +18,8 @@ namespace Plato.Internal.FileSystem.Abstractions
         Task CreateFileAsync(string path, Stream stream);
 
         bool DeleteFile(string fileName, string path);
+
+        string Combine(params string[] paths);
 
     }
 

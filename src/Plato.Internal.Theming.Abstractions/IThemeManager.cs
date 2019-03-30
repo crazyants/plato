@@ -5,6 +5,7 @@ namespace Plato.Internal.Theming.Abstractions
 {
     public interface IThemeManager
     {
+        string RootPath { get;  }
 
         IEnumerable<IThemeDescriptor> AvailableThemes { get; }
 

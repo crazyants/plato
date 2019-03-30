@@ -10,6 +10,7 @@ using Plato.Theming.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Theming.Abstractions;
+using Plato.Theming.Services;
 
 namespace Plato.Theming.ViewProviders
 {
@@ -18,7 +19,7 @@ namespace Plato.Theming.ViewProviders
     {
 
         private readonly IThemeManager _themeManager;
-
+        
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -49,8 +50,7 @@ namespace Plato.Theming.ViewProviders
                 View<ThemingIndexViewModel>("Admin.Index.Tools", viewModel => indexViewModel).Zone("tools"),
                 View<ThemingIndexViewModel>("Admin.Index.Content", viewModel => indexViewModel).Zone("content")
             ));
-
-
+            
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(ThemeAdmin model, IViewProviderContext updater)
@@ -71,22 +71,21 @@ namespace Plato.Theming.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(ThemeAdmin model, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(ThemeAdmin theme, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-
-
+        
         IEnumerable<SelectListItem> GetAvailableThemes()
         {
-            // Build timezones 
+
             var themes = new List<SelectListItem>();
             foreach (var z in _themeManager.AvailableThemes)
             {
                 themes.Add(new SelectListItem
                 {
                     Text = z.Name,
-                    Value = z.Location
+                    Value = z.Id
                 });
             }
 

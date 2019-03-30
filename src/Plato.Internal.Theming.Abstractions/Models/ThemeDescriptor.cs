@@ -5,6 +5,8 @@ namespace Plato.Internal.Theming.Abstractions.Models
    public class ThemeDescriptor : IThemeDescriptor
     {
 
+        public string Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -21,7 +23,7 @@ namespace Plato.Internal.Theming.Abstractions.Models
 
         public string Category { get; set; }
 
-        public string Location { get; set; }
+        public string FullPath { get; set; }
 
     }
 

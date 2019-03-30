@@ -6,7 +6,7 @@ namespace Plato.Theming.ViewModels
     public class EditThemeViewModel
     {
 
-        public string Theme { get; set; }
+        public string ThemeId { get; set; }
 
         public IEnumerable<SelectListItem> AvailableThemes { get; set; }
         

@@ -178,9 +178,47 @@ namespace Plato.Internal.FileSystem
             File.Copy(sourceFileName, destinationFileName.PhysicalPath, true);
         }
 
-        public void DeleteFile(string path)
+        public void CopyDirectory(string sourceDirectory, string destinationDirectory, bool copyChildDirectories)
         {
 
+            var dir = GetDirectoryInfo(sourceDirectory);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirectory);
+            }
+            
+            // If the destination directory doesn't exist, create it.
+            if (!Directory.Exists(destinationDirectory))
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+
+            // Get the files in the directory and copy them to the new location.
+            var files = dir.GetFiles();
+            foreach (var file in files)
+            {
+                var tempPath = Path.Combine(destinationDirectory, file.Name);
+                file.CopyTo(tempPath, false);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+            if (copyChildDirectories)
+            {
+                var subDirectories = dir.GetDirectories();
+                foreach (var subDirectory in subDirectories)
+                {
+                    var tempPath = Path.Combine(destinationDirectory, subDirectory.Name);
+                    CopyDirectory(subDirectory.FullName, tempPath, true);
+                }
+            }
+
+        }
+
+        public void DeleteFile(string path)
+        {
             MakeDestinationFileNameAvailable(GetFileInfo(path));
         }
 

@@ -18,21 +18,21 @@ namespace Plato.Users.ViewProviders
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly IUploadFolder _uploadFolder;
+        private readonly ISitesFolder _sitesFolder;
 
         public UserViewProvider(
             IShellSettings shellSettings,
             IPlatoUserStore<User> platoUserStore,
             UserManager<User> userManager,
             IUserPhotoStore<UserPhoto> userPhotoStore,
-            IUploadFolder uploadFolder,
+            ISitesFolder sitesFolder,
             IHostingEnvironment hostEnvironment,
             IFileStore fileStore)
         {
             _platoUserStore = platoUserStore;
             _userManager = userManager;
             _userPhotoStore = userPhotoStore;
-            _uploadFolder = uploadFolder;
+            _sitesFolder = sitesFolder;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Profile user, IViewProviderContext context)

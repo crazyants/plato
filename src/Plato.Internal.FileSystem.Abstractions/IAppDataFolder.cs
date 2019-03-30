@@ -6,8 +6,10 @@ using Microsoft.Extensions.FileProviders;
 
 namespace Plato.Internal.FileSystem.Abstractions
 {
+
     public interface IAppDataFolder
     {
+
         string RootPath { get; }
 
         IFileInfo GetFileInfo(string path);
@@ -39,5 +41,7 @@ namespace Plato.Internal.FileSystem.Abstractions
         bool DirectoryExists(string path);
 
         string MapPath(string path);
+
     }
+
 }

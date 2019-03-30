@@ -32,7 +32,7 @@ namespace Plato.Users.ViewProviders
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _hostEnvironment;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly IUploadFolder _uploadFolder;
+        private readonly ISitesFolder _sitesFolder;
 
         private readonly IUrlHelper _urlHelper;
 
@@ -48,12 +48,12 @@ namespace Plato.Users.ViewProviders
             IPlatoUserManager<User> platoUserManager,
             IHostingEnvironment hostEnvironment,
             IFileStore fileStore,
-            IUploadFolder uploadFolder,
+            ISitesFolder sitesFolder,
             IPlatoUserStore<User> userStore)
         {
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
-            _uploadFolder = uploadFolder;
+            _sitesFolder = sitesFolder;
             _userStore = userStore;
             _userPhotoStore = userPhotoStore;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
@@ -319,7 +319,7 @@ namespace Plato.Users.ViewProviders
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
 
             // Upload the new file
-            var fileName = await _uploadFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
+            var fileName = await _sitesFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
 
             // Ensure the new file was created
             if (!string.IsNullOrEmpty(fileName))
@@ -327,7 +327,7 @@ namespace Plato.Users.ViewProviders
                 // Delete any existing file
                 if (existingPhoto != null)
                 {
-                    _uploadFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
+                    _sitesFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
                 }
             }
 

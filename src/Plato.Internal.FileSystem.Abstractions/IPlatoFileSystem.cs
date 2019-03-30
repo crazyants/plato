@@ -40,6 +40,8 @@ namespace Plato.Internal.FileSystem.Abstractions
 
         void StoreFile(string sourceFileName, string destinationPath);
 
+        void CopyDirectory(string sourceDirectory, string destinationDirectory, bool copyChildDirectories);
+
         void DeleteFile(string path);
 
         DateTimeOffset GetFileLastWriteTimeUtc(string path);

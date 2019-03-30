@@ -2,6 +2,8 @@
 {
     public interface IThemeDescriptor
     {
+        
+        string Id { get; set; }
 
         string Name { get; set; }
 
@@ -17,7 +19,7 @@
 
         string Category { get; set; }
 
-        string Location { get; set; }
+        string FullPath { get; set; }
 
     }
 }

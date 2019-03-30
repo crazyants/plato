@@ -12,14 +12,17 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Theming.Services;
 using Plato.Theming.ViewModels;
 
 namespace Plato.Theming.Controllers
 {
+
     public class AdminController : Controller, IUpdateModel
     {
         
         private readonly IViewProviderManager<ThemeAdmin> _viewProvider;
+        private readonly ISiteThemeCreator _siteThemeCreator;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
@@ -31,17 +34,22 @@ namespace Plato.Theming.Controllers
         public AdminController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,           
-            IViewProviderManager<ThemeAdmin> viewProvider, 
+            IViewProviderManager<ThemeAdmin> viewProvider,
+            ISiteThemeCreator siteThemeCreator,
             IBreadCrumbManager breadCrumbManager,
-            IAlerter alerter, IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IAlerter alerter)
         {
-            _viewProvider = viewProvider;
+
             _breadCrumbManager = breadCrumbManager;
-            _alerter = alerter;
             _contextFacade = contextFacade;
+            _viewProvider = viewProvider;
+            _alerter = alerter;
+            _siteThemeCreator = siteThemeCreator;
 
             T = htmlLocalizer;
             S = stringLocalizer;
+
         }
 
         // ------------
@@ -60,11 +68,9 @@ namespace Plato.Theming.Controllers
             });
                      
             return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new ThemeAdmin(), this));
-
             
         }
-
-
+        
         // ------------
         // Create
         // ------------
@@ -109,38 +115,34 @@ namespace Plato.Theming.Controllers
                 return View(viewModel);
             }
 
-            // Create tag
+            // Create theme
             var model = new ThemeAdmin()
             {
                 IsNewTheme = true
             };
 
-            //// Persist tag
-            //var result = await _tagManager.CreateAsync(tag);
-            //if (result.Succeeded)
-            //{
-
-                // Indicate new tag so UpdateAsync does not execute within our view provider
-                //result.Response.IsNewTag = true;
+            var result = _siteThemeCreator.CreateTheme(viewModel.ThemeId, viewModel.Name);
+            if (result.Succeeded)
+            {
 
                 // Execute view providers
-                await _viewProvider.ProvideUpdateAsync(model, this);
+               await _viewProvider.ProvideUpdateAsync(model, this);
 
                 // Add confirmation
-                _alerter.Success(T["Tag Added Successfully!"]);
+                _alerter.Success(T["Theme Added Successfully!"]);
 
                 // Return
                 return RedirectToAction(nameof(Index));
 
-            //}
-            //else
-            //{
-            //    // Report any errors
-            //    foreach (var error in result.Errors)
-            //    {
-            //        ModelState.AddModelError(string.Empty, error.Description);
-            //    }
-            //}
+            }
+            else
+            {
+                // Report any errors
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
 
             return View(viewModel);
 

@@ -1,0 +1,5 @@
+﻿Name: Default Theme
+Author: InstantASP
+WebSite: http://www.instantasp.co.uk/
+Version: 1.0.0
+PlatoVersion: 1.0.0

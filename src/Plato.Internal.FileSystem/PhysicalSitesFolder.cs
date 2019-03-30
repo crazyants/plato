@@ -1,38 +1,39 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
 
-namespace Plato.Internal.FileSystem.Uploads
+namespace Plato.Internal.FileSystem
 {
-    public class PhysicalUploadFolder : IUploadFolder
+    public class PhysicalSitesFolder : ISitesFolder
     {
         
         private const int ByMaxFileNameLength = 32;
         
         private readonly IPlatoFileSystem _fileSystem;
-        private readonly ILogger<PhysicalUploadFolder> _logger;
+        private readonly ILogger<PhysicalSitesFolder> _logger;
 
-        public PhysicalUploadFolder(
+        private const string _defaultPath = "wwwroot/sites";
+
+        public PhysicalSitesFolder(
             IPlatoFileSystem parentFileSystem,
-            ILogger<PhysicalUploadFolder> logger)
+            ILogger<PhysicalSitesFolder> logger)
         {
             _logger = logger;
 
-            if (!parentFileSystem.DirectoryExists(Path))
+            if (!parentFileSystem.DirectoryExists(_defaultPath))
             {
-                parentFileSystem.CreateDirectory(Path);
+                parentFileSystem.CreateDirectory(_defaultPath);
             }
 
-            var root = parentFileSystem.GetDirectoryInfo(Path).FullName;
-            _fileSystem = new PlatoFileSystem(root, new PhysicalFileProvider(root), _logger);
+            RootPath = parentFileSystem.GetDirectoryInfo(_defaultPath).FullName;
+            _fileSystem = new PlatoFileSystem(RootPath, new PhysicalFileProvider(RootPath), _logger);
 
         }
         
-        public string Path => "wwwroot/uploads";
+        public string RootPath { get; private set; }
 
         public async Task<string> SaveUniqueFileAsync(
             Stream stream,
@@ -145,7 +146,11 @@ namespace Plato.Internal.FileSystem.Uploads
             return false;
         }
 
+        public string Combine(params string[] paths)
+        {
+            return _fileSystem.Combine(paths);
+        }
+
     }
-
-
+    
 }
