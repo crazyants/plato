@@ -1,59 +1,67 @@
 ﻿@model EditThemeViewModel
 
-<card>
-    <card-title>
-        @if (Model.IsNewTheme)
-        {
-            <h6 class="card-title">@T["Add Theme"]</h6>
-        }
-        else
-        {
-            <h6 class="card-title">@T["Edit Theme"]</h6>
-        }
-    </card-title>
+<card class="card card-body-flush">
+<card-title>
+    <h6 class="card-title">@T["Edit Theme"]</h6>
+</card-title>
     <card-body>
         
-        @if (Model.IsNewTheme)
+        @if (Model.Files.Any())
         {
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group" asp-validation-class-for="Name">
-                        <label asp-for="Name">
-                            <strong>
-                                @T["Name"]
-                            </strong>
-                            <br/>
-                            <span class="text-muted">
-                                @T["Provide a name for your new theme"]
-                            </span>
-                        </label>
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                        <div class="input-group">
-                            <input placeholder="@T["a short name to help identify your theme..."]" asp-for="Name" class="form-control" autofocus/>
-                        </div>
-                    </div>
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var file in Model.Files)
+                {
+             
+                    <li class="list-group-item list-group-item-action">
 
-                </div>
-                <div class="col-6">
-                    <div class="form-group" asp-validation-class-for="TimeZone">
-                        <label asp-for="AvailableThemes">
-                            <strong>@T["Base Theme"]</strong><br/>
-                            <span class="text-muted">
-                                @T["Select a base theme to use as a starting point for your new theme"]
-                            </span>
-                        </label>
-                        <span asp-validation-for="AvailableThemes" class="text-danger"></span>
-                        <select class="form-control"
-                                asp-for="ThemeId"
-                                asp-items="@Model.AvailableThemes"></select>
-                    </div>
-                </div>
-            </div>
+                        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@file.Name" class="btn btn-secondary float-right">
+                            <i class="fal fa-pencil"></i>
+                            @T["Edit"]
+                        </a>
+
+                        <h6 class="d-inline-block">
+
+                            @if (file.Children.Count > 0)
+                            {
+                                <i class="fal fa-folder mr-2"></i>
+                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@file.Name" class="font-weight-bold">
+                                    @file.Name
+                                    
+                                    @if (file.Children.Count == 1)
+                                    {
+                                        <span class="text-muted">
+                                            / @file.Children[0].Name
+                                        </span>
+                                    }
+                                  
+                                </a>
+                            }
+                            else
+                            {
+                                <i class="fal fa-file mr-2"></i>
+                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@file.Name" class="font-weight-bold">
+                                    @file.Name
+                                </a>
+                            }
+                        
+                        </h6>
+
+                    </li>
+
+                }
+            </ul>
         }
         else
         {
-
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No themes found"]
+                </li>
+            </ul>
         }
+        
 
     </card-body>
 </card>
+
+

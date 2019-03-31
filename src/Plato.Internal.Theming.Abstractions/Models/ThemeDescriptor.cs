@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Plato.Internal.Theming.Abstractions.Models
 {
@@ -21,6 +20,7 @@ namespace Plato.Internal.Theming.Abstractions.Models
         public ThemeDescriptor(ThemeDescriptor descriptor)
         {
             _values = new Dictionary<string, string>(descriptor._values, StringComparer.OrdinalIgnoreCase);
+            Id = descriptor.Id;
             Name = descriptor.Name;
             Description = descriptor.Description;
             Author = descriptor.Author;
@@ -43,6 +43,8 @@ namespace Plato.Internal.Theming.Abstractions.Models
         public IEnumerable<string> Keys => _values.Keys;
 
         public string Id { get; set; }
+
+        public string FullPath { get; set; }
 
         public string Name
         {
@@ -91,8 +93,12 @@ namespace Plato.Internal.Theming.Abstractions.Models
             get => this["Category"];
             set => _values["Category"] = value;
         }
-        
-        public string FullPath { get; set; }
+
+        public string Tags
+        {
+            get => this["Tags"];
+            set => _values["Tags"] = value;
+        }
 
     }
 

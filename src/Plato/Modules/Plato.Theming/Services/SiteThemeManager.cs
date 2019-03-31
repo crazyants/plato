@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
 using Plato.Internal.FileSystem.Abstractions;
@@ -14,17 +15,17 @@ namespace Plato.Theming.Services
 
     public class SiteThemeManager : ISiteThemeManager
     {
-
+        
+        private IEnumerable<IThemeDescriptor> _themeDescriptors;
         private readonly IPlatoFileSystem _platoFileSystem;
         private readonly IThemeLocator _themeLocator;
-        private IEnumerable<IThemeDescriptor> _themeDescriptors;
 
-        private const string ThemeFileNameFormat = "Theme.{0}";
+        private const string ByThemeFileNameFormat = "Theme.{0}";
 
         public SiteThemeManager(
+            IOptions<ThemeOptions> themeOptions,
             IPlatoFileSystem platoFilesystem,
             IShellSettings shellSettings,
-            IOptions<ThemeOptions> themeOptions,
             IThemeLocator themeLocator,
             ISitesFolder sitesFolder)
         {
@@ -53,7 +54,62 @@ namespace Plato.Theming.Services
             }
         }
 
-        public ICommandResult<IThemeDescriptor> SaveDescriptor(string themeId, IThemeDescriptor descriptor)
+        public IEnumerable<ThemeFile> ListFiles(string themeId)
+        {
+
+            // Get theme to list
+            var theme = AvailableThemes.FirstOrDefault(t => t.Id.Equals(themeId, StringComparison.OrdinalIgnoreCase));
+            if (theme == null)
+            {
+                throw new Exception($"A theme folder named {themeId} could not be found!");
+            }
+            
+            return ListFilesInternal(theme.FullPath);
+
+        }
+
+        private IEnumerable<ThemeFile> ListFilesInternal(string path)
+        {
+
+            var output = new List<ThemeFile>();
+
+            // Process directories
+            var directories = _platoFileSystem.ListDirectories(path);
+            foreach (var directory in directories)
+            {
+
+                var themeFile = new ThemeFile
+                {
+                    Name = directory.Name
+                };
+
+                foreach (var file in directory.GetFiles())
+                {
+                    themeFile.Children.Add(new ThemeFile()
+                    {
+                        Name = file.Name
+                    });
+                }
+
+                output.Add(themeFile);
+
+            }
+            
+            // Process files
+            var currentDirectory = _platoFileSystem.GetDirectoryInfo(path);
+            foreach (var file in currentDirectory.GetFiles())
+            {
+                output.Add(new ThemeFile()
+                {
+                    Name = file.Name
+                });
+            }
+            
+            return output;
+
+        }
+        
+        public ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(string themeId, IThemeDescriptor descriptor)
         {
             
             if (descriptor == null)
@@ -66,16 +122,19 @@ namespace Plato.Theming.Services
                 throw new ArgumentNullException(nameof(descriptor.Name));
             }
             
-            var fileName = string.Format(ThemeFileNameFormat, "txt");
-            var tenantPath = _platoFileSystem.MapPath(
+            // Path to theme manifest file
+            var fileName = string.Format(ByThemeFileNameFormat, "txt");
+            var manifestPath = _platoFileSystem.MapPath(
                 _platoFileSystem.Combine(RootPath, themeId, fileName));
 
+            // Configure YAML configuration
             var configurationProvider = new YamlConfigurationProvider(new YamlConfigurationSource
             {
-                Path = tenantPath,
+                Path = manifestPath,
                 Optional = false
             });
 
+            // Build configuration
             foreach (var key in descriptor.Keys)
             {
                 if (!string.IsNullOrEmpty(descriptor[key]))
@@ -96,8 +155,7 @@ namespace Plato.Theming.Services
             }
 
             return result.Success(descriptor);
-
-
+            
         }
 
         #endregion

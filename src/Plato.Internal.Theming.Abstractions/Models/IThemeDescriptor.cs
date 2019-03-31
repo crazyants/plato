@@ -22,8 +22,8 @@ namespace Plato.Internal.Theming.Abstractions.Models
         string Category { get; set; }
 
         string FullPath { get; set; }
-
-
+        
+        string Tags { get; set; }
 
         string this[string key] { get; }
 
@@ -32,4 +32,5 @@ namespace Plato.Internal.Theming.Abstractions.Models
         IDictionary<string, string> Configuration { get; }
 
     }
+
 }

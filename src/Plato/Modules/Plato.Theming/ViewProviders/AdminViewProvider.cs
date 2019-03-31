@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -59,17 +60,30 @@ namespace Plato.Theming.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(ThemeAdmin model, IViewProviderContext updater)
         {
 
-            var editThemeViewModel = new EditThemeViewModel()
+            // We are adding a new theme
+            if (String.IsNullOrEmpty(model.Id))
             {
-                IsNewTheme = model.IsNewTheme,
-                AvailableThemes = GetAvailableThemes()
+                var createViewModel = new CreateThemeViewModel()
+                {
+                    AvailableThemes = GetAvailableThemes()
+                };
+
+                return Task.FromResult(Views(
+                    View<CreateThemeViewModel>("Admin.Create.Header", viewModel => createViewModel).Zone("header").Order(1),
+                    View<CreateThemeViewModel>("Admin.Create.Content", viewModel => createViewModel).Zone("content").Order(1),
+                    View<CreateThemeViewModel>("Admin.Create.Footer", viewModel => createViewModel).Zone("footer").Order(1)
+                ));
+            }
+
+            // We are editing an existing theme
+            var editViewModel = new EditThemeViewModel()
+            {
+                Files = _siteThemeManager.ListFiles(model.Id)
             };
 
             return Task.FromResult(Views(
-                View<EditThemeViewModel>("Admin.Edit.Header", viewModel => editThemeViewModel).Zone("header").Order(1),
-                View<EditThemeViewModel>("Admin.Edit.Content", viewModel => editThemeViewModel).Zone("content").Order(1),
-                View<EditThemeViewModel>("Admin.Edit.Actions", viewModel => editThemeViewModel).Zone("actions").Order(1),
-                View<EditThemeViewModel>("Admin.Edit.Footer", viewModel => editThemeViewModel).Zone("footer").Order(1)
+                View<EditThemeViewModel>("Admin.Edit.Header", viewModel => editViewModel).Zone("header").Order(1),
+                View<EditThemeViewModel>("Admin.Edit.Content", viewModel => editViewModel).Zone("content").Order(1)
             ));
 
         }
@@ -78,6 +92,7 @@ namespace Plato.Theming.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
         
         IEnumerable<SelectListItem> GetAvailableThemes()
         {

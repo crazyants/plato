@@ -2,7 +2,9 @@
 {
     public class ThemeAdmin
     {
-        public bool IsNewTheme { get; set; }
-
+        
+        public string Id { get; set; }
+        
     }
+
 }

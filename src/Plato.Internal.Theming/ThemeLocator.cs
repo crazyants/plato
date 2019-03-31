@@ -15,7 +15,7 @@ namespace Plato.Internal.Theming
         private const string PathSection = "path";
         private const string DescriptionSection = "description";
         private const string VersionSection = "version";
-        private const string PlatoVersionSection = "orchardversion";
+        private const string PlatoVersionSection = "platoversion";
         private const string AuthorSection = "author";
         private const string WebsiteSection = "website";
         private const string TagsSection = "tags";

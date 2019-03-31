@@ -36,18 +36,18 @@ namespace Plato.Theming.Services
             var result = new CommandResult<ThemeDescriptor>();
 
             // Get base theme 
-            IThemeDescriptor baseTheme = null;
-            foreach (var theme in _themeManager.AvailableThemes)
+            IThemeDescriptor baseThemeDescriptor = null;
+            foreach (var descriptor in _themeManager.AvailableThemes)
             {
-                if (theme.Id.Equals(baseThemeId, StringComparison.OrdinalIgnoreCase))
+                if (descriptor.Id.Equals(baseThemeId, StringComparison.OrdinalIgnoreCase))
                 {
-                    baseTheme = theme;
+                    baseThemeDescriptor = descriptor;
                     break;
                 }
             }
 
             // Ensure base theme exists
-            if (baseTheme == null)
+            if (baseThemeDescriptor == null)
             {
                 throw new Exception($"Could not locate the theme \"{baseThemeId}\".");
             }
@@ -56,22 +56,27 @@ namespace Plato.Theming.Services
             {
 
                 var newThemeId = newThemeName.ToSafeFileName();
-
+                if (!string.IsNullOrEmpty(newThemeId))
+                {
+                    newThemeId = newThemeId.ToLower()
+                        .Replace(" ", "-");
+                }
+                
                 // Path to the new directory for our theme
                 var targetPath = _platoFileSystem.Combine(
                     _siteThemeManager.RootPath, newThemeId);
 
-                // Copy base theme to new directory
+                // Copy base theme to new directory within /sites/{SiteName/themes
                 _platoFileSystem.CopyDirectory(
-                    baseTheme.FullPath,
+                    baseThemeDescriptor.FullPath,
                     targetPath,
                     true);
 
                 // Update theme name 
-                baseTheme.Name = newThemeName;
+                baseThemeDescriptor.Name = newThemeName;
             
-                // Update YAML 
-                var update = _siteThemeManager.SaveDescriptor(newThemeId, baseTheme);
+                // Update YAML manifest
+                var update = _siteThemeManager.UpdateThemeDescriptor(newThemeId, baseThemeDescriptor);
                 if (!update.Succeeded)
                 {
                     return result.Failed(update.Errors.ToArray());
@@ -83,7 +88,7 @@ namespace Plato.Theming.Services
                 return result.Failed(e.Message);
             }
 
-            return result.Success(baseTheme);
+            return result.Success(baseThemeDescriptor);
 
         }
 

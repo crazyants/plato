@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
@@ -17,7 +18,7 @@ namespace Plato.Internal.Theming
         private readonly IThemeLocator _themeLocator;
         private readonly IPlatoFileSystem _platoFileSystem;
 
-        private const string ThemeFileNameFormat = "Theme.{0}";
+        private const string ByThemeFileNameFormat = "Theme.{0}";
 
         private  IEnumerable<IThemeDescriptor> _themeDescriptors;
 
@@ -51,9 +52,34 @@ namespace Plato.Internal.Theming
                 return _themeDescriptors;
             }
         }
+        
+        public IEnumerable<ThemeFile> ListFiles(string themeId)
+        {
 
+            // Get theme to list
+            var theme = AvailableThemes.FirstOrDefault(t => t.Id.Equals(themeId, StringComparison.OrdinalIgnoreCase));
+            if (theme == null)
+            {
+                throw new Exception($"A theme folder named {themeId} could not be found!");
+            }
 
-        public ICommandResult<IThemeDescriptor> SaveDescriptor(string themeId, IThemeDescriptor descriptor)
+            var output = new List<ThemeFile>();
+
+            // Get files
+            var files = _platoFileSystem.ListDirectories(theme.FullPath);
+            foreach (var file in files)
+            {
+                output.Add(new ThemeFile()
+                {
+                    Name = file.Name
+                });
+            }
+
+            return output;
+
+        }
+
+        public ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(string themeId, IThemeDescriptor descriptor)
         {
 
             if (descriptor == null)
@@ -67,7 +93,7 @@ namespace Plato.Internal.Theming
             }
 
 
-            var fileName = string.Format(ThemeFileNameFormat, "txt");
+            var fileName = string.Format(ByThemeFileNameFormat, "txt");
             var tenantPath = _platoFileSystem.MapPath(
                 _platoFileSystem.Combine(RootPath, themeId, fileName));
 

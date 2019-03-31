@@ -10,7 +10,9 @@ namespace Plato.Internal.Theming.Abstractions
 
         IEnumerable<IThemeDescriptor> AvailableThemes { get; }
 
-        ICommandResult<IThemeDescriptor> SaveDescriptor(string themeId, IThemeDescriptor descriptor);
+        IEnumerable<ThemeFile> ListFiles(string themeId);
+
+        ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(string themeId, IThemeDescriptor descriptor);
 
     }
 

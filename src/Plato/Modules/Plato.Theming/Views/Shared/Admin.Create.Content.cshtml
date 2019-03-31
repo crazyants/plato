@@ -1,0 +1,39 @@
+﻿@model CreateThemeViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Add Theme"]</h6>
+    </card-title>
+    <card-body>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group" asp-validation-class-for="Name">
+                    <label asp-for="Name">
+                        <strong>@T["Name"]</strong><br/>
+                        <span class="text-muted">
+                            @T["Provide a name for your new theme"]
+                        </span>
+                    </label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <div class="input-group">
+                        <input placeholder="@T["a short name to help identify your theme..."]" asp-for="Name" class="form-control" autofocus/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group" asp-validation-class-for="TimeZone">
+                    <label asp-for="AvailableThemes">
+                        <strong>@T["Base Theme"]</strong><br/>
+                        <span class="text-muted">
+                            @T["Select a theme to use as a starting point for your new theme"]
+                        </span>
+                    </label>
+                    <span asp-validation-for="AvailableThemes" class="text-danger"></span>
+                    <select class="form-control"
+                            asp-for="ThemeId"
+                            asp-items="@Model.AvailableThemes"></select>
+                </div>
+            </div>
+        </div>
+    </card-body>
+</card>

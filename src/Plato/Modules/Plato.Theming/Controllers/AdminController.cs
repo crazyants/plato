@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
@@ -92,16 +88,12 @@ namespace Plato.Theming.Controllers
             });
 
             // We need to pass along the featureId
-            return View((LayoutViewModel)await _viewProvider.ProvideEditAsync(new ThemeAdmin
-            {
-                IsNewTheme = true
-
-            }, this));
+            return View((LayoutViewModel)await _viewProvider.ProvideEditAsync(new ThemeAdmin(), this));
 
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
-        public async Task<IActionResult> CreatePost(EditThemeViewModel viewModel)
+        public async Task<IActionResult> CreatePost(CreateThemeViewModel viewModel)
         {
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
@@ -129,10 +121,7 @@ namespace Plato.Theming.Controllers
             }
 
             // Create theme
-            var model = new ThemeAdmin()
-            {
-                IsNewTheme = true
-            };
+            var model = new ThemeAdmin();
 
             var result = _siteThemeCreator.CreateTheme(viewModel.ThemeId, viewModel.Name);
             if (result.Succeeded)
@@ -161,6 +150,54 @@ namespace Plato.Theming.Controllers
 
         }
 
-       
+        // ------------
+        // Edit
+        // ------------
+
+        public async Task<IActionResult> Edit(string id)
+        {
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav())
+                    .Add(S["Themes"], theming => theming
+                        .Action("Index", "Admin", "Plato.Theming")
+                        .LocalNav())
+                    //.Add(S["Edit Theme"], edit => edit
+                    //    .Action("Index", "Admin", "Plato.Theming")
+                    //    .LocalNav())
+                    .Add(S["Edit Theme"]);
+            });
+
+            var model = new ThemeAdmin()
+            {
+                Id = id
+            };
+           
+            return View((LayoutViewModel)await _viewProvider.ProvideEditAsync(model, this));
+
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
+        public async Task<IActionResult> EditPost(int id)
+        {
+
+         
+            var result = await _viewProvider.ProvideUpdateAsync(new ThemeAdmin(), this);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+
+            _alerter.Success(T["Tag Updated Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
     }
 }
