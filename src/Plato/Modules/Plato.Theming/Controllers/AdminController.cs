@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
@@ -13,7 +12,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Theming.Services;
+using Plato.Internal.Theming.Abstractions;
 using Plato.Theming.ViewModels;
 
 namespace Plato.Theming.Controllers

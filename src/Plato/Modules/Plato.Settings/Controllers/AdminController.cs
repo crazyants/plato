@@ -12,6 +12,7 @@ using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Theming.Abstractions;
 using Plato.Settings.ViewModels;
 
 namespace Plato.Settings.Controllers
@@ -24,32 +25,36 @@ namespace Plato.Settings.Controllers
 
         private readonly IAuthorizationService _authorizationService;
         private readonly ISiteSettingsStore _siteSettingsStore;
-        private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly ITimeZoneProvider _timeZoneProvider;
+        private readonly ISiteThemeManager _themeManager;
         private readonly ILocaleProvider _localeProvider;
-
+        private readonly IAlerter _alerter;
+        
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
 
 
         public AdminController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IAuthorizationService authorizationService,
-            IAlerter alerter,
             ISiteSettingsStore siteSettingsStore,
             IBreadCrumbManager breadCrumbManager,
             ITimeZoneProvider timeZoneProvider,
-            ILocaleProvider localeProvider)
+            ILocaleProvider localeProvider,
+            ISiteThemeManager themeManager,
+            IAlerter alerter)
         {
-            _alerter = alerter;
+
+            _authorizationService = authorizationService;
             _siteSettingsStore = siteSettingsStore;
             _breadCrumbManager = breadCrumbManager;
             _timeZoneProvider = timeZoneProvider;
             _localeProvider = localeProvider;
-            _authorizationService = authorizationService;
+            _themeManager = themeManager;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -104,8 +109,7 @@ namespace Plato.Settings.Controllers
             return RedirectToAction(nameof(Index));
         }
         
-        [HttpPost]
-        [ActionName(nameof(Index))]
+        [HttpPost, ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(SiteSettingsViewModel viewModel)
         {
             
@@ -135,6 +139,7 @@ namespace Plato.Settings.Controllers
                 settings.TimeZone = viewModel.TimeZone;
                 settings.DateTimeFormat = viewModel.DateTimeFormat;
                 settings.Culture = viewModel.Culture;
+                settings.Theme = viewModel.Theme;
             }
             else
             {
@@ -144,7 +149,8 @@ namespace Plato.Settings.Controllers
                     SiteName = viewModel.SiteName,
                     TimeZone = viewModel.TimeZone,
                     DateTimeFormat = viewModel.DateTimeFormat,
-                    Culture = viewModel.Culture
+                    Culture = viewModel.Culture,
+                    Theme = viewModel.Theme
                 };
             }
         
@@ -179,9 +185,11 @@ namespace Plato.Settings.Controllers
                     TimeZone = settings.TimeZone,
                     DateTimeFormat = settings.DateTimeFormat,
                     Culture = settings.Culture,
+                    Theme = settings.Theme,
                     AvailableTimeZones = await GetAvailableTimeZonesAsync(),
-                    AvailableDateTimeFormat = GetAvaialbleDateTimeFormats(),
-                    AvailableCultures = await GetAvailableCulturesAsync()
+                    AvailableDateTimeFormat = GetAvailableDateTimeFormats(),
+                    AvailableCultures = await GetAvailableCulturesAsync(),
+                    AvailableThemes = GetAvailableThemes(),
                 };
             }
             
@@ -197,7 +205,7 @@ namespace Plato.Settings.Controllers
 
         #region "Private Methods"
         
-        IEnumerable<SelectListItem> GetAvaialbleDateTimeFormats()
+        IEnumerable<SelectListItem> GetAvailableDateTimeFormats()
         {
             
             var formats = new List<SelectListItem>
@@ -278,6 +286,32 @@ namespace Plato.Settings.Controllers
             }
 
             return locales;
+        }
+
+
+        IEnumerable<SelectListItem> GetAvailableThemes()
+        {
+
+            // Build timezones 
+            var themes = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["-"],
+                    Value = ""
+                }
+            };
+            
+            foreach (var theme in _themeManager.AvailableThemes)
+            {
+                themes.Add(new SelectListItem
+                {
+                    Text = theme.Name,
+                    Value = theme.FullPath
+                });
+            }
+
+            return themes;
         }
 
         #endregion

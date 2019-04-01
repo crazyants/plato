@@ -2,7 +2,7 @@
 
 namespace Plato.Theming.Services
 {
-    public interface ISiteThemeManager : IThemeManager
-    {
-    }
+    //public interface ISiteThemeManager : IThemeManager
+    //{
+    //}
 }

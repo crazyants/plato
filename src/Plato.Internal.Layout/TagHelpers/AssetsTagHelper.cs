@@ -107,7 +107,7 @@ namespace Plato.Internal.Layout.TagHelpers
             // filter by section and return ordered assets
             return @matchingEnvironments?.Resources
                 .Where(r => r.Section == Section)
-                .OrderBy(p => p.Priority)
+                .OrderBy(p => p.Order)
                 .ToList();
 
         }

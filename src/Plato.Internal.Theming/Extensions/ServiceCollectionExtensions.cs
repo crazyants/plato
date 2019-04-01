@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Internal.Theming.Abstractions.Locator;
 
@@ -18,8 +19,15 @@ namespace Plato.Internal.Theming.Extensions
 
             services.AddSingleton<IConfigureOptions<ThemeOptions>, ThemeOptionsConfigure>();
             services.AddSingleton<IThemeLocator, ThemeLocator>();
+
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<IThemeFileManager, ThemeFileManager>();
+            services.AddSingleton<IThemeDescriptorUpdater, ThemeDescriptorUpdater>();
+         
+            services.AddSingleton<ISiteThemeManager, DummySiteThemeManager>();
+            services.AddSingleton<ISiteThemeFileManager, DummySiteThemeFileManager>();
+
+
             return services;
         }
 

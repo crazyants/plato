@@ -19,12 +19,16 @@ namespace Plato.Settings.ViewModels
         public string DateTimeFormat { get; set; }
 
         public string Culture { get; set; }
+
+        public string Theme { get; set; }
         
         public IEnumerable<SelectListItem> AvailableTimeZones { get; set; }
 
         public IEnumerable<SelectListItem> AvailableDateTimeFormat { get; set; }
 
         public IEnumerable<SelectListItem> AvailableCultures { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableThemes { get; set; }
 
     }
 

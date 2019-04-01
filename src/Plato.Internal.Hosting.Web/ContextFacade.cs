@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
@@ -23,7 +24,8 @@ namespace Plato.Internal.Hosting.Web
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        
+        private readonly IOptions<ThemeOptions> _themeOptions;
+
         private IUrlHelper _urlHelper;
 
         public ContextFacade(
@@ -31,13 +33,15 @@ namespace Plato.Internal.Hosting.Web
             IPlatoUserStore<User> platoUserStore,
             IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory, 
+            IOptions<ThemeOptions> themeOptions)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
+            _themeOptions = themeOptions;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()
@@ -118,6 +122,23 @@ namespace Plato.Internal.Hosting.Web
             return DefaultCulture;
 
         }
+
+        public async Task<string> GetCurrentThemeAsync()
+        {
+
+            var settings = await _siteSettingsStore.GetAsync();
+            if (settings != null)
+            {
+                if (!String.IsNullOrEmpty(settings.Theme))
+                {
+                    return settings.Theme.ToLower();
+                }
+            }
+
+            return $"{_themeOptions.Value.VirtualPathToThemesFolder}/Default";
+
+        }
+
 
     }
 

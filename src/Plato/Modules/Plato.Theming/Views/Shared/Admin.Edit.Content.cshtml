@@ -83,8 +83,24 @@
                         </li>
                         <li class="list-group-item">
                             <button type="submit" class="btn btn-primary" data-role="button">
-                                @T["Save Changes"]
+                                @T["Save File"]
                             </button>
+                            
+                            
+                            @if (Model.File?.Parent != null)
+                            {
+                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.ThemeId" asp-route-path="@Model.File?.Parent.RelativePath" class="btn btn-sm btn-secondary">
+                                    @T["Cancel"]
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-route-controller="Admin" asp-route-action="Index" class="btn btn-sm btn-secondary">
+                                    @T["Cancel"]
+                                </a>
+                            }
+
+
                         </li>
                     }
                
@@ -96,9 +112,6 @@
                          @T["No files found"]
                      </li>
                  }
-
-            
-
             }
         </ul>
 

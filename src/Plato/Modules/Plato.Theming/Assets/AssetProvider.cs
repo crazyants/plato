@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Assets.Abstractions;
-using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Theming.Assets
 {
@@ -10,18 +10,18 @@ namespace Plato.Theming.Assets
     public class AssetProvider : IAssetProvider
     {
 
-        private readonly ISiteSettingsStore _siteSettingsStore;
+        private readonly IContextFacade _contextFacade;
 
-        public AssetProvider(ISiteSettingsStore siteSettingsStore)
+        public AssetProvider(IContextFacade contextFacade)
         {
-            _siteSettingsStore = siteSettingsStore;
+            _contextFacade = contextFacade;
         }
 
         public async Task<IEnumerable<AssetEnvironment>> GetAssetEnvironments()
         {
 
-            var themeName = await GetThemeNameAsync();
-            if (String.IsNullOrEmpty(themeName))
+            var theme = await _contextFacade.GetCurrentThemeAsync();
+            if (String.IsNullOrEmpty(theme))
             {
                 return null;
             }
@@ -34,9 +34,10 @@ namespace Plato.Theming.Assets
                 {
                     new Asset()
                     {
-                        Url = $"/themes/{themeName}/theme.css",
+                        Url = $"/{theme}/theme.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Order = int.MaxValue
                     }
                 }),
 
@@ -46,9 +47,10 @@ namespace Plato.Theming.Assets
                     /* Css */
                     new Asset()
                     {
-                        Url =  $"/themes/{themeName}/theme.min.css",
+                        Url =  $"/{theme}/theme.min.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Order = int.MaxValue
                     },
                 }),
 
@@ -58,30 +60,16 @@ namespace Plato.Theming.Assets
                     /* Css */
                     new Asset()
                     {
-                        Url = $"/themes/{themeName}/theme.min.css",
+                        Url = $"/{theme}/theme.min.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Order = int.MaxValue
                     },
                 })
 
             };
         }
         
-        private async Task<string> GetThemeNameAsync()
-        {
-            
-            var settings = await _siteSettingsStore.GetAsync();
-            if (settings != null)
-            {
-                if (!String.IsNullOrEmpty(settings.ThemeName))
-                {
-                    return settings.ThemeName.ToLower();
-                }
-            }
-
-            return string.Empty;
-
-        }
 
 
     }

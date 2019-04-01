@@ -7,6 +7,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Theming.Abstractions;
 using Plato.Theming.Assets;
 using Plato.Theming.Navigation;
 using Plato.Theming.Models;
@@ -37,12 +38,9 @@ namespace Plato.Theming
             services.AddScoped<IViewProviderManager<ThemeAdmin>, ViewProviderManager<ThemeAdmin>>();
             services.AddScoped<IViewProvider<ThemeAdmin>, AdminViewProvider>();
 
-            // Tenant theme manager
+            // Tenant specific theming implementations
             services.AddScoped<ISiteThemeManager, SiteThemeManager>();
-
             services.AddScoped<ISiteThemeFileManager, SiteThemeFileManager>();
-
-            // Theme creator
             services.AddScoped<ISiteThemeCreator, SiteThemeCreator>();
             
         }

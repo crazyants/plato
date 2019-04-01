@@ -9,9 +9,7 @@ namespace Plato.Internal.Theming.Abstractions
         string RootPath { get;  }
 
         IEnumerable<IThemeDescriptor> AvailableThemes { get; }
-        
-        ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(string themeId, IThemeDescriptor descriptor);
-
+    
     }
 
 }

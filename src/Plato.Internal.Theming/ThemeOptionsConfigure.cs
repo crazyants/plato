@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Theming.Abstractions;
+using Plato.Internal.Abstractions.Settings;
 
 namespace Plato.Internal.Theming
 {

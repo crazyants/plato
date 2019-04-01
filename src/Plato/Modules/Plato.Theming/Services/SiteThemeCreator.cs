@@ -11,8 +11,9 @@ namespace Plato.Theming.Services
     
     public class SiteThemeCreator : ISiteThemeCreator
     {
-        
-        public readonly ISiteThemeManager _siteThemeManager;
+
+        private readonly IThemeDescriptorUpdater _themeDescriptorUpdater;
+        private readonly ISiteThemeManager _siteThemeManager;
         private readonly IPlatoFileSystem _platoFileSystem;
         public readonly IThemeManager _themeManager;
         public readonly ISitesFolder _sitesFolder;
@@ -21,12 +22,14 @@ namespace Plato.Theming.Services
             ISiteThemeManager siteThemeManager,
             IPlatoFileSystem platoFileSystem,
             IThemeManager themeManager,
-            ISitesFolder sitesFolder)
+            ISitesFolder sitesFolder,
+            IThemeDescriptorUpdater themeDescriptorUpdater)
         {
             _siteThemeManager = siteThemeManager;
             _platoFileSystem = platoFileSystem;
             _themeManager = themeManager;
             _sitesFolder = sitesFolder;
+            _themeDescriptorUpdater = themeDescriptorUpdater;
         }
 
         public ICommandResult<IThemeDescriptor> CreateTheme(string baseThemeId, string newThemeName)
@@ -76,7 +79,7 @@ namespace Plato.Theming.Services
                 baseThemeDescriptor.Name = newThemeName;
             
                 // Update YAML manifest
-                var update = _siteThemeManager.UpdateThemeDescriptor(newThemeId, baseThemeDescriptor);
+                var update = _themeDescriptorUpdater.UpdateThemeDescriptor(targetPath, baseThemeDescriptor);
                 if (!update.Succeeded)
                 {
                     return result.Failed(update.Errors.ToArray());

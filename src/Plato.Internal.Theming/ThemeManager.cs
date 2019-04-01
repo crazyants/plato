@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Internal.Theming.Abstractions.Locator;

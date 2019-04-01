@@ -20,7 +20,6 @@ namespace Plato.Theming.ViewProviders
 
         private readonly ISiteThemeManager _siteThemeManager;
         private readonly ISiteThemeFileManager _siteThemeFileManager;
-
         private readonly IThemeManager _themeManager;
         
         public IHtmlLocalizer T { get; }

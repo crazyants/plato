@@ -20,6 +20,8 @@ namespace Plato.Internal.Hosting.Abstractions
         string GetRouteUrl(RouteValueDictionary routeValues);
 
         Task<string> GetCurrentCultureAsync();
+
+        Task<string> GetCurrentThemeAsync();
         
     }
 

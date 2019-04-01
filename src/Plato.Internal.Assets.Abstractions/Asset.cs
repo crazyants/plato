@@ -14,7 +14,7 @@ namespace Plato.Internal.Assets.Abstractions
 
         public AssetSection Section { get; set; }
 
-        public int Priority { get; set; }
+        public int Order { get; set; }
 
         public IHtmlContent InlineContent { get; set; }
     }
