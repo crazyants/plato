@@ -16,7 +16,10 @@ namespace Plato.Internal.Theming.Abstractions
 
         IEnumerable<IThemeFile> GetParents(string themeId, string relativePath);
 
-        Task<string> ReadyFileAsync(string themeId, string relativePath);
+        Task<string> ReadFileAsync(IThemeFile themeFile);
+
+        Task SaveFileAsync(IThemeFile themeFile, string contents);
 
     }
+
 }

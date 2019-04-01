@@ -106,6 +106,15 @@ namespace Plato.Internal.FileSystem
             }
         }
 
+        public async Task SaveFileAsync(string path, string content)
+        {
+            using (var writer = File.CreateText(path))
+            {
+                await writer.WriteAsync(content);
+            }
+            
+        }
+
         public async Task CreateFileAsync(string path, Stream stream)
         {
             using (var file = CreateFile(path))

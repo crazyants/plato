@@ -212,7 +212,7 @@ namespace Plato.Theming.Controllers
 
                         if (parent.RelativePath.Equals(path, StringComparison.OrdinalIgnoreCase))
                         {
-                            builder.Add(S[parent.Name], home => home
+                            builder.Add(S[parent.Name], home => home 
                                 .LocalNav());
                         }
                         else
@@ -237,30 +237,61 @@ namespace Plato.Theming.Controllers
             
             return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(new ThemeAdmin()
             {
-                Id = id,
+                ThemeId = id,
                 Path = path
             }, this));
 
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
-        public async Task<IActionResult> EditPost(int id)
+        public async Task<IActionResult> EditPost(EditThemeViewModel model)
         {
-
-         
+            
             var result = await _viewProvider.ProvideUpdateAsync(new ThemeAdmin(), this);
 
             if (!ModelState.IsValid)
             {
-                return View(result);
+
+                // Add model state errors 
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _alerter.Danger(T[error.ErrorMessage]);
+                    }
+                }
+
+                // Return
+                return RedirectToAction(nameof(Index));
+
             }
 
-            _alerter.Success(T["Tag Updated Successfully!"]);
+            // Get theme files for current theme and path
+            var themeFile = _themeFileManager.GetFile(model.ThemeId, model.Path);
 
-            return RedirectToAction(nameof(Index));
+            if (themeFile == null)
+            {
+                return NotFound();
+            }
+
+            // Write file
+            await _themeFileManager.SaveFileAsync(themeFile, model.FileContents);
+
+            // Display Confirmation
+            _alerter.Success(T["File Updated Successfully!"]);
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Theming",
+                ["controller"] = "Admin",
+                ["action"] = "Edit",
+                ["id"] = model.ThemeId,
+                ["path"] = model.Path
+            }));
 
         }
-
-
+        
     }
+
 }

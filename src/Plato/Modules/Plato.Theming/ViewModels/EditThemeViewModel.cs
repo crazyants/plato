@@ -8,7 +8,10 @@ namespace Plato.Theming.ViewModels
     public class EditThemeViewModel
     {
 
-        public string Id { get; set; }
+        [Required]
+        public string ThemeId { get; set; }
+
+        public string Path { get; set; }
 
         [Required, DataType(DataType.MultilineText)]
         public string FileContents { get; set; }

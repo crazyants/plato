@@ -1,5 +1,8 @@
 ﻿@model EditThemeViewModel
 
+<input type="hidden" asp-for="ThemeId" />
+<input type="hidden" asp-for="Path" />
+
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title">
@@ -20,7 +23,7 @@
             @if (Model.File?.Parent != null)
             {
                 <li class="list-group-item">
-                    <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-path="@Model.File?.Parent.RelativePath" class="btn btn-sm btn-secondary" data-provide="tooltip" title="@T["Parent Directory"]">
+                    <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.ThemeId" asp-route-path="@Model.File?.Parent.RelativePath" class="btn btn-sm btn-secondary" data-provide="tooltip" title="@T["Parent Directory"]">
                         <i class="fal fa-level-up fa-flip-horizontal"></i>
                     </a>
                 </li>
@@ -49,7 +52,7 @@
                             <i class="fal fa-file mr-2" data-provide="tooltip" title="@T["File"]"></i>
                         }
                         <h6 class="d-inline-block">
-                            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-path="@file.RelativePath" class="font-weight-bold">
+                            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.ThemeId" asp-route-path="@file.RelativePath" class="font-weight-bold">
                                 @file.Name
                             </a>
                         </h6>
@@ -76,11 +79,10 @@
                     else
                     {
                         <li class="list-group-item">
-                        
                             <textarea asp-for="FileContents" class="form-control" style="height: 300px;">@Model.FileContents</textarea>
                         </li>
                         <li class="list-group-item">
-                            <button class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" data-role="button">
                                 @T["Save Changes"]
                             </button>
                         </li>

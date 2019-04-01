@@ -43,9 +43,14 @@ namespace Plato.Theming.Services
             return _themeFileManager.GetParents(themeId, relativePath);
         }
 
-        public async Task<string> ReadyFileAsync(string themeId, string relativePath)
+        public async Task<string> ReadFileAsync(IThemeFile themeFile)
         {
-            return await _themeFileManager.ReadyFileAsync(themeId, relativePath);
+            return await _themeFileManager.ReadFileAsync(themeFile);
+        }
+
+        public async Task SaveFileAsync(IThemeFile themeFile, string contents)
+        {
+            await _themeFileManager.SaveFileAsync(themeFile, contents);
         }
     }
 

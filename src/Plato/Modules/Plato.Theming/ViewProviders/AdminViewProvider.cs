@@ -67,7 +67,7 @@ namespace Plato.Theming.ViewProviders
         {
 
             // We are adding a new theme
-            if (String.IsNullOrEmpty(model.Id))
+            if (String.IsNullOrEmpty(model.ThemeId))
             {
                 var createViewModel = new CreateThemeViewModel()
                 {
@@ -81,19 +81,18 @@ namespace Plato.Theming.ViewProviders
                 );
             }
 
-            var file = _siteThemeFileManager.GetFile(model.Id, model.Path);
-            var fileContents = await _siteThemeFileManager.ReadyFileAsync(model.Id, model.Path); ;
-            var files = !string.IsNullOrEmpty(model.Path)
-                ? _siteThemeFileManager.GetFiles(model.Id, model.Path)
-                : _siteThemeFileManager.GetFiles(model.Id);
+            var file = _siteThemeFileManager.GetFile(model.ThemeId, model.Path);
 
             // We are editing an existing theme
             var editViewModel = new EditThemeViewModel()
             {
-                Id = model.Id,
+                ThemeId = model.ThemeId,
+                Path = model.Path,
                 File = file,
-                FileContents = fileContents,
-                Files = files
+                FileContents = await _siteThemeFileManager.ReadFileAsync(file),
+                Files = !string.IsNullOrEmpty(model.Path)
+                    ? _siteThemeFileManager.GetFiles(model.ThemeId, model.Path)
+                    : _siteThemeFileManager.GetFiles(model.ThemeId)
             };
 
             return Views(
