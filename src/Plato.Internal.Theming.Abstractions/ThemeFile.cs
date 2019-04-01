@@ -2,12 +2,33 @@
 
 namespace Plato.Internal.Theming.Abstractions
 {
-    public class ThemeFile
+
+    public interface IThemeFile
+    {
+        string Name { get; set; }
+
+        string FullName { get; set; }
+
+        string RelativePath { get; set; }
+
+        IList<IThemeFile> Children { get; set; }
+
+        IThemeFile Parent { get; set; }
+
+    }
+
+    public class ThemeFile : IThemeFile
     {
         public string Name { get; set; }
 
-        public IList<ThemeFile> Children { get; set; } = new List<ThemeFile>();
+        public string FullName { get; set; }
+
+        public string RelativePath { get; set; }
+
+        public IList<IThemeFile> Children { get; set; } = new List<IThemeFile>();
         
+        public IThemeFile Parent { get; set; }
+
     }
 
 }

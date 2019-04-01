@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,6 +18,7 @@ namespace Plato.Theming.ViewProviders
     {
 
         private readonly ISiteThemeManager _siteThemeManager;
+        private readonly ISiteThemeFileManager _siteThemeFileManager;
 
         private readonly IThemeManager _themeManager;
         
@@ -27,10 +29,13 @@ namespace Plato.Theming.ViewProviders
         public AdminViewProvider(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer, 
-            IThemeManager themeManager, ISiteThemeManager siteThemeManager)
+            IThemeManager themeManager, 
+            ISiteThemeManager siteThemeManager,
+            ISiteThemeFileManager siteThemeFileManager)
         {
             _themeManager = themeManager;
             _siteThemeManager = siteThemeManager;
+            _siteThemeFileManager = siteThemeFileManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -75,10 +80,19 @@ namespace Plato.Theming.ViewProviders
                 ));
             }
 
+
+            var themeFiles = _siteThemeFileManager.GetFiles(model.Id);
+
+            // Get available theme files
+            var files = !string.IsNullOrEmpty(model.Path)
+                ? GetChildrenByRelativePathRecursively(model)
+                : themeFiles;
+            
             // We are editing an existing theme
             var editViewModel = new EditThemeViewModel()
             {
-                Files = _siteThemeManager.ListFiles(model.Id)
+                Id = model.Id,
+                Files = files
             };
 
             return Task.FromResult(Views(
@@ -93,7 +107,43 @@ namespace Plato.Theming.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        
+
+        IEnumerable<IThemeFile> GetChildrenByRelativePathRecursively(
+            ThemeAdmin model,
+            IEnumerable<IThemeFile> input = null,
+            IList<IThemeFile> output = null)
+        {
+
+            if (input == null)
+            {
+                input = _siteThemeFileManager.GetFiles(model.Id);
+            }
+            if (output == null)
+            {
+                output = new List<IThemeFile>();
+            }
+            
+            foreach (var themeFile in input)
+            {
+                if (themeFile.RelativePath.Equals(model.Path, StringComparison.OrdinalIgnoreCase))
+                {
+                    foreach (var child in themeFile.Children)
+                    {
+                        output.Add(child);
+                    }
+                }
+                
+                if (themeFile.Children.Any())
+                {
+                    GetChildrenByRelativePathRecursively(model, themeFile.Children, output);
+                }
+
+            }
+
+            return output;
+
+        }
+
         IEnumerable<SelectListItem> GetAvailableThemes()
         {
 

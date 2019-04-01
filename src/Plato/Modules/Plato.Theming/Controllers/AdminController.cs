@@ -154,7 +154,7 @@ namespace Plato.Theming.Controllers
         // Edit
         // ------------
 
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string id, string path)
         {
 
             _breadCrumbManager.Configure(builder =>
@@ -173,7 +173,8 @@ namespace Plato.Theming.Controllers
 
             var model = new ThemeAdmin()
             {
-                Id = id
+                Id = id,
+                Path = path
             };
            
             return View((LayoutViewModel)await _viewProvider.ProvideEditAsync(model, this));

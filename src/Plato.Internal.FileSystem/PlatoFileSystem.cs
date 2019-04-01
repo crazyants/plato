@@ -21,12 +21,13 @@ namespace Plato.Internal.FileSystem
         public PlatoFileSystem(
             string rootPath,
             IFileProvider fileProvider,
-            ILogger logger){
+            ILogger logger)
+        {
             _fileProvider = fileProvider;
             _logger = logger;
             RootPath = rootPath;
         }
-        
+
         public string RootPath
         {
             get; private set;

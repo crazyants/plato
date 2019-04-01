@@ -7,6 +7,7 @@ using Plato.Internal.FileSystem.Abstractions;
 
 namespace Plato.Internal.FileSystem
 {
+
     public class PhysicalSitesFolder : ISitesFolder
     {
         

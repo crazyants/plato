@@ -11,43 +11,32 @@
             <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var file in Model.Files)
                 {
-             
                     <li class="list-group-item list-group-item-action">
-
-                        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@file.Name" class="btn btn-secondary float-right">
-                            <i class="fal fa-pencil"></i>
-                            @T["Edit"]
-                        </a>
-
-                        <h6 class="d-inline-block">
-
-                            @if (file.Children.Count > 0)
-                            {
-                                <i class="fal fa-folder mr-2"></i>
-                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@file.Name" class="font-weight-bold">
+                        @if (file.Children.Count > 0)
+                        {
+                            <i class="fal fa-folder mr-2" data-provide="tooltip" title="@T["Folder"]"></i>
+                            <h6 class="d-inline-block">
+                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-path="@file.RelativePath" class="font-weight-bold">
                                     @file.Name
-                                    
-                                    @if (file.Children.Count == 1)
-                                    {
-                                        <span class="text-muted">
-                                            / @file.Children[0].Name
-                                        </span>
-                                    }
-                                  
                                 </a>
-                            }
-                            else
-                            {
-                                <i class="fal fa-file mr-2"></i>
+                            </h6>
+                            @if (file.Children.Count == 1)
+                             {
+                                 <span class="text-muted">
+                                     / @file.Children[0].Name
+                                 </span>
+                             }
+                        }
+                        else
+                        {
+                            <i class="fal fa-file mr-2" data-provide="tooltip" title="@T["File"]"></i>
+                            <h6 class="d-inline-block">
                                 <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@file.Name" class="font-weight-bold">
                                     @file.Name
                                 </a>
-                            }
-                        
-                        </h6>
-
+                            </h6>
+                        }
                     </li>
-
                 }
             </ul>
         }

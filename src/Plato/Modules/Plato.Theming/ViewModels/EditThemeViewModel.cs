@@ -7,7 +7,9 @@ namespace Plato.Theming.ViewModels
     public class EditThemeViewModel
     {
 
-        public IEnumerable<ThemeFile> Files { get; set; }
+        public string Id { get; set; }
+
+        public IEnumerable<IThemeFile> Files { get; set; }
 
     }
     

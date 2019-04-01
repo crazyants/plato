@@ -19,7 +19,7 @@ namespace Plato.Internal.Theming
         private readonly IPlatoFileSystem _platoFileSystem;
 
         private const string ByThemeFileNameFormat = "Theme.{0}";
-
+        
         private  IEnumerable<IThemeDescriptor> _themeDescriptors;
 
         public ThemeManager(
@@ -53,32 +53,6 @@ namespace Plato.Internal.Theming
             }
         }
         
-        public IEnumerable<ThemeFile> ListFiles(string themeId)
-        {
-
-            // Get theme to list
-            var theme = AvailableThemes.FirstOrDefault(t => t.Id.Equals(themeId, StringComparison.OrdinalIgnoreCase));
-            if (theme == null)
-            {
-                throw new Exception($"A theme folder named {themeId} could not be found!");
-            }
-
-            var output = new List<ThemeFile>();
-
-            // Get files
-            var files = _platoFileSystem.ListDirectories(theme.FullPath);
-            foreach (var file in files)
-            {
-                output.Add(new ThemeFile()
-                {
-                    Name = file.Name
-                });
-            }
-
-            return output;
-
-        }
-
         public ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(string themeId, IThemeDescriptor descriptor)
         {
 
@@ -125,11 +99,52 @@ namespace Plato.Internal.Theming
             return result.Success(descriptor);
 
         }
-        
+
         #endregion
-
-
+        
         #region "Private Methods"
+
+        IEnumerable<IThemeFile> ListFilesInternal(string path)
+        {
+
+            var output = new List<ThemeFile>();
+
+            // Process directories
+            var directories = _platoFileSystem.ListDirectories(path);
+            foreach (var directory in directories)
+            {
+
+                var themeFile = new ThemeFile
+                {
+                    Name = directory.Name
+                };
+
+                foreach (var file in directory.GetFiles())
+                {
+                    themeFile.Children.Add(new ThemeFile()
+                    {
+                        Name = file.Name
+                    });
+                }
+
+                output.Add(themeFile);
+
+            }
+
+            // Process files
+            var currentDirectory = _platoFileSystem.GetDirectoryInfo(path);
+            foreach (var file in currentDirectory.GetFiles())
+            {
+                output.Add(new ThemeFile()
+                {
+                    Name = file.Name
+                });
+            }
+
+            return output;
+
+        }
+
 
         void InitializeThemes()
         {
