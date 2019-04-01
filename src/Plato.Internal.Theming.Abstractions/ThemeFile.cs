@@ -11,6 +11,8 @@ namespace Plato.Internal.Theming.Abstractions
 
         string RelativePath { get; set; }
 
+        bool IsDirectory { get; set; }
+
         IList<IThemeFile> Children { get; set; }
 
         IThemeFile Parent { get; set; }
@@ -24,6 +26,8 @@ namespace Plato.Internal.Theming.Abstractions
         public string FullName { get; set; }
 
         public string RelativePath { get; set; }
+
+        public bool IsDirectory { get; set; }
 
         public IList<IThemeFile> Children { get; set; } = new List<IThemeFile>();
         

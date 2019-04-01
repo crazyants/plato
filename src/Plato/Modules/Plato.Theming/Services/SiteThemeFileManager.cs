@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Plato.Internal.Theming.Abstractions;
 
 namespace Plato.Theming.Services
@@ -41,7 +42,11 @@ namespace Plato.Theming.Services
         {
             return _themeFileManager.GetParents(themeId, relativePath);
         }
-      
+
+        public async Task<string> ReadyFileAsync(string themeId, string relativePath)
+        {
+            return await _themeFileManager.ReadyFileAsync(themeId, relativePath);
+        }
     }
 
 }

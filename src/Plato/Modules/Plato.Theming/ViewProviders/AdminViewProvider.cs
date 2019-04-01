@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Plato.Theming.Models;
 using Plato.Theming.ViewModels;
@@ -62,7 +63,7 @@ namespace Plato.Theming.ViewProviders
             
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(ThemeAdmin model, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(ThemeAdmin model, IViewProviderContext updater)
         {
 
             // We are adding a new theme
@@ -73,27 +74,32 @@ namespace Plato.Theming.ViewProviders
                     AvailableThemes = GetAvailableThemes()
                 };
 
-                return Task.FromResult(Views(
+                return Views(
                     View<CreateThemeViewModel>("Admin.Create.Header", viewModel => createViewModel).Zone("header").Order(1),
                     View<CreateThemeViewModel>("Admin.Create.Content", viewModel => createViewModel).Zone("content").Order(1),
                     View<CreateThemeViewModel>("Admin.Create.Footer", viewModel => createViewModel).Zone("footer").Order(1)
-                ));
+                );
             }
-            
+
+            var file = _siteThemeFileManager.GetFile(model.Id, model.Path);
+            var fileContents = await _siteThemeFileManager.ReadyFileAsync(model.Id, model.Path); ;
+            var files = !string.IsNullOrEmpty(model.Path)
+                ? _siteThemeFileManager.GetFiles(model.Id, model.Path)
+                : _siteThemeFileManager.GetFiles(model.Id);
+
             // We are editing an existing theme
             var editViewModel = new EditThemeViewModel()
             {
                 Id = model.Id,
-                File = _siteThemeFileManager.GetFile(model.Id, model.Path),
-                Files = !string.IsNullOrEmpty(model.Path)
-                    ? _siteThemeFileManager.GetFiles(model.Id, model.Path)
-                    : _siteThemeFileManager.GetFiles(model.Id)
+                File = file,
+                FileContents = fileContents,
+                Files = files
             };
 
-            return Task.FromResult(Views(
+            return Views(
                 View<EditThemeViewModel>("Admin.Edit.Header", viewModel => editViewModel).Zone("header").Order(1),
                 View<EditThemeViewModel>("Admin.Edit.Content", viewModel => editViewModel).Zone("content").Order(1)
-            ));
+            );
 
         }
 

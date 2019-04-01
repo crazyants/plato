@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Plato.Internal.Theming.Abstractions
 {
@@ -14,6 +15,8 @@ namespace Plato.Internal.Theming.Abstractions
         IThemeFile GetFile(string themeId, string relativePath);
 
         IEnumerable<IThemeFile> GetParents(string themeId, string relativePath);
+
+        Task<string> ReadyFileAsync(string themeId, string relativePath);
 
     }
 }

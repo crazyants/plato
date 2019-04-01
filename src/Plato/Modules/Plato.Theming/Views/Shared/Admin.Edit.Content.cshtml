@@ -1,19 +1,18 @@
 ﻿@model EditThemeViewModel
 
 <card class="card card-body-flush">
-<card-title>
-    <h6 class="card-title">
-        @if (Model.File != null)
-        {
-            @T[Model.File.Name]
-        }
-        else
-        {
-            @T["Edit Theme"]
-        }
-     
-    </h6>
-</card-title>
+    <card-title>
+        <h6 class="card-title">
+            @if (Model.File != null)
+            {
+                @T[Model.File.Name]
+            }
+            else
+            {
+                @T["Edit Theme"]
+            }
+        </h6>
+    </card-title>
     <card-body>
         
         <ul class="list-group list-group-flush list-group-hover">
@@ -28,6 +27,7 @@
             }
             else
             {
+
                 <li class="list-group-item">
                     <a asp-route-controller="Admin" asp-route-action="Index" class="btn btn-sm btn-secondary" data-provide="tooltip" title="@T["Parent Directory"]">
                         <i class="fal fa-level-up fa-flip-horizontal"></i>
@@ -40,29 +40,24 @@
                 foreach (var file in Model.Files)
                 {
                     <li class="list-group-item list-group-item-action">
-                        @if (file.Children.Count > 0)
+                        @if (file.IsDirectory)
                         {
                             <i class="fal fa-folder mr-2" data-provide="tooltip" title="@T["Folder"]"></i>
-                            <h6 class="d-inline-block">
-                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-path="@file.RelativePath" class="font-weight-bold">
-                                    @file.Name
-                                </a>
-                            </h6>
-                            @if (file.Children.Count == 1)
-                             {
-                                 <span class="text-muted">
-                                     / @file.Children[0].Name
-                                 </span>
-                             }
                         }
                         else
                         {
                             <i class="fal fa-file mr-2" data-provide="tooltip" title="@T["File"]"></i>
-                            <h6 class="d-inline-block">
-                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@file.Name" class="font-weight-bold">
-                                    @file.Name
-                                </a>
-                            </h6>
+                        }
+                        <h6 class="d-inline-block">
+                            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-path="@file.RelativePath" class="font-weight-bold">
+                                @file.Name
+                            </a>
+                        </h6>
+                        @if (file.Children.Count == 1)
+                        {
+                            <span class="text-muted">
+                                / @file.Children[0].Name
+                            </span>
                         }
                     </li>
                 }
@@ -70,10 +65,37 @@
             }
             else
             {
+                @if (Model.File != null)
+                {
+                    if (Model.File.IsDirectory)
+                    {
+                        <li class="list-group-item">
+                            @T["No files found"]
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item">
+                        
+                            <textarea asp-for="FileContents" class="form-control" style="height: 300px;">@Model.FileContents</textarea>
+                        </li>
+                        <li class="list-group-item">
+                            <button class="btn btn-primary">
+                                @T["Save Changes"]
+                            </button>
+                        </li>
+                    }
+               
 
-                <li class="list-group-item">
-                    @T["No themes found"]
-                </li>
+                }
+                 else
+                 {
+                     <li class="list-group-item">
+                         @T["No files found"]
+                     </li>
+                 }
+
+            
 
             }
         </ul>
