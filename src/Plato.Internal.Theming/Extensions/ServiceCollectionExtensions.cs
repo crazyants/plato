@@ -19,6 +19,7 @@ namespace Plato.Internal.Theming.Extensions
             services.AddSingleton<IConfigureOptions<ThemeOptions>, ThemeOptionsConfigure>();
             services.AddSingleton<IThemeLocator, ThemeLocator>();
             services.AddSingleton<IThemeManager, ThemeManager>();
+            services.AddSingleton<IThemeFileManager, ThemeFileManager>();
             return services;
         }
 

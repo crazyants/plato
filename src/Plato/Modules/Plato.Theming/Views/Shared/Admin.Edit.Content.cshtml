@@ -2,14 +2,42 @@
 
 <card class="card card-body-flush">
 <card-title>
-    <h6 class="card-title">@T["Edit Theme"]</h6>
+    <h6 class="card-title">
+        @if (Model.File != null)
+        {
+            @T[Model.File.Name]
+        }
+        else
+        {
+            @T["Edit Theme"]
+        }
+     
+    </h6>
 </card-title>
     <card-body>
         
-        @if (Model.Files.Any())
-        {
-            <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var file in Model.Files)
+        <ul class="list-group list-group-flush list-group-hover">
+
+            @if (Model.File?.Parent != null)
+            {
+                <li class="list-group-item">
+                    <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-path="@Model.File?.Parent.RelativePath" class="btn btn-sm btn-secondary" data-provide="tooltip" title="@T["Parent Directory"]">
+                        <i class="fal fa-level-up fa-flip-horizontal"></i>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a asp-route-controller="Admin" asp-route-action="Index" class="btn btn-sm btn-secondary" data-provide="tooltip" title="@T["Parent Directory"]">
+                        <i class="fal fa-level-up fa-flip-horizontal"></i>
+                    </a>
+                </li>
+            }
+
+            @if (Model.Files.Any())
+            {
+                foreach (var file in Model.Files)
                 {
                     <li class="list-group-item list-group-item-action">
                         @if (file.Children.Count > 0)
@@ -38,17 +66,17 @@
                         }
                     </li>
                 }
-            </ul>
-        }
-        else
-        {
-            <ul class="list-group list-group-flush list-group-hover">
+
+            }
+            else
+            {
+
                 <li class="list-group-item">
                     @T["No themes found"]
                 </li>
-            </ul>
-        }
-        
+
+            }
+        </ul>
 
     </card-body>
 </card>

@@ -181,6 +181,7 @@ namespace Plato.Theming.Controllers
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
+
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Admin", "Plato.Admin")
                         .LocalNav())
@@ -188,6 +189,7 @@ namespace Plato.Theming.Controllers
                         .Action("Index", "Admin", "Plato.Theming")
                         .LocalNav());
              
+                // Build parents
                 var parents = _themeFileManager.GetParents(id, path);
                 if (parents != null)
                 {
@@ -201,6 +203,12 @@ namespace Plato.Theming.Controllers
 
                     foreach (var parent in parents)
                     {
+
+                        if (string.IsNullOrEmpty(parent.RelativePath))
+                        {
+                            // don't render root - handled above
+                            continue;
+                        }
 
                         if (parent.RelativePath.Equals(path, StringComparison.OrdinalIgnoreCase))
                         {
@@ -224,18 +232,14 @@ namespace Plato.Theming.Controllers
                     builder.Add(S[theme.Name], home => home
                         .LocalNav());
                 }
-             
-           
-                    
-            });
 
-            var model = new ThemeAdmin()
+            });
+            
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(new ThemeAdmin()
             {
                 Id = id,
                 Path = path
-            };
-           
-            return View((LayoutViewModel)await _viewProvider.ProvideEditAsync(model, this));
+            }, this));
 
         }
 

@@ -84,6 +84,7 @@ namespace Plato.Theming.ViewProviders
             var editViewModel = new EditThemeViewModel()
             {
                 Id = model.Id,
+                File = _siteThemeFileManager.GetFile(model.Id, model.Path),
                 Files = !string.IsNullOrEmpty(model.Path)
                     ? _siteThemeFileManager.GetFiles(model.Id, model.Path)
                     : _siteThemeFileManager.GetFiles(model.Id)

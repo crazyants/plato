@@ -9,6 +9,8 @@ namespace Plato.Theming.ViewModels
 
         public string Id { get; set; }
 
+        public IThemeFile File { get; set; }
+
         public IEnumerable<IThemeFile> Files { get; set; }
 
     }
