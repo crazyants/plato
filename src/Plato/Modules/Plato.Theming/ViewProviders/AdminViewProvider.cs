@@ -79,20 +79,14 @@ namespace Plato.Theming.ViewProviders
                     View<CreateThemeViewModel>("Admin.Create.Footer", viewModel => createViewModel).Zone("footer").Order(1)
                 ));
             }
-
-
-            var themeFiles = _siteThemeFileManager.GetFiles(model.Id);
-
-            // Get available theme files
-            var files = !string.IsNullOrEmpty(model.Path)
-                ? GetChildrenByRelativePathRecursively(model)
-                : themeFiles;
             
             // We are editing an existing theme
             var editViewModel = new EditThemeViewModel()
             {
                 Id = model.Id,
-                Files = files
+                Files = !string.IsNullOrEmpty(model.Path)
+                    ? _siteThemeFileManager.GetFiles(model.Id, model.Path)
+                    : _siteThemeFileManager.GetFiles(model.Id)
             };
 
             return Task.FromResult(Views(
@@ -107,42 +101,6 @@ namespace Plato.Theming.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-
-        IEnumerable<IThemeFile> GetChildrenByRelativePathRecursively(
-            ThemeAdmin model,
-            IEnumerable<IThemeFile> input = null,
-            IList<IThemeFile> output = null)
-        {
-
-            if (input == null)
-            {
-                input = _siteThemeFileManager.GetFiles(model.Id);
-            }
-            if (output == null)
-            {
-                output = new List<IThemeFile>();
-            }
-            
-            foreach (var themeFile in input)
-            {
-                if (themeFile.RelativePath.Equals(model.Path, StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var child in themeFile.Children)
-                    {
-                        output.Add(child);
-                    }
-                }
-                
-                if (themeFile.Children.Any())
-                {
-                    GetChildrenByRelativePathRecursively(model, themeFile.Children, output);
-                }
-
-            }
-
-            return output;
-
-        }
 
         IEnumerable<SelectListItem> GetAvailableThemes()
         {

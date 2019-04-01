@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
 using Plato.Internal.FileSystem.Abstractions;
@@ -20,9 +18,7 @@ namespace Plato.Theming.Services
         private IEnumerable<IThemeDescriptor> _themeDescriptors;
         private readonly IPlatoFileSystem _platoFileSystem;
         private readonly IThemeLocator _themeLocator;
-
-     
-
+        
         private const string ByThemeFileNameFormat = "Theme.{0}";
 
         public SiteThemeManager(

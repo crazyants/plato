@@ -13,5 +13,14 @@ namespace Plato.Internal.Theming
             throw new NotImplementedException();
         }
 
+        public IEnumerable<IThemeFile> GetFiles(string themeId, string relativePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IThemeFile GetFile(string themeId, string relativePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

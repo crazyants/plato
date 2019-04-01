@@ -7,5 +7,9 @@ namespace Plato.Internal.Theming.Abstractions
 
         IEnumerable<IThemeFile> GetFiles(string themeId);
 
+        IEnumerable<IThemeFile> GetFiles(string themeId, string relativePath);
+
+        IThemeFile GetFile(string themeId, string relativePath);
+
     }
 }

@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
@@ -20,6 +24,8 @@ namespace Plato.Theming.Controllers
         
         private readonly IViewProviderManager<ThemeAdmin> _viewProvider;
         private readonly ISiteThemeCreator _siteThemeCreator;
+        private readonly ISiteThemeManager _siteThemeManager;
+        private readonly ISiteThemeFileManager _themeFileManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
@@ -35,13 +41,17 @@ namespace Plato.Theming.Controllers
             ISiteThemeCreator siteThemeCreator,
             IBreadCrumbManager breadCrumbManager,
             IContextFacade contextFacade,
-            IAlerter alerter)
+            IAlerter alerter,
+            ISiteThemeFileManager themeFileManager,
+            ISiteThemeManager siteThemeManager)
         {
 
             _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade;
             _viewProvider = viewProvider;
             _alerter = alerter;
+            _themeFileManager = themeFileManager;
+            _siteThemeManager = siteThemeManager;
             _siteThemeCreator = siteThemeCreator;
 
             T = htmlLocalizer;
@@ -157,6 +167,18 @@ namespace Plato.Theming.Controllers
         public async Task<IActionResult> Edit(string id, string path)
         {
 
+            var theme = _siteThemeManager
+                .AvailableThemes.FirstOrDefault(t => t.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+
+            if (theme == null)
+            {
+                return NotFound();
+            }
+            
+            // Get theme files for current theme and path
+            var themeFile = _themeFileManager.GetFile(id, path);
+
+            // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -164,11 +186,47 @@ namespace Plato.Theming.Controllers
                         .LocalNav())
                     .Add(S["Themes"], theming => theming
                         .Action("Index", "Admin", "Plato.Theming")
-                        .LocalNav())
-                    //.Add(S["Edit Theme"], edit => edit
-                    //    .Action("Index", "Admin", "Plato.Theming")
-                    //    .LocalNav())
-                    .Add(S["Edit Theme"]);
+                        .LocalNav());
+             
+                var parents = _themeFileManager.GetParents(id, path);
+                if (parents != null)
+                {
+
+                    builder.Add(S[theme.Name], home => home
+                        .Action("Edit", "Admin", "Plato.Theming", new RouteValueDictionary()
+                        {
+                            ["id"] = theme.Id,
+                            ["path"] = ""
+                        }).LocalNav());
+
+                    foreach (var parent in parents)
+                    {
+
+                        if (parent.RelativePath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                        {
+                            builder.Add(S[parent.Name], home => home
+                                .LocalNav());
+                        }
+                        else
+                        {
+                            builder.Add(S[parent.Name], home => home
+                                .Action("Edit", "Admin", "Plato.Theming", new RouteValueDictionary()
+                                {
+                                    ["id"] = theme.Id,
+                                    ["path"] = parent.RelativePath
+                                }).LocalNav());
+                        }
+               
+                    }
+                }
+                else
+                {
+                    builder.Add(S[theme.Name], home => home
+                        .LocalNav());
+                }
+             
+           
+                    
             });
 
             var model = new ThemeAdmin()

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
 using Plato.Internal.FileSystem.Abstractions;
-using Plato.Internal.Models.Shell;
 using Plato.Internal.Theming.Abstractions;
 
 namespace Plato.Theming.Services
@@ -18,25 +17,25 @@ namespace Plato.Theming.Services
         private readonly IPlatoFileSystem _platoFileSystem;
     
         public SiteThemeFileManager(
-
-            IOptions<ThemeOptions> themeOptions,
             IPlatoFileSystem platoFilesystem,
-            IShellSettings shellSettings,
-            ISitesFolder sitesFolder,
             ISiteThemeManager siteThemeManager)
         {
-
             _platoFileSystem = platoFilesystem;
             _siteThemeManager = siteThemeManager;
-            
         }
 
         public IEnumerable<IThemeFile> GetFiles(string themeId)
         {
 
+            // Get available themes
+            var availableThemes = _siteThemeManager.AvailableThemes;
+            if (availableThemes == null)
+            {
+                throw new Exception($"Could not list files for theme \"{themeId}\" as no themes exist!");
+            }
+
             // Get theme to list
-            var theme = _siteThemeManager.AvailableThemes
-                .FirstOrDefault(t => t.Id.Equals(themeId, StringComparison.OrdinalIgnoreCase));
+            var theme = availableThemes.FirstOrDefault(t => t.Id.Equals(themeId, StringComparison.OrdinalIgnoreCase));
 
             // Ensure we found the theme
             if (theme == null)
@@ -47,21 +46,24 @@ namespace Plato.Theming.Services
             // Full path to theme we are listing files for
             _fullPathToCurrentTheme = _platoFileSystem.MapPath(theme.FullPath);
 
-            // Iterate files
-            var themeFiles = new List<IThemeFile>();
+            // Build output
+            var output = new List<IThemeFile>();
 
             // Add directories
-            var directories = GetDirectoriesRecursively(theme.FullPath);
+            var directories = BuildDirectoriesRecursively(theme.FullPath);
             if (directories != null)
             {
-                themeFiles.AddRange(directories);
+                foreach (var childDirectory in directories)
+                {
+                    output.Add(childDirectory);
+                }
             }
 
             // Add files
             var directory = _platoFileSystem.GetDirectoryInfo(theme.FullPath);
             foreach (var file in directory.GetFiles())
             {
-                themeFiles.Add(new ThemeFile()
+                output.Add(new ThemeFile()
                 {
                     Name = file.Name,
                     FullName = file.FullName,
@@ -69,14 +71,49 @@ namespace Plato.Theming.Services
                 });
             }
 
-            return themeFiles;
+            return output;
             
         }
 
-        IEnumerable<IThemeFile> GetDirectoriesRecursively(
-            string themePath,
-            IThemeFile parentDirectory = null,
-            IList<IThemeFile> output = null)
+        public IEnumerable<IThemeFile> GetFiles(string themeId, string relativePath)
+        {
+            var file = GetFile(themeId, relativePath);
+            if (file != null)
+            {
+                return file.Children.Reverse();
+            }
+
+            return new List<IThemeFile>();
+
+        }
+
+        public IThemeFile GetFile(string themeId, string relativePath)
+        {
+            var files = GetFiles(themeId);
+            if (files != null)
+            {
+                return GetThemeFileByRelativePathRecursively(relativePath, files);
+            }
+
+            return null;
+
+        }
+
+        public IEnumerable<IThemeFile> GetParents(string themeId, string relativePath)
+        {
+            var file = GetFile(themeId, relativePath);
+            if (file != null)
+            {
+                return RecurseParents(file).Reverse();
+            }
+
+            return null;
+
+        }
+        
+        // ---------------
+
+        IEnumerable<IThemeFile> BuildDirectoriesRecursively(string path, IThemeFile parent = null, IList<IThemeFile> output = null)
         {
 
             if (output == null)
@@ -85,7 +122,7 @@ namespace Plato.Theming.Services
             }
 
             // Recurse directories
-            var themeDirectory = _platoFileSystem.GetDirectoryInfo(themePath);
+            var themeDirectory = _platoFileSystem.GetDirectoryInfo(path);
             foreach (var directory in themeDirectory.GetDirectories())
             {
                 // Add directory
@@ -93,10 +130,11 @@ namespace Plato.Theming.Services
                 {
                     Name = directory.Name,
                     FullName = directory.FullName,
-                    RelativePath = directory.FullName.Replace(_fullPathToCurrentTheme, "")
+                    RelativePath = directory.FullName.Replace(_fullPathToCurrentTheme, ""),
+                    Parent = parent
                 };
 
-                // Add files from directory
+                // Add files to directory
                 foreach (var file in directory.GetFiles())
                 {
                     themeFile.Children.Add(new ThemeFile()
@@ -108,19 +146,62 @@ namespace Plato.Theming.Services
                     });
                 }
 
-                if (parentDirectory != null)
+                if (parent != null)
                 {
-                    parentDirectory.Children.Add(themeFile);
+                    parent.Children.Add(themeFile);
                 }
                 else
                 {
                     output.Add(themeFile);
                 }
 
-                GetDirectoriesRecursively(directory.FullName, themeFile, output);
+                BuildDirectoriesRecursively(directory.FullName, themeFile, output);
 
             }
 
+            return output;
+
+        }
+
+        IThemeFile GetThemeFileByRelativePathRecursively(string relativePath, IEnumerable<IThemeFile> themeFiles)
+        {
+            
+            foreach (var themeFile in themeFiles)
+            {
+                if (themeFile.RelativePath.Equals(relativePath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return themeFile;
+                }
+
+                if (themeFile.Children.Any())
+                {
+                    return GetThemeFileByRelativePathRecursively(relativePath, themeFile.Children);
+                }
+                
+            }
+
+            return null;
+
+        }
+
+        IEnumerable<IThemeFile> RecurseParents(IThemeFile themeFile, IList<IThemeFile> output = null)
+        {
+
+            if (output == null)
+            {
+                output = new List<IThemeFile>();
+            }
+            
+            if (themeFile.Parent != null)
+            {
+                output.Add(themeFile);
+                RecurseParents(themeFile.Parent, output);
+            }
+            else
+            {
+                output.Add(themeFile);
+            }
+            
             return output;
 
         }
