@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Plato.Theming.Models;
 using Plato.Theming.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Theming.Abstractions;
-using Plato.Theming.Services;
 
 namespace Plato.Theming.ViewProviders
 {
@@ -111,12 +108,12 @@ namespace Plato.Theming.ViewProviders
         {
 
             var themes = new List<SelectListItem>();
-            foreach (var z in _themeManager.AvailableThemes)
+            foreach (var theme in _themeManager.AvailableThemes)
             {
                 themes.Add(new SelectListItem
                 {
-                    Text = z.Name,
-                    Value = z.Id
+                    Text = theme.Name,
+                    Value = theme.Id
                 });
             }
 

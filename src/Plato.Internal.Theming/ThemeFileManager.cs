@@ -47,11 +47,11 @@ namespace Plato.Internal.Theming
             // Build output
             var output = new List<IThemeFile>();
             
-            // Recurse directories
+            // Get theme directory
             var themeDirectory = _fileSystem.GetDirectoryInfo(theme.FullPath);
 
-            // Add our theme folder as the root
-            var themeRoot = new ThemeFile
+            // Add our theme directory as the root
+            var rootDirectory = new ThemeFile
             {
                 Name = themeDirectory.Name,
                 FullName = themeDirectory.FullName,
@@ -59,7 +59,7 @@ namespace Plato.Internal.Theming
             };
             
             // Add child directories to our root
-            var directories = BuildDirectoriesRecursively(theme.FullPath, themeRoot);
+            var directories = BuildDirectoriesRecursively(theme.FullPath, rootDirectory);
             if (directories != null)
             {
                 foreach (var childDirectory in directories)
@@ -68,14 +68,14 @@ namespace Plato.Internal.Theming
                 }
             }
 
-            // Add files
+            // Add files from our theme directory
             foreach (var file in themeDirectory.GetFiles())
             {
                 output.Add(new ThemeFile()
                 {
                     Name = file.Name,
                     FullName = file.FullName,
-                    Parent = themeRoot
+                    Parent = rootDirectory
                 });
             }
             
@@ -83,9 +83,10 @@ namespace Plato.Internal.Theming
             var list = ((IList<IThemeFile>) output.ToList());
 
             // Update list with relative paths
+            // We pass by reference so we don't need to create another list
             BuildRelativePathsRecursively(ref list, _fileSystem.MapPath(theme.FullPath));
 
-            // Update updated list
+            // Return composed theme files
             return list;
             
         }
@@ -115,7 +116,7 @@ namespace Plato.Internal.Theming
             var files = GetFiles(themeId);
             if (files != null)
             {
-                return GetThemeFileByRelativePathRecursively(relativePath, files);
+                return GetByRelativePathRecursively(relativePath, files);
             }
 
             return null;
@@ -131,7 +132,7 @@ namespace Plato.Internal.Theming
             var file = GetFile(themeId, relativePath);
             if (file != null)
             {
-                return RecurseParents(file).Reverse();
+                return BuildParentsRecursively(file).Reverse();
             }
 
             return null;
@@ -208,7 +209,7 @@ namespace Plato.Internal.Theming
                     });
                 }
                 
-                // If a parent exists add current file as a child of the parent
+                // Add current file as a child of the parent
                 parent?.Children.Add(themeFile);
                 
                 // Recurse until we've processed all directories 
@@ -219,52 +220,8 @@ namespace Plato.Internal.Theming
             return parent?.Children ?? null;
 
         }
-
-        IThemeFile GetThemeFileByRelativePathRecursively(string relativePath, IEnumerable<IThemeFile> themeFiles)
-        {
-
-            foreach (var themeFile in themeFiles)
-            {
-                if (themeFile.RelativePath.Equals(relativePath, StringComparison.OrdinalIgnoreCase))
-                {
-                    return themeFile;
-                }
-
-                if (themeFile.Children.Any())
-                {
-                    // Continue searching until we find results
-                    var files = GetThemeFileByRelativePathRecursively(relativePath, themeFile.Children);
-                    if (files != null)
-                    {
-                        return files;
-                    }
-                }
-
-            }
-
-            return null;
-
-        }
         
-         void BuildRelativePathsRecursively(ref IList<IThemeFile> themeFiles, string rootPath)
-        {
-
-            foreach (var themeFile in themeFiles)
-            {
-
-                themeFile.RelativePath = themeFile.FullName.Replace(rootPath, "");
-                
-                if (themeFile.Children.Any())
-                {
-                    var children = themeFile.Children;
-                    BuildRelativePathsRecursively(ref children, rootPath);
-                }
-
-            }
-            
-        }
-        
-        IEnumerable<IThemeFile> RecurseParents(IThemeFile themeFile, IList<IThemeFile> output = null)
+        IEnumerable<IThemeFile> BuildParentsRecursively(IThemeFile themeFile, IList<IThemeFile> output = null)
         {
 
             if (output == null)
@@ -275,7 +232,7 @@ namespace Plato.Internal.Theming
             if (themeFile.Parent != null)
             {
                 output.Add(themeFile);
-                RecurseParents(themeFile.Parent, output);
+                BuildParentsRecursively(themeFile.Parent, output);
             }
             else
             {
@@ -284,6 +241,51 @@ namespace Plato.Internal.Theming
 
             return output;
 
+        }
+
+        IThemeFile GetByRelativePathRecursively(string relativePath, IEnumerable<IThemeFile> themeFiles)
+        {
+
+            foreach (var themeFile in themeFiles)
+            {
+
+                // Does the relative path match?
+                if (themeFile.RelativePath.Equals(relativePath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return themeFile;
+                }
+
+                if (themeFile.Children.Any())
+                {
+
+                    // Recurse
+                    var files = GetByRelativePathRecursively(relativePath, themeFile.Children);
+
+                    // Continue searching until we find our relative path
+                    if (files != null)
+                    {
+                        return files;
+                    }
+
+                }
+
+            }
+
+            return null;
+
+        }
+
+        void BuildRelativePathsRecursively(ref IList<IThemeFile> themeFiles, string rootPath)
+        {
+            foreach (var themeFile in themeFiles)
+            {
+                themeFile.RelativePath = themeFile.FullName.Replace(rootPath, "");
+                if (themeFile.Children.Any())
+                {
+                    var children = themeFile.Children;
+                    BuildRelativePathsRecursively(ref children, rootPath);
+                }
+            }
         }
 
     }

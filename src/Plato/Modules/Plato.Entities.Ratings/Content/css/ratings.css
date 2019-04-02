@@ -1,7 +1,6 @@
 ﻿
 .vote-toggle {
     text-align: center;
-    background: #eee;
 }
 
 .list-left .vote-toggle { width: 36px; }
@@ -18,10 +17,4 @@
     line-height: normal;
 }
 
-.vote-toggle a.btn-vote-up:hover,
-.vote-toggle a.btn-vote-down:hover {
-    color: white;
-    background-color: #007bff;
-}
-
-.vote-toggle h6 { margin: 6px 0; color: #666; }
+.vote-toggle h6 { margin: 6px 0; }

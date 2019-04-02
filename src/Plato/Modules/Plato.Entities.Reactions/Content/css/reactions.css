@@ -1,7 +1,7 @@
 ﻿
 /* reaction dropdown */
 .react-dropdown-menu {
-    text-align: center;
+    text-align: center !important;
 }
 
 .react-dropdown-menu .dropdown-item {

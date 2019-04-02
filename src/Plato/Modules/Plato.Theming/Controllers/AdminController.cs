@@ -40,18 +40,18 @@ namespace Plato.Theming.Controllers
             ISiteThemeCreator siteThemeCreator,
             IBreadCrumbManager breadCrumbManager,
             IContextFacade contextFacade,
-            IAlerter alerter,
             ISiteThemeFileManager themeFileManager,
-            ISiteThemeManager siteThemeManager)
+            ISiteThemeManager siteThemeManager,
+            IAlerter alerter)
         {
 
             _breadCrumbManager = breadCrumbManager;
-            _contextFacade = contextFacade;
-            _viewProvider = viewProvider;
-            _alerter = alerter;
             _themeFileManager = themeFileManager;
             _siteThemeManager = siteThemeManager;
             _siteThemeCreator = siteThemeCreator;
+            _contextFacade = contextFacade;
+            _viewProvider = viewProvider;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
