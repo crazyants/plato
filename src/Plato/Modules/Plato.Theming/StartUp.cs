@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Assets.Abstractions;
@@ -38,9 +40,10 @@ namespace Plato.Theming
             services.AddScoped<IViewProviderManager<ThemeAdmin>, ViewProviderManager<ThemeAdmin>>();
             services.AddScoped<IViewProvider<ThemeAdmin>, AdminViewProvider>();
 
-            // Tenant specific theming implementations
-            services.AddScoped<ISiteThemeManager, SiteThemeManager>();
-            services.AddScoped<ISiteThemeFileManager, SiteThemeFileManager>();
+            // Replace dummy site theme services with tenant specific implementations
+            services.Replace<ISiteThemeManager, SiteThemeManager>(ServiceLifetime.Scoped);
+            services.Replace<ISiteThemeFileManager, SiteThemeFileManager>(ServiceLifetime.Scoped);
+            
             services.AddScoped<ISiteThemeCreator, SiteThemeCreator>();
             
         }

@@ -307,7 +307,7 @@ namespace Plato.Settings.Controllers
                 themes.Add(new SelectListItem
                 {
                     Text = theme.Name,
-                    Value = theme.FullPath
+                    Value = theme.FullPath.ToLower()
                 });
             }
 

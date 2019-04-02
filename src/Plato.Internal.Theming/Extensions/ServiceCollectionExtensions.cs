@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Internal.Theming.Abstractions.Locator;
 
@@ -36,10 +37,14 @@ namespace Plato.Internal.Theming.Extensions
             IHostingEnvironment env)
         {
 
+            // Add default themes
             var options = app.ApplicationServices.GetRequiredService<IOptions<ThemeOptions>>();
             if (options != null)
             {
-                var contentPath = Path.Combine(env.ContentRootPath, options.Value.VirtualPathToThemesFolder);
+                var contentPath = Path.Combine(
+                    env.ContentRootPath,
+                    options.Value.VirtualPathToThemesFolder);
+
                 app.UseStaticFiles(new StaticFileOptions
                 {
                     RequestPath = "/" + options.Value.VirtualPathToThemesFolder,
@@ -47,8 +52,19 @@ namespace Plato.Internal.Theming.Extensions
                 });
             }
 
+            // Add sites folder
+            var sitesFolder = app.ApplicationServices.GetRequiredService<ISitesFolder>();
+            if (sitesFolder != null)
+            {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    RequestPath = "/sites",
+                    FileProvider = new PhysicalFileProvider(sitesFolder.RootPath)
+                });
+            }
+
         }
-
-
+        
     }
+
 }

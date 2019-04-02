@@ -135,7 +135,7 @@ namespace Plato.Internal.Hosting.Web
                 }
             }
 
-            return $"{_themeOptions.Value.VirtualPathToThemesFolder}/Default";
+            return $"{_themeOptions.Value.VirtualPathToThemesFolder.ToLower()}/default";
 
         }
 

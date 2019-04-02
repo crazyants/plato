@@ -17,10 +17,10 @@ namespace Plato.Theming.Services
     {
         
         private IEnumerable<IThemeDescriptor> _themeDescriptors;
+
         private readonly IPlatoFileSystem _platoFileSystem;
         private readonly IThemeLocator _themeLocator;
         
-     
         public SiteThemeManager(
             IOptions<ThemeOptions> themeOptions,
             IPlatoFileSystem platoFilesystem,

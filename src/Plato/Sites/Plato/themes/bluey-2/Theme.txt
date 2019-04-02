@@ -1,0 +1,5 @@
+Name: Bluey 2
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Author: InstantASP
+WebSite: http://www.instantasp.co.uk/

@@ -16,7 +16,7 @@ namespace Plato.Internal.FileSystem
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalSitesFolder> _logger;
 
-        private static string InternalRootPath = "wwwroot/sites";
+        private static string InternalRootPath = "Sites";
 
         public PhysicalSitesFolder(
             IPlatoFileSystem parentFileSystem,

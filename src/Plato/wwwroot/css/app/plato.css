@@ -790,7 +790,7 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
 }
 
 .infinite-scroll-loader {
-    padding: 0;
+    padding: 0 !important;
     margin: 0;
     list-style: none;
     display: none;
