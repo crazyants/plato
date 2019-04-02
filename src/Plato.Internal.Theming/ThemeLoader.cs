@@ -1,40 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Internal.Theming.Abstractions.Locator;
 using Plato.Internal.Theming.Abstractions.Models;
-using Plato.Internal.Yaml;
 
 namespace Plato.Internal.Theming
 {
-    public class ThemeManager : IThemeManager
+    public class ThemeLoader : IThemeLoader
     {
-        private const string ByThemeFileNameFormat = "Theme.{0}";
-
+     
         private IEnumerable<IThemeDescriptor> _themeDescriptors;
 
         private readonly IThemeLocator _themeLocator;
-        private readonly IPlatoFileSystem _platoFileSystem;
-        
-        public ThemeManager(
+
+        public ThemeLoader(
             IHostingEnvironment hostingEnvironment,
             IOptions<ThemeOptions> themeOptions,
             IThemeLocator themeLocator,
             IPlatoFileSystem platoFileSystem)
         {
+
             _themeLocator = themeLocator;
-            _platoFileSystem = platoFileSystem;
 
             var contentRootPath = hostingEnvironment.ContentRootPath;
             var virtualPathToThemesFolder = themeOptions.Value.VirtualPathToThemesFolder;
 
-            RootPath = _platoFileSystem.Combine(
+            RootPath = platoFileSystem.Combine(
                 contentRootPath,
                 virtualPathToThemesFolder);
 

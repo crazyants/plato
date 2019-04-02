@@ -35,7 +35,7 @@ namespace Plato.Theming
             services.AddScoped<IViewProvider<ThemeAdmin>, AdminViewProvider>();
 
             // Replace dummy site theme services with tenant specific implementations
-            services.Replace<ISiteThemeManager, SiteThemeManager>(ServiceLifetime.Scoped);
+            services.Replace<ISiteThemeLoader, SiteThemeLoader>(ServiceLifetime.Scoped);
             services.Replace<ISiteThemeFileManager, SiteThemeFileManager>(ServiceLifetime.Scoped);
             
         }

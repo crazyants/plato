@@ -15,9 +15,9 @@ namespace Plato.Theming.ViewProviders
     public class AdminViewProvider : BaseViewProvider<ThemeAdmin>
     {
 
-        private readonly ISiteThemeManager _siteThemeManager;
+        private readonly ISiteThemeLoader _siteThemeLoader;
         private readonly ISiteThemeFileManager _siteThemeFileManager;
-        private readonly IThemeManager _themeManager;
+        private readonly IThemeLoader _themeLoader;
         
         public IHtmlLocalizer T { get; }
 
@@ -26,12 +26,12 @@ namespace Plato.Theming.ViewProviders
         public AdminViewProvider(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer, 
-            IThemeManager themeManager, 
-            ISiteThemeManager siteThemeManager,
+            IThemeLoader themeLoader, 
+            ISiteThemeLoader siteThemeLoader,
             ISiteThemeFileManager siteThemeFileManager)
         {
-            _themeManager = themeManager;
-            _siteThemeManager = siteThemeManager;
+            _themeLoader = themeLoader;
+            _siteThemeLoader = siteThemeLoader;
             _siteThemeFileManager = siteThemeFileManager;
 
             T = htmlLocalizer;
@@ -48,7 +48,7 @@ namespace Plato.Theming.ViewProviders
 
             var indexViewModel = new ThemingIndexViewModel()
             {
-                Themes = _siteThemeManager.AvailableThemes
+                Themes = _siteThemeLoader.AvailableThemes
             };
 
             return Task.FromResult(Views(
@@ -108,7 +108,7 @@ namespace Plato.Theming.ViewProviders
         {
 
             var themes = new List<SelectListItem>();
-            foreach (var theme in _themeManager.AvailableThemes)
+            foreach (var theme in _themeLoader.AvailableThemes)
             {
                 themes.Add(new SelectListItem
                 {

@@ -13,7 +13,7 @@ using Plato.Internal.Yaml;
 namespace Plato.Theming.Services
 {
 
-    public class SiteThemeManager : ISiteThemeManager
+    public class SiteThemeLoader : ISiteThemeLoader
     {
         
         private IEnumerable<IThemeDescriptor> _themeDescriptors;
@@ -21,7 +21,7 @@ namespace Plato.Theming.Services
         private readonly IPlatoFileSystem _platoFileSystem;
         private readonly IThemeLocator _themeLocator;
         
-        public SiteThemeManager(
+        public SiteThemeLoader(
             IOptions<ThemeOptions> themeOptions,
             IPlatoFileSystem platoFilesystem,
             IShellSettings shellSettings,

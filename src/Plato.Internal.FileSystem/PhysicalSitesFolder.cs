@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
@@ -15,14 +16,17 @@ namespace Plato.Internal.FileSystem
         
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalSitesFolder> _logger;
+        private readonly IHostingEnvironment _hostEnvironment;
 
         private static string InternalRootPath = "Sites";
 
         public PhysicalSitesFolder(
             IPlatoFileSystem parentFileSystem,
-            ILogger<PhysicalSitesFolder> logger)
+            ILogger<PhysicalSitesFolder> logger,
+            IHostingEnvironment hostEnvironment)
         {
             _logger = logger;
+            _hostEnvironment = hostEnvironment;
 
             if (!parentFileSystem.DirectoryExists(InternalRootPath))
             {
@@ -130,6 +134,16 @@ namespace Plato.Internal.FileSystem
 
         public bool DeleteFile(string fileName, string path)
         {
+
+            if (String.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
             
             if (!path.EndsWith("\\"))
             {
@@ -138,15 +152,49 @@ namespace Plato.Internal.FileSystem
 
 
             var fullPath = path + fileName;
-
             if (_fileSystem.FileExists(fullPath))
             {
-                _fileSystem.DeleteFile(fullPath);
+                try
+                {
+                    _fileSystem.DeleteFile(fullPath);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+
+                return true;
+
             }
 
             return false;
         }
 
+        public bool DeleteDirectory(string path)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+            
+            if (!_fileSystem.DirectoryExists(path))
+            {
+                return false;
+            }
+
+            try
+            {
+                _fileSystem.DeleteDirectory(path);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+        
         public string Combine(params string[] paths)
         {
             return _fileSystem.Combine(paths);

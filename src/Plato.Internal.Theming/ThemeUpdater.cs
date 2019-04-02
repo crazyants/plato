@@ -19,7 +19,7 @@ namespace Plato.Internal.Theming
             _platoFileSystem = platoFileSystem;
         }
 
-        public ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(
+        public ICommandResult<IThemeDescriptor> UpdateTheme(
             string pathToThemeFolder,
             IThemeDescriptor descriptor)
         {

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Theming.Models;
@@ -12,6 +14,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Theming.ViewModels;
 
@@ -20,13 +23,15 @@ namespace Plato.Theming.Controllers
 
     public class AdminController : Controller, IUpdateModel
     {
-        
+
         private readonly IViewProviderManager<ThemeAdmin> _viewProvider;
-        private readonly IThemeCreator _themeCreator;
-        private readonly ISiteThemeManager _siteThemeManager;
         private readonly ISiteThemeFileManager _themeFileManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly ISiteThemeLoader _siteThemeLoader;
         private readonly IContextFacade _contextFacade;
+        private readonly IPlatoFileSystem _fileSystem;
+        private readonly IThemeCreator _themeCreator;
+        private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -41,16 +46,21 @@ namespace Plato.Theming.Controllers
             IBreadCrumbManager breadCrumbManager,
             IContextFacade contextFacade,
             ISiteThemeFileManager themeFileManager,
-            ISiteThemeManager siteThemeManager,
-            IAlerter alerter)
+            ISiteThemeLoader siteThemeLoader,
+            IAlerter alerter,
+            ISitesFolder sitesFolder, 
+            IPlatoFileSystem fileSystem,
+            ISiteSettingsStore siteSettingsStore)
         {
 
             _breadCrumbManager = breadCrumbManager;
             _themeFileManager = themeFileManager;
-            _siteThemeManager = siteThemeManager;
+            _siteThemeLoader = siteThemeLoader;
             _themeCreator = themeCreator;
             _contextFacade = contextFacade;
             _viewProvider = viewProvider;
+            _fileSystem = fileSystem;
+            _siteSettingsStore = siteSettingsStore;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -166,9 +176,11 @@ namespace Plato.Theming.Controllers
         public async Task<IActionResult> Edit(string id, string path)
         {
 
-            var theme = _siteThemeManager
+            // Get theme
+            var theme = _siteThemeLoader
                 .AvailableThemes.FirstOrDefault(t => t.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
 
+            // Ensure we found the theme
             if (theme == null)
             {
                 return NotFound();
@@ -290,7 +302,56 @@ namespace Plato.Theming.Controllers
             }));
 
         }
-        
+
+        // ------------
+        // Delete
+        // ------------
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string id)
+        {
+            
+            // Get theme
+            var theme = _siteThemeLoader
+                .AvailableThemes.FirstOrDefault(t => t.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+
+            // Ensure we found the theme
+            if (theme == null)
+            {
+                return NotFound();
+            }
+            
+            // Is the theme we are deleting our current theme
+            var currentTheme = await _contextFacade.GetCurrentThemeAsync();
+            if (currentTheme.Equals(theme.FullPath, StringComparison.OrdinalIgnoreCase))
+            {
+
+                // Get settings 
+                var settings = await _siteSettingsStore.GetAsync();
+
+                // Clear theme, ensures we fallback to our default theme
+                settings.Theme = "";
+
+                // Save settings
+                await _siteSettingsStore.SaveAsync(settings);
+
+            }
+
+            // Delete the theme from the file system
+            var result = _fileSystem.DeleteDirectory(theme.FullPath);
+            if (result)
+            {
+                _alerter.Success(T["Theme Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T[$"Could not delete the theme at \"{theme.FullPath}\""]);
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
     }
 
 }

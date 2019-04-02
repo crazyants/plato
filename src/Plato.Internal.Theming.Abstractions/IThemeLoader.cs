@@ -4,7 +4,7 @@ using Plato.Internal.Theming.Abstractions.Models;
 
 namespace Plato.Internal.Theming.Abstractions
 {
-    public interface IThemeManager
+    public interface IThemeLoader
     {
         string RootPath { get;  }
 

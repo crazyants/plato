@@ -19,6 +19,8 @@ namespace Plato.Internal.FileSystem.Abstractions
 
         bool DeleteFile(string fileName, string path);
 
+        bool DeleteDirectory(string path);
+
         string Combine(params string[] paths);
 
     }

@@ -6,7 +6,7 @@ namespace Plato.Internal.Theming.Abstractions
     public interface IThemeUpdater
     {
 
-        ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(string pathToThemeFolder, IThemeDescriptor descriptor);
+        ICommandResult<IThemeDescriptor> UpdateTheme(string pathToThemeFolder, IThemeDescriptor descriptor);
 
     }
 }

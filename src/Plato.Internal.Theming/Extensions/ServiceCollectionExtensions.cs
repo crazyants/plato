@@ -21,14 +21,14 @@ namespace Plato.Internal.Theming.Extensions
             services.AddSingleton<IConfigureOptions<ThemeOptions>, ThemeOptionsConfigure>();
             services.AddSingleton<IThemeLocator, ThemeLocator>();
 
-            services.AddSingleton<IThemeManager, ThemeManager>();
+            services.AddSingleton<IThemeLoader, ThemeLoader>();
             services.AddSingleton<IThemeFileManager, ThemeFileManager>();
 
             services.AddScoped<IThemeCreator, ThemeCreator>();
             services.AddSingleton<IThemeUpdater, ThemeUpdater>();
          
             // Dummy implementations to mimic IThemeManager, until the theming feature is enabled
-            services.AddSingleton<ISiteThemeManager, DummySiteThemeManager>();
+            services.AddSingleton<ISiteThemeLoader, DummySiteThemeLoader>();
             services.AddSingleton<ISiteThemeFileManager, DummySiteThemeFileManager>();
             
             return services;

@@ -33,32 +33,53 @@ namespace Plato.Internal.FileSystem
             get; private set;
         }
 
-        private void MakeDestinationFileNameAvailable(IFileInfo fileInfo)
+        private bool MakeDestinationFileNameAvailable(IFileInfo fileInfo)
         {
+
+            if (fileInfo == null)
+            {
+                throw new ArgumentNullException(nameof(fileInfo));
+            }
+
             var destinationFileName = fileInfo.PhysicalPath;
+
+            if (string.IsNullOrEmpty(destinationFileName))
+            {
+                throw new ArgumentNullException(nameof(destinationFileName));
+            }
+
             var isDirectory = Directory.Exists(destinationFileName);
-         
             try
             {
                 if (isDirectory)
-                    Directory.Delete(destinationFileName);
+                {
+                    // Note recursive = true (deletes all child directories and files)
+                    Directory.Delete(destinationFileName, true);
+                }
                 else
+                {
                     File.Delete(destinationFileName);
+                }
+                    
             }
-            catch
+            catch (Exception e)
             {
                 // We land here if the file is in use, for example. Let's move on.
+                _logger.LogError(e, e.Message);
             }
 
+            // If directory still exists we have a problem
             if (isDirectory && Directory.Exists(destinationFileName))
             {
-                //_logger.LogWarning("Could not delete recipe execution folder {0} under \"App_Data\" folder", destinationFileName);
-                return;
+                return false;
             }
+
             // If destination doesn't exist, we are good
             if (!File.Exists(destinationFileName))
-                return;
-
+            {
+                return true;
+            }
+                
             // Try renaming destination to a unique filename
             const string extension = "deleted";
             for (var i = 0; i < 100; i++)
@@ -69,25 +90,30 @@ namespace Plato.Internal.FileSystem
                 {
                     File.Delete(newFileName);
                     File.Move(destinationFileName, newFileName);
-                    return;
+                    return true;
                 }
                 catch
                 {
-                  
+                    // ignored
                 }
             }
 
             // Try again with the original filename. This should throw the same exception
             // we got at the very beginning.
+            var ok = true;
             try
             {
                 File.Delete(destinationFileName);
+             
             }
-            catch (Exception ex)
-            {             
-                throw new Exception(
-                    $"Unable to make room available for file \"{destinationFileName}\". Exception details follow: {ex.Message}");
+            catch (Exception e)
+            {
+                ok = false;
+                _logger.LogError(e, e.Message);
             }
+
+            return ok;
+
         }
         
         public string Combine(params string[] paths)
@@ -227,9 +253,14 @@ namespace Plato.Internal.FileSystem
 
         }
 
-        public void DeleteFile(string path)
+        public bool DeleteFile(string path)
         {
-            MakeDestinationFileNameAvailable(GetFileInfo(path));
+            return MakeDestinationFileNameAvailable(GetFileInfo(path));
+        }
+
+        public bool DeleteDirectory(string path)
+        {
+            return MakeDestinationFileNameAvailable(GetFileInfo(path));
         }
 
         public void CreateDirectory(string path)

@@ -27,7 +27,7 @@ namespace Plato.Settings.Controllers
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly ITimeZoneProvider _timeZoneProvider;
-        private readonly ISiteThemeManager _themeManager;
+        private readonly ISiteThemeLoader _themeLoader;
         private readonly ILocaleProvider _localeProvider;
         private readonly IAlerter _alerter;
         
@@ -44,7 +44,7 @@ namespace Plato.Settings.Controllers
             IBreadCrumbManager breadCrumbManager,
             ITimeZoneProvider timeZoneProvider,
             ILocaleProvider localeProvider,
-            ISiteThemeManager themeManager,
+            ISiteThemeLoader themeLoader,
             IAlerter alerter)
         {
 
@@ -53,7 +53,7 @@ namespace Plato.Settings.Controllers
             _breadCrumbManager = breadCrumbManager;
             _timeZoneProvider = timeZoneProvider;
             _localeProvider = localeProvider;
-            _themeManager = themeManager;
+            _themeLoader = themeLoader;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -302,7 +302,7 @@ namespace Plato.Settings.Controllers
                 }
             };
             
-            foreach (var theme in _themeManager.AvailableThemes)
+            foreach (var theme in _themeLoader.AvailableThemes)
             {
                 themes.Add(new SelectListItem
                 {

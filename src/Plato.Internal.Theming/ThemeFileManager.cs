@@ -11,7 +11,7 @@ namespace Plato.Internal.Theming
     public class ThemeFileManager : IThemeFileManager
     {
     
-        private IThemeManager _themeManager;
+        private IThemeLoader _themeLoader;
         private readonly IPlatoFileSystem _fileSystem;
 
         public ThemeFileManager(IPlatoFileSystem filesystem)
@@ -19,9 +19,9 @@ namespace Plato.Internal.Theming
             _fileSystem = filesystem;
         }
 
-        public void SetThemeManager(IThemeManager manager)
+        public void SetThemeLoader(IThemeLoader loader)
         {
-            _themeManager = manager;
+            _themeLoader = loader;
         }
 
         public IEnumerable<IThemeFile> GetFiles(string themeId)
@@ -31,7 +31,7 @@ namespace Plato.Internal.Theming
             EnsureThemeManager();
 
             // Get available themes
-            var availableThemes = _themeManager.AvailableThemes;
+            var availableThemes = _themeLoader.AvailableThemes;
             if (availableThemes == null)
             {
                 throw new Exception($"Could not list files for theme \"{themeId}\". No themes could be located!");
@@ -176,7 +176,7 @@ namespace Plato.Internal.Theming
         
         void EnsureThemeManager()
         {
-            if (_themeManager == null)
+            if (_themeLoader == null)
             {
                 throw new Exception("A theme manager has not been initialized. You must call the SetThemeManager method passing in a valid IThemeManager implementation.");
             }

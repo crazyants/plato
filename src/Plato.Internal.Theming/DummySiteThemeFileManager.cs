@@ -11,16 +11,16 @@ namespace Plato.Internal.Theming
         private readonly IThemeFileManager _themeFileManager;
 
         public DummySiteThemeFileManager(
-            ISiteThemeManager siteThemeManager,
+            ISiteThemeLoader siteThemeLoader,
             IThemeFileManager themeFileManager)
         {
             _themeFileManager = themeFileManager;
-            SetThemeManager(siteThemeManager);
+            SetThemeLoader(siteThemeLoader);
         }
 
-        public void SetThemeManager(IThemeManager manager)
+        public void SetThemeLoader(IThemeLoader loader)
         {
-            _themeFileManager.SetThemeManager(manager);
+            _themeFileManager.SetThemeLoader(loader);
         }
 
         public IEnumerable<IThemeFile> GetFiles(string themeId)

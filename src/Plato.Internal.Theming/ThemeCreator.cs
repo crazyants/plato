@@ -13,46 +13,37 @@ namespace Plato.Internal.Theming
     {
 
         private readonly IThemeUpdater _themeUpdater;
-        private readonly ISiteThemeManager _siteThemeManager;
+        private readonly ISiteThemeLoader _siteThemeLoader;
         private readonly IPlatoFileSystem _platoFileSystem;
-        public readonly IThemeManager _themeManager;
-        public readonly ISitesFolder _sitesFolder;
-
+        public readonly IThemeLoader _themeLoader;
+     
         public ThemeCreator(
-            ISiteThemeManager siteThemeManager,
+            ISiteThemeLoader siteThemeLoader,
             IPlatoFileSystem platoFileSystem,
-            IThemeManager themeManager,
-            ISitesFolder sitesFolder,
+            IThemeLoader themeLoader,
             IThemeUpdater themeUpdater)
         {
-            _siteThemeManager = siteThemeManager;
+            _siteThemeLoader = siteThemeLoader;
             _platoFileSystem = platoFileSystem;
-            _themeManager = themeManager;
-            _sitesFolder = sitesFolder;
+            _themeLoader = themeLoader;
             _themeUpdater = themeUpdater;
         }
 
-        public ICommandResult<IThemeDescriptor> CreateTheme(string baseThemeId, string newThemeName)
+        public ICommandResult<IThemeDescriptor> CreateTheme(string sourceThemeId, string newThemeName)
         {
 
             // Create result
             var result = new CommandResult<ThemeDescriptor>();
 
             // Get base theme 
-            IThemeDescriptor baseThemeDescriptor = null;
-            foreach (var descriptor in _themeManager.AvailableThemes)
-            {
-                if (descriptor.Id.Equals(baseThemeId, StringComparison.OrdinalIgnoreCase))
-                {
-                    baseThemeDescriptor = descriptor;
-                    break;
-                }
-            }
+            var baseDescriptor =
+                _themeLoader.AvailableThemes.FirstOrDefault(t =>
+                    t.Id.Equals(sourceThemeId, StringComparison.OrdinalIgnoreCase));
 
             // Ensure base theme exists
-            if (baseThemeDescriptor == null)
+            if (baseDescriptor == null)
             {
-                throw new Exception($"Could not locate the theme \"{baseThemeId}\".");
+                throw new Exception($"Could not locate the base theme \"{sourceThemeId}\".");
             }
 
             try
@@ -64,22 +55,23 @@ namespace Plato.Internal.Theming
                     newThemeId = newThemeId.ToLower()
                         .Replace(" ", "-");
                 }
-                
+
                 // Path to the new directory for our theme
                 var targetPath = _platoFileSystem.Combine(
-                    _siteThemeManager.RootPath, newThemeId);
+                    _siteThemeLoader.RootPath, newThemeId);
 
                 // Copy base theme to new directory within /sites/{SiteName/themes
                 _platoFileSystem.CopyDirectory(
-                    baseThemeDescriptor.FullPath,
+                    baseDescriptor.FullPath,
                     targetPath,
                     true);
 
                 // Update theme name 
-                baseThemeDescriptor.Name = newThemeName;
-            
+                baseDescriptor.Name = newThemeName;
+                baseDescriptor.FullPath = targetPath;
+
                 // Update YAML manifest
-                var update = _themeUpdater.UpdateThemeDescriptor(targetPath, baseThemeDescriptor);
+                var update = _themeUpdater.UpdateTheme(targetPath, baseDescriptor);
                 if (!update.Succeeded)
                 {
                     return result.Failed(update.Errors.ToArray());
@@ -91,7 +83,7 @@ namespace Plato.Internal.Theming
                 return result.Failed(e.Message);
             }
 
-            return result.Success(baseThemeDescriptor);
+            return result.Success(baseDescriptor);
 
         }
 

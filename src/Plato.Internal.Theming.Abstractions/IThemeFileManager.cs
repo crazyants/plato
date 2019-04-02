@@ -6,7 +6,7 @@ namespace Plato.Internal.Theming.Abstractions
     public interface IThemeFileManager
     {
 
-        void SetThemeManager(IThemeManager manager);
+        void SetThemeLoader(IThemeLoader loader);
 
         IEnumerable<IThemeFile> GetFiles(string themeId);
 

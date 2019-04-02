@@ -123,8 +123,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(Create))]
+        [HttpPost, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditModeratorViewModel model)
         {
 
@@ -235,8 +234,7 @@ namespace Plato.Discuss.Moderation.Controllers
             return View(result);
         }
         
-        [HttpPost]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(int id)
         {
 
@@ -347,8 +345,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-
+        
     }
 
 }

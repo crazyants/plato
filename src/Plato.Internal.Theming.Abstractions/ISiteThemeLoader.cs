@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Theming.Abstractions
 {
-    public interface ISiteThemeManager : IThemeManager
+    public interface ISiteThemeLoader : IThemeLoader
     {
     }
 }
