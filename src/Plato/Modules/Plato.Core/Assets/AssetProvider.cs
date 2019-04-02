@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 
-namespace Plato.Theming.Assets
+namespace Plato.Core.Assets
 {
 
     public class AssetProvider : IAssetProvider

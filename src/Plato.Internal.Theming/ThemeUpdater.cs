@@ -8,13 +8,13 @@ using Plato.Internal.Yaml;
 namespace Plato.Internal.Theming
 {
 
-    public class ThemeDescriptorUpdater : IThemeDescriptorUpdater
+    public class ThemeUpdater : IThemeUpdater
     {
         private const string ByThemeFileNameFormat = "Theme.{0}";
 
         private readonly IPlatoFileSystem _platoFileSystem;
 
-        public ThemeDescriptorUpdater(IPlatoFileSystem platoFileSystem)
+        public ThemeUpdater(IPlatoFileSystem platoFileSystem)
         {
             _platoFileSystem = platoFileSystem;
         }

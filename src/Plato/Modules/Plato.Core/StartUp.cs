@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Core.Assets;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Handlers;
 using Plato.Core.Middleware;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
@@ -29,7 +31,10 @@ namespace Plato.Core
 
             // Set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-            
+
+            // Register client resources
+            services.AddScoped<IAssetProvider, AssetProvider>();
+
             // Configure current culture
             services.Configure<LocaleOptions>(options =>
             {

@@ -5,11 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Theming.Abstractions;
-using Plato.Theming.Assets;
 using Plato.Theming.Navigation;
 using Plato.Theming.Models;
 using Plato.Theming.Services;
@@ -28,10 +26,7 @@ namespace Plato.Theming
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-            // Register client resources
-            services.AddScoped<IAssetProvider, AssetProvider>();
-
+            
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
@@ -42,8 +37,6 @@ namespace Plato.Theming
             // Replace dummy site theme services with tenant specific implementations
             services.Replace<ISiteThemeManager, SiteThemeManager>(ServiceLifetime.Scoped);
             services.Replace<ISiteThemeFileManager, SiteThemeFileManager>(ServiceLifetime.Scoped);
-            
-            services.AddScoped<ISiteThemeCreator, SiteThemeCreator>();
             
         }
 

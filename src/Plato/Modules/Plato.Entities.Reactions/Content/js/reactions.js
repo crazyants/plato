@@ -147,7 +147,7 @@ $(function (win, doc, $) {
                             var result = results[i],
                                 $li = $("<li>",
                                     {
-                                        "class": "bg-light border-right border-secondary"
+                                        "class": "list-group-item  border-0"
                                     }),
                                 $a = $("<a>",
                                     {

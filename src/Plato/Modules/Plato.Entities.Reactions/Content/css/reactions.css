@@ -18,16 +18,19 @@
 /* reaction list (displayed below topics) */
 
 .reaction-list {
-    padding: 0; 
-    margin: 0;
+    padding: 0 !important; 
+    margin: 0 !important;
     list-style: none;
     display: block;
 }
 
-.reaction-list > li {
+.reaction-list > li.list-group-item {
     float: left;
     padding: 0; 
     margin: 0;
 }
 
-.reaction-list a { text-decoration: none; }
+.reaction-list a {
+    border-radius: 0;
+     text-decoration: none;
+}

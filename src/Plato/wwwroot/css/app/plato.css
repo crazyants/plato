@@ -278,7 +278,6 @@
 /* arrow border */
 .dropdown-menu:before {
     border: 8px solid transparent;
-    border-bottom-color: #C0C0C1;
 }
 
 /* arrow background */
@@ -286,6 +285,7 @@
     border: 7px solid transparent;
     border-bottom-color: #fff;
 }
+
 
 .dropdown-menu:before { left: 9px; right: auto; top: -16px; }
 .dropdown-menu:after { left: 10px; right: auto; top: -14px; }
@@ -729,17 +729,10 @@
 .tree input:checked + label > i.check-icon:after { opacity: 1; }
 
 /* ------------------------- */
-/* List groups */
-/* ------------------------- */
-
-
-/* ------------------------- */
 /* Labels */
 /* ------------------------- */
 
-.label { background-color: #E4ECF5; color: #007bff; border-radius: 0.25rem; }
-.label-outline { border: 1px solid #CBDCFF; }
-a.label:hover, .label.active { background: #007bff; color: #fff; }
+.label { border-radius: 0.25rem; }
 
 /* ------------------------- */
 /* badges / medallions */
@@ -933,13 +926,12 @@ a.label:hover, .label.active { background: #007bff; color: #fff; }
 /* arrow border */
 .reply-left + .reply-body:before {
     border: 10px solid transparent;
-    border-right-color: #ddd;
 }
 
 /* arrow background */
 .reply-left + .reply-body:after {
     border: 9px solid transparent;
-    border-right-color: #f8f8f8;
+
 }
 
 /* disable list-left smaller devices */

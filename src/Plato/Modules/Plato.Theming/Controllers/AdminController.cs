@@ -22,7 +22,7 @@ namespace Plato.Theming.Controllers
     {
         
         private readonly IViewProviderManager<ThemeAdmin> _viewProvider;
-        private readonly ISiteThemeCreator _siteThemeCreator;
+        private readonly IThemeCreator _themeCreator;
         private readonly ISiteThemeManager _siteThemeManager;
         private readonly ISiteThemeFileManager _themeFileManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -37,7 +37,7 @@ namespace Plato.Theming.Controllers
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,           
             IViewProviderManager<ThemeAdmin> viewProvider,
-            ISiteThemeCreator siteThemeCreator,
+            IThemeCreator themeCreator,
             IBreadCrumbManager breadCrumbManager,
             IContextFacade contextFacade,
             ISiteThemeFileManager themeFileManager,
@@ -48,7 +48,7 @@ namespace Plato.Theming.Controllers
             _breadCrumbManager = breadCrumbManager;
             _themeFileManager = themeFileManager;
             _siteThemeManager = siteThemeManager;
-            _siteThemeCreator = siteThemeCreator;
+            _themeCreator = themeCreator;
             _contextFacade = contextFacade;
             _viewProvider = viewProvider;
             _alerter = alerter;
@@ -132,7 +132,7 @@ namespace Plato.Theming.Controllers
             // Create theme
             var model = new ThemeAdmin();
 
-            var result = _siteThemeCreator.CreateTheme(viewModel.ThemeId, viewModel.Name);
+            var result = _themeCreator.CreateTheme(viewModel.ThemeId, viewModel.Name);
             if (result.Succeeded)
             {
 

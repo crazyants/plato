@@ -6,30 +6,30 @@ using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Internal.Theming.Abstractions.Models;
 
-namespace Plato.Theming.Services
+namespace Plato.Internal.Theming
 {
     
-    public class SiteThemeCreator : ISiteThemeCreator
+    public class ThemeCreator : IThemeCreator
     {
 
-        private readonly IThemeDescriptorUpdater _themeDescriptorUpdater;
+        private readonly IThemeUpdater _themeUpdater;
         private readonly ISiteThemeManager _siteThemeManager;
         private readonly IPlatoFileSystem _platoFileSystem;
         public readonly IThemeManager _themeManager;
         public readonly ISitesFolder _sitesFolder;
 
-        public SiteThemeCreator(
+        public ThemeCreator(
             ISiteThemeManager siteThemeManager,
             IPlatoFileSystem platoFileSystem,
             IThemeManager themeManager,
             ISitesFolder sitesFolder,
-            IThemeDescriptorUpdater themeDescriptorUpdater)
+            IThemeUpdater themeUpdater)
         {
             _siteThemeManager = siteThemeManager;
             _platoFileSystem = platoFileSystem;
             _themeManager = themeManager;
             _sitesFolder = sitesFolder;
-            _themeDescriptorUpdater = themeDescriptorUpdater;
+            _themeUpdater = themeUpdater;
         }
 
         public ICommandResult<IThemeDescriptor> CreateTheme(string baseThemeId, string newThemeName)
@@ -79,7 +79,7 @@ namespace Plato.Theming.Services
                 baseThemeDescriptor.Name = newThemeName;
             
                 // Update YAML manifest
-                var update = _themeDescriptorUpdater.UpdateThemeDescriptor(targetPath, baseThemeDescriptor);
+                var update = _themeUpdater.UpdateThemeDescriptor(targetPath, baseThemeDescriptor);
                 if (!update.Succeeded)
                 {
                     return result.Failed(update.Errors.ToArray());

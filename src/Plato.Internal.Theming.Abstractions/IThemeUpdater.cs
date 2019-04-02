@@ -3,7 +3,7 @@ using Plato.Internal.Theming.Abstractions.Models;
 
 namespace Plato.Internal.Theming.Abstractions
 {
-    public interface IThemeDescriptorUpdater
+    public interface IThemeUpdater
     {
 
         ICommandResult<IThemeDescriptor> UpdateThemeDescriptor(string pathToThemeFolder, IThemeDescriptor descriptor);
