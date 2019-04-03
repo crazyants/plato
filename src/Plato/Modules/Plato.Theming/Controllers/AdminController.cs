@@ -138,16 +138,18 @@ namespace Plato.Theming.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-
+            
             // Create theme
-            var model = new ThemeAdmin();
-
             var result = _themeCreator.CreateTheme(viewModel.ThemeId, viewModel.Name);
             if (result.Succeeded)
             {
 
                 // Execute view providers
-               await _viewProvider.ProvideUpdateAsync(model, this);
+               await _viewProvider.ProvideUpdateAsync(new ThemeAdmin()
+               {
+                   ThemeId = viewModel.ThemeId,
+                   Path = viewModel.Name
+               }, this);
 
                 // Add confirmation
                 _alerter.Success(T["Theme Added Successfully!"]);

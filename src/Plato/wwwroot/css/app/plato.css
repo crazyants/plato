@@ -66,6 +66,8 @@
 .nav .account .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
 .site-nav li > a .nav-text { margin-left: 0.50rem; }
 
+.navbar-brand img { width: 200px; }
+
 /* ------------------------- */
 /* Search bar */
 /* ------------------------- */
@@ -598,6 +600,12 @@
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
 
+/* list sizes */
+.list-left-2x { width: 112px; }
+.list-left-2x + .list-body { margin-left: 112px; }
+.list-left-3x { width: 168px; }
+.list-left-3x + .list-body { margin-left: 168px; }
+
 /* remove list-body margin if it's the next element after list-row' */
 .list-row { float: left; width: 100%; }
 .list-row + .list-body { margin-left: 0; }
@@ -642,9 +650,23 @@
 /* Tagit */
 /* ------------------- */
 
-.tagit li.tagit-list-item { display: inline-block; border-radius: 0.15rem; margin-right: 0.50rem; }
+.tagit {
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.tagit li.tagit-list-item { display: inline-block; border-radius: 0.15rem; margin-right: 0.25rem; }
 .tagit-list-item-input { width: 100%; display: inline-block; }
-.tagit-list-item-input input { width: 100%; outline: none; border: 0; background: transparent; }
+
+.tagit-list-item-input input,
+.tagit-list-item-input .form-control,
+.tagit-list-item-input .form-control:focus {
+    width: 100%; 
+    outline: none; 
+    border: 0; 
+    background: transparent;
+    box-shadow: none;
+    border-color:transparent
+}
 
 .tagit li.bg-warning, 
 .tagit li.bg-warning .btn-primary { color: #000; background-color: #FFF389 !important; border-color: #D8CE78 !important;  }
@@ -819,7 +841,6 @@
     z-index: 10;
     position: fixed;
     width: 100%;
-    background: #eee;
 }
 
 /* scollable area */
@@ -828,11 +849,13 @@
     overflow: auto;
 }
 
+/*
 .resizable-container::-webkit-scrollbar { background:#eee; width: 9px; }
 .resizable-container::-webkit-scrollbar-thumb:vertical { border-radius: 0; margin: 0 9px; background-color: #ccc;  }
 .resizable-container::-webkit-scrollbar-thumb:vertical:hover { cursor: pointer; background-color: #aaa; }
 .resizable-container::-webkit-scrollbar-button:start:decrement,
 .resizable-container::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
+*/
 
 .resizable-top {  left: 0;  top: 0; height: 400px; }
 .resizable-bottom { left: 0; top: auto; bottom: 0; height: calc(75vh);  }
@@ -852,16 +875,13 @@
     cursor: e-resize;
 }
 
-
 .resizable-top .resizable-bar {
     bottom: 0;
     z-index: 10001;
 }
 
 .resizable-bar {
-    background: #eee;
     margin: 0;
-    color: #000;
     line-height: normal;
     -moz-user-select: none; 
     -ms-user-select: none;
@@ -869,27 +889,21 @@
     user-select: none;
     text-align: center;
     position: relative;
-    background-color: #C1C1C1; 
+    overflow: hidden;
 }
-
-.resizable-bar.active,
-.resizable-bar:hover { background-color: #A8A8A8; }
 
 .resizable-bar i {
     position: absolute;
     left: 50%;
     top: 3px;
     transform: translate(-50%, -50%);
-    color: white;
     margin: 0;
     transform-origin: center center;
     transition: all 0.15s ease-out;
 }
 
 .resizable-header {
-    border-bottom: 1px solid #dddddd;
     padding: 0.75rem 1.23rem;
-    background: white;
 }
 
 .resizable-close {
@@ -898,12 +912,10 @@
 
 .resizable-body {
     padding: 1.25rem;
-    background-color: #f8f8f8;
 }
 
-
 /* ------------------------- */
-/* Reply arrow */
+/* Reply Left */
 /* ------------------------- */
 
 .reply-left + .reply-body { position: relative; }
@@ -944,6 +956,46 @@
     .reply-left + .reply-body:before,
     .reply-left + .reply-body:after { display: none; }
 
+}
+
+/* --------------------------- */
+/* Counter */
+/* --------------------------- */
+
+.counter {
+    display: inline-block;
+    width: 48px;
+    font-size: 11px;
+    text-align: center;
+    padding: 6px 0;
+    margin: 0 3px 0 0;
+    border: 1px solid transparent;
+}
+
+.counter h6 {
+    font-size: 17px;
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+
+/* Clear margins on first and last counters within group */
+.counter-group .counter:first-child {
+    margin-left: 0;
+}
+
+.counter-group .counter:last-child {
+    margin-right: 0;
+}
+
+/* Sizes */
+
+.counter-2x {
+    width: 96px;
+}
+
+.counter-3x {
+    width: 144px;
 }
 
 /* --------------------------- */

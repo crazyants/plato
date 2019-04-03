@@ -233,9 +233,23 @@ a.label:hover, .label.active {
 /* Resizable Area */
 /* ------------------- */
 
+.resizable {
+    background: #f8f8f8;
+}
+
+.resizable-bar {
+    background-color: #C1C1C1; 
+    color: #fff;
+}
+
 .resizable-bar.active,
 .resizable-bar:hover {
     background-color: #007bff;
+}
+
+.resizable-header {
+    border-bottom: 1px solid #dddddd;
+    background: white;
 }
 
 /* ------------------- */
@@ -265,4 +279,114 @@ a.label:hover, .label.active {
 
 .vote-toggle h6 {
     color: #666;
+}
+
+/* ------------------- */
+/* Counter Colors */
+/* ------------------- */
+
+.counter {
+    background: #f8f8f8;
+    border-color: #f8f8f8;
+    color: #888;
+}
+
+.counter-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.counter-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+}
+
+.counter-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.counter-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: #fff;
+}
+
+.counter-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: white;
+}
+
+.counter-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.counter-outline-primary {
+    border-color: #A5A7E9;
+    color: #007bff;
+}
+
+.counter-outline-secondary {
+    border-color: #ddd;
+}
+
+.counter-outline-success {
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.counter-outline-info {
+    border-color: #17a2b8;
+    color: #17a2b8;
+}
+
+.counter-outline-warning {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+.counter-outline-danger {
+    border-color: #EE7E6F;
+    color: #dc3545;
+}
+
+
+/* ------------------------- */
+/* Markdown Editor */
+/* ------------------------- */
+
+.md-editor {
+    background: #fff;
+}
+
+/* Main border color */
+.md-editor,
+.md-editor > .md-footer, 
+.md-editor > .md-header,
+.md-editor .md-header-row,
+.md-editor > .dz-message {
+    border-color:#ced4da;
+}
+
+/* Buttons */
+.md-editor .btn-toolbar > .btn-group > .btn,
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn { background: white; border: 1px solid #ddd; }
+
+
+/* Focus */
+.md-editor.active {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Style textarea and preview */
+.md-editor .md-textarea,
+.md-editor .md-preview {
+    background-color: white;
 }

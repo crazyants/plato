@@ -2,34 +2,41 @@
 @{
     var details = Model.Entity.GetOrCreate<IdeaDetails>();
     var voteText = Model.Entity.TotalRatings == 1 ? T["vote"] : T["votes"];
-    var answersText = Model.Entity.TotalReplies == 1 ? T["answer"] : T["answers"];
-    string voteCss = "votes", answerCss = "answers", ratingCss = "rating";
+    var repliesText = Model.Entity.TotalReplies == 1 ? T["reply"] : T["replies"];
+    string voteCss = "votes", replyCss = "replies", ratingCss = "rating";
 
     if (Model.Entity.TotalReplies > 0)
     {
-        answerCss =  "answers replies";
+        replyCss = "counter-outline-secondary";
     }
-    if (Model.Entity.TotalAnswers > 0)
+    if (Model.Entity.TotalRatings > 0)
     {
-        answerCss =  "answers accepted";
+        voteCss = "counter-outline-info";
     }
     if (Model.Entity.SummedRating > 0)
     {
-        ratingCss = "rating positive";
+        ratingCss = "counter-outline-primary";
     }
     if (Model.Entity.SummedRating < 0)
     {
-        ratingCss = "rating negative";
+        ratingCss = "counter-outline-danger";
+    }
+    if (Model.Entity.SummedRating < -10)
+    {
+        ratingCss = "counter-danger";
     }
 
 }
 
-<div class="list-left counter-group counter-group-2x">
+<div class="list-left list-left-3x counter-group">
     <div class="counter @voteCss">
         <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @voteText.Value
     </div>
     <div class="counter @ratingCss">
         <h6>@Model.Entity.SummedRating.ToPrettyInt()</h6> @T["rating"]
+    </div>
+    <div class="counter @replyCss">
+        <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @repliesText.Value
     </div>
 </div>
 <div class="list-body">

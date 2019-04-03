@@ -3,8 +3,12 @@
     width: 100%;
     border-width: 1px;
     border-style: solid;
-    background: white;
     border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.md-editor.active {
+    outline: 0;
 }
 
 /* floated row to allow us to float tabs left and buttons right */
@@ -17,7 +21,7 @@
 }
 
 .md-header-row,
-.dz-message { background-color: #fafafa; }
+.dz-message {  }
 
 .md-header-row .nav { 
     padding: .50rem .50rem 0 .50rem;
@@ -25,31 +29,12 @@
 }
 
 .md-header-row .btn-toolbar {
-    background-color: transparent;
     padding: .30rem .50rem 0 .50rem;
 }
 
 /* Buttons */
-.md-editor .btn-toolbar > .btn-group > .btn,
-.md-editor .btn-toolbar > .btn-group > .dropdown > .btn{ background: white; border: 1px solid #ddd; }
 .md-editor .btn-toolbar .btn-group .btn.disabled { display: none; }
 .md-editor .btn-toolbar > .btn-group > .dropdown { margin-left: -1px; }
-
-/* Main border color */
-.md-editor,
-.md-editor > .md-footer, 
-.md-editor > .md-header,
-.md-editor .md-header-row,
-.md-editor > .dz-message {
-     border-color:#ced4da;
-}
-
-/* Focus */
-.md-editor.active {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
 
 /* Disable some borders */
 
@@ -68,17 +53,9 @@
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
-    background-color: white;
     background-clip: padding-box;
     border-radius: 0;
 }
-
-.md-textarea::-webkit-scrollbar { background:#eee; width: 9px; }
-.md-textarea::-webkit-scrollbar-thumb:vertical { border-radius: 4px; margin: 0; cursor: default; background-color: #ccc;  }
-.md-textarea::-webkit-scrollbar-thumb:vertical:hover { background-color: #aaa; }
-.md-textarea::-webkit-scrollbar-button:start:decrement,
-.md-textarea::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
-
 
 .md-editor .md-preview { overflow: auto; max-height: 600px; }
 
@@ -144,14 +121,6 @@
     top: 0;
 }
 
-.md-editor.md-fullscreen-mode .btn.active,
- .md-editor.md-fullscreen-mode .btn:active,
- .md-editor.md-fullscreen-mode .btn:focus,
- .md-editor.md-fullscreen-mode .btn:hover {
-    box-shadow: none;
-    color: #333;
-}
-
 .md-editor.md-fullscreen-mode .md-fullscreen-controls {
     display: inline;
 }
@@ -206,3 +175,4 @@
 @media only screen and (max-width : 348px) {
     .md-editor .btn-toolbar > .btn-group { display: none; }
 }
+
