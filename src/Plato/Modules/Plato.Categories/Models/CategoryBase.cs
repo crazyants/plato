@@ -10,7 +10,6 @@ namespace Plato.Categories.Models
 
     public class CategoryBase :
         IComparable<ICategory>,
-        IDbModel<ICategory>,
         ICategory
     {
 

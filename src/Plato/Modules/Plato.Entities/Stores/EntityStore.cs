@@ -19,6 +19,7 @@ namespace Plato.Entities.Stores
     {
 
         public const string  ById = "ById";
+        public const string ByFeatureId = "ByFeatureId";
 
         private readonly ICacheManager _cacheManager;
         private readonly IEntityRepository<TEntity> _entityRepository;
@@ -160,10 +161,175 @@ namespace Plato.Entities.Stores
             });
 
         }
+        
+        public async Task<IEnumerable<TEntity>> GetByFeatureIdAsync(int featureId)
+        {
+
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByFeatureId, featureId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+                var results = await _entityRepository.SelectByFeatureIdAsync(featureId);
+                if (results != null)
+                {
+                    results = await MergeEntityData(results.ToList());
+                    results = PrepareHierarchy(results.ToLookup(c => c.ParentId));
+                    results = results.OrderBy(r => r.SortOrder);
+                }
+
+                return results;
+
+            });
+
+        }
+
+        public async Task<IEnumerable<TEntity>> GetParentsByIdAsync(int entityId)
+        {
+
+            if (entityId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entityId));
+            }
+
+            var entity = await GetByIdAsync(entityId);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            if (entity.FeatureId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entity.FeatureId));
+            }
+
+            var entities = await GetByFeatureIdAsync(entity.FeatureId);
+            if (entities == null)
+            {
+                return null;
+            }
+
+            return RecurseParents(entities.ToList(), entity.Id).Reverse();
+
+        }
+
+        public async Task<IEnumerable<TEntity>> GetChildrenByIdAsync(int entityId)
+        {
+
+            var entity = await GetByIdAsync(entityId);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var entities = await GetByFeatureIdAsync(entity.FeatureId);
+            if (entities == null)
+            {
+                return null;
+            }
+
+            return RecurseChildren(entities.ToList(), entity.Id);
+
+        }
 
         #endregion
 
         #region "Private Methods"
+
+        IList<TEntity> PrepareHierarchy(
+            ILookup<int, TEntity> input,
+            IList<TEntity> output = null,
+            TEntity parent = null,
+            int parentId = 0,
+            int depth = 0)
+        {
+
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (output == null) output = new List<TEntity>();
+            if (parentId == 0) depth = 0;
+
+            foreach (var item in input[parentId])
+            {
+
+                if (depth < 0) depth = 0;
+                if (parent != null) depth++;
+
+                item.Depth = depth;
+                item.Parent = parent;
+                
+                if (parent != null)
+                {
+                    var children = new List<IEntity>() { item };
+                    if (parent.Children != null)
+                    {
+                        children.AddRange(parent.Children);
+                    }
+
+                    parent.Children = children.OrderBy(c => c.SortOrder);
+                }
+
+                output.Add(item);
+
+                // recurse
+                PrepareHierarchy(input, output, item, item.Id, depth--);
+            }
+
+            return output;
+
+        }
+
+
+        IEnumerable<TEntity> RecurseParents(
+            IList<TEntity> input,
+            int rootId,
+            IList<TEntity> output = null)
+        {
+            if (output == null)
+            {
+                output = new List<TEntity>();
+            }
+
+            foreach (var item in input)
+            {
+                if (item.Id == rootId)
+                {
+                    if (item.ParentId > 0)
+                    {
+                        output.Add(item);
+                        RecurseParents(input, item.ParentId, output);
+                    }
+                    else
+                    {
+                        output.Add(item);
+                    }
+                }
+            }
+
+            return output;
+
+        }
+
+        IEnumerable<TEntity> RecurseChildren(
+            IList<TEntity> input,
+            int rootId,
+            IList<TEntity> output = null)
+        {
+
+            if (output == null)
+            {
+                output = new List<TEntity>();
+            }
+
+            foreach (var item in input)
+            {
+                if (item.ParentId == rootId)
+                {
+                    output.Add(item);
+                    RecurseChildren(input, item.Id, output);
+                }
+            }
+
+            return output;
+
+        }
 
         async Task<IEnumerable<IEntityData>> SerializeMetaDataAsync(TEntity entity)
         {
@@ -296,6 +462,7 @@ namespace Plato.Entities.Stores
         }
 
         #endregion
+
 
     }
 

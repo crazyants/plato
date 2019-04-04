@@ -82,6 +82,7 @@ namespace Plato.Entities.Repositories
                 entity.DailyReports,
                 entity.DailyStars,
                 entity.DailyRatings,
+                entity.SortOrder,
                 entity.CreatedUserId,
                 entity.CreatedDate,
                 entity.EditedUserId,
@@ -256,6 +257,7 @@ namespace Plato.Entities.Repositories
             double dailyReports,
             double dailyStars,
             double dailyRatings,
+            int sortOrder,
             int createdUserId,
             DateTimeOffset? createdDate,
             int editedUserId,
@@ -311,6 +313,7 @@ namespace Plato.Entities.Repositories
                     dailyReports,
                     dailyStars,
                     dailyRatings,
+                    sortOrder,
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     editedUserId,
@@ -343,6 +346,38 @@ namespace Plato.Entities.Repositories
         }
         
         #endregion
+
+        public async Task<IEnumerable<TModel>> SelectByFeatureIdAsync(int featureId)
+        {
+            IList<TModel> output = null;
+            using (var context = _dbContext)
+            {
+                output = await context.ExecuteReaderAsync<IList<TModel>>(
+                    CommandType.StoredProcedure,
+                    "SelectEntitiesByFeatureId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<TModel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = ActivateInstanceOf<TModel>.Instance();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+                        }
+
+                        return output;
+
+                    },
+                    featureId);
+
+            }
+
+            return output;
+
+        }
     }
 
 }

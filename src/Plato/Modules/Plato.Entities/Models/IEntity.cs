@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
     
-    public interface IEntity  : IEntityMetaData<IEntityData>
+    public interface IEntity  : 
+        IEntityMetaData<IEntityData>,
+        INestable<IEntity>
     {
 
         int Id { get; set; }

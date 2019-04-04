@@ -134,11 +134,11 @@ a.label.active {
     color: #fff !important;
 }
 
-.tree a.tree-link.active,
 .list-group-check-list input:checked + label {
     color: white;
     background-color: #2A9FD6;
 }
+
 /* ------------------- */
 /* Dropdowns */
 /* ------------------- */
@@ -201,6 +201,19 @@ a.label.active {
 .tree .list-group-item.active > a.toggler,
 .tree .list-group-item.active > a.toggler:hover {
     color: #fff;
+}
+
+.tree li.list-group-item:not(.active),
+.tree li.list-group-item:hover:not(.active) {
+    color: #aaa;
+}
+
+.tree li.list-group-item:not(.active) {
+    background-color: #111;
+}
+
+.tree li.list-group-item.active {
+    background-color: #2A9FD6;
 }
 
 /* ------------------- */

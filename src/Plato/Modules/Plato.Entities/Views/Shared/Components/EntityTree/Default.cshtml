@@ -1,13 +1,15 @@
-﻿@model CategoryTreeViewModel
+﻿@using Plato.Entities.Models
+@using Plato.Internal.Layout.Views
+@model EntityTreeViewModel
 @functions {
 
-    async Task<string> BuildCategories(CategoryTreeViewModel model)
+    async Task<string> BuildCategories(EntityTreeViewModel model)
     {
         return await BuildCategoriesRecursively(model.SelectedCategories, model.HtmlName); ;
     }
 
     async Task<string> BuildCategoriesRecursively(
-        IList<Selection<CategoryBase>> channels,
+        IList<Selection<Entity>> channels,
         string htmlName,
         System.Text.StringBuilder sb = null,
         int id = 0)
@@ -40,7 +42,7 @@
                         .Append("\" class=\"")
                         .Append(css)
                         .Append("\" data-filter-list-value=\"")
-                        .Append(channel.Value.Name)
+                        .Append(channel.Value.Title)
                         .Append("\">");
 
                     sb.Append("<div class=\"p-2\"");
@@ -92,38 +94,38 @@
                     {
                         sb.Append("<i class=\"fal mr-2 check-icon\"></i>");
                     }
-                  
-                    sb.Append("<span class=\"category-icon category-icon-sm mr-2\" style=\"");
 
-                    if (!String.IsNullOrEmpty(channel.Value.BackColor))
-                    {
-                        sb.Append("background-color: ")
-                            .Append(channel.Value.BackColor)
-                            .Append(";");
-                    }
-                    if (!String.IsNullOrEmpty(channel.Value.ForeColor))
-                    {
-                        sb.Append("color: ")
-                            .Append(channel.Value.ForeColor)
-                            .Append(";");
-                    }
-                    
-                    sb.Append("\">");
+                    //sb.Append("<span class=\"category-icon category-icon-sm mr-2\" style=\"");
 
-                    if (!String.IsNullOrEmpty(channel.Value.IconCss))
-                    {
-                        sb.Append("<i class=\"")
-                            .Append(channel.Value.IconCss)
-                            .Append("\"></i>");
-                    }
-                    else
-                    {
-                        sb.Append("<i class=\"fal fa-folder\"></i>");
-                    }
-                    
-                    sb.Append("</span>");
+                    //if (!String.IsNullOrEmpty(channel.Value.BackColor))
+                    //{
+                    //    sb.Append("background-color: ")
+                    //        .Append(channel.Value.BackColor)
+                    //        .Append(";");
+                    //}
+                    //if (!String.IsNullOrEmpty(channel.Value.ForeColor))
+                    //{
+                    //    sb.Append("color: ")
+                    //        .Append(channel.Value.ForeColor)
+                    //        .Append(";");
+                    //}
 
-                    sb.Append(channel.Value.Name);
+                    //sb.Append("\">");
+
+                    //if (!String.IsNullOrEmpty(channel.Value.IconCss))
+                    //{
+                    //    sb.Append("<i class=\"")
+                    //        .Append(channel.Value.IconCss)
+                    //        .Append("\"></i>");
+                    //}
+                    //else
+                    //{
+                    //    sb.Append("<i class=\"fal fa-folder\"></i>");
+                    //}
+
+                    //sb.Append("</span>");
+
+                    sb.Append(channel.Value.Title);
 
                     sb.Append("</label>");
 

@@ -175,7 +175,7 @@ namespace Plato.Categories.Stores
                 if (results != null)
                 {
                     results = await MergeCategoryData(results.ToList());
-                    results = PrepareChildren(results.ToLookup(c => c.ParentId));
+                    results = PrepareHierarchy(results.ToLookup(c => c.ParentId));
                     results = results.OrderBy(r => r.SortOrder);
                 }
 
@@ -344,42 +344,42 @@ namespace Plato.Categories.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        IList<TCategory> PrepareChildren(
-            ILookup<int, TCategory> categories,
+        IList<TCategory> PrepareHierarchy(
+            ILookup<int, TCategory> input,
             IList<TCategory> output = null,
             TCategory parent = null,
             int parentId = 0,
             int depth = 0)
         {
 
-            if (categories == null) throw new ArgumentNullException(nameof(categories));
+            if (input == null) throw new ArgumentNullException(nameof(input));
             if (output == null) output = new List<TCategory>();
             if (parentId == 0) depth = 0;
 
-            foreach (var category in categories[parentId])
+            foreach (var item in input[parentId])
             {
 
                 if (depth < 0) depth = 0;
                 if (parent != null) depth++;
 
-                category.Depth = depth;
-                category.Parent = parent;
-
-                //parent?.Children.Add(category);
+                item.Depth = depth;
+                item.Parent = parent;
+                
                 if (parent != null)
                 {
-                    var children = new List<ICategory>() { category };
+                    var children = new List<ICategory>() {item};
                     if (parent.Children != null)
                     {
                         children.AddRange(parent.Children);
                     }
-                    parent.Children = children.OrderBy(c => c.SortOrder);;
+
+                    parent.Children = children.OrderBy(c => c.SortOrder);
                 }
-         
-                output.Add(category);
+
+                output.Add(item);
 
                 // recurse
-                PrepareChildren(categories, output, category, category.Id, depth--);
+                PrepareHierarchy(input, output, item, item.Id, depth--);
             }
 
             return output;
@@ -387,7 +387,7 @@ namespace Plato.Categories.Stores
         }
 
         IEnumerable<TCategory> RecurseParents(
-            IList<TCategory> categories,
+            IList<TCategory> input,
             int rootId,
             IList<TCategory> output = null)
         {
@@ -396,18 +396,18 @@ namespace Plato.Categories.Stores
                 output = new List<TCategory>();
             }
 
-            foreach (var category in categories)
+            foreach (var item in input)
             {
-                if (category.Id == rootId)
+                if (item.Id == rootId)
                 {
-                    if (category.ParentId > 0)
+                    if (item.ParentId > 0)
                     {
-                        output.Add(category);
-                        RecurseParents(categories, category.ParentId, output);
+                        output.Add(item);
+                        RecurseParents(input, item.ParentId, output);
                     }
                     else
                     {
-                        output.Add(category);
+                        output.Add(item);
                     }
                 }
             }
@@ -417,7 +417,7 @@ namespace Plato.Categories.Stores
         }
 
         IEnumerable<TCategory> RecurseChildren(
-            IList<TCategory> categories,
+            IList<TCategory> input,
             int rootId,
             IList<TCategory> output = null)
         {
@@ -427,12 +427,12 @@ namespace Plato.Categories.Stores
                 output = new List<TCategory>();
             }
 
-            foreach (var category in categories)
+            foreach (var item in input)
             {
-                if (category.ParentId == rootId)
+                if (item.ParentId == rootId)
                 {
-                    output.Add(category);
-                    RecurseChildren(categories, category.Id, output);
+                    output.Add(item);
+                    RecurseChildren(input, item.Id, output);
                 }
             }
 

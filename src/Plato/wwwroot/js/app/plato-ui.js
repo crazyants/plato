@@ -526,7 +526,7 @@ $(function (win, doc, $) {
                     toggleSelector = $caller.data(dataKey).toggleSelector,
                     event = $caller.data(dataKey).event;
 
-                // Bind toggler events
+                // Bind toggle events
                 $(toggleSelector).unbind(event).bind(event,
                     function (e) {
                         var toggle = true;

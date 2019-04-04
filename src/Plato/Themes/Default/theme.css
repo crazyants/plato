@@ -131,11 +131,11 @@ a.label:hover, .label.active {
     color: #fff !important;
 }
 
-.tree a.tree-link.active,
 .list-group-check-list input:checked + label {
     color: white;
     background-color: #007bff;
 }
+
 /* ------------------- */
 /* Dropdowns */
 /* ------------------- */
@@ -194,15 +194,27 @@ a.label:hover, .label.active {
     color: #007bff;
 }
 
-
 /* ------------------- */
 /* Tree */
 /* ------------------- */
 
 /* expand / collapse button */
-.tree .list-group-item.active > a.toggler,
-.tree .list-group-item.active > a.toggler:hover {
+.tree li.list-group-item.active > a.toggler,
+.tree li.list-group-item.active > a.toggler:hover {
     color: #fff;
+}
+
+.tree li.list-group-item:not(.active),
+.tree li.list-group-item:hover:not(.active) {
+    color: #222;
+}
+
+.tree li.list-group-item:not(.active) {
+    background-color: #fff;
+}
+
+.tree li.list-group-item.active {
+    background-color: #007bff;
 }
 
 /* ------------------- */

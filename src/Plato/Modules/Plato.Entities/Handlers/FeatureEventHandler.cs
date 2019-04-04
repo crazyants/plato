@@ -213,6 +213,11 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "SortOrder",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },
@@ -532,13 +537,13 @@ namespace Plato.Entities.Handlers
                 
                 // drop entities
                 builder.TableBuilder.DropTable(_entities);
-
+                
                 builder.ProcedureBuilder
                     .DropDefaultProcedures(_entities)
-                    .DropProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectByKey))
-                    .DropProcedure(new SchemaProcedure("SelectEntityUsersPaged", StoredProcedureType.SelectByKey));
-
-
+                    .DropProcedure(new SchemaProcedure("SelectEntitiesByFeatureId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntitiesPaged"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityUsersPaged"));
+                
                 // drop entity data
                 builder.TableBuilder.DropTable(_entityData);
 
@@ -607,7 +612,7 @@ namespace Plato.Entities.Handlers
 
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entities)
-
+                
                 // Overwrite our SelectEntityById created via CreateDefaultProcedures
                 // above to also return all EntityData within a second result set
                 .CreateProcedure(
@@ -645,7 +650,38 @@ namespace Plato.Entities.Handlers
                                 )")
                         .ForTable(_entities)
                         .WithParameter(_entities.PrimaryKeyColumn))
-                        
+
+                // SelectEntitiesByFeatureId
+                .CreateProcedure(new SchemaProcedure("SelectEntitiesByFeatureId",
+                        @"SELECT e.*, 0 AS Rank, 0 AS MaxRank,
+                                    c.UserName AS CreatedUserName,                              
+                                    c.DisplayName AS CreatedDisplayName,                                  
+                                    c.Alias AS CreatedAlias,
+                                    c.PhotoUrl AS CreatedPhotoUrl,
+                                    c.PhotoColor AS CreatedPhotoColor,
+                                    c.SignatureHtml AS CreatedSignatureHtml,
+                                    m.UserName AS ModifiedUserName,                                 
+                                    m.DisplayName AS ModifiedDisplayName,                                
+                                    m.Alias AS ModifiedAlias,
+                                    m.PhotoUrl AS ModifiedPhotoUrl,
+                                    m.PhotoColor AS ModifiedPhotoColor,
+                                    m.SignatureHtml AS ModifiedSignatureHtml,
+                                    l.UserName AS LastReplyUserName,                                
+                                    l.DisplayName AS LastReplyDisplayName,                                  
+                                    l.Alias AS LastReplyAlias,
+                                    l.PhotoUrl AS LastReplyPhotoUrl,
+                                    l.PhotoColor AS LastReplyPhotoColor,
+                                    l.SignatureHtml AS LastReplySignatureHtml
+                                FROM {prefix}_Entities e WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
+                                    LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
+                                    LEFT OUTER JOIN {prefix}_Users l ON e.LastReplyUserId = l.Id
+                                WHERE (
+                                   e.FeatureId = @FeatureId
+                                )")
+                    .ForTable(_entities)
+                    .WithParameter(new SchemaColumn() { Name = "FeatureId", DbType = DbType.Int32 }))
+                    
                 .CreateProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_entities)
                     .WithParameters(new List<SchemaColumn>()

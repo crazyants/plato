@@ -110,17 +110,29 @@ namespace Plato.Entities.Models
         public SimpleUser ModifiedBy { get; private set; } = new SimpleUser();
 
         public SimpleUser LastReplyBy { get; private set; } = new SimpleUser();
-
-        public IEnumerable<IEntityData> Data { get; set; } = new List<EntityData>();
-
-        public IDictionary<Type, ISerializable> MetaData => _metaData;
-
+        
         public int Rank { get; set; }
 
         public int MaxRank { get; set; }
 
         public int Relevance { get; set; }
 
+        // IMetaData
+
+        public IEnumerable<IEntityData> Data { get; set; } = new List<EntityData>();
+
+        public IDictionary<Type, ISerializable> MetaData => _metaData;
+
+        // INestable
+
+        public IEnumerable<IEntity> Children { get; set; } = new List<IEntity>();
+
+        public IEntity Parent { get; set; }
+
+        public int Depth { get; set; }
+
+        public int SortOrder { get; set; }
+        
         public Entity()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
@@ -369,7 +381,7 @@ namespace Plato.Entities.Models
 
             Relevance = Rank.ToPercentageOf(MaxRank);
         }
-        
+
     }
     
 }

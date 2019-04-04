@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Models;
 
 namespace Plato.Categories.Models
 {
-    public interface ICategory : ICategoryMetaData<CategoryData>, ILabelBase
+    public interface ICategory :
+        ICategoryMetaData<CategoryData>,
+        INestable<ICategory>,
+        ILabelBase,
+        IDbModel
     {
         
         int ParentId { get; set; }
 
         int FeatureId { get; set; }
-
-        int SortOrder { get; set; }
         
         int CreatedUserId { get; set; }
 
@@ -22,14 +23,6 @@ namespace Plato.Categories.Models
 
         DateTimeOffset? ModifiedDate { get; set; }
         
-        IEnumerable<ICategory> Children { get; set; }
-
-        ICategory Parent { get; set; }
-
-        int Depth { get; set; }
-
-        void PopulateModel(IDataReader dr);
-
     }
-  
+    
 }
