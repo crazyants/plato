@@ -1,0 +1,13 @@
+﻿@model UserDisplayViewModel
+
+<div class="list-left">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias">
+        <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar" url="@Model.User.Avatar.Url" />
+    </a>
+</div>
+<div class="list-body">
+    <h4>@Model.User?.DisplayName</h4>
+    @T["All topics started by"] @Model.User?.DisplayName
+</div>
+<hr />
+

@@ -1,0 +1,18 @@
+﻿@using Plato.Entities.Models
+@model EntityIndexViewModel<Doc>
+
+@await DisplayAsync(new View("EntityTree", new
+{
+    options = new EntityTreeOptions()
+    {
+        IndexOptions = Model.Options,
+        SelectedCategories = new List<int>(),
+        EditMenuViewName = ""
+    }
+}))
+
+@await DisplayAsync(new View("DocList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))

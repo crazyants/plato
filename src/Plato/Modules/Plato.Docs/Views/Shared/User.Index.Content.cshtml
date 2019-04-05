@@ -1,8 +1,12 @@
-﻿@using Plato.Entities.Models
-@model EntityIndexViewModel<Topic>
+﻿@model EntityIndexViewModel<Doc>
 
 @await DisplayAsync(new View("TopicList", new
 {
     options = @Model.Options,
     pager = @Model.Pager
 }))
+
+
+
+
+

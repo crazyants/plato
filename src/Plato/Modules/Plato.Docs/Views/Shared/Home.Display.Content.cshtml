@@ -1,0 +1,14 @@
+﻿@model EntityViewModel<Doc, DocComment>
+
+@await DisplayAsync(new View("Topic", new
+{
+    options = @Model.Options
+}))
+
+@await DisplayAsync(new View("TopicReplyList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
+
+

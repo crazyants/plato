@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Articles.Navigation
+namespace Plato.Docs.Navigation
 {
-
     public class SiteMenu : INavigationProvider
     {
         public SiteMenu(IStringLocalizer localizer)
@@ -21,36 +20,36 @@ namespace Plato.Articles.Navigation
             {
                 return;
             }
-            
+
+
             builder
-                .Add(T["Articles"], 2, discuss => discuss
-                        .IconCss("fal fa-copy")
-                        .Action("Index", "Home", "Plato.Articles")
+                .Add(T["Docs"], 1, discuss => discuss
+                        .IconCss("fal fa-book-open")
+                        .Action("Index", "Home", "Plato.Docs")
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
-                            {"title", T["Articles"]}
+                            {"title", T["Docs"]}
                         })
                         //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                       , new List<string>() { "discuss", "text-hidden" }
+                        .LocalNav(), new List<string>() {"docs", "text-hidden"}
                 );
-
+            
             //builder
-            //    .Add(T["Articles"], 2, discuss => discuss
-            //            .IconCss("fal fa-book-open")
+            //    .Add(T["Discuss"], 1, discuss => discuss
+            //            .IconCss("fal fa-comment-alt fa-flip-y")
             //            .Attributes(new Dictionary<string, object>()
             //            {
             //                {"data-provide", "tooltip"},
-            //                {"title", T["Articles"]}
+            //                {"title", T["Discuss"]}
             //            })
             //            .Add(T["Latest"], int.MinValue, installed => installed
-            //                .Action("Index", "Home", "Plato.Articles")
+            //                .Action("Index", "Home", "Plato.Docs")
             //                //.Permission(Permissions.ManageRoles)
             //                .LocalNav()
             //            )
             //            .Add(T["Popular"], int.MinValue + 1, installed => installed
-            //                .Action("Popular", "Home", "Plato.Articles")
+            //                .Action("Popular", "Home", "Plato.Docs")
             //                //.Permission(Permissions.ManageRoles)
             //                .LocalNav()
             //            ), new List<string>() {"discuss", "text-hidden"}

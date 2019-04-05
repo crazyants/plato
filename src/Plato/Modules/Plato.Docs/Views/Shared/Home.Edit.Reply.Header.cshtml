@@ -1,0 +1,17 @@
+﻿@model EditEntityReplyViewModel
+
+@if (Model.Id == 0)
+{
+    <h4>@T["Post Reply"]</h4>
+    <span class="text-muted">@T["Post a new reply."]</span>
+    <hr />
+}
+else
+{
+    <h4>@T["Edit Reply"]</h4>
+    <span class="text-muted">@T["Edit an existing reply."]</span>
+    <hr />
+}
+
+
+

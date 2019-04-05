@@ -1,0 +1,23 @@
+﻿@model EntityViewModel<Doc, DocComment>
+
+@if (Model.Replies != null)
+{
+    var offset = Model.Pager.Offset;
+    var rowOffset = Model.Pager.RowOffset;
+    @foreach (var reply in Model.Replies.Data)
+     {
+         reply.Offset = rowOffset;
+         reply.SelectedOffset = offset;
+         @await DisplayAsync(new View("DocCommentListItem", new
+         {
+             model = new EntityReplyListItemViewModel<Doc, DocComment>()
+             {
+                 Entity = Model.Entity,
+                 Reply = reply
+             }
+         }))
+         {
+             rowOffset++;
+         }
+     }
+}

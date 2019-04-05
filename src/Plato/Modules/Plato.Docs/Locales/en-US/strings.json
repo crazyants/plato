@@ -1,0 +1,20 @@
+{
+  "Strings": [
+    {
+      "Key": "Post Topic",
+      "Value": "Post Topic"
+    },
+    {
+      "Key": "New Post",
+      "Value": "New Post"
+    },
+    {
+      "Key": "Discuss",
+      "Value": "Discuss"
+    },
+    {
+      "Key": "Localized String",
+      "Value": "String From Locale File"
+    }
+  ]
+}
