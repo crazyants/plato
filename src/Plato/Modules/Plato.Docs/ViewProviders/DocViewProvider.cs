@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Docs.Models;
@@ -6,32 +8,37 @@ using Plato.Docs.Services;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Docs.ViewProviders
 {
-    public class TopicViewProvider : BaseViewProvider<Doc>
+    public class DocViewProvider : BaseViewProvider<Doc>
     {
 
         public const string EditorHtmlName = "message";
-        
+        private const string CategoryHtmlName = "parent";
+
         private readonly IEntityStore<Doc> _entityStore;
         private readonly IPostManager<Doc> _topicManager;
         private readonly IEntityViewIncrementer<Doc> _viewIncrementer;
+        private readonly IFeatureFacade _featureFacade;
 
         private readonly HttpRequest _request;
         
-        public TopicViewProvider(
+        public DocViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IEntityStore<Doc> entityStore,
             IPostManager<Doc> topicManager,
-            IEntityViewIncrementer<Doc> viewIncrementer)
+            IEntityViewIncrementer<Doc> viewIncrementer,
+            IFeatureFacade featureFacade)
         {
             _entityStore = entityStore;
             _topicManager = topicManager;
             _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
+            _featureFacade = featureFacade;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Doc doc, IViewProviderContext context)
@@ -46,7 +53,8 @@ namespace Plato.Docs.ViewProviders
             return Task.FromResult(Views(
                 View<EntityIndexViewModel<Doc>>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<EntityIndexViewModel<Doc>>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<EntityIndexViewModel<Doc>>("Home.Index.Content", model => viewModel).Zone("content")
+                View<EntityIndexViewModel<Doc>>("Home.Index.Content", model => viewModel).Zone("content"),
+                View<EntityIndexViewModel<Doc>>("Home.Index.Sidebar", model => viewModel).Zone("sidebar")
             ));
 
         }
@@ -82,8 +90,11 @@ namespace Plato.Docs.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(Doc doc, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Doc doc, IViewProviderContext updater)
         {
+
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
+            
 
             // Ensures we persist the message between post backs
             var message = doc.Message;
@@ -106,12 +117,23 @@ namespace Plato.Docs.ViewProviders
                 EditorHtmlName = EditorHtmlName,
                 Alias = doc.Alias
             };
-     
-            return Task.FromResult(Views(
+
+            var entityDropDownViewModel = new EntityDropDownViewModel()
+            {
+                Options = new EntityIndexOptions()
+                {
+                    FeatureId = feature.Id
+                },
+                HtmlName = CategoryHtmlName,
+                SelectedEntity = doc?.ParentId ?? 0
+            };
+            
+            return Views(
                 View<EditEntityViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
                 View<EditEntityViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
+                View<EntityDropDownViewModel>("Home.Edit.Sidebar", model => entityDropDownViewModel).Zone("sidebar"),
                 View<EditEntityViewModel>("Home.Edit.Footer", model => viewModel).Zone("Footer")
-            ));
+            );
 
         }
         
@@ -161,6 +183,8 @@ namespace Plato.Docs.ViewProviders
             // Validate 
             if (await ValidateModelAsync(doc, context.Updater))
             {
+                doc.ParentId = GetParentEntity();
+
                 // Update
                 var result = await _topicManager.UpdateAsync(doc);
 
@@ -178,7 +202,31 @@ namespace Plato.Docs.ViewProviders
             return await BuildEditAsync(doc, context);
 
         }
+
+
+        int GetParentEntity()
+        {
+           
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.StartsWith(CategoryHtmlName))
+                {
+                    var values = _request.Form[key];
+                    foreach (var value in values)
+                    {
+                        var ok = int.TryParse(value, out var id);
+                        if (ok)
+                        {
+                            return id;
+                        }
+                    }
+                }
+            }
+
+            return 0;
+        }
         
+     
     }
 
 }

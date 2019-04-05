@@ -37,15 +37,15 @@ namespace Plato.Docs.Controllers
         #region "Constructor"
 
         private readonly IAuthorizationService _authorizationService;
-        private readonly IViewProviderManager<Doc> _topicViewProvider;
-        private readonly IViewProviderManager<DocComment> _replyViewProvider;
+        private readonly IViewProviderManager<Doc> _docViewProvider;
+        private readonly IViewProviderManager<DocComment> _docCommentViewProvider;
         private readonly IEntityStore<Doc> _entityStore;
         private readonly IEntityReplyStore<DocComment> _entityReplyStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityReplyService<DocComment> _replyService;
         private readonly IReportEntityManager<Doc> _reportEntityManager;
         private readonly IReportEntityManager<DocComment> _reportReplyManager;
-        private readonly IPostManager<Doc> _topicManager;
+        private readonly IPostManager<Doc> _docManager;
         private readonly IPostManager<DocComment> _replyManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
@@ -59,13 +59,13 @@ namespace Plato.Docs.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer localizer,
-            IPostManager<Doc> topicManager,
+            IPostManager<Doc> docManager,
             IPostManager<DocComment> replyManager,
             IEntityStore<Doc> entityStore,
             IEntityReplyStore<DocComment> entityReplyStore,
             IPlatoUserStore<User> platoUserStore,
-            IViewProviderManager<Doc> topicViewProvider,
-            IViewProviderManager<DocComment> replyViewProvider,
+            IViewProviderManager<Doc> docViewProvider,
+            IViewProviderManager<DocComment> docCommentViewProvider,
             IReportEntityManager<Doc> reportEntityManager,
             IReportEntityManager<DocComment> reportReplyManager,
             IAuthorizationService authorizationService,
@@ -75,12 +75,12 @@ namespace Plato.Docs.Controllers
             IContextFacade contextFacade,
             IAlerter alerter)
         {
-            _topicViewProvider = topicViewProvider;
-            _replyViewProvider = replyViewProvider;
+            _docViewProvider = docViewProvider;
+            _docCommentViewProvider = docCommentViewProvider;
             _entityStore = entityStore;
             _contextFacade = contextFacade;
             _entityReplyStore = entityReplyStore;
-            _topicManager = topicManager;
+            _docManager = docManager;
             _replyManager = replyManager;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
@@ -170,7 +170,7 @@ namespace Plato.Docs.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideIndexAsync(new Doc(), this));
+            return View((LayoutViewModel) await _docViewProvider.ProvideIndexAsync(new Doc(), this));
 
         }
 
@@ -211,10 +211,10 @@ namespace Plato.Docs.Controllers
                 return Unauthorized();
             }
 
-            var topic = new Doc();
+            var entity = new Doc();
             if (channel > 0)
             {
-                topic.CategoryId = channel;
+                entity.CategoryId = channel;
             }
 
             // Build breadcrumb
@@ -232,7 +232,7 @@ namespace Plato.Docs.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideEditAsync(topic, this));
+            return View((LayoutViewModel) await _docViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -244,7 +244,7 @@ namespace Plato.Docs.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(new Doc()
+            if (await _docViewProvider.IsModelStateValid(new Doc()
             {
                 Title = model.Title,
                 Message = model.Message,
@@ -254,7 +254,7 @@ namespace Plato.Docs.Controllers
             {
 
                 // Get composed type from all involved view providers
-                var topic = await _topicViewProvider.GetComposedType(this);
+                var topic = await _docViewProvider.GetComposedType(this);
 
                 // Populated created by
                 topic.CreatedUserId = user?.Id ?? 0;
@@ -263,7 +263,7 @@ namespace Plato.Docs.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newEntity = await _topicManager.CreateAsync(topic);
+                var newEntity = await _docManager.CreateAsync(topic);
 
                 // Ensure the insert was successful
                 if (newEntity.Succeeded)
@@ -274,7 +274,7 @@ namespace Plato.Docs.Controllers
                     newEntity.Response.IsNewTopic = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(newEntity.Response, this);
+                    await _docViewProvider.ProvideUpdateAsync(newEntity.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
@@ -433,7 +433,7 @@ namespace Plato.Docs.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideDisplayAsync(entity, this));
+            return View((LayoutViewModel) await _docViewProvider.ProvideDisplayAsync(entity, this));
 
         }
 
@@ -467,7 +467,7 @@ namespace Plato.Docs.Controllers
             };
 
             // Validate model state within all view providers
-            if (await _replyViewProvider.IsModelStateValid(reply, this))
+            if (await _docCommentViewProvider.IsModelStateValid(reply, this))
             {
 
                 // We need to first add the reply so we have a unique Id
@@ -482,7 +482,7 @@ namespace Plato.Docs.Controllers
                     result.Response.IsNewReply = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _replyViewProvider.ProvideUpdateAsync(result.Response, this);
+                    await _docCommentViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Reply Added Successfully!"]);
@@ -581,7 +581,7 @@ namespace Plato.Docs.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideEditAsync(entity, this));
+            return View((LayoutViewModel) await _docViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -599,7 +599,7 @@ namespace Plato.Docs.Controllers
             }
 
             // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(new Doc()
+            if (await _docViewProvider.IsModelStateValid(new Doc()
             {
                 Title = model.Title,
                 Message = model.Message
@@ -625,12 +625,12 @@ namespace Plato.Docs.Controllers
                 entity.Message = model.Message;
 
                 // Execute view providers ProvideUpdateAsync method
-                await _topicViewProvider.ProvideUpdateAsync(entity, this);
+                await _docViewProvider.ProvideUpdateAsync(entity, this);
 
                 // Everything was OK
-                _alerter.Success(T["Topic Updated Successfully!"]);
+                _alerter.Success(T["Doc Updated Successfully!"]);
 
-                // Redirect to topic
+                // Redirect to entity
                 return RedirectToAction(nameof(Display), new
                 {
                     Id = entity.Id,
@@ -668,8 +668,8 @@ namespace Plato.Docs.Controllers
             }
 
             // Get reply entity
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -678,7 +678,7 @@ namespace Plato.Docs.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Do we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                 user?.Id == reply.CreatedUserId
                     ? Permissions.EditOwnDocComments
                     : Permissions.EditAnyDocComment))
@@ -695,11 +695,11 @@ namespace Plato.Docs.Controllers
                     ).Add(S["Docs"], docs => docs
                         .Action("Index", "Home", "Plato.Docs")
                         .LocalNav()
-                    ).Add(S[topic.Title.TrimToAround(75)], post => post
+                    ).Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary()
                         {
-                            ["opts.id"] = topic.Id,
-                            ["opts.alias"] = topic.Alias
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias
                         })
                         .LocalNav()
                     )
@@ -709,7 +709,7 @@ namespace Plato.Docs.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _replyViewProvider.ProvideEditAsync(reply, this));
+            return View((LayoutViewModel) await _docCommentViewProvider.ProvideEditAsync(reply, this));
 
         }
 
@@ -748,11 +748,11 @@ namespace Plato.Docs.Controllers
             reply.Message = model.Message;
 
             // Validate model state within all view providers
-            if (await _replyViewProvider.IsModelStateValid(reply, this))
+            if (await _docCommentViewProvider.IsModelStateValid(reply, this))
             {
 
                 // Execute view providers ProvideUpdateAsync method
-                await _replyViewProvider.ProvideUpdateAsync(reply, this);
+                await _docCommentViewProvider.ProvideUpdateAsync(reply, this);
 
                 // Everything was OK
                 _alerter.Success(T["Reply Updated Successfully!"]);
@@ -852,8 +852,8 @@ namespace Plato.Docs.Controllers
             }
 
             _alerter.Success(docComment != null
-                ? T["Thank You. Reply Reported Successfully!"]
-                : T["Thank You. Topic Reported Successfully!"]);
+                ? T["Thank You. Comment Reported Successfully!"]
+                : T["Thank You. Doc Reported Successfully!"]);
 
             // Redirect
             return RedirectToAction(nameof(Reply), new RouteValueDictionary()
@@ -888,10 +888,10 @@ namespace Plato.Docs.Controllers
                 return Unauthorized();
             }
 
-            // Get topic
+            // Get entity
             var entity = await _entityStore.GetByIdAsync(entityId);
 
-            // Ensure the topic exists
+            // Ensure the entity exists
             if (entity == null)
             {
                 return NotFound();
@@ -906,23 +906,23 @@ namespace Plato.Docs.Controllers
                 return Unauthorized();
             }
 
-            // Update topic
+            // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
             entity.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _docManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic deleted successfully"]);
+                _alerter.Success(T["Doc Deleted Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not delete the topic"]);
+                _alerter.Danger(T["Could not delete the doc"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to entity
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Docs",
@@ -956,7 +956,7 @@ namespace Plato.Docs.Controllers
             // Get entity
             var entity = await _entityStore.GetByIdAsync(entityId);
 
-            // Ensure the topic exists
+            // Ensure the entity exists
             if (entity == null)
             {
                 return NotFound();
@@ -971,23 +971,23 @@ namespace Plato.Docs.Controllers
                 return Unauthorized();
             }
 
-            // Update topic
+            // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
             entity.IsDeleted = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _docManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic restored successfully"]);
+                _alerter.Success(T["Doc Restored Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not restore the topic"]);
+                _alerter.Danger(T["Could not restore the doc"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to entity
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Docs",
@@ -1029,15 +1029,15 @@ namespace Plato.Docs.Controllers
                 return NotFound();
             }
 
-            // Ensure the topic exists
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
+            // Ensure the entity exists
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
 
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                 user.Id == reply.CreatedUserId
                     ? Permissions.DeleteOwnDocComments
                     : Permissions.DeleteAnyDocComment))
@@ -1055,21 +1055,21 @@ namespace Plato.Docs.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply deleted successfully"]);
+                _alerter.Success(T["Reply Deleted Successfully"]);
             }
             else
             {
                 _alerter.Danger(T["Could not delete the reply"]);
             }
 
-            // Redirect back to topic
+            // Redirect back to entity
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Docs",
                 ["controller"] = "Home",
                 ["action"] = "Reply",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias,
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = reply.Id
 
             }));
@@ -1102,15 +1102,15 @@ namespace Plato.Docs.Controllers
                 return NotFound();
             }
 
-            // Ensure the topic exists
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
+            // Ensure the entity exists
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
 
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                 user.Id == reply.CreatedUserId
                     ? Permissions.RestoreOwnDocComments
                     : Permissions.RestoreAnyDocComment))
@@ -1140,8 +1140,8 @@ namespace Plato.Docs.Controllers
                 ["area"] = "Plato.Docs",
                 ["controller"] = "Home",
                 ["action"] = "Reply",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias,
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = reply.Id
 
             }));
@@ -1331,17 +1331,17 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
             var randomUser = users?.Data[rnd.Next(0, totalUsers)];
             var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
 
-            var topic = new Doc()
+            var entity = new Doc()
             {
-                Title = "Test Topic " + rnd.Next(0, 2000).ToString(),
+                Title = "Test Doc " + rnd.Next(0, 2000).ToString(),
                 Message = GetSampleMarkDown(rnd.Next(0, 2000)),
                 FeatureId = feature?.Id ?? 0,
                 CreatedUserId = randomUser?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            // create topic
-            var data = await _topicManager.CreateAsync(topic);
+            // create entity
+            var data = await _docManager.CreateAsync(entity);
             if (data.Succeeded)
             {
                 for (var i = 0; i < 25; i++)

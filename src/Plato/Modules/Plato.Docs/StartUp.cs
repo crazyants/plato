@@ -89,9 +89,9 @@ namespace Plato.Docs
 
             // Register view providers
             services.AddScoped<IViewProviderManager<Doc>, ViewProviderManager<Doc>>();
-            services.AddScoped<IViewProvider<Doc>, TopicViewProvider>();
+            services.AddScoped<IViewProvider<Doc>, DocViewProvider>();
             services.AddScoped<IViewProviderManager<DocComment>, ViewProviderManager<DocComment>>();
-            services.AddScoped<IViewProvider<DocComment>, ReplyViewProvider>();
+            services.AddScoped<IViewProvider<DocComment>, DocCommentViewProvider>();
 
             // Add profile views
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();

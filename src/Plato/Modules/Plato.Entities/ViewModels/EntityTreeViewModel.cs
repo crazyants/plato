@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
 using Plato.Entities.Models;
 
 namespace Plato.Entities.ViewModels
@@ -6,7 +7,7 @@ namespace Plato.Entities.ViewModels
     public class EntityTreeViewModel
     {
         
-        public IList<Selection<Entity>> SelectedCategories { get; set; }
+        public IList<Selection<Entity>> SelectedEntities { get; set; }
 
         public string HtmlName { get; set; }
 
@@ -15,6 +16,8 @@ namespace Plato.Entities.ViewModels
         public string EditMenuViewName { get; set; }
 
         public string CssClass { get; set; }
+
+        public RouteValueDictionary RouteValues { get; set; }
 
     }
 

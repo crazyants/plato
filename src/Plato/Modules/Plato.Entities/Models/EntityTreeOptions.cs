@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
 using Plato.Entities.ViewModels;
 
 namespace Plato.Entities.Models
@@ -8,7 +9,7 @@ namespace Plato.Entities.Models
 
         public EntityIndexOptions IndexOptions { get; set; } = new EntityIndexOptions();
 
-        public IEnumerable<int> SelectedCategories { get; set; }
+        public int SelectedEntity { get; set; }
 
         public string HtmlName { get; set; }
 
@@ -17,6 +18,8 @@ namespace Plato.Entities.Models
         public string EditMenuViewName { get; set; }
 
         public string CssClass { get; set; }
+
+        public RouteValueDictionary RouteValues { get; set; }
 
     }
 

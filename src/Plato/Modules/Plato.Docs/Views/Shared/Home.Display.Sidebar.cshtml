@@ -1,6 +1,32 @@
-﻿@model Doc
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Entities.Models
+@model Doc
 
-@await DisplayAsync(new View("EntityDetails", new
+
+
+@await DisplayAsync(new View("EntityTree", new
+{
+    options = new EntityTreeOptions()
+    {
+        IndexOptions = new EntityIndexOptions()
+        {
+            FeatureId = Model.FeatureId
+        },
+        SelectedCategories = new List<int>(),
+        EditMenuViewName = "",
+        RouteValues = new RouteValueDictionary()
+        {
+            ["area"] = "Plato.Docs",
+            ["controller"] = "Home",
+            ["action"] = "Display"
+        }
+    }
+}))
+
+
+
+
+@*@await DisplayAsync(new View("EntityDetails", new
 {
     id = @Model.Id
 }))
@@ -8,4 +34,4 @@
 @await DisplayAsync(new View("EntityParticipants", new
 {
     id = @Model.Id
-}))
+}))*@

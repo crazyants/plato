@@ -5,7 +5,7 @@
 
     async Task<string> BuildCategories(EntityTreeViewModel model)
     {
-        return await BuildCategoriesRecursively(model.SelectedCategories, model.HtmlName); ;
+        return await BuildCategoriesRecursively(model.SelectedEntities, model.HtmlName); ;
     }
 
     async Task<string> BuildCategoriesRecursively(
@@ -25,36 +25,45 @@
             .Append(style)
             .Append("\" class=\"list-group list-group-flush\">");
 
-        if (Model.SelectedCategories != null)
+        if (Model.SelectedEntities != null)
         {
 
-            foreach (var channel in Model.SelectedCategories)
+            foreach (var entity in Model.SelectedEntities)
             {
-                var nodeId = htmlName + "-node-" + channel.Value.Id;
-                var checkId = htmlName + "-check-" + channel.Value.Id;
-                var css = @channel.IsSelected ? "list-group-item list-group-item-action active checked" : "list-group-item list-group-item-action";
-                var check = channel.IsSelected ? " checked" : string.Empty;
+                var nodeId = htmlName + "-node-" + entity.Value.Id;
+                var checkId = htmlName + "-check-" + entity.Value.Id;
+                var css = entity.IsSelected ? "list-group-item list-group-item-action active checked" : "list-group-item list-group-item-action";
+                var check = entity.IsSelected ? " checked" : string.Empty;
 
-                if (channel.Value.ParentId == id)
+                if (entity.Value.ParentId == id)
                 {
+
+                    var url = "";
+                    if (Model.RouteValues != null)
+                    {
+                        Model.RouteValues["opts.id"] = entity.Value.Id;
+                        Model.RouteValues["opts.alias"] = entity.Value.Alias;
+                        url = base.GetRouteUrl(Model.RouteValues);
+                    }
+
                     sb.Append("<li id=\"")
                         .Append(nodeId)
                         .Append("\" class=\"")
                         .Append(css)
                         .Append("\" data-filter-list-value=\"")
-                        .Append(channel.Value.Title)
+                        .Append(entity.Value.Title)
                         .Append("\">");
 
                     sb.Append("<div class=\"p-2\"");
-                    if (channel.Value.Depth > 0)
+                    if (entity.Value.Depth > 0)
                     {
                         sb.Append(" style=\"margin-left: ")
-                            .Append(channel.Value.Depth)
+                            .Append(entity.Value.Depth)
                             .Append("rem;\"");
                     }
                     sb.Append("\">");
 
-                    if (channel.Value.Children.Any())
+                    if (entity.Value.Children.Any())
                     {
                         sb.Append("<a class=\"btn toggler mr-2\" data-node-id=\"")
                             .Append(nodeId)
@@ -78,7 +87,7 @@
                             .Append("\" name=\"")
                             .Append(htmlName)
                             .Append("\" value=\"")
-                            .Append(channel.Value.Id)
+                            .Append(entity.Value.Id)
                             .Append("\" data-node-id=\"")
                             .Append(nodeId)
                             .Append("\"")
@@ -125,7 +134,15 @@
 
                     //sb.Append("</span>");
 
-                    sb.Append(channel.Value.Title);
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        sb.Append("<a href=\"").Append(url).Append("\">");
+                    }
+                    sb.Append(entity.Value.Title);
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        sb.Append("</a>");
+                    }
 
                     sb.Append("</label>");
 
@@ -133,7 +150,7 @@
                     {
                         var view = await DisplayAsync(new View(Model.EditMenuViewName, new
                         {
-                            categoryId = channel.Value.Id
+                            categoryId = entity.Value.Id
                         }));
                         sb.Append(view.ToHtmlString());
                     }
@@ -141,7 +158,7 @@
                     sb.Append("</div>");
 
                     // Recurse
-                    await BuildCategoriesRecursively(channels, htmlName, sb, channel.Value.Id);
+                    await BuildCategoriesRecursively(channels, htmlName, sb, entity.Value.Id);
 
                     sb.Append("</li>");
 

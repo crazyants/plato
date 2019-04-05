@@ -1,6 +1,16 @@
 ﻿@using Plato.Entities.Models
 @model EntityIndexViewModel<Topic>
 
+@await DisplayAsync(new View("EntityTree", new
+{
+    options = new EntityTreeOptions()
+    {
+        IndexOptions = Model.Options,
+        SelectedCategories = new List<int>(),
+        EditMenuViewName = ""
+    }
+}))
+
 @await DisplayAsync(new View("TopicList", new
 {
     options = @Model.Options,

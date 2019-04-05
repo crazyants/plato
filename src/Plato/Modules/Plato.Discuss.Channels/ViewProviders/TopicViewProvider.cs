@@ -172,8 +172,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 return default(IViewProviderResult);
             }
-
-
+            
             // Override breadcrumb configuration within base discuss controller 
             IEnumerable<ChannelAdmin> parents = null;
             if (entity.CategoryId > 0)

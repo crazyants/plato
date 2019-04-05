@@ -7,17 +7,17 @@ using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 
-namespace Plato.Categories.ViewComponents
+namespace Plato.Entities.ViewComponents
 {
     public class EntityTreeViewComponent : ViewComponent
     {
 
-        private readonly IEntityStore<Entity> _categoryStore;
+        private readonly IEntityStore<Entity> _entityStore;
         
         public EntityTreeViewComponent(
-            IEntityStore<Entity> categoryStore)
+            IEntityStore<Entity> entityStore)
         {
-            _categoryStore = categoryStore;
+            _entityStore = entityStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(EntityTreeOptions options)
@@ -27,20 +27,16 @@ namespace Plato.Categories.ViewComponents
             {
                 options = new EntityTreeOptions();
             }
-
-            if (options.SelectedCategories == null)
-            {
-                options.SelectedCategories = new int[0];
-            }
-
+            
             var selected = await BuildSelectionsAsync(options);
             return View(new EntityTreeViewModel
             {
                 HtmlName = options.HtmlName,
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 EditMenuViewName = options.EditMenuViewName,
-                SelectedCategories = selected,
-                CssClass = options.CssClass
+                SelectedEntities = selected,
+                CssClass = options.CssClass,
+                RouteValues = options.RouteValues
             });
 
         }
@@ -53,12 +49,12 @@ namespace Plato.Categories.ViewComponents
                 throw new ArgumentNullException(nameof(options.IndexOptions.FeatureId));
             }
 
-            var channels = await _categoryStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId.Value);
+            var entity = await _entityStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId.Value);
 
-            return channels?.Select(c => new Selection<Entity>
+            return entity?.Select(e => new Selection<Entity>
                 {
-                    IsSelected = options.SelectedCategories.Any(v => v == c.Id),
-                    Value = c
+                    IsSelected = options.SelectedEntity.Equals(e.Id),
+                    Value = e
                 })
                 .ToList();
 

@@ -11,7 +11,7 @@ using Plato.Internal.Layout.ViewProviders;
 namespace Plato.Docs.ViewProviders
 {
 
-    public class ReplyViewProvider : BaseViewProvider<DocComment>
+    public class DocCommentViewProvider : BaseViewProvider<DocComment>
     {
 
         private const string EditorHtmlName = "message";
@@ -23,9 +23,9 @@ namespace Plato.Docs.ViewProviders
 
         private readonly HttpRequest _request;
 
-        public ReplyViewProvider(
+        public DocCommentViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IStringLocalizer<TopicViewProvider> stringLocalize,
+            IStringLocalizer<DocViewProvider> stringLocalize,
             IPostManager<DocComment> replyManager, 
             IEntityReplyStore<DocComment> replyStore)
         {

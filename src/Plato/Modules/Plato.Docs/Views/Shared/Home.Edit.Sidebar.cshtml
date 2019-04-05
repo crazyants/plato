@@ -1,2 +1,7 @@
-﻿@model EditEntityViewModel
+﻿@model EntityDropDownViewModel
 
+
+@await DisplayAsync(new View("EntityDropDown", new
+{
+    @Model
+}))

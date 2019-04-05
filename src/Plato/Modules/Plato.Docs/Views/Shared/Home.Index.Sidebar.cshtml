@@ -1,1 +1,29 @@
-﻿@model EntityIndexViewModel<Doc>
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Entities.Models
+@model EntityIndexViewModel<Doc>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Docs"]</h6>
+    </card-title>
+    <card-body>
+        
+        @await DisplayAsync(new View("EntityTree", new
+        {
+            options = new EntityTreeOptions()
+            {
+                IndexOptions = Model.Options,
+                SelectedCategories = new List<int>(),
+                EditMenuViewName = "",
+                RouteValues = new RouteValueDictionary()
+                {
+                    ["area"] = "Plato.Docs",
+                    ["controller"] = "Home",
+                    ["action"] = "Display"
+                }
+            }
+        }))
+
+
+    </card-body>
+</card>
