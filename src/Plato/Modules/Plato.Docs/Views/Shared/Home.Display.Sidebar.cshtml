@@ -2,36 +2,30 @@
 @using Plato.Entities.Models
 @model Doc
 
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Docs"]</h6>
+    </card-title>
+    <card-body>
 
-
-@await DisplayAsync(new View("EntityTree", new
-{
-    options = new EntityTreeOptions()
-    {
-        IndexOptions = new EntityIndexOptions()
+        @await DisplayAsync(new View("EntityTree", new
         {
-            FeatureId = Model.FeatureId
-        },
-        SelectedCategories = new List<int>(),
-        EditMenuViewName = "",
-        RouteValues = new RouteValueDictionary()
-        {
-            ["area"] = "Plato.Docs",
-            ["controller"] = "Home",
-            ["action"] = "Display"
-        }
-    }
-}))
-
-
-
-
-@*@await DisplayAsync(new View("EntityDetails", new
-{
-    id = @Model.Id
-}))
-
-@await DisplayAsync(new View("EntityParticipants", new
-{
-    id = @Model.Id
-}))*@
+            options = new EntityTreeOptions()
+            {
+                IndexOptions = new EntityIndexOptions()
+                {
+                    FeatureId = Model.FeatureId
+                },
+                SelectedEntity = Model.Id,
+                EditMenuViewName = "",
+                RouteValues = new RouteValueDictionary()
+                {
+                    ["area"] = "Plato.Docs",
+                    ["controller"] = "Home",
+                    ["action"] = "Display"
+                }
+            }
+        }))
+        
+    </card-body>
+</card>
