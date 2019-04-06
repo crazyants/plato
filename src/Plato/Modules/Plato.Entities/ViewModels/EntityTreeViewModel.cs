@@ -9,6 +9,8 @@ namespace Plato.Entities.ViewModels
         
         public IList<Selection<Entity>> SelectedEntities { get; set; }
 
+        public IEnumerable<IEntity> SelectedParents { get; set; }
+
         public string HtmlName { get; set; }
 
         public bool EnableCheckBoxes { get; set; }
@@ -23,6 +25,8 @@ namespace Plato.Entities.ViewModels
 
     public class Selection<TModel> where TModel : class, IEntity
     {
+
+        public bool IsExpanded { get; set; }
 
         public bool IsSelected { get; set; }
 

@@ -5,11 +5,17 @@
 
     async Task<string> BuildCategories(EntityTreeViewModel model)
     {
-        return await BuildCategoriesRecursively(model.SelectedEntities, model.HtmlName); ;
+        return await BuildCategoriesRecursively(model.SelectedEntities, model.HtmlName);
     }
 
+    bool IsParentOfSelected(int id, IEnumerable<IEntity> selectedParents)
+    {
+        return selectedParents?.FirstOrDefault(p => p.Id == id) != null ? true : false;
+    }
+
+
     async Task<string> BuildCategoriesRecursively(
-        IList<Selection<Entity>> channels,
+        IList<Selection<Entity>> entities,
         string htmlName,
         System.Text.StringBuilder sb = null,
         int id = 0)
@@ -20,7 +26,9 @@
             sb = new System.Text.StringBuilder();
         }
 
-        var style = id == 0 ? "display:block" : "display:none";
+        var isParentOrRoot = id == 0 || IsParentOfSelected(id, Model.SelectedParents);
+
+        var style = isParentOrRoot ? "display:block" : "display:none";
         sb.Append("<ul style=\"")
             .Append(style)
             .Append("\" class=\"list-group list-group-flush\">");
@@ -33,7 +41,15 @@
                 var nodeId = htmlName + "-node-" + entity.Value.Id;
                 var checkId = htmlName + "-check-" + entity.Value.Id;
                 var css = entity.IsSelected ? "list-group-item list-group-item-action active checked" : "list-group-item list-group-item-action";
+
+                var isParentOfSelected = IsParentOfSelected(entity.Value.Id, Model.SelectedParents);
+                if (isParentOfSelected)
+                {
+                    css += " show";
+                }
+
                 var check = entity.IsSelected ? " checked" : string.Empty;
+
 
                 if (entity.Value.ParentId == id)
                 {
@@ -46,7 +62,10 @@
                         url = base.GetRouteUrl(Model.RouteValues);
                     }
 
+                    var listItemStyle =
                     sb.Append("<li id=\"")
+                        .Append(nodeId)
+                        .Append("\" style=\"")
                         .Append(nodeId)
                         .Append("\" class=\"")
                         .Append(css)
@@ -158,7 +177,7 @@
                     sb.Append("</div>");
 
                     // Recurse
-                    await BuildCategoriesRecursively(channels, htmlName, sb, entity.Value.Id);
+                    await BuildCategoriesRecursively(entities, htmlName, sb, entity.Value.Id);
 
                     sb.Append("</li>");
 

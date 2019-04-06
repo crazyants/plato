@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -28,20 +29,29 @@ namespace Plato.Entities.ViewComponents
                 options = new EntityTreeOptions();
             }
             
+            // Build selection including parents 
             var selected = await BuildSelectionsAsync(options);
+            IEnumerable<Entity> parents = null;
+            if (options.SelectedEntity > 0)
+            {
+                parents = await _entityStore.GetParentsByIdAsync(options.SelectedEntity);
+            }
+                
             return View(new EntityTreeViewModel
             {
                 HtmlName = options.HtmlName,
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 EditMenuViewName = options.EditMenuViewName,
                 SelectedEntities = selected,
+                SelectedParents = parents,
                 CssClass = options.CssClass,
                 RouteValues = options.RouteValues
             });
 
         }
 
-        private async Task<IList<Selection<Entity>>> BuildSelectionsAsync(EntityTreeOptions options)
+        async Task<IList<Selection<Entity>>> BuildSelectionsAsync(
+            EntityTreeOptions options)
         {
 
             if (options.IndexOptions.FeatureId == null)
@@ -49,16 +59,19 @@ namespace Plato.Entities.ViewComponents
                 throw new ArgumentNullException(nameof(options.IndexOptions.FeatureId));
             }
 
-            var entity = await _entityStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId.Value);
-
-            return entity?.Select(e => new Selection<Entity>
+            // Get entities
+            var entities = await _entityStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId.Value);
+            
+            // Build a model for our tree view
+            return entities?.Select(e => new Selection<Entity>
                 {
                     IsSelected = options.SelectedEntity.Equals(e.Id),
                     Value = e
                 })
                 .ToList();
-
+        
         }
+        
     }
 
 }
