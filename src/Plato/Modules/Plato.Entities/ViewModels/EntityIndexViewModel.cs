@@ -92,8 +92,9 @@ namespace Plato.Entities.ViewModels
         Reactions = 6,
         Follows = 7,
         Stars = 8,
-        Created = 9,
-        Modified = 10
+        SortOrder = 9,
+        Created = 10,
+        Modified = 11
     }
 
     public enum FilterBy

@@ -7,14 +7,14 @@ using Plato.Entities.Stores;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 
-namespace Plato.Entities.ViewComponents
+namespace Plato.Docs.ViewComponents
 {
 
-    public class EntityDropDownViewComponent : ViewComponent
+    public class DocDropDownViewComponent : ViewComponent
     {
         private readonly IEntityStore<Entity> _entityStore;
         
-        public EntityDropDownViewComponent(IEntityStore<Entity> entityStore)
+        public DocDropDownViewComponent(IEntityStore<Entity> entityStore)
         {
             _entityStore = entityStore;
         }

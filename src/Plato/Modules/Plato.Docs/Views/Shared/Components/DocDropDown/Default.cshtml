@@ -1,0 +1,76 @@
+﻿@using Plato.Entities.Models
+@using Plato.Internal.Layout.Views
+@model EntityDropDownViewModel
+
+<div class="card" data-provide="category-dropdown">
+
+    <div class="dropdown">
+        <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+            <i class="fal fa-cog float-right"></i>
+            @T["Parent Doc"]
+        </a>
+        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" style="width: 450px;" aria-labelledby="channelDropdown">
+            <div class="dropdown-header">
+                <a href="#" class="text-muted float-right" data-toggle="dropdown">
+                    <i class="fal fa-times"></i>
+                </a>
+                @T["Select a parent..."]
+            </div>
+            <div class="my-2 mx-3">
+                <input type="search" class="form-control" 
+                       data-filter-list-empty=".no-channel-results"
+                       placeholder="@T["Search channels..."]" />
+            </div>
+            <div class="dropdown-header hidden">
+                @T["No channel found"]
+            </div>
+            @if (Model.Entities != null)
+            {
+                @await DisplayAsync(new View("DocTree", new
+                {
+                    options = new EntityTreeOptions()
+                    {
+                        SelectedEntity = Model.SelectedEntity,
+                        HtmlName = Model.HtmlName,
+                        EnableCheckBoxes = true,
+                        CssClass = "dropdown-scrollable"
+                    }
+                }))
+            }
+            else
+            {
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        @T["No results."]
+                    </li>
+                </ul>
+            }
+
+        </div>
+    </div>
+
+    @{
+        // get selected for preview
+        var selectedEntities = Model.Entities?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<Entity>>();
+    }
+    @if (selectedEntities.Count > 0)
+    {
+        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
+            @foreach (var channel in selectedEntities)
+            {
+                <li class="list-group-item">
+                    @channel.Value.Title
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <ul data-empty-preview-text="@T["No parent selected."]" class="list-group select-dropdown-preview">
+            <li class="list-group-item">
+                @T["No parent selected."]
+            </li>
+        </ul>
+    }
+
+</div>

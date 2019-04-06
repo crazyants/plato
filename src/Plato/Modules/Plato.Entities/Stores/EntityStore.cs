@@ -20,26 +20,26 @@ namespace Plato.Entities.Stores
 
         public const string  ById = "ById";
         public const string ByFeatureId = "ByFeatureId";
-
-        private readonly ICacheManager _cacheManager;
-        private readonly IEntityRepository<TEntity> _entityRepository;
+        
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
+        private readonly IEntityRepository<TEntity> _entityRepository;
+        private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly ILogger<EntityStore<TEntity>> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
-        private readonly ITypedModuleProvider _typedModuleProvider;
-
+        private readonly ICacheManager _cacheManager;
+        
         public EntityStore(
-            ITypedModuleProvider typedModuleProvider,
+            IEntityDataStore<IEntityData> entityDataStore,
             IEntityRepository<TEntity> entityRepository,
+            ITypedModuleProvider typedModuleProvider,
             ILogger<EntityStore<TEntity>> logger,
             IDbQueryConfiguration dbQuery,
-            ICacheManager cacheManager,
-            IEntityDataStore<IEntityData> entityDataStore)
+            ICacheManager cacheManager)
         {
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
-            _cacheManager = cacheManager;
             _entityDataStore = entityDataStore;
+            _cacheManager = cacheManager;
             _dbQuery = dbQuery;
             _logger = logger;
         }
@@ -156,6 +156,8 @@ namespace Plato.Entities.Stores
                 if (results != null)
                 {
                     results.Data = await MergeEntityData(results.Data);
+                    results.Data = PrepareHierarchy(results.Data.ToLookup(c => c.ParentId));
+                    results.Data = results.Data.OrderBy(r => r.SortOrder).ToList();
                 }
                 return results;
             });

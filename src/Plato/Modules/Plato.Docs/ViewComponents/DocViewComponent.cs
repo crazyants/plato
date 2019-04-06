@@ -33,6 +33,7 @@ namespace Plato.Docs.ViewComponents
             return View(await GetViewModel(options));
 
         }
+
         async Task<EntityViewModel<Doc, DocComment>> GetViewModel(
             EntityOptions options)
         {

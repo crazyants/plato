@@ -31,7 +31,7 @@ $(function (win, doc, $) {
             // Quote
             // -------------
 
-            $('[data-provide="postQuote"]').bind("click",
+            $('[data-provide="postDocQuote"]').bind("click",
                 function (e) {
 
                     e.preventDefault();
@@ -70,12 +70,12 @@ $(function (win, doc, $) {
 
 
                 });
-
+            
             // -------------
             // Reply
             // -------------
 
-            $('[data-provide="postReply"]').bind("click", function (e) {
+            $('[data-provide="postDocComment"]').bind("click", function (e) {
 
                 e.preventDefault();
 

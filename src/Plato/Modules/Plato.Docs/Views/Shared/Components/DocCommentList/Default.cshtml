@@ -1,7 +1,7 @@
 ﻿@model EntityViewModel<Doc, DocComment>
 @{
-    var replyText = T["reply"];
-    var repliesText = T["replies"];
+    var replyText = T["comment"];
+    var repliesText = T["comments"];
 }
 
 @if (Model.Replies != null)
@@ -51,7 +51,7 @@
                     }
                     else
                     {
-                        <a href="#" data-provide="postReply">@T["Post a reply"]</a>
+                        <a href="#" data-provide="postDocComment">@T["Post a comment"]</a>
                     }
                 </span>
             </card-body>
@@ -70,16 +70,16 @@ else
                      <span class="text-muted ml-2">
                          @if (base.CurrentUser == null)
                          {
-                             @T["No replies have been posted yet."]
+                             @T["No comments have been posted yet."]
                              <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                              @T["or"]
                              <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                             @T["to post your reply"]
+                             @T["to post a comment"]
                          }
                          else
                          {
-                             @T["No replies have been posted yet."]
-                             <a href="#" data-provide="postReply">@T["Be the first"]</a>
+                             @T["No comments have been posted yet."]
+                             <a href="#" data-provide="postDocComment">@T["Be the first"]</a>
                          }
                      </span>
                  </card-body>

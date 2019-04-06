@@ -118,13 +118,13 @@ namespace Plato.Docs.Navigation
                                 ? new Dictionary<string, object>()
                                 {
                                     {"data-toggle", "tooltip"},
-                                    {"title", T["Login to Reply"]}
+                                    {"title", T["Login to Comment"]}
                                 }
                                 : new Dictionary<string, object>()
                                 {
-                                    {"data-provide", "postReply"},
+                                    {"data-provide", "postDocComment"},
                                     {"data-toggle", "tooltip"},
-                                    {"title", T["Reply"]}
+                                    {"title", T["Comment"]}
                                 })
                             .Action("Login", "Account", "Plato.Users",
                                 new RouteValueDictionary()
@@ -133,7 +133,7 @@ namespace Plato.Docs.Navigation
                                 })
                             .Permission(Permissions.PostDocComments)
                             .LocalNav()
-                        , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
+                        , new List<string>() {"doc-reply", "text-muted", "text-hidden"}
                     );
 
             }

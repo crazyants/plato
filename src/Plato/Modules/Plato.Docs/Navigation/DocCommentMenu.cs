@@ -110,7 +110,7 @@ namespace Plato.Docs.Navigation
                                 ? new List<string>() { "dropdown-item", "dropdown-item-success" }
                                 : new List<string>() { "dropdown-item", "dropdown-item-danger" }
                         )
-                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                    , new List<string>() {"doc-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
             if (!topic.IsLocked)
@@ -122,14 +122,14 @@ namespace Plato.Docs.Navigation
                                 ? new Dictionary<string, object>()
                                 {
                                     {"data-toggle", "tooltip"},
-                                    {"title", T["Login to Reply"]}
+                                    {"title", T["Login to Comment"]}
                                 }
                                 : new Dictionary<string, object>()
                                 {
-                                    {"data-provide", "postQuote"},
+                                    {"data-provide", "postDocQuote"},
                                     {"data-quote-selector", "#quote" + reply.Id.ToString()},
                                     {"data-toggle", "tooltip"},
-                                    {"title", T["Reply"]}
+                                    {"title", T["Comment"]}
                                 })
                             .Action("Login", "Account", "Plato.Users",
                                 new RouteValueDictionary()
@@ -138,7 +138,7 @@ namespace Plato.Docs.Navigation
                                 })
                             .Permission(Permissions.PostDocComments)
                             .LocalNav()
-                        , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
+                        , new List<string>() { "doc-reply", "text-muted", "text-hidden" }
                     );
 
             }

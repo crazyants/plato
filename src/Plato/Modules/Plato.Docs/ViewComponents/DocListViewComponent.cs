@@ -123,8 +123,7 @@ namespace Plato.Docs.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-
-      
+        
         private readonly IEntityService<Doc> _entityService;
         private readonly IAuthorizationService _authorizationService;
 

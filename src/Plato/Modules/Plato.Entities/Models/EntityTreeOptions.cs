@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
-using Plato.Entities.ViewModels;
 
 namespace Plato.Entities.Models
 {
+
     public class EntityTreeOptions
     {
-
-        public EntityIndexOptions IndexOptions { get; set; } = new EntityIndexOptions();
+         
+        public IEnumerable<IEntity> Entities { get; set; }
 
         public int SelectedEntity { get; set; }
 

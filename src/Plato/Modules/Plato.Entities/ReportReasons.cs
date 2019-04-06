@@ -8,6 +8,7 @@ namespace Plato.Entities
         public static readonly IDictionary<Reason, string> Reasons = new Dictionary<Reason, string>()
         {
             [Reason.Spam] = "Spam / Advertising",
+            [Reason.Inaccurate] = "Inaccurate / Out Of Date",
             [Reason.Profanity] = "Profanity",
             [Reason.Inappropriate] = "Inappropriate Content",
             [Reason.OffTopic] = "Off Topic / Irrelevant",
@@ -19,12 +20,13 @@ namespace Plato.Entities
         public enum Reason
         {
             Spam = 1,
-            Profanity = 2,
-            Inappropriate = 3,
-            OffTopic = 4,
-            TermsOfService = 5,
-            PrivacyPolicy = 6,
-            Signature = 7
+            Inaccurate = 2,
+            Profanity = 3,
+            Inappropriate = 4,
+            OffTopic = 5,
+            TermsOfService = 6,
+            PrivacyPolicy = 7,
+            Signature = 8
         }
 
     }

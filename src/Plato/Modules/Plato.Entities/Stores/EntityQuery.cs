@@ -1049,6 +1049,8 @@ namespace Plato.Entities.Stores
                     return "e.IsSpam";
                 case "isspam":
                     return "e.IsSpam";
+                case "sortorder":
+                    return "e.SortOrder";
                 case "created":
                     return "e.CreatedDate";
                 case "createddate":

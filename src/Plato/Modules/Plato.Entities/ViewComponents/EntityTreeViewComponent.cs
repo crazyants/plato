@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -15,8 +13,7 @@ namespace Plato.Entities.ViewComponents
 
         private readonly IEntityStore<Entity> _entityStore;
         
-        public EntityTreeViewComponent(
-            IEntityStore<Entity> entityStore)
+        public EntityTreeViewComponent(IEntityStore<Entity> entityStore)
         {
             _entityStore = entityStore;
         }
@@ -30,7 +27,7 @@ namespace Plato.Entities.ViewComponents
             }
             
             // Build selection including parents 
-            var selected = await BuildSelectionsAsync(options);
+            var selected = BuildSelectionsAsync(options);
             IEnumerable<Entity> parents = null;
             if (options.SelectedEntity > 0)
             {
@@ -42,28 +39,19 @@ namespace Plato.Entities.ViewComponents
                 HtmlName = options.HtmlName,
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 EditMenuViewName = options.EditMenuViewName,
-                SelectedEntities = selected,
-                SelectedParents = parents,
                 CssClass = options.CssClass,
-                RouteValues = options.RouteValues
+                RouteValues = options.RouteValues,
+                SelectedEntities = selected,
+                SelectedParents = parents
             });
 
         }
 
-        async Task<IList<Selection<Entity>>> BuildSelectionsAsync(
-            EntityTreeOptions options)
+        IList<Selection<IEntity>> BuildSelectionsAsync(EntityTreeOptions options)
         {
-
-            if (options.IndexOptions.FeatureId == null)
-            {
-                throw new ArgumentNullException(nameof(options.IndexOptions.FeatureId));
-            }
-
-            // Get entities
-            var entities = await _entityStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId.Value);
             
-            // Build a model for our tree view
-            return entities?.Select(e => new Selection<Entity>
+            // Build a model for our tree
+            return options.Entities?.Select(e => new Selection<IEntity>
                 {
                     IsSelected = options.SelectedEntity.Equals(e.Id),
                     Value = e

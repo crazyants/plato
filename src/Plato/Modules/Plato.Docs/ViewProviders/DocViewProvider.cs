@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Docs.Models;
@@ -18,27 +16,27 @@ namespace Plato.Docs.ViewProviders
     {
 
         public const string EditorHtmlName = "message";
-        private const string CategoryHtmlName = "parent";
+        public const string ParentHtmlName = "parent";
 
+        private readonly IEntityViewIncrementer<Doc> _viewIncrementer;
         private readonly IEntityStore<Doc> _entityStore;
         private readonly IPostManager<Doc> _topicManager;
-        private readonly IEntityViewIncrementer<Doc> _viewIncrementer;
         private readonly IFeatureFacade _featureFacade;
 
         private readonly HttpRequest _request;
         
         public DocViewProvider(
-            IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Doc> entityStore,
-            IPostManager<Doc> topicManager,
             IEntityViewIncrementer<Doc> viewIncrementer,
+            IHttpContextAccessor httpContextAccessor,
+            IPostManager<Doc> topicManager,
+            IEntityStore<Doc> entityStore,
             IFeatureFacade featureFacade)
         {
-            _entityStore = entityStore;
-            _topicManager = topicManager;
-            _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
+            _viewIncrementer = viewIncrementer;
             _featureFacade = featureFacade;
+            _topicManager = topicManager;
+            _entityStore = entityStore;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Doc doc, IViewProviderContext context)
@@ -93,8 +91,12 @@ namespace Plato.Docs.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Doc doc, IViewProviderContext updater)
         {
 
+            // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
-            
+            if (feature == null)
+            {
+                throw new Exception("The feature Plato.Docs could not be found");
+            }
 
             // Ensures we persist the message between post backs
             var message = doc.Message;
@@ -109,6 +111,7 @@ namespace Plato.Docs.ViewProviders
                 }
             }
           
+            // Build general model
             var viewModel = new EditEntityViewModel()
             {
                 Id = doc.Id,
@@ -117,17 +120,19 @@ namespace Plato.Docs.ViewProviders
                 EditorHtmlName = EditorHtmlName,
                 Alias = doc.Alias
             };
-
+            
+            // Build drop down model
             var entityDropDownViewModel = new EntityDropDownViewModel()
             {
                 Options = new EntityIndexOptions()
                 {
                     FeatureId = feature.Id
                 },
-                HtmlName = CategoryHtmlName,
+                HtmlName = ParentHtmlName,
                 SelectedEntity = doc?.ParentId ?? 0
             };
             
+            // Build view
             return Views(
                 View<EditEntityViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
                 View<EditEntityViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
@@ -202,14 +207,13 @@ namespace Plato.Docs.ViewProviders
             return await BuildEditAsync(doc, context);
 
         }
-
-
+        
         int GetParentEntity()
         {
            
             foreach (var key in _request.Form.Keys)
             {
-                if (key.StartsWith(CategoryHtmlName))
+                if (key.StartsWith(ParentHtmlName))
                 {
                     var values = _request.Form[key];
                     foreach (var value in values)

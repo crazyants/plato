@@ -139,13 +139,9 @@ namespace Plato.Docs
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        PostDocs,
                         PostDocComments,
-                        EditOwnDocs,
                         EditOwnDocComments,
-                        DeleteOwnDocs,
                         DeleteOwnDocComments,
-                        ReportDocs,
                         ReportDocComments
                     }
                 },

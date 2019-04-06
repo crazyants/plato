@@ -7,7 +7,9 @@
     <div class="list-body reply-body">
         <card>
             <card-title>
-                <h6 class="card-title d-inline-block">@T["Doc"]</h6>
+                <h6 class="card-title d-inline-block">
+                    @Model.Entity.Title
+                </h6>
                 @if (Model.Entity.IsPinned)
                 {
                     <span title="@T["This doc is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
