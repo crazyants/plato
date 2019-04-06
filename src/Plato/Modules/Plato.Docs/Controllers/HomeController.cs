@@ -203,20 +203,27 @@ namespace Plato.Docs.Controllers
         // New Entity
         // -----------------
 
-        public async Task<IActionResult> Create(int channel)
+        public async Task<IActionResult> Create(int parentId)
         {
 
-            if (!await _authorizationService.AuthorizeAsync(this.User, channel, Permissions.PostDocs))
+            if (!await _authorizationService.AuthorizeAsync(this.User, Permissions.PostDocs))
             {
                 return Unauthorized();
             }
 
             var entity = new Doc();
-            if (channel > 0)
+            if (parentId > 0)
             {
-                entity.CategoryId = channel;
+                entity.ParentId = parentId;
             }
 
+            // Get any parents 
+            IEnumerable<Entity> parents = null;
+            if (parentId > 0)
+            {
+                parents = await _entityStore.GetParentsByIdAsync(parentId);
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -226,8 +233,25 @@ namespace Plato.Docs.Controllers
                         .LocalNav())
                     .Add(S["Docs"], docs => docs
                         .Action("Index", "Home", "Plato.Docs")
-                        .LocalNav())
-                    .Add(S["New Post"], post => post
+                        .LocalNav());
+                
+                if (parents != null)
+                {
+                    foreach (var parent in parents)
+                    {
+                        builder.Add(S[parent.Title], channel => channel
+                            .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary
+                            {
+                                ["opts.id"] = parent.Id,
+                                ["opts.alias"] = parent.Alias,
+                            })
+                            .LocalNav()
+                        );
+                    }
+                }
+                
+                builder
+                    .Add(S["New Doc"], post => post
                         .LocalNav());
             });
 
@@ -254,16 +278,16 @@ namespace Plato.Docs.Controllers
             {
 
                 // Get composed type from all involved view providers
-                var topic = await _docViewProvider.GetComposedType(this);
+                var entity = await _docViewProvider.GetComposedType(this);
 
                 // Populated created by
-                topic.CreatedUserId = user?.Id ?? 0;
-                topic.CreatedDate = DateTimeOffset.UtcNow;
+                entity.CreatedUserId = user?.Id ?? 0;
+                entity.CreatedDate = DateTimeOffset.UtcNow;
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newEntity = await _docManager.CreateAsync(topic);
+                var newEntity = await _docManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
                 if (newEntity.Succeeded)
@@ -418,16 +442,39 @@ namespace Plato.Docs.Controllers
                 ["opts.alias"] = entity.Alias
             });
 
+            // Get any parents 
+            var parents = await _entityStore.GetParentsByIdAsync(entity.Id);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Docs"], docs => docs
-                    .Action("Index", "Home", "Plato.Docs")
-                    .LocalNav()
-                ).Add(S[entity.Title.TrimToAround(75)], post => post
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav())
+                    .Add(S["Docs"], docs => docs
+                        .Action("Index", "Home", "Plato.Docs")
+                        .LocalNav());
+
+                if (parents != null)
+                {
+                    foreach (var parent in parents)
+                    {
+                        if (parent.Id != entity.Id)
+                        {
+                            builder.Add(S[parent.Title], channel => channel
+                                .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary
+                                {
+                                    ["opts.id"] = parent.Id,
+                                    ["opts.alias"] = parent.Alias,
+                                })
+                                .LocalNav()
+                            );
+                        }
+                      
+                    }
+                }
+
+                builder.Add(S[entity.Title.TrimToAround(75)], post => post
                     .LocalNav()
                 );
             });
@@ -485,7 +532,7 @@ namespace Plato.Docs.Controllers
                     await _docCommentViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Everything was OK
-                    _alerter.Success(T["Reply Added Successfully!"]);
+                    _alerter.Success(T["Comment Added Successfully!"]);
 
                     // Redirect
                     return RedirectToAction(nameof(Reply), new RouteValueDictionary()
@@ -561,23 +608,26 @@ namespace Plato.Docs.Controllers
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
+
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Docs"], docs => docs
+                        .LocalNav())
+                    .Add(S["Docs"], docs => docs
                         .Action("Index", "Home", "Plato.Docs")
-                        .LocalNav()
-                    ).Add(S[entity.Title.TrimToAround(75)], post => post
+                        .LocalNav())
+                    .Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary()
                         {
                             ["opts.id"] = entity.Id,
                             ["opts.alias"] = entity.Alias
                         })
                         .LocalNav()
-                    )
-                    .Add(S["Edit Topic"], post => post
-                        .LocalNav()
                     );
+
+
+                builder.Add(S["Edit Doc"], post => post
+                    .LocalNav()
+                );
             });
 
             // Return view

@@ -4,20 +4,20 @@ using Plato.Internal.Models.Badges;
 
 namespace Plato.Docs.Badges
 {
-    public class TopicBadges : IBadgesProvider<Badge>
+    public class DocBadges : IBadgesProvider<Badge>
     {
 
         public static readonly Badge First =
-            new Badge("First Topic", "Started a new topic", "fal fa-comment-alt-plus", BadgeLevel.Bronze, 1, 0);
+            new Badge("First Doc", "Posted a new doc", "fal fa-comment-alt-plus", BadgeLevel.Bronze, 1, 0);
 
         public static readonly Badge Bronze =
-            new Badge("Conversation Starter", "Started several topics", "fal fa-asterisk", BadgeLevel.Bronze, 10, 5);
+            new Badge("Doc Starter", "Posted some docs", "fal fa-asterisk", BadgeLevel.Bronze, 10, 5);
 
         public static readonly Badge Silver =
-            new Badge("Converse", "Started several topics", "fal fa-broadcast-tower", BadgeLevel.Silver, 25, 10);
+            new Badge("Documenter", "Contributed several docs", "fal fa-broadcast-tower", BadgeLevel.Silver, 25, 10);
         
         public static readonly Badge Gold =
-            new Badge("Conversationalist", "Contributed many topics", "fal fa-bullhorn", BadgeLevel.Gold, 50, 20);
+            new Badge("Doctator", "Contributed many docs", "fal fa-bullhorn", BadgeLevel.Gold, 50, 20);
 
         public IEnumerable<Badge> GetBadges()
         {

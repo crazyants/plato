@@ -1,4 +1,5 @@
-﻿@model Doc
+﻿@using Microsoft.AspNetCore.Routing
+@model Doc
 
 <card class="card card-body-flush">
     <card-title>
@@ -9,7 +10,13 @@
         {
             options = new EntityTreeOptions()
             {
-                SelectedEntity = Model.Id
+                SelectedEntity = Model.Id,
+                RouteValues = new RouteValueDictionary()
+                {
+                    ["area"] = "Plato.Docs",
+                    ["controller"] = "Home",
+                    ["action"] = "Display"
+                }
             }
         }))
     </card-body>

@@ -95,26 +95,32 @@ $(function (win, doc, $) {
                             e.stopPropagation();
 
                             // Get all checked labels within the dropdown
-                            $dropdown.find('input:checked').each(function() {
+                            var $checked = $dropdown.find('input:checked');
+                            if ($checked.length > 0) {
+                                $checked.each(function() {
 
-                                var checkId = $(this).attr("id");
-                                var $label = $dropdown.find('[for="' + checkId + '"]');
-                                if ($label.length > 0) {
-                                    var index = methods.getIndex($caller, $label);
-                                    if (index === -1) {
-                                        $dropdown.data("selectDropdown").items = [];
-                                        $dropdown.data("selectDropdown").items.push($label);
-                                        $dropdown.selectDropdown("update");
-                                    } else {
-                                        $dropdown.selectDropdown({
-                                                highlightIndex: index
-                                            },
-                                            "highlight");
+                                    var checkId = $(this).attr("id");
+                                    var $label = $dropdown.find('[for="' + checkId + '"]');
+                                    if ($label.length > 0) {
+                                        var index = methods.getIndex($caller, $label);
+
+                                        if (index === -1) {
+                                            $dropdown.data("selectDropdown").items = [];
+                                            $dropdown.data("selectDropdown").items.push($label);
+                                            $dropdown.selectDropdown("update");
+                                        } else {
+                                            $dropdown.selectDropdown({
+                                                    highlightIndex: index
+                                                },
+                                                "highlight");
+                                        }
+
                                     }
-
-                                }
-                            });
-
+                                });
+                            } else {
+                                $dropdown.data("selectDropdown").items = [];
+                                $dropdown.selectDropdown("update");
+                            }
 
                         }
                     },

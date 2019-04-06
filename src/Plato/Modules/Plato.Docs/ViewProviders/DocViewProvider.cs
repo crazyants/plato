@@ -167,6 +167,7 @@ namespace Plato.Docs.ViewProviders
 
                 doc.Title = model.Title;
                 doc.Message = model.Message;
+                doc.ParentId = GetParentSelection();;
             }
 
         }
@@ -188,7 +189,8 @@ namespace Plato.Docs.ViewProviders
             // Validate 
             if (await ValidateModelAsync(doc, context.Updater))
             {
-                doc.ParentId = GetParentEntity();
+
+                doc.ParentId = GetParentSelection();
 
                 // Update
                 var result = await _topicManager.UpdateAsync(doc);
@@ -208,7 +210,7 @@ namespace Plato.Docs.ViewProviders
 
         }
         
-        int GetParentEntity()
+        int GetParentSelection()
         {
            
             foreach (var key in _request.Form.Keys)

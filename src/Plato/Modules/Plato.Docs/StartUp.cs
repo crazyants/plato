@@ -107,8 +107,8 @@ namespace Plato.Docs
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<DocComment>>();
 
             // Badge providers
-            services.AddScoped<IBadgesProvider<Badge>, TopicBadges>();
-            services.AddScoped<IBadgesProvider<Badge>, ReplyBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, DocBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, DocCommentBadges>();
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
@@ -168,7 +168,7 @@ namespace Plato.Docs
             routes.MapAreaRoute(
                 name: "DocsNew",
                 areaName: "Plato.Docs",
-                template: "docs/new/{channel:int?}",
+                template: "docs/new/{parentId:int?}",
                 defaults: new { controller = "Home", action = "Create" }
             );
 

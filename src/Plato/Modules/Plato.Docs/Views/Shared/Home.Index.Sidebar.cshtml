@@ -1,4 +1,5 @@
-﻿@model EntityIndexViewModel<Doc>
+﻿@using Microsoft.AspNetCore.Routing
+@model EntityIndexViewModel<Doc>
 
 <card class="card card-body-flush">
     <card-title>
@@ -8,6 +9,14 @@
         @await DisplayAsync(new View("DocTree", new
         {
             options = new EntityTreeOptions()
+            {
+                RouteValues = new RouteValueDictionary()
+                {
+                    ["area"] = "Plato.Docs",
+                    ["controller"] = "Home",
+                    ["action"] = "Display"
+                }
+            }
         }))
     </card-body>
 </card>

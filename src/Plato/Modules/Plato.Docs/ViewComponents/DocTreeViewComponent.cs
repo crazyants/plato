@@ -87,12 +87,8 @@ namespace Plato.Docs.ViewComponents
                 SelectedEntity = options.SelectedEntity,
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 CssClass = options.CssClass,
-                RouteValues = new RouteValueDictionary()
-                {
-                    ["area"] = "Plato.Docs",
-                    ["controller"] = "Home",
-                    ["action"] = "Display"
-                }
+                HtmlName = options.HtmlName,
+                RouteValues = options.RouteValues
             });
 
         }
