@@ -32,7 +32,7 @@
 
                         <label asp-for="Name"><strong>@T["Icon"]</strong></label>
                         <br />
-                        <button type="button" href="#selectIconModal" data-provide="category-icon-modal" data-icon-prefix="@Model.ChannelIcons.Prefix" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary text-muted" role="button">
+                        <button type="button" href="#selectIconModal" data-provide="category-icon-modal" data-icon-prefix="@Model.ChannelIcons.Prefix" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary" role="button">
                             @if (String.IsNullOrEmpty(Model.IconCss))
                             {
                                 <i class="fal fa-plus"></i>
@@ -54,7 +54,7 @@
                         <div class="input-group">
 
                             <div asp-color-picker="BackColor" class="input-group-prepend">
-                                <div class="input-group-text" data-toggle="tooltip" title="@T["Background Color"]" style="cursor: pointer;">
+                                <div class="input-group-text border-0" data-toggle="tooltip" title="@T["Background Color"]" style="cursor: pointer;">
                                     <i class="fa fa-square" style="color: @Model.BackColor"></i>
                                 </div>
                                 <input type="text" asp-for="BackColor" class="form-control" style="width: 95px;" />
@@ -73,7 +73,7 @@
                         <div class="input-group">
 
                             <div asp-color-picker="ForeColor" class="input-group-prepend">
-                                <div class="input-group-text" data-toggle="tooltip" title="@T["Text Color"]" style="cursor: pointer;">
+                                <div class="input-group-text border-0" data-toggle="tooltip" title="@T["Text Color"]" style="cursor: pointer;">
                                     <i class="fa fa-square" style="color: @Model.ForeColor"></i>
                                 </div>
                                 <input type="text" asp-for="ForeColor" class="form-control" style="width: 95px;" />

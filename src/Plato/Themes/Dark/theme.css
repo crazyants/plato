@@ -1,4 +1,13 @@
 
+/* ------------------- */
+/* Icon selection */
+/* ------------------- */
+
+.radio-icon input + span { color: inherit; }
+.radio-icon input:checked + span { color: #fff; }
+.radio-icon input:checked + span:before {
+    background-color: #2A9FD6;
+}
 
 /* ------------------- */
 /* Reply Arrows */
@@ -197,20 +206,9 @@ a.label.active {
 /* Tree */
 /* ------------------- */
 
-/* expand / collapse button */
-.tree .list-group-item.active a,
-.tree .list-group-item.active a:hover {
-    color: inherit;
-}
-
 .tree li.list-group-item:not(.active),
 .tree li.list-group-item:hover:not(.active) {
     color: #aaa;
-}
-
-.tree li.list-group-item:not(.active) a,
-.tree li.list-group-item:hover:not(.active) a:hover {
-    color: inherit;
 }
 
 .tree li.list-group-item:not(.active) {

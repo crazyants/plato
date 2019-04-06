@@ -288,13 +288,11 @@
     border-bottom-color: #fff;
 }
 
-
 .dropdown-menu:before { left: 9px; right: auto; top: -16px; }
 .dropdown-menu:after { left: 10px; right: auto; top: -14px; }
 
 .dropdown-menu-right:before { left: auto; right: 9px; top: -16px; }
 .dropdown-menu-right:after { left: auto; right: 10px; top: -14px; }
-
 
 /* disable bootstrap caret */
 .dropdown-toggle-no-caret:after {
@@ -526,13 +524,9 @@
     transform: translate(-50%, -50%);
 }
 
-.radio-icon input + span { color: #555; }
-.radio-icon input:checked + span { color: #fff; }
-
 .radio-icon input:checked + span:before {
     content: '-';
     text-indent: -5000px;
-    background-color: #007bff;
     position: absolute;
     width: 100px;
     height: 100px;
@@ -750,6 +744,22 @@
 .tree input + label > i.check-icon:after { vertical-align: middle; width: 20px; content: '\f00c'; opacity: 0; }
 .tree input:checked + label > i.check-icon:after { opacity: 1; }
 
+/* expand / collapse button */
+.tree .list-group-item.active > a,
+.tree .list-group-item.active > a:hover,
+.tree .list-group-item.active label > a,
+.tree .list-group-item.active label > a:hover {
+    color: inherit;
+}
+
+.tree li.list-group-item:not(.active) > a,
+.tree li.list-group-item:hover:not(.active) > a:hover,
+.tree .list-group-item:not(.active) label > a,
+.tree .list-group-item:not(.active) label > a:hover {
+    color: inherit;
+}
+
+
 /* ------------------------- */
 /* Labels */
 /* ------------------------- */
@@ -757,7 +767,7 @@
 .label { border-radius: 0.25rem; }
 
 /* ------------------------- */
-/* badges / medallions */
+/* Badges / medallions */
 /* ------------------------- */
 
 .medallion-list {
@@ -797,7 +807,7 @@
 .medallion .badge { z-index: 2; position: absolute; right: 0;  }
 
 /* -------------- */
-/* infiniteScroll */
+/* InfiniteScroll */
 /* -------------- */
 
 .infinite-scroll .list-group-item {
@@ -1025,7 +1035,6 @@
 .anim-delay-8x { animation-delay: 0.50s; }
 .anim-delay-9x { animation-delay: 0.60s; }
 .anim-delay-10x { animation-delay: 0.65s; }
-
 
 /* scale in */
 

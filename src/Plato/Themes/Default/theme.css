@@ -1,5 +1,13 @@
 ﻿
+/* ------------------- */
+/* Icon selection */
+/* ------------------- */
 
+.radio-icon input + span { color: #222; }
+.radio-icon input:checked + span { color: #fff; }
+.radio-icon input:checked + span:before {
+    background-color: #007bff;
+}
 
 /* ------------------- */
 /* Reply Arrows */
@@ -198,10 +206,14 @@ a.label:hover, .label.active {
 /* Tree */
 /* ------------------- */
 
-/* expand / collapse button */
-.tree li.list-group-item.active a,
-.tree li.list-group-item.active a:hover {
-    color: inherit;
+
+.tree li.list-group-item:not(.active),
+.tree li.list-group-item:hover:not(.active) {
+    color: #222;
+}
+
+.tree li.list-group-item:not(.active) {
+    background-color: #fff;
 }
 
 .tree li.list-group-item.active {
@@ -381,7 +393,6 @@ a.label:hover, .label.active {
 /* Buttons */
 .md-editor .btn-toolbar > .btn-group > .btn,
 .md-editor .btn-toolbar > .btn-group > .dropdown > .btn { background: white; border: 1px solid #ddd; }
-
 
 /* Focus */
 .md-editor.active {
