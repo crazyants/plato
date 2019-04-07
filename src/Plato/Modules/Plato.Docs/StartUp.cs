@@ -160,7 +160,7 @@ namespace Plato.Docs
             routes.MapAreaRoute(
                 name: "DocsEntity",
                 areaName: "Plato.Docs",
-                template: "docs/t/{opts.id:int}/{opts.alias}/{pager.offset:int?}",
+                template: "docs/d/{opts.id:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 

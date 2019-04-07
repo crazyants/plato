@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
@@ -18,7 +19,7 @@ namespace Plato.Entities.ViewComponents
             _entityStore = entityStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(EntityTreeOptions options)
+        public Task<IViewComponentResult> InvokeAsync(EntityTreeOptions options)
         {
 
             if (options == null)
@@ -28,13 +29,8 @@ namespace Plato.Entities.ViewComponents
             
             // Build selection including parents 
             var selected = BuildSelectionsAsync(options);
-            IEnumerable<Entity> parents = null;
-            if (options.SelectedEntity > 0)
-            {
-                parents = await _entityStore.GetParentsByIdAsync(options.SelectedEntity);
-            }
-                
-            return View(new EntityTreeViewModel
+            
+            return Task.FromResult((IViewComponentResult) View(new EntityTreeViewModel
             {
                 HtmlName = options.HtmlName,
                 EnableCheckBoxes = options.EnableCheckBoxes,
@@ -42,8 +38,8 @@ namespace Plato.Entities.ViewComponents
                 CssClass = options.CssClass,
                 RouteValues = options.RouteValues,
                 SelectedEntities = selected,
-                SelectedParents = parents
-            });
+                SelectedParents = options.Entities?.RecurseParents<Entity>(options.SelectedEntity)
+            }));
 
         }
 

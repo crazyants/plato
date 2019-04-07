@@ -73,9 +73,7 @@ namespace Plato.Docs.ViewComponents
                     {
                         q.HideDeleted.True();
                     }
-
-
-
+                    
                 })
                 .GetResultsAsync(options, pager);
 

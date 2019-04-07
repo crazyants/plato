@@ -66,8 +66,7 @@ namespace Plato.Entities.Services
 
             // Get authenticated user 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-          
+            
             // Return tailored results
             return await _entityStore.QueryAsync()
                 .Take(pager.Page, pager.Size)

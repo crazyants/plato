@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Abstractions;
@@ -156,8 +157,8 @@ namespace Plato.Entities.Stores
                 if (results != null)
                 {
                     results.Data = await MergeEntityData(results.Data);
-                    results.Data = PrepareHierarchy(results.Data.ToLookup(c => c.ParentId));
-                    results.Data = results.Data.OrderBy(r => r.SortOrder).ToList();
+                    //results.Data = PrepareHierarchy(results.Data.ToLookup(c => c.ParentId));
+                    //results.Data = results.Data.OrderBy(r => r.SortOrder).ToList();
                 }
                 return results;
             });
@@ -174,8 +175,8 @@ namespace Plato.Entities.Stores
                 if (results != null)
                 {
                     results = await MergeEntityData(results.ToList());
-                    results = PrepareHierarchy(results.ToLookup(c => c.ParentId));
-                    results = results.OrderBy(r => r.SortOrder);
+                    //results = PrepareHierarchy(results.ToLookup(c => c.ParentId));
+                    //results = results.OrderBy(r => r.SortOrder);
                 }
 
                 return results;
@@ -204,12 +205,10 @@ namespace Plato.Entities.Stores
             }
 
             var entities = await GetByFeatureIdAsync(entity.FeatureId);
-            if (entities == null)
-            {
-                return null;
-            }
+            return entities?.BuildHierarchy<TEntity>()
+                .RecurseParents<TEntity>(entity.Id).Reverse();
 
-            return RecurseParents(entities.ToList(), entity.Id).Reverse();
+            //return RecurseParents(entities.ToList(), entity.Id).Reverse();
 
         }
 
@@ -223,12 +222,10 @@ namespace Plato.Entities.Stores
             }
 
             var entities = await GetByFeatureIdAsync(entity.FeatureId);
-            if (entities == null)
-            {
-                return null;
-            }
+            return entities?.BuildHierarchy<TEntity>()
+                .RecurseChildren<TEntity>(entity.Id).Reverse();
 
-            return RecurseChildren(entities.ToList(), entity.Id);
+            //return RecurseChildren(entities.ToList(), entity.Id);
 
         }
 
@@ -236,102 +233,102 @@ namespace Plato.Entities.Stores
 
         #region "Private Methods"
 
-        IList<TEntity> PrepareHierarchy(
-            ILookup<int, TEntity> input,
-            IList<TEntity> output = null,
-            TEntity parent = null,
-            int parentId = 0,
-            int depth = 0)
-        {
+        //////IList<TEntity> PrepareHierarchy(
+        //////    ILookup<int, TEntity> input,
+        //////    IList<TEntity> output = null,
+        //////    TEntity parent = null,
+        //////    int parentId = 0,
+        //////    int depth = 0)
+        //////{
 
-            if (input == null) throw new ArgumentNullException(nameof(input));
-            if (output == null) output = new List<TEntity>();
-            if (parentId == 0) depth = 0;
+        //////    if (input == null) throw new ArgumentNullException(nameof(input));
+        //////    if (output == null) output = new List<TEntity>();
+        //////    if (parentId == 0) depth = 0;
 
-            foreach (var item in input[parentId])
-            {
+        //////    foreach (var item in input[parentId])
+        //////    {
 
-                if (depth < 0) depth = 0;
-                if (parent != null) depth++;
+        //////        if (depth < 0) depth = 0;
+        //////        if (parent != null) depth++;
 
-                item.Depth = depth;
-                item.Parent = parent;
+        //////        item.Depth = depth;
+        //////        item.Parent = parent;
                 
-                if (parent != null)
-                {
-                    var children = new List<IEntity>() { item };
-                    if (parent.Children != null)
-                    {
-                        children.AddRange(parent.Children);
-                    }
+        //////        if (parent != null)
+        //////        {
+        //////            var children = new List<IEntity>() { item };
+        //////            if (parent.Children != null)
+        //////            {
+        //////                children.AddRange(parent.Children);
+        //////            }
 
-                    parent.Children = children.OrderBy(c => c.SortOrder);
-                }
+        //////            parent.Children = children.OrderBy(c => c.SortOrder);
+        //////        }
 
-                output.Add(item);
+        //////        output.Add(item);
 
-                // recurse
-                PrepareHierarchy(input, output, item, item.Id, depth--);
-            }
+        //////        // recurse
+        //////        PrepareHierarchy(input, output, item, item.Id, depth--);
+        //////    }
 
-            return output;
+        //////    return output;
 
-        }
+        //////}
 
 
-        IEnumerable<TEntity> RecurseParents(
-            IList<TEntity> input,
-            int rootId,
-            IList<TEntity> output = null)
-        {
-            if (output == null)
-            {
-                output = new List<TEntity>();
-            }
+        //////IEnumerable<TEntity> RecurseParents(
+        //////    IList<TEntity> input,
+        //////    int rootId,
+        //////    IList<TEntity> output = null)
+        //////{
+        //////    if (output == null)
+        //////    {
+        //////        output = new List<TEntity>();
+        //////    }
 
-            foreach (var item in input)
-            {
-                if (item.Id == rootId)
-                {
-                    if (item.ParentId > 0)
-                    {
-                        output.Add(item);
-                        RecurseParents(input, item.ParentId, output);
-                    }
-                    else
-                    {
-                        output.Add(item);
-                    }
-                }
-            }
+        //////    foreach (var item in input)
+        //////    {
+        //////        if (item.Id == rootId)
+        //////        {
+        //////            if (item.ParentId > 0)
+        //////            {
+        //////                output.Add(item);
+        //////                RecurseParents(input, item.ParentId, output);
+        //////            }
+        //////            else
+        //////            {
+        //////                output.Add(item);
+        //////            }
+        //////        }
+        //////    }
 
-            return output;
+        //////    return output;
 
-        }
+        //////}
 
-        IEnumerable<TEntity> RecurseChildren(
-            IList<TEntity> input,
-            int rootId,
-            IList<TEntity> output = null)
-        {
+        //////IEnumerable<TEntity> RecurseChildren(
+        //////    IList<TEntity> input,
+        //////    int rootId,
+        //////    IList<TEntity> output = null)
+        //////{
 
-            if (output == null)
-            {
-                output = new List<TEntity>();
-            }
+        //////    if (output == null)
+        //////    {
+        //////        output = new List<TEntity>();
+        //////    }
 
-            foreach (var item in input)
-            {
-                if (item.ParentId == rootId)
-                {
-                    output.Add(item);
-                    RecurseChildren(input, item.Id, output);
-                }
-            }
+        //////    foreach (var item in input)
+        //////    {
+        //////        if (item.ParentId == rootId)
+        //////        {
+        //////            output.Add(item);
+        //////            RecurseChildren(input, item.Id, output);
+        //////        }
+        //////    }
 
-            return output;
+        //////    return output;
 
-        }
+        //////}
 
         async Task<IEnumerable<IEntityData>> SerializeMetaDataAsync(TEntity entity)
         {

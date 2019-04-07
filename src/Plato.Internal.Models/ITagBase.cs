@@ -10,8 +10,7 @@
         string Description { get; set; }
         
         string Alias { get; set; }
-
-
+        
     }
     
 }

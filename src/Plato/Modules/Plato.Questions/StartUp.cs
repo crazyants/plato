@@ -173,6 +173,14 @@ namespace Plato.Questions
                 defaults: new { controller = "Home", action = "Create" }
             );
 
+            // Edit Entity
+            routes.MapAreaRoute(
+                name: "QuestionsEdit",
+                areaName: "Plato.Questions",
+                template: "questions/edit/{opts.id:int?}/{opts.alias?}",
+                defaults: new { controller = "Home", action = "Edit" }
+            );
+
             // Display Reply
             routes.MapAreaRoute(
                 name: "QuestionsDisplayReply",

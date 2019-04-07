@@ -5,9 +5,9 @@ using Plato.Internal.Models;
 namespace Plato.Labels.Models
 {
 
-    public interface ILabel : 
-        ILabelBase,
+    public interface ILabel :
         IMetaData<LabelData>,
+        ILabelBase,
         IDbModel
     {
 

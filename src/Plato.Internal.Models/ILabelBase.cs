@@ -1,7 +1,8 @@
-﻿
-namespace Plato.Internal.Models
+﻿namespace Plato.Internal.Models
 {
-    public interface ILabelBase
+
+
+    public interface ILabelBase 
     {
 
         int Id { get; set; }
