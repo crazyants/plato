@@ -8,12 +8,17 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Entities.Handlers;
 using Plato.Entities.Models;
+using Plato.Entities.Navigation;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Entities.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Search.Abstractions;
 
 namespace Plato.Entities
@@ -35,6 +40,9 @@ namespace Plato.Entities
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
+
+            // Register navigation provider
+            services.AddScoped<INavigationProvider, UserSubmissionsMenu>();
 
             // Repositories
             services.AddScoped<IEntityRepository<Entity>, EntityRepository<Entity>>();
@@ -63,7 +71,11 @@ namespace Plato.Entities
 
             // Full text index providers
             services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
-            
+        
+            // Add profile views
+            services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
+            services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
+
         }
 
         public override void Configure(

@@ -1,28 +1,23 @@
 ﻿@using Plato.Internal.Abstractions.Extensions
 @model User
-
 <card>
     <card-title>
-        
-        <div class="nav navbar p-0 navbar-expand-lg navbar-light">
 
+        <div class="nav navbar p-0 navbar-expand-lg navbar-light">
             <div class="d-flex align-items-center">
                 <button class="navbar-toggler my-2" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
-
-            <div class="collapse navbar-collapse" id="navbar-collapse" role="navigation">
-
+            <div class="collapse navbar-collapse w-100" id="navbar-collapse" role="navigation">
                 <navigation name="profile"
-                            class="nav nav-tabs card-header-tabs"
+                            class="nav nav-tabs card-header-tabs w-100"
                             child-ul-css-class="dropdown-menu" />
             </div>
         </div>
-    
+
     </card-title>
     <card-body>
-
         <div class="row">
             <div class="col-lg-4">
                 <div class="row">
@@ -30,7 +25,7 @@
                         <i class="fal fa-hashtag fa-2x text-muted m-3"></i>
                     </div>
                     <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip" title=" @T["rank"] #@Model.Rank.ToPrettyInt(true)">@Model.Rank.ToPrettyInt(true)</h1><br/>
+                        <h1 class="d-inline-block" data-toggle="tooltip" title=" @T["rank"] #@Model.Rank.ToPrettyInt(true)">@Model.Rank.ToPrettyInt(true)</h1><br />
                         <span class="text-muted">
                             @T["rank"]
                         </span>
@@ -64,10 +59,6 @@
                 </div>
             </div>
         </div>
-  
     </card-body>
 </card>
-
-
-
 

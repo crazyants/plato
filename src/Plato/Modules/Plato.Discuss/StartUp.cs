@@ -55,6 +55,7 @@ namespace Plato.Discuss
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
             services.AddScoped<INavigationProvider, PostMenu>();
+            services.AddScoped<INavigationProvider, UserEntitiesMenu>();
             services.AddScoped<INavigationProvider, TopicMenu>();
             services.AddScoped<INavigationProvider, TopicReplyMenu>();
 
@@ -94,9 +95,9 @@ namespace Plato.Discuss
             services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
 
-            // Add profile views
-            services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
-            services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
+            //// Add profile views
+            //services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
+            //services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
             
             // Add user views
             services.AddScoped<IViewProviderManager<UserIndex>, ViewProviderManager<UserIndex>>();

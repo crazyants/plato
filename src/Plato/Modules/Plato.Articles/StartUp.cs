@@ -55,6 +55,7 @@ namespace Plato.Articles
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
             services.AddScoped<INavigationProvider, PostMenu>();
+            services.AddScoped<INavigationProvider, UserEntitiesMenu>();
             services.AddScoped<INavigationProvider, ArticleMenu>();
             services.AddScoped<INavigationProvider, ArticleCommentMenu>();
 
@@ -94,9 +95,9 @@ namespace Plato.Articles
             services.AddScoped<IViewProviderManager<Comment>, ViewProviderManager<Comment>>();
             services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
 
-            // Add profile views
-            services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
-            services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
+            //// Add profile views
+            //services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
+            //services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
             
             // Add user views
             services.AddScoped<IViewProviderManager<UserIndex>, ViewProviderManager<UserIndex>>();

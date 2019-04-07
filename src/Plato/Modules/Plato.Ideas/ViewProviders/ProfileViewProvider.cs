@@ -63,7 +63,7 @@ namespace Plato.Ideas.ViewProviders
             return Views(
                     View<EntityIndexViewModel<Idea>>("Profile.Ideas.Display.Content", model => viewModel)
                         .Zone("content")
-                        .Order(3)
+                        .Order(5)
                 );
 
         }

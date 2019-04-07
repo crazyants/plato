@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Plato.Docs.Models;
+using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -7,7 +7,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
-namespace Plato.Docs.ViewProviders
+namespace Plato.Entities.ViewProviders
 {
     public class ProfileViewProvider : BaseViewProvider<Profile>
     {
@@ -35,36 +35,26 @@ namespace Plato.Docs.ViewProviders
                 return await BuildIndexAsync(profile, context);
             }
             
-            // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
-
-            // Ensure feature exists
-            if (feature == null)
-            {
-                return await BuildIndexAsync(profile, context);
-            }
-
             // Build view model
-            var viewModel = new EntityIndexViewModel<Doc>()
+            var viewModel = new EntityIndexViewModel<Entity>()
             {
                 Options = new EntityIndexOptions()
                 { 
-                    FeatureId = feature.Id,
                     CreatedByUserId = user.Id
                 },
                 Pager = new PagerOptions()
                 {
                     Page = 1,
-                    Size = 5,
+                    Size = 10,
                     Enabled = false
                 }
             };
 
             // Return view
             return Views(
-                View<EntityIndexViewModel<Doc>>("Profile.Docs.Display.Content", model => viewModel)
+                View<EntityIndexViewModel<Entity>>("Profile.Entities.Display.Content", model => viewModel)
                     .Zone("content")
-                    .Order(2)
+                    .Order(1)
             );
 
         }

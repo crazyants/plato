@@ -778,18 +778,10 @@
 
     font-size: 55pt; 
 }
-.medallion .medallion-icon { font-size: 28pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-shadow: 1px 1px 1px #888; }
+.medallion .medallion-icon { font-size: 28pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
 .medallion.medallion-sm .medallion-bg { font-size: 30pt; }
 .medallion.medallion-sm .medallion-icon { font-size: 16pt; }
-
-.medallion-gold .medallion-bg { color: #E9F000; }
-.medallion-silver .medallion-bg { color: #A8A6A3; }
-.medallion-bronze .medallion-bg { color: #D0BA00; }
-
-.medallion-gold .medallion-icon,
-.medallion-silver .medallion-icon,
-.medallion-bronze .medallion-icon { color: white; }
 
 .medallion .badge { z-index: 2; position: absolute; right: 0;  }
 

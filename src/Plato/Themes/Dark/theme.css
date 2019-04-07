@@ -1,5 +1,21 @@
 
 /* ------------------- */
+/* Badges */
+/* ------------------- */
+
+.medallion-gold .medallion-bg,
+.medallion-silver .medallion-bg,
+.medallion-bronze .medallion-bg { color: transparent; background-color: #222; border-radius: 50%;  }
+
+.medallion-gold .medallion-bg { border: 1px dashed #E9F000; }
+.medallion-silver .medallion-bg { border: 1px dashed #AAA8A6; }
+.medallion-bronze .medallion-bg { border: 1px dashed #D0BA00; }
+
+.medallion-gold .medallion-icon,
+.medallion-silver .medallion-icon,
+.medallion-bronze .medallion-icon { color: #2A9FD6; }
+
+/* ------------------- */
 /* Markdown Body */
 /* ------------------- */
 
