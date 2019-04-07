@@ -61,7 +61,7 @@ $(function (win, doc, $) {
                         css: "active"
                     },
                     noResultsIcon: null,
-                    noResultsText: "No notifications at this time",
+                    noResultsText: app.T("No notifications at this time"),
                     config: {
                         method: "GET",
                         url: 'api/notifications/user/get?page={page}&size={pageSize}',

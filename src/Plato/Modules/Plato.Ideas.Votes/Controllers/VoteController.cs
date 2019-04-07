@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,8 +68,8 @@ namespace Plato.Ideas.Votes.Controllers
             
             // Get permission
             var permission = model.EntityReplyId > 0
-                ? Permissions.VoteAnswers
-                : Permissions.VoteQuestions;
+                ? Permissions.VoteIdeaComments
+                : Permissions.VoteIdeas;
             
             // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, permission))

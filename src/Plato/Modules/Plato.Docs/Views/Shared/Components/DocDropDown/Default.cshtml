@@ -2,7 +2,7 @@
 @using Plato.Internal.Layout.Views
 @model EntityDropDownViewModel
 
-<div class="card" data-provide="category-dropdown">
+<div class="card" data-provide="entity-dropdown">
 
     <div class="dropdown">
         <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
@@ -19,10 +19,10 @@
             <div class="my-2 mx-3">
                 <input type="search" class="form-control" 
                        data-filter-list-empty=".no-channel-results"
-                       placeholder="@T["Search channels..."]" />
+                       placeholder="@T["Search docs..."]" />
             </div>
             <div class="dropdown-header hidden">
-                @T["No channel found"]
+                @T["No docs found"]
             </div>
             @if (Model.Entities != null)
             {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Entities.Assets;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
@@ -11,6 +12,7 @@ using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Search.Abstractions;
 
@@ -30,6 +32,9 @@ namespace Plato.Entities
             
             // Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
+            // Register client resources
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Repositories
             services.AddScoped<IEntityRepository<Entity>, EntityRepository<Entity>>();

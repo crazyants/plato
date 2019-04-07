@@ -43,16 +43,22 @@
     
     <div class="float-right">
         <ol class="list-inline text-muted text-right">
-            <li class="list-inline-item">
-                <span title="@T["Comments"]" data-toggle="tooltip">
-                    @Model.Entity.TotalReplies <i class="fal fa-comment-alt-lines"></i>
-                </span>
-            </li>
-            <li class="list-inline-item">
-                <span title="@T["Views"]" data-toggle="tooltip">
-                    @Model.Entity.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
-                </span>
-            </li>
+            @if (Model.Entity.TotalReplies > 0)
+            {
+                <li class="list-inline-item">
+                    <span title="@T["Comments"]" data-toggle="tooltip">
+                        @Model.Entity.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
+                    </span>
+                </li>
+            }
+            @if (Model.Entity.TotalViews > 0)
+            {
+                <li class="list-inline-item">
+                    <span title="@T["Views"]" data-toggle="tooltip">
+                        @Model.Entity.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
+                    </span>
+                </li>
+            }
         </ol>
         @if (details?.LatestUsers != null)
         {

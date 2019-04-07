@@ -52,8 +52,8 @@ namespace Plato.Ideas.Votes.Navigation
                             {
                                 Entity = entity,
                                 Reply = reply,
-                                Permission = Permissions.VoteAnswers,
-                                ApiUrl = "api/questions/vote/post"
+                                Permission = Permissions.VoteIdeaComments,
+                                ApiUrl = "api/ideas/vote/post"
                             }
                         })
                 );

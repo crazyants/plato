@@ -27,9 +27,9 @@ $(function (win, doc, $) {
     // --------
 
     /* categorySelectDropdown */
-    var categoryDropdown = function (options) {
+    var entityDropdown = function (options) {
 
-        var dataKey = "categoryDropdown",
+        var dataKey = "entityDropdown",
             dataIdKey = dataKey + "Id";
 
         var defaults = {};
@@ -60,7 +60,7 @@ $(function (win, doc, $) {
                 $caller.selectDropdown($.extend({
                         itemTemplate:
                             '<li class="list-group-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
-                        parseItemTemplate: function(html, $label) {
+                    parseItemTemplate: function (html, $label) {
                             var $div = $('<div class="list-group-item">');
                             $div.append($label.clone().removeAttr("for"));
                             return $div;
@@ -231,133 +231,17 @@ $(function (win, doc, $) {
 
     }();
 
-    // categoryIconModal
-    var categoryIconModal = function () {
-
-        var dataKey = "categoryIconModal",
-            dataIdKey = dataKey + "Id";
-
-        var defaults = {
-                event: "click"
-            };
-
-        var methods = {
-            init: function ($caller, methodName) {
-
-                if (methodName) {
-                    if (this[methodName]) {
-                        this[methodName].apply(this, [$caller]);
-                    } else {
-                        alert(methodName + " is not a valid method!");
-                    }
-                    return;
-                }
-
-                methods.bind($caller);
-
-            },
-            bind: function ($caller) {
-
-                var selectedIcon = null,
-                    iconPrefix = $caller.attr("data-icon-prefix"),
-                    $modal = $($caller.attr("href")),
-                    $inputs = $modal.find("input[name=iconCss]"),
-                    $checked = $modal.find("input[name=iconCss]:checked");
-                   
-
-                if ($checked.length > 0) {
-                    selectedIcon = $checked.val();
-                }
-
-                $inputs.change(function () {
-                    selectedIcon = $(this).val();
-                });
-
-                $modal.on('hidden.bs.modal',
-                    function (e) {
-                        if (selectedIcon === "") {
-                            return;
-                        }
-                        var $i = $caller.find("i");
-                        if ($i.length > 0) {
-                            $i.removeClass()
-                                .addClass(iconPrefix + selectedIcon);
-                        }
-                    });
-
-            },
-            unbind: function ($caller) {
-                $caller.unbind('hidden.bs.modal');
-            }
-        };
-
-        return {
-            init: function () {
-
-                var options = {};
-                var methodName = null;
-                for (var i = 0; i < arguments.length; ++i) {
-                    var a = arguments[i];
-                    switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
-                    }
-                }
-
-                if (this.length > 0) {
-                    // $(selector).selectIconModal
-                    return this.each(function () {
-                        if (!$(this).data(dataIdKey)) {
-                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
-                            $(this).data(dataIdKey, id);
-                            $(this).data(dataKey, $.extend({}, defaults, options));
-                        } else {
-                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
-                        }
-                        methods.init($(this), methodName);
-                    });
-                } else {
-                    // $().selectIconModal
-                    if (methodName) {
-                        if (methods[methodName]) {
-                            var $caller = $("body");
-                            $caller.data(dataKey, $.extend({}, defaults, options));
-                            methods[methodName].apply(this, [$caller]);
-                        } else {
-                            alert(methodName + " is not a valid method!");
-                        }
-                    }
-                }
-
-            }
-
-        };
-
-    }();
-    
+ 
     $.fn.extend({
-        categoryIconModal: categoryIconModal.init,
-        categoryDropdown: categoryDropdown.init
+        
+        entityDropdown: entityDropdown.init
     });
 
     app.ready(function () {
 
-        $('[data-provide="category-icon-modal"]')
-            .categoryIconModal();
-
-        /* category dropdown */
-        $('[data-provide="category-dropdown"]')
-            .categoryDropdown();
+        /* entity dropdown */
+        $('[data-provide="entity-dropdown"]')
+            .entityDropdown();
         
     });
 

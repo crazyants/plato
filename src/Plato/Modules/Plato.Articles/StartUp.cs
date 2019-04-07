@@ -173,6 +173,14 @@ namespace Plato.Articles
                 defaults: new { controller = "Home", action = "Create" }
             );
 
+            // Edit Entity
+            routes.MapAreaRoute(
+                name: "ArticlesEdit",
+                areaName: "Plato.Articles",
+                template: "articles/edit/{opts.id:int?}/{opts.alias?}",
+                defaults: new { controller = "Home", action = "Edit" }
+            );
+
             // Display Reply
             routes.MapAreaRoute(
                 name: "ArticlesDisplayReply",

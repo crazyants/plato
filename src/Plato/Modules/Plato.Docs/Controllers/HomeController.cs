@@ -604,6 +604,9 @@ namespace Plato.Docs.Controllers
             {
                 return Unauthorized();
             }
+            
+            // Get any parents 
+            var parents = await _entityStore.GetParentsByIdAsync(entity.Id);
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -614,16 +617,21 @@ namespace Plato.Docs.Controllers
                         .LocalNav())
                     .Add(S["Docs"], docs => docs
                         .Action("Index", "Home", "Plato.Docs")
-                        .LocalNav())
-                    .Add(S[entity.Title.TrimToAround(75)], post => post
-                        .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary()
-                        {
-                            ["opts.id"] = entity.Id,
-                            ["opts.alias"] = entity.Alias
-                        })
-                        .LocalNav()
-                    );
+                        .LocalNav());
 
+                if (parents != null)
+                {
+                    foreach (var parent in parents)
+                    {
+                        builder.Add(S[parent.Title], channel => channel
+                            .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary
+                            {
+                                ["opts.id"] = parent.Id,
+                                ["opts.alias"] = parent.Alias,
+                            })
+                            .LocalNav());
+                    }
+                }
 
                 builder.Add(S["Edit Doc"], post => post
                     .LocalNav()
@@ -736,24 +744,42 @@ namespace Plato.Docs.Controllers
                 return Unauthorized();
             }
 
+
+            // Get any parents 
+            var parents = await _entityStore.GetParentsByIdAsync(entity.Id);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Docs"], docs => docs
+                        .LocalNav())
+                    .Add(S["Docs"], docs => docs
                         .Action("Index", "Home", "Plato.Docs")
-                        .LocalNav()
-                    ).Add(S[entity.Title.TrimToAround(75)], post => post
+                        .LocalNav())
+                    .Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary()
                         {
                             ["opts.id"] = entity.Id,
                             ["opts.alias"] = entity.Alias
                         })
-                        .LocalNav()
-                    )
-                    .Add(S["Edit Reply"], post => post
+                        .LocalNav());
+
+                if (parents != null)
+                {
+                    foreach (var parent in parents)
+                    {
+                        builder.Add(S[parent.Title], channel => channel
+                            .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary
+                            {
+                                ["opts.id"] = parent.Id,
+                                ["opts.alias"] = parent.Alias,
+                            })
+                            .LocalNav());
+                    }
+                }
+
+                builder.Add(S["Edit Comment"], post => post
                         .LocalNav()
                     );
             });

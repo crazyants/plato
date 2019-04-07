@@ -3331,7 +3331,7 @@ $(function (win, doc, $) {
                 if ($preview.length === 0) {
                     $preview = $caller.next();
                     if (!$preview.hasClass("select-dropdown-preview")) {
-                        throw new Error("A preview area coulod not be found for the select dropdown.");
+                        throw new Error("A preview area could not be found for the select dropdown.");
                     }
                 }
                 return $preview;

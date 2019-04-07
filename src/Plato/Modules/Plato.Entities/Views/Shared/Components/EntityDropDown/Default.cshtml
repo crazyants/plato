@@ -1,8 +1,7 @@
-﻿@using Plato.Entities.Models
-@using Plato.Internal.Layout.Views
-@model EntityDropDownViewModel
+﻿@model EntityDropDownViewModel
 
-<div class="card" data-provide="category-dropdown">
+
+<div class="card" data-provide="entity-dropdown">
 
     <div class="dropdown">
         <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
@@ -19,10 +18,10 @@
             <div class="my-2 mx-3">
                 <input type="search" class="form-control" 
                        data-filter-list-empty=".no-channel-results"
-                       placeholder="@T["Search channels..."]" />
+                       placeholder="@T["Search for parent..."]" />
             </div>
             <div class="dropdown-header hidden">
-                @T["No channel found"]
+                @T["No results found"]
             </div>
             @if (Model.Entities != null)
             {
@@ -30,7 +29,6 @@
                 {
                     options = new EntityTreeOptions()
                     {
-                        IndexOptions = Model.Options,
                         SelectedEntity = Model.SelectedEntity,
                         HtmlName = Model.HtmlName,
                         EnableCheckBoxes = true,
@@ -60,18 +58,6 @@
             @foreach (var channel in selectedEntities)
             {
                 <li class="list-group-item">
-                    @*@if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))
-                    {
-                        <span class="category-icon category-icon-sm mr-2" style="background-color: @channel.Value.BackColor; color: @channel.Value.ForeColor">
-                            <i class="@channel.Value.IconCss"></i>
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="category-icon category-icon-sm mr-2">
-                            <i class="fal fa-folder"></i>
-                        </span>
-                    }*@
                     @channel.Value.Title
                 </li>
             }

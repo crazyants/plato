@@ -6,18 +6,18 @@ namespace Plato.Ideas.Votes
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission VoteQuestions =
-            new Permission("VoteQuestions", "Can up & down vote questions");
+        public static readonly Permission VoteIdeas =
+            new Permission("VoteIdeas", "Can up & down vote ideas");
 
-        public static readonly Permission VoteAnswers =
-            new Permission("VoteAnswers", "Can up & down vote answers");
+        public static readonly Permission VoteIdeaComments =
+            new Permission("VoteIdeaComments", "Can up & down vote idea comments");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                VoteQuestions,
-                VoteAnswers
+                VoteIdeas,
+                VoteIdeaComments
             };
         }
 
@@ -30,8 +30,8 @@ namespace Plato.Ideas.Votes
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        VoteQuestions,
-                        VoteAnswers
+                        VoteIdeas,
+                        VoteIdeaComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -39,8 +39,8 @@ namespace Plato.Ideas.Votes
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        VoteQuestions,
-                        VoteAnswers
+                        VoteIdeas,
+                        VoteIdeaComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -48,8 +48,8 @@ namespace Plato.Ideas.Votes
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        VoteQuestions,
-                        VoteAnswers
+                        VoteIdeas,
+                        VoteIdeaComments
                     }
                 }
             };

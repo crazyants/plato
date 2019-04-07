@@ -39,8 +39,8 @@ namespace Plato.Ideas.Votes.Navigation
                         model = new VoteToggleViewModel()
                         {                     
                             Entity = entity,
-                            Permission = Permissions.VoteQuestions,
-                            ApiUrl = "api/questions/vote/post"
+                            Permission = Permissions.VoteIdeas,
+                            ApiUrl = "api/ideas/vote/post"
                         }
                     })
                 );
