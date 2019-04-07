@@ -5,7 +5,8 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Navigation.Abstractions
 {
-    public interface INavigationItemBuilder : INavigationBuilder    {
+    public interface INavigationItemBuilder : INavigationBuilder
+    {
 
         INavigationItemBuilder Caption(LocalizedString caption);
 
@@ -15,6 +16,10 @@ namespace Plato.Internal.Navigation.Abstractions
 
         INavigationItemBuilder IconCss(string css);
 
+        INavigationItemBuilder Badge(string badgeText);
+
+        INavigationItemBuilder Badge(string badgeText, string badgeCss);
+        
         INavigationItemBuilder Order(int order);
 
         INavigationItemBuilder Url(string url);

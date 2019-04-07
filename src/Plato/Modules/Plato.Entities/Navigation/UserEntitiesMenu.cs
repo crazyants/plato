@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Questions.Navigation
+namespace Plato.Entities.Navigation
 {
     public class UserEntitiesMenu : INavigationProvider
     {
@@ -18,7 +21,7 @@ namespace Plato.Questions.Navigation
         {
             T = localizer;
         }
-        
+
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
@@ -32,27 +35,24 @@ namespace Plato.Questions.Navigation
                 builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
                     FeatureEntityMetrics;
 
-            // Get feature metrics
-            var metric = model?.Metrics?.FirstOrDefault(m => m.ModuleId.Equals("Plato.Ideas", StringComparison.OrdinalIgnoreCase));
+            var total = model?.Total ?? 0;
 
             // Get route values
             var context = builder.ActionContext;
-            object id = context.RouteData.Values["opts.id"], 
+            object id = context.RouteData.Values["opts.id"],
                 alias = context.RouteData.Values["opts.alias"];
 
-            builder.Add(T["Questions"], 4, topics => topics
-                .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty, "badge badge-primary ml-2")
-                .Action("Index", "User", "Plato.Questions", new RouteValueDictionary()
-                {
-                    ["opts.createdByUserId"] = id?.ToString(),
-                    ["opts.alias"] = alias?.ToString()
-                })
-                //.Permission(Permissions.ManageRoles)
-                .LocalNav()
+            builder.Add(T["All"], 1, topics => topics
+                    .Badge(total > 0 ? total.ToPrettyInt() : string.Empty, "badge badge-primary ml-2")
+                    .Action("Display", "User", "Plato.Users", new RouteValueDictionary()
+                    {
+                        ["opts.createdByUserId"] = id?.ToString(),
+                        ["opts.alias"] = alias?.ToString()
+                    })
+                    //.Permission(Permissions.ManageRoles)
+                    .LocalNav(), new List<string>() {"active"}
             );
-
         }
-
     }
 
 }

@@ -45,6 +45,19 @@ namespace Plato.Internal.Navigation
             return this;
         }
 
+        public INavigationItemBuilder Badge(string badgeText)
+        {
+            _item.BadgeText = badgeText;
+            return this;
+        }
+
+        public INavigationItemBuilder Badge(string badgeText, string badgeCss)
+        {
+            _item.BadgeText = badgeText;
+            _item.BadgeCss = badgeCss;
+            return this;
+        }
+
         public INavigationItemBuilder Order(int order)
         {
             _item.Order = order;

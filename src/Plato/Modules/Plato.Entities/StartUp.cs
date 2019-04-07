@@ -42,7 +42,7 @@ namespace Plato.Entities
             services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Register navigation provider
-            services.AddScoped<INavigationProvider, UserSubmissionsMenu>();
+            services.AddScoped<INavigationProvider, UserEntitiesMenu>();
 
             // Repositories
             services.AddScoped<IEntityRepository<Entity>, EntityRepository<Entity>>();
@@ -56,6 +56,8 @@ namespace Plato.Entities
             services.AddScoped<IEntityDataItemStore<EntityData>, EntityDataItemStore<EntityData>>();
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore<EntityReply>>();
             services.AddScoped<IEntityUsersStore, EntityUsersStore>();
+            services.AddScoped<IFeatureEntityMetricsStore, FeatureEntityMetricsStore>();
+           
 
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();

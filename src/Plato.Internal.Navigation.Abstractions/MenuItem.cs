@@ -65,7 +65,11 @@ namespace Plato.Internal.Navigation.Abstractions
         public string IconCss { get; set; }
 
         public bool Selected { get; set; }
-        
+
+        public string BadgeText { get; set; }
+
+        public string BadgeCss { get; set; } = "badge badge-primary";
+
     }
 
 }

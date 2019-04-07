@@ -1,4 +1,4 @@
-﻿@model EntityIndexViewModel<Entity>
+﻿@model UserEntitiesViewModel
 
 <card class="card card-body-flush">
     <card-title>
@@ -11,6 +11,7 @@
             </div>
             <div class="collapse navbar-collapse w-100" id="navbar-collapse2" role="navigation">
                 <navigation name="user-entities"
+                            model="@Model.Metrics"
                             class="nav nav-tabs card-header-tabs w-100"
                             child-ul-css-class="dropdown-menu" />
             </div>
@@ -21,8 +22,8 @@
         <ul class="list-group list-group-flush list-group-hover">
             @await DisplayAsync(new View("GetEntityList", new
             {
-                options = @Model.Options,
-                pager = @Model.Pager
+                options = @Model.IndexViewModel.Options,
+                pager = @Model.IndexViewModel.Pager
             }))
         </ul>
 </card-body>

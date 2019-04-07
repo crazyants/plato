@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Plato.Entities.Models;
+using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -11,16 +13,16 @@ namespace Plato.Entities.ViewProviders
 {
     public class ProfileViewProvider : BaseViewProvider<Profile>
     {
-
-        private readonly IFeatureFacade _featureFacade;
+        
+        private readonly IFeatureEntityMetricsStore _featureEntityMetricsStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
         
         public ProfileViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            IFeatureFacade featureFacade)
+            IFeatureEntityMetricsStore featureEntityMetricsStore)
         {
             _platoUserStore = platoUserStore;
-            _featureFacade = featureFacade;
+            _featureEntityMetricsStore = featureEntityMetricsStore;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile, IViewProviderContext context)
@@ -35,24 +37,29 @@ namespace Plato.Entities.ViewProviders
                 return await BuildIndexAsync(profile, context);
             }
             
-            // Build view model
-            var viewModel = new EntityIndexViewModel<Entity>()
+            var viewModel = new UserEntitiesViewModel()
             {
-                Options = new EntityIndexOptions()
-                { 
-                    CreatedByUserId = user.Id
-                },
-                Pager = new PagerOptions()
+                Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id),
+                IndexViewModel = new EntityIndexViewModel<Entity>()
                 {
-                    Page = 1,
-                    Size = 10,
-                    Enabled = false
+                    Options = new EntityIndexOptions()
+                    {
+                        CreatedByUserId = user.Id
+                    },
+                    Pager = new PagerOptions()
+                    {
+                        Page = 1,
+                        Size = 10,
+                        Enabled = false
+                    }
                 }
             };
+         
+
 
             // Return view
             return Views(
-                View<EntityIndexViewModel<Entity>>("Profile.Entities.Display.Content", model => viewModel)
+                View<UserEntitiesViewModel>("Profile.Entities.Display.Content", model => viewModel)
                     .Zone("content")
                     .Order(1)
             );

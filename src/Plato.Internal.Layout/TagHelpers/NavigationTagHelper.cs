@@ -331,11 +331,21 @@ namespace Plato.Internal.Layout.TagHelpers
                         .Append(item.IconCss)
                         .Append("\"></i>");
                 }
-
+                
                 sb.Append("<span class=\"nav-text\">")
                     .Append(item.Text.Value)
-                    .Append("</span>")
-                    .Append("</a>");
+                    .Append("</span>");
+                
+                if (!String.IsNullOrEmpty(item.BadgeText))
+                {
+                    sb.Append("<span class=\"")
+                        .Append(item.BadgeCss)
+                        .Append("\">")
+                        .Append(item.BadgeText)
+                        .Append("</span>");
+                }
+                
+                sb.Append("</a>");
 
             }
 
