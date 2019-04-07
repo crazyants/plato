@@ -10,16 +10,11 @@ namespace Plato.Discuss.Navigation
     public class PostMenu : INavigationProvider
     {
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-
         public IStringLocalizer T { get; set; }
         
-        public PostMenu(
-            IStringLocalizer localizer, 
-            IActionContextAccessor actionContextAccessor)
+        public PostMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -41,7 +36,7 @@ namespace Plato.Discuss.Navigation
                         .Action("Create", "Home", "Plato.Discuss", new RouteValueDictionary())
                         .Permission(Permissions.PostTopics)
                         .LocalNav()
-                    ), new List<string>() {"nav-item", "text-hidden", "active" });
+                    ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
         }
     }
 

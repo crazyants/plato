@@ -19,10 +19,10 @@
             <card-title>
                 @if (Model.Id == 0)
                 {
+                    <h6 class="card-title float-left">@T["New Question"]</h6>
                     <navigation name="post"
-                                class="nav nav-tabs card-header-tabs"
-                                child-ul-css-class="dropdown-menu anim anim-2x anim-scale-in"/>
-
+                                class="nav navbar p-0 float-right"
+                                child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
                 }
                 else
                 {

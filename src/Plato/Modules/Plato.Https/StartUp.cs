@@ -43,7 +43,7 @@ namespace Plato.Https
             // Call configure on HttpsRewriteOptionsConfiguration
             serviceProvider.GetService<IConfigureOptions<RewriteOptions>>().Configure(options);
 
-            // Provide options to rewritter
+            // Provide options to re-writer
             app.UseRewriter(options);
 
         }

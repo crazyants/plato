@@ -10,17 +10,12 @@ namespace Plato.Docs.Navigation
 {
     public class PostMenu : INavigationProvider
     {
-
-        private readonly IActionContextAccessor _actionContextAccessor;
-
+        
         public IStringLocalizer T { get; set; }
         
-        public PostMenu(
-            IStringLocalizer localizer, 
-            IActionContextAccessor actionContextAccessor)
+        public PostMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -42,7 +37,7 @@ namespace Plato.Docs.Navigation
                         .Action("Create", "Home", "Plato.Docs", new RouteValueDictionary())
                         .Permission(Permissions.PostDocs)
                         .LocalNav()
-                    ), new List<string>() {"nav-item", "text-hidden", "active" });
+                    ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
         }
     }
 
