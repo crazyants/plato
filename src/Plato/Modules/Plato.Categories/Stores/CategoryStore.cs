@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Plato.Categories.Extensions;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Internal.Abstractions;
@@ -127,7 +128,7 @@ namespace Plato.Categories.Stores
                     var categories = await GetByFeatureIdAsync(category.FeatureId);
                     if (categories != null)
                     {
-                        category.Children = RecurseChildren(categories.ToList(), category.Id);
+                        category.Children = categories.RecurseChildren<TCategory>(category.Id);
                     }
                     
                 }
@@ -175,7 +176,7 @@ namespace Plato.Categories.Stores
                 if (results != null)
                 {
                     results = await MergeCategoryData(results.ToList());
-                    results = PrepareHierarchy(results.ToLookup(c => c.ParentId));
+                    results = results.BuildHierarchy<TCategory>();
                     results = results.OrderBy(r => r.SortOrder);
                 }
 
@@ -204,12 +205,7 @@ namespace Plato.Categories.Stores
             }
             
             var categories = await GetByFeatureIdAsync(category.FeatureId);
-            if (categories == null)
-            {
-                return null;
-            }
-
-            return RecurseParents(categories.ToList(), category.Id).Reverse();
+            return categories?.RecurseParents<TCategory>(category.Id).Reverse();
 
         }
 
@@ -222,12 +218,7 @@ namespace Plato.Categories.Stores
             }
 
             var categories = await GetByFeatureIdAsync(category.FeatureId);
-            if (categories == null)
-            {
-                return null;
-            }
-
-            return RecurseChildren(categories.ToList(), category.Id);
+            return categories?.RecurseChildren<TCategory>(category.Id);
 
         }
         
@@ -342,102 +333,6 @@ namespace Plato.Categories.Stores
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
-        }
-
-        IList<TCategory> PrepareHierarchy(
-            ILookup<int, TCategory> input,
-            IList<TCategory> output = null,
-            TCategory parent = null,
-            int parentId = 0,
-            int depth = 0)
-        {
-
-            if (input == null) throw new ArgumentNullException(nameof(input));
-            if (output == null) output = new List<TCategory>();
-            if (parentId == 0) depth = 0;
-
-            foreach (var item in input[parentId])
-            {
-
-                if (depth < 0) depth = 0;
-                if (parent != null) depth++;
-
-                item.Depth = depth;
-                item.Parent = parent;
-                
-                if (parent != null)
-                {
-                    var children = new List<ICategory>() {item};
-                    if (parent.Children != null)
-                    {
-                        children.AddRange(parent.Children);
-                    }
-
-                    parent.Children = children.OrderBy(c => c.SortOrder);
-                }
-
-                output.Add(item);
-
-                // recurse
-                PrepareHierarchy(input, output, item, item.Id, depth--);
-            }
-
-            return output;
-
-        }
-
-        IEnumerable<TCategory> RecurseParents(
-            IList<TCategory> input,
-            int rootId,
-            IList<TCategory> output = null)
-        {
-            if (output == null)
-            {
-                output = new List<TCategory>();
-            }
-
-            foreach (var item in input)
-            {
-                if (item.Id == rootId)
-                {
-                    if (item.ParentId > 0)
-                    {
-                        output.Add(item);
-                        RecurseParents(input, item.ParentId, output);
-                    }
-                    else
-                    {
-                        output.Add(item);
-                    }
-                }
-            }
-
-            return output;
-
-        }
-
-        IEnumerable<TCategory> RecurseChildren(
-            IList<TCategory> input,
-            int rootId,
-            IList<TCategory> output = null)
-        {
-
-            if (output == null)
-            {
-                output = new List<TCategory>();
-            }
-
-            foreach (var item in input)
-            {
-                if (item.ParentId == rootId)
-                {
-                    output.Add(item);
-                    RecurseChildren(input, item.Id, output);
-                }
-            }
-
-            return output;
-
         }
 
         void CancelTokens(TCategory model)
