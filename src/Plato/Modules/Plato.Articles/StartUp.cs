@@ -54,6 +54,7 @@ namespace Plato.Articles
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
+            services.AddScoped<INavigationProvider, PostMenu>();
             services.AddScoped<INavigationProvider, ArticleMenu>();
             services.AddScoped<INavigationProvider, ArticleCommentMenu>();
 

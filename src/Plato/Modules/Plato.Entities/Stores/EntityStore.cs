@@ -157,8 +157,6 @@ namespace Plato.Entities.Stores
                 if (results != null)
                 {
                     results.Data = await MergeEntityData(results.Data);
-                    //results.Data = PrepareHierarchy(results.Data.ToLookup(c => c.ParentId));
-                    //results.Data = results.Data.OrderBy(r => r.SortOrder).ToList();
                 }
                 return results;
             });
@@ -175,8 +173,6 @@ namespace Plato.Entities.Stores
                 if (results != null)
                 {
                     results = await MergeEntityData(results.ToList());
-                    //results = PrepareHierarchy(results.ToLookup(c => c.ParentId));
-                    //results = results.OrderBy(r => r.SortOrder);
                 }
 
                 return results;

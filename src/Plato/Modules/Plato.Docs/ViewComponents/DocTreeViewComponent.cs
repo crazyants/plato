@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Plato.Docs.Models;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
@@ -83,7 +83,7 @@ namespace Plato.Docs.ViewComponents
        
             return View(new EntityTreeOptions()
             {
-                Entities = results?.Data.BuildHierarchy<Doc>(),
+                Entities = results?.Data?.BuildHierarchy<Doc>()?.OrderBy(r => r.SortOrder),
                 EditMenuViewName = "",
                 SelectedEntity = options.SelectedEntity,
                 EnableCheckBoxes = options.EnableCheckBoxes,

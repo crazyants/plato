@@ -20,8 +20,7 @@ namespace Plato.Questions.Navigation
             {
                 return;
             }
-
-
+            
             builder
                 .Add(T["Questions"], 3, discuss => discuss
                         .IconCss("fal fa-question-circle")
