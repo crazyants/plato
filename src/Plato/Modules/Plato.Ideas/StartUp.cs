@@ -161,7 +161,7 @@ namespace Plato.Ideas
             routes.MapAreaRoute(
                 name: "IdeasDisplay",
                 areaName: "Plato.Ideas",
-                template: "ideas/q/{opts.id:int}/{opts.alias}/{pager.offset:int?}",
+                template: "ideas/i/{opts.id:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
 
@@ -171,6 +171,14 @@ namespace Plato.Ideas
                 areaName: "Plato.Ideas",
                 template: "ideas/new/{channel?}",
                 defaults: new { controller = "Home", action = "Create" }
+            );
+            
+            // Edit Entity
+            routes.MapAreaRoute(
+                name: "IdeasEdit",
+                areaName: "Plato.Ideas",
+                template: "ideas/edit/{opts.id:int?}/{opts.alias?}",
+                defaults: new { controller = "Home", action = "Edit" }
             );
 
             // Display Reply

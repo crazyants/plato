@@ -111,11 +111,8 @@
 .markdown-body blockquote {
     display: block;
     font-size: 100%;
-   
     padding: 0.25rem 0.75rem;
     position: relative;
-    border-left: .25em solid #dfe2e5;
-    color: #6a737d;
 }
 
 .markdown-body blockquote footer {
@@ -123,7 +120,6 @@
     text-align: left;
     padding: 0 0 0.25rem 0;
     font-size: 0.875em;
-    color: #888;
 }
 
 .markdown-body blockquote.primary{ border: 1px solid #D9DDE7; border-left: 4px solid #007bff; background: #F3F7FF; }
@@ -160,13 +156,6 @@
     border-style: solid;
 }
 
-.markdown-body table,
-.markdown-body table tr,
-.markdown-body table td,
-.markdown-body table th {
-    border-color: rgba(0, 0, 0, 0.1);
-}
-
 /* headings */
 
 .markdown-body h1 { font-size: 2em; }
@@ -178,7 +167,8 @@
 
 .markdown-body h1,
 .markdown-body h2 {
-    border-bottom: 1px solid #eaecef;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
     padding-bottom: .3em;
 }
 
@@ -197,8 +187,6 @@
 /* code blocks */
 
 .markdown-body pre {
-    background-color: #f6f8fa;
-    border: 1px solid #eee;
     border-radius: 3px;
     font-size: 85%;
     line-height: 1.45;
@@ -208,7 +196,6 @@
     margin-bottom: 16px;
     margin-top: 0;
 }
-
 
 /* ------------------------- */
 /* Grid system */

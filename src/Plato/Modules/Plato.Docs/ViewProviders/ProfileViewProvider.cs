@@ -62,7 +62,7 @@ namespace Plato.Docs.ViewProviders
 
             // Return view
             return Views(
-                View<EntityIndexViewModel<Doc>>("Profile.Discuss.Display.Content", model => viewModel)
+                View<EntityIndexViewModel<Doc>>("Profile.Docs.Display.Content", model => viewModel)
                     .Zone("content")
                     .Order(1)
             );

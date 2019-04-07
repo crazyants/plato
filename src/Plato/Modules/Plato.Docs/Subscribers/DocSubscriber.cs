@@ -8,14 +8,14 @@ using Plato.Internal.Reputations.Abstractions;
 namespace Plato.Docs.Subscribers
 {
     
-    public class TopicSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
+    public class DocSubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
 
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly IUserReputationAwarder _reputationAwarder;
         private readonly IBroker _broker;
 
-        public TopicSubscriber(
+        public DocSubscriber(
             IUserReputationAwarder reputationAwarder,
             IEntityRepository<TEntity> entityRepository,
             IBroker broker)

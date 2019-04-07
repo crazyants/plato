@@ -1,5 +1,44 @@
 
 /* ------------------- */
+/* Markdown Body */
+/* ------------------- */
+
+/* tables */
+
+.markdown-body table,
+.markdown-body table tr,
+.markdown-body table td,
+.markdown-body table th {
+    border-color: rgba(50, 50, 50, 0.75);
+}
+
+/* blockquotes */
+
+.markdown-body blockquote {
+    border-left: .25em solid rgba(75, 75, 75, 0.75);
+    color: #6a737d;
+}
+
+.markdown-body blockquote footer {
+    color: #888;
+}
+
+/* headers */
+
+.markdown-body h1,
+.markdown-body h2 {
+    border-color: rgba(50, 50, 50, 0.50);
+}
+
+/* code blocks */
+
+.markdown-body pre {
+    background-color: rgba(50, 50, 50, 0.25);
+    border: 1px solid rgba(50, 50, 50, 0.50);
+    color: inherit;
+}
+
+/* ------------------- */
 /* Icon selection */
 /* ------------------- */
 

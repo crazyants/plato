@@ -102,8 +102,8 @@ namespace Plato.Docs
             services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, TopicSubscriber<Doc>>();
-            services.AddScoped<IBrokerSubscriber, ReplySubscriber<DocComment>>();
+            services.AddScoped<IBrokerSubscriber, DocSubscriber<Doc>>();
+            services.AddScoped<IBrokerSubscriber, DocCommentSubscriber<DocComment>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<DocComment>>();
 
             // Badge providers
@@ -111,8 +111,8 @@ namespace Plato.Docs
             services.AddScoped<IBadgesProvider<Badge>, DocCommentBadges>();
 
             // Background tasks
-            services.AddScoped<IBackgroundTaskProvider, TopicBadgesAwarder>();
-            services.AddScoped<IBackgroundTaskProvider, ReplyBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, DocBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, DocCommentBadgesAwarder>();
 
             // Notification types
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();

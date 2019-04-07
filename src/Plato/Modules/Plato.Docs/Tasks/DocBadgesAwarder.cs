@@ -21,7 +21,7 @@ using Plato.Internal.Notifications.Extensions;
 
 namespace Plato.Docs.Tasks
 {
-    public class TopicBadgesAwarder : IBackgroundTaskProvider
+    public class DocBadgesAwarder : IBackgroundTaskProvider
     {
 
         private const string Sql = @"                       
@@ -81,7 +81,7 @@ namespace Plato.Docs.Tasks
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
         
-        public TopicBadgesAwarder(
+        public DocBadgesAwarder(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<Badge> notificationManager,
             IUserReputationAwarder userReputationAwarder,

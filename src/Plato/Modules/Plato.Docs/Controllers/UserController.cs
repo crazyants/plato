@@ -103,7 +103,7 @@ namespace Plato.Docs.Controllers
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
-                    return View("GetTopics", viewModel);
+                    return View("GetDocs", viewModel);
             }
 
             // Build breadcrumb
@@ -122,7 +122,7 @@ namespace Plato.Docs.Controllers
                         ["opts.alias"] = user.Alias
                     })
                     .LocalNav()
-                ).Add(S["Topics"]);
+                ).Add(S["Docs"]);
             });
             
 

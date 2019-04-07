@@ -10,27 +10,24 @@ using Plato.Internal.Reputations.Abstractions;
 namespace Plato.Docs.Subscribers
 {
 
-    public class ReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
+    public class DocCommentSubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
-
-        private readonly IBroker _broker;
-        private readonly IEntityStore<Doc> _entityStore;
-        private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
-        private readonly IEntityUsersStore _entityUsersStore;
+        
         private readonly IUserReputationAwarder _reputationAwarder;
+        private readonly IEntityUsersStore _entityUsersStore;
+        private readonly IEntityStore<Doc> _entityStore;
+        private readonly IBroker _broker;
 
-        public ReplySubscriber(
-            IBroker broker,
+        public DocCommentSubscriber(
+            IUserReputationAwarder reputationAwarder,
+            IEntityUsersStore entityUsersStore,
             IEntityStore<Doc> entityStore,
-            IEntityReplyStore<TEntityReply> entityReplyStore,
-            IEntityUsersStore entityUsersStore, 
-            IUserReputationAwarder reputationAwarder)
+            IBroker broker)
         {
-            _broker = broker;
-            _entityStore = entityStore;
-            _entityReplyStore = entityReplyStore;
-            _entityUsersStore = entityUsersStore;
             _reputationAwarder = reputationAwarder;
+            _entityUsersStore = entityUsersStore;
+            _entityStore = entityStore;
+            _broker = broker;
         }
 
         #region "Implementation"
@@ -164,12 +161,8 @@ namespace Plato.Docs.Subscribers
             return reply;
 
         }
-
-        #endregion
-
-        #region "Private Methods"
-
-        private async Task<TEntityReply> EntityDetailsUpdater(TEntityReply reply)
+        
+        async Task<TEntityReply> EntityDetailsUpdater(TEntityReply reply)
         {
             
             // We need an entity to update
