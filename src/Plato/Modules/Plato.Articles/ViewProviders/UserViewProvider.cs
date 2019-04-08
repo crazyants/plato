@@ -34,12 +34,6 @@ namespace Plato.Articles.ViewProviders
                 return await BuildIndexAsync(userIndex, context);
             }
 
-            // Build view model
-            var userDisplayViewModel = new UserDisplayViewModel()
-            {
-                User = user
-            };
-
             // Get index view model from context
             var indexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
             if (indexViewModel == null)
@@ -47,15 +41,19 @@ namespace Plato.Articles.ViewProviders
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Article>).ToString()} has not been registered on the HttpContext!");
             }
 
-            var viewModel = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id);
+            // Build view model
+            var userDisplayViewModel = new UserDisplayViewModel<Article>()
+            {
+                User = user,
+                IndexViewModel = indexViewModel,
+                Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id)
+            };
 
             // Build view
             return Views(
                 View<UserDisplayViewModel>("User.Index.Header", model => userDisplayViewModel).Zone("header"),
-                View<EntityIndexViewModel<Article>>("User.Index.Content", model => indexViewModel).Zone("content"),
-                View<FeatureEntityMetrics>("User.Entities.Display.Sidebar", model => viewModel)
-                    .Zone("sidebar")
-                    .Order(1)
+                View<UserDisplayViewModel<Article>>("User.Index.Content", model => userDisplayViewModel).Zone("content"),
+                View<UserDisplayViewModel>("User.Entities.Display.Sidebar", model => userDisplayViewModel).Zone("sidebar")
             );
             
         }

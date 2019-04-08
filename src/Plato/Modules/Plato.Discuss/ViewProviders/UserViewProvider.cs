@@ -23,8 +23,9 @@ namespace Plato.Discuss.ViewProviders
             _platoUserStore = platoUserStore;
             _featureEntityMetricsStore = featureEntityMetricsStore;
         }
-        
-        public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex, IViewProviderContext context)
+
+        public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex,
+            IViewProviderContext context)
         {
 
             var user = await _platoUserStore.GetByIdAsync(userIndex.Id);
@@ -33,27 +34,28 @@ namespace Plato.Discuss.ViewProviders
                 return await BuildIndexAsync(userIndex, context);
             }
 
-            var userDisplayViewModel = new UserDisplayViewModel()
-            {
-                User = user
-            };
-
-            var indexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
+            var indexViewModel =
+                context.Controller.HttpContext.Items[
+                    typeof(EntityIndexViewModel<Topic>)] as EntityIndexViewModel<Topic>;
             if (indexViewModel == null)
             {
-                throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
+                throw new Exception(
+                    $"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
             }
 
-            var viewModel = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id);
-            
+            var userDisplayViewModel = new UserDisplayViewModel<Topic>()
+            {
+                User = user,
+                IndexViewModel = indexViewModel,
+                Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id)
+            };
+
             return Views(
                 View<UserDisplayViewModel>("User.Index.Header", model => userDisplayViewModel).Zone("header"),
-                View<EntityIndexViewModel<Topic>>("User.Index.Content", model => indexViewModel).Zone("content"),
-                View<FeatureEntityMetrics>("User.Entities.Display.Sidebar", model => viewModel)
-                    .Zone("sidebar")
-                    .Order(1)
+                View<UserDisplayViewModel<Topic>>("User.Index.Content", model => userDisplayViewModel).Zone("content"),
+                View<UserDisplayViewModel>("User.Entities.Display.Sidebar", model => userDisplayViewModel).Zone("sidebar")
             );
-            
+
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(UserIndex model, IViewProviderContext context)

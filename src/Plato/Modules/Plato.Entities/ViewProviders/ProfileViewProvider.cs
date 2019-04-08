@@ -35,7 +35,7 @@ namespace Plato.Entities.ViewProviders
                 return await BuildIndexAsync(profile, context);
             }
             
-            var viewModel = new UserEntitiesViewModel()
+            var viewModel = new UserDisplayViewModel<Entity>()
             {
                 User = user,
                 Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id),
@@ -56,7 +56,7 @@ namespace Plato.Entities.ViewProviders
          
             // Return view
             return Views(
-                View<UserEntitiesViewModel>("Profile.Entities.Display.Content", model => viewModel)
+                View<UserDisplayViewModel<Entity>>("Profile.Entities.Display.Content", model => viewModel)
                     .Zone("content")
                     .Order(1)
             );

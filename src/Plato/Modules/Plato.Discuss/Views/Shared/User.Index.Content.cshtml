@@ -1,9 +1,9 @@
-﻿@model EntityIndexViewModel<Topic>
+﻿@model UserDisplayViewModel<Topic>
 
 @await DisplayAsync(new View("TopicList", new
 {
-    options = @Model.Options,
-    pager = @Model.Pager
+    options = @Model.IndexViewModel.Options,
+    pager = @Model.IndexViewModel.Pager
 }))
 
 

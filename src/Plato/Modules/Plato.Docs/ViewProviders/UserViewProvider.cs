@@ -32,26 +32,24 @@ namespace Plato.Docs.ViewProviders
             {
                 return await BuildIndexAsync(userIndex, context);
             }
-
-            var userDisplayViewModel = new UserDisplayViewModel()
-            {
-                User = user
-            };
-
+            
             var indexViewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Doc>)] as EntityIndexViewModel<Doc>;
             if (indexViewModel == null)
             {
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Doc>).ToString()} has not been registered on the HttpContext!");
             }
 
-            var viewModel = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id);
+            var userDisplayViewModel = new UserDisplayViewModel<Doc>()
+            {
+                User = user,
+                IndexViewModel = indexViewModel,
+                Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id)
+            };
 
             return Views(
                 View<UserDisplayViewModel>("User.Index.Header", model => userDisplayViewModel).Zone("header"),
-                View<EntityIndexViewModel<Doc>>("User.Index.Content", model => indexViewModel).Zone("content"),
-                View<FeatureEntityMetrics>("User.Entities.Display.Sidebar", model => viewModel)
-                    .Zone("sidebar")
-                    .Order(1)
+                View<UserDisplayViewModel<Doc>>("User.Index.Content", model => userDisplayViewModel).Zone("content"),
+                View<UserDisplayViewModel>("User.Entities.Display.Sidebar", model => userDisplayViewModel).Zone("sidebar")
             );
             
         }

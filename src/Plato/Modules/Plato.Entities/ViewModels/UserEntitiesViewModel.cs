@@ -5,14 +5,14 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.ViewModels
 {
-    public class UserEntitiesViewModel
-    {
+    //public class UserEntitiesViewModel<TModel> where TModel : class
+    //{
 
-        public IUser User { get; set; }
+    //    public IUser User { get; set; }
 
-        public FeatureEntityMetrics Metrics { get; set; }
+    //    public FeatureEntityMetrics Metrics { get; set; }
 
-        public EntityIndexViewModel<Entity> IndexViewModel { get; set; }
+    //    public EntityIndexViewModel<TModel> IndexViewModel { get; set; }
 
-    }
+    //}
 }
