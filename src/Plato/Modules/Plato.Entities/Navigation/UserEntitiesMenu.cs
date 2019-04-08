@@ -52,7 +52,9 @@ namespace Plato.Entities.Navigation
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav(), new List<string>() {"active"}
             );
+
         }
+
     }
 
 }

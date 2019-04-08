@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -55,8 +53,6 @@ namespace Plato.Entities.ViewProviders
                 }
             };
          
-
-
             // Return view
             return Views(
                 View<UserEntitiesViewModel>("Profile.Entities.Display.Content", model => viewModel)
