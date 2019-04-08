@@ -39,18 +39,30 @@ namespace Plato.Entities.Navigation
 
             // Get route values
             var context = builder.ActionContext;
-            object id = context.RouteData.Values["opts.id"],
+            object id = context.RouteData.Values["opts.createdByUserId"],
                 alias = context.RouteData.Values["opts.alias"];
+            var isArea = context.RouteData.Values["area"].ToString()
+                .Equals("Plato.Entities", StringComparison.OrdinalIgnoreCase);
+            var isController = context.RouteData.Values["controller"].ToString()
+                .Equals("User", StringComparison.OrdinalIgnoreCase);
+            var isAction = context.RouteData.Values["action"].ToString()
+                .Equals("Index", StringComparison.OrdinalIgnoreCase);
+            
+            var css = "";
+            if (isArea && isController && isAction)
+            {
+                css = "active";
+            }
 
             builder.Add(T["All"], 1, topics => topics
-                    .Badge(total > 0 ? total.ToPrettyInt() : string.Empty, "badge badge-primary ml-2")
-                    .Action("Display", "User", "Plato.Users", new RouteValueDictionary()
+                    .Badge(total > 0 ? total.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
+                    .Action("Display", "User", "Plato.Entities", new RouteValueDictionary()
                     {
                         ["opts.createdByUserId"] = id?.ToString(),
                         ["opts.alias"] = alias?.ToString()
                     })
                     //.Permission(Permissions.ManageRoles)
-                    .LocalNav(), new List<string>() {"active"}
+                    .LocalNav(), new List<string>() { css }
             );
 
         }

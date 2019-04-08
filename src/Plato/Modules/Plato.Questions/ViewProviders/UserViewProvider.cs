@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Questions.Models;
-using Plato.Questions.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;

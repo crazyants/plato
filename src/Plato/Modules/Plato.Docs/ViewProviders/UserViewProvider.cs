@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Docs.Models;
-using Plato.Docs.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;

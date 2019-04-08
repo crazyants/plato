@@ -37,6 +37,7 @@ namespace Plato.Entities.ViewProviders
             
             var viewModel = new UserEntitiesViewModel()
             {
+                User = user,
                 Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id),
                 IndexViewModel = new EntityIndexViewModel<Entity>()
                 {

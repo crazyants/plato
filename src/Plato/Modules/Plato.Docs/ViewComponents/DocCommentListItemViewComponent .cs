@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Docs.Models;
-using Plato.Docs.ViewModels;
 using Plato.Entities.ViewModels;
 
 namespace Plato.Docs.ViewComponents

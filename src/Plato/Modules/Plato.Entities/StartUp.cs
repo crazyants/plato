@@ -77,6 +77,10 @@ namespace Plato.Entities
             // Add profile views
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
             services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
+            
+            // Add user views
+            services.AddScoped<IViewProviderManager<EntityUserIndex>, ViewProviderManager<EntityUserIndex>>();
+            services.AddScoped<IViewProvider<EntityUserIndex>, UserViewProvider>();
 
         }
 
@@ -86,6 +90,15 @@ namespace Plato.Entities
             IServiceProvider serviceProvider)
         {
 
+            // User Index
+            routes.MapAreaRoute(
+                name: "EntitiesUser",
+                areaName: "Plato.Entities",
+                template: "u/{opts.createdByUserId:int}/{opts.alias?}/all/{pager.offset:int?}",
+                defaults: new { controller = "User", action = "Index" }
+            );
+
+            // Web API
             routes.MapAreaRoute(
                 name: "EntitiesWebApi",
                 areaName: "Plato.Entities",

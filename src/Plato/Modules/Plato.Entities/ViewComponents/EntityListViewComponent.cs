@@ -9,7 +9,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Entities.ViewComponents
 {
-    public class SearchListViewComponent : ViewComponent
+    public class EntityListViewComponent : ViewComponent
     {
 
 
@@ -114,11 +114,8 @@ namespace Plato.Entities.ViewComponents
         };
         
         private readonly IEntityService<Entity> _entityService;
-        ////private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
-
-        ////private SearchSettings _searchSettings;
-
-        public SearchListViewComponent(
+    
+        public EntityListViewComponent(
             IEntityService<Entity> entityService)
         {
             _entityService = entityService;
@@ -138,9 +135,6 @@ namespace Plato.Entities.ViewComponents
             {
                 pager = new PagerOptions();
             }
-
-            // Get search settings
-            //_searchSettings = await _searchSettingsStore.GetAsync();
 
             // Get view model
             var model = await GetIndexViewModel(options, pager);
@@ -172,13 +166,6 @@ namespace Plato.Entities.ViewComponents
 
             // Build results
             var results = await _entityService
-                .ConfigureDb(o =>
-                {
-                    //if (_searchSettings != null)
-                    //{
-                    //    o.SearchType = _searchSettings.SearchType;
-                    //}
-                })
                 .GetResultsAsync(options, pager); 
 
             // Set pager total

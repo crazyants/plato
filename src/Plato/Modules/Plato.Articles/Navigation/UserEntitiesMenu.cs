@@ -39,11 +39,11 @@ namespace Plato.Articles.Navigation
 
             // Get route values
             var context = builder.ActionContext;
-            object id = context.RouteData.Values["opts.id"], 
+            object id = context.RouteData.Values["opts.createdByUserId"], 
                 alias = context.RouteData.Values["opts.alias"];
 
             builder.Add(T["Articles"], 3, topics => topics
-                .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty, "badge badge-primary ml-2")
+                .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
                 .Action("Index", "User", "Plato.Articles", new RouteValueDictionary()
                 {
                     ["opts.createdByUserId"] = id?.ToString(),

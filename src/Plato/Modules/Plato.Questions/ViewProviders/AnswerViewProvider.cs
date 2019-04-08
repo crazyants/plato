@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Plato.Questions.Models;
 using Plato.Questions.Services;
-using Plato.Questions.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
