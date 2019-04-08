@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Search.ViewModels;
 
 namespace Plato.Search.Navigation
 {
+
     public class SearchMenu : INavigationProvider
     {
 
@@ -40,17 +38,14 @@ namespace Plato.Search.Navigation
                         .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                         {
                             ["opts.featureId"] = null,
-                            ["opts.within"] =string.Empty,
                             ["opts.search"] = indexViewModel.Options.Search
-                        })
-                        .Attributes(new Dictionary<string, object>()
-                        {
-                            {"data-feature-id", 0}
                         })
                         .LocalNav(), indexViewModel.Options.FeatureId == null
                         ? new string[] {"active"}
                         : null);
+
         }
+
     }
 
 }

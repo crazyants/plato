@@ -7,6 +7,7 @@ using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -19,10 +20,9 @@ namespace Plato.Search.Controllers
     public class HomeController : Controller, IUpdateModel
     {
         
-        private readonly IViewProviderManager<SearchResult> _viewProvider;
-        private readonly IAlerter _alerter;
-        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+        private readonly IViewProviderManager<SearchResult> _viewProvider;
+        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
 
         public IHtmlLocalizer T { get; }
@@ -30,20 +30,18 @@ namespace Plato.Search.Controllers
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IStringLocalizer<HomeController> stringLocalizer,
-            IHtmlLocalizer<HomeController> localizer,
-            IAlerter alerter,
-            IBreadCrumbManager breadCrumbManager,
-            IViewProviderManager<SearchResult> viewProvider,
+            IStringLocalizer stringLocalizer,
+            IHtmlLocalizer localizer,
             ISearchSettingsStore<SearchSettings> searchSettingsStore,
+            IViewProviderManager<SearchResult> viewProvider,
+            IBreadCrumbManager breadCrumbManager,
             IContextFacade contextFacade)
         {
 
-            _alerter = alerter;
-            _breadCrumbManager = breadCrumbManager;
-            _viewProvider = viewProvider;
             _searchSettingsStore = searchSettingsStore;
+            _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade;
+            _viewProvider = viewProvider;
 
             T = localizer;
             S = stringLocalizer;
@@ -81,8 +79,6 @@ namespace Plato.Search.Controllers
                 this.RouteData.Values.Add("opts.filter", opts.Filter);
             if (opts.FeatureId != defaultViewOptions.FeatureId && !this.RouteData.Values.ContainsKey("opts.featureId"))
                 this.RouteData.Values.Add("opts.featureId", opts.FeatureId);
-            if (opts.Within != defaultViewOptions.Within && !this.RouteData.Values.ContainsKey("opts.within"))
-                this.RouteData.Values.Add("opts.within", opts.Within);
             if (pager.Page != defaultPagerOptions.Page && !this.RouteData.Values.ContainsKey("pager.page"))
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.Size != defaultPagerOptions.Size && !this.RouteData.Values.ContainsKey("pager.size"))
@@ -127,7 +123,7 @@ namespace Plato.Search.Controllers
             }
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(new SearchResult(), this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new SearchResult(), this));
 
         }
 

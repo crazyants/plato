@@ -37,8 +37,8 @@
                                 <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-inline">
                                     <ul class="nav nav-pills float-right">
                                         <li class="nav-item dropdown account">
-                                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                                <avatar class="avatar avatar-sm mr-2" url="@this.CurrentUser.Avatar.Url"/> @this.CurrentUser.DisplayName
+                                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-provide="tooltip" title="@this.CurrentUser.DisplayName">
+                                                <avatar class="avatar avatar-sm mr-2" url="@this.CurrentUser.Avatar.Url"/>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
                                                 <div class="p-3">

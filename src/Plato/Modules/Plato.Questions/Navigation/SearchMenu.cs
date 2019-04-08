@@ -52,32 +52,11 @@ namespace Plato.Questions.Navigation
                     .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                     {
                         ["opts.featureId"] = feature.Id,
-                        ["opts.within"] = "questions",
                         ["opts.search"] = indexViewModel.Options.Search
-                    })
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-feature-id", feature.Id}
                     })
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav(),
-                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "articles"
-                        ? new string[] { "active" }
-                        : null
-                ).Add(T["Question Answers"], 7, f => f
-                    .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
-                    {
-                        ["opts.featureId"] = feature.Id,
-                        ["opts.within"] = "answers",
-                        ["opts.search"] = indexViewModel.Options.Search
-                    })
-                    .Attributes(new Dictionary<string, object>()
-                    {
-                        {"data-feature-id", feature.Id}
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav(),
-                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "comments"
+                    indexViewModel.Options.FeatureId == feature.Id
                         ? new string[] { "active" }
                         : null
                 );

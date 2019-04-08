@@ -31,10 +31,7 @@ namespace Plato.Entities.ViewModels
 
         [DataMember(Name = "feature")]
         public int? FeatureId { get; set; }
-
-        [DataMember(Name = "within")]
-        public string Within { get; set; }
-
+        
         [DataMember(Name = "filter")]
         public FilterBy Filter { get; set; } = FilterBy.All;
 

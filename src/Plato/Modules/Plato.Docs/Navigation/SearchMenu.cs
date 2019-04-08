@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Docs.Navigation
@@ -17,7 +15,9 @@ namespace Plato.Docs.Navigation
 
         private readonly IFeatureFacade _featureFacade;
    
-        public SearchMenu(IStringLocalizer<AdminMenu> localizer, IContextFacade contextFacade, IFeatureFacade featureFacade)
+        public SearchMenu(
+            IStringLocalizer<AdminMenu> localizer, 
+            IFeatureFacade featureFacade)
         {
             T = localizer;
             _featureFacade = featureFacade;
@@ -53,32 +53,11 @@ namespace Plato.Docs.Navigation
                         .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                         {
                             ["opts.featureId"] = feature.Id,
-                            ["opts.within"] = "docs",
                             ["opts.search"] = indexViewModel.Options.Search
-                        })
-                        .Attributes(new Dictionary<string, object>()
-                        {
-                            {"data-feature-id", feature.Id}
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav(),
-                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "topics"
-                        ? new string[] {"active"}
-                        : null
-                ).Add(T["Doc Comments"], 5, f => f
-                        .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
-                        {
-                            ["opts.featureId"] = feature.Id,
-                            ["opts.within"] = "doccomments",
-                            ["opts.search"] = indexViewModel.Options.Search
-                        })
-                        .Attributes(new Dictionary<string, object>()
-                        {
-                            {"data-feature-id", feature.Id}
-                        })
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav(),
-                    indexViewModel.Options.FeatureId == feature.Id && indexViewModel.Options.Within == "replies"
+                    indexViewModel.Options.FeatureId == feature.Id
                         ? new string[] {"active"}
                         : null
                 );

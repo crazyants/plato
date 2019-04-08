@@ -80,12 +80,16 @@ namespace Plato.Search
             IServiceProvider serviceProvider)
         {
             
+            // Search index
+
             routes.MapAreaRoute(
-                name: "PlatoSearch",
+                name: "PlatoSearchIndex",
                 areaName: "Plato.Search",
                 template: "search/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
+            
+            // Admin settings
 
             routes.MapAreaRoute(
                 name: "PlatoSearchAdmin",
@@ -93,6 +97,8 @@ namespace Plato.Search
                 template: "admin/settings/search",
                 defaults: new { controller = "Admin", action = "Index" }
             );
+
+            // Web Api
 
             routes.MapAreaRoute(
                 name: "PlatoSearchWebApi",
