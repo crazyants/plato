@@ -19,6 +19,8 @@ namespace Plato.Entities.Models
 
         public int FeatureId { get; set; }
 
+        public string ModuleId { get; private set; }
+
         public int CategoryId { get; set; }
         
         public string Title { get; set; }
@@ -194,6 +196,9 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("FeatureId"))
                 FeatureId = Convert.ToInt32(dr["FeatureId"]);
+
+            if (dr.ColumnIsNotNull("ModuleId"))
+                ModuleId = Convert.ToString(dr["ModuleId"]);
 
             if (dr.ColumnIsNotNull("CategoryId"))
                 CategoryId = Convert.ToInt32(dr["CategoryId"]);

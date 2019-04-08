@@ -18,6 +18,8 @@ namespace Plato.Entities.Models
 
         int FeatureId { get; set; }
 
+        string ModuleId { get; }
+
         int CategoryId { get; set; }
 
         string Title { get; set; }

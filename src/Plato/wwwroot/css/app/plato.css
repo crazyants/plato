@@ -63,8 +63,10 @@
 /* ------------------------- */
 
 .nav li > a.text-hidden .nav-text { display: none;  }
-.nav .account .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
+
 .site-nav li > a .nav-text { margin-left: 0.50rem; }
+
+.dropdown.account > .dropdown-menu { width: 350px; }
 
 .navbar-brand img { width: 200px; }
 
@@ -338,9 +340,11 @@
     border-radius: 50%;
 }
 
+.avatar-xs { width: 24px; height: 24px; }
 .avatar-sm { width: 28px; height: 28px; }
 .avatar-md { width: 62px; height: 62px; }
 .avatar-lg { width: 110px; height: 110px; }
+.avatar-xl { width: 180px; height: 180px; }
 
 .avatar-round { border-radius: 50%; }
 

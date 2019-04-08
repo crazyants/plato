@@ -7,18 +7,12 @@
             <i class="fal fa-bell"></i>
             <span class="badge badge-danger hidden" data-provide="notificationsBadge"></span>
         </a>
-        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in p-0" aria-labelledby="notificationDropdown">
-            <div class="dropdown-header px-3 py-2">
-                <div class="py-1">
-                    <div class="float-right">
-                        <a asp-route-area="Plato.Users.Notifications" asp-route-controller="Home" asp-route-action="EditProfile">
-                            Settings
-                        </a>
-                    </div>
-                    <span class="d-inline-block">@T["Notifications"]</span>
-                </div>
+        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="notificationDropdown">
+            <div class="dropdown-header">
+                <a asp-route-area="Plato.Users.Notifications" asp-route-controller="Home" asp-route-action="EditProfile" class="float-right" data-toggle="tooltip" title="@T["Settings"]"><i class="fal fa-cog"></i></a>
+                <h6>@T["Notifications"]</h6>
             </div>
-            <div class="dropdown-body" data-provide="notifications">
+            <div data-provide="notifications">
                 <p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p>
             </div>
         </div>

@@ -80,7 +80,7 @@ namespace Plato.Entities.Controllers
 
                     var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["area"] = "Plato.Discuss",
+                        ["area"] = entity.ModuleId,
                         ["controller"] = "Home",
                         ["action"] = "Display",
                         ["opts.id"] = entity.Id,
@@ -142,14 +142,6 @@ namespace Plato.Entities.Controllers
                 ? base.Result(output)
                 : base.NoResults();
 
-        }
-
-
-        [HttpDelete]
-        [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Delete(int id)
-        {
-            throw new NotImplementedException();
         }
         
         #endregion

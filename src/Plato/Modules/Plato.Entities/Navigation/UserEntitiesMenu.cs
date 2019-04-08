@@ -50,7 +50,7 @@ namespace Plato.Entities.Navigation
                 css = "active";
             }
 
-            builder.Add(T["All"], 1, topics => topics
+            builder.Add(T["All"], 0, topics => topics
                     .Badge(total > 0 ? total.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
                     .Action("Index", "User", "Plato.Entities", new RouteValueDictionary()
                     {

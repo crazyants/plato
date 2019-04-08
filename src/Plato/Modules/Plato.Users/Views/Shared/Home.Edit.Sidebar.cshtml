@@ -4,20 +4,19 @@
 
         <card class="card card-body-flush">
             <card-title>
-                <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler btn btn-primary float-right" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <h6 class="card-title">@T["Your Account"]</h6>
             </card-title>
             <card-body>
         
-                <div class="collapse navbar-collapse list-group list-group-flush flex-column" id="navbar-collapse" role="navigation">
+                <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
                     <navigation name="edit-profile"
                                 collaspsable="true"
-                                enable-list="false"
-                                class=" d-lg-block"
-                                child-ul-css-class="nav flex-column"
-                                link-css-class="nav-link list-group-item list-group-item-action" />
+                                class="list-group list-group-flush  flex-fill"
+                                li-css-class="d-block w-100"
+                                link-css-class="list-group-item list-group-item-action" />
                 </div>
         
             </card-body>

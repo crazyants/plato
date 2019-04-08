@@ -35,22 +35,28 @@
                             @if (this.CurrentUser != null)
                             {
                                 <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-inline">
-                                    <ul class="nav nav-pills float-right app-nav">
+                                    <ul class="nav nav-pills float-right">
                                         <li class="nav-item dropdown account">
                                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                                <avatar class="avatar mr-2" url="@this.CurrentUser.Avatar.Url"/> @this.CurrentUser.DisplayName
+                                                <avatar class="avatar avatar-sm mr-2" url="@this.CurrentUser.Avatar.Url"/> @this.CurrentUser.DisplayName
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
+                                                <div class="p-3">
+                                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
+                                                    <avatar data-toggle="tooltip" title="@this.CurrentUser.DisplayName" class="avatar mr-2" url="@this.CurrentUser.Avatar.Url" />
+                                                    <h6 class="d-inline-block align-middle">@this.CurrentUser.DisplayName</h6>
+                                                </div>
+                                                <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
                                                 <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
-                                                <div asp-permission="AdminAccess">
+                                                <authorize asp-permission="AdminAccess">
                                                     <authorize-success>
                                                         <div class="dropdown-divider"></div>
                                                         <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
                                                     </authorize-success>
-                                                </div>
+                                                </authorize>
                                                 <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                             </div>
                                         </li>

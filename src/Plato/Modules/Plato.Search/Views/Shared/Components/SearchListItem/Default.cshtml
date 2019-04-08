@@ -1,7 +1,7 @@
 ﻿@model EntityListItemViewModel<Entity>
 
 <span class="text-muted float-right" data-toggle="tooltip" title="@T["Relevance"]">@Model.Entity.Relevance%</span>
-<a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">
+<a asp-route-area="@Model.Entity.ModuleId" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">
     @Html.Raw(Model.Entity.Title.HighlightTerms(Model.Options.Search))
 </a>
 <div class="text-muted">

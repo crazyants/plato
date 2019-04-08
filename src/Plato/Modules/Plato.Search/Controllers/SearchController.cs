@@ -1,20 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
-using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
-using Plato.Search.Services;
 using Plato.Search.Stores;
-using Plato.Search.ViewModels;
 using Plato.WebApi.Controllers;
 using Plato.WebApi.Models;
 
@@ -100,7 +95,7 @@ namespace Plato.Search.Controllers
 
                     var url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["area"] = "Plato.Discuss",
+                        ["area"] = entity.ModuleId,
                         ["controller"] = "Home",
                         ["action"] = "Display",
                         ["opts.id"] = entity.Id,

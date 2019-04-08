@@ -361,6 +361,7 @@ namespace Plato.Entities.Stores
 
         #region "Constructor"
 
+        private readonly string _shellFeaturesTableName;
         private readonly string _entitiesTableName;
         private readonly string _usersTableName;
         private readonly string _userRolesTableName;
@@ -377,6 +378,7 @@ namespace Plato.Entities.Stores
         public EntityQueryBuilder(EntityQuery<TModel> query)
         {
             _query = query;
+            _shellFeaturesTableName = GetTableNameWithPrefix("ShellFeatures");
             _entitiesTableName = GetTableNameWithPrefix("Entities");
             _usersTableName = GetTableNameWithPrefix("Users");
             _rolesTableName = GetTableNameWithPrefix("Roles");
@@ -437,7 +439,7 @@ namespace Plato.Entities.Stores
         {
             var sb = new StringBuilder();
             sb
-                .Append("e.*, ")
+                .Append("e.*, f.ModuleId, ")
                 .Append("c.UserName AS CreatedUserName, ")
                 .Append("c.DisplayName AS CreatedDisplayName,")
                 .Append("c.Alias AS CreatedAlias,")
@@ -484,8 +486,13 @@ namespace Plato.Entities.Stores
             // join last reply user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" l ON e.LastReplyUserId = l.Id");
+                .Append(" l ON e.LastReplyUserId = l.Id ");
 
+            // join shell features table
+            sb.Append("INNER JOIN ")
+                .Append(_shellFeaturesTableName)
+                .Append(" f ON e.FeatureId = f.Id");
+            
             // join full text tables
             if (EnableFullText())
             {
