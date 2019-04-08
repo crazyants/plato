@@ -1,6 +1,6 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "User Articles";
 }
 
 <div class="layout">
@@ -35,16 +35,16 @@
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
-            <div class="col-md-9">
-                @if (Model.Content != null)
-                {
-                    <view model="@Model.Content"></view>
-                }
-            </div>
             <div class="col-md-3">
                 @if (Model.SideBar != null)
                 {
                     <view model="@Model.SideBar"></view>
+                }
+            </div>
+            <div class="col-md-9">
+                @if (Model.Content != null)
+                {
+                    <view model="@Model.Content"></view>
                 }
             </div>
         </div>
@@ -52,9 +52,9 @@
     else
     {
         @if (Model.Content != null)
-        {
-            <view model="@Model.Content"></view>
-        }
+         {
+             <view model="@Model.Content"></view>
+         }
     }
 
     <div class="layout-footer">

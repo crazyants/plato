@@ -5,7 +5,6 @@ using Plato.Entities.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Entities.ViewProviders

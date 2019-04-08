@@ -94,7 +94,7 @@ namespace Plato.Entities.Controllers
                 this.RouteData.Values.Add("pager.size", pager.Size);
             
             // Build view model
-            var viewModel = await GetIndexViewModelAsync(opts, pager);
+            var viewModel = GetIndexViewModel(opts, pager);
 
             // Add view model to context
             this.HttpContext.Items[typeof(EntityIndexViewModel<Entity>)] = viewModel;
@@ -103,7 +103,7 @@ namespace Plato.Entities.Controllers
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
-                    return View("GetTopics", viewModel);
+                    return View("GetEntities", viewModel);
             }
 
             // Build breadcrumb
@@ -122,7 +122,7 @@ namespace Plato.Entities.Controllers
                         ["opts.alias"] = user.Alias
                     })
                     .LocalNav()
-                ).Add(S["Topics"]);
+                ).Add(S["All"]);
             });
             
 
@@ -134,18 +134,9 @@ namespace Plato.Entities.Controllers
 
         }
 
-        async Task<EntityIndexViewModel<Entity>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
+        EntityIndexViewModel<Entity> GetIndexViewModel(EntityIndexOptions options, PagerOptions pager)
         {
-
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+            
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 

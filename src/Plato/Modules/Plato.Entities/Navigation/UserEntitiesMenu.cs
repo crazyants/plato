@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
 using Plato.Entities.Stores;
-using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -56,7 +52,7 @@ namespace Plato.Entities.Navigation
 
             builder.Add(T["All"], 1, topics => topics
                     .Badge(total > 0 ? total.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
-                    .Action("Display", "User", "Plato.Entities", new RouteValueDictionary()
+                    .Action("Index", "User", "Plato.Entities", new RouteValueDictionary()
                     {
                         ["opts.createdByUserId"] = id?.ToString(),
                         ["opts.alias"] = alias?.ToString()
