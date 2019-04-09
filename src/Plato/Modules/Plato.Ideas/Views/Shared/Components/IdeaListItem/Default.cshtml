@@ -28,15 +28,12 @@
 
 }
 
-<div class="list-left list-left-3x counter-group">
+<div class="list-left list-left-2x counter-group">
     <div class="counter @voteCss">
         <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @voteText.Value
     </div>
     <div class="counter @ratingCss">
         <h6>@Model.Entity.SummedRating.ToPrettyInt()</h6> @T["rating"]
-    </div>
-    <div class="counter @replyCss">
-        <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @repliesText.Value
     </div>
 </div>
 <div class="list-body">

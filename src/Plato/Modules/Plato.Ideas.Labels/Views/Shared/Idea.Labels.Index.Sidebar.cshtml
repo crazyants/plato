@@ -1,0 +1,43 @@
+﻿@model LabelsViewModel<Label>
+
+<card class="card card-body-flush">
+    <card-title>
+        <a data-toggle="tooltip" title="@T["All Labels"]" asp-route-area="Plato.Ideas.Labels" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+            <i class="fal fa-ellipsis-h fa-2x"></i>
+        </a>
+        <h6 class="card-title">@T["Top Labels"]</h6>
+    </card-title>
+    <card-body>
+
+        @if (Model.Labels != null)
+        {
+            <div class="list-group list-group-flush list-group-hover">
+                @foreach (var label in Model.Labels)
+                {
+                    var css = label.Id == Model.SelectedLabelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                    <a asp-route-area="Plato.Ideas.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="@css">
+                        <span class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                            @label.Name
+                        </span>
+                        <span data-toggle="tooltip" title="@T["Questions"]" class="badge badge-info float-right">
+                            @label.TotalEntities.ToPrettyInt()
+                        </span>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center my-4 text-muted">
+                @T["Labls can be helpful to identify the type of conversation."]
+                <br /><br />
+                <a asp-route-area="Plato.Ideas.Labels" asp-route-controller="Admin" asp-route-action="Index" class="btn btn-secondary">
+                    @T["Manage Labels"]
+                </a>
+            </div>
+        }
+
+    </card-body>
+</card>
+
+

@@ -1,0 +1,14 @@
+﻿@model LabelIndexViewModel<Plato.Ideas.Labels.Models.Label>
+
+<form class="form-inline" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
+    <div class="input-group">
+        <input class="form-control" name="opts.search" value="@Model.Options.Search" type="search" placeholder="@T["Search labels..."]" aria-label="Search">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+                <i class="fal fa-search"></i>
+            </button>
+        </div>
+    </div>
+</form>
+
+

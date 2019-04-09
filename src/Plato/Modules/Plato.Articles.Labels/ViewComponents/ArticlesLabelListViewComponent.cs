@@ -17,7 +17,7 @@ namespace Plato.Articles.Labels.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Topics",
+                Text = "Articles",
                 Value = LabelSortBy.Entities
             },
             new SortColumn()

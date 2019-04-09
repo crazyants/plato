@@ -5,19 +5,19 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Labels.Services;
 using Plato.Labels.ViewModels;
-using Plato.Questions.Labels.Models;
+using Plato.Ideas.Labels.Models;
 
-namespace Plato.Questions.Labels.ViewComponents
+namespace Plato.Ideas.Labels.ViewComponents
 {
 
-    public class QuestionsLabelListViewComponent : ViewComponent
+    public class IdeasLabelListViewComponent : ViewComponent
     {
 
         private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
             new SortColumn()
             {
-                Text = "Questions",
+                Text = "Ideas",
                 Value = LabelSortBy.Entities
             },
             new SortColumn()
@@ -63,7 +63,7 @@ namespace Plato.Questions.Labels.ViewComponents
         
         private readonly ILabelService<Label> _labelService;
 
-        public QuestionsLabelListViewComponent(
+        public IdeasLabelListViewComponent(
             ILabelService<Label> labelService)
         {
             _labelService = labelService;

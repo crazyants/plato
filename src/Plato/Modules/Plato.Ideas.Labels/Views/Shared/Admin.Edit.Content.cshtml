@@ -1,0 +1,78 @@
+﻿@model EditLabelViewModel
+
+<card>
+    <card-title>
+        @if (Model.IsNewLabel)
+        {
+        <h6 class="card-title">@T["Add Label"]</h6>
+        }
+        else
+        {
+        <h6 class="card-title">@T["Edit Label"]</h6>
+        }
+    </card-title>
+    <card-body>
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Name">
+                        <label asp-for="Name"><strong>@T["Name"]</strong></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="input-group">
+                            <input placeholder="@T["name your channel"]" asp-for="Name" class="form-control" autofocus />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-2">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Icon">
+
+                        <label asp-for="Name"><strong>@T["Background"]</strong></label>
+                        <div class="input-group">
+
+                            <div asp-color-picker="BackColor" class="input-group-prepend">
+                                <div class="input-group-text" data-toggle="tooltip" title="@T["Background Color"]" style="cursor: pointer;">
+                                    <i class="fa fa-square" style="color: @Model.BackColor"></i>
+                                </div>
+                                <input type="text" asp-for="BackColor" class="form-control" style="width: 95px;" />
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-2">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Icon">
+
+                        <label asp-for="Name"><strong>@T["Text"]</strong></label>
+                        <div class="input-group">
+                            
+                            <div asp-color-picker="ForeColor" class="input-group-prepend">
+                                <div class="input-group-text" data-toggle="tooltip" title="@T["Text Color"]" style="cursor: pointer;">
+                                    <i class="fa fa-square" style="color: @Model.ForeColor"></i>
+                                </div>
+                                <input type="text" asp-for="ForeColor" class="form-control" style="width: 95px;" />
+                            </div>
+
+                        </div>
+
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Description">
+                        <label asp-for="Name"><strong>@T["Description"]</strong></label>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <input type="text" placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control" />
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </card-body>
+</card>

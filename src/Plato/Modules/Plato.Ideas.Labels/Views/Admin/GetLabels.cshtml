@@ -1,0 +1,11 @@
+﻿@model LabelIndexViewModel<Plato.Ideas.Labels.Models.Label>
+@{
+    Layout = null;
+}
+
+@await DisplayAsync(new View("GetDiscussLabelList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
+
