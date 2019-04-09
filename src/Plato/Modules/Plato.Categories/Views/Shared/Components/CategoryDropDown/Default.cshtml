@@ -1,14 +1,14 @@
 ﻿@model CategoryDropDownViewModel
 
 <div class="card" data-provide="category-dropdown">
-
-    <div class="dropdown">
-        <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+    
+    <div class="dropdown list-group-flush">
+        <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="categoryDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
             <i class="fal fa-cog float-right"></i>
             @T["Channel"]
         </a>
-        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" style="width: 450px;" aria-labelledby="channelDropdown">
-            <div class="dropdown-header">
+        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in p-0" style="width: 450px;" aria-labelledby="categoryDropdown">
+            <div class="dropdown-header my-2">
                 <a href="#" class="text-muted float-right" data-toggle="dropdown">
                     <i class="fal fa-times"></i>
                 </a>
@@ -47,15 +47,15 @@
 
         </div>
     </div>
-
+  
     @{
         // get selected channels for preview
-        var selectedChannels = Model.Categories?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<CategoryBase>>();
+        var selectedCategories = Model.Categories?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<CategoryBase>>();
     }
-    @if (selectedChannels.Count > 0)
+    @if (selectedCategories.Count > 0)
     {
-        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
-            @foreach (var channel in selectedChannels)
+        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group list-group-flush select-dropdown-preview">
+            @foreach (var channel in selectedCategories)
             {
                 <li class="list-group-item">
                     @if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))
@@ -77,7 +77,7 @@
     }
     else
     {
-        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group list-group-flush select-dropdown-preview">
             <li class="list-group-item">
                 @T["No channels selected."]
             </li>

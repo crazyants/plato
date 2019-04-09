@@ -4,13 +4,13 @@
 
 <div class="card" data-provide="entity-dropdown">
 
-    <div class="dropdown">
+    <div class="dropdown list-group-flush">
         <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
             <i class="fal fa-cog float-right"></i>
             @T["Parent Doc"]
         </a>
-        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" style="width: 450px;" aria-labelledby="channelDropdown">
-            <div class="dropdown-header">
+        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in p-0" style="width: 450px;" aria-labelledby="channelDropdown">
+            <div class="dropdown-header my-2">
                 <a href="#" class="text-muted float-right" data-toggle="dropdown">
                     <i class="fal fa-times"></i>
                 </a>
@@ -55,7 +55,7 @@
     }
     @if (selectedEntities.Count > 0)
     {
-        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group list-group-flush select-dropdown-preview">
             @foreach (var channel in selectedEntities)
             {
                 <li class="list-group-item">
@@ -66,7 +66,7 @@
     }
     else
     {
-        <ul data-empty-preview-text="@T["No parent selected."]" class="list-group select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No parent selected."]" class="list-group list-group-flush select-dropdown-preview">
             <li class="list-group-item">
                 @T["No parent selected."]
             </li>

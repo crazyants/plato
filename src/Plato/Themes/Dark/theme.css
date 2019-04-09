@@ -70,7 +70,7 @@
 
 /* arrow border */
 .reply-left + .reply-body:before {
-    border-right-color: #060606;
+    border-right-color: #282828;
 }
 
 /* arrow background */
@@ -235,12 +235,12 @@ a.label.active {
 
 /* arrow border */
 .dropdown-menu:before {
-    border-bottom-color: rgba(0,0,0,0.20);
+    border-bottom-color: #282828;
 }
 
 /* arrow background */
 .dropdown-menu:after {
-    border-bottom-color: #282828;
+    border-bottom-color: #1a1a1a;
 }
 
 /* ------------------- */
@@ -798,7 +798,7 @@ kbd {
 .form-control {
     color: #fff;
     background-color: #1a1a1a;
-    border: 1px solid transparent;
+    border: 1px solid #262626;
 }
 
 .form-control:focus {
@@ -1553,8 +1553,8 @@ select.form-control:focus::-ms-value {
 
 .dropdown-menu {
     color: #888;
-    background-color: #282828;
-    border: 1px solid rgba(0,0,0,0.20);
+    background-color: #1a1a1a;
+    border: 1px solid #282828;
 }
 
 
@@ -1916,12 +1916,12 @@ select.form-control:focus::-ms-value {
 
 .card {
     background-color: #111111;
-    border: 1px solid rgba(0,0,0,0.125);
+    border: 1px solid #282828;
 }
 
 .card-header {
     background-color: rgba(0,0,0,0.03);
-    border-bottom: 1px solid rgba(0,0,0,0.125)
+    border-bottom: 1px solid #282828;
 }
 
 .card-header:first-child {
@@ -2242,7 +2242,7 @@ a.badge-dark:focus, a.badge-dark.focus {
 
 .list-group-item {
     background-color: #161616;
-    border: 1px solid #101010;
+    border: 1px solid #282828;
 }
 
 .list-group-item.disabled, .list-group-item:disabled {
