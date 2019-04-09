@@ -1,4 +1,19 @@
 ﻿
+
+/* ------------------- */
+/* Validation */
+/* ------------------- */
+
+.validation-summary-errors {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.validation-summary-errors,
+.validation-summary-errors a {
+    color: #721c24;
+}
+
 /* ------------------- */
 /* Badges */
 /* ------------------- */
