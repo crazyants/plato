@@ -1,0 +1,17 @@
+Name: Plato Ideas Categories
+Description: Add categories to help organize ideas within Plato.Ideas.
+Category: Ideas
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Categories",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Ideas",
+		Version: "1.0.0"
+	}
+]

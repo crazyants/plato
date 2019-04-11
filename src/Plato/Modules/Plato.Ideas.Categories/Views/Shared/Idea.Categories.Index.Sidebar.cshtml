@@ -1,0 +1,54 @@
+﻿@model CategoryListViewModel<Category>
+
+<card class="card card-body-flush">
+    <card-title>
+        <a data-toggle="tooltip" title="@T["All Categories"]" asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+            <i class="fal fa-ellipsis-h fa-2x"></i>
+        </a>
+        <h6 class="card-title float-left">@T["Categories"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model.Categories != null)
+        {
+            <div class="list-group list-group-flush list-group-hover">
+                @foreach (var channel in Model.Categories.Where(c => c.ParentId == 0))
+                {
+                    var channelDetails = channel.GetOrCreate<CategoryDetails>();
+                    var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                    <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
+                        <span data-toggle="tooltip" title="@T["Total Topics"]" class="badge badge-info float-right">
+                            @channelDetails.TotalEntities.ToPrettyInt()
+                        </span>
+                        @if (!String.IsNullOrWhiteSpace(channel.IconCss))
+                        {
+                            <div class="float-left mr-3">
+                                <span class="category-icon category-icon-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
+                                    <i class="@channel.IconCss"></i>
+                                </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="float-left mr-3">
+                                <span class="category-icon category-icon-sm">
+                                    <i class="fal fa-folder"></i>
+                                </span>
+                            </div>
+                        }
+                        @channel.Name
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center p-4 text-muted">
+                @T["Channels help you organize & control access to your conversations"]
+                <br /><br />
+                <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Admin" asp-route-action="Index" class="btn btn-secondary">
+                    @T["Manage Channels"]
+                </a>
+            </div>
+        }
+    </card-body>
+</card>

@@ -6,21 +6,21 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Questions.Categories.Navigation;
-using Plato.Questions.Categories.Subscribers;
+using Plato.Ideas.Categories.Navigation;
+using Plato.Ideas.Categories.Subscribers;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
-using Plato.Questions.Categories.Models;
-using Plato.Questions.Categories.ViewAdapters;
-using Plato.Questions.Categories.ViewProviders;
-using Plato.Questions.Models;
-using Plato.Questions.Categories.Services;
+using Plato.Ideas.Categories.Models;
+using Plato.Ideas.Categories.ViewAdapters;
+using Plato.Ideas.Categories.ViewProviders;
+using Plato.Ideas.Models;
+using Plato.Ideas.Categories.Services;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Questions.Categories
+namespace Plato.Ideas.Categories
 {
     public class Startup : StartupBase
     {
@@ -50,10 +50,10 @@ namespace Plato.Questions.Categories
             services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();
 
             // Discuss view providers
-            services.AddScoped<IViewProviderManager<Question>, ViewProviderManager<Question>>();
-            services.AddScoped<IViewProvider<Question>, QuestionViewProvider>();
-            services.AddScoped<IViewProviderManager<Answer>, ViewProviderManager<Answer>>();
-            services.AddScoped<IViewProvider<Answer>, AnswerViewProvider>();
+            services.AddScoped<IViewProviderManager<Idea>, ViewProviderManager<Idea>>();
+            services.AddScoped<IViewProvider<Idea>, IdeaViewProvider>();
+            services.AddScoped<IViewProviderManager<IdeaComment>, ViewProviderManager<IdeaComment>>();
+            services.AddScoped<IViewProvider<IdeaComment>, IdeaCommentViewProvider>();
 
             // Home view provider
             services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
@@ -68,10 +68,10 @@ namespace Plato.Questions.Categories
             services.AddScoped<IViewProvider<CategoryAdmin>, CategoryRolesViewProvider>();
 
             // Register view adapters
-            services.AddScoped<IViewAdapterProvider, QuestionListItemViewAdapter>();
+            services.AddScoped<IViewAdapterProvider, IdeaListItemViewAdapter>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Answer>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<IdeaComment>>();
             
             // Channel details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
@@ -85,9 +85,9 @@ namespace Plato.Questions.Categories
         {
             
             routes.MapAreaRoute(
-                name: "HomeQuestionsCategories",
-                areaName: "Plato.Questions.Categories",
-                template: "questions/categories/{opts.categoryId:int?}/{opts.alias?}/{pager.offset:int?}",
+                name: "HomeIdeasCategories",
+                areaName: "Plato.Ideas.Categories",
+                template: "ideas/categories/{opts.categoryId:int?}/{opts.alias?}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

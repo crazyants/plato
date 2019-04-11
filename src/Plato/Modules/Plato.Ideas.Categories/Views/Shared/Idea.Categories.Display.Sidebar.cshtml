@@ -1,0 +1,48 @@
+﻿@model CategoryListViewModel<Category>
+
+<card class="card card-body-flush">
+    <card-title>
+        <a data-toggle="tooltip" title="@T["All Categories"]" asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+            <i class="fal fa-ellipsis-h fa-2x"></i>
+        </a>
+        <h6 class="card-title float-left">@T["Categories"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            <div class="list-group list-group-flush list-group-hover">
+                @foreach (var channel in Model.Categories)
+                {
+                    var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                    <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
+                        @if (!String.IsNullOrWhiteSpace(channel.IconCss))
+                        {
+                            <div class="float-left mr-3">
+                                <span class="category-icon category-icon-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
+                                    <i class="@channel.IconCss"></i>
+                                </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="float-left mr-3">
+                                <span class="category-icon category-icon-sm">
+                                    <i class="fal fa-folder"></i>
+                                </span>
+                            </div>
+                        }
+                        @channel.Name
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    @T["No channel"]
+                </div>
+            </div>
+        }
+    </card-body>
+</card>
