@@ -19,6 +19,7 @@ namespace Plato.Questions.Categories.Models
     
     public class LatestPost
     {
+
         public int Id { get; set; }
 
         public string Alias { get; set; }

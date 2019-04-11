@@ -10,6 +10,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Questions.Controllers
 {
+
     public class AdminController : Controller, IUpdateModel
     {
 
@@ -36,13 +37,14 @@ namespace Plato.Questions.Controllers
         
         public async Task<IActionResult> Index()
         {
+
             _breadCrumbManager.Configure(builder =>
             {
                 builder
                     .Add(S["Home"], home => home
                         .Action("Index", "Admin", "Plato.Admin")
                         .LocalNav())
-                    .Add(S["Questions"], articles => articles
+                    .Add(S["Questions"], questions => questions
                         .LocalNav());
             });
 
@@ -50,9 +52,7 @@ namespace Plato.Questions.Controllers
             return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new AdminIndex(), this));
 
         }
-
-
-
+        
     }
 
 }

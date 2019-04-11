@@ -2,16 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.ViewModels;
 using Plato.Questions.Categories.Models;
-using Plato.Questions.Categories.ViewModels;
-using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Questions.Categories.ViewComponents
 {
 
-    public class ChannelListItemViewComponent : ViewComponent
+    public class QuestionCategoryListItemViewComponent : ViewComponent
     {
  
-        public ChannelListItemViewComponent()
+        public QuestionCategoryListItemViewComponent()
         {
         }
 
@@ -32,9 +30,7 @@ namespace Plato.Questions.Categories.ViewComponents
             return Task.FromResult((IViewComponentResult)View(model));
 
         }
-
-
+        
     }
-
-
+    
 }

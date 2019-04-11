@@ -25,7 +25,7 @@ namespace Plato.Questions.Categories.ViewProviders
     public class QuestionViewProvider : BaseViewProvider<Question>
     {
 
-        private const string CategoryHtmlName = "channel";
+        private const string CategoryHtmlName = "category";
         
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityCategoryManager _entityCategoryManager;
@@ -83,7 +83,7 @@ namespace Plato.Questions.Categories.ViewProviders
             }
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return Views(View<CategoryListViewModel<CategoryAdmin>>("Questions.Channels.Index.Sidebar", model =>
+            return Views(View<CategoryListViewModel<CategoryAdmin>>("Question.Categories.Index.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.ParentId == 0);
                     return model;
@@ -152,7 +152,7 @@ namespace Plato.Questions.Categories.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<CategoryListViewModel<CategoryAdmin>>("Question.Channels.Display.Sidebar", model =>
+                View<CategoryListViewModel<CategoryAdmin>>("Question.Categories.Display.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.Id == question.CategoryId);
                     return model;
@@ -192,7 +192,7 @@ namespace Plato.Questions.Categories.ViewProviders
 
                 if (parents != null)
                 {
-                    builder.Add(S["Channels"], channels => channels
+                    builder.Add(S["Categories"], categories => categories
                         .Action("Index", "Home", "Plato.Questions.Categories", new RouteValueDictionary()
                         {
                             ["opts.categoryId"] = null,
@@ -202,7 +202,7 @@ namespace Plato.Questions.Categories.ViewProviders
                     );
                     foreach (var parent in parents)
                     {
-                        builder.Add(S[parent.Name], channel => channel
+                        builder.Add(S[parent.Name], category => category
                             .Action("Index", "Home", "Plato.Questions.Categories", new RouteValueDictionary
                             {
                                 ["opts.categoryId"] = parent.Id,
@@ -241,7 +241,7 @@ namespace Plato.Questions.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryDropDownViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<CategoryDropDownViewModel>("Question.Categories.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }

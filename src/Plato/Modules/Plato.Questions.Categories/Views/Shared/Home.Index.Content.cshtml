@@ -1,13 +1,13 @@
 ﻿@model CategoryIndexViewModel
 
-@await DisplayAsync(new View("ChannelList", new
+@await DisplayAsync(new View("QuestionCategoryList", new
 {
     options = @Model.Options
 }))
 
 @if (Model.Options.ChannelId != 0)
 {
-    @await DisplayAsync(new View("TopicList", new
+    @await DisplayAsync(new View("QuestionList", new
     {
         options = @Model.EntityIndexOptions,
         pager = @Model.Pager

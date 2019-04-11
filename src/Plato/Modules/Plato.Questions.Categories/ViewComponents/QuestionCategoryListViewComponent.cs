@@ -5,19 +5,18 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Questions.Categories.Models;
-using Plato.Questions.Categories.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Features;
 
 namespace Plato.Questions.Categories.ViewComponents
 {
 
-    public class ChannelListViewComponent : ViewComponent
+    public class QuestionCategoryListViewComponent : ViewComponent
     {
         private readonly ICategoryStore<Category> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
-        public ChannelListViewComponent(
+        public QuestionCategoryListViewComponent(
             ICategoryStore<Category> channelStore,
             IFeatureFacade featureFacade)
         {
@@ -60,6 +59,5 @@ namespace Plato.Questions.Categories.ViewComponents
         }
 
     }
-
-
+    
 }
