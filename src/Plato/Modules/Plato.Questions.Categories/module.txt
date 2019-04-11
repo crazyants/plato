@@ -1,0 +1,17 @@
+Name: Plato Questions Categories
+Description: Add categories to help organize questions within Plato.Questions.
+Category: Questions
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Categories",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Questions",
+		Version: "1.0.0"
+	}
+]

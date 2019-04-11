@@ -11,6 +11,7 @@ using Plato.Discuss.Star.Subscribers;
 using Plato.Discuss.Star.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Star.Handlers;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Star
 {
@@ -35,7 +36,10 @@ namespace Plato.Discuss.Star
 
             // Star subscribers
             services.AddScoped<IBrokerSubscriber, StarSubscriber>();
-     
+            
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
         }
 
         public override void Configure(

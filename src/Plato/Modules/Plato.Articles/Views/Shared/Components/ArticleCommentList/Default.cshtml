@@ -47,7 +47,7 @@
                 <span class="text-muted">
                     @if (base.CurrentUser == null)
                     {
-                        @T["Enjoying the conversation?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to post your reply"]
+                        @T["Can we improve this article?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to leave feedback"]
                     }
                     else
                     {

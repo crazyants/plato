@@ -263,6 +263,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Docs", "src\Plato\Mod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Ideas.Labels", "src\Plato\Modules\Plato.Ideas.Labels\Plato.Ideas.Labels.csproj", "{7E4000C8-77FE-4DC0-8622-40798350705B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Questions.Categories", "src\Plato\Modules\Plato.Questions.Categories\Plato.Questions.Categories.csproj", "{1BEE0CAF-F9B8-40DD-B18F-FC0B4D92D320}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -773,6 +775,10 @@ Global
 		{7E4000C8-77FE-4DC0-8622-40798350705B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E4000C8-77FE-4DC0-8622-40798350705B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E4000C8-77FE-4DC0-8622-40798350705B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BEE0CAF-F9B8-40DD-B18F-FC0B4D92D320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BEE0CAF-F9B8-40DD-B18F-FC0B4D92D320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BEE0CAF-F9B8-40DD-B18F-FC0B4D92D320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BEE0CAF-F9B8-40DD-B18F-FC0B4D92D320}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -905,6 +911,7 @@ Global
 		{009CFBA6-373E-4DC9-8339-BA4671A9C91B} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{E30462DE-5139-4255-817C-DE217656C12B} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{7E4000C8-77FE-4DC0-8622-40798350705B} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{1BEE0CAF-F9B8-40DD-B18F-FC0B4D92D320} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

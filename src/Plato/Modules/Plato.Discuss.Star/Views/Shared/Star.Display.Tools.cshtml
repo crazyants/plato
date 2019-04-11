@@ -2,12 +2,16 @@
 
 @if (!Model.IsFollowing)
 {
-    <button data-toggle="tooltip" title="@T[Model.StarType.SubscribeDescription]" class="btn btn-secondary star-off" data-on-css="star-on" data-off-css="star-off" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-subscribe-tooltip="@T[Model.StarType.SubscribeDescription]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.StarType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
-        <i class="fal fa-star"></i> 
-        <span>
-            @T[Model.StarType.SubscribeText]
-        </span>
-    </button>
+    <authorize asp-permission="StarTopics">
+        <authorize-success>
+            <button data-toggle="tooltip" title="@T[Model.StarType.SubscribeDescription]" class="btn btn-secondary star-off" data-on-css="star-on" data-off-css="star-off" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-subscribe-tooltip="@T[Model.StarType.SubscribeDescription]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.StarType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
+                <i class="fal fa-star"></i> 
+                <span>
+                    @T[Model.StarType.SubscribeText]
+                </span>
+            </button>
+        </authorize-success>
+    </authorize>
 }
 else
 {

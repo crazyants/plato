@@ -1,0 +1,172 @@
+﻿@model CategoryListViewModel<Category>
+
+@if (Model.Options.ChannelId == 0)
+{
+    if (Model.Categories != null)
+    {
+        @foreach (var channel in Model.Categories)
+         {
+             <card class="card card-body-flush">
+                 <card-title>
+                     @if (Model.Options.EnableEdit)
+                     {
+                         <ul class="nav navbar p-0 float-right">
+                             <li class="nav-item dropdown">
+                                 <a class="btn btn-secondary float-right dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     @T["Edit"]
+                                 </a>
+                                 <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="navbarDropdown">
+                                     <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="dropdown-item">
+                                         @T["Edit Channel"]
+                                     </a>
+                                     <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@channel.Id" class="dropdown-item">
+                                         @T["Add Child Channel"]
+                                     </a>
+                                     <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@channel.Id" class="dropdown-item">
+                                         @T["Sort Channel"]
+                                     </a>
+                                     <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@channel.Id" class="dropdown-item">
+                                         @T["Close Channel"]
+                                     </a>
+                                     <div class="dropdown-divider"></div>
+                                     <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@channel.Id" class="dropdown-item">
+                                         @T["Delete Channel"]
+                                     </a>
+                                 </div>
+                             </li>
+                         </ul>
+
+                     }
+                     else
+                     {
+                         var details = channel.GetOrCreate<CategoryDetails>();
+                       
+                         <ol class="list-inline text-muted float-right">
+                             <li class="list-inline-item">
+                                 <span title="@T["Topics"]" data-toggle="tooltip">
+                                     @details.TotalEntities.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
+                                 </span>
+                             </li>
+                             <li class="list-inline-item">
+                                 <span title="@T["Replies"]" data-toggle="tooltip">
+                                     @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                                 </span>
+                             </li>
+                         </ol>
+                     }
+
+                     <h6 class="card-title">
+                         @if (Model.Options.EnableEdit)
+                         {
+                             <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@channel.Id" asp-route-opts.alias="@channel.Alias">
+                                 @channel.Name
+                             </a>
+                         }
+                         else
+                         {
+                             <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias">
+                                 @channel.Name
+                             </a>
+                         }
+                     </h6>
+                     @if (!String.IsNullOrEmpty(@channel.Description))
+                     {
+                         <span class="text-muted">
+                             @channel.Description
+                         </span>
+                     }
+
+                 </card-title>
+                 <card-body>
+
+                     <ul class="list-group list-group-flush list-group-hover">
+                         @if (channel.Children.Any())
+                         {
+                             foreach (var child in channel.Children)
+                             {
+                                 <li class="list-group-item list-group-item-action">
+                                     @await DisplayAsync(new View("ChannelListItem", new
+                                     {
+                                         category = child,
+                                         options = Model.Options
+                                     }))
+                                 </li>
+                             }
+                         }
+                         else
+                         {
+
+                             <li class="list-group-item">
+                                 <h6>@T["No child channels"]</h6>
+                             </li>
+
+                         }
+                     </ul>
+                 </card-body>
+             </card>
+         }
+    }
+    else
+    {
+        <card class="card card-body-flush">
+            <card-title>
+                <h6 class="card-title">@T["Channels"]</h6>
+            </card-title>
+            <card-body>
+                
+                <ul class="list-group list-group-flush list-group-hover">
+                    <li class="list-group-item">
+                        @T["No channels found"]
+                    </li>
+                </ul>
+             
+            </card-body>
+        </card>
+    }
+}
+else
+{
+    @if (Model.Categories.Any())
+     {
+         <card class="card card-body-flush">
+             <card-title>
+                 <h6 class="card-title">@T["Child Channels"]</h6>
+             </card-title>
+             <card-body>
+                 <ul class="list-group list-group-flush list-group-hover">
+                     @foreach (var category in Model.Categories)
+                     {
+                         <li class="list-group-item list-group-item-action">
+                             @await DisplayAsync(new View("ChannelListItem", new
+                             {
+                                 category = category,
+                                 options = Model.Options
+                             }))
+                         </li>
+                     }
+                 </ul>
+             </card-body>
+         </card>
+    }
+    else
+    {
+        if (Model.Options.EnableEdit)
+        {
+            <card class="card card-body-flush">
+                <card-title>
+                    <h6 class="card-title">@T["Child Channels"]</h6>
+                </card-title>
+                <card-body>
+                
+                    <ul class="list-group list-group-flush list-group-hover">
+                        <li class="list-group-item">
+                            @T["No child channels"]
+                        </li>
+                    </ul>
+             
+                </card-body>
+            </card>
+        }
+    }
+}
+
