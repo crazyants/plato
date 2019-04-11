@@ -83,7 +83,7 @@ namespace Plato.Questions.Categories.ViewProviders
             }
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return Views(View<CategoryListViewModel<CategoryAdmin>>("Question.Categories.Index.Sidebar", model =>
+            return Views(View<CategoryListViewModel<Category>>("Question.Categories.Index.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.ParentId == 0);
                     return model;
@@ -152,7 +152,7 @@ namespace Plato.Questions.Categories.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<CategoryListViewModel<CategoryAdmin>>("Question.Categories.Display.Sidebar", model =>
+                View<CategoryListViewModel<Category>>("Question.Categories.Display.Sidebar", model =>
                 {
                     model.Categories = categories?.Where(c => c.Id == question.CategoryId);
                     return model;

@@ -72,7 +72,13 @@ namespace Plato.Articles.Categories.ViewProviders
             return Views(
                 View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
-                View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1)
+                View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
+                View<CategoryListViewModel<Category>>("Article.Categories.Index.Sidebar", model =>
+                {
+                    model.Options = channelViewOpts;
+                    model.Categories = categories;
+                    return model;
+                }).Zone("sidebar").Order(1)
             );
 
         }

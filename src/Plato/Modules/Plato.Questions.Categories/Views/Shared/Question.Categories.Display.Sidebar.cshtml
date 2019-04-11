@@ -1,11 +1,11 @@
-﻿@model CategoryListViewModel<CategoryAdmin>
+﻿@model CategoryListViewModel<Category>
 
 <card class="card card-body-flush">
     <card-title>
-        <a data-toggle="tooltip" title="@T["All Channels"]" asp-route-area="Plato.Questions.Categories" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+        <a data-toggle="tooltip" title="@T["All Categories"]" asp-route-area="Plato.Questions.Categories" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
             <i class="fal fa-ellipsis-h fa-2x"></i>
         </a>
-        <h6 class="card-title float-left">@T["Channel"]</h6>
+        <h6 class="card-title float-left">@T["Categories"]</h6>
     </card-title>
     <card-body>
         @if (Model.Categories != null && Model.Categories.Any())

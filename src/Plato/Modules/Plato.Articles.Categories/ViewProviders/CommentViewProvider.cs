@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
@@ -9,7 +7,6 @@ using Plato.Articles.Categories.Models;
 using Plato.Articles.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Categories.ViewProviders
@@ -27,7 +24,7 @@ namespace Plato.Articles.Categories.ViewProviders
 
 
         public CommentViewProvider(
-            IStringLocalizer<CommentViewProvider> stringLocalizer,
+            IStringLocalizer stringLocalizer,
             IEntityStore<Article> entityStore,
             ICategoryStore<Category> channelStore, 
             IBreadCrumbManager breadCrumbManager)

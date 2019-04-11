@@ -85,7 +85,7 @@
                              foreach (var child in channel.Children)
                              {
                                  <li class="list-group-item list-group-item-action">
-                                     @await DisplayAsync(new View("ChannelListItem", new
+                                     @await DisplayAsync(new View("QuestionCategoryListItem", new
                                      {
                                          category = child,
                                          options = Model.Options
@@ -110,16 +110,14 @@
     {
         <card class="card card-body-flush">
             <card-title>
-                <h6 class="card-title">@T["Channels"]</h6>
+                <h6 class="card-title">@T["Categories"]</h6>
             </card-title>
             <card-body>
-                
                 <ul class="list-group list-group-flush list-group-hover">
                     <li class="list-group-item">
-                        @T["No channels found"]
+                        @T["No categories found"]
                     </li>
                 </ul>
-             
             </card-body>
         </card>
     }
@@ -130,7 +128,7 @@ else
      {
          <card class="card card-body-flush">
              <card-title>
-                 <h6 class="card-title">@T["Child Channels"]</h6>
+                 <h6 class="card-title">@T["Child Categories"]</h6>
              </card-title>
              <card-body>
                  <ul class="list-group list-group-flush list-group-hover">
@@ -154,13 +152,13 @@ else
         {
             <card class="card card-body-flush">
                 <card-title>
-                    <h6 class="card-title">@T["Child Channels"]</h6>
+                    <h6 class="card-title">@T["Child Categories"]</h6>
                 </card-title>
                 <card-body>
                 
                     <ul class="list-group list-group-flush list-group-hover">
                         <li class="list-group-item">
-                            @T["No child channels"]
+                            @T["No child categories"]
                         </li>
                     </ul>
              

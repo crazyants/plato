@@ -68,7 +68,7 @@ namespace Plato.Questions.Categories.ViewProviders
                 View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<CategoryListViewModel<CategoryAdmin>>("Topic.Channels.Index.Sidebar", model =>
+                View<CategoryListViewModel<Category>>("Question.Categories.Index.Sidebar", model =>
                 {
                     //model.SelectedChannelId = channel?.Id ?? 0;
                     model.Options = channelViewOpts;
