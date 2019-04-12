@@ -443,12 +443,11 @@
 
 .main-container > .container-fluid:last-child { padding-bottom: 6rem; }
 
-.nav-asides .navbar-nav { margin: 1rem 0; }
+.nav-asides .navbar-collapse .navbar-nav { margin: 1rem 0; }
 .nav-asides > .navbar .nav-link { padding: 0.5rem 1rem; border-radius: 0.20rem; }
 .nav-asides > .navbar .nav-link i { margin-right: 0.50rem; }
 .nav-asides hr { margin: 0.5rem 0 1rem 0; display: none; }
-.nav-asides .navbar-toggler { height: 40px; }
-.nav-asides  .site-nav { display: none; }
+.nav-asides .site-nav { display: none; }
 
 @media (min-width: 992px) {
     
@@ -466,7 +465,6 @@
     .navbar-expand-lg .navbar-collapse {
         display: flex !important;
         flex-basis: auto;
-      
     }
  
     .nav-asides > .navbar {
@@ -481,6 +479,10 @@
         height: 100vh;
         overflow-y: scroll;
         -ms-overflow-style: none;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 1020;
     }
 
     .nav-asides > .navbar::-webkit-scrollbar { display: none; }

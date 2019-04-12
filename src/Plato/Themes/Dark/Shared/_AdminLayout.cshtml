@@ -1,40 +1,48 @@
 ﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"] - Plato</title>
-        <base href="/" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <assets section="Header" />
-        <scripts section="Header" />
-    </head>
-    <body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Plato</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <assets section="Header" />
+    <scripts section="Header" />
+</head>
+<body>
 
-        <assets section="Body" />
-        <scripts section="Body" />
+    <assets section="Body" />
+    <scripts section="Body" />
 
-        <div class="nav-v nav-asides">
+    <div class="nav-v nav-asides">
 
-            <div class="nav nav-tabs navbar navbar-expand-lg bg-dark navbar-dark">
-                <a class="navbar-brand" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
-                    @T["Plato"]
-                </a>
-                <hr />
-                <div class="d-flex align-items-center">
-                    <a href="#" class="nav-link dropdown-toggle-no-caret d-lg-none" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fal fa-bars"></i>
-                    </a>
-                    <a class="nav-link d-lg-none" data-toggle="tooltip" data-container="#adminNav" title="@T[" Return Home"]" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-placement="bottom">
-                        <i class="fal fa-home"></i>
-                    </a>
-                    <div class="d-block d-lg-none">
-                        @if (this.CurrentUser != null)
-                        {
-                        <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-flex align-items-center">
-                            <div class="dropdown">
-                                <a class="nav-link" href="#" data-toggle="dropdown">
+        <div class="nav navbar navbar-expand-lg bg-dark navbar-dark">
+            <a class="navbar-brand" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                @T["Plato"]
+            </a>
+            <hr />
+            <div class="d-lg-none">
+                <div class="navbar-nav float-left">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                                <i class="fal fa-bars"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tooltip" data-container="#adminNav" title="@T[" Return Home"]" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-placement="bottom">
+                                <i class="fal fa-home"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                @if (this.CurrentUser != null)
+                {
+                    <ul class="nav float-left">
+                        <li class="nav-item dropdown">
+                            <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post">
+                                <a class="nav-link" href="#" data-toggle="dropdown" data-display="static">
                                     <avatar class="avatar avatar-sm" url="@this.CurrentUser.Avatar.Url" />
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
@@ -45,32 +53,31 @@
                                     <div class="dropdown-divider"></div>
                                     <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                 </div>
-                            </div>
-                        </form>
-                        }
-                    </div>
-                </div>
-
-                <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
-                    <navigation name="admin"
-                                collaspsable="true"
-                                class="navbar-nav d-lg-block"
-                                child-ul-css-class="nav flex-column"
-                                link-css-class="nav-link" />
-                </div>
-
+                            </form>
+                        </li>
+                    </ul>
+                }
+                 
             </div>
+            <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
+                <navigation name="admin"
+                            collaspsable="true"
+                            class="navbar-nav d-lg-block"
+                            child-ul-css-class="nav flex-column"
+                            link-css-class="nav-link" />
+            </div>
+        </div>
 
-            <div class="main-container">
-                <div class="container-fluid">
-                    <div class="row navbar nav-tabs site-nav" role="navigation">
-                        <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">
-                            @T["Plato"]
-                        </a>
-                        @if (this.CurrentUser != null)
-                        {
+        <div class="main-container">
+            <div class="container-fluid">
+                <div class="row navbar nav-tabs site-nav" role="navigation">
+                    <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">
+                        @T["Plato"]
+                    </a>
+                    @if (this.CurrentUser != null)
+                    {
                         <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post">
-                            <ul class="nav" id="adminNav">
+                            <ul class="nav">
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tooltip" data-container="#adminNav" title="@T[" Return Home"]" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-placement="bottom">
                                         <i class="fal fa-home"></i>
@@ -99,27 +106,27 @@
                                 </li>
                             </ul>
                         </form>
-                        }
-                    </div>
-                    <div class="row" aria-label="breadcrumb">
-                        <breadcrumb class="breadcrumb mb-0 w-100 rounded-0" />
-                    </div>
-                    <div class="row">
-                        <div class="col-12 py-4">
-                            @RenderBody()
-                            <footer class="mt-2">
-                                <p class="text-muted">
-                                    &copy; @System.DateTime.Now.Year - Plato
-                                </p>
-                            </footer>
-                        </div>
+                    }
+                </div>
+                <div class="row" aria-label="breadcrumb">
+                    <breadcrumb class="breadcrumb mb-0 w-100 rounded-0" />
+                </div>
+                <div class="row">
+                    <div class="col-12 py-4">
+                        @RenderBody()
+                        <footer class="mt-2">
+                            <p class="text-muted">
+                                &copy; @System.DateTime.Now.Year - Plato
+                            </p>
+                        </footer>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <assets section="Footer" />
-        <scripts section="Footer" />
+    <assets section="Footer" />
+    <scripts section="Footer" />
 
-    </body>
+</body>
 </html>
