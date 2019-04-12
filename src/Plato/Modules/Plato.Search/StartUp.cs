@@ -43,6 +43,7 @@ namespace Plato.Search
 
             // Navigation
             services.AddScoped<INavigationProvider, SearchMenu>();
+            services.AddScoped<INavigationProvider, SiteSearchMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, AdminMenu>();
 
