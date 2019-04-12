@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Questions.Navigation
 {
+
     public class AdminMenu : INavigationProvider
     {
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
@@ -21,7 +22,7 @@ namespace Plato.Questions.Navigation
             }
 
             builder
-                .Add(T["Questions"], 3, users => users
+                .Add(T["Questions"], 4, questions => questions
                     .IconCss("fal fa-question-circle")
                     .Add(T["Overview"], int.MinValue, home => home
                         .Action("Index", "Admin", "Plato.Questions")
@@ -29,8 +30,8 @@ namespace Plato.Questions.Navigation
                         .LocalNav()
                     ));
             
-
         }
+
     }
 
 }

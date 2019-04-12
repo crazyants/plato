@@ -12,18 +12,16 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Notifications.Extensions;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
 using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Notifications.Extensions;
-using Plato.Notifications.Services;
 
 namespace Plato.Questions.Tasks
 {
-    public class CommentBadgesAwarder : IBackgroundTaskProvider
+    public class AnswerBadgesAwarder : IBackgroundTaskProvider
     {
 
         private const string Sql = @"                       
@@ -83,7 +81,7 @@ namespace Plato.Questions.Tasks
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
 
-        public CommentBadgesAwarder(
+        public AnswerBadgesAwarder(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<Badge> notificationManager,
             IUserReputationAwarder userReputationAwarder,

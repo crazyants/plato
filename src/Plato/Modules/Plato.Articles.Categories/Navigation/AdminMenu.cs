@@ -22,7 +22,8 @@ namespace Plato.Articles.Categories.Navigation
             }
 
             builder
-                .Add(T["Articles"], 1, users => users
+                .Add(T["Articles"], 3, users => users
+                    .IconCss("fal fa-copy")
                     .Add(T["Categories"], 1, manage => manage
                         .Action("Index", "Admin", "Plato.Articles.Categories")
                         //.Permission(Permissions.ManageRoles)

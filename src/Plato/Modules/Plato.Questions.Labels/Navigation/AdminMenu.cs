@@ -21,15 +21,16 @@ namespace Plato.Questions.Labels.Navigation
             }
 
             builder
-                .Add(T["Questions"], 1, users => users
+                .Add(T["Questions"], 4, questions => questions
+                    .IconCss("fal fa-question-circle")
                     .Add(T["Labels"], 3, manage => manage
                         .Action("Index", "Admin", "Plato.Questions.Labels")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));
-            
 
         }
+
     }
 
 }

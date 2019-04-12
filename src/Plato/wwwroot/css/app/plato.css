@@ -60,15 +60,14 @@
 /* Navigation */
 /* ------------------------- */
 
+.site-nav li a.nav-link { height: 44px; }
+.site-nav li.dropdown  .dropdown-menu { min-width: 200px; }
+.site-nav li.dropdown.account > a.nav-link { line-height: normal; }
+.site-nav li.dropdown.account > .dropdown-menu { width: 350px; }
+
+.nav .navbar-brand img { width: 200px; }
+.nav li > a .nav-text { margin-left: 0.50rem; }
 .nav li > a.text-hidden .nav-text { display: none;  }
-
-.site-nav li > a .nav-text { margin-left: 0.50rem; }
-
-.site-nav .dropdown-menu { width: 200px; }
-
-.dropdown.account > .dropdown-menu { width: 350px; }
-
-.navbar-brand img { width: 200px; }
 
 .nav-search { display: block; margin-top: 3px; }
 

@@ -22,7 +22,7 @@ namespace Plato.Ideas.Navigation
             }
             
             builder
-                .Add(T["Ideas"], 4, ideas => ideas
+                .Add(T["Ideas"], 5, ideas => ideas
                         .IconCss("fal fa-lightbulb")
                         .Action("Index", "Home", "Plato.Ideas")
                         .Attributes(new Dictionary<string, object>()

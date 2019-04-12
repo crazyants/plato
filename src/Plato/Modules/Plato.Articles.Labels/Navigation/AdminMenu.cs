@@ -21,7 +21,8 @@ namespace Plato.Articles.Labels.Navigation
             }
 
             builder
-                .Add(T["Articles"], 1, users => users
+                .Add(T["Articles"], 3, users => users
+                    .IconCss("fal fa-copy")
                     .Add(T["Labels"], 3, manage => manage
                         .Action("Index", "Admin", "Plato.Articles.Labels")
                         //.Permission(Permissions.ManageRoles)

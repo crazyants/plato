@@ -112,8 +112,8 @@ namespace Plato.Questions
             services.AddScoped<IBadgesProvider<Badge>, CommentBadges>();
 
             // Background tasks
-            services.AddScoped<IBackgroundTaskProvider, ArticleBadgesAwarder>();
-            services.AddScoped<IBackgroundTaskProvider, CommentBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, QuestionBadgesAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, AnswerBadgesAwarder>();
 
 
             // Notification types

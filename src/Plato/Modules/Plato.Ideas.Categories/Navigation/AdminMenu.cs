@@ -7,6 +7,7 @@ namespace Plato.Ideas.Categories.Navigation
 
     public class AdminMenu : INavigationProvider
     {
+
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
@@ -22,7 +23,8 @@ namespace Plato.Ideas.Categories.Navigation
             }
 
             builder
-                .Add(T["Ideas"], 1, ideas => ideas
+                .Add(T["Ideas"], 5, ideas => ideas
+                    .IconCss("fal fa-lightbulb")
                     .Add(T["Categories"], 1, manage => manage
                         .Action("Index", "Admin", "Plato.Ideas.Categories")
                         //.Permission(Permissions.ManageRoles)

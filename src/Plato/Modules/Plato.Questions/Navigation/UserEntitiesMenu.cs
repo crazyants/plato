@@ -26,8 +26,7 @@ namespace Plato.Questions.Navigation
             {
                 return;
             }
-
-
+            
             // Get metrics from context
             var model =
                 builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
@@ -55,8 +54,7 @@ namespace Plato.Questions.Navigation
             {
                 css = "active";
             }
-
-
+            
             builder.Add(T["Questions"], 4, topics => topics
                 .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
                 .Action("Index", "User", "Plato.Questions", new RouteValueDictionary()

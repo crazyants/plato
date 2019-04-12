@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Navigation
@@ -28,9 +28,9 @@ namespace Plato.Discuss.Navigation
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));
-            
 
         }
+
     }
 
 }

@@ -23,7 +23,7 @@ namespace Plato.Docs.Navigation
 
 
             builder
-                .Add(T["Docs"], 1, discuss => discuss
+                .Add(T["Docs"], 2, discuss => discuss
                         .IconCss("fal fa-book-open")
                         .Action("Index", "Home", "Plato.Docs")
                         .Attributes(new Dictionary<string, object>()

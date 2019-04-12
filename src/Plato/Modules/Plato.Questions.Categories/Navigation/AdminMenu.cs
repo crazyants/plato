@@ -22,7 +22,8 @@ namespace Plato.Questions.Categories.Navigation
             }
 
             builder
-                .Add(T["Questions"], 1, questions => questions
+                .Add(T["Questions"], 4, questions => questions
+                    .IconCss("fal fa-question-circle")
                     .Add(T["Categories"], 1, manage => manage
                         .Action("Index", "Admin", "Plato.Questions.Categories")
                         //.Permission(Permissions.ManageRoles)

@@ -21,7 +21,8 @@ namespace Plato.Ideas.Labels.Navigation
             }
 
             builder
-                .Add(T["Ideas"], 1, ideas => ideas
+                .Add(T["Ideas"], 5, ideas => ideas
+                    .IconCss("fal fa-lightbulb")
                     .Add(T["Labels"], 3, manage => manage
                         .Action("Index", "Admin", "Plato.Ideas.Labels")
                         //.Permission(Permissions.ManageRoles)

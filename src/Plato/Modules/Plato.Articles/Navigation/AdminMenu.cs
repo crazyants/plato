@@ -22,7 +22,7 @@ namespace Plato.Articles.Navigation
             }
 
             builder
-                .Add(T["Articles"], 2, users => users
+                .Add(T["Articles"], 3, users => users
                     .IconCss("fal fa-copy")
                     .Add(T["Overview"], int.MinValue, home => home
                         .Action("Index", "Admin", "Plato.Articles")
