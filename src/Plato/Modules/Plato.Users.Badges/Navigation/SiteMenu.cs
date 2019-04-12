@@ -22,18 +22,37 @@ namespace Plato.Users.Badges.Navigation
                 return;
             }
 
+
+
             builder
-                .Add(T["Badges"], int.MaxValue - 10, badges => badges
-                        .Action("Index", "Home", "Plato.Users.Badges")
-                        .IconCss("fal fa-trophy")
-                        //.Permission(Permissions.ManageRoles)
+                .Add(T["Navigation"], int.MaxValue - 5, nav => nav
+                        .IconCss("fal fa-bars")
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
-                            {"title", T["Badges"]}
+                            {"title", T["More"]}
                         })
-                        .LocalNav()
-                    , new List<string>() { "badges", "text-hidden" });
+                        .Add(T["Badges"], int.MaxValue, installed => installed
+                            .Action("Index", "Home", "Plato.Users.Badges")
+                            .IconCss("fal fa-trophy mr-2")
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav()
+                        ), new List<string>() { "dropdown-toggle-no-caret", "navigation", "text-hidden" }
+                );
+
+
+            //builder
+            //    .Add(T["Badges"], int.MaxValue - 10, badges => badges
+            //            .Action("Index", "Home", "Plato.Users.Badges")
+            //            .IconCss("fal fa-trophy")
+            //            //.Permission(Permissions.ManageRoles)
+            //            .Attributes(new Dictionary<string, object>()
+            //            {
+            //                {"data-provide", "tooltip"},
+            //                {"title", T["Badges"]}
+            //            })
+            //            .LocalNav()
+            //        , new List<string>() { "badges", "text-hidden" });
         }
     }
 

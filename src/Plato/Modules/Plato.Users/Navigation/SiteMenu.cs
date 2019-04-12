@@ -21,19 +21,37 @@ namespace Plato.Users.Navigation
             {
                 return;
             }
-
+            
             builder
-                .Add(T["Users"], int.MaxValue - 5, installed => installed
-                        .Action("Index", "Home", "Plato.Users")
-                        .IconCss("fal fa-user")
-                        //.Permission(Permissions.ManageRoles)
+                .Add(T["Navigation"], int.MaxValue - 5, nav => nav
+                        .IconCss("fal fa-bars")
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
-                            {"title", T["Users"]}
+                            {"title", T["More"]}
                         })
-                        .LocalNav()
-                    , new List<string>() {"users", "text-hidden"});
+                        .Add(T["Users"], int.MaxValue - 1, installed => installed
+                            .Action("Index", "Home", "Plato.Users")
+                            .IconCss("fal fa-user mr-2")
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav()
+                        ), new List<string>() { "dropdown-toggle-no-caret", "navigation", "text-hidden"}
+                );
+
+
+
+            //builder
+            //    .Add(T["Users"], int.MaxValue - 5, installed => installed
+            //            .Action("Index", "Home", "Plato.Users")
+            //            .IconCss("fal fa-user")
+            //            //.Permission(Permissions.ManageRoles)
+            //            .Attributes(new Dictionary<string, object>()
+            //            {
+            //                {"data-provide", "tooltip"},
+            //                {"title", T["Users"]}
+            //            })
+            //            .LocalNav()
+            //        , new List<string>() {"users", "text-hidden"});
         }
     }
 

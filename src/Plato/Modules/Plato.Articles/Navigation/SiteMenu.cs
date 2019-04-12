@@ -33,7 +33,7 @@ namespace Plato.Articles.Navigation
                         })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                       , new List<string>() { "discuss", "text-hidden" }
+                       , new List<string>() { "articles",  "text-hidden" }
                 );
 
             //builder

@@ -13,7 +13,7 @@
     <scripts section="Header" />
 </head>
 <body>
-  
+
     <assets section="Body" />
     <scripts section="Body" />
 
@@ -26,19 +26,25 @@
 
     <div class="nav nav-tabs">
         <div class="container-fluid">
-           
-                <div class="navbar px-4" role="navigation">
-                    <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">@T["Plato"]</a>
-                    <div class="float-right">
-
+            <div class="navbar d-block px-4" role="navigation">
+                <div class="row">
+                    <div class="col-1">
+                        <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">@T["Plato"]</a>
+                    </div>
+                    <div class="col-6">
+                        <navigation name="site-search"
+                                    class="nav nav-search" />
+                    </div>
+                    <div class="col-5">
                         <div class="float-right">
+
                             @if (this.CurrentUser != null)
                             {
-                                <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-inline">
-                                    <ul class="nav nav-pills float-right">
+                                <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="float-right">
+                                    <ul class="nav nav-pills">
                                         <li class="nav-item dropdown account">
                                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-provide="tooltip" title="@this.CurrentUser.DisplayName">
-                                                <avatar class="avatar avatar-sm mr-2" url="@this.CurrentUser.Avatar.Url"/>
+                                                <avatar class="avatar avatar-sm mr-2" url="@this.CurrentUser.Avatar.Url" />
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
                                                 <div class="p-3">
@@ -60,7 +66,7 @@
                                                 <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                             </div>
                                         </li>
-                                     
+
                                     </ul>
                                 </form>
                             }
@@ -75,30 +81,30 @@
                                     </li>
                                 </ul>
                             }
-                        </div>
-                        
-                        <navigation name="site"
-                                    class="nav nav-pills float-right site-nav"
-                                    child-ul-css-class="dropdown-menu anim anim-2x anim-scale-in" />
 
+                            <navigation name="site"
+                                        class="nav nav-pills float-left site-nav"
+                                        child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+
+                        </div>
                     </div>
                 </div>
-          
+            </div>
         </div>
     </div>
 
-<div class="container-fluid">
-    <div class=" p-4">
-        <nav aria-label="breadcrumb">
-            <breadcrumb class="breadcrumb p-0 bg-transparent col-12" />
-        </nav>
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @System.DateTime.Now.Year - Plato</p>
-        </footer>
+    <div class="container-fluid">
+        <div class=" p-4">
+            <nav aria-label="breadcrumb">
+                <breadcrumb class="breadcrumb p-0 bg-transparent col-12" />
+            </nav>
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @System.DateTime.Now.Year - Plato</p>
+            </footer>
+        </div>
     </div>
-</div>
 
     <assets section="Footer" />
     <scripts section="Footer" />

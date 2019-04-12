@@ -18,7 +18,7 @@ namespace Plato.Search.Navigation
 
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
-            if (!String.Equals(name, "site", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "site-search", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
