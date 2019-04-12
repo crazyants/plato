@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -157,9 +160,6 @@ namespace Plato.Users.Controllers
                 // Get composed type from all involved view providers
                 var loginViewModel = await _loginViewProvider.GetComposedType(this);
 
-                // Authenticate composed type
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(
                     loginViewModel.UserName,
                     loginViewModel.Password,
@@ -169,6 +169,21 @@ namespace Plato.Users.Controllers
                 // Success
                 if (result.Succeeded)
                 {
+                    
+                    //var claims = new List<Claim>
+                    //{
+                    //    new Claim(ClaimTypes.Name, Guid.NewGuid().ToString())
+                    //};
+
+                    //var claimsIdentity = new ClaimsIdentity(
+                    //    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    //var authProperties = new AuthenticationProperties();
+
+                    //await HttpContext.SignInAsync(
+                    //    CookieAuthenticationDefaults.AuthenticationScheme,
+                    //    new ClaimsPrincipal(claimsIdentity),
+                    //    authProperties);
+
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {

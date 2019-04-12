@@ -11,47 +11,42 @@
              {
                  var collapsableId = "user-" + user.Id;
                  <ul class="list-group list-group-flush list-group-hover">
-                    <li class="list-group-item list-group-item-action">
-                     
-                        <div class="dropdown float-right">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                @T["Edit"]
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <button type="submit" asp-controller="Admin" asp-route-action="DeleteUser" asp-route-id="@user.Id.ToString()" data-provide="confirm" class="dropdown-item dropdown-item-danger">
-                                    @T["Delete Moderator"]
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div role="button" class="btn btn-expand" title="@T["Channels"]" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
-                             <i class="fal fa-chevron-right"></i>
+                     <li class="list-group-item list-group-item-action">
+                         <div class="dropdown float-right">
+                             <a class="btn btn-secondary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                                 @T["Edit"]
+                             </a>
+                             <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="navbarDropdown">
+                                 <button type="submit" asp-controller="Admin" asp-route-action="DeleteUser" asp-route-id="@user.Id.ToString()" data-provide="confirm" class="dropdown-item dropdown-item-danger">
+                                     @T["Delete Moderator"]
+                                 </button>
+                             </div>
                          </div>
-                         
+                         <a role="button" class="btn btn-expand mr-2" title="@T["Channels"]" data-toggle="collapse" href="#@collapsableId" aria-expanded="false" aria-controls="@collapsableId">
+                             <i class="fal fa-chevron-right"></i>
+                         </a>
                          <h6 class="d-inline-block">
-                             <avatar class="avatar avatar-sm" url="@user.Avatar.Url" />
+                             <avatar class="avatar avatar-sm mr-2" url="@user.Avatar.Url" />
                              @user.DisplayName
                          </h6>
-
                          <span class="text-muted">
                              @@@user.UserName
                          </span>
-
+                     </li>
+                     <li id="@collapsableId" class="list-group-item collapse p-0">
+                         <ul class="list-group list-group-flush list-group-hover">
+                             @foreach (var moderator in Model.CategorizedModerators[user])
+                             {
+                                 <li class="list-group-item list-group-item-action">
+                                     @await DisplayAsync(new View("ModeratorListItem", new
+                                     {
+                                         moderator = moderator
+                                     }))
+                                 </li>
+                             }
+                         </ul>
                      </li>
                  </ul>
-                 <div id="@collapsableId" class="collapse">
-                     <ul class="list-group list-group-flush list-group-hover">
-                         @foreach (var moderator in Model.CategorizedModerators[user])
-                         {
-                             <li class="list-group-item list-group-item-action">
-                                 @await DisplayAsync(new View("ModeratorListItem", new
-                                 {
-                                     moderator = moderator
-                                 }))
-                             </li>
-                         }
-                     </ul>
-                 </div>
              }
         }
         else
@@ -66,7 +61,7 @@
 </card>
 
 <script section="Footer">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(".btn-expand").click(function () {
             if ($(this).hasClass("active")) {
                 $(this).removeClass("active");
@@ -76,6 +71,4 @@
         });
     });
 </script>
-
-
 

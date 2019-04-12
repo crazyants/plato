@@ -356,7 +356,7 @@ namespace Plato.Discuss.Controllers
             if (entity.IsPrivate)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
-                    Permissions.ViewPrivateTopics))
+                    Permissions.ViewHiddenTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()

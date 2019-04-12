@@ -4167,7 +4167,7 @@ $(function (win, doc, $) {
                 // init tagIt
                 $caller.tagIt($.extend({
                     itemTemplate:
-                        '<li class="tagit-list-item"><span class="avatar avatar-sm mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
+                        '<li class="tagit-list-item"><div class="btn-group"><div class="btn btn-sm label label-outline font-weight-bold"><span class="avatar avatar-xs mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName}</div> <a href="#" class="btn btn-sm label label-outline dropdown-toggle-split tagit-list-item-delete"><i class="fal fa-fw fa-times"></i></a></div></li>',
                     parseItemTemplate: function (html, result) {
 
                         if (result.id) {

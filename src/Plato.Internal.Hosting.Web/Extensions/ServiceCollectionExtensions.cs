@@ -163,11 +163,15 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 {
                     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
                     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                    options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
+                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.LoginPath = new PathString("/login");
                 })
                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
-                    options.LoginPath = new PathString("/Users/Account/Login");
+                    options.LoginPath = new PathString("/login");
                     options.Events = new CookieAuthenticationEvents
                     {
                         OnValidatePrincipal = async context =>

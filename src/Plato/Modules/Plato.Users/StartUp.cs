@@ -18,6 +18,7 @@ using Plato.Internal.Models.Reputations;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Security;
 using Plato.Users.ViewAdaptors;
 using Plato.Users.Handlers;
 using Plato.Users.ViewModels;
@@ -66,7 +67,12 @@ namespace Plato.Users
             // No interface for the error describer so we can add errors without rev'ing the interface
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
-            services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
+
+            //services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<User>, PlatoClaimsPrincipalFactory<User, Role>>();
+
+
+            
 
             // Stores
             services.TryAddScoped<IUserStore<User>, UserStore>();

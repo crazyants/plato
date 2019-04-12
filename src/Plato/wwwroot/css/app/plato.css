@@ -662,6 +662,8 @@
 .tagit li.bg-warning, 
 .tagit li.bg-warning .btn-primary { color: #000; background-color: #FFF389 !important; border-color: #D8CE78 !important;  }
 
+.tagit .form-control { margin: 0; padding: 0; }
+
 /* ------------------------- */
 /* Toggle switch */
 /* ------------------------- */
