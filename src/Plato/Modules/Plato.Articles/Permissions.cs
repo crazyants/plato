@@ -35,42 +35,78 @@ namespace Plato.Articles
 
         public static readonly Permission RestoreAnyArticle =
             new Permission("RestoreAnyArticle", "Restore any article");
+
+        public static readonly Permission ViewDeletedArticles =
+            new Permission("ViewDeletedArticles", "View deleted articles");
         
-        public static readonly Permission DeleteOwnComments =
-            new Permission("DeleteOwnComments", "Delete own comments");
+        public static readonly Permission DeleteOwnArticleComments =
+            new Permission("DeleteOwnArticleComments", "Delete own comments");
 
-        public static readonly Permission RestoreOwnComments =
-            new Permission("RestoreOwnComments", "Restore own comments");
+        public static readonly Permission RestoreOwnArticleComments =
+            new Permission("RestoreOwnArticleComments", "Restore own comments");
         
-        public static readonly Permission DeleteAnyComment =
-            new Permission("DeleteAnyComment", "Delete any comment");
+        public static readonly Permission DeleteAnyArticleComment =
+            new Permission("DeleteAnyArticleComment", "Delete any comment");
 
-        public static readonly Permission RestoreAnyComment =
-            new Permission("RestoreAnyComment", "Restore any comment");
-
+        public static readonly Permission RestoreAnyArticleComment =
+            new Permission("RestoreAnyArticleComment", "Restore any comment");
+        
+        public static readonly Permission ViewDeletedArticleComments =
+            new Permission("ViewDeletedArticleComments", "View deleted comments");
+        
         public static readonly Permission ReportArticles =
             new Permission("ReportArticles", "Report articles");
 
-        public static readonly Permission ReportComments =
-            new Permission("ReportComments", "Report comments");
+        public static readonly Permission ReportArticleComments =
+            new Permission("ReportArticleComments", "Report comments");
+        
+        public static readonly Permission PinArticles =
+            new Permission("PinArticles", "Pin articles");
+
+        public static readonly Permission UnpinArticles =
+            new Permission("UnpinArticles", "Unpin articles");
+
+        public static readonly Permission LockArticles =
+            new Permission("LockArticles", "Lock articles");
+
+        public static readonly Permission UnlockArticles =
+            new Permission("UnlockArticles", "Unlock articles");
+
+        public static readonly Permission HideArticles =
+            new Permission("HideArticles", "Hide articles");
+
+        public static readonly Permission ShowArticles =
+            new Permission("ShowArticles", "Unhide articles");
 
         public static readonly Permission ViewPrivateArticles =
-            new Permission("ViewPrivateArticles", "View private articles");
+            new Permission("ViewPrivateArticles", "View hidden articles");
 
-        public static readonly Permission ViewPrivateComments =
-            new Permission("ViewPrivateComments", "View private comments");
+        public static readonly Permission HideArticleComments =
+            new Permission("HideArticleComments", "Hide comments");
+
+        public static readonly Permission ShowArticleComments =
+            new Permission("ShowArticleComments", "Unhide comments");
+        
+        public static readonly Permission ViewPrivateArticleComments =
+            new Permission("ViewPrivateArticleComments", "View hidden comments");
+
+        public static readonly Permission ArticleToSpam =
+            new Permission("ArticleToSpam", "Move articles to SPAM");
+
+        public static readonly Permission ArticleFromSpam =
+            new Permission("ArticleFromSpam", "Remove articles from SPAM");
 
         public static readonly Permission ViewSpamArticles =
             new Permission("ViewSpamArticles", "View articles flagged as SPAM");
 
-        public static readonly Permission ViewSpamComments =
-            new Permission("ViewSpamComments", "View comments flagged as SPAM");
-        
-        public static readonly Permission ViewDeletedArticles =
-            new Permission("ViewDeletedArticles", "View deleted articles");
+        public static readonly Permission ArticleCommentToSpam =
+            new Permission("ArticleCommentToSpam", "Move comments to SPAM");
 
-        public static readonly Permission ViewDeletedComments =
-            new Permission("ViewDeletedComments", "View deleted comments");
+        public static readonly Permission ArticleCommentFromSpam =
+            new Permission("ArticleCommentFromSpam", "Remove comments from SPAM");
+
+        public static readonly Permission ViewSpamArticleComments =
+            new Permission("ViewSpamArticleComments", "View comments flagged as SPAM");
         
         public IEnumerable<Permission> GetPermissions()
         {
@@ -86,18 +122,30 @@ namespace Plato.Articles
                 RestoreOwnArticles,
                 DeleteAnyArticle,
                 RestoreAnyArticle,
-                DeleteOwnComments,
-                RestoreOwnComments,
-                DeleteAnyComment,
-                RestoreAnyComment,
-                ReportArticles,
-                ReportComments,
-                ViewPrivateArticles,
-                ViewPrivateComments,
-                ViewSpamArticles,
-                ViewSpamComments,
                 ViewDeletedArticles,
-                ViewDeletedComments
+                DeleteOwnArticleComments,
+                RestoreOwnArticleComments,
+                DeleteAnyArticleComment,
+                RestoreAnyArticleComment,
+                ViewDeletedArticleComments,
+                ReportArticles,
+                ReportArticleComments,
+                PinArticles,
+                UnpinArticles,
+                LockArticles,
+                UnlockArticles,
+                HideArticles,
+                ShowArticles,
+                ViewPrivateArticles,
+                HideArticleComments,
+                ShowArticleComments,
+                ViewPrivateArticleComments,
+                ArticleToSpam,
+                ArticleFromSpam,
+                ViewSpamArticles,
+                ArticleCommentToSpam,
+                ArticleCommentFromSpam,
+                ViewPrivateArticleComments
             };
         }
 
@@ -120,18 +168,30 @@ namespace Plato.Articles
                         RestoreOwnArticles,
                         DeleteAnyArticle,
                         RestoreAnyArticle,
-                        DeleteOwnComments,
-                        RestoreOwnComments,
-                        DeleteAnyComment,
-                        RestoreAnyComment,
-                        ReportArticles,
-                        ReportComments,
-                        ViewPrivateArticles,
-                        ViewPrivateComments,
-                        ViewSpamArticles,
-                        ViewSpamComments,
                         ViewDeletedArticles,
-                        ViewDeletedComments
+                        DeleteOwnArticleComments,
+                        RestoreOwnArticleComments,
+                        DeleteAnyArticleComment,
+                        RestoreAnyArticleComment,
+                        ViewDeletedArticleComments,
+                        ReportArticles,
+                        ReportArticleComments,
+                        PinArticles,
+                        UnpinArticles,
+                        LockArticles,
+                        UnlockArticles,
+                        HideArticles,
+                        ShowArticles,
+                        ViewPrivateArticles,
+                        HideArticleComments,
+                        ShowArticleComments,
+                        ViewPrivateArticleComments,
+                        ArticleToSpam,
+                        ArticleFromSpam,
+                        ViewSpamArticles,
+                        ArticleCommentToSpam,
+                        ArticleCommentFromSpam,
+                        ViewPrivateArticleComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -141,9 +201,9 @@ namespace Plato.Articles
                     {
                         PostComments,
                         EditOwnComment,
-                        DeleteOwnComments,
+                        DeleteOwnArticleComments,
                         ReportArticles,
-                        ReportComments
+                        ReportArticleComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -157,16 +217,28 @@ namespace Plato.Articles
                         EditOwnComment,
                         DeleteOwnArticles,
                         RestoreOwnArticles,
-                        DeleteOwnComments,
-                        RestoreOwnComments,
-                        ReportArticles,
-                        ReportComments,
-                        ViewPrivateArticles,
-                        ViewPrivateComments,
-                        ViewSpamArticles,
-                        ViewSpamComments,
                         ViewDeletedArticles,
-                        ViewDeletedComments
+                        DeleteOwnArticleComments,
+                        RestoreOwnArticleComments,
+                        ViewDeletedArticleComments,
+                        ReportArticles,
+                        ReportArticleComments,
+                        PinArticles,
+                        UnpinArticles,
+                        LockArticles,
+                        UnlockArticles,
+                        HideArticles,
+                        ShowArticles,
+                        ViewPrivateArticles,
+                        HideArticleComments,
+                        ShowArticleComments,
+                        ViewPrivateArticleComments,
+                        ArticleToSpam,
+                        ArticleFromSpam,
+                        ViewSpamArticles,
+                        ArticleCommentToSpam,
+                        ArticleCommentFromSpam,
+                        ViewPrivateArticleComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -175,7 +247,7 @@ namespace Plato.Articles
                     Permissions = new[]
                     {
                         ReportArticles,
-                        ReportComments
+                        ReportArticleComments
                     }
                 }
             };

@@ -160,6 +160,7 @@ namespace Plato.Users.Controllers
                 // Get composed type from all involved view providers
                 var loginViewModel = await _loginViewProvider.GetComposedType(this);
 
+                // Get sign in result
                 var result = await _signInManager.PasswordSignInAsync(
                     loginViewModel.UserName,
                     loginViewModel.Password,
@@ -170,21 +171,6 @@ namespace Plato.Users.Controllers
                 if (result.Succeeded)
                 {
                     
-                    //var claims = new List<Claim>
-                    //{
-                    //    new Claim(ClaimTypes.Name, Guid.NewGuid().ToString())
-                    //};
-
-                    //var claimsIdentity = new ClaimsIdentity(
-                    //    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    //var authProperties = new AuthenticationProperties();
-
-                    //await HttpContext.SignInAsync(
-                    //    CookieAuthenticationDefaults.AuthenticationScheme,
-                    //    new ClaimsPrincipal(claimsIdentity),
-                    //    authProperties);
-
-
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
                         _logger.LogInformation(1, "User logged in.");

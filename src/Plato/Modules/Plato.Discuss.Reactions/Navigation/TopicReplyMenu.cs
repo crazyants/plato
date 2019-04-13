@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
+using Plato.Entities.Extensions;
 using Plato.Entities.Reactions.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -11,7 +12,7 @@ namespace Plato.Discuss.Reactions.Navigation
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
-    
+
         public IStringLocalizer T { get; set; }
 
         public TopicReplyMenu(
@@ -21,7 +22,7 @@ namespace Plato.Discuss.Reactions.Navigation
             T = localizer;
             _actionContextAccessor = actionContextAccessor;
         }
-        
+
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
@@ -33,7 +34,13 @@ namespace Plato.Discuss.Reactions.Navigation
             // Get model from navigation builder
             var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
-            
+
+            // No need to show reactions if reply is hidden
+            if (reply.IsHidden())
+            {
+                return;
+            }
+
             // Add reaction menu view to navigation
             builder
                 .Add(T["React"], react => react
@@ -48,7 +55,7 @@ namespace Plato.Discuss.Reactions.Navigation
                     })
                     .Permission(Permissions.ReactToReplies)
                 );
-            
+
         }
 
     }

@@ -231,22 +231,22 @@ a.label.active {
 
 .dropdown-item-info:hover,
 .dropdown-item-info:focus {
-    background: #17a2b8;
+    background: #17a2b8 !important;
 }
 
 .dropdown-item-warning:hover,
 .dropdown-item-warning:focus {
-    background: #ffc107;
+    background: #ffc107 !important;
 }
 
 .dropdown-item-success:hover,
 .dropdown-item-success:focus {
-    background: #28a745;
+    background: #28a745 !important;
 }
 
 .dropdown-item-danger:hover,
 .dropdown-item-danger:focus {
-    background: #dc3545;
+    background: #CC0000 !important;
 }
 
 /* arrow border */

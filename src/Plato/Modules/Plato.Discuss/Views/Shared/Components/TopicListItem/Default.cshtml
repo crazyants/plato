@@ -36,13 +36,13 @@
     <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
     {
-        <span title="@T["This discussion is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+        <span title="@T["This topic is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-thumbtack"></i>
         </span>
     }
     @if (Model.Entity.IsLocked)
     {
-        <span title="@T["This discussion is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
+        <span title="@T["This topic is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-lock"></i>
         </span>
     }
@@ -98,15 +98,15 @@
         }
         @if (Model.Entity.IsPrivate)
         {
-            <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This discussion is private and only visible to you as you have permission to view private topics"]">@T["Private"]</span>
+            <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This topic is hidden and only visible as you have permission to view hidden topics"]">@T["Hidden"]</span>
         }
         @if (Model.Entity.IsSpam)
         {
-            <span class="badge badge-info" data-toggle="tooltip" title="@T["This discussion has been flagged as SPAM and is only visible to you as you have permission to view topics flagged as SPAM"]">@T["SPAM"]</span>
+            <span class="badge badge-info" data-toggle="tooltip" title="@T["This topic has been flagged as SPAM and is only visible as you have permission to view topics flagged as SPAM"]">@T["SPAM"]</span>
         }
         @if (Model.Entity.IsDeleted)
         {
-            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This discussion has been deleted and is only visible to you as you have permission to view deleted topics"]">@T["Deleted"]</span>
+            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This topic has been deleted and is only visible as you have permission to view deleted topics"]">@T["Deleted"]</span>
         }
     </div>
 

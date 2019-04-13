@@ -6,6 +6,16 @@ using Microsoft.Extensions.Options;
 
 namespace Plato.Internal.Security
 {
+
+    // <summary>
+    // A custom UserClaimsPrincipalFactory implementation.
+    // Roles within Plato can contain many claims. For this reason to avoid cookie
+    // chunking and exceeding maximum request header length issues caused by persisting claims
+    // within the a cookie we don't persist the role claims within the cookie and instead
+    // query these claims as necessary based on our minimal claims principal created by this implementation.
+    // </summary>
+    /// <typeparam name="TUser"></typeparam>
+    /// <typeparam name="TRole"></typeparam>
     public class PlatoClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser>
         where TUser : class
         where TRole : class
@@ -26,44 +36,33 @@ namespace Plato.Internal.Security
 
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(TUser user)
         {
-
-         
+            
+            // Our list of claims
             var claims = new List<Claim>();
+
+            // Get user details
             var userId = await _userManager.GetUserIdAsync(user);
             var userNameAsync = await _userManager.GetUserNameAsync(user);
 
+            // Create user detail claims
             claims.Add(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
             claims.Add(new Claim(Options.ClaimsIdentity.UserNameClaimType, userNameAsync));
 
+            // If the security stamp changes the authentication cookie will be ivalidated
             if (this.UserManager.SupportsUserSecurityStamp)
             {
                 claims.Add(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, await this.UserManager.GetSecurityStampAsync(user)));
             }
 
+            // User claims
             if (this.UserManager.SupportsUserClaim)
             {
                 claims.AddRange((IEnumerable<Claim>)await this.UserManager.GetClaimsAsync(user));
             }
      
-            foreach (string roleName in (IEnumerable<string>)await _userManager.GetRolesAsync(user))
-            {
+            // NOTE: We don't store role claims here
 
-                claims.Add(new Claim(Options.ClaimsIdentity.RoleClaimType, roleName));
-                
-                // Roles within Plato can contain many claims. For this reason to avoid cookie
-                // chunking and exceeding maximum request header length limitations we don't store the role
-                // claims within a client side cookie and instead query these as necessary based on the role claims
-
-                //var byNameAsync = await _roleManager.FindByNameAsync(roleName);
-                //if (byNameAsync != null)
-                //{
-                //    ClaimsIdentity claimsIdentity = id;
-                //    claimsIdentity.AddClaims((IEnumerable<Claim>)await _roleManager.GetClaimsAsync(byNameAsync));
-                //    claimsIdentity = (ClaimsIdentity)null;
-                //}
-             
-            }
-
+            // Return identity
             return new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
             
         }

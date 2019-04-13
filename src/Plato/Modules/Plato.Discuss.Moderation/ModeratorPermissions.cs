@@ -33,12 +33,12 @@ namespace Plato.Discuss.Moderation
         public static readonly ModeratorPermission UnpinTopics =
             new ModeratorPermission("UnpinTopics", "Unpin topics");
         
-        public static readonly ModeratorPermission CloseTopics =
-            new ModeratorPermission("CloseTopics", "Lock topics");
+        public static readonly ModeratorPermission LockTopics =
+            new ModeratorPermission("LockTopics", "Lock topics");
 
-        public static readonly ModeratorPermission OpenTopics =
-            new ModeratorPermission("OpenTopics", "Unlock topics");
-
+        public static readonly ModeratorPermission UnlockTopics =
+            new ModeratorPermission("UnlockTopics", "Unlock topics");
+        
         public static readonly ModeratorPermission HideTopics =
             new ModeratorPermission("HideTopics", "Hide topics");
         
@@ -75,8 +75,8 @@ namespace Plato.Discuss.Moderation
                 RestoreReplies,
                 PinTopics,
                 UnpinTopics,
-                CloseTopics,
-                OpenTopics,
+                LockTopics,
+                UnlockTopics,
                 HideTopics,
                 ShowTopics,
                 HideReplies,
@@ -103,8 +103,8 @@ namespace Plato.Discuss.Moderation
                         DeleteReplies,
                         PinTopics,
                         UnpinTopics,
-                        CloseTopics,
-                        OpenTopics,
+                        LockTopics,
+                        UnlockTopics,
                         HideTopics,
                         ShowTopics,
                         HideReplies,

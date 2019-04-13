@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
+using Plato.Entities.Extensions;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -78,6 +80,30 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditOwnReplies :
                                 Permissions.EditAnyReply)
                             .LocalNav())
+                        .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(topic.CategoryId)
+                            .Permission(reply.IsPrivate
+                                ? Permissions.ShowReplies
+                                : Permissions.HideReplies)
+                            .LocalNav()
+                        )
+                        .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Discuss.Moderation",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(topic.CategoryId)
+                            .Permission(reply.IsSpam
+                                ? Permissions.ReplyFromSpam
+                                : Permissions.ReplyToSpam)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
@@ -113,7 +139,8 @@ namespace Plato.Discuss.Navigation
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
-            if (!topic.IsLocked)
+            // If entity & reply are not hidden and entity is not locked allow replies
+            if (!topic.IsHidden() && !reply.IsHidden() && !topic.IsLocked)
             {
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
@@ -142,9 +169,7 @@ namespace Plato.Discuss.Navigation
                     );
 
             }
-
-
-
+            
         }
 
     }

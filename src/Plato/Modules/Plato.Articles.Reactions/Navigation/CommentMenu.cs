@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
+using Plato.Entities.Extensions;
 using Plato.Entities.Reactions.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -33,6 +34,12 @@ namespace Plato.Articles.Reactions.Navigation
             // Get model from navigation builder
             var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
+            
+            // No need to show reactions if reply is hidden
+            if (reply.IsHidden())
+            {
+                return;
+            }
             
             // Add reaction menu view to navigation
             builder

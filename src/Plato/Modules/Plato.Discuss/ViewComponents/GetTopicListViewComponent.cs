@@ -55,7 +55,7 @@ namespace Plato.Discuss.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewHiddenTopics))
+                        Permissions.ViewPrivateTopics))
                     {
                         q.HidePrivate.True();
                     }

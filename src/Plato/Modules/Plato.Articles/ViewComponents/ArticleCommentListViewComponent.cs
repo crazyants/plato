@@ -68,21 +68,21 @@ namespace Plato.Articles.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateComments))
+                        Permissions.ViewPrivateArticleComments))
                     {
                         q.HidePrivate.True();
                     }
 
                     // Hide spam?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewSpamComments))
+                        Permissions.ViewSpamArticleComments))
                     {
                         q.HideSpam.True();
                     }
 
                     // Hide deleted?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewDeletedComments))
+                        Permissions.ViewDeletedArticleComments))
                     {
                         q.HideDeleted.True();
                     }

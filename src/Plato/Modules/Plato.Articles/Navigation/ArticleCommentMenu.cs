@@ -50,14 +50,14 @@ namespace Plato.Articles.Navigation
             if (reply.IsDeleted)
             {
                 deletePermission = user?.Id == reply.CreatedUserId
-                    ? Permissions.RestoreOwnComments
-                    : Permissions.RestoreAnyComment;
+                    ? Permissions.RestoreOwnArticleComments
+                    : Permissions.RestoreAnyArticleComment;
             }
             else
             {
                 deletePermission = user?.Id == reply.CreatedUserId
-                    ? Permissions.DeleteOwnComments
-                    : Permissions.DeleteAnyComment;
+                    ? Permissions.DeleteOwnArticleComments
+                    : Permissions.DeleteAnyArticleComment;
             }
             
             // Options
@@ -91,7 +91,7 @@ namespace Plato.Articles.Navigation
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })
-                            .Permission(Permissions.ReportComments)
+                            .Permission(Permissions.ReportArticleComments)
                             .LocalNav()
                         )
                         .Add(T["Divider"], int.MaxValue - 1, divider => divider

@@ -36,7 +36,6 @@ namespace Plato.Discuss
         public static readonly Permission RestoreAnyTopic =
             new Permission("RestoreAnyTopic", "Restore any topic");
         
-
         public static readonly Permission ViewDeletedTopics =
             new Permission("ViewDeletedTopics", "View deleted topics");
 
@@ -60,36 +59,35 @@ namespace Plato.Discuss
 
         public static readonly Permission ReportReplies =
             new Permission("ReportReplies", "Report replies");
-
-       
+        
         public static readonly Permission PinTopics =
             new Permission("PinTopics", "Pin topics");
 
         public static readonly Permission UnpinTopics =
             new Permission("UnpinTopics", "Unpin topics");
 
-        public static readonly Permission CloseTopics =
-            new Permission("CloseTopics", "Lock topics");
+        public static readonly Permission LockTopics =
+            new Permission("LockTopics", "Lock topics");
 
-        public static readonly Permission OpenTopics =
-            new Permission("OpenTopics", "Unlock topics");
+        public static readonly Permission UnlockTopics =
+            new Permission("UnlockTopics", "Unlock topics");
 
         public static readonly Permission HideTopics =
             new Permission("HideTopics", "Hide topics");
 
-        public static readonly Permission UnhideTopics =
+        public static readonly Permission ShowTopics =
             new Permission("ShowTopics", "Unhide topics");
 
-        public static readonly Permission ViewHiddenTopics =
+        public static readonly Permission ViewPrivateTopics =
             new Permission("ViewPrivateTopics", "View hidden topics");
 
         public static readonly Permission HideReplies =
             new Permission("HideReplies", "Hide replies");
 
-        public static readonly Permission UnhideReplies =
+        public static readonly Permission ShowReplies =
             new Permission("ShowReplies", "Unhide replies");
         
-        public static readonly Permission ViewHiddenReplies =
+        public static readonly Permission ViewPrivateReplies =
             new Permission("ViewPrivateReplies", "View hidden replies");
 
         public static readonly Permission TopicToSpam =
@@ -134,14 +132,14 @@ namespace Plato.Discuss
                 ReportReplies,
                 PinTopics,
                 UnpinTopics,
-                CloseTopics,
-                OpenTopics,
+                LockTopics,
+                UnlockTopics,
                 HideTopics,
-                UnhideTopics,
-                ViewHiddenTopics,
+                ShowTopics,
+                ViewPrivateTopics,
                 HideReplies,
-                UnhideReplies,
-                ViewHiddenReplies,
+                ShowReplies,
+                ViewPrivateReplies,
                 TopicToSpam,
                 TopicFromSpam,
                 ViewSpamTopics,
@@ -176,20 +174,20 @@ namespace Plato.Discuss
                         RestoreAnyReply,
                         ReportTopics,
                         ReportReplies,
-                        ViewHiddenTopics,
-                        ViewHiddenReplies,
+                        ViewPrivateTopics,
+                        ViewPrivateReplies,
                         ViewSpamTopics,
                         ViewSpamReplies,
                         ViewDeletedTopics,
                         ViewDeletedReplies,
                         PinTopics,
                         UnpinTopics,
-                        CloseTopics,
-                        OpenTopics,
+                        LockTopics,
+                        UnlockTopics,
                         HideTopics,
-                        UnhideTopics,
+                        ShowTopics,
                         HideReplies,
-                        UnhideReplies,
+                        ShowReplies,
                         TopicToSpam,
                         TopicFromSpam,
                         ReplyToSpam,
@@ -226,20 +224,20 @@ namespace Plato.Discuss
                         RestoreOwnReplies,
                         ReportTopics,
                         ReportReplies,
-                        ViewHiddenTopics,
-                        ViewHiddenReplies,
+                        ViewPrivateTopics,
+                        ViewPrivateReplies,
                         ViewSpamTopics,
                         ViewSpamReplies,
                         ViewDeletedTopics,
                         ViewDeletedReplies,
                         PinTopics,
                         UnpinTopics,
-                        CloseTopics,
-                        OpenTopics,
+                        LockTopics,
+                        UnlockTopics,
                         HideTopics,
-                        UnhideTopics,
+                        ShowTopics,
                         HideReplies,
-                        UnhideReplies,
+                        ShowReplies,
                         TopicToSpam,
                         TopicFromSpam,
                         ReplyToSpam,

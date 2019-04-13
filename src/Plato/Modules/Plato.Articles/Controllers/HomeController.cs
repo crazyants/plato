@@ -861,289 +861,7 @@ namespace Plato.Articles.Controllers
         }
 
         // -----------------
-        // Delete / Restore Entity
-        // -----------------
-
-        public async Task<IActionResult> Delete(string id)
-        {
-
-            // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
-            if (!ok)
-            {
-                return NotFound();
-            }
-
-            // Get current user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Ensure we are authenticated
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            // Get entity
-            var entity = await _entityStore.GetByIdAsync(entityId);
-
-            // Ensure the topic exists
-            if (entity == null)
-            {
-                return NotFound();
-            }
-            
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
-                user.Id == entity.CreatedUserId
-                    ? Permissions.DeleteOwnArticles
-                    : Permissions.DeleteAnyArticle))
-            {
-                return Unauthorized();
-            }
-            
-            // Update topic
-            entity.ModifiedUserId = user?.Id ?? 0;
-            entity.ModifiedDate = DateTimeOffset.UtcNow;
-            entity.IsDeleted = true;
-
-            // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
-
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["Article deleted successfully"]);
-            }
-            else
-            {
-                _alerter.Danger(T["Could not delete the topic"]);
-            }
-
-            // Redirect back to article
-            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Articles",
-                ["controller"] = "Home",
-                ["action"] = "Display",
-                ["opts.id"] = entity.Id,
-                ["opts.alias"] = entity.Alias
-            }));
-            
-        }
-     
-        public async Task<IActionResult> Restore(string id)
-        {
-
-            // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
-            if (!ok)
-            {
-                return NotFound();
-            }
-
-            // Get current user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Ensure we are authenticated
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            // Get topic
-            var topic = await _entityStore.GetByIdAsync(entityId);
-
-            // Ensure the topic exists
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-                user.Id == topic.CreatedUserId
-                    ? Permissions.RestoreOwnArticles
-                    : Permissions.RestoreAnyArticle))
-            {
-                return Unauthorized();
-            }
-
-            // Update topic
-            topic.ModifiedUserId = user?.Id ?? 0;
-            topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsDeleted = false;
-
-            // Save changes and return results
-            var result = await _topicManager.UpdateAsync(topic);
-
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["Topic restored successfully"]);
-            }
-            else
-            {
-                _alerter.Danger(T["Could not restore the topic"]);
-            }
-
-            // Redirect back to article
-            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Articles",
-                ["controller"] = "Home",
-                ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
-            }));
-
-        }
-        
-        // -----------------
-        // Delete / Restore Reply
-        // -----------------
-        
-        public async Task<IActionResult> DeleteReply(string id)
-        {
-
-            // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
-            if (!ok)
-            {
-                return NotFound();
-            }
-
-            // Get current user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Ensure we are authenticated
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            // Ensure the reply exists
-            var reply = await _entityReplyStore.GetByIdAsync(replyId);
-            if (reply == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure the topic exists
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-                user.Id == reply.CreatedUserId
-                    ? Permissions.DeleteOwnComments
-                    : Permissions.DeleteAnyComment))
-            {
-                return Unauthorized();
-            }
-
-            // Update reply
-            reply.ModifiedUserId = user?.Id ?? 0;
-            reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsDeleted = true;
-
-            // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
-
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["Reply deleted successfully"]);
-            }
-            else
-            {
-                _alerter.Danger(T["Could not delete the reply"]);
-            }
-
-            // Redirect back to article
-            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Articles",
-                ["controller"] = "Home",
-                ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
-            }));
-
-        }
-
-        public async Task<IActionResult> RestoreReply(string id)
-        {
-
-            // Ensure we have a valid id
-            var ok = int.TryParse(id, out int replyId);
-            if (!ok)
-            {
-                return NotFound();
-            }
-
-            // Get current user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Ensure we are authenticated
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            // Ensure the reply exists
-            var reply = await _entityReplyStore.GetByIdAsync(replyId);
-            if (reply == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure the topic exists
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
-                user.Id == reply.CreatedUserId
-                    ? Permissions.RestoreOwnComments
-                    : Permissions.RestoreAnyComment))
-            {
-                return Unauthorized();
-            }
-
-            // Update reply
-            reply.ModifiedUserId = user?.Id ?? 0;
-            reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsDeleted = false;
-
-            // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
-
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["Reply restored successfully"]);
-            }
-            else
-            {
-                _alerter.Danger(T["Could not restore the reply"]);
-            }
-
-            // Redirect back to article
-            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Articles",
-                ["controller"] = "Home",
-                ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
-            }));
-
-        }
-
-        // -----------------
-        // Reply
+        //  Display Reply
         // -----------------
 
         public async Task<IActionResult> Reply(EntityOptions opts)
@@ -1215,6 +933,981 @@ namespace Plato.Articles.Controllers
 
         }
 
+        // -----------------
+        // Entity Helpers
+        // -----------------
+
+        public async Task<IActionResult> Pin(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.PinArticles))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update topic
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPinned = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Pinned Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not pin the article"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Unpin(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.UnpinArticles))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPinned = false;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Pin Removed Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove pin"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Hide(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.HideArticles))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPrivate = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article Hidden Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not hide the article"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Show(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ShowArticles))
+            {
+                return Unauthorized();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPrivate = false;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article Made Public Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not update the article"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Lock(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.LockArticles))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsLocked = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article Locked Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not lock the article"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Unlock(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.UnlockArticles))
+            {
+                return Unauthorized();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsLocked = false;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article Unlocked Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not unlock the article"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> ToSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ArticleToSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsSpam = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article Marked as SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not mark article as SPAM"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> FromSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ArticleFromSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsSpam = false;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article Removed from SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove the article from SPAM"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == entity.CreatedUserId
+                    ? Permissions.DeleteOwnArticles
+                    : Permissions.DeleteAnyArticle))
+            {
+                return Unauthorized();
+            }
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsDeleted = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article deleted successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not delete the article"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Restore(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == entity.CreatedUserId
+                    ? Permissions.RestoreOwnArticles
+                    : Permissions.RestoreAnyArticle))
+            {
+                return Unauthorized();
+            }
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsDeleted = false;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(entity);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Article Restored Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not restore the article"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        // -----------------
+        // Entity Reply Helpers
+        // -----------------
+
+        public async Task<IActionResult> HideReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.HideArticleComments))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsPrivate = true;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Hidden Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not hide the comment"]);
+            }
+
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+        }
+
+        public async Task<IActionResult> ShowReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ShowArticleComments))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsPrivate = false;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Made Public Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not make the comment public"]);
+            }
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+
+        }
+
+        public async Task<IActionResult> ReplyToSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ArticleCommentToSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsSpam = true;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Marked as SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not mark the comment as SPAM"]);
+            }
+
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+
+        }
+
+        public async Task<IActionResult> ReplyFromSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ArticleCommentFromSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsSpam = false;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Removed from SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove the comment from SPAM"]);
+            }
+
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+            
+        }
+
+        public async Task<IActionResult> DeleteReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Ensure the reply exists
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the entity exists
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == reply.CreatedUserId
+                    ? Permissions.DeleteOwnArticleComments
+                    : Permissions.DeleteAnyArticleComment))
+            {
+                return Unauthorized();
+            }
+
+            // Update reply
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsDeleted = true;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not delete the comment"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+        }
+
+        public async Task<IActionResult> RestoreReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Ensure the reply exists
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the entity exists
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == reply.CreatedUserId
+                    ? Permissions.RestoreOwnArticleComments
+                    : Permissions.RestoreAnyArticleComment))
+            {
+                return Unauthorized();
+            }
+
+            // Update reply
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsDeleted = false;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Restored Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not restore the comment"]);
+            }
+
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Articles",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+        }
+        
         #endregion
 
         #region "Private Methods"

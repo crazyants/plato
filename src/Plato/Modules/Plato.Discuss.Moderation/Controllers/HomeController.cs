@@ -10,11 +10,7 @@ using Plato.Discuss.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
-using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Moderation.Models;
-using Plato.Moderation.Stores;
 
 namespace Plato.Discuss.Moderation.Controllers
 {
@@ -59,8 +55,118 @@ namespace Plato.Discuss.Moderation.Controllers
         }
 
         #region "Topics"
+        
+        public async Task<IActionResult> Pin(string id)
+        {
 
-        public async Task<IActionResult> HideTopic(string id)
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var topic = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the topic exists
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.PinTopics))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update topic
+            topic.ModifiedUserId = user?.Id ?? 0;
+            topic.ModifiedDate = DateTimeOffset.UtcNow;
+            topic.IsPinned = true;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(topic);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Topic Pinned Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove topic from SPAM"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Unpin(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var topic = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the topic exists
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.UnpinTopics))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update topic
+            topic.ModifiedUserId = user?.Id ?? 0;
+            topic.ModifiedDate = DateTimeOffset.UtcNow;
+            topic.IsPinned = false;
+
+            // Save changes and return results
+            var result = await _topicManager.UpdateAsync(topic);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Pin Removed Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove pin"]);
+            }
+
+            // Redirect back to topic
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = topic.Id,
+                ["opts.alias"] = topic.Alias
+            }));
+
+        }
+        
+        public async Task<IActionResult> Hide(string id)
         {
 
             // Ensure we have a valid id
@@ -115,7 +221,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        public async Task<IActionResult> ShowTopic(string id)
+        public async Task<IActionResult> Show(string id)
         {
 
             // Ensure we have a valid id
@@ -171,7 +277,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
         
-        public async Task<IActionResult> CloseTopic(string id)
+        public async Task<IActionResult> Lock(string id)
         {
 
             // Ensure we have a valid id
@@ -190,7 +296,7 @@ namespace Plato.Discuss.Moderation.Controllers
             }
 
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.CloseTopics))
+            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.LockTopics))
             {
                 return Unauthorized();
             }
@@ -226,7 +332,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        public async Task<IActionResult> OpenTopic(string id)
+        public async Task<IActionResult> Unlock(string id)
         {
 
             // Ensure we have a valid id
@@ -245,7 +351,7 @@ namespace Plato.Discuss.Moderation.Controllers
             }
 
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.OpenTopics))
+            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.UnlockTopics))
             {
                 return Unauthorized();
             }
@@ -282,7 +388,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        public async Task<IActionResult> TopicToSpam(string id)
+        public async Task<IActionResult> ToSpam(string id)
         {
 
             // Ensure we have a valid id
@@ -337,7 +443,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        public async Task<IActionResult> TopicFromSpam(string id)
+        public async Task<IActionResult> FromSpam(string id)
         {
 
             // Ensure we have a valid id
@@ -392,7 +498,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        public async Task<IActionResult> DeleteTopic(string id)
+        public async Task<IActionResult> Delete(string id)
         {
 
             // Ensure we have a valid id
@@ -447,7 +553,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
 
-        public async Task<IActionResult> RestoreTopic(string id)
+        public async Task<IActionResult> Restore(string id)
         {
 
             // Ensure we have a valid id
@@ -501,117 +607,7 @@ namespace Plato.Discuss.Moderation.Controllers
             }));
 
         }
-        
-        public async Task<IActionResult> PinTopic(string id)
-        {
-
-            // Ensure we have a valid id
-            var ok = int.TryParse(id, out var entityId);
-            if (!ok)
-            {
-                return NotFound();
-            }
-
-            var topic = await _entityStore.GetByIdAsync(entityId);
-
-            // Ensure the topic exists
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.PinTopics))
-            {
-                return Unauthorized();
-            }
-
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Update topic
-            topic.ModifiedUserId = user?.Id ?? 0;
-            topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsPinned = true;
-
-            // Save changes and return results
-            var result = await _topicManager.UpdateAsync(topic);
-
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["Topic Pinned Successfully"]);
-            }
-            else
-            {
-                _alerter.Danger(T["Could not remove topic from SPAM"]);
-            }
-
-            // Redirect back to topic
-            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Discuss",
-                ["controller"] = "Home",
-                ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
-            }));
-
-        }
-
-        public async Task<IActionResult> UnpinTopic(string id)
-        {
-
-            // Ensure we have a valid id
-            var ok = int.TryParse(id, out var entityId);
-            if (!ok)
-            {
-                return NotFound();
-            }
-
-            var topic = await _entityStore.GetByIdAsync(entityId);
-
-            // Ensure the topic exists
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.UnpinTopics))
-            {
-                return Unauthorized();
-            }
-
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Update topic
-            topic.ModifiedUserId = user?.Id ?? 0;
-            topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsPinned = false;
-
-            // Save changes and return results
-            var result = await _topicManager.UpdateAsync(topic);
-
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["Pin Removed Successfully"]);
-            }
-            else
-            {
-                _alerter.Danger(T["Could not remove pin"]);
-            }
-
-            // Redirect back to topic
-            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Discuss",
-                ["controller"] = "Home",
-                ["action"] = "Display",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias
-            }));
-
-        }
-
+   
         #endregion
 
         #region "Replies"

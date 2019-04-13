@@ -68,12 +68,9 @@ namespace Plato.Users
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
 
-            //services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
+            // Custom UserClaimsPrincipalFactory implementation
             services.TryAddScoped<IUserClaimsPrincipalFactory<User>, PlatoClaimsPrincipalFactory<User, Role>>();
-
-
             
-
             // Stores
             services.TryAddScoped<IUserStore<User>, UserStore>();
             services.TryAddScoped<IUserSecurityStampStore<User>, UserStore>();
