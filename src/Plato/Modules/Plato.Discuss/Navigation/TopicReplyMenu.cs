@@ -31,8 +31,8 @@ namespace Plato.Discuss.Navigation
             }
 
             // Get topic from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (entity == null)
             {
                 return;
             }
@@ -81,24 +81,24 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditAnyReply)
                             .LocalNav())
                         .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Discuss.Moderation",
+                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = reply?.Id ?? 0
                                 })
-                            .Resource(topic.CategoryId)
+                            .Resource(entity.CategoryId)
                             .Permission(reply.IsPrivate
                                 ? Permissions.ShowReplies
                                 : Permissions.HideReplies)
                             .LocalNav()
                         )
                         .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
-                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Discuss.Moderation",
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = reply?.Id ?? 0
                                 })
-                            .Resource(topic.CategoryId)
+                            .Resource(entity.CategoryId)
                             .Permission(reply.IsSpam
                                 ? Permissions.ReplyFromSpam
                                 : Permissions.ReplyToSpam)
@@ -107,8 +107,8 @@ namespace Plato.Discuss.Navigation
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias,
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias,
                                 ["opts.replyId"] = reply.Id
                             })
                             .Attributes(new Dictionary<string, object>()
@@ -140,8 +140,9 @@ namespace Plato.Discuss.Navigation
                 );
 
             // If entity & reply are not hidden and entity is not locked allow replies
-            if (!topic.IsHidden() && !reply.IsHidden() && !topic.IsLocked)
+            if (!entity.IsHidden() && !reply.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")

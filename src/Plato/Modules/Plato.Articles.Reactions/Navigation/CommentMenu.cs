@@ -35,6 +35,24 @@ namespace Plato.Articles.Reactions.Navigation
             var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
             
+            // We need an entity
+            if (entity == null)
+            {
+                return;
+            }
+
+            // We need a reply
+            if (reply == null)
+            {
+                return;
+            }
+
+            // No need to show reactions if entity is hidden
+            if (entity.IsHidden())
+            {
+                return;
+            }
+
             // No need to show reactions if reply is hidden
             if (reply.IsHidden())
             {

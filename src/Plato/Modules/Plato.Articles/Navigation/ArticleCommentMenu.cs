@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
+using Plato.Entities.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -75,9 +76,33 @@ namespace Plato.Articles.Navigation
                                 ["id"] = reply?.Id ?? 0
                             })
                             .Permission(user?.Id == reply.CreatedUserId ?
-                                Permissions.EditOwnComment :
-                                Permissions.EditAnyComment)
+                                Permissions.EditOwnArticleComment :
+                                Permissions.EditAnyArticleComment)
                             .LocalNav())
+                        .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Articles",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsPrivate
+                                ? Permissions.ShowArticleComments
+                                : Permissions.HideArticleComments)
+                            .LocalNav()
+                        )
+                        .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Articles",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsSpam
+                                ? Permissions.ArticleCommentFromSpam
+                                : Permissions.ArticleCommentToSpam)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
@@ -113,8 +138,10 @@ namespace Plato.Articles.Navigation
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
-            if (!entity.IsLocked)
+            // If entity & reply are not hidden and entity is not locked allow replies
+            if (!entity.IsHidden() && !reply.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
@@ -136,7 +163,7 @@ namespace Plato.Articles.Navigation
                                 {
                                     ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
                                 })
-                            .Permission(Permissions.PostComments)
+                            .Permission(Permissions.PostArticleComments)
                             .LocalNav()
                         , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
                     );

@@ -29,8 +29,8 @@ namespace Plato.Discuss.Navigation
             }
 
             // Get model from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (entity == null)
             {
                 return;
             }
@@ -39,17 +39,17 @@ namespace Plato.Discuss.Navigation
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
             
             Permission deletePermission = null;
-            if (topic.IsDeleted)
+            if (entity.IsDeleted)
             {
                 // Do we have restore permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.RestoreOwnTopics
                     : Permissions.RestoreAnyTopic;
             }
             else
             {
                 // Do we have delete permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.DeleteOwnTopics
                     : Permissions.DeleteAnyTopic;
             }
@@ -66,58 +66,58 @@ namespace Plato.Discuss.Navigation
                         .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
-                            .Permission(user?.Id == topic.CreatedUserId
+                            .Permission(user?.Id == entity.CreatedUserId
                                 ? Permissions.EditOwnTopics
                                 : Permissions.EditAnyTopic)
                             .LocalNav()
                         )
-                        .Add(topic.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
-                            .Action(topic.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Discuss",
+                        .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                            .Action(entity.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
-                                    ["id"] = topic.Id
+                                    ["id"] = entity.Id
                                 })
-                            .Resource(topic.CategoryId)
-                            .Permission(topic.IsPinned
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPinned
                                 ? Permissions.UnpinTopics
                                 : Permissions.PinTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
-                            .Action(topic.IsLocked ? "Unlock" : "Lock", "Home", "Plato.Discuss",
+                        .Add(entity.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
+                            .Action(entity.IsLocked ? "Unlock" : "Lock", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
-                                    ["id"] = topic.Id
+                                    ["id"] = entity.Id
                                 })
-                            .Resource(topic.CategoryId)
-                            .Permission(topic.IsLocked
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsLocked
                                 ? Permissions.UnlockTopics
                                 : Permissions.LockTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(topic.IsPrivate ? "Show" : "Hide", "Home", "Plato.Discuss",
+                        .Add(entity.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(entity.IsPrivate ? "Show" : "Hide", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
-                                    ["id"] = topic.Id
+                                    ["id"] = entity.Id
                                 })
-                            .Resource(topic.CategoryId)
-                            .Permission(topic.IsPrivate
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPrivate
                                 ? Permissions.ShowTopics
                                 : Permissions.HideTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsSpam ? T["Not Spam"] : T["Spam"], 2, spam => spam
-                            .Action(topic.IsSpam ? "FromSpam" : "ToSpam", "Home", "Plato.Discuss",
+                        .Add(entity.IsSpam ? T["Not Spam"] : T["Spam"], 2, spam => spam
+                            .Action(entity.IsSpam ? "FromSpam" : "ToSpam", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
-                                    ["id"] = topic.Id
+                                    ["id"] = entity.Id
                                 })
-                            .Resource(topic.CategoryId)
-                            .Permission(topic.IsSpam
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsSpam
                                 ? Permissions.TopicFromSpam
                                 : Permissions.TopicToSpam)
                             .LocalNav()
@@ -125,8 +125,8 @@ namespace Plato.Discuss.Navigation
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Discuss", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -141,15 +141,15 @@ namespace Plato.Discuss.Navigation
                             .Permission(deletePermission)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(topic.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Discuss",
+                        .Add(entity.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Action(entity.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Discuss",
                                     new RouteValueDictionary()
                                     {
-                                        ["id"] = topic.Id
+                                        ["id"] = entity.Id
                                     })
                                 .Permission(deletePermission)
                                 .LocalNav(),
-                            topic.IsDeleted
+                            entity.IsDeleted
                                 ? new List<string>() {"dropdown-item", "dropdown-item-success"}
                                 : new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
@@ -157,7 +157,7 @@ namespace Plato.Discuss.Navigation
                 );
 
             // If entity is not hidden or locked allow replies
-            if (!topic.IsHidden() && !topic.IsLocked)
+            if (!entity.IsHidden() && !entity.IsLocked)
             {
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options

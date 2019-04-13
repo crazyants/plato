@@ -674,8 +674,8 @@ namespace Plato.Articles.Controllers
             // Do we have permission
             if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
                 user?.Id == reply.CreatedUserId
-                    ? Permissions.EditOwnComment
-                    : Permissions.EditAnyComment))
+                    ? Permissions.EditOwnArticleComment
+                    : Permissions.EditAnyArticleComment))
             {
                 return Unauthorized();
             }

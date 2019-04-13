@@ -9,8 +9,8 @@ namespace Plato.Articles
         public static readonly Permission PostArticles =
             new Permission("PostArticles", "Post articles");
 
-        public static readonly Permission PostComments =
-            new Permission("PostComments", "Post comments");
+        public static readonly Permission PostArticleComments =
+            new Permission("PostArticleComments", "Post comments");
 
         public static readonly Permission EditOwnArticles =
             new Permission("EditOwnArticles", "Edit own articles");
@@ -18,11 +18,11 @@ namespace Plato.Articles
         public static readonly Permission EditAnyArticle =
             new Permission("EditAnyArticle", "Edit any article");
         
-        public static readonly Permission EditOwnComment =
-            new Permission("EditOwnComment", "Edit own comments");
+        public static readonly Permission EditOwnArticleComment =
+            new Permission("EditOwnArticleComment", "Edit own comments");
 
-        public static readonly Permission EditAnyComment =
-            new Permission("EditAnyComment", "Edit any comment");
+        public static readonly Permission EditAnyArticleComment =
+            new Permission("EditAnyArticleComment", "Edit any comment");
         
         public static readonly Permission DeleteOwnArticles = 
             new Permission("DeleteOwnArticles", "Delete own articles");
@@ -113,11 +113,11 @@ namespace Plato.Articles
             return new[]
             {
                 PostArticles,
-                PostComments,
+                PostArticleComments,
                 EditOwnArticles,
                 EditAnyArticle,
-                EditOwnComment,
-                EditAnyComment,
+                EditOwnArticleComment,
+                EditAnyArticleComment,
                 DeleteOwnArticles,
                 RestoreOwnArticles,
                 DeleteAnyArticle,
@@ -145,7 +145,7 @@ namespace Plato.Articles
                 ViewSpamArticles,
                 ArticleCommentToSpam,
                 ArticleCommentFromSpam,
-                ViewPrivateArticleComments
+                ViewSpamArticleComments
             };
         }
 
@@ -159,11 +159,11 @@ namespace Plato.Articles
                     Permissions = new[]
                     {
                         PostArticles,
-                        PostComments,
+                        PostArticleComments,
                         EditOwnArticles,
                         EditAnyArticle,
-                        EditOwnComment,
-                        EditAnyComment,
+                        EditOwnArticleComment,
+                        EditAnyArticleComment,
                         DeleteOwnArticles,
                         RestoreOwnArticles,
                         DeleteAnyArticle,
@@ -191,7 +191,7 @@ namespace Plato.Articles
                         ViewSpamArticles,
                         ArticleCommentToSpam,
                         ArticleCommentFromSpam,
-                        ViewPrivateArticleComments
+                        ViewSpamArticleComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -199,8 +199,8 @@ namespace Plato.Articles
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        PostComments,
-                        EditOwnComment,
+                        PostArticleComments,
+                        EditOwnArticleComment,
                         DeleteOwnArticleComments,
                         ReportArticles,
                         ReportArticleComments
@@ -212,9 +212,9 @@ namespace Plato.Articles
                     Permissions = new[]
                     {
                         PostArticles,
-                        PostComments,
+                        PostArticleComments,
                         EditOwnArticles,
-                        EditOwnComment,
+                        EditOwnArticleComment,
                         DeleteOwnArticles,
                         RestoreOwnArticles,
                         ViewDeletedArticles,
@@ -238,7 +238,7 @@ namespace Plato.Articles
                         ViewSpamArticles,
                         ArticleCommentToSpam,
                         ArticleCommentFromSpam,
-                        ViewPrivateArticleComments
+                        ViewSpamArticleComments
                     }
                 },
                 new DefaultPermissions<Permission>

@@ -8,18 +8,6 @@
         <card>
             <card-title>
                 <h6 class="card-title d-inline-block">@T["Topic"]</h6>
-                @if (Model.Entity.IsPinned)
-                {
-                    <span title="@T["This topic is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                        <i class="fal fa-thumbtack"></i>
-                    </span>
-                }
-                @if (Model.Entity.IsLocked)
-                {
-                    <span title="@T["This topic is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                        <i class="fal fa-lock"></i>
-                    </span>
-                }
                 @if (Model.Entity.IsPrivate)
                 {
                     <span data-toggle="tooltip" title="@T["This topic is hidden and only visible as you have permission to view hidden topics"]" class="badge badge-primary">@T["Hidden"]</span>

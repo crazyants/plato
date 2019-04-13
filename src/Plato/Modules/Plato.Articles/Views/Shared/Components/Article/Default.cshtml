@@ -8,29 +8,17 @@
         <card>
             <card-title>
                 <h6 class="card-title d-inline-block">@T["Article"]</h6>
-                @if (Model.Entity.IsPinned)
-                {
-                    <span title="@T["This article is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                        <i class="fal fa-thumbtack"></i>
-                    </span>
-                }
-                @if (Model.Entity.IsLocked)
-                {
-                    <span title="@T["This article is locked and is not accepting comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                        <i class="fal fa-lock"></i>
-                    </span>
-                }
                 @if (Model.Entity.IsPrivate)
                 {
-                    <span data-toggle="tooltip" title="@T["This article is private and only visible to you as you have permission to view private articles"]" class="badge badge-primary">@T["Private"]</span>
+                    <span data-toggle="tooltip" title="@T["This article is hidden and only visible as you have permission to view hidden articles"]" class="badge badge-primary">@T["Hidden"]</span>
                 }
                 @if (Model.Entity.IsSpam)
                 {
-                    <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible to you as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
+                    <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
                 }
                 @if (Model.Entity.IsDeleted)
                 {
-                    <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible to you as you have permission to view deleted articles"]">@T["Deleted"]</span>
+                    <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible as you have permission to view deleted articles"]">@T["Deleted"]</span>
                 }
                 <navigation name="article"
                             model="Model.Entity"

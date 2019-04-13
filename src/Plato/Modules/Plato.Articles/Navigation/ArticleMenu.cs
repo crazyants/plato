@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
+using Plato.Entities.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -73,6 +74,54 @@ namespace Plato.Articles.Navigation
                                 : Permissions.EditAnyArticle)
                             .LocalNav()
                         )
+                           .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                            .Action(entity.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Articles",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPinned
+                                ? Permissions.UnpinArticles
+                                : Permissions.PinArticles)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
+                            .Action(entity.IsLocked ? "Unlock" : "Lock", "Home", "Plato.Articles",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsLocked
+                                ? Permissions.UnlockArticles
+                                : Permissions.LockArticles)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(entity.IsPrivate ? "Show" : "Hide", "Home", "Plato.Articles",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPrivate
+                                ? Permissions.ShowArticles
+                                : Permissions.HideArticles)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsSpam ? T["Not Spam"] : T["Spam"], 2, spam => spam
+                            .Action(entity.IsSpam ? "FromSpam" : "ToSpam", "Home", "Plato.Articles",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsSpam
+                                ? Permissions.ArticleFromSpam
+                                : Permissions.ArticleToSpam)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Articles", new RouteValueDictionary()
                             {
@@ -106,9 +155,11 @@ namespace Plato.Articles.Navigation
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-
-            if (!entity.IsLocked)
+            
+            // If entity is not hidden or locked allow replies
+            if (!entity.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
@@ -129,7 +180,7 @@ namespace Plato.Articles.Navigation
                                 {
                                     ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
                                 })
-                            .Permission(Permissions.PostComments)
+                            .Permission(Permissions.PostArticleComments)
                             .LocalNav()
                         , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
                     );
