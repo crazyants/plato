@@ -1,4 +1,5 @@
-﻿@model EntityViewModel<Doc, DocComment>
+﻿@using Plato.Entities.Extensions
+@model EntityViewModel<Doc, DocComment>
 @{
     var replyText = T["comment"];
     var repliesText = T["comments"];
@@ -41,27 +42,31 @@
         <div class="infinite-scroll-loader" data-type="next"></div>
     </div>
 
-    <div class="my-4">
-        <card>
-            <card-body>
-                <span class="text-muted">
-                    @if (base.CurrentUser == null)
-                    {
-                        @T["Can we improve this doc?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to leave feedback"]
-                    }
-                    else
-                    {
-                        <a href="#" data-provide="postDocComment">@T["Post a comment"]</a>
-                    }
-                </span>
-            </card-body>
-        </card>
-    </div>
+    @if (!Model.Entity.IsHidden() && !Model.Entity.IsLocked)
+     {
+         <div class="my-4">
+             <card>
+                 <card-body>
+                     <span class="text-muted">
+                         @if (base.CurrentUser == null)
+                         {
+                             @T["Can we improve this doc?"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a> @T["or"] <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a> @T["to leave feedback"]
+                         }
+                         else
+                         {
+                             <a href="#" data-provide="postDocComment">@T["Post a comment"]</a>
+                         }
+                     </span>
+                 </card-body>
+             </card>
+         </div>
+     }
+    
 
 }
 else
 {
-    @if (!Model.Entity.IsLocked)
+    @if (!Model.Entity.IsHidden() && !Model.Entity.IsLocked)
      {
          <div class="my-4">
              <card>

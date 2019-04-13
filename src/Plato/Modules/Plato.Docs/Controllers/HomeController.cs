@@ -942,8 +942,523 @@ namespace Plato.Docs.Controllers
         }
 
         // -----------------
-        // Delete / Restore Entity
+        // Display Reply
         // -----------------
+
+        public async Task<IActionResult> Reply(EntityOptions opts)
+        {
+
+            // Default options
+            if (opts == null)
+            {
+                opts = new EntityOptions();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
+
+            // Ensure entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Configure options
+            opts = ConfigureEntityDisplayOptions(entity, opts);
+
+            // Get offset for given reply
+            var offset = 0;
+            if (opts.ReplyId > 0)
+            {
+                // We need to iterate all replies to calculate the offset
+                var replies = await _replyService.GetResultsAsync(opts, new PagerOptions
+                {
+                    Size = int.MaxValue
+                });
+                if (replies?.Data != null)
+                {
+                    foreach (var reply in replies.Data)
+                    {
+                        offset++;
+                        if (reply.Id == opts.ReplyId)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (offset == 0)
+            {
+                // Could not locate offset, fallback by redirecting to entity
+                return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                {
+                    ["area"] = "Plato.Docs",
+                    ["controller"] = "Home",
+                    ["action"] = "Display",
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias
+                }));
+            }
+
+            // Redirect to offset within entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["pager.offset"] = offset,
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        // -----------------
+        // Entity Helpers
+        // -----------------
+
+        public async Task<IActionResult> Pin(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.PinDocs))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update topic
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPinned = true;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Pinned Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not pin the doc"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Unpin(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.UnpinDocs))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPinned = false;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Pin Removed Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove pin"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Hide(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.HideDocs))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPrivate = true;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Hidden Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not hide the doc"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Show(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ShowDocs))
+            {
+                return Unauthorized();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsPrivate = false;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Made Public Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not update the doc"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Lock(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.LockDocs))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsLocked = true;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Locked Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not lock the doc"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Unlock(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.UnlockDocs))
+            {
+                return Unauthorized();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsLocked = false;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Unlocked Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not unlock the doc"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> ToSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.DocToSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsSpam = true;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Marked as SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not mark doc as SPAM"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> FromSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.DocFromSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsSpam = false;
+
+            // Save changes and return results
+            var result = await _docManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Removed from SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove the doc from SPAM"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
 
         public async Task<IActionResult> Delete(string id)
         {
@@ -1076,8 +1591,260 @@ namespace Plato.Docs.Controllers
         }
 
         // -----------------
-        // Delete / Restore Reply
+        // Entity Reply Helpers
         // -----------------
+
+        public async Task<IActionResult> HideReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.HideDocComments))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsPrivate = true;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Hidden Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not hide the comment"]);
+            }
+
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+        }
+
+        public async Task<IActionResult> ShowReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ShowDocComments))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsPrivate = false;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Made Public Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not make the comment public"]);
+            }
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+
+        }
+
+        public async Task<IActionResult> ReplyToSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.DocCommentToSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsSpam = true;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Marked as SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not mark the comment as SPAM"]);
+            }
+
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+
+        }
+
+        public async Task<IActionResult> ReplyFromSpam(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.DocCommentFromSpam))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            reply.IsSpam = false;
+
+            // Save changes and return results
+            var result = await _replyManager.UpdateAsync(reply);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Comment Removed from SPAM"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not remove the comment from SPAM"]);
+            }
+
+            // Redirect back to reply
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply.Id
+            }));
+
+        }
 
         public async Task<IActionResult> DeleteReply(string id)
         {
@@ -1131,11 +1898,11 @@ namespace Plato.Docs.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply Deleted Successfully"]);
+                _alerter.Success(T["Comment Deleted Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not delete the reply"]);
+                _alerter.Danger(T["Could not delete the comment"]);
             }
 
             // Redirect back to entity
@@ -1147,7 +1914,6 @@ namespace Plato.Docs.Controllers
                 ["opts.id"] = entity.Id,
                 ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = reply.Id
-
             }));
 
         }
@@ -1204,11 +1970,11 @@ namespace Plato.Docs.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Reply restored successfully"]);
+                _alerter.Success(T["Comment Restored Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not restore the reply"]);
+                _alerter.Danger(T["Could not restore the comment"]);
             }
 
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -1219,80 +1985,6 @@ namespace Plato.Docs.Controllers
                 ["opts.id"] = entity.Id,
                 ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = reply.Id
-
-            }));
-
-        }
-
-        // -----------------
-        // Display Reply
-        // -----------------
-
-        public async Task<IActionResult> Reply(EntityOptions opts)
-        {
-
-            // Default options
-            if (opts == null)
-            {
-                opts = new EntityOptions();
-            }
-
-            // Get entity
-            var entity = await _entityStore.GetByIdAsync(opts.Id);
-
-            // Ensure entity exists
-            if (entity == null)
-            {
-                return NotFound();
-            }
-
-            // Configure options
-            opts = ConfigureEntityDisplayOptions(entity, opts);
-
-            // Get offset for given reply
-            var offset = 0;
-            if (opts.ReplyId > 0)
-            {
-                // We need to iterate all replies to calculate the offset
-                var replies = await _replyService.GetResultsAsync(opts, new PagerOptions
-                {
-                    Size = int.MaxValue
-                });
-                if (replies?.Data != null)
-                {
-                    foreach (var reply in replies.Data)
-                    {
-                        offset++;
-                        if (reply.Id == opts.ReplyId)
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (offset == 0)
-            {
-                // Could not locate offset, fallback by redirecting to entity
-                return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                {
-                    ["area"] = "Plato.Docs",
-                    ["controller"] = "Home",
-                    ["action"] = "Display",
-                    ["opts.id"] = entity.Id,
-                    ["opts.alias"] = entity.Alias
-                }));
-            }
-
-            // Redirect to offset within entity
-            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Docs",
-                ["controller"] = "Home",
-                ["action"] = "Display",
-                ["pager.offset"] = offset,
-                ["opts.id"] = entity.Id,
-                ["opts.alias"] = entity.Alias
             }));
 
         }

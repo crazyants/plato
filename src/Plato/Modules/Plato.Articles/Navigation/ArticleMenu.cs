@@ -74,7 +74,7 @@ namespace Plato.Articles.Navigation
                                 : Permissions.EditAnyArticle)
                             .LocalNav()
                         )
-                           .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                        .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
                             .Action(entity.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Articles",
                                 new RouteValueDictionary()
                                 {

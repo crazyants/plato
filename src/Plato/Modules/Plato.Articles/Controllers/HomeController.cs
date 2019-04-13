@@ -1425,7 +1425,7 @@ namespace Plato.Articles.Controllers
             var result = await _topicManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article deleted successfully"]);
+                _alerter.Success(T["Article Deleted Successfully"]);
             }
             else
             {

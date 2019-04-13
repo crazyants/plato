@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Docs.Models;
-using Plato.Internal.Hosting.Abstractions;
+using Plato.Entities.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -30,8 +29,8 @@ namespace Plato.Docs.Navigation
             }
 
             // Get model from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Doc)] as Doc;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Doc)] as Doc;
+            if (entity == null)
             {
                 return;
             }
@@ -40,17 +39,17 @@ namespace Plato.Docs.Navigation
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
             
             Permission deletePermission = null;
-            if (topic.IsDeleted)
+            if (entity.IsDeleted)
             {
                 // Do we have restore permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.RestoreOwnDocs
                     : Permissions.RestoreAnyDoc;
             }
             else
             {
                 // Do we have delete permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.DeleteOwnDocs
                     : Permissions.DeleteAnyDoc;
             }
@@ -67,19 +66,67 @@ namespace Plato.Docs.Navigation
                         .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("Edit", "Home", "Plato.Docs", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
-                            .Permission(user?.Id == topic.CreatedUserId
+                            .Permission(user?.Id == entity.CreatedUserId
                                 ? Permissions.EditOwnDocs
                                 : Permissions.EditAnyDoc)
+                            .LocalNav()
+                        )
+                          .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                            .Action(entity.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Docs",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPinned
+                                ? Permissions.UnpinDocs
+                                : Permissions.PinDocs)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
+                            .Action(entity.IsLocked ? "Unlock" : "Lock", "Home", "Plato.Docs",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsLocked
+                                ? Permissions.UnlockDocs
+                                : Permissions.LockDocs)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(entity.IsPrivate ? "Show" : "Hide", "Home", "Plato.Docs",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPrivate
+                                ? Permissions.ShowDocs
+                                : Permissions.HideDocs)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsSpam ? T["Not Spam"] : T["Spam"], 2, spam => spam
+                            .Action(entity.IsSpam ? "FromSpam" : "ToSpam", "Home", "Plato.Docs",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsSpam
+                                ? Permissions.DocFromSpam
+                                : Permissions.DocToSpam)
                             .LocalNav()
                         )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Docs", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -94,22 +141,23 @@ namespace Plato.Docs.Navigation
                             .Permission(deletePermission)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(topic.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Docs",
+                        .Add(entity.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Action(entity.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Docs",
                                     new RouteValueDictionary()
                                     {
-                                        ["id"] = topic.Id
+                                        ["id"] = entity.Id
                                     })
                                 .Permission(deletePermission)
                                 .LocalNav(),
-                            topic.IsDeleted
+                            entity.IsDeleted
                                 ? new List<string>() {"dropdown-item", "dropdown-item-success"}
                                 : new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
                     , new List<string>() {"doc-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
-            if (!topic.IsLocked)
+            // If entity is not hidden or locked allow replies
+            if (!entity.IsHidden() && !entity.IsLocked)
             {
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
