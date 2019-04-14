@@ -60,6 +60,7 @@ namespace Plato.Docs
         public static readonly Permission ReportDocComments =
             new Permission("ReportDocComments", "Report documentation comments");
         
+
         public static readonly Permission PinDocs =
             new Permission("PinDocs", "Pin docs");
 

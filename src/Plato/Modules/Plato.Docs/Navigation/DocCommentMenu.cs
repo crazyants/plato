@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Docs.Models;
+using Plato.Entities.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -29,8 +30,8 @@ namespace Plato.Docs.Navigation
             }
 
             // Get topic from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Doc)] as Doc;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Doc)] as Doc;
+            if (entity == null)
             {
                 return;
             }
@@ -78,11 +79,35 @@ namespace Plato.Docs.Navigation
                                 Permissions.EditOwnDocComments :
                                 Permissions.EditAnyDocComment)
                             .LocalNav())
+                        .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Docs",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsPrivate
+                                ? Permissions.ShowDocComments
+                                : Permissions.HideDocComments)
+                            .LocalNav()
+                        )
+                        .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Docs",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsSpam
+                                ? Permissions.DocCommentFromSpam
+                                : Permissions.DocCommentToSpam)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Docs", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias,
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias,
                                 ["opts.replyId"] = reply.Id
                             })
                             .Attributes(new Dictionary<string, object>()
@@ -112,9 +137,11 @@ namespace Plato.Docs.Navigation
                         )
                     , new List<string>() {"doc-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-
-            if (!topic.IsLocked)
+            
+            // If entity & reply are not hidden and entity is not locked allow replies
+            if (!entity.IsHidden() && !reply.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")

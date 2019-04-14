@@ -53,24 +53,60 @@ namespace Plato.Questions
 
         public static readonly Permission ReportAnswers =
             new Permission("ReportAnswers", "Report answers");
-
-        public static readonly Permission ViewPrivateQuestions =
-            new Permission("ViewPrivateQuestions", "View private questions");
-
-        public static readonly Permission ViewPrivateAnswers =
-            new Permission("ViewPrivateAnswers", "View private answers");
-
-        public static readonly Permission ViewSpamQuestions =
-            new Permission("ViewSpamQuestions", "View questions flagged as SPAM");
-
-        public static readonly Permission ViewSpamAnswers =
-            new Permission("ViewSpamAnswers", "View answers flagged as SPAM");
         
         public static readonly Permission ViewDeletedQuestions =
             new Permission("ViewDeletedQuestions", "View deleted questions");
 
         public static readonly Permission ViewDeletedAnswers =
-            new Permission("ViewDeletedComments", "View deleted answers");
+            new Permission("ViewDeletedAnswers", "View deleted answers");
+        
+        public static readonly Permission PinQuestions =
+            new Permission("PinQuestions", "Pin questions");
+
+        public static readonly Permission UnpinQuestions =
+            new Permission("UnpinQuestions", "Unpin questions");
+
+        public static readonly Permission LockQuestions =
+            new Permission("LockQuestions", "Lock questions");
+
+        public static readonly Permission UnlockQuestions =
+            new Permission("UnlockQuestions", "Unlock questions");
+
+        public static readonly Permission HideQuestions =
+            new Permission("HideQuestions", "Hide questions");
+
+        public static readonly Permission ShowQuestions =
+            new Permission("ShowQuestions", "Unhide questions");
+
+        public static readonly Permission ViewPrivateQuestions =
+            new Permission("ViewPrivateQuestions", "View hidden questions");
+
+        public static readonly Permission HideAnswers =
+            new Permission("HideAnswers", "Hide answers");
+
+        public static readonly Permission ShowAnswers =
+            new Permission("ShowAnswers", "Unhide answers");
+
+        public static readonly Permission ViewPrivateAnswers =
+            new Permission("ViewPrivateAnswers", "View hidden answers");
+
+        public static readonly Permission QuestionToSpam =
+            new Permission("QuestionToSpam", "Move questions to SPAM");
+
+        public static readonly Permission QuestionFromSpam =
+            new Permission("QuestionFromSpam", "Remove questions from SPAM");
+
+        public static readonly Permission ViewSpamQuestions =
+            new Permission("ViewSpamQuestions", "View questions flagged as SPAM");
+
+        public static readonly Permission AnswerToSpam =
+            new Permission("AnswerToSpam", "Move answers to SPAM");
+
+        public static readonly Permission AnswerFromSpam =
+            new Permission("AnswerFromSpam", "Remove answers from SPAM");
+
+        public static readonly Permission ViewSpamAnswers =
+            new Permission("ViewSpamAnswers", "View answers flagged as SPAM");
         
         public IEnumerable<Permission> GetPermissions()
         {
@@ -86,18 +122,30 @@ namespace Plato.Questions
                 RestoreOwnQuestions,
                 DeleteAnyQuestion,
                 RestoreAnyQuestion,
+                ViewDeletedQuestions,
                 DeleteOwnAnswers,
                 RestoreOwnAnswers,
                 DeleteAnyAnswer,
                 RestoreAnyAnswer,
+                ViewDeletedAnswers,
                 ReportQuestions,
                 ReportAnswers,
+                PinQuestions,
+                UnpinQuestions,
+                LockQuestions,
+                UnlockQuestions,
+                HideQuestions,
+                ShowQuestions,
                 ViewPrivateQuestions,
+                HideAnswers,
+                ShowAnswers,
                 ViewPrivateAnswers,
+                QuestionToSpam,
+                QuestionFromSpam,
                 ViewSpamQuestions,
-                ViewSpamAnswers,
-                ViewDeletedQuestions,
-                ViewDeletedAnswers
+                AnswerToSpam,
+                AnswerFromSpam,
+                ViewSpamAnswers
             };
         }
 
@@ -120,18 +168,30 @@ namespace Plato.Questions
                         RestoreOwnQuestions,
                         DeleteAnyQuestion,
                         RestoreAnyQuestion,
+                        ViewDeletedQuestions,
                         DeleteOwnAnswers,
                         RestoreOwnAnswers,
                         DeleteAnyAnswer,
                         RestoreAnyAnswer,
+                        ViewDeletedAnswers,
                         ReportQuestions,
                         ReportAnswers,
+                        PinQuestions,
+                        UnpinQuestions,
+                        LockQuestions,
+                        UnlockQuestions,
+                        HideQuestions,
+                        ShowQuestions,
                         ViewPrivateQuestions,
+                        HideAnswers,
+                        ShowAnswers,
                         ViewPrivateAnswers,
+                        QuestionToSpam,
+                        QuestionFromSpam,
                         ViewSpamQuestions,
-                        ViewSpamAnswers,
-                        ViewDeletedQuestions,
-                        ViewDeletedAnswers
+                        AnswerToSpam,
+                        AnswerFromSpam,
+                        ViewSpamAnswers
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -156,19 +216,37 @@ namespace Plato.Questions
                         PostQuestions,
                         PostAnswers,
                         EditOwnQuestions,
+                        EditAnyQuestion,
                         EditOwnAnswers,
+                        EditAnyAnswer,
                         DeleteOwnQuestions,
                         RestoreOwnQuestions,
+                        DeleteAnyQuestion,
+                        RestoreAnyQuestion,
+                        ViewDeletedQuestions,
                         DeleteOwnAnswers,
                         RestoreOwnAnswers,
+                        DeleteAnyAnswer,
+                        RestoreAnyAnswer,
+                        ViewDeletedAnswers,
                         ReportQuestions,
                         ReportAnswers,
+                        PinQuestions,
+                        UnpinQuestions,
+                        LockQuestions,
+                        UnlockQuestions,
+                        HideQuestions,
+                        ShowQuestions,
                         ViewPrivateQuestions,
+                        HideAnswers,
+                        ShowAnswers,
                         ViewPrivateAnswers,
+                        QuestionToSpam,
+                        QuestionFromSpam,
                         ViewSpamQuestions,
-                        ViewSpamAnswers,
-                        ViewDeletedQuestions,
-                        ViewDeletedAnswers
+                        AnswerToSpam,
+                        AnswerFromSpam,
+                        ViewSpamAnswers
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -181,6 +259,7 @@ namespace Plato.Questions
                     }
                 }
             };
+
         }
 
     }

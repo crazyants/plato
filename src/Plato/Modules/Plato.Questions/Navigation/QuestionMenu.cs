@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Extensions;
 using Plato.Questions.Models;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -75,6 +74,54 @@ namespace Plato.Questions.Navigation
                                 : Permissions.EditAnyQuestion)
                             .LocalNav()
                         )
+                           .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                            .Action(entity.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Questions",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPinned
+                                ? Permissions.UnpinQuestions
+                                : Permissions.PinQuestions)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
+                            .Action(entity.IsLocked ? "Unlock" : "Lock", "Home", "Plato.Questions",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsLocked
+                                ? Permissions.UnlockQuestions
+                                : Permissions.LockQuestions)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(entity.IsPrivate ? "Show" : "Hide", "Home", "Plato.Questions",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPrivate
+                                ? Permissions.ShowQuestions
+                                : Permissions.HideQuestions)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsSpam ? T["Not Spam"] : T["Spam"], 2, spam => spam
+                            .Action(entity.IsSpam ? "FromSpam" : "ToSpam", "Home", "Plato.Questions",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsSpam
+                                ? Permissions.QuestionFromSpam
+                                : Permissions.QuestionToSpam)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Questions", new RouteValueDictionary()
                             {
@@ -108,9 +155,11 @@ namespace Plato.Questions.Navigation
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-
-            if (!entity.IsLocked)
+            
+            // If entity is not hidden or locked allow replies
+            if (!entity.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
