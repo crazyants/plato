@@ -107,7 +107,7 @@ namespace Plato.Ideas.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = reasonText.Value,
-                Message = S["A questions answer has been reported!"],
+                Message = S["A comment has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow

@@ -185,7 +185,7 @@ namespace Plato.Questions.Categories.ViewProviders
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
+                ).Add(S["Questions"], home => home
                     .Action("Index", "Home", "Plato.Questions")
                     .LocalNav()
                 );
@@ -213,7 +213,7 @@ namespace Plato.Questions.Categories.ViewProviders
                     }
                 }
 
-                // Ensure we have a topic title
+                // Ensure we have a entity title
                 if (!String.IsNullOrEmpty(entity.Title))
                 {
                     builder.Add(S[entity.Title], t => t
@@ -226,7 +226,7 @@ namespace Plato.Questions.Categories.ViewProviders
                     );
                 }
            
-                builder.Add(S[entity.Id > 0 ? "Edit Topic" : "New Topic"]);
+                builder.Add(S[entity.Id > 0 ? "Edit Question" : "New Question"]);
 
             });
             
@@ -246,7 +246,7 @@ namespace Plato.Questions.Categories.ViewProviders
 
         }
         
-        public override async Task<bool> ValidateModelAsync(Question topic, IUpdateModel updater)
+        public override async Task<bool> ValidateModelAsync(Question question, IUpdateModel updater)
         {
             return await updater.TryUpdateModelAsync(new CategoryInputViewModel
             {

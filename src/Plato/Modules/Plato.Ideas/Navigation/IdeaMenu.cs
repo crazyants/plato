@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Extensions;
 using Plato.Ideas.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -28,8 +29,8 @@ namespace Plato.Ideas.Navigation
             }
 
             // Get model from context
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Idea)] as Idea;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Idea)] as Idea;
+            if (entity == null)
             {
                 return;
             }
@@ -38,22 +39,22 @@ namespace Plato.Ideas.Navigation
             var user = builder.ActionContext.HttpContext.Features[typeof(User)] as User;
             
             Permission deletePermission = null;
-            if (topic.IsDeleted)
+            if (entity.IsDeleted)
             {
                 // Do we have restore permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.RestoreOwnIdeas
                     : Permissions.RestoreAnyIdea;
             }
             else
             {
                 // Do we have delete permissions?
-                deletePermission = user?.Id == topic.CreatedUserId
+                deletePermission = user?.Id == entity.CreatedUserId
                     ? Permissions.DeleteOwnIdeas
                     : Permissions.DeleteAnyIdeaComment;
             }
 
-            // Add topic options
+            // Add entity options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
@@ -65,19 +66,67 @@ namespace Plato.Ideas.Navigation
                         .Add(T["Edit"], int.MinValue, edit => edit
                             .Action("Edit", "Home", "Plato.Ideas", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
-                            .Permission(user?.Id == topic.CreatedUserId
+                            .Permission(user?.Id == entity.CreatedUserId
                                 ? Permissions.EditOwnIdeas
                                 : Permissions.EditAnyIdea)
+                            .LocalNav()
+                        )
+                            .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                            .Action(entity.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Ideas",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPinned
+                                ? Permissions.UnpinIdeas
+                                : Permissions.PinIdeas)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
+                            .Action(entity.IsLocked ? "Unlock" : "Lock", "Home", "Plato.Ideas",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsLocked
+                                ? Permissions.UnlockIdeas
+                                : Permissions.LockIdeas)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(entity.IsPrivate ? "Show" : "Hide", "Home", "Plato.Ideas",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsPrivate
+                                ? Permissions.ShowIdeas
+                                : Permissions.HideIdeas)
+                            .LocalNav()
+                        )
+                        .Add(entity.IsSpam ? T["Not Spam"] : T["Spam"], 2, spam => spam
+                            .Action(entity.IsSpam ? "FromSpam" : "ToSpam", "Home", "Plato.Ideas",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsSpam
+                                ? Permissions.IdeaFromSpam
+                                : Permissions.IdeaToSpam)
                             .LocalNav()
                         )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Ideas", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id,
-                                ["opts.alias"] = topic.Alias
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
                             })
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -92,23 +141,25 @@ namespace Plato.Ideas.Navigation
                             .Permission(deletePermission)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(topic.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
-                                .Action(topic.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Ideas",
+                        .Add(entity.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Action(entity.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Ideas",
                                     new RouteValueDictionary()
                                     {
-                                        ["id"] = topic.Id
+                                        ["id"] = entity.Id
                                     })
                                 .Permission(deletePermission)
                                 .LocalNav(),
-                            topic.IsDeleted
+                            entity.IsDeleted
                                 ? new List<string>() {"dropdown-item", "dropdown-item-success"}
                                 : new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
-                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                    , new List<string>() {"idea-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-
-            if (!topic.IsLocked)
+            
+            // If entity is not hidden or locked allow replies
+            if (!entity.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
@@ -131,7 +182,7 @@ namespace Plato.Ideas.Navigation
                                 })
                             .Permission(Permissions.PostIdeaComments)
                             .LocalNav()
-                        , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
+                        , new List<string>() {"idea-reply", "text-muted", "text-hidden"}
                     );
 
             }

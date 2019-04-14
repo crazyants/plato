@@ -6,8 +6,8 @@
       "Cc": "",
       "Bcc": "",
       "From": "",
-      "Subject": "[SiteName] - Topic Reported",
-      "Message": "Hi {0},\n\nThe topic \"{1}\" has been reported for the reason \"{2}\" by {3} (@{4}). You can review this topic at the link below.\n\n{5}\n\n[SiteName]\n[SiteUrl]"
+      "Subject": "[SiteName] - Doc Reported",
+      "Message": "Hi {0},\n\nThe doc \"{1}\" has been reported for the reason \"{2}\" by {3} (@{4}). You can review this doc at the link below.\n\n{5}\n\n[SiteName]\n[SiteUrl]"
     },
     {
       "Id": "NewDocCommentReport",
@@ -15,8 +15,8 @@
       "Cc": "",
       "Bcc": "",
       "From": "",
-      "Subject": "[SiteName] - Reply Reported",
-      "Message": "Hi {0},\n\nA reply to the topic \"{1}\" has been reported for the reason \"{2}\" by {3} (@{4}). You can review this reply at the link below.\n\n{5}\n\n[SiteName]\n[SiteUrl]"
+      "Subject": "[SiteName] - Comment Reported",
+      "Message": "Hi {0},\n\nA comment to the doc \"{1}\" has been reported for the reason \"{2}\" by {3} (@{4}). You can review this comment at the link below.\n\n{5}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }

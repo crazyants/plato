@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Extensions;
 using Plato.Entities.Ratings.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Questions.Models;
@@ -26,11 +27,19 @@ namespace Plato.Questions.Votes.Navigation
 
             // Get model from navigation builder
             var entity = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
+
+            // We always need an entity
             if (entity == null)
             {
                 return;
             }
-       
+
+            // If entity is hidden don't allow voting
+            if (entity.IsHidden())
+            {
+                return;
+            }
+
             // Add reaction menu view to navigation
             builder
                 .Add(T["Vote"], react => react

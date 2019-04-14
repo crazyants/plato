@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Extensions;
 using Plato.Ideas.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -78,6 +79,30 @@ namespace Plato.Ideas.Navigation
                                 Permissions.EditOwnIdeaComments :
                                 Permissions.EditAnyIdeaComment)
                             .LocalNav())
+                        .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Ideas",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsPrivate
+                                ? Permissions.ShowIdeaComments
+                                : Permissions.HideIdeaComments)
+                            .LocalNav()
+                        )
+                        .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Ideas",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsSpam
+                                ? Permissions.IdeaCommentFromSpam
+                                : Permissions.IdeaCommentToSpam)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Ideas", new RouteValueDictionary()
                             {
@@ -110,11 +135,13 @@ namespace Plato.Ideas.Navigation
                                 ? new List<string>() { "dropdown-item", "dropdown-item-success" }
                                 : new List<string>() { "dropdown-item", "dropdown-item-danger" }
                         )
-                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                    , new List<string>() {"idea-comment-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
-
-            if (!entity.IsLocked)
+            
+            // If entity & reply are not hidden and entity is not locked allow replies
+            if (!entity.IsHidden() && !reply.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
@@ -138,7 +165,7 @@ namespace Plato.Ideas.Navigation
                                 })
                             .Permission(Permissions.PostIdeaComments)
                             .LocalNav()
-                        , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
+                        , new List<string>() { "idea-reply", "text-muted", "text-hidden" }
                     );
 
             }

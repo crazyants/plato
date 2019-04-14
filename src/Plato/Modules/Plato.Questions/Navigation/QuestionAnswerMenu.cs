@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Extensions;
 using Plato.Questions.Models;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -78,6 +79,30 @@ namespace Plato.Questions.Navigation
                                 Permissions.EditOwnAnswers :
                                 Permissions.EditAnyAnswer)
                             .LocalNav())
+                        .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Questions",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsPrivate
+                                ? Permissions.ShowAnswers
+                                : Permissions.HideAnswers)
+                            .LocalNav()
+                        )
+                        .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Questions",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply?.Id ?? 0
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(reply.IsSpam
+                                ? Permissions.AnswerFromSpam
+                                : Permissions.AnswerToSpam)
+                            .LocalNav()
+                        )
                         .Add(T["Report"], int.MaxValue - 2, report => report
                             .Action("Report", "Home", "Plato.Questions", new RouteValueDictionary()
                             {
@@ -110,11 +135,14 @@ namespace Plato.Questions.Navigation
                                 ? new List<string>() { "dropdown-item", "dropdown-item-success" }
                                 : new List<string>() { "dropdown-item", "dropdown-item-danger" }
                         )
-                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                    , new List<string>() {"answer-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
-            if (!entity.IsLocked)
+
+            // If entity & reply are not hidden and entity is not locked allow replies
+            if (!entity.IsHidden() && !reply.IsHidden() && !entity.IsLocked)
             {
+
                 builder
                     .Add(T["Comment"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
@@ -138,7 +166,7 @@ namespace Plato.Questions.Navigation
                                 })
                             .Permission(Permissions.PostAnswers)
                             .LocalNav()
-                        , new List<string>() { "topic-reply", "text-muted", "text-hidden" }
+                        , new List<string>() { "answer-reply", "text-muted", "text-hidden" }
                     );
 
             }

@@ -125,10 +125,10 @@ namespace Plato.Docs
             services.AddScoped<INotificationManager<ReportSubmission<DocComment>>, NotificationManager<ReportSubmission<DocComment>>>();
 
             // Notification providers
-            services.AddScoped<INotificationProvider<ReportSubmission<Doc>>, TopicReportWeb>();
-            services.AddScoped<INotificationProvider<ReportSubmission<Doc>>, TopicReportEmail>();
-            services.AddScoped<INotificationProvider<ReportSubmission<DocComment>>, ReplyReportWeb>();
-            services.AddScoped<INotificationProvider<ReportSubmission<DocComment>>, ReplyReportEmail>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Doc>>, DocReportWeb>();
+            services.AddScoped<INotificationProvider<ReportSubmission<Doc>>, DocReportEmail>();
+            services.AddScoped<INotificationProvider<ReportSubmission<DocComment>>, CommentReportWeb>();
+            services.AddScoped<INotificationProvider<ReportSubmission<DocComment>>, CommentReportEmail>();
 
             // Report entity managers
             services.AddScoped<IReportEntityManager<Doc>, ReportTopicManager>();

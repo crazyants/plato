@@ -43,7 +43,7 @@
                         }
                         @if (Model.Reply.IsPrivate)
                         {
-                            <span data-toggle="tooltip" title="@T["This comment is private and only visible to you as you have permission to view private comments"]" class="badge badge-primary">@T["Private"]</span>
+                            <span data-toggle="tooltip" title="@T["This comment is hidden and only visible to you as you have permission to view hidden comments"]" class="badge badge-primary">@T["Hidden"]</span>
                         }
                         @if (Model.Reply.IsDeleted)
                         {

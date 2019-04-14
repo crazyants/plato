@@ -3,12 +3,8 @@
     var details = Model.Entity.GetOrCreate<IdeaDetails>();
     var voteText = Model.Entity.TotalRatings == 1 ? T["vote"] : T["votes"];
     var repliesText = Model.Entity.TotalReplies == 1 ? T["reply"] : T["replies"];
-    string voteCss = "votes", replyCss = "replies", ratingCss = "rating";
-
-    if (Model.Entity.TotalReplies > 0)
-    {
-        replyCss = "counter-outline-secondary";
-    }
+    string voteCss = "votes", ratingCss = "rating";
+    
     if (Model.Entity.TotalRatings > 0)
     {
         voteCss = "counter-outline-info";
@@ -105,21 +101,21 @@
         @if (@Model.Channel != null)
         {
             <span>@T["in"]</span>
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
+            <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
                 @Model.Channel.Name
             </a>
         }
         @if (Model.Entity.IsPrivate)
         {
-            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This idea is private and only visible to you as you have permission to view private ideas"]">@T["Private"]</span>
+            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This idea is hidden and only visible as you have permission to view hidden ideas"]">@T["Hidden"]</span>
         }
         @if (Model.Entity.IsSpam)
         {
-            <span class="badge badge-info" data-toggle="tooltip" title="@T["This idea has been flagged as SPAM and is only visible to you as you have permission to view ideas flagged as SPAM"]">@T["SPAM"]</span>
+            <span class="badge badge-info" data-toggle="tooltip" title="@T["This idea has been flagged as SPAM and is only visible as you have permission to view ideas flagged as SPAM"]">@T["SPAM"]</span>
         }
         @if (Model.Entity.IsDeleted)
         {
-            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This idea has been deleted and is only visible to you as you have permission to view deleted ideas"]">@T["Deleted"]</span>
+            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This idea has been deleted and is only visible as you have permission to view deleted ideas"]">@T["Deleted"]</span>
         }
     </div>
 </div>

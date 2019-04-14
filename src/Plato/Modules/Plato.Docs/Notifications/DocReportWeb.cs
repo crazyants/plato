@@ -15,7 +15,7 @@ using Plato.Entities.Models;
 
 namespace Plato.Docs.Notifications
 {
-    public class TopicReportWeb : INotificationProvider<ReportSubmission<Doc>>
+    public class DocReportWeb : INotificationProvider<ReportSubmission<Doc>>
     {
 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -25,7 +25,7 @@ namespace Plato.Docs.Notifications
 
         public IStringLocalizer S { get; }
         
-        public TopicReportWeb(
+        public DocReportWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             ICapturedRouterUrlHelper urlHelper,
@@ -82,7 +82,7 @@ namespace Plato.Docs.Notifications
             });
 
             // Get reason given text
-            var reasonText = S["Topic Reported"];
+            var reasonText = S["Doc Reported"];
             if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
             {
                 reasonText = S[ReportReasons.Reasons[context.Model.Why]];
@@ -94,7 +94,7 @@ namespace Plato.Docs.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = reasonText.Value,
-                Message = S["A topic has been reported!"],
+                Message = S["A doc has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow

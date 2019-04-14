@@ -6,10 +6,6 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Docs.Models;
-using Plato.Docs.NotificationTypes;
-using Plato.Entities;
-using Plato.Entities.Models;
-using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -18,56 +14,55 @@ using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Docs.NotificationTypes;
+using Plato.Entities;
+using Plato.Entities.Models;
 
 namespace Plato.Docs.Notifications
 {
-    public class ReplyReportEmail : INotificationProvider<ReportSubmission<DocComment>>
+    public class DocReportEmail : INotificationProvider<ReportSubmission<Doc>>
     {
-
+        
         private readonly IContextFacade _contextFacade;
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
-        private readonly IEntityStore<Doc> _topicStore;
 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
 
-        public ReplyReportEmail(
+        public DocReportEmail(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
-            ILocaleStore localeStore,
+            ILocaleStore localeStore, 
             IEmailManager emailManager,
-            ICapturedRouterUrlHelper capturedRouterUrlHelper,
-            IEntityStore<Doc> topicStore)
+            ICapturedRouterUrlHelper capturedRouterUrlHelper)
         {
             _contextFacade = contextFacade;
             _localeStore = localeStore;
             _emailManager = emailManager;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
-            _topicStore = topicStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;
 
         }
 
-        public async Task<ICommandResult<ReportSubmission<DocComment>>> SendAsync(INotificationContext<ReportSubmission<DocComment>> context)
+        public async Task<ICommandResult<ReportSubmission<Doc>>> SendAsync(INotificationContext<ReportSubmission<Doc>> context)
         {
-
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.ReplyReport.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.TopicReport.Name, StringComparison.Ordinal))
             {
                 return null;
             }
 
             // Create result
-            var result = new CommandResult<ReportSubmission<DocComment>>();
+            var result = new CommandResult<ReportSubmission<Doc>>();
 
             // Get email template
-            const string templateId = "NewReplyReport";
+            const string templateId = "NewDocReport";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email == null)
@@ -76,41 +71,30 @@ namespace Plato.Docs.Notifications
                     $"No email template with the Id '{templateId}' exists within the 'locales/{culture}/emails.json' file!");
             }
 
-            // Get topic for reply
-            var topic = await _topicStore.GetByIdAsync(context.Model.What.EntityId);
-
-            // We need an topic for the reply
-            if (topic == null)
+            // Get reason given text
+            var reasonText = S["No reason supplied"];
+            if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
             {
-                return result.Failed(
-                    $"No entity with id '{context.Model.What.EntityId}' exists. Failed to send reply spam email notification.");
+                reasonText = S[ReportReasons.Reasons[context.Model.Why]];
             }
-        
+            
             // Build topic url
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
                 ["area"] = "Plato.Docs",
                 ["controller"] = "Home",
-                ["action"] = "Reply",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias,
-                ["opts.replyId"] = context.Model.What.Id
+                ["action"] = "Display",
+                ["opts.id"] = context.Model.What.Id,
+                ["opts.alias"] = context.Model.What.Alias
             });
 
-            // Reason given text
-            var reasonText = S["None Provided"];
-            if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
-            {
-                reasonText = S[ReportReasons.Reasons[context.Model.Why]];
-            }
-            
             // Build message from template
             var message = email.BuildMailMessage();
             message.Body = string.Format(
                 email.Message,
                 context.Notification.To.DisplayName,
-                topic.Title,
+                context.Model.What.Title,
                 reasonText.Value,
                 context.Model.Who.DisplayName,
                 context.Model.Who.UserName,
@@ -127,8 +111,9 @@ namespace Plato.Docs.Notifications
             }
 
             return result.Failed(emailResult.Errors?.ToArray());
-
+            
         }
 
     }
+
 }

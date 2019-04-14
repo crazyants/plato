@@ -39,16 +39,15 @@ namespace Plato.Questions.Controllers
         private readonly IViewProviderManager<Answer> _replyViewProvider;
         private readonly IEntityStore<Question> _entityStore;
         private readonly IEntityReplyStore<Answer> _entityReplyStore;
-        private readonly IPostManager<Question> _topicManager;
-        private readonly IPostManager<Answer> _replyManager;
-        private readonly IAlerter _alerter;
+        private readonly IPostManager<Question> _questionManager;
+        private readonly IPostManager<Answer> _answerManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyService<Answer> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
-
+        private readonly IAlerter _alerter;
 
         private readonly IReportEntityManager<Question> _reportEntityManager;
         private readonly IReportEntityManager<Answer> _reportReplyManager;
@@ -65,8 +64,8 @@ namespace Plato.Questions.Controllers
             IViewProviderManager<Question> entityViewProvider,
             IEntityReplyStore<Answer> entityReplyStore,
             IViewProviderManager<Answer> replyViewProvider,
-            IPostManager<Question> topicManager,
-            IPostManager<Answer> replyManager,
+            IPostManager<Question> questionManager,
+            IPostManager<Answer> answerManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
@@ -81,9 +80,8 @@ namespace Plato.Questions.Controllers
             _entityStore = entityStore;
             _contextFacade = contextFacade;
             _entityReplyStore = entityReplyStore;
-            _topicManager = topicManager;
-            _replyManager = replyManager;
-            _alerter = alerter;
+            _questionManager = questionManager;
+            _answerManager = answerManager;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
@@ -92,6 +90,7 @@ namespace Plato.Questions.Controllers
             _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
+            _alerter = alerter;
 
             T = localizer;
             S = stringLocalizer;
@@ -213,10 +212,10 @@ namespace Plato.Questions.Controllers
                 return Unauthorized();
             }
 
-            var topic = new Question();
+            var entity = new Question();
             if (channel > 0)
             {
-                topic.CategoryId = channel;
+                entity.CategoryId = channel;
             }
 
             // Build breadcrumb
@@ -234,7 +233,7 @@ namespace Plato.Questions.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(topic, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -265,30 +264,30 @@ namespace Plato.Questions.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newTopic = await _topicManager.CreateAsync(entity);
+                var newEntity = await _questionManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
-                if (newTopic.Succeeded)
+                if (newEntity.Succeeded)
                 {
 
-                    // Indicate new topic to prevent topic update
-                    // on first creation within our topic view provider
-                    newTopic.Response.IsNewQuestion = true;
+                    // Indicate new entity to prevent entity update
+                    // on first creation within our view provider
+                    newEntity.Response.IsNewQuestion = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _entityViewProvider.ProvideUpdateAsync(newTopic.Response, this);
+                    await _entityViewProvider.ProvideUpdateAsync(newEntity.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Question Created Successfully!"]);
 
-                    // Redirect to topic
-                    return RedirectToAction(nameof(Display), new {Id = newTopic.Response.Id});
+                    // Redirect to entity
+                    return RedirectToAction(nameof(Display), new {Id = newEntity.Response.Id});
 
                 }
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in newTopic.Errors)
+                    foreach (var error in newEntity.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -472,7 +471,7 @@ namespace Plato.Questions.Controllers
 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
-                var result = await _replyManager.CreateAsync(reply);
+                var result = await _answerManager.CreateAsync(reply);
 
                 // Ensure the insert was successful
                 if (result.Succeeded)
@@ -530,7 +529,7 @@ namespace Plato.Questions.Controllers
 
         public async Task<IActionResult> Edit(EntityOptions opts)
         {
-            // Get topic we are editing
+            // Get entity we are editing
             var entity = await _entityStore.GetByIdAsync(opts.Id);
             if (entity == null)
             {
@@ -586,8 +585,8 @@ namespace Plato.Questions.Controllers
         public async Task<IActionResult> EditPost(EditEntityViewModel model)
         {
             // Get entity we are editing 
-            var topic = await _entityStore.GetByIdAsync(model.Id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(model.Id);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -604,31 +603,31 @@ namespace Plato.Questions.Controllers
                 var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                 // Only update edited information if the message changes
-                if (model.Message != topic.Message)
+                if (model.Message != entity.Message)
                 {
-                    topic.EditedUserId = user?.Id ?? 0;
-                    topic.EditedDate = DateTimeOffset.UtcNow;
+                    entity.EditedUserId = user?.Id ?? 0;
+                    entity.EditedDate = DateTimeOffset.UtcNow;
                 }
 
                 // Always update modified information
-                topic.ModifiedUserId = user?.Id ?? 0;
-                topic.ModifiedDate = DateTimeOffset.UtcNow;
+                entity.ModifiedUserId = user?.Id ?? 0;
+                entity.ModifiedDate = DateTimeOffset.UtcNow;
                 
                 // Update title & message
-                topic.Title = model.Title;
-                topic.Message = model.Message;
+                entity.Title = model.Title;
+                entity.Message = model.Message;
 
                 // Execute view providers ProvideUpdateAsync method
-                await _entityViewProvider.ProvideUpdateAsync(topic, this);
+                await _entityViewProvider.ProvideUpdateAsync(entity, this);
 
                 // Everything was OK
-                _alerter.Success(T["Topic Updated Successfully!"]);
+                _alerter.Success(T["Question Updated Successfully!"]);
 
-                // Redirect to topic
+                // Redirect to entity
                 return RedirectToAction(nameof(Display), new
                 {
-                    Id = topic.Id,
-                    Alias = topic.Alias
+                    Id = entity.Id,
+                    Alias = entity.Alias
                 });
 
             }
@@ -662,8 +661,8 @@ namespace Plato.Questions.Controllers
             }
 
             // Get reply entity
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -672,7 +671,7 @@ namespace Plato.Questions.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Do we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                 user?.Id == reply.CreatedUserId
                     ? Permissions.EditOwnAnswers
                     : Permissions.EditAnyAnswer))
@@ -689,11 +688,11 @@ namespace Plato.Questions.Controllers
                     ).Add(S["Questions"], questions => questions
                         .Action("Index", "Home", "Plato.Questions")
                         .LocalNav()
-                    ).Add(S[topic.Title.TrimToAround(75)], post => post
+                    ).Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Questions", new RouteValueDictionary()
                         {
-                            ["opts.id"] = topic.Id,
-                            ["opts.alias"] = topic.Alias
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias
                         })
                         .LocalNav()
                     )
@@ -963,13 +962,13 @@ namespace Plato.Questions.Controllers
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Update topic
+            // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
             entity.IsPinned = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1024,7 +1023,7 @@ namespace Plato.Questions.Controllers
             entity.IsPinned = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1079,7 +1078,7 @@ namespace Plato.Questions.Controllers
             entity.IsPrivate = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1135,7 +1134,7 @@ namespace Plato.Questions.Controllers
             entity.IsPrivate = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1190,7 +1189,7 @@ namespace Plato.Questions.Controllers
             entity.IsLocked = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1246,7 +1245,7 @@ namespace Plato.Questions.Controllers
             entity.IsLocked = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1301,7 +1300,7 @@ namespace Plato.Questions.Controllers
             entity.IsSpam = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1356,7 +1355,7 @@ namespace Plato.Questions.Controllers
             entity.IsSpam = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1422,7 +1421,7 @@ namespace Plato.Questions.Controllers
             entity.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
                 _alerter.Success(T["Question Deleted Successfully"]);
@@ -1487,7 +1486,7 @@ namespace Plato.Questions.Controllers
             entity.IsDeleted = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _questionManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
                 _alerter.Success(T["Question Restored Successfully"]);
@@ -1551,7 +1550,7 @@ namespace Plato.Questions.Controllers
             reply.IsPrivate = true;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _answerManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1614,7 +1613,7 @@ namespace Plato.Questions.Controllers
             reply.IsPrivate = false;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _answerManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1676,7 +1675,7 @@ namespace Plato.Questions.Controllers
             reply.IsSpam = true;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _answerManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1739,7 +1738,7 @@ namespace Plato.Questions.Controllers
             reply.IsSpam = false;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _answerManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1811,7 +1810,7 @@ namespace Plato.Questions.Controllers
             reply.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _answerManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1883,7 +1882,7 @@ namespace Plato.Questions.Controllers
             reply.IsDeleted = false;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _answerManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -2020,7 +2019,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
             };
 
             // create topic
-            var data = await _topicManager.CreateAsync(topic);
+            var data = await _questionManager.CreateAsync(topic);
             if (data.Succeeded)
             {
                 for (var i = 0; i < 25; i++)
@@ -2035,7 +2034,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
                         CreatedUserId = randomUser?.Id ?? 0,
                         CreatedDate = DateTimeOffset.UtcNow
                     };
-                    var newReply = await _replyManager.CreateAsync(reply);
+                    var newReply = await _answerManager.CreateAsync(reply);
                 }
             }
 

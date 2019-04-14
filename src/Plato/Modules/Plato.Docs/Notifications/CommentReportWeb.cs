@@ -16,7 +16,7 @@ using Plato.Entities.Stores;
 
 namespace Plato.Docs.Notifications
 {
-    public class ReplyReportWeb : INotificationProvider<ReportSubmission<DocComment>>
+    public class CommentReportWeb : INotificationProvider<ReportSubmission<DocComment>>
     {
 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -27,7 +27,7 @@ namespace Plato.Docs.Notifications
 
         public IStringLocalizer S { get; }
         
-        public ReplyReportWeb(
+        public CommentReportWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             ICapturedRouterUrlHelper urlHelper,
@@ -95,7 +95,7 @@ namespace Plato.Docs.Notifications
             });
 
             // Get reason given text
-            var reasonText = S["Reply Reported"];
+            var reasonText = S["Comment Reported"];
             if (ReportReasons.Reasons.ContainsKey(context.Model.Why))
             {
                 reasonText = S[ReportReasons.Reasons[context.Model.Why]];
@@ -107,7 +107,7 @@ namespace Plato.Docs.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = reasonText.Value,
-                Message = S["A reply has been reported!"],
+                Message = S["A comment has been reported!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow

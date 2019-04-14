@@ -185,7 +185,7 @@ namespace Plato.Ideas.Categories.ViewProviders
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
+                ).Add(S["Ideas"], home => home
                     .Action("Index", "Home", "Plato.Ideas")
                     .LocalNav()
                 );

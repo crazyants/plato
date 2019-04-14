@@ -70,7 +70,7 @@
     <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
     {
-        <span title="@T["This article is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+        <span title="@T["This question is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
             <i class="fal fa-thumbtack"></i>
         </span>
     }

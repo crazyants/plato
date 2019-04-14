@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Questions.Models;
 using Plato.Entities.Ratings.ViewModels;
@@ -31,6 +32,8 @@ namespace Plato.Questions.Votes.Navigation
 
             // Get entity from navigation builder
             var entity = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
+
+            // We need an entity
             if (entity == null)
             {
                 return;
@@ -38,14 +41,19 @@ namespace Plato.Questions.Votes.Navigation
 
             // Get reply from navigation builder
             var reply = builder.ActionContext.HttpContext.Items[typeof(Answer)] as Answer;
+
+            // We need a reply
             if (reply == null)
             {
                 return;
             }
-            
+
+            // If entity & reply are not hidden allow voting
+            if (!entity.IsHidden() && !reply.IsHidden())
+            {
                 // Add vote toggle view to navigation
                 builder
-                .Add(T["Vote"], react => react
+                    .Add(T["Vote"], react => react
                         .View("VoteToggle", new
                         {
                             model = new VoteToggleViewModel()
@@ -56,7 +64,8 @@ namespace Plato.Questions.Votes.Navigation
                                 ApiUrl = "api/questions/vote/post"
                             }
                         })
-                );
+                    );
+            }
 
         }
 

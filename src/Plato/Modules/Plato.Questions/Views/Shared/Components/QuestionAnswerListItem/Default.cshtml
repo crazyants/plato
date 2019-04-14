@@ -39,15 +39,15 @@
                         </span>
                         @if (Model.Reply.IsSpam)
                         {
-                            <span class="badge badge-info" data-toggle="tooltip" title="@T["This reply has been flagged as SPAM and is only visible to you as you have permission to view replies flagged as SPAM"]">@T["SPAM"]</span>
+                            <span class="badge badge-info" data-toggle="tooltip" title="@T["This answer has been flagged as SPAM and is only visible as you have permission to view answers flagged as SPAM"]">@T["SPAM"]</span>
                         }
                         @if (Model.Reply.IsPrivate)
                         {
-                            <span data-toggle="tooltip" title="@T["This reply is private and only visible to you as you have permission to view private replies"]" class="badge badge-primary">@T["Private"]</span>
+                            <span data-toggle="tooltip" title="@T["This answer is hidden and only visible as you have permission to view hidden answers"]" class="badge badge-primary">@T["Hidden"]</span>
                         }
                         @if (Model.Reply.IsDeleted)
                         {
-                            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This reply has been deleted and is only visible to you as you have permission to view deleted replies"]">@T["Deleted"]</span>
+                            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This answer has been deleted and is only visible as you have permission to view deleted answers"]">@T["Deleted"]</span>
                         }
                         @if (Model.Reply.IsClosed)
                         {
