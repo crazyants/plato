@@ -78,17 +78,24 @@ namespace Plato.Roles.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(Role role, IViewProviderContext updater)
         {
-        
+
+            // Locate the role we are editing within our default roles
+            var defaultRole = DefaultRoles.ToList()
+                .FirstOrDefault(r => r.Equals(role.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Build model
             var editRoleViewModel = new EditRoleViewModel()
             {
                 Id = role.Id,
                 RoleName = role.Name,
                 Role = role,
                 IsNewRole = await IsNewRole(role.Id),
+                IsDefaultRole = defaultRole != null ? true : false,
                 EnabledPermissions = await GetEnabledRolePermissionsAsync(role),
                 CategorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync()
             };
 
+            // Return view
             return Views(
                 View<EditRoleViewModel>("Admin.Edit.Header", model => editRoleViewModel).Zone("header"),
                 View<EditRoleViewModel>("Admin.Edit.Meta", model => editRoleViewModel).Zone("meta"),

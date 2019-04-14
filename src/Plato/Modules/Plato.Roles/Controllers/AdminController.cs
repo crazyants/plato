@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
@@ -25,12 +25,10 @@ namespace Plato.Roles.Controllers
         #region "Constructor"
 
         private readonly IAuthorizationService _authorizationService;
-
         private readonly IViewProviderManager<Role> _roleViewProvider;
-        private readonly IPlatoRoleStore _platoRoleStore;
         private readonly RoleManager<Role> _roleManager;
-        private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,16 +36,14 @@ namespace Plato.Roles.Controllers
 
 
         public AdminController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
-            IPlatoRoleStore platoRoleStore, 
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IViewProviderManager<Role> roleViewProvider,
             RoleManager<Role> roleManager, IAlerter alerter,
             IAuthorizationService authorizationService,
             IBreadCrumbManager breadCrumbManager)
         {
-        
-            _platoRoleStore = platoRoleStore;
+
             _roleViewProvider = roleViewProvider;
             _roleManager = roleManager;
             _alerter = alerter;
@@ -63,9 +59,11 @@ namespace Plato.Roles.Controllers
 
         #region "Actions"
 
-        public async Task<IActionResult> Index(
-            RoleIndexOptions opts,
-            PagerOptions pager)
+        // --------------
+        // Index
+        // --------------
+
+        public async Task<IActionResult> Index(RoleIndexOptions opts, PagerOptions pager)
         {
             
             // Ensuer we have permission
@@ -87,8 +85,7 @@ namespace Plato.Roles.Controllers
             {
                 opts = new RoleIndexOptions();
             }
-
-
+            
             // default pager
             if (pager == null)
             {
@@ -111,12 +108,7 @@ namespace Plato.Roles.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.Size != defaultPagerOptions.Size)
                 this.RouteData.Values.Add("pager.size", pager.Size);
-            
-            //// Maintain previous route data when generating page links
-            //var routeData = new RouteData();
-            //routeData.Values.Add("opts.search", opts.Search);
-            //routeData.Values.Add("opts.order", opts.Order);
-
+         
             // Build view model
             var viewModel = new RolesIndexViewModel()
             {
@@ -126,12 +118,14 @@ namespace Plato.Roles.Controllers
 
             // Add view model to context
             this.HttpContext.Items[typeof(RolesIndexViewModel)] = viewModel;
-
-            var result = await _roleViewProvider.ProvideIndexAsync(new Role(), this);
-
-            return View(result);
+            
+            return View((LayoutViewModel) await _roleViewProvider.ProvideIndexAsync(new Role(), this));
 
         }
+        
+        // --------------
+        // Create
+        // --------------
         
         public async Task<IActionResult> Create()
         {
@@ -152,29 +146,53 @@ namespace Plato.Roles.Controllers
                     .LocalNav()
                 ).Add(S["Add Role"]);
             });
-
-            var result = await _roleViewProvider.ProvideEditAsync(new Role(), this);
-            return View(result);
+            
+            return View((LayoutViewModel) await _roleViewProvider.ProvideEditAsync(new Role(), this));
         }
 
-        [HttpPost]
-        [ActionName(nameof(Create))]
+        [HttpPost, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost()
         {
-            
-            var result = await _roleViewProvider.ProvideUpdateAsync(new Role(), this);
+
+            var newRole = new Role();
+            var roleClaims = new List<RoleClaim>();
+            foreach (string key in Request.Form.Keys)
+            {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
+                {
+                    var permissionName = key.Substring("Checkbox.".Length);
+                    roleClaims.Add(new RoleClaim { ClaimType = Permission.ClaimTypeName, ClaimValue = permissionName });
+                }
+            }
+
+            newRole.RoleClaims.RemoveAll(c => c.ClaimType == Permission.ClaimTypeName);
+            newRole.RoleClaims.AddRange(roleClaims);
+
+            var result = await _roleViewProvider.ProvideUpdateAsync(newRole, this);
 
             if (!ModelState.IsValid)
             {
-                return View(result);
+                _alerter.Success(T["Role Created Successfully!"]);
+            }
+            else
+            {
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _alerter.Danger(T[error.ErrorMessage]);
+                    }
+                }
             }
 
-            _alerter.Success(T["Role Created Successfully!"]);
-
+         
             return RedirectToAction(nameof(Index));
-
-
+            
         }
+
+        // --------------
+        // Edit
+        // --------------
 
         public async Task<IActionResult> Edit(string id)
         {
@@ -201,14 +219,12 @@ namespace Plato.Roles.Controllers
             {
                 return NotFound();
             }
-
-            var result = await _roleViewProvider.ProvideEditAsync(role, this);
-            return View(result);
+            
+            return View((LayoutViewModel) await _roleViewProvider.ProvideEditAsync(role, this));
 
         }
         
-        [HttpPost]
-        [ActionName(nameof(Edit))]
+        [HttpPost, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(string id)
         {
             
@@ -243,6 +259,10 @@ namespace Plato.Roles.Controllers
             return RedirectToAction(nameof(Index));
             
         }
+
+        // --------------
+        // Delete
+        // --------------
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
@@ -288,6 +308,6 @@ namespace Plato.Roles.Controllers
 
         #endregion
         
-
     }
+
 }

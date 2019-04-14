@@ -20,6 +20,8 @@ namespace Plato.Roles.ViewModels
         public string Description { get; set; }
         
         public bool IsNewRole { get; set; }
+
+        public bool IsDefaultRole { get; set; }
         
         public IDictionary<string, IEnumerable<Permission>> CategorizedPermissions { get; set; }
 
