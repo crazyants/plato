@@ -35,6 +35,20 @@ namespace Plato.Docs.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(EntityTreeOptions options)
         {
 
+            // Get entities
+            var entities = await GetEntities();
+
+            // Add entities to view model
+            options.Entities = entities?.Data?.BuildHierarchy<Doc>()?.OrderBy(r => r.SortOrder);
+                
+            // Return view
+            return View(options);
+
+        }
+
+        private async Task<IPagedResults<Doc>> GetEntities()
+        {
+
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
             if (feature == null)
             {
@@ -47,9 +61,9 @@ namespace Plato.Docs.ViewComponents
                 Sort = SortBy.SortOrder,
                 Order = OrderBy.Asc
             };
-            
+
             // Get results
-            var results = await _entityService
+            return await _entityService
                 .ConfigureQuery(async q =>
                 {
 
@@ -73,27 +87,16 @@ namespace Plato.Docs.ViewComponents
                     {
                         q.HideDeleted.True();
                     }
-                    
+
                 })
                 .GetResultsAsync(indexOptions, new PagerOptions()
                 {
                     Page = 1,
                     Size = int.MaxValue
                 });
-       
-            return View(new EntityTreeOptions()
-            {
-                Entities = results?.Data?.BuildHierarchy<Doc>()?.OrderBy(r => r.SortOrder),
-                EditMenuViewName = "",
-                SelectedEntity = options.SelectedEntity,
-                EnableCheckBoxes = options.EnableCheckBoxes,
-                CssClass = options.CssClass,
-                HtmlName = options.HtmlName,
-                RouteValues = options.RouteValues
-            });
 
         }
-        
+
     }
 
 }

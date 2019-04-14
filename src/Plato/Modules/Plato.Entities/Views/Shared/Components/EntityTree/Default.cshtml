@@ -138,7 +138,7 @@
                     {
                         var view = await DisplayAsync(new View(Model.EditMenuViewName, new
                         {
-                            categoryId = entity.Value.Id
+                            entityId = entity.Value.Id
                         }));
                         sb.Append(view.ToHtmlString());
                     }
