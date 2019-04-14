@@ -9,7 +9,9 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
-    public class Entity :  IEntity
+    public class Entity :
+        IComparable<IEntity>,
+        IEntity
     {
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
         
@@ -302,6 +304,9 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("DailyRatings"))
                 DailyRatings = Convert.ToDouble(dr["DailyRatings"]);
 
+            if (dr.ColumnIsNotNull("SortOrder"))
+                SortOrder = Convert.ToInt32(dr["SortOrder"]);
+            
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
@@ -387,6 +392,19 @@ namespace Plato.Entities.Models
             Relevance = Rank.ToPercentageOf(MaxRank);
         }
 
+        public int CompareTo(IEntity other)
+        {
+            if (other == null)
+                return 1;
+            var sortOrderCompare = other.SortOrder;
+            if (this.SortOrder == sortOrderCompare)
+                return 0;
+            if (this.SortOrder < sortOrderCompare)
+                return -1;
+            if (this.SortOrder > sortOrderCompare)
+                return 1;
+            return 0;
+        }
     }
     
 }

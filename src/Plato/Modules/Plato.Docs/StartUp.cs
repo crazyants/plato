@@ -69,7 +69,7 @@ namespace Plato.Docs
             services.AddScoped<IEntityReplyManager<DocComment>, EntityReplyManager<DocComment>>();
 
             // Register data access
-            services.AddScoped<IPostManager<Doc>, TopicManager>();
+            services.AddScoped<IPostManager<Doc>, DocManager>();
             services.AddScoped<IPostManager<DocComment>, ReplyManager>();
             
             // Services

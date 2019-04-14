@@ -50,7 +50,11 @@ namespace Plato.Docs.Services
         }
 
         #endregion
-        
+
+        public Task<ICommandResult<DocComment>> Move(DocComment model, MoveDirection direction)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 }

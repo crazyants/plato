@@ -272,7 +272,6 @@ a.label:hover, .label.active {
 /* Tree */
 /* ------------------- */
 
-
 .tree li.list-group-item:not(.active),
 .tree li.list-group-item:hover:not(.active) {
     color: #222;

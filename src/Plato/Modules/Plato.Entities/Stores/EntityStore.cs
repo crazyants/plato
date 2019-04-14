@@ -173,6 +173,7 @@ namespace Plato.Entities.Stores
                 if (results != null)
                 {
                     results = await MergeEntityData(results.ToList());
+                    results = results.OrderBy(r => r.SortOrder);
                 }
 
                 return results;

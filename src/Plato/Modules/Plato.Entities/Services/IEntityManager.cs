@@ -1,4 +1,5 @@
-﻿using Plato.Internal.Abstractions;
+﻿using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Services
 {
@@ -12,7 +13,15 @@ namespace Plato.Entities.Services
         event EntityEvents<TEntity>.Handler Updated;
         event EntityEvents<TEntity>.Handler Deleting;
         event EntityEvents<TEntity>.Handler Deleted;
-        
+
+        Task<ICommandResult<TEntity>> Move(TEntity model, MoveDirection direction);
+
     }
-    
+
+    public enum MoveDirection
+    {
+        Up,
+        Down
+    }
+
 }

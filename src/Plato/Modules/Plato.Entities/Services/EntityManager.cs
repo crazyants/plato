@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -19,6 +20,7 @@ namespace Plato.Entities.Services
         public event EntityEvents<TEntity>.Handler Updated;
         public event EntityEvents<TEntity>.Handler Deleting;
         public event EntityEvents<TEntity>.Handler Deleted;
+        
 
         #region "Constructor"
 
@@ -232,10 +234,108 @@ namespace Plato.Entities.Services
             return result.Failed(new CommandError("An unknown error occurred whilst attempting to create an eneity."));
 
         }
-        
+
+        public async Task<ICommandResult<TEntity>> Move(TEntity model, MoveDirection direction)
+        {
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            // Our result
+            var result = new CommandResult<TEntity>();
+
+            // All categories for supplied category feature
+            var entities = await _entityStore.GetByFeatureIdAsync(model.FeatureId);
+            if (entities == null)
+            {
+                return result.Failed($"No entities were found matching FeatureId '{model.FeatureId}'");
+            }
+            
+            var currentSortOrder = model.SortOrder;
+            switch (direction)
+            {
+
+                case MoveDirection.Up:
+
+                    // Find entity above the supplied entity
+                    TEntity above = null;
+
+                    foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
+                    {
+                        if (entity.SortOrder < currentSortOrder)
+                        {
+                            above = (TEntity)entity;
+                        }
+                    }
+
+                    // Swap sort orders
+                    if (above != null)
+                    {
+
+                        // Update source
+                        await UpdateSortOrder(model, above.SortOrder);
+
+                        // Update entity we are swapping with modified detailed
+                        above.ModifiedUserId = model.ModifiedUserId;
+                        above.ModifiedDate = model.ModifiedDate;
+                        
+                        // Update target
+                        await UpdateSortOrder(above, currentSortOrder);
+
+                    }
+
+                    break;
+
+                case MoveDirection.Down:
+
+                    // Find category below the supplied category
+                    TEntity below = null;
+                    var children = entities
+                        .Where(c => c.ParentId == model.ParentId)
+                        .ToList();
+                    for (var i = children.Count - 1; i >= 0; i--)
+                    {
+                        if (children[i].SortOrder > currentSortOrder)
+                        {
+                            below = (TEntity)children[i];
+                        }
+                    }
+
+                    // Swap sort orders
+                    if (below != null)
+                    {
+
+                        // Update source
+                        await UpdateSortOrder(model, below.SortOrder);
+                        
+                        // Update entity we are swapping with modified detailed
+                        below.ModifiedUserId = model.ModifiedUserId;
+                        below.ModifiedDate = model.ModifiedDate;
+                        
+                        // Update target
+                        await UpdateSortOrder(below, currentSortOrder);
+
+                    }
+
+                    break;
+
+            }
+
+            return result.Success();
+
+        }
+
         #endregion
 
         #region "Private Methods"
+
+        async Task<ICommandResult<TEntity>> UpdateSortOrder(TEntity model, int sortOrder)
+        {
+            model.SortOrder = sortOrder;
+            return await UpdateAsync(model);
+        }
 
         async Task<string> ParseEntityHtml(string message)
         {

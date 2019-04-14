@@ -20,6 +20,7 @@ using Plato.Internal.Layout;
 
 namespace Plato.Discuss.Channels.Controllers
 {
+
     public class AdminController : Controller, IUpdateModel
     {
 
@@ -57,7 +58,7 @@ namespace Plato.Discuss.Channels.Controllers
         }
 
         // --------------
-        // Manage Categories
+        // Index
         // --------------
 
         public async Task<IActionResult> Index(int id)
@@ -125,7 +126,7 @@ namespace Plato.Discuss.Channels.Controllers
         }
 
         // --------------
-        // Create Category
+        // Create
         // --------------
 
         public async Task<IActionResult> Create(int id = 0)
@@ -210,7 +211,7 @@ namespace Plato.Discuss.Channels.Controllers
         }
 
         // --------------
-        // Edit Category
+        // Edit
         // --------------
 
         public async Task<IActionResult> Edit(int id)

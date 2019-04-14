@@ -1989,6 +1989,130 @@ namespace Plato.Docs.Controllers
 
         }
 
+        // --------------
+        // Move Up / Down
+        // --------------
+
+        public async Task<IActionResult> MoveUp(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Ensure valid range
+            if (entityId <= 0)
+            {
+                return NotFound();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // We need an entity
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+
+            // Persist
+            var result = await _docManager.Move(entity, MoveDirection.Up);
+
+            // Confirm
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Updated Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Return to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> MoveDown(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Ensure valid range
+            if (entityId <= 0)
+            {
+                return NotFound();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // We need an entity
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+
+            // Persist
+            var result = await _docManager.Move(entity, MoveDirection.Down);
+
+            // Confirm
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Doc Updated Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+            
+            // Return to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+        
         #endregion
 
         #region "Private Methods"

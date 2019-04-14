@@ -762,6 +762,11 @@
     color: inherit;
 }
 
+.tree li.list-group-item.active .text-muted {
+    color: inherit !important;
+}
+
+
 /* ------------------------- */
 /* Labels */
 /* ------------------------- */

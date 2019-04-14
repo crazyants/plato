@@ -368,7 +368,7 @@ namespace Plato.Categories.Services
             var categories = await _categoryStore.GetByFeatureIdAsync(model.FeatureId);
             if (categories == null)
             {
-                return result.Failed($"No categirues was forumd for matching FeatureId '{model.FeatureId}'");
+                return result.Failed($"No categories was found matching FeatureId '{model.FeatureId}'");
             }
 
 
