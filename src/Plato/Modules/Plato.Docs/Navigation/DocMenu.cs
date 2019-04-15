@@ -170,7 +170,7 @@ namespace Plato.Docs.Navigation
                                 }
                                 : new Dictionary<string, object>()
                                 {
-                                    {"data-provide", "postDocComment"},
+                                    {"data-provide", "postReply"},
                                     {"data-toggle", "tooltip"},
                                     {"title", T["Comment"]}
                                 })

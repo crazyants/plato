@@ -853,21 +853,11 @@
 }
 
 /* scollable area */
-.resizable-container {
-    position: relative;
-    overflow: auto;
-}
-
-/*
-.resizable-container::-webkit-scrollbar { background:#eee; width: 9px; }
-.resizable-container::-webkit-scrollbar-thumb:vertical { border-radius: 0; margin: 0 9px; background-color: #ccc;  }
-.resizable-container::-webkit-scrollbar-thumb:vertical:hover { cursor: pointer; background-color: #aaa; }
-.resizable-container::-webkit-scrollbar-button:start:decrement,
-.resizable-container::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
-*/
+.resizable .resizable-container { position: relative; overflow: auto; }
+.resizable-hidden .resizable-container { overflow: hidden; }
 
 .resizable-top {  left: 0;  top: 0; height: 400px; }
-.resizable-bottom { left: 0; top: auto; bottom: 0; height: calc(75vh);  }
+.resizable-bottom { left: 0; top: auto; bottom: 0; height: calc(90vh); }
 .resizable-left { display: table; left: 0;  top: 0; width: 400px;  }
 .resizable-right { display: table; top: 0; right: 0; width: 400px;  }
 

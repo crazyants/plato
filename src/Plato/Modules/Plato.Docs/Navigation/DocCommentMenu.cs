@@ -153,7 +153,7 @@ namespace Plato.Docs.Navigation
                                 }
                                 : new Dictionary<string, object>()
                                 {
-                                    {"data-provide", "postDocQuote"},
+                                    {"data-provide", "postQuote"},
                                     {"data-quote-selector", "#quote" + reply.Id.ToString()},
                                     {"data-toggle", "tooltip"},
                                     {"title", T["Comment"]}

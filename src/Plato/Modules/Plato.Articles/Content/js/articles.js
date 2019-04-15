@@ -18,43 +18,30 @@ $(function (win, doc, $) {
     
     // --------
 
-    var app = win.$.Plato;
+    var app = win.$.Plato,
+        featureId = "Plato.Articles";
 
     // --------
 
     var articles = {
         init: function () {
+            app.logger.logInfo(featureId + " initializing");
             this.bind();
+            app.logger.logInfo(featureId + " initialized");
         },
         bind: function () {
-            
-            // -------------
-            // Comment
-            // -------------
-
-            $('[data-provide="postComment"]').bind("click", function (e) {
-
-                e.preventDefault();
-
-                /* resizeable */
-                $('[data-provide="resizeable"]').resizeable("toggleVisibility", {
-                    onShow: function ($caller) {
-                        var $textArea = $caller.find(".md-textarea");
-                        if ($textArea.length > 0) {
-                            $textArea.focus();
-                        }
-                    }
-                });
-
-            });
-
+            // implementation
         }
     };
     
     // --------
 
+    // app ready
     app.ready(function () {
         articles.init();
     });
+    
+    // infinite scroll load
+    $().infiniteScroll(function ($ele) { }, "ready");
 
 }(window, document, jQuery));

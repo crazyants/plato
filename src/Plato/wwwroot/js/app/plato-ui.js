@@ -3625,7 +3625,23 @@ $(function (win, doc, $) {
             },
             show: function ($caller) {
                 if ($caller.hasClass("resizable-hidden")) {
+
+                    var $bar = $caller.find(".resizable-bar"),
+                        $container = $caller.find(".resizable-container");
+
+                    // Make visible
                     $caller.removeClass("resizable-hidden");
+
+                    // Set container height to ensure correct overflow upon show
+                    $container.css({ "height": $caller.height() - $bar.height() });
+
+                    // Ensure we scroll the container to the top
+                    $container.scrollTo({
+                            offset: 0,
+                            interval: 500
+                        },
+                        "go");
+
                     // onShow event
                     if ($caller.data(dataKey).onShow) {
                         $caller.data(dataKey).onShow($caller);
@@ -4309,6 +4325,169 @@ $(function (win, doc, $) {
 
     }();
 
+    /* replySpy */
+    var replySpy = function () {
+
+        var dataKey = "replySpy",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            postQuoteSelector: '[data-provide="postQuote"]',
+            postReplySelector: '[data-provide="postReply"]',
+            onQuote: function ($caller) { },
+            onReply: function ($caller) { }
+        };
+
+        var methods = {
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                var postQuoteSelector = $caller.data(dataKey).postQuoteSelector,
+                    postReplySelector = $caller.data(dataKey).postReplySelector;
+                
+                // Bind Quote
+                if (postQuoteSelector) {
+                    $caller.find(postQuoteSelector).unbind("click").bind("click",
+                        function (e) {
+                            
+                            e.preventDefault();
+                            
+                            // Get element containing quote
+                            var value = "",
+                                selector = $(this).attr("data-quote-selector"),
+                                $quote = $(selector);
+
+                            // Apply locale
+                            var text = app.T("In response to");
+
+                            if ($quote.length > 0) {
+                                var displayName = $quote.attr("data-display-name"),
+                                    replyUrl = $quote.attr("data-reply-url");
+                                value = "> " + $quote.html()
+                                    .replace(/\n\r/g, "\n")
+                                    .replace(/[\s]\n/g, "\n")
+                                    .replace(/\n/g, "\n> ");
+                                if (displayName && replyUrl) {
+                                    value += "\n> ^^ " + text + " [" + displayName + "](" + replyUrl + ")";
+                                }
+                                value += "\n\n";
+                            }
+
+                            /* resizeable */
+                            $('[data-provide="resizeable"]').resizeable("toggleVisibility", {
+                                onShow: function ($resizeable) {
+                                    var $textArea = $resizeable.find(".md-textarea");
+                                    if ($textArea.length > 0) {
+                                        $textArea.val(value);
+                                        $textArea.focus();
+                                    }
+                                }
+                            });
+
+                            // onQuote event
+                            if ($caller.data(dataKey).onQuote) {
+                                $caller.data(dataKey).onQuote($caller);
+                            }
+                            
+                        });
+                }
+            
+                // Bind Reply
+                if (postReplySelector) {
+                    $caller.find(postReplySelector).unbind("click").bind("click", function (e) {
+
+                        e.preventDefault();
+
+                        /* resizeable */
+                        $('[data-provide="resizeable"]').resizeable("toggleVisibility", {
+                            onShow: function ($caller) {
+                                var $textArea = $caller.find(".md-textarea");
+                                if ($textArea.length > 0) {
+                                    $textArea.focus();
+                                }
+                            }
+                        });
+                        
+                        // onReply event
+                        if ($caller.data(dataKey).onReply) {
+                            $caller.data(dataKey).onReply($caller);
+                        }
+
+                    });
+                }
+              
+            },
+            unbind: function ($caller) {
+
+                var postQuoteSelector = $caller.data(dataKey).postQuoteSelector,
+                    postReplySelector = $caller.data(dataKey).postReplySelector;
+
+                if (postQuoteSelector) {
+                    $caller.find(postQuoteSelector).unbind("click");
+                }
+                if (postReplySelector) {
+                    $caller.find(postReplySelector).unbind("click");
+                }
+                
+
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).replySpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().replySpy()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+        };
+
+    }();
+
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -4330,7 +4509,8 @@ $(function (win, doc, $) {
         autoLinkImages: autoLinkImages.init,
         markdownBody: markdownBody.init,
         confirm: confirm.init,
-        resizeable: resizeable.init
+        resizeable: resizeable.init,
+        replySpy: replySpy.init
     });
 
     // ---------------------------
@@ -4387,6 +4567,9 @@ $(function (win, doc, $) {
         /* resizeable */
         this.find('[data-provide="resizeable"]').resizeable();
 
+        /* replySpy */
+        this.replySpy();
+
     };
 
     // --------------
@@ -4406,7 +4589,10 @@ $(function (win, doc, $) {
             
             /* Initialize dialogSpy upon infiniteScroll load */
             $ele.find('[data-provide="dialog"]').dialogSpy();
-            
+
+            /* Initialize replySpy upon infiniteScroll load */
+            $ele.replySpy("bind");
+
         }, "ready");
 
     });

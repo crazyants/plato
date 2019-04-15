@@ -171,7 +171,7 @@ namespace Plato.Ideas.Navigation
                                 }
                                 : new Dictionary<string, object>()
                                 {
-                                    {"data-provide", "postIdeaComment"},
+                                    {"data-provide", "postReply"},
                                     {"data-toggle", "tooltip"},
                                     {"title", T["Reply"]}
                                 })

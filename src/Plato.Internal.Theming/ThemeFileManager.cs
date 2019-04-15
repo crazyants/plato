@@ -27,8 +27,8 @@ namespace Plato.Internal.Theming
         public IEnumerable<IThemeFile> GetFiles(string themeId)
         {
 
-            // Ensure theme manager
-            EnsureThemeManager();
+            // Ensure theme loader
+            EnsureThemeLoader();
 
             // Get available themes
             var availableThemes = _themeLoader.AvailableThemes;
@@ -95,7 +95,7 @@ namespace Plato.Internal.Theming
         {
 
             // Ensure theme manager
-            EnsureThemeManager();
+            EnsureThemeLoader();
 
             var file = GetFile(themeId, relativePath);
             if (file != null)
@@ -111,7 +111,7 @@ namespace Plato.Internal.Theming
         {
 
             // Ensure theme manager
-            EnsureThemeManager();
+            EnsureThemeLoader();
 
             var files = GetFiles(themeId);
             if (files != null)
@@ -127,7 +127,7 @@ namespace Plato.Internal.Theming
         {
 
             // Ensure theme manager
-            EnsureThemeManager();
+            EnsureThemeLoader();
 
             var file = GetFile(themeId, relativePath);
             if (file != null)
@@ -174,11 +174,11 @@ namespace Plato.Internal.Theming
 
         // ---------------
         
-        void EnsureThemeManager()
+        void EnsureThemeLoader()
         {
             if (_themeLoader == null)
             {
-                throw new Exception("A theme manager has not been initialized. You must call the SetThemeManager method passing in a valid IThemeManager implementation.");
+                throw new Exception("A theme loader has not been initialized. You must call the SetThemeLoader method passing in a valid IThemeLoader implementation.");
             }
         }
 
