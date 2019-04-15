@@ -70,7 +70,7 @@
                         .Append(entity.Value.Title)
                         .Append("\">");
 
-                    sb.Append("<div class=\"p-2\"");
+                    sb.Append("<div class=\"py-2 px-3\"");
                     if (entity.Value.Depth > 0)
                     {
                         sb.Append(" style=\"margin-left: ")
@@ -87,15 +87,7 @@
                         sb.Append("<i class=\"fal fa-chevron-right\"></i>");
                         sb.Append("</a>");
                     }
-                    else
-                    {
-
-                        sb.Append("<span class=\"btn toggler mr-2\">")
-                            .Append("<i class=\"fal\"></i>")
-                            .Append("</span>");
-
-                    }
-
+                   
                     if (@Model.EnableCheckBoxes)
                     {
                         sb.Append("<input type=\"radio\" id=\"")
@@ -156,7 +148,7 @@
         }
         else
         {
-            sb.Append("<li class=\"p-2\">");
+            sb.Append("<li class=\"py-2 px-3\">");
             sb.Append(T["No results found"].Value);
             sb.Append("</li>");
         }
