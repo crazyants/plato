@@ -1,6 +1,26 @@
-﻿@model Doc
+﻿@using Plato.Docs
+@using Plato.Internal.Security.Abstractions
+@model Doc
 @{
     var dropdownId = "editDoc" + Model.Id;
+    var postPermission = Permissions.PostDocs;
+    var editPermission =
+        Model.CreatedUserId == base.CurrentUser.Id
+            ? Permissions.EditOwnDocs
+            : Permissions.EditAnyDoc;
+    var sortPermission =
+        Model.CreatedUserId == base.CurrentUser.Id
+            ? Permissions.SortOwnDocs
+            : Permissions.SortAnyDoc;
+    var deletePermission =
+        Model.CreatedUserId == base.CurrentUser.Id
+            ? Permissions.DeleteOwnDocs
+            : Permissions.DeleteAnyDoc;
+    var restorePermission =
+        Model.CreatedUserId == base.CurrentUser.Id
+            ? Permissions.RestoreOwnDocs
+            : Permissions.RestoreAnyDoc;
+
 }
 
 <div class="dropdown float-right">
@@ -8,30 +28,49 @@
         <i class="fa fa-ellipsis-h"></i>
     </a>
     <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="@dropdownId">
-        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-alias="@Model.Alias" class="dropdown-item">
-            @T["Edit Doc"]
-        </a>
-        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Create" asp-route-parentId="@Model.Id" class="dropdown-item">
-            @T["Add Child"]
-        </a>
-        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveUp" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Move Up"]
-        </a>
-        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Move Down"]
-        </a>
-        <div class="dropdown-divider"></div>
+        <authorize asp-permission="@editPermission.Name">
+            <authorize-success>
+                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Edit" asp-route-id="@Model.Id" asp-route-alias="@Model.Alias" class="dropdown-item">
+                    @T["Edit Doc"]
+                </a>
+            </authorize-success>
+        </authorize>
+        <authorize asp-permission="@postPermission.Name">
+            <authorize-success>
+                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Create" asp-route-parentId="@Model.Id" class="dropdown-item">
+                    @T["Add Child"]
+                </a>
+            </authorize-success>
+        </authorize>
+        <authorize asp-permission="@sortPermission.Name">
+            <authorize-success>
+                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveUp" asp-route-id="@Model.Id" class="dropdown-item">
+                    @T["Move Up"]
+                </a>
+                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
+                    @T["Move Down"]
+                </a>
+            </authorize-success>
+        </authorize>
         @if (Model.IsDeleted)
         {
-            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Restore" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-success">
-                @T["Restore Doc"]
-            </a>
+            <authorize asp-permission="@restorePermission.Name">
+                <authorize-success>
+                    <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Restore" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-success">
+                        @T["Restore Doc"]
+                    </a>
+                </authorize-success>
+            </authorize>
         }
         else
         {
-            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Delete" data-provide="confirm" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
-                @T["Delete Doc"]
-            </a>
+            <authorize asp-permission="@deletePermission.Name">
+                <authorize-success>
+                    <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Delete" data-provide="confirm" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
+                        @T["Delete Doc"]
+                    </a>
+                </authorize-success>
+            </authorize>
         }
     </div>
 </div>

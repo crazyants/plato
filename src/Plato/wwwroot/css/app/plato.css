@@ -234,6 +234,8 @@
 .card-body-flush .card-body { padding: 0; }
 .card-body-sm-gutter .card-body { padding: 0.5rem; }
 
+.card-header .nav-link { padding: 0.25rem 1rem; }
+
 /* ------------------------- */
 /* VCard */
 /* ------------------------- */

@@ -1,11 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Docs
 @model Doc
+@{
+    var postPermission = Permissions.PostDocs;
+}
 
 <card class="card card-body-flush">
     <card-title>
-        <a asp-route-action="Create" class="btn btn-sm dropdown-toggle text-muted dropdown-toggle-no-caret float-right" data-provide="tooltip" title="@T["New Doc"]">
-            <i class="fal fa-plus"></i>
-        </a>
+        <authorize asp-permission="@postPermission.Name">
+            <authorize-success>
+                <a asp-route-action="Create" class="btn btn-sm dropdown-toggle text-muted dropdown-toggle-no-caret float-right" data-provide="tooltip" title="@T["New Doc"]">
+                    <i class="fal fa-plus"></i>
+                </a>
+            </authorize-success>
+        </authorize>
         <h6 class="card-title">@T["Browse Docs"]</h6>
     </card-title>
     <card-body>
@@ -14,7 +22,6 @@
             options = new EntityTreeOptions()
             {
                 SelectedEntity = Model.Id,
-                EditMenuViewName = "DocTreeMenu",
                 RouteValues = new RouteValueDictionary()
                 {
                     ["area"] = "Plato.Docs",

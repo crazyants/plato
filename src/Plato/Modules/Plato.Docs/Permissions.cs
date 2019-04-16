@@ -7,60 +7,65 @@ namespace Plato.Docs
     {
 
         public static readonly Permission PostDocs =
-            new Permission("PostDocs", "Post documentation");
+            new Permission("PostDocs", "Post docs");
 
         public static readonly Permission PostDocComments =
-            new Permission("PostDocComments", "Post comments to documentation");
+            new Permission("PostDocComments", "Post comments to docs");
         
         public static readonly Permission EditOwnDocs =
-            new Permission("EditOwnDocs", "Edit own documentation");
+            new Permission("EditOwnDocs", "Edit own docs");
 
         public static readonly Permission EditAnyDoc =
-            new Permission("EditAnyDoc", "Edit any documentation");
+            new Permission("EditAnyDoc", "Edit any docs");
 
+        public static readonly Permission SortOwnDocs =
+            new Permission("SortOwnDocs", "Sort own docs");
+
+        public static readonly Permission SortAnyDoc =
+            new Permission("SortAnyDoc", "Sort any docs");
+        
         public static readonly Permission EditOwnDocComments =
-            new Permission("EditOwnDocComments", "Edit own documentation comments");
+            new Permission("EditOwnDocComments", "Edit own comments");
 
         public static readonly Permission EditAnyDocComment =
-            new Permission("EditAnyDocComment", "Edit any documentation comment");
+            new Permission("EditAnyDocComment", "Edit any comment");
         
         public static readonly Permission DeleteOwnDocs = 
-            new Permission("DeleteOwnDocs", "Delete own documentation");
+            new Permission("DeleteOwnDocs", "Delete own docs");
 
         public static readonly Permission RestoreOwnDocs =
-            new Permission("RestoreOwnDocs", "Restore own documentation");
+            new Permission("RestoreOwnDocs", "Restore own docs");
         
         public static readonly Permission DeleteAnyDoc =
-            new Permission("DeleteAnyDoc", "Delete any documentation");
+            new Permission("DeleteAnyDoc", "Delete any doc");
 
         public static readonly Permission RestoreAnyDoc =
-            new Permission("RestoreAnyDoc", "Restore any documentation");
+            new Permission("RestoreAnyDoc", "Restore any doc");
 
         public static readonly Permission ViewDeletedDocs =
-            new Permission("ViewDeletedDocs", "View deleted documentation");
+            new Permission("ViewDeletedDocs", "View deleted doc");
         
         public static readonly Permission DeleteOwnDocComments =
-            new Permission("DeleteOwnDocComments", "Delete own documentation comments");
+            new Permission("DeleteOwnDocComments", "Delete own comments");
 
         public static readonly Permission RestoreOwnDocComments =
-            new Permission("RestoreOwnDocComments", "Restore own documentation comments");
+            new Permission("RestoreOwnDocComments", "Restore own comments");
         
         public static readonly Permission DeleteAnyDocComment =
-            new Permission("DeleteAnyDocComment", "Delete any documentation comment");
+            new Permission("DeleteAnyDocComment", "Delete any comment");
 
         public static readonly Permission RestoreAnyDocComment =
-            new Permission("RestoreAnyDocComment", "Restore any documentation comment");
+            new Permission("RestoreAnyDocComment", "Restore any comment");
 
         public static readonly Permission ViewDeletedDocComments =
-            new Permission("ViewDeletedDocComments", "View deleted documentation comments");
+            new Permission("ViewDeletedDocComments", "View deleted comments");
 
         public static readonly Permission ReportDocs =
-            new Permission("ReportDocs", "Report documentation");
+            new Permission("ReportDocs", "Report docs");
 
         public static readonly Permission ReportDocComments =
-            new Permission("ReportDocComments", "Report documentation comments");
+            new Permission("ReportDocComments", "Report doc comments");
         
-
         public static readonly Permission PinDocs =
             new Permission("PinDocs", "Pin docs");
 
@@ -117,6 +122,8 @@ namespace Plato.Docs
                 PostDocComments,
                 EditOwnDocs,
                 EditAnyDoc,
+                SortOwnDocs,
+                SortAnyDoc,
                 EditOwnDocComments,
                 EditAnyDocComment,
                 DeleteOwnDocs,
@@ -163,6 +170,8 @@ namespace Plato.Docs
                         PostDocComments,
                         EditOwnDocs,
                         EditAnyDoc,
+                        SortOwnDocs,
+                        SortAnyDoc,
                         EditOwnDocComments,
                         EditAnyDocComment,
                         DeleteOwnDocs,
@@ -215,6 +224,8 @@ namespace Plato.Docs
                         PostDocComments,
                         EditOwnDocs,
                         EditAnyDoc,
+                        SortOwnDocs,
+                        SortAnyDoc,
                         EditOwnDocComments,
                         EditAnyDocComment,
                         DeleteOwnDocs,

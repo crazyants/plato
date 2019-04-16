@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Docs.Models;
+using Microsoft.AspNetCore.Authorization;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
@@ -40,7 +41,8 @@ namespace Plato.Docs.ViewComponents
 
             // Add entities to view model
             options.Entities = entities?.Data?.BuildHierarchy<Doc>()?.OrderBy(r => r.SortOrder);
-                
+            options.EditMenuViewName = await DisplayMenu() ? "DocTreeMenu" : string.Empty;
+
             // Return view
             return View(options);
 
@@ -97,6 +99,29 @@ namespace Plato.Docs.ViewComponents
 
         }
 
+        private async Task<bool> DisplayMenu()
+        {
+
+            var permissions = new List<IPermission>
+            {
+                Permissions.PostDocs,
+                Permissions.EditAnyDoc,
+                Permissions.SortAnyDoc,
+                Permissions.DeleteAnyDoc
+            };
+
+            // If any of the permissions are allowed display menu
+            foreach (var permission in permissions)
+            {
+                if (await _authorizationService.AuthorizeAsync(ViewContext.HttpContext.User, permission))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
     }
 
 }

@@ -20,14 +20,12 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Docs.Models;
 using Plato.Docs.Services;
 using Plato.Entities;
-using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
-using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Docs.Controllers
 {
