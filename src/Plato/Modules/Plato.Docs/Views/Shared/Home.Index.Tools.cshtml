@@ -7,13 +7,4 @@
             @T["New Doc"]
         </a>
     </authorize-success>
-    <authorize-fail>
-        @if (base.CurrentUser == null)
-        {
-            <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary" title="@T["New Doc"]">
-                <i class="fal fa-fw fa-lock"></i>
-                @T["Login to Post"]
-            </a>
-        }
-    </authorize-fail>
 </div>

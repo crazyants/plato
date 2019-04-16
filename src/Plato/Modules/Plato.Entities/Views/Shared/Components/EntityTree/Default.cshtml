@@ -10,7 +10,7 @@
     {
         return selectedParents?.FirstOrDefault(p => p.Id == id) != null ? true : false;
     }
-    
+
     async Task<string> BuildRecursively(
         IList<Selection<IEntity>> entities,
         string htmlName,
@@ -47,7 +47,6 @@
 
                 var check = entity.IsSelected ? " checked" : string.Empty;
 
-
                 if (entity.Value.ParentId == id)
                 {
 
@@ -58,11 +57,9 @@
                         Model.RouteValues["opts.alias"] = entity.Value.Alias;
                         url = base.GetRouteUrl(Model.RouteValues);
                     }
-
+                
                     var listItemStyle =
                     sb.Append("<li id=\"")
-                        .Append(nodeId)
-                        .Append("\" style=\"")
                         .Append(nodeId)
                         .Append("\" class=\"")
                         .Append(css)
@@ -70,7 +67,7 @@
                         .Append(entity.Value.Title)
                         .Append("\">");
 
-                    sb.Append("<div class=\"py-2 px-3\"");
+                    sb.Append("<div class=\"tree-row\"");
                     if (entity.Value.Depth > 0)
                     {
                         sb.Append(" style=\"margin-left: ")
@@ -81,13 +78,21 @@
 
                     if (entity.Value.Children.Any())
                     {
+                        sb.Append("<div class=\"tree-left\">");
                         sb.Append("<a class=\"btn toggler mr-2\" data-node-id=\"")
                             .Append(nodeId)
                             .Append("\" data-toggle=\"tree\" href=\"#\">");
                         sb.Append("<i class=\"fal fa-chevron-right\"></i>");
                         sb.Append("</a>");
+                        sb.Append("</div>");
                     }
-                   
+                    else
+                    {
+                        //sb.Append("<div class=\"tree-left\"></div>");
+                    }
+
+                    sb.Append("<div class=\"tree-body\">");
+
                     if (@Model.EnableCheckBoxes)
                     {
                         sb.Append("<input type=\"radio\" id=\"")
@@ -126,6 +131,8 @@
 
                     sb.Append("</label>");
 
+                    sb.Append("</div>");
+
                     if (!String.IsNullOrEmpty(Model.EditMenuViewName))
                     {
                         var view = await DisplayAsync(new View(Model.EditMenuViewName, new
@@ -134,6 +141,7 @@
                         }));
                         sb.Append(view.ToHtmlString());
                     }
+                 
 
                     sb.Append("</div>");
 

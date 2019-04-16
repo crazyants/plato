@@ -230,11 +230,12 @@
 /* Card */
 /* ------------------------- */
 
-.card-title { margin: 0.50rem 0; }
+.card-header .card-title { margin: 0.50rem 0; }
+.card-header .nav-link { padding: 0.25rem 1rem; }
+
 .card-body-flush .card-body { padding: 0; }
 .card-body-sm-gutter .card-body { padding: 0.5rem; }
 
-.card-header .nav-link { padding: 0.25rem 1rem; }
 
 /* ------------------------- */
 /* VCard */
@@ -588,7 +589,6 @@
 /* ------------------------- */
 
 .list-left { float: left; width: 56px; }
-
 .list-left + .list-body { display: block; margin-left: 56px; }
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
@@ -741,7 +741,10 @@
 .tree li.list-group-item.active { z-index: initial !important; }
 
 /* animate expand / collapse */
+.tree li > div > div > a.toggler,
 .tree li > div > a.toggler { color: inherit; width: 22px; padding: 0; margin-right: 0.25rem; transform: rotate(0); text-align: center; vertical-align: middle; transition: transform .15s ease-in; }
+
+.tree li.show > div > div > a.toggler,
 .tree li.show > div > a.toggler { transform: rotate(90deg); }
 
 /* checkbox / radio button */
@@ -768,6 +771,11 @@
     color: inherit !important;
 }
 
+
+.tree .tree-row { display: table; padding: 0.50rem 1rem; }
+.tree .tree-left { width: 5%; display: table-cell; vertical-align: top; }
+.tree .tree-body { width: 90%; display: table-cell; vertical-align: middle; }
+.tree .tree-right { width: 5%; display: table-cell; vertical-align: top; }
 
 /* ------------------------- */
 /* Labels */

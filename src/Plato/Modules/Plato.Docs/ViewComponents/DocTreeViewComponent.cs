@@ -102,6 +102,7 @@ namespace Plato.Docs.ViewComponents
         private async Task<bool> DisplayMenu()
         {
 
+            // Permissions needed for the menu
             var permissions = new List<IPermission>
             {
                 Permissions.PostDocs,
@@ -122,6 +123,7 @@ namespace Plato.Docs.ViewComponents
             return false;
 
         }
+
     }
 
 }
