@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
@@ -41,6 +42,12 @@ namespace Plato.Articles.Subscribers
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
 
+            // Deleted
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityDeleted"
+            }, async message => await EntityDeleted(message.What));
+            
         }
 
         public void Unsubscribe()
@@ -58,6 +65,13 @@ namespace Plato.Articles.Subscribers
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
 
+            // Deleted
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityDeleted"
+            }, async message => await EntityDeleted(message.What));
+
+
         }
 
         #endregion
@@ -67,13 +81,21 @@ namespace Plato.Articles.Subscribers
         async Task<TEntity> EntityCreated(TEntity entity)
         {
 
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             if (entity.IsHidden())
             {
                 return entity;
             }
 
             // Award reputation
-            await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId, "Created an article");
+            if (entity.CreatedUserId > 0)
+            {
+                await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId, "Created an article");
+            }
 
             // Return
             return entity;
@@ -82,6 +104,11 @@ namespace Plato.Articles.Subscribers
 
         async Task<TEntity> EntityUpdating(TEntity entity)
         {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
 
             // Get existing entity before any changes
             var existingEntity = await _entityRepository.SelectByIdAsync(entity.Id);
@@ -98,7 +125,11 @@ namespace Plato.Articles.Subscribers
                 // If the existing entity was not already hidden revoke reputation
                 if (!existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.RevokeAsync(Reputations.NewArticle, entity.CreatedUserId, "Article deleted or hidden");
+                    if (entity.CreatedUserId > 0)
+                    {
+                        await _reputationAwarder.RevokeAsync(Reputations.NewArticle, entity.CreatedUserId,
+                            "Article deleted or hidden");
+                    }
                 }
             }
             else
@@ -106,12 +137,41 @@ namespace Plato.Articles.Subscribers
                 // If the existing entity was already hidden award reputation
                 if (existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId, "Article approved or made visible");
+                    if (entity.CreatedUserId > 0)
+                    {
+                        await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId,
+                            "Article approved or made visible");
+                    }
                 }
             }
 
             // Return
             return entity;
+
+        }
+
+        async Task<TEntity> EntityDeleted(TEntity entity)
+        {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            if (entity.IsHidden())
+            {
+                return entity;
+            }
+
+            // Revoke awarded reputation 
+            if (entity.CreatedUserId > 0)
+            {
+                await _reputationAwarder.RevokeAsync(Reputations.NewArticle, entity.CreatedUserId,
+                    "Article deleted or hidden");
+            }
+
+            return entity;
+
 
         }
 

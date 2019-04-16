@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Entities.Extensions;
 using Plato.Questions.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Questions.Subscribers
 {
@@ -16,17 +18,20 @@ namespace Plato.Questions.Subscribers
         private readonly IEntityStore<Question> _entityStore;
         private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
+        private readonly IUserReputationAwarder _reputationAwarder;
 
         public AnswerSubscriber(
             IBroker broker,
             IEntityStore<Question> entityStore,
             IEntityReplyStore<TEntityReply> entityReplyStore,
-            IEntityUsersStore entityUsersStore)
+            IEntityUsersStore entityUsersStore,
+            IUserReputationAwarder reputationAwarder)
         {
             _broker = broker;
             _entityStore = entityStore;
             _entityReplyStore = entityReplyStore;
             _entityUsersStore = entityUsersStore;
+            _reputationAwarder = reputationAwarder;
         }
 
         #region "Implementation"
@@ -46,6 +51,12 @@ namespace Plato.Questions.Subscribers
                 Key = "EntityReplyUpdated"
             }, async message => await EntityReplyUpdated(message.What));
 
+            // Deleted
+            _broker.Sub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyDeleted"
+            }, async message => await EntityReplyDeleted(message.What));
+
         }
 
         public void Unsubscribe()
@@ -62,6 +73,12 @@ namespace Plato.Questions.Subscribers
             {
                 Key = "EntityReplyUpdated"
             }, async message => await EntityReplyUpdated(message.What));
+
+            // Deleted
+            _broker.Unsub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyDeleted"
+            }, async message => await EntityReplyDeleted(message.What));
 
         }
 
@@ -82,21 +99,17 @@ namespace Plato.Questions.Subscribers
                 throw new ArgumentNullException(nameof(reply));
             }
             
-            if (reply.IsPrivate)
+            if (reply.IsHidden())
             {
                 return reply;
             }
-
-            if (reply.IsDeleted)
+            
+            // Award reputation for new reply
+            if (reply.CreatedUserId > 0)
             {
-                return reply;
+                await _reputationAwarder.AwardAsync(Reputations.NewAnswer, reply.CreatedUserId, "Posted an answer");
             }
-
-            if (reply.IsSpam)
-            {
-                return reply;
-            }
-
+            
             // Update entity details
             return await EntityDetailsUpdater(reply);
 
@@ -113,6 +126,31 @@ namespace Plato.Questions.Subscribers
             // Update entity details
             return await EntityDetailsUpdater(reply);
             
+        }
+
+        async Task<TEntityReply> EntityReplyDeleted(TEntityReply reply)
+        {
+
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
+            if (reply.IsHidden())
+            {
+                return reply;
+            }
+
+            // Revoke awarded reputation 
+            if (reply.CreatedUserId > 0)
+            {
+                await _reputationAwarder.RevokeAsync(Reputations.NewAnswer, reply.CreatedUserId,
+                    "Answer deleted or hidden");
+            }
+
+            // Return reply
+            return reply;
+
         }
         
         #endregion

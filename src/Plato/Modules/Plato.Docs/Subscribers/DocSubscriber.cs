@@ -73,8 +73,11 @@ namespace Plato.Docs.Subscribers
             }
 
             // Award reputation
-            await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic posted");
-
+            if (entity.CreatedUserId > 0)
+            {
+                await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic posted");
+            }
+           
             // Return
             return entity;
 
@@ -97,8 +100,11 @@ namespace Plato.Docs.Subscribers
             {
                 // If the existing entity was not already hidden revoke reputation
                 if (!existingEntity.IsHidden())
-                {
-                    await _reputationAwarder.RevokeAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic deleted or hidden");
+                { 
+                    if (entity.CreatedUserId > 0)
+                    {
+                        await _reputationAwarder.RevokeAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic deleted or hidden");
+                    }
                 }
             }
             else
@@ -106,7 +112,10 @@ namespace Plato.Docs.Subscribers
                 // If the existing entity was already hidden award reputation
                 if (existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic approved or made visible");
+                    if (entity.CreatedUserId > 0)
+                    {
+                        await _reputationAwarder.AwardAsync(Reputations.NewTopic, entity.CreatedUserId, "Topic approved or made visible");
+                    }
                 }
             }
 

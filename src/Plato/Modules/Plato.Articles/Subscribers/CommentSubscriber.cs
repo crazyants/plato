@@ -5,6 +5,7 @@ using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Articles.Subscribers
 {
@@ -14,19 +15,19 @@ namespace Plato.Articles.Subscribers
 
         private readonly IBroker _broker;
         private readonly IEntityStore<Article> _entityStore;
-        private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
+        private readonly IUserReputationAwarder _reputationAwarder;
 
         public CommentSubscriber(
             IBroker broker,
             IEntityStore<Article> entityStore,
-            IEntityReplyStore<TEntityReply> entityReplyStore,
-            IEntityUsersStore entityUsersStore)
+            IEntityUsersStore entityUsersStore,
+            IUserReputationAwarder reputationAwarder)
         {
             _broker = broker;
             _entityStore = entityStore;
-            _entityReplyStore = entityReplyStore;
             _entityUsersStore = entityUsersStore;
+            _reputationAwarder = reputationAwarder;
         }
 
         #region "Implementation"
@@ -97,6 +98,13 @@ namespace Plato.Articles.Subscribers
                 return reply;
             }
 
+            // Award reputation for new reply
+            if (reply.CreatedUserId > 0)
+            {
+                await _reputationAwarder.AwardAsync(Reputations.NewComment, reply.CreatedUserId,
+                    "Posted an article comment");
+            }
+
             // Update entity details
             return await EntityDetailsUpdater(reply);
 
@@ -114,7 +122,43 @@ namespace Plato.Articles.Subscribers
             return await EntityDetailsUpdater(reply);
             
         }
-        
+
+        async Task<TEntityReply> EntityReplyDeleted(TEntityReply reply)
+        {
+
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
+            if (reply.IsPrivate)
+            {
+                return reply;
+            }
+
+            if (reply.IsDeleted)
+            {
+                return reply;
+            }
+
+            if (reply.IsSpam)
+            {
+                return reply;
+            }
+
+            // Revoke awarded reputation 
+            if (reply.CreatedUserId > 0)
+            {
+                await _reputationAwarder.RevokeAsync(Reputations.NewComment, reply.CreatedUserId,
+                    "Comment deleted or hidden");
+            }
+
+            // Return reply
+            return reply;
+
+        }
+
+
         #endregion
 
         #region "Private Methods"

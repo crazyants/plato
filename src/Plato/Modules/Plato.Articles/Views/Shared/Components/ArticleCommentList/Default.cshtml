@@ -52,27 +52,18 @@
                     <div class="text-muted">
                         <authorize asp-permission="@replyPermission.Name">
                             <authorize-success>
-                                @if (base.CurrentUser == null)
-                                {
-                                    @T["Can we improve this article?"]
-                                    <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                                    @T["or"]
-                                    <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                                    @T["to comment"]
-                                }
-                                else
-                                {
-                                    <a href="#" data-provide="postReply">@T["Post a comment"]</a>
-                                }
+                                <i class="fal fa-reply mr-2"></i>
+                                <a href="#" data-provide="postReply">@T["Post a comment"]</a>
                             </authorize-success>
                             <authorize-fail>
                                 @if (base.CurrentUser == null)
                                 {
+                                    <i class="fal fa-bullhorn mr-2"></i>
                                     @T["Can we improve this article?"]
                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                                     @T["or"]
                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                                    @T["to comment"]
+                                    @T["to tell us how"]
                                 }
                                 else
                                 {
@@ -98,31 +89,19 @@ else
                     <div class="text-muted">
                         <authorize asp-permission="@replyPermission.Name">
                             <authorize-success>
-                                <i class="fal fa-reply"></i>
-                                <span class="text-muted ml-2">
-                                    @if (base.CurrentUser == null)
-                                    {
-                                        @T["No comments have been posted yet."]
-                                        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                                        @T["or"]
-                                        <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                                        @T["to post a comment"]
-                                    }
-                                    else
-                                    {
-                                        @T["No comments have been posted yet."]
-                                        <a href="#" data-provide="postReply">@T["Be the first"]</a>
-                                    }
-                                </span>
+                                <i class="fal fa-reply mr-2"></i>
+                                @T["No comments have been posted yet."]
+                                <a href="#" data-provide="postReply">@T["Be the first"]</a>
                             </authorize-success>
                             <authorize-fail>
                                 @if (base.CurrentUser == null)
                                 {
-                                    @T["Can we improve this doc?"]
+                                    <i class="fal fa-bullhorn mr-2"></i>
+                                    @T["Can we improve this article?"]
                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                                     @T["or"]
                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                                    @T["to comment"]
+                                    @T["to tell us how"]
                                 }
                                 else
                                 {

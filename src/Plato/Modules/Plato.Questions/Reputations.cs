@@ -8,18 +8,18 @@ namespace Plato.Questions
     public class Reputations : IReputationsProvider<Reputation>
     {
 
-        public static readonly Reputation NewArticle =
-            new Reputation("New Article", 1);
+        public static readonly Reputation NewQuestion =
+            new Reputation("New Question", 1);
 
-        public static readonly Reputation NewComment =
-            new Reputation("New Comment", 1);
+        public static readonly Reputation NewAnswer =
+            new Reputation("New Answer", 1);
 
         public IEnumerable<Reputation> GetReputations()
         {
             return new[]
             {
-                NewArticle,
-                NewComment
+                NewQuestion,
+                NewAnswer
             };
         }
 

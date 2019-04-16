@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
@@ -40,6 +41,12 @@ namespace Plato.Questions.Subscribers
             {
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
+            
+            // Deleted
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityDeleted"
+            }, async message => await EntityDeleted(message.What));
 
         }
 
@@ -58,6 +65,12 @@ namespace Plato.Questions.Subscribers
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
 
+            // Deleted
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityDeleted"
+            }, async message => await EntityDeleted(message.What));
+
         }
 
         #endregion
@@ -73,8 +86,11 @@ namespace Plato.Questions.Subscribers
             }
 
             // Award reputation
-            await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId, "Created an article");
-
+            if (entity.CreatedUserId > 0)
+            {
+                await _reputationAwarder.AwardAsync(Reputations.NewQuestion, entity.CreatedUserId, "Posted a question");
+            }
+            
             // Return
             return entity;
 
@@ -98,7 +114,11 @@ namespace Plato.Questions.Subscribers
                 // If the existing entity was not already hidden revoke reputation
                 if (!existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.RevokeAsync(Reputations.NewArticle, entity.CreatedUserId, "Article deleted or hidden");
+                    if (entity.CreatedUserId > 0)
+                    {
+                        await _reputationAwarder.RevokeAsync(Reputations.NewQuestion, entity.CreatedUserId,
+                            "Question deleted or hidden");
+                    }
                 }
             }
             else
@@ -106,11 +126,40 @@ namespace Plato.Questions.Subscribers
                 // If the existing entity was already hidden award reputation
                 if (existingEntity.IsHidden())
                 {
-                    await _reputationAwarder.AwardAsync(Reputations.NewArticle, entity.CreatedUserId, "Article approved or made visible");
+                    if (entity.CreatedUserId > 0)
+                    {
+                        await _reputationAwarder.AwardAsync(Reputations.NewQuestion, entity.CreatedUserId,
+                            "Question approved or made visible");
+                    }
+
                 }
             }
 
             // Return
+            return entity;
+
+        }
+
+        async Task<TEntity> EntityDeleted(TEntity entity)
+        {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            if (entity.IsHidden())
+            {
+                return entity;
+            }
+
+            // Revoke awarded reputation 
+            if (entity.CreatedUserId > 0)
+            {
+                await _reputationAwarder.RevokeAsync(Reputations.NewQuestion, entity.CreatedUserId,
+                    "Question deleted or hidden");
+            }
+
             return entity;
 
         }

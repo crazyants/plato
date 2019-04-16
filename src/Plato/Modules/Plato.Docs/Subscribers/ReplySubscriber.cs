@@ -111,7 +111,10 @@ namespace Plato.Docs.Subscribers
             }
 
             // Award reputation for new reply
-            await _reputationAwarder.AwardAsync(Reputations.NewReply, reply.CreatedUserId, "Posted a reply");
+            if (reply.CreatedUserId > 0)
+            {
+                await _reputationAwarder.AwardAsync(Reputations.NewReply, reply.CreatedUserId, "Posted a reply");
+            }
 
             // Update entity details
             return await EntityDetailsUpdater(reply);
@@ -155,8 +158,11 @@ namespace Plato.Docs.Subscribers
             }
 
             // Revoke awarded reputation 
-            await _reputationAwarder.RevokeAsync(Reputations.NewReply, reply.CreatedUserId, "Reply deleted or hidden");
-
+            if (reply.CreatedUserId > 0)
+            {
+                await _reputationAwarder.RevokeAsync(Reputations.NewReply, reply.CreatedUserId, "Reply deleted or hidden");
+            }
+            
             // Return reply
             return reply;
 

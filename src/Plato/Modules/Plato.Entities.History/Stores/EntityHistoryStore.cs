@@ -51,12 +51,7 @@ namespace Plato.Entities.History.Stores
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
-            
-            if (model.CreatedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
-            }
-            
+           
             var follow = await _entityHistoryRepository.InsertUpdateAsync(model);
             if (follow != null)
             {
@@ -84,11 +79,6 @@ namespace Plato.Entities.History.Stores
             if (model.EntityId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
-            }
-
-            if (model.CreatedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
 
             var follow = await _entityHistoryRepository.InsertUpdateAsync(model);

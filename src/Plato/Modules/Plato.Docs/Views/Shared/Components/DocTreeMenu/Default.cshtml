@@ -4,22 +4,29 @@
 @{
     var dropdownId = "editDoc" + Model.Id;
     var postPermission = Permissions.PostDocs;
-    var editPermission =
-        Model.CreatedUserId == base.CurrentUser.Id
-            ? Permissions.EditOwnDocs
-            : Permissions.EditAnyDoc;
-    var sortPermission =
-        Model.CreatedUserId == base.CurrentUser.Id
-            ? Permissions.SortOwnDocs
-            : Permissions.SortAnyDoc;
-    var deletePermission =
-        Model.CreatedUserId == base.CurrentUser.Id
-            ? Permissions.DeleteOwnDocs
-            : Permissions.DeleteAnyDoc;
-    var restorePermission =
-        Model.CreatedUserId == base.CurrentUser.Id
-            ? Permissions.RestoreOwnDocs
-            : Permissions.RestoreAnyDoc;
+    var editPermission = Permissions.EditAnyDoc;
+    var sortPermission = Permissions.SortAnyDoc;
+    var deletePermission = Permissions.DeleteAnyDoc;
+    var restorePermission = Permissions.RestoreAnyDoc;
+    if (base.CurrentUser != null)
+    {
+        editPermission =
+            Model.CreatedUserId == base.CurrentUser.Id
+                ? Permissions.EditOwnDocs
+                : Permissions.EditAnyDoc;
+        sortPermission =
+            Model.CreatedUserId == base.CurrentUser.Id
+                ? Permissions.SortOwnDocs
+                : Permissions.SortAnyDoc;
+        deletePermission =
+            Model.CreatedUserId == base.CurrentUser.Id
+                ? Permissions.DeleteOwnDocs
+                : Permissions.DeleteAnyDoc;
+        restorePermission =
+            Model.CreatedUserId == base.CurrentUser.Id
+                ? Permissions.RestoreOwnDocs
+                : Permissions.RestoreAnyDoc;
+    }
 
 }
 

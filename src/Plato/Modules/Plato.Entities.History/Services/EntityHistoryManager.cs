@@ -55,11 +55,11 @@ namespace Plato.Entities.History.Services
                 throw new ArgumentNullException(nameof(model.EntityReplyId));
             }
 
-            // We always need a CreatedUserId
-            if (model.CreatedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
-            }
+            //// We always need a CreatedUserId
+            //if (model.CreatedUserId <= 0)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            //}
 
             // We always need a CreatedDate
             if (model.CreatedDate == null)
@@ -122,10 +122,10 @@ namespace Plato.Entities.History.Services
             }
 
             // We always need a CreatedUserId
-            if (model.CreatedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
-            }
+            //if (model.CreatedUserId <= 0)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            //}
 
             // We always need a CreatedDate
             if (model.CreatedDate == null)

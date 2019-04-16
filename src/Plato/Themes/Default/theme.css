@@ -287,6 +287,14 @@ a.label:hover, .label.active {
 }
 
 /* ------------------- */
+/* Avatar */
+/* ------------------- */
+
+.avatar {
+    background-color: #B4D0FF;
+}
+
+/* ------------------- */
 /* Admin Nav */
 /* ------------------- */
 

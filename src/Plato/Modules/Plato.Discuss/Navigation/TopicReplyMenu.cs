@@ -146,13 +146,7 @@ namespace Plato.Discuss.Navigation
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
-                            .Attributes(user == null
-                                ? new Dictionary<string, object>()
-                                {
-                                    {"data-toggle", "tooltip"},
-                                    {"title", T["Login to Reply"]}
-                                }
-                                : new Dictionary<string, object>()
+                            .Attributes(new Dictionary<string, object>()
                                 {
                                     {"data-provide", "postQuote"},
                                     {"data-quote-selector", "#quote" + reply.Id.ToString()},

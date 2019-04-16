@@ -162,18 +162,12 @@ namespace Plato.Docs.Navigation
                 builder
                     .Add(T["Reply"], int.MaxValue, options => options
                             .IconCss("fa fa-reply")
-                            .Attributes(user == null
-                                ? new Dictionary<string, object>()
-                                {
-                                    {"data-toggle", "tooltip"},
-                                    {"title", T["Login to Comment"]}
-                                }
-                                : new Dictionary<string, object>()
-                                {
-                                    {"data-provide", "postReply"},
-                                    {"data-toggle", "tooltip"},
-                                    {"title", T["Comment"]}
-                                })
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-provide", "postReply"},
+                                {"data-toggle", "tooltip"},
+                                {"title", T["Comment"]}
+                            })
                             .Action("Login", "Account", "Plato.Users",
                                 new RouteValueDictionary()
                                 {

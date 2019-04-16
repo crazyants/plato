@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Entities.Extensions;
 using Plato.Ideas.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Ideas.Subscribers
 {
@@ -16,17 +18,20 @@ namespace Plato.Ideas.Subscribers
         private readonly IEntityStore<Idea> _entityStore;
         private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
         private readonly IEntityUsersStore _entityUsersStore;
+        private readonly IUserReputationAwarder _reputationAwarder;
 
         public IdeaCommentSubscriber(
             IBroker broker,
             IEntityStore<Idea> entityStore,
             IEntityReplyStore<TEntityReply> entityReplyStore,
-            IEntityUsersStore entityUsersStore)
+            IEntityUsersStore entityUsersStore,
+            IUserReputationAwarder reputationAwarder)
         {
             _broker = broker;
             _entityStore = entityStore;
             _entityReplyStore = entityReplyStore;
             _entityUsersStore = entityUsersStore;
+            _reputationAwarder = reputationAwarder;
         }
 
         #region "Implementation"
@@ -82,21 +87,17 @@ namespace Plato.Ideas.Subscribers
                 throw new ArgumentNullException(nameof(reply));
             }
             
-            if (reply.IsPrivate)
+            if (reply.IsHidden())
             {
                 return reply;
             }
 
-            if (reply.IsDeleted)
+            // Award reputation for new reply
+            if (reply.CreatedUserId > 0)
             {
-                return reply;
+                await _reputationAwarder.AwardAsync(Reputations.NewIdeaComment, reply.CreatedUserId, "Posted a suggestion");
             }
-
-            if (reply.IsSpam)
-            {
-                return reply;
-            }
-
+            
             // Update entity details
             return await EntityDetailsUpdater(reply);
 
@@ -114,7 +115,33 @@ namespace Plato.Ideas.Subscribers
             return await EntityDetailsUpdater(reply);
             
         }
-        
+
+        async Task<TEntityReply> EntityReplyDeleted(TEntityReply reply)
+        {
+
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
+            if (reply.IsHidden())
+            {
+                return reply;
+            }
+
+            // Revoke awarded reputation 
+            if (reply.CreatedUserId > 0)
+            {
+                await _reputationAwarder.RevokeAsync(Reputations.NewIdeaComment, reply.CreatedUserId,
+                    "Suggestion deleted or hidden");
+            }
+
+            // Return reply
+            return reply;
+
+        }
+
+
         #endregion
 
         #region "Private Methods"

@@ -1,8 +1,10 @@
 ﻿@using Plato.Entities.Extensions
+@using Plato.Ideas
 @model EntityViewModel<Idea, IdeaComment>
 @{
     var answerText = T["comment"];
     var answersText = T["comments"];
+    var replyPermission = Permissions.PostIdeaComments;
 }
 
 @if (Model.Replies != null)
@@ -49,20 +51,30 @@
          <div class="my-4">
              <card>
                  <card-body>
-                     <span class="text-muted">
-                         @if (base.CurrentUser == null)
-                         {
-                             @T["Would you like to contribute to this idea?"]
-                             <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                             @T["or"]
-                             <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                             @T["to post your comments"]
-                         }
-                         else
-                         {
-                             <a href="#" data-provide="postReply">@T["Post a Comment"]</a>
-                         }
-                     </span>
+                     <div class="text-muted">
+                         <authorize asp-permission="@replyPermission.Name">
+                             <authorize-success>
+                                 <i class="fal fa-reply mr-2"></i>
+                                 <a href="#" data-provide="postReply">@T["Post a reply"]</a>
+                             </authorize-success>
+                             <authorize-fail>
+                                 @if (base.CurrentUser == null)
+                                 {
+                                     <i class="fal fa-bullhorn mr-2"></i>
+                                     @T["Have a suggestion?"]
+                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                     @T["or"]
+                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
+                                     @T["to post"]
+                                 }
+                                 else
+                                 {
+                                     <i class="fal fa-lock mr-2"></i>
+                                     @T["You don't have permission to post"]
+                                 }
+                             </authorize-fail>
+                         </authorize>
+                     </div>
                  </card-body>
              </card>
          </div>
@@ -75,22 +87,31 @@ else
          <div class="my-4">
              <card>
                  <card-body>
-                     <i class="fal fa-reply"></i>
-                     <span class="text-muted ml-2">
-                         @if (base.CurrentUser == null)
-                         {
-                             @T["No comments have been posted yet."]
-                             <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                             @T["or"]
-                             <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
-                             @T["to post your comments"]
-                         }
-                         else
-                         {
-                             @T["No feedback has been posted yet."]
-                             <a href="#" data-provide="postReply">@T["Help improve this idea"]</a>
-                         }
-                     </span>
+                     <div class="text-muted">
+                         <authorize asp-permission="@replyPermission.Name">
+                             <authorize-success>
+                                 <i class="fal fa-reply mr-2"></i>
+                                 @T["No suggestions have been posted yet."]
+                                 <a href="#" data-provide="postReply">@T["Be the first"]</a>
+                             </authorize-success>
+                             <authorize-fail>
+                                 @if (base.CurrentUser == null)
+                                 {
+                                     <i class="fal fa-bullhorn mr-2"></i>
+                                     @T["Have a suggestion?"]
+                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                     @T["or"]
+                                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["register"]</a>
+                                     @T["to post your reply"]
+                                 }
+                                 else
+                                 {
+                                     <i class="fal fa-lock mr-2"></i>
+                                     @T["You don't have permission to post replies"]
+                                 }
+                             </authorize-fail>
+                         </authorize>
+                     </div>
                  </card-body>
              </card>
          </div>

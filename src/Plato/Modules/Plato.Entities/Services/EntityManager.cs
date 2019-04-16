@@ -68,10 +68,10 @@ namespace Plato.Entities.Services
                 throw new ArgumentNullException(nameof(model.Message));
             }
 
-            if (model.CreatedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
-            }
+            //if (model.CreatedUserId <= 0)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            //}
 
             if (model.CreatedDate == null)
             {
@@ -121,7 +121,7 @@ namespace Plato.Entities.Services
             // Validate
             if (model.Id <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+                throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
             if (model.FeatureId <= 0)
@@ -139,10 +139,10 @@ namespace Plato.Entities.Services
                 throw new ArgumentNullException(nameof(model.Message));
             }
 
-            if (model.ModifiedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
-            }
+            //if (model.ModifiedUserId <= 0)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
+            //}
 
             if (model.ModifiedDate == null)
             {
