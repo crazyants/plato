@@ -33,12 +33,6 @@
 
 .hidden { display: none !important; }
 
-/* Highlight background */
-.bg-highlight {
-    background-color: #fff000;
-    background-color: rgba(255, 240, 0, 0.5); font-weight: bold;
-}
-
 /* Animate Bootstrap tooltips */
 
 .tooltip.show .arrow,
@@ -927,7 +921,11 @@
 /* ------------------------- */
 
 .reply-left + .reply-body { position: relative; }
+
+/* avatar within reply-left */
+.reply-left .avatar { margin-top: 16px; }
 .reply-left a.avatar-link { margin-top: 16px; }
+.reply-left a.avatar-link .avatar { margin-top: 0; }
 .reply-left .avatar { width: 36px; height: 36px; }
 
 /* reply body arrow */

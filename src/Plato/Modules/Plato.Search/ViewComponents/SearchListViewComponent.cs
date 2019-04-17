@@ -28,8 +28,8 @@ namespace Plato.Search.ViewComponents
             },
             new Filter()
             {
-                Text = "My Topics",
-                Value = FilterBy.MyTopics
+                Text = "Started",
+                Value = FilterBy.Started
             },
             new Filter()
             {

@@ -27,7 +27,7 @@ namespace Plato.Entities.ViewComponents
             new Filter()
             {
                 Text = "My Topics",
-                Value = FilterBy.MyTopics
+                Value = FilterBy.Started
             },
             new Filter()
             {

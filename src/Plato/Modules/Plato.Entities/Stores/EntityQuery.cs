@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -66,10 +67,8 @@ namespace Plato.Entities.Stores
         private WhereBool _hidePrivate;
         private WhereBool _showSpam;
         private WhereBool _hideSpam;
-
         private WhereBool _showClosed;
         private WhereBool _hideClosed;
-
         private WhereBool _isPinned;
         private WhereBool _isNotPinned;
         private WhereBool _hideDeleted;
@@ -79,11 +78,9 @@ namespace Plato.Entities.Stores
         private WhereDate _createdDate;
         private WhereInt _modifiedUserId;
         private WhereDate _modifiedDate;
-
         private WhereInt _participatedUserId;
         private WhereInt _followUserId;
         private WhereInt _starUserId;
-
         private WhereInt _totalViews;
         private WhereInt _totalReplies;
         private WhereInt _totalParticipants;
@@ -295,67 +292,80 @@ namespace Plato.Entities.Stores
 
         /*
 
-            DECLARE @RowIndex int = 0;
-            DECLARE @PageSize int = 40;
-
             DECLARE @FullTextSearchQuery nvarchar(4000);
-            SET @FullTextSearchQuery = 'FORMSOF(INFLECTIONAL, installation)';
+            SET @FullTextSearchQuery = 'FORMSOF(INFLECTIONAL, introduction)';
+
+            DECLARE @temp TABLE
+            (
+              Id int, 
+              [Rank] int
+            )
+
+            DECLARE @results TABLE
+            (
+              Id int, 
+              [Rank] int
+            )
+
+            -- add entities to @temp 
+            INSERT INTO @temp
+	            SELECT i.[Key], i.[Rank] 
+	            FROM plato_Entities e
+	            INNER JOIN CONTAINSTABLE(plato_Entities, *, @FullTextSearchQuery) AS i ON i.[Key] = e.Id 
+	            WHERE (e.Id IN (IsNull(i.[Key], 0)))
+
+            -- aggregate replies into @temp
+            INSERT INTO @temp
+	            SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] 
+		            FROM plato_EntityReplies er
+		            INNER JOIN CONTAINSTABLE(plato_EntityReplies, *, @FullTextSearchQuery) AS i ON i.[Key] = er.Id 
+		            WHERE (er.Id IN (IsNull(i.[Key], 0)))
+		            GROUP BY er.EntityId, i.[Rank]
+
+            -- distinct ids and aggregated rank
+            INSERT INTO @results
+	            SELECT Id, SUM(Rank) AS [Rank] FROM @temp GROUP BY Id 
 
             DECLARE @FullTextMaxRank int;
-            SET @FullTextMaxRank = (
-            SELECT TOP 1 IsNull(ftEntities.RANK,0) AS MaxRank 
-            FROM plato4_Entities e 
-            LEFT OUTER JOIN plato4_Users c ON e.CreatedUserId = c.Id 
-            LEFT OUTER JOIN plato4_Users m ON e.ModifiedUserId = m.Id 
-
-            INNER JOIN CONTAINSTABLE(plato4_Entities, *, @FullTextSearchQuery) AS ftEntities ON ftEntities.[Key] = e.Id  
-
-            WHERE (FeatureId = 41 AND IsPrivate = 0 AND IsSpam = 0) ORDER BY MaxRank DESC
-            );
-
-            SELECT e.*, 
+            SET @FullTextMaxRank = (SELECT TOP 1 [Rank] FROM @results ORDER BY [Rank] DESC);
+	            
+            SELECT e.*, f.ModuleId, 
             c.UserName AS CreatedUserName, 
             c.DisplayName AS CreatedDisplayName,
-            c.FirstName AS CreatedFirstName,
-            c.LastName AS CreatedLastName,
             c.Alias AS CreatedAlias,
+            c.PhotoUrl AS CreatedPhotoUrl,
+            c.PhotoColor AS CreatedPhotoColor,
+            c.SignatureHtml AS CreatedSignatureHtml,
             m.UserName AS ModifiedUserName, 
             m.DisplayName AS ModifiedDisplayName,
-            m.FirstName AS ModifiedFirstName,
-            m.LastName AS ModifiedLastName,
-            m.Alias AS ModifiedAlias,
-            IsNull(ftEntities.RANK,0) AS [Rank],
+            m.Alias AS ModifiedAlias, 
+            m.PhotoUrl AS ModifiedPhotoUrl, 
+            m.PhotoColor AS ModifiedPhotoColor, 
+            m.SignatureHtml AS ModifiedSignatureHtml,
+            l.UserName AS LastReplyUserName, 
+            l.DisplayName AS LastReplyDisplayName,
+            l.Alias AS LastReplyAlias, 
+            l.PhotoUrl AS LastReplyPhotoUrl,
+            l.PhotoColor AS LastReplyPhotoColor,
+            l.SignatureHtml AS LastReplySignatureHtml,
+            r.[Rank] AS [Rank],
             @FullTextMaxRank AS MaxRank 
+            FROM plato_Entities e 
+            INNER JOIN plato_ShellFeatures f ON e.FeatureId = f.Id 
 
-            FROM 
+            INNER JOIN @results r ON r.Id = e.Id 
 
-            plato4_Entities e
-            LEFT OUTER JOIN plato4_Users c ON e.CreatedUserId = c.Id 
-            LEFT OUTER JOIN plato4_Users m ON e.ModifiedUserId = m.Id 
+            LEFT OUTER JOIN plato_Users c ON e.CreatedUserId = c.Id 
+            LEFT OUTER JOIN plato_Users m ON e.ModifiedUserId = m.Id 
+            LEFT OUTER JOIN plato_Users l ON e.LastReplyUserId = l.Id 
 
-            LEFT OUTER JOIN
+            WHERE (e.Id IN (SELECT Id FROM @results))
 
-            CONTAINSTABLE(plato4_Entities, *, @FullTextSearchQuery) AS ftEntities  ON ftEntities.[Key] = e.Id 
-
-            LEFT OUTER JOIN
-
-            CONTAINSTABLE(plato4_EntityReplies, *, @FullTextSearchQuery) AS ftEntityReplies 
-            INNER JOIN plato4_EntityReplies er ON ftEntityReplies.[Key] = er.Id 
-
-            ON e.Id = er.EntityId 
-
-            WHERE (
-
-	            (
-		            e.FeatureId = 41 AND e.IsPrivate = 0 AND e.IsSpam = 0
-	            )
-	            AND
-	            (
-		            e.Id IN (IsNull(ftEntities.[Key],0)) OR 
-		            er.Id IN (IsNull(ftEntityReplies.[Key],0))
-	            )
-
-            ) ORDER BY e.Id DESC OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;
+	            ORDER BY 
+	            e.IsPinned DESC, 
+	            [Rank] DESC 
+	            
+            OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY;
             
         */
 
@@ -402,8 +412,7 @@ namespace Plato.Entities.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append(BuildFullTextQuery());
-            sb.Append(BuildFullTextMaxRank());
+            sb.Append(BuildKeywordResults());
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
@@ -422,8 +431,7 @@ namespace Plato.Entities.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append(BuildFullTextQuery());
-            sb.Append(BuildFullTextMaxRank());
+            sb.Append(BuildKeywordResults());
             sb.Append("SELECT COUNT(e.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
@@ -458,8 +466,8 @@ namespace Plato.Entities.Stores
                 .Append("l.PhotoUrl AS LastReplyPhotoUrl, ")
                 .Append("l.PhotoColor AS LastReplyPhotoColor, ")
                 .Append("l.SignatureHtml AS LastReplySignatureHtml, ")
-                .Append(BuildFullTextRankSelect()).Append(" AS [Rank], ")
-                .Append("@FullTextMaxRank AS MaxRank");
+                .Append(HasKeywords() ? "r.[Rank] AS [Rank], " : "0 AS [Rank],")
+                .Append("@MaxRank AS MaxRank");
             
             return sb.ToString();
 
@@ -469,12 +477,21 @@ namespace Plato.Entities.Stores
         {
 
             var sb = new StringBuilder();
+            sb.Append(_entitiesTableName).Append(" e ");
             
-            sb.Append(_entitiesTableName)
-                .Append(" e ");
+            // join shell features table
+            sb.Append("INNER JOIN ")
+                .Append(_shellFeaturesTableName)
+                .Append(" f ON e.FeatureId = f.Id ");
 
+            // join results if we have keywords
+            if (HasKeywords())
+            {
+                sb.Append("INNER JOIN @results r ON r.Id = e.Id ");
+            }
+            
             // join created user
-            sb.Append("LEFT OUTER JOIN ")
+                sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" c ON e.CreatedUserId = c.Id ");
 
@@ -488,151 +505,184 @@ namespace Plato.Entities.Stores
                 .Append(_usersTableName)
                 .Append(" l ON e.LastReplyUserId = l.Id ");
 
-            // join shell features table
-            sb.Append("INNER JOIN ")
-                .Append(_shellFeaturesTableName)
-                .Append(" f ON e.FeatureId = f.Id");
-            
-            // join full text tables
-            if (EnableFullText())
-            {
-                
-                // join ftEntities
-                // ---------------------------
-
-                sb
-                    .Append(" LEFT OUTER JOIN ") // join entities
-                    .Append(_query.Options.SearchType.ToString().ToUpper())
-                    .Append("(")
-                    .Append(_entitiesTableName)
-                    .Append(", *, @FullTextSearchQuery");
-                if (_query.Options.MaxResults > 0)
-                {
-                    sb.Append(", ").Append(_query.Options.MaxResults.ToString());
-                }
-
-                sb.Append(") AS ftEntities ON ftEntities.[Key] = e.Id");
-                
-                // join ftEntityReplies
-                // ---------------------------
-
-                sb
-                    .Append(" LEFT OUTER JOIN ") // join entities
-                    .Append(_query.Options.SearchType.ToString().ToUpper())
-                    .Append("(")
-                    .Append(_entityRepliesTableName)
-                    .Append(", *, @FullTextSearchQuery");
-                if (_query.Options.MaxResults > 0)
-                {
-                    sb.Append(", ").Append(_query.Options.MaxResults.ToString());
-                }
-
-                sb.Append(") AS ftEntityReplies ")
-                    .Append("INNER JOIN ")
-                    .Append(_entityRepliesTableName)
-                    .Append(" AS er ON ftEntityReplies.[Key] = er.Id ");
-
-                // join EntityReplies on Entities
-                // ---------------------------
-
-                sb.Append("ON er.EntityId = e.Id");
-
-            }
-
             return sb.ToString();
 
-        }
-
-        string BuildFullTextMaxRank()
-        {
-
-            var sb = new StringBuilder();
-            sb.Append("DECLARE @FullTextMaxRank int;");
-            sb.Append("SET @FullTextMaxRank = ");
-
-            if (EnableFullText())
-            {
-                var whereClause = BuildWhereClause();
-                sb
-                    .Append("(")
-                    .Append("SELECT TOP 1 ")
-                    .Append(BuildFullTextRankSelect())
-                    .Append(" AS MaxRank FROM ")
-                    .Append(BuildTables());
-                if (!string.IsNullOrEmpty(whereClause))
-                    sb.Append(" WHERE (").Append(whereClause).Append(")");
-                sb.Append(" ORDER BY MaxRank DESC")
-                    .Append(")");
-            }
-            else
-            {
-                sb.Append("0");
-            }
-
-            sb.Append(";");
-
-            return sb.ToString();
-        }
-
-        string BuildFullTextQuery()
-        {
-
-            // Not used if full text search is not active
-            if (!EnableFullText())
-            {
-                return string.Empty;
-            }
-
-            // Get full text query
-            var fullTextSearchQuery =
-                _query.Options.FullTextQueryParser.ToFullTextSearchQuery(
-                    _query.Params.Keywords.Value);
-
-            if (String.IsNullOrEmpty(fullTextSearchQuery))
-            {
-                return string.Empty;
-            }
-
-            var sb = new StringBuilder();
-            sb.Append("DECLARE @FullTextSearchQuery nvarchar(4000);")
-                .Append("SET @FullTextSearchQuery = '")
-                .Append(fullTextSearchQuery.Replace("'", "''"))
-                .Append("';")
-                .Append(Environment.NewLine);
-            return sb.ToString();
-
-        }
-
-        string BuildFullTextRankSelect()
-        {
-
-            if (!EnableFullText())
-            {
-                return "0";
-            }
-
-            return "(IsNull(ftEntities.RANK,0) + IsNull(ftEntityReplies.RANK,0))";
-            
         }
         
-        bool EnableFullText()
+        string BuildKeywordResults()
         {
 
             // No keywords
-            if (String.IsNullOrEmpty(_query.Params.Keywords.Value))
+            if (string.IsNullOrEmpty(GetKeywords()))
             {
-                return false;
+                return string.Empty;
             }
 
-            // Full text is not enabled
-            if (_query.Options.SearchType == SearchTypes.Tsql)
+            // Build standard SQL or full text queries
+            var sb = new StringBuilder();
+            var queries = _query.Options.SearchType != SearchTypes.Tsql
+                ? BuildFullTextQueries()
+                : BuildSqlQueries();
+            
+            // Build temporary results from queries
+            sb.Append("DECLARE @temp TABLE (Id int, [Rank] int); ");
+            foreach (var query in queries)
             {
-                return false;
+                sb.Append("INSERT INTO @temp ")
+                    .Append(Environment.NewLine)
+                    .Append(query)
+                    .Append(Environment.NewLine);
             }
 
-            return true;
+            // Build final distinct and aggregated results from temporary results
+            sb.Append("DECLARE @results TABLE (Id int, [Rank] int); ")
+                .Append(Environment.NewLine)
+                .Append("INSERT INTO @results ")
+                .Append(Environment.NewLine)
+                .Append("SELECT Id, SUM(Rank) AS [Rank] FROM @temp GROUP BY Id;")
+                .Append(Environment.NewLine);
+
+            // Get max rank from results table
+            sb.Append("DECLARE @MaxRank int;")
+                .Append("SET @MaxRank = ")
+                .Append(_query.Options.SearchType != SearchTypes.Tsql
+                    ? "(SELECT TOP 1 [Rank] FROM @results ORDER BY [Rank] DESC)"
+                    : "0")
+                .Append(";");
+
+            return sb.ToString();
 
         }
+
+        List<string> BuildSqlQueries()
+        {
+            
+            // Entities
+            var q1 = new StringBuilder();
+            q1.Append("SELECT Id, 0 AS [Rank] FROM ")
+                .Append(_entitiesTableName)
+                .Append("WHERE (")
+                .Append(_query.Params.Keywords.ToSqlString("Title", "Keywords"))
+                .Append(" OR ")
+                .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
+                .Append(");");
+            
+            // Entity Replies
+            var q2 = new StringBuilder();
+            q2.Append("SELECT EntityId, 0 AS [Rank] FROM ")
+                .Append(_entityRepliesTableName)
+                .Append(" WHERE (")
+                .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
+                .Append(") GROUP BY EntityId");
+            
+            // Return queries
+            return new List<string>()
+            {
+                q1.ToString(),
+                q2.ToString()
+            };
+
+        }
+
+        List<string> BuildFullTextQueries()
+        {
+       
+            // Entities
+            var q1 = new StringBuilder();
+            q1
+                .Append("SELECT i.[Key], i.[Rank] ")
+                .Append("FROM ")
+                .Append(_entitiesTableName)
+                .Append(" e ")
+                .Append("INNER JOIN ")
+                .Append(_query.Options.SearchType.ToString().ToUpper())
+                .Append("(")
+                .Append(_entitiesTableName)
+                .Append(", *, '").Append(GetKeywords()).Append("'");
+            if (_query.Options.MaxResults > 0)
+                q1.Append(", ").Append(_query.Options.MaxResults.ToString());
+            q1.Append(") AS i ON i.[Key] = e.Id WHERE (e.Id IN (IsNull(i.[Key], 0)));");
+
+            // Entity replies
+            var q2 = new StringBuilder();
+            q2
+                .Append("SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] ")
+                .Append("FROM ")
+                .Append(_entityRepliesTableName)
+                .Append(" er ")
+                .Append("INNER JOIN ")
+                .Append(_query.Options.SearchType.ToString().ToUpper())
+                .Append("(")
+                .Append(_entityRepliesTableName)
+                .Append(", *, '").Append(GetKeywords()).Append("'");
+            if (_query.Options.MaxResults > 0)
+                q2.Append(", ").Append(_query.Options.MaxResults.ToString());
+            q2.Append(") AS i ON i.[Key] = er.Id ")
+                .Append("WHERE (er.Id IN (IsNull(i.[Key], 0))) ")
+                .Append("GROUP BY er.EntityId, i.[Rank];");
+            
+            // Return queries
+            return new List<string>()
+            {
+                q1.ToString(),
+                q2.ToString()
+            };
+
+        }
+
+        bool HasKeywords()
+        {
+            return !string.IsNullOrEmpty(GetKeywords());
+        }
+
+        string GetKeywords()
+        {
+
+            if (string.IsNullOrEmpty(_query.Params.Keywords.Value))
+            {
+                return string.Empty;
+            }
+
+            // No need to modify keywords
+            if (_query.Options.SearchType == SearchTypes.Tsql)
+            {
+                return _query.Params.Keywords.Value;
+            }
+
+            // Parse keywords into valid full text query
+            var fullTextSearchQuery =
+                _query.Options.FullTextQueryParser.ToFullTextSearchQuery(
+                    _query.Params.Keywords.Value);
+            
+            // Ensure parse was successful
+            if (!String.IsNullOrEmpty(fullTextSearchQuery))
+            {
+                return fullTextSearchQuery.Replace("'", "''");
+            }
+
+            return string.Empty;
+
+        }
+
+        //bool EnableFullText()
+        //{
+
+        //    // No keywords
+        //    if (String.IsNullOrEmpty(_query.Params.Keywords.Value))
+        //    {
+        //        return false;
+        //    }
+
+        //    // Full text is not enabled
+        //    if (_query.Options.SearchType == SearchTypes.Tsql)
+        //    {
+        //        return false;
+        //    }
+
+        //    // We have keywords and full text is enabled
+        //    return true;
+
+        //}
         
         string GetTableNameWithPrefix(string tableName)
         {
@@ -948,10 +998,7 @@ namespace Plato.Entities.Stores
                 }
                 else
                 {
-                    sb.Append("e.Id IN (IsNull(ftEntities.[Key],0))")
-                        .Append(" OR ")
-                        .Append("er.Id IN(IsNull(ftEntityReplies.[Key], 0))");
-
+                    sb.Append("e.Id IN (SELECT Id FROM @results)");
                 }
 
                 sb.Append(")");

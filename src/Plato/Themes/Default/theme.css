@@ -120,6 +120,11 @@ a.label:hover, .label.active {
     border-color: #E9E9E9 !important;
 }
 
+/* height search terms */
+.bg-highlight {
+    background-color: rgba(255, 240, 0, 0.5); font-weight: bold;
+}
+
 /* ------------------- */
 /* Forms */
 /* ------------------- */

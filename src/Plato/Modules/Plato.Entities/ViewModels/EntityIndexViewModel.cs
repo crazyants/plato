@@ -97,7 +97,7 @@ namespace Plato.Entities.ViewModels
     public enum FilterBy
     {
         All = 0,
-        MyTopics = 1,
+        Started = 1,
         Participated = 2,
         Following = 3,
         Starred = 4,

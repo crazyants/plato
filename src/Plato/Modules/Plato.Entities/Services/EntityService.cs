@@ -105,7 +105,7 @@ namespace Plato.Entities.Services
 
                     switch (options.Filter)
                     {
-                        case FilterBy.MyTopics:
+                        case FilterBy.Started:
                             if (user != null)
                             {
                                 q.CreatedUserId.Equals(user.Id);
