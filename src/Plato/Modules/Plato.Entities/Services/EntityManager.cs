@@ -67,12 +67,7 @@ namespace Plato.Entities.Services
             {
                 throw new ArgumentNullException(nameof(model.Message));
             }
-
-            //if (model.CreatedUserId <= 0)
-            //{
-            //    throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
-            //}
-
+            
             if (model.CreatedDate == null)
             {
                 throw new ArgumentNullException(nameof(model.CreatedDate));
@@ -138,11 +133,6 @@ namespace Plato.Entities.Services
             {
                 throw new ArgumentNullException(nameof(model.Message));
             }
-
-            //if (model.ModifiedUserId <= 0)
-            //{
-            //    throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
-            //}
 
             if (model.ModifiedDate == null)
             {

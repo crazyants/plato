@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
-using Plato.Search.ViewComponents;
 
 namespace Plato.Entities.Stores
 {
@@ -978,6 +976,7 @@ namespace Plato.Entities.Stores
 
             // Build standard SQL or full text queries
             var sb = new StringBuilder();
+
             //var queries = _query.Options.SearchType != SearchTypes.Tsql
             //    ? BuildFullTextQueries()
             //    : BuildSqlQueries();
@@ -989,8 +988,8 @@ namespace Plato.Entities.Stores
                 Where = BuildWhere(),
                 Keywords = _query.Params.Keywords
             });
-            
-            // Build temporary results from queries
+
+            // Build results from federated queries
             sb.Append("DECLARE @temp TABLE (Id int, [Rank] int); ");
             foreach (var query in queries)
             {
@@ -1000,12 +999,12 @@ namespace Plato.Entities.Stores
                     .Append(Environment.NewLine);
             }
 
-            // Build final distinct and aggregated results from temporary results
+            // Build final distinct and aggregated results from federated results
             sb.Append("DECLARE @results TABLE (Id int, [Rank] int); ")
                 .Append(Environment.NewLine)
                 .Append("INSERT INTO @results ")
                 .Append(Environment.NewLine)
-                .Append("SELECT Id, SUM(Rank) AS [Rank] FROM @temp GROUP BY Id;")
+                .Append("SELECT Id, SUM(Rank) FROM @temp GROUP BY Id;")
                 .Append(Environment.NewLine);
 
             // Get max rank from results table
@@ -1019,117 +1018,117 @@ namespace Plato.Entities.Stores
 
         }
 
-        List<string> BuildSqlQueries()
-        {
+        //List<string> BuildSqlQueries()
+        //{
 
-            var whereClause = BuildWhere();
+        //    var whereClause = BuildWhere();
 
-            // Entities
-            // ----------------------
+        //    // Entities
+        //    // ----------------------
 
-            var q1 = new StringBuilder();
-            q1.Append("SELECT e.Id, 0 AS [Rank] FROM ")
-                .Append(_entitiesTableName)
-                .Append(" e WHERE (");
-            if (!string.IsNullOrEmpty(whereClause))
-            {
-                q1.Append("(").Append(whereClause).Append(") AND ");
-            }
-            q1.Append("(")
-                .Append(_query.Params.Keywords.ToSqlString("e.Title", "Keywords"))
-                .Append(" OR ")
-                .Append(_query.Params.Keywords.ToSqlString("e.Message", "Keywords"))
-                .Append("));");
+        //    var q1 = new StringBuilder();
+        //    q1.Append("SELECT e.Id, 0 AS [Rank] FROM ")
+        //        .Append(_entitiesTableName)
+        //        .Append(" e WHERE (");
+        //    if (!string.IsNullOrEmpty(whereClause))
+        //    {
+        //        q1.Append("(").Append(whereClause).Append(") AND ");
+        //    }
+        //    q1.Append("(")
+        //        .Append(_query.Params.Keywords.ToSqlString("e.Title", "Keywords"))
+        //        .Append(" OR ")
+        //        .Append(_query.Params.Keywords.ToSqlString("e.Message", "Keywords"))
+        //        .Append("));");
 
-            // Entity Replies
-            // ----------------------
+        //    // Entity Replies
+        //    // ----------------------
 
-            var q2 = new StringBuilder();
-            q2.Append("SELECT er.EntityId, 0 AS [Rank] FROM ")
-                .Append(_entityRepliesTableName)
-                .Append(" er INNER JOIN ")
-                .Append(_entitiesTableName)
-                .Append(" e ON e.Id = er.EntityId ")
-                .Append(" WHERE (");
-            if (!string.IsNullOrEmpty(whereClause))
-            {
-                q2.Append("(").Append(whereClause).Append(") AND ");
-            }
-            q2.Append("(")
-                .Append(_query.Params.Keywords.ToSqlString("er.Message", "Keywords"))
-                .Append(")) GROUP BY er.EntityId");
+        //    var q2 = new StringBuilder();
+        //    q2.Append("SELECT er.EntityId, 0 AS [Rank] FROM ")
+        //        .Append(_entityRepliesTableName)
+        //        .Append(" er INNER JOIN ")
+        //        .Append(_entitiesTableName)
+        //        .Append(" e ON e.Id = er.EntityId ")
+        //        .Append(" WHERE (");
+        //    if (!string.IsNullOrEmpty(whereClause))
+        //    {
+        //        q2.Append("(").Append(whereClause).Append(") AND ");
+        //    }
+        //    q2.Append("(")
+        //        .Append(_query.Params.Keywords.ToSqlString("er.Message", "Keywords"))
+        //        .Append(")) GROUP BY er.EntityId");
 
-            // Return queries
-            return new List<string>()
-            {
-                q1.ToString(),
-                q2.ToString()
-            };
+        //    // Return queries
+        //    return new List<string>()
+        //    {
+        //        q1.ToString(),
+        //        q2.ToString()
+        //    };
 
-        }
+        //}
 
-        List<string> BuildFullTextQueries()
-        {
+        //List<string> BuildFullTextQueries()
+        //{
 
-            var whereClause = BuildWhere();
+        //    var whereClause = BuildWhere();
 
-            // Entities
-            // ----------------------
+        //    // Entities
+        //    // ----------------------
 
-            var q1 = new StringBuilder();
-            q1
-                .Append("SELECT i.[Key], i.[Rank] ")
-                .Append("FROM ")
-                .Append(_entitiesTableName)
-                .Append(" e ")
-                .Append("INNER JOIN ")
-                .Append(_query.Options.SearchType.ToString().ToUpper())
-                .Append("(")
-                .Append(_entitiesTableName)
-                .Append(", *, '").Append(GetKeywords()).Append("'");
-            if (_query.Options.MaxResults > 0)
-                q1.Append(", ").Append(_query.Options.MaxResults.ToString());
-            q1.Append(") AS i ON i.[Key] = e.Id WHERE ");
-            if (!string.IsNullOrEmpty(whereClause))
-                q1.Append("(").Append(whereClause).Append(") AND ");
-            q1.Append("(e.Id IN (IsNull(i.[Key], 0)));");
+        //    var q1 = new StringBuilder();
+        //    q1
+        //        .Append("SELECT i.[Key], i.[Rank] ")
+        //        .Append("FROM ")
+        //        .Append(_entitiesTableName)
+        //        .Append(" e ")
+        //        .Append("INNER JOIN ")
+        //        .Append(_query.Options.SearchType.ToString().ToUpper())
+        //        .Append("(")
+        //        .Append(_entitiesTableName)
+        //        .Append(", *, '").Append(GetKeywords()).Append("'");
+        //    if (_query.Options.MaxResults > 0)
+        //        q1.Append(", ").Append(_query.Options.MaxResults.ToString());
+        //    q1.Append(") AS i ON i.[Key] = e.Id WHERE ");
+        //    if (!string.IsNullOrEmpty(whereClause))
+        //        q1.Append("(").Append(whereClause).Append(") AND ");
+        //    q1.Append("(e.Id IN (IsNull(i.[Key], 0)));");
 
-            // Entity replies
-            // ----------------------
+        //    // Entity replies
+        //    // ----------------------
 
-            var q2 = new StringBuilder();
-            q2
-                .Append("SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] ")
-                .Append("FROM ")
-                .Append(_entityRepliesTableName)
-                .Append(" er ")
+        //    var q2 = new StringBuilder();
+        //    q2
+        //        .Append("SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] ")
+        //        .Append("FROM ")
+        //        .Append(_entityRepliesTableName)
+        //        .Append(" er ")
 
-                .Append("INNER JOIN ")
-                .Append(_query.Options.SearchType.ToString().ToUpper())
-                .Append("(")
-                .Append(_entityRepliesTableName)
-                .Append(", *, '").Append(GetKeywords()).Append("'");
-            if (_query.Options.MaxResults > 0)
-                q2.Append(", ").Append(_query.Options.MaxResults.ToString());
-            q2.Append(") i ON i.[Key] = er.Id ")
-                .Append("INNER JOIN ")
-                .Append(_entitiesTableName)
-                .Append(" e ON e.Id = er.EntityId ")
+        //        .Append("INNER JOIN ")
+        //        .Append(_query.Options.SearchType.ToString().ToUpper())
+        //        .Append("(")
+        //        .Append(_entityRepliesTableName)
+        //        .Append(", *, '").Append(GetKeywords()).Append("'");
+        //    if (_query.Options.MaxResults > 0)
+        //        q2.Append(", ").Append(_query.Options.MaxResults.ToString());
+        //    q2.Append(") i ON i.[Key] = er.Id ")
+        //        .Append("INNER JOIN ")
+        //        .Append(_entitiesTableName)
+        //        .Append(" e ON e.Id = er.EntityId ")
 
-                .Append("WHERE ");
-            if (!string.IsNullOrEmpty(whereClause))
-                q1.Append("(").Append(whereClause).Append(") AND ");
-            q2.Append("(er.Id IN (IsNull(i.[Key], 0)))")
-                .Append("GROUP BY er.EntityId, i.[Rank];");
+        //        .Append("WHERE ");
+        //    if (!string.IsNullOrEmpty(whereClause))
+        //        q1.Append("(").Append(whereClause).Append(") AND ");
+        //    q2.Append("(er.Id IN (IsNull(i.[Key], 0)))")
+        //        .Append("GROUP BY er.EntityId, i.[Rank];");
 
-            // Return queries
-            return new List<string>()
-            {
-                q1.ToString(),
-                q2.ToString()
-            };
+        //    // Return queries
+        //    return new List<string>()
+        //    {
+        //        q1.ToString(),
+        //        q2.ToString()
+        //    };
 
-        }
+        //}
 
         bool HasKeywords()
         {

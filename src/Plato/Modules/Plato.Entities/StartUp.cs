@@ -76,8 +76,7 @@ namespace Plato.Entities
 
             // Full text index providers
             services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
-
-
+            
             // Federated query manager 
             services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
             services.AddScoped<IFederatedQueryProvider<Entity>, EntitySearchQueries<Entity>>();

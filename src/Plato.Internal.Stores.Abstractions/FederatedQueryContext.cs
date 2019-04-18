@@ -2,6 +2,7 @@
 
 namespace Plato.Internal.Stores.Abstractions
 {
+
     public interface IFederatedQueryContext<TModel> where TModel : class
     {
         
@@ -15,9 +16,7 @@ namespace Plato.Internal.Stores.Abstractions
 
     public class FederatedQueryContext<TModel> : IFederatedQueryContext<TModel> where TModel : class
     {
-
-  
-
+        
         public IQuery<TModel> Query { get; set; }
 
         public WhereString Keywords { get; set; }

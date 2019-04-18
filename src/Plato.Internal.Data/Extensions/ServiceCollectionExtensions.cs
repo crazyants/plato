@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Migrations.Extensions;
 using Plato.Internal.Data.Providers;

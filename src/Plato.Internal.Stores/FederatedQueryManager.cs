@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores
@@ -31,13 +30,11 @@ namespace Plato.Internal.Stores
                 {
                     try
                     {
-
                         var providedQueries = provider.GetQueries(context);
                         foreach (var query in providedQueries)
                         {
                             queries.Add(ReplaceTablePrefix(query, context.Query.Options.TablePrefix));
                         }
-                   
                     }
                     catch (Exception e)
                     {

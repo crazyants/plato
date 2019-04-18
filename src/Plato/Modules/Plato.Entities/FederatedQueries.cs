@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Plato.Entities.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Search.Abstractions;
 using Plato.Internal.Stores.Abstractions;
@@ -21,6 +21,13 @@ namespace Plato.Entities
 
         public IEnumerable<string> GetQueries(IFederatedQueryContext<TModel> context)
         {
+
+            // Ensure correct query type for federated query
+            if (context.Query.GetType() != typeof(EntityQuery<TModel>))
+            {
+                return null;
+            }
+
             return context.Query.Options.SearchType != SearchTypes.Tsql
                 ? BuildFullTextQueries(context)
                 : BuildSqlQueries(context);
@@ -69,8 +76,7 @@ namespace Plato.Entities
                 q1.ToString(),
                 q2.ToString()
             };
-
-
+            
         }
 
 
