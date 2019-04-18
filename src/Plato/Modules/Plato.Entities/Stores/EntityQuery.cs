@@ -18,7 +18,9 @@ namespace Plato.Entities.Stores
         public EntityQueryParams Params { get; set; }
 
         private readonly IStore<TModel> _store;
-
+        
+        public EntityQueryBuilder<TModel> Builder { get; private set; }
+        
         public EntityQuery(IStore<TModel> store)
         {
             _store = store;
@@ -35,9 +37,9 @@ namespace Plato.Entities.Stores
         public override async Task<IPagedResults<TModel>> ToList()
         {
 
-            var builder = new EntityQueryBuilder<TModel>(this);
-            var populateSql = builder.BuildSqlPopulate();
-            var countSql = builder.BuildSqlCount();
+            Builder = new EntityQueryBuilder<TModel>(this);
+            var populateSql = Builder.BuildSqlPopulate();
+            var countSql = Builder.BuildSqlCount();
 
             return await _store.SelectAsync(
                 PageIndex,
@@ -47,6 +49,7 @@ namespace Plato.Entities.Stores
                 Params.Keywords.Value);
         }
         
+     
     }
 
     #endregion
@@ -293,79 +296,54 @@ namespace Plato.Entities.Stores
 
         /*
 
-            DECLARE @FullTextSearchQuery nvarchar(4000);
-            SET @FullTextSearchQuery = 'FORMSOF(INFLECTIONAL, introduction)';
+            DECLARE @MaxRank int;
+            DECLARE @temp TABLE (Id int, [Rank] int); 
 
-            DECLARE @temp TABLE
-            (
-              Id int, 
-              [Rank] int
-            )
+            -- Provided via federated search
+            INSERT INTO @temp 
+                SELECT i.[Key], i.[Rank] FROM plato_Entities e INNER JOIN CONTAINSTABLE(plato_Entities, *, 'FORMSOF(INFLECTIONAL, introduction)') AS i ON i.[Key] = e.Id WHERE (e.Id IN (IsNull(i.[Key], 0)));
 
-            DECLARE @results TABLE
-            (
-              Id int, 
-              [Rank] int
-            )
+            -- Provided via federated search
+            INSERT INTO @temp 
+                SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] FROM plato_EntityReplies er INNER JOIN CONTAINSTABLE(plato_EntityReplies, *, 'FORMSOF(INFLECTIONAL, introduction)') i ON i.[Key] = er.Id INNER JOIN plato_Entities e ON e.Id = er.EntityId WHERE (er.Id IN (IsNull(i.[Key], 0)))GROUP BY er.EntityId, i.[Rank];
 
-            -- add entities to @temp 
-            INSERT INTO @temp
-	            SELECT i.[Key], i.[Rank] 
-	            FROM plato_Entities e
-	            INNER JOIN CONTAINSTABLE(plato_Entities, *, @FullTextSearchQuery) AS i ON i.[Key] = e.Id 
-	            WHERE (e.Id IN (IsNull(i.[Key], 0)))
+            DECLARE @results TABLE (Id int, [Rank] int); 
+            INSERT INTO @results 
+                SELECT Id, SUM(Rank) FROM @temp GROUP BY Id;
 
-            -- aggregate replies into @temp
-            INSERT INTO @temp
-	            SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] 
-		            FROM plato_EntityReplies er
-		            INNER JOIN CONTAINSTABLE(plato_EntityReplies, *, @FullTextSearchQuery) AS i ON i.[Key] = er.Id 
-		            WHERE (er.Id IN (IsNull(i.[Key], 0)))
-		            GROUP BY er.EntityId, i.[Rank]
+            SET @MaxRank = (SELECT TOP 1 [Rank] FROM @results ORDER BY [Rank] DESC);
 
-            -- distinct ids and aggregated rank
-            INSERT INTO @results
-	            SELECT Id, SUM(Rank) AS [Rank] FROM @temp GROUP BY Id 
-
-            DECLARE @FullTextMaxRank int;
-            SET @FullTextMaxRank = (SELECT TOP 1 [Rank] FROM @results ORDER BY [Rank] DESC);
-	            
-            SELECT e.*, f.ModuleId, 
-            c.UserName AS CreatedUserName, 
-            c.DisplayName AS CreatedDisplayName,
-            c.Alias AS CreatedAlias,
-            c.PhotoUrl AS CreatedPhotoUrl,
-            c.PhotoColor AS CreatedPhotoColor,
-            c.SignatureHtml AS CreatedSignatureHtml,
-            m.UserName AS ModifiedUserName, 
-            m.DisplayName AS ModifiedDisplayName,
-            m.Alias AS ModifiedAlias, 
-            m.PhotoUrl AS ModifiedPhotoUrl, 
-            m.PhotoColor AS ModifiedPhotoColor, 
-            m.SignatureHtml AS ModifiedSignatureHtml,
-            l.UserName AS LastReplyUserName, 
-            l.DisplayName AS LastReplyDisplayName,
-            l.Alias AS LastReplyAlias, 
-            l.PhotoUrl AS LastReplyPhotoUrl,
-            l.PhotoColor AS LastReplyPhotoColor,
-            l.SignatureHtml AS LastReplySignatureHtml,
-            r.[Rank] AS [Rank],
-            @FullTextMaxRank AS MaxRank 
+            SELECT e.*, 
+                f.ModuleId, 
+                c.UserName AS CreatedUserName, 
+                c.DisplayName AS CreatedDisplayName,
+                c.Alias AS CreatedAlias,
+                c.PhotoUrl AS CreatedPhotoUrl,
+                c.PhotoColor AS CreatedPhotoColor,
+                c.SignatureHtml AS CreatedSignatureHtml,
+                m.UserName AS ModifiedUserName, 
+                m.DisplayName AS ModifiedDisplayName,
+                m.Alias AS ModifiedAlias, 
+                m.PhotoUrl AS ModifiedPhotoUrl, 
+                m.PhotoColor AS ModifiedPhotoColor, 
+                m.SignatureHtml AS ModifiedSignatureHtml,
+                l.UserName AS LastReplyUserName, 
+                l.DisplayName AS LastReplyDisplayName,
+                l.Alias AS LastReplyAlias, 
+                l.PhotoUrl AS LastReplyPhotoUrl, 
+                l.PhotoColor AS LastReplyPhotoColor, 
+                l.SignatureHtml AS LastReplySignatureHtml, 
+                r.[Rank] AS [Rank], 
+                @MaxRank AS MaxRank 
             FROM plato_Entities e 
-            INNER JOIN plato_ShellFeatures f ON e.FeatureId = f.Id 
-
-            INNER JOIN @results r ON r.Id = e.Id 
-
-            LEFT OUTER JOIN plato_Users c ON e.CreatedUserId = c.Id 
-            LEFT OUTER JOIN plato_Users m ON e.ModifiedUserId = m.Id 
-            LEFT OUTER JOIN plato_Users l ON e.LastReplyUserId = l.Id 
-
-            WHERE (e.Id IN (SELECT Id FROM @results))
-
-	            ORDER BY 
+                INNER JOIN plato_ShellFeatures f ON e.FeatureId = f.Id 
+                INNER JOIN @results r ON r.Id = e.Id -- joined on federated search results
+                LEFT OUTER JOIN plato_Users c ON e.CreatedUserId = c.Id 
+                LEFT OUTER JOIN plato_Users m ON e.ModifiedUserId = m.Id 
+                LEFT OUTER JOIN plato_Users l ON e.LastReplyUserId = l.Id 
+            ORDER BY 
 	            e.IsPinned DESC, 
 	            [Rank] DESC 
-	            
             OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY;
             
         */
@@ -417,7 +395,7 @@ namespace Plato.Entities.Stores
 
             sb.Append("DECLARE @MaxRank int;")
                 .Append(Environment.NewLine)
-                .Append(BuildSearchResults())
+                .Append(BuildFederatedResults())
                 .Append(Environment.NewLine);
 
             sb.Append("SELECT ")
@@ -442,7 +420,7 @@ namespace Plato.Entities.Stores
 
             sb.Append("DECLARE @MaxRank int;")
                 .Append(Environment.NewLine)
-                .Append(BuildSearchResults())
+                .Append(BuildFederatedResults())
                 .Append(Environment.NewLine);
 
             sb.Append("SELECT COUNT(e.Id) FROM ")
@@ -451,11 +429,15 @@ namespace Plato.Entities.Stores
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
         }
+        
+        private string _where = null;
+
+        public string Where => _where ?? (_where = BuildWhere());
 
         #endregion
 
         #region "Private Methods"
-        
+
         string BuildSelect()
         {
             var sb = new StringBuilder();
@@ -485,13 +467,13 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-
+        
         string BuildTables()
         {
 
             var sb = new StringBuilder();
             sb.Append(_entitiesTableName).Append(" e ");
-            
+
             // join shell features table
             sb.Append("INNER JOIN ")
                 .Append(_shellFeaturesTableName)
@@ -502,9 +484,9 @@ namespace Plato.Entities.Stores
             {
                 sb.Append("INNER JOIN @results r ON r.Id = e.Id ");
             }
-            
+
             // join created user
-                sb.Append("LEFT OUTER JOIN ")
+            sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" c ON e.CreatedUserId = c.Id ");
 
@@ -522,7 +504,7 @@ namespace Plato.Entities.Stores
 
         }
 
-          string BuildWhere()
+        string BuildWhere()
         {
 
             var sb = new StringBuilder();
@@ -577,7 +559,7 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.LabelId.ToSqlString("LabelId"))
                     .Append("))");
             }
-            
+
             // TagId
             // --> Only available if the Tags feature is enabled
             if (_query.Params.TagId.Value > -1)
@@ -676,7 +658,7 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.CreatedUserId.Operator);
                 sb.Append(_query.Params.CreatedUserId.ToSqlString("e.CreatedUserId"));
             }
-            
+
             // ParticipatedUserId
             // --> Returns all entities with replies by the supplied
             // --> user and excludes entities created by the supplied user
@@ -693,7 +675,7 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.ParticipatedUserId.Value)
                     .Append(")");
             }
-            
+
             // -----------------
             // private 
             // -----------------
@@ -773,7 +755,7 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowClosed.Operator);
                 sb.Append("e.IsClosed = 1");
             }
-            
+
             // -----------------
             // pinned 
             // -----------------
@@ -815,7 +797,7 @@ namespace Plato.Entities.Stores
             //            .Append(" OR ")
             //            .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
             //            .Append(")");
-                    
+
             //        sb.Append(" OR ");
 
             //        // Entity Replies
@@ -839,7 +821,8 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-              
+
+
         string GetTableNameWithPrefix(string tableName)
         {
             return !string.IsNullOrEmpty(_query.Options.TablePrefix)
@@ -965,7 +948,7 @@ namespace Plato.Entities.Stores
 
         // -- Search
         
-        string BuildSearchResults()
+        string BuildFederatedResults()
         {
 
             // No keywords
@@ -977,20 +960,13 @@ namespace Plato.Entities.Stores
             // Build standard SQL or full text queries
             var sb = new StringBuilder();
 
-            //var queries = _query.Options.SearchType != SearchTypes.Tsql
-            //    ? BuildFullTextQueries()
-            //    : BuildSqlQueries();
-
             // Compose federated queries
-            var queries = _query.FederatedQueryManager.GetQueries(new FederatedQueryContext<TModel>()
-            {
-                Query = _query,       
-                Where = BuildWhere(),
-                Keywords = _query.Params.Keywords
-            });
+            var queries = _query.FederatedQueryManager.GetQueries(_query);
 
-            // Build results from federated queries
+            // Create a temporary table for all our federated queries
             sb.Append("DECLARE @temp TABLE (Id int, [Rank] int); ");
+
+            // Execute each federated query adding results to temporary table
             foreach (var query in queries)
             {
                 sb.Append("INSERT INTO @temp ")
@@ -999,7 +975,7 @@ namespace Plato.Entities.Stores
                     .Append(Environment.NewLine);
             }
 
-            // Build final distinct and aggregated results from federated results
+            // Build final distinct and aggregated results from temporary federated results
             sb.Append("DECLARE @results TABLE (Id int, [Rank] int); ")
                 .Append(Environment.NewLine)
                 .Append("INSERT INTO @results ")
@@ -1007,7 +983,7 @@ namespace Plato.Entities.Stores
                 .Append("SELECT Id, SUM(Rank) FROM @temp GROUP BY Id;")
                 .Append(Environment.NewLine);
 
-            // Get max rank from results table
+            // Get max / highest rank from final results table
             sb.Append("SET @MaxRank = ")
                 .Append(_query.Options.SearchType != SearchTypes.Tsql
                     ? "(SELECT TOP 1 [Rank] FROM @results ORDER BY [Rank] DESC)"

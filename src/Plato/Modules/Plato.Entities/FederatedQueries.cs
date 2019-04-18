@@ -13,29 +13,31 @@ namespace Plato.Entities
 
         protected readonly IFullTextQueryParser _fullTextQueryParser;
 
-        public EntitySearchQueries(
-            IFullTextQueryParser fullTextQueryParser)
+        public EntitySearchQueries(IFullTextQueryParser fullTextQueryParser)
         {
             _fullTextQueryParser = fullTextQueryParser;
         }
 
-        public IEnumerable<string> GetQueries(IFederatedQueryContext<TModel> context)
+        public IEnumerable<string> GetQueries(IQuery<TModel> query)
         {
 
             // Ensure correct query type for federated query
-            if (context.Query.GetType() != typeof(EntityQuery<TModel>))
+            if (query.GetType() != typeof(EntityQuery<TModel>))
             {
                 return null;
             }
-
-            return context.Query.Options.SearchType != SearchTypes.Tsql
-                ? BuildFullTextQueries(context)
-                : BuildSqlQueries(context);
+            
+            // Convert to correct query type
+            var entityQuery = (EntityQuery<TModel>)Convert.ChangeType(query, typeof(EntityQuery<TModel>));
+            
+            return query.Options.SearchType != SearchTypes.Tsql
+                ? BuildFullTextQueries(entityQuery)
+                : BuildSqlQueries(entityQuery);
         }
 
-        List<string> BuildSqlQueries(IFederatedQueryContext<TModel> context)
+        List<string> BuildSqlQueries(EntityQuery<TModel> query)
         {
-
+            
             // Entities
             // ----------------------
 
@@ -43,14 +45,14 @@ namespace Plato.Entities
             q1.Append("SELECT e.Id, 0 AS [Rank] FROM ")
                 .Append("{prefix}_Entities")
                 .Append(" e WHERE (");
-            if (!string.IsNullOrEmpty(context.Where))
+            if (!string.IsNullOrEmpty(query.Builder.Where))
             {
-                q1.Append("(").Append(context.Where).Append(") AND ");
+                q1.Append("(").Append(query.Builder.Where).Append(") AND ");
             }
             q1.Append("(")
-                .Append(context.Keywords.ToSqlString("e.Title", "Keywords"))
+                .Append(query.Params.Keywords.ToSqlString("e.Title", "Keywords"))
                 .Append(" OR ")
-                .Append(context.Keywords.ToSqlString("e.Message", "Keywords"))
+                .Append(query.Params.Keywords.ToSqlString("e.Message", "Keywords"))
                 .Append("));");
 
             // Entity Replies
@@ -62,12 +64,12 @@ namespace Plato.Entities
                 .Append(" er INNER JOIN {prefix}_Entities ")
                 .Append("e ON e.Id = er.EntityId ")
                 .Append(" WHERE (");
-            if (!string.IsNullOrEmpty(context.Where))
+            if (!string.IsNullOrEmpty(query.Builder.Where))
             {
-                q2.Append("(").Append(context.Where).Append(") AND ");
+                q2.Append("(").Append(query.Builder.Where).Append(") AND ");
             }
             q2.Append("(")
-                .Append(context.Keywords.ToSqlString("er.Message", "Keywords"))
+                .Append(query.Params.Keywords.ToSqlString("er.Message", "Keywords"))
                 .Append(")) GROUP BY er.EntityId");
 
             // Return queries
@@ -80,11 +82,11 @@ namespace Plato.Entities
         }
 
 
-        List<string> BuildFullTextQueries(IFederatedQueryContext<TModel> context)
+        List<string> BuildFullTextQueries(EntityQuery<TModel> query)
         {
-
+            
             // Parse keywords into valid full text query syntax
-            var fullTextQuery = _fullTextQueryParser.ToFullTextSearchQuery(context.Keywords.Value);
+            var fullTextQuery = _fullTextQueryParser.ToFullTextSearchQuery(query.Params.Keywords.Value);
 
             // Ensure parse was successful
             if (!String.IsNullOrEmpty(fullTextQuery))
@@ -99,15 +101,17 @@ namespace Plato.Entities
                 .Append("{prefix}_Entities")
                 .Append(" e ")
                 .Append("INNER JOIN ")
-                .Append(context.Query.Options.SearchType.ToString().ToUpper())
+                .Append(query.Options.SearchType.ToString().ToUpper())
                 .Append("(")
                 .Append("{prefix}_Entities")
                 .Append(", *, '").Append(fullTextQuery).Append("'");
-            if (context.Query.Options.MaxResults > 0)
-                q1.Append(", ").Append(context.Query.Options.MaxResults.ToString());
+            if (query.Options.MaxResults > 0)
+                q1.Append(", ").Append(query.Options.MaxResults.ToString());
             q1.Append(") AS i ON i.[Key] = e.Id WHERE ");
-            if (!string.IsNullOrEmpty(context.Where))
-                q1.Append("(").Append(context.Where).Append(") AND ");
+            if (!string.IsNullOrEmpty(query.Builder.Where))
+            {
+                q1.Append("(").Append(query.Builder.Where).Append(") AND ");
+            }
             q1.Append("(e.Id IN (IsNull(i.[Key], 0)));");
 
             // Entity replies
@@ -120,20 +124,20 @@ namespace Plato.Entities
                 .Append("{prefix}_EntityReplies")
                 .Append(" er ")
                 .Append("INNER JOIN ")
-                .Append(context.Query.Options.SearchType.ToString().ToUpper())
+                .Append(query.Options.SearchType.ToString().ToUpper())
                 .Append("(")
                 .Append("{prefix}_EntityReplies")
                 .Append(", *, '").Append(fullTextQuery).Append("'");
-            if (context.Query.Options.MaxResults > 0)
-                q2.Append(", ").Append(context.Query.Options.MaxResults.ToString());
+            if (query.Options.MaxResults > 0)
+                q2.Append(", ").Append(query.Options.MaxResults.ToString());
             q2.Append(") i ON i.[Key] = er.Id ")
-                .Append("INNER JOIN ")
-                .Append("{prefix}_Entities")
-                .Append(" e ON e.Id = er.EntityId ")
+                .Append("INNER JOIN {prefix}_Entities e ON e.Id = er.EntityId ")
                 .Append("WHERE ");
-            if (!string.IsNullOrEmpty(context.Where))
-                q1.Append("(").Append(context.Where).Append(") AND ");
-            q2.Append("(er.Id IN (IsNull(i.[Key], 0)))")
+            if (!string.IsNullOrEmpty(query.Builder.Where))
+            {
+                q2.Append("(").Append(query.Builder.Where).Append(") AND ");
+            }
+            q2.Append("(er.Id IN (IsNull(i.[Key], 0))) ")
                 .Append("GROUP BY er.EntityId, i.[Rank];");
 
             // Return queries

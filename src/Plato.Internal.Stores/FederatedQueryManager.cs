@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores
@@ -21,7 +22,7 @@ namespace Plato.Internal.Stores
             _logger = logger;
         }
 
-        public IEnumerable<string> GetQueries(IFederatedQueryContext<TModel> context)
+        public IEnumerable<string> GetQueries(IQuery<TModel> query)
         {
             if (_queries == null)
             {
@@ -30,10 +31,10 @@ namespace Plato.Internal.Stores
                 {
                     try
                     {
-                        var providedQueries = provider.GetQueries(context);
-                        foreach (var query in providedQueries)
+                        var providedQueries = provider.GetQueries(query);
+                        foreach (var providedQuery in providedQueries)
                         {
-                            queries.Add(ReplaceTablePrefix(query, context.Query.Options.TablePrefix));
+                            queries.Add(ReplaceTablePrefix(providedQuery, query.Options.TablePrefix));
                         }
                     }
                     catch (Exception e)
