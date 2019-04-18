@@ -25,6 +25,7 @@ using Plato.Articles.Services;
 using Plato.Articles.Subscribers;
 using Plato.Articles.Tasks;
 using Plato.Articles.ViewProviders;
+using Plato.Entities;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
@@ -32,6 +33,8 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Articles
 {
@@ -134,6 +137,11 @@ namespace Plato.Articles
             // Report entity managers
             services.AddScoped<IReportEntityManager<Article>, ReportArticleManager>();
             services.AddScoped<IReportEntityManager<Comment>, ReportCommentManager>();
+            
+            // Federated query manager 
+            services.AddScoped<IFederatedQueryManager<Article>, FederatedQueryManager<Article>>();
+            services.AddScoped<IFederatedQueryProvider<Article>, EntitySearchQueries<Article>>();
+            
 
         }
 

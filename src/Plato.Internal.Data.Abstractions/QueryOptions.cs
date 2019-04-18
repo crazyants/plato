@@ -1,5 +1,6 @@
 ﻿namespace Plato.Internal.Data.Abstractions
 {
+
     public enum SearchTypes
     {
         Tsql = 0,
@@ -15,8 +16,7 @@
         int MaxResults { get; set; }
 
         SearchTypes SearchType { get; set; }
-
-        IFullTextQueryParser FullTextQueryParser { get; set; }
+        
 
     }
 
@@ -29,7 +29,6 @@
 
         public SearchTypes SearchType { get; set; } = SearchTypes.Tsql;
 
-        public IFullTextQueryParser FullTextQueryParser { get; set; }
     }
 
 }

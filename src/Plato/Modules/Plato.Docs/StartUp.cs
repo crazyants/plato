@@ -29,9 +29,12 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Docs.NotificationTypes;
 using Plato.Docs.Notifications;
+using Plato.Entities;
 using Plato.Entities.Models;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Docs
 {
@@ -133,6 +136,10 @@ namespace Plato.Docs
             // Report entity managers
             services.AddScoped<IReportEntityManager<Doc>, ReportTopicManager>();
             services.AddScoped<IReportEntityManager<DocComment>, ReportReplyManager>();
+
+            // Federated query manager 
+            services.AddScoped<IFederatedQueryManager<Doc>, FederatedQueryManager<Doc>>();
+            services.AddScoped<IFederatedQueryProvider<Doc>, EntitySearchQueries<Doc>>();
 
         }
 

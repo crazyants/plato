@@ -15,7 +15,7 @@ namespace Plato.Internal.Data.Abstractions
         public IQueryOptions Options => _options;
    
         public IDictionary<string, OrderBy> SortColumns => _sortColumns;
-
+        
         public int PageIndex { get; private set; } = 1;
 
         public int PageSize { get; private set; } = int.MaxValue;

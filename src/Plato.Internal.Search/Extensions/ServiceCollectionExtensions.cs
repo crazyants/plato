@@ -12,7 +12,8 @@ namespace Plato.Internal.Search.Extensions
         {
 
             services.TryAddScoped<IFullTextIndexManager, FullTextIndexManager>();
-            
+            services.AddSingleton<IFullTextQueryParser, FullTextQueryParser>();
+
             return services;
 
         }

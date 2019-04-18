@@ -14,6 +14,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.Search.Abstractions\Plato.Internal.Search.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Text.Abstractions\Plato.Internal.Text.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

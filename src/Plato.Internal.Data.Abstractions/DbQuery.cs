@@ -7,20 +7,24 @@ namespace Plato.Internal.Data.Abstractions
     {
         
         private readonly DbContextOptions _dbContextOptionss;
-        private readonly IFullTextQueryParser _fullTextQueryParser;
+        //private readonly IFederatedQueryManager _federatedQueryManager;
 
         public DbQueryConfiguration(
-            IOptions<DbContextOptions> dbContextOptions,
-            IFullTextQueryParser fullTextQueryParser)
+            IOptions<DbContextOptions> dbContextOptions
+            //IFullTextQueryParser fullTextQueryParser
+            )
         {
-            _fullTextQueryParser = fullTextQueryParser;
+            //_fullTextQueryParser = fullTextQueryParser;
             _dbContextOptionss = dbContextOptions.Value;
+            //_federatedQueryManager = federatedQueryManager;
         }
 
         public IQuery<T> ConfigureQuery<T>(IQuery<T> query) where T : class
         {
             query.Options.TablePrefix = _dbContextOptionss.TablePrefix;
-            query.Options.FullTextQueryParser = _fullTextQueryParser;
+            //query.FederatedQueryManager = _federatedQueryManager;
+
+            //query.Options.FullTextQueryParser = _fullTextQueryParser;
             return query;
         }
     }

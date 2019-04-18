@@ -33,7 +33,7 @@ namespace Plato.Entities.Services
 
         }
         
-        public IEntityService<TModel> ConfigureDb(Action<QueryOptions> configure)
+        public IEntityService<TModel> ConfigureDb(Action<IQueryOptions> configure)
         {
             _configureDb = configure;
             return this;

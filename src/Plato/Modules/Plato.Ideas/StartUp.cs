@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Entities;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -32,6 +33,8 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Ideas
 {
@@ -134,6 +137,10 @@ namespace Plato.Ideas
             // Report entity managers
             services.AddScoped<IReportEntityManager<Idea>, ReportIdeaManager>();
             services.AddScoped<IReportEntityManager<IdeaComment>, ReportIdeaCommentManager>();
+
+            // Federated query manager 
+            services.AddScoped<IFederatedQueryManager<Idea>, FederatedQueryManager<Idea>>();
+            services.AddScoped<IFederatedQueryProvider<Idea>, EntitySearchQueries<Idea>>();
 
         }
 

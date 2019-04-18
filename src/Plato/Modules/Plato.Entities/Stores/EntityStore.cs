@@ -12,6 +12,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
 {
@@ -28,19 +29,22 @@ namespace Plato.Entities.Stores
         private readonly ILogger<EntityStore<TEntity>> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
-        
+        private readonly IFederatedQueryManager<TEntity> _federatedQueryManager;
+
         public EntityStore(
             IEntityDataStore<IEntityData> entityDataStore,
             IEntityRepository<TEntity> entityRepository,
             ITypedModuleProvider typedModuleProvider,
             ILogger<EntityStore<TEntity>> logger,
             IDbQueryConfiguration dbQuery,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager, 
+            IFederatedQueryManager<TEntity> federatedQueryManager)
         {
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
             _entityDataStore = entityDataStore;
             _cacheManager = cacheManager;
+            _federatedQueryManager = federatedQueryManager;
             _dbQuery = dbQuery;
             _logger = logger;
         }
@@ -144,8 +148,10 @@ namespace Plato.Entities.Stores
 
         public IQuery<TEntity> QueryAsync()
         {
-            var query = new EntityQuery<TEntity>(this);
-            return _dbQuery.ConfigureQuery<TEntity>(query); ;
+            return _dbQuery.ConfigureQuery<TEntity>(new EntityQuery<TEntity>(this)
+            {
+                FederatedQueryManager = _federatedQueryManager
+            }); ;
         }
 
         public async Task<IPagedResults<TEntity>> SelectAsync(params object[] args)

@@ -3,14 +3,14 @@
 namespace Plato.Internal.Data.Abstractions
 {
 
-    public interface IFullTextQueryParser
-    {
+    //public interface IFullTextQueryParser
+    //{
 
-        HashSet<string> StopWords { get; set; }
+    //    HashSet<string> StopWords { get; set; }
 
-        string ToFullTextSearchQuery(string query);
+    //    string ToFullTextSearchQuery(string query);
 
-    }
+    //}
 
 
 }

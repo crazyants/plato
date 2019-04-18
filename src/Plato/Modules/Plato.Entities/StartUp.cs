@@ -15,11 +15,14 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Entities.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Search.Abstractions;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities
 {
@@ -73,7 +76,12 @@ namespace Plato.Entities
 
             // Full text index providers
             services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
-        
+
+
+            // Federated query manager 
+            services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
+            services.AddScoped<IFederatedQueryProvider<Entity>, EntitySearchQueries<Entity>>();
+
             // Add profile views
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
             services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();

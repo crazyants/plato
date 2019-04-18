@@ -28,9 +28,12 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Discuss.NotificationTypes;
 using Plato.Discuss.Notifications;
+using Plato.Entities;
 using Plato.Entities.Models;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -132,6 +135,10 @@ namespace Plato.Discuss
             // Report entity managers
             services.AddScoped<IReportEntityManager<Topic>, ReportTopicManager>();
             services.AddScoped<IReportEntityManager<Reply>, ReportReplyManager>();
+
+            // Federated query manager 
+            services.AddScoped<IFederatedQueryManager<Topic>, FederatedQueryManager<Topic>>();
+            services.AddScoped<IFederatedQueryProvider<Topic>, EntitySearchQueries<Topic>>();
 
         }
 

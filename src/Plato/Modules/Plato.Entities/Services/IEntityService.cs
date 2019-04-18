@@ -13,7 +13,7 @@ namespace Plato.Entities.Services
 
         Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager);
         
-        IEntityService<TModel> ConfigureDb(Action<QueryOptions> configure);
+        IEntityService<TModel> ConfigureDb(Action<IQueryOptions> configure);
 
         IEntityService<TModel> ConfigureQuery(Action<EntityQueryParams> configure);
 

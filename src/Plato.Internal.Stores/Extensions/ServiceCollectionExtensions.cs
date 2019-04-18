@@ -8,6 +8,7 @@ using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstract;
+using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Reputations;
@@ -70,7 +71,8 @@ namespace Plato.Internal.Stores.Extensions
         
             // Schema
             services.AddScoped<IConstraintStore, ConstraintStore>();
-          
+            
+   
             return services;
             
         }
