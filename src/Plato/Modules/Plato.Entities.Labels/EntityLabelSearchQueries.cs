@@ -6,14 +6,15 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Search.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Entities
+namespace Plato.Entities.Labels
 {
-    public class EntitySearchQueries<TModel> : IFederatedQueryProvider<TModel> where TModel : class
+
+    public class EntityLabelSearchQueries<TModel> : IFederatedQueryProvider<TModel> where TModel : class
     {
 
         protected readonly IFullTextQueryParser _fullTextQueryParser;
 
-        public EntitySearchQueries(IFullTextQueryParser fullTextQueryParser)
+        public EntityLabelSearchQueries(IFullTextQueryParser fullTextQueryParser)
         {
             _fullTextQueryParser = fullTextQueryParser;
         }
@@ -34,8 +35,6 @@ namespace Plato.Entities
                 ? BuildFullTextQueries(entityQuery)
                 : BuildSqlQueries(entityQuery);
         }
-
-        // ----------
 
         List<string> BuildSqlQueries(EntityQuery<TModel> query)
         {
@@ -62,8 +61,8 @@ namespace Plato.Entities
 
             var q2 = new StringBuilder();
             q2.Append("SELECT er.EntityId, 0 AS [Rank] FROM ")
-                .Append("{prefix}_EntityReplies ")
-                .Append("er INNER JOIN {prefix}_Entities ")
+                .Append("{prefix}_EntityReplies")
+                .Append(" er INNER JOIN {prefix}_Entities ")
                 .Append("e ON e.Id = er.EntityId ")
                 .Append(" WHERE (");
             if (!string.IsNullOrEmpty(query.Builder.Where))
@@ -82,7 +81,8 @@ namespace Plato.Entities
             };
             
         }
-        
+
+
         List<string> BuildFullTextQueries(EntityQuery<TModel> query)
         {
             
@@ -100,58 +100,43 @@ namespace Plato.Entities
             {
                 return null;
             }
-            
+
+            /*
+                Produces the following federated query...
+                -----------------
+                SELECT el.EntityId, SUM(i.[Rank]) AS [Rank] 
+                FROM plato_Labels l INNER JOIN 
+                CONTAINSTABLE(plato_Labels, *, 'FORMSOF(INFLECTIONAL, creative)') AS i ON i.[Key] = l.Id 
+                INNER JOIN plato_EntityLabels el ON el.LabelId = l.Id
+                WHERE (l.Id IN (IsNull(i.[Key], 0))) GROUP BY el.EntityId;
+             */
+
             var q1 = new StringBuilder();
             q1
-                .Append("SELECT i.[Key], i.[Rank] ")
+                .Append("SELECT el.EntityId, SUM(i.[Rank]) ")
                 .Append("FROM ")
-                .Append("{prefix}_Entities")
-                .Append(" e ")
+                .Append("{prefix}_Labels")
+                .Append(" l ")
                 .Append("INNER JOIN ")
                 .Append(query.Options.SearchType.ToString().ToUpper())
                 .Append("(")
-                .Append("{prefix}_Entities")
+                .Append("{prefix}_Labels")
                 .Append(", *, '").Append(fullTextQuery).Append("'");
             if (query.Options.MaxResults > 0)
                 q1.Append(", ").Append(query.Options.MaxResults.ToString());
-            q1.Append(") AS i ON i.[Key] = e.Id WHERE ");
+            q1.Append(") AS i ON i.[Key] = l.Id ")
+                .Append("INNER JOIN {prefix}_EntityLabels el ON el.LabelId = l.Id ")
+                .Append("WHERE ");
             if (!string.IsNullOrEmpty(query.Builder.Where))
             {
                 q1.Append("(").Append(query.Builder.Where).Append(") AND ");
             }
-            q1.Append("(e.Id IN (IsNull(i.[Key], 0)));");
-
-            // Entity replies
-            // ----------------------
-
-            var q2 = new StringBuilder();
-            q2
-                .Append("SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] ")
-                .Append("FROM ")
-                .Append("{prefix}_EntityReplies")
-                .Append(" er ")
-                .Append("INNER JOIN ")
-                .Append(query.Options.SearchType.ToString().ToUpper())
-                .Append("(")
-                .Append("{prefix}_EntityReplies")
-                .Append(", *, '").Append(fullTextQuery).Append("'");
-            if (query.Options.MaxResults > 0)
-                q2.Append(", ").Append(query.Options.MaxResults.ToString());
-            q2.Append(") i ON i.[Key] = er.Id ")
-                .Append("INNER JOIN {prefix}_Entities e ON e.Id = er.EntityId ")
-                .Append("WHERE ");
-            if (!string.IsNullOrEmpty(query.Builder.Where))
-            {
-                q2.Append("(").Append(query.Builder.Where).Append(") AND ");
-            }
-            q2.Append("(er.Id IN (IsNull(i.[Key], 0))) ")
-                .Append("GROUP BY er.EntityId, i.[Rank];");
+            q1.Append("(l.Id IN (IsNull(i.[Key], 0))) GROUP BY el.EntityId;");
 
             // Return queries
             return new List<string>()
             {
-                q1.ToString(),
-                q2.ToString()
+                q1.ToString()
             };
 
         }

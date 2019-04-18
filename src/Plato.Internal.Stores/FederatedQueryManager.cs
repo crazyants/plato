@@ -32,9 +32,15 @@ namespace Plato.Internal.Stores
                     try
                     {
                         var providedQueries = provider.GetQueries(query);
-                        foreach (var providedQuery in providedQueries)
+                        if (providedQueries != null)
                         {
-                            queries.Add(ReplaceTablePrefix(providedQuery, query.Options.TablePrefix));
+                            foreach (var providedQuery in providedQueries)
+                            {
+                                if (!string.IsNullOrEmpty(providedQuery))
+                                {
+                                    queries.Add(ReplaceTablePrefix(providedQuery, query.Options.TablePrefix));
+                                }
+                            }
                         }
                     }
                     catch (Exception e)

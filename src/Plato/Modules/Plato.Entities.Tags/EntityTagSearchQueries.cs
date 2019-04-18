@@ -8,6 +8,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Tags
 {
+
     public class EntityTagSearchQueries<TModel> : IFederatedQueryProvider<TModel> where TModel : class
     {
 
@@ -93,16 +94,23 @@ namespace Plato.Entities.Tags
             {
                 fullTextQuery = fullTextQuery.Replace("'", "''");
             }
-
-            /*                
-                SELECT et.EntityId, SUM(i.[Rank]) AS [Rank] 
+            
+            // Can be empty if only puntutaton or stop words were entered
+            if (string.IsNullOrEmpty(fullTextQuery))
+            {
+                return null;
+            }
+            
+            /*
+                Produces the following federated query...
+                -----------------
+                SELECT et.EntityId, SUM(i.[Rank])
                 FROM plato_Tags t INNER JOIN 
                 CONTAINSTABLE(plato_Tags, *, 'FORMSOF(INFLECTIONAL, percent)') AS i ON i.[Key] = t.Id 
                 INNER JOIN plato_EntityTags et ON et.TagId = t.Id
-                WHERE (t.Id IN (IsNull(i.[Key], 0))) GROUP BY et.EntityId;
-             *
+                WHERE (t.Id IN (IsNull(i.[Key], 0))) GROUP BY et.EntityId;             
              */
-             
+
             var q1 = new StringBuilder();
             q1
                 .Append("SELECT et.EntityId, SUM(i.[Rank]) ")

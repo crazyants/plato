@@ -38,7 +38,7 @@ namespace Plato.Internal.Search
 
         public string ToFullTextSearchQuery(string query)
         {
-            var node = FixUpExpressionTree(ParseNode(query, ConjunctionTypes.And), true);
+            var node = FixUpExpressionTree(ParseNode(query, ConjunctionTypes.Or), true);
             return (node != null) ? node.ToString() : string.Empty;
         }
 

@@ -7,6 +7,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Search.Abstractions;
 using Plato.Labels.Assets;
 using Plato.Labels.Handlers;
 using Plato.Labels.Models;
@@ -56,6 +57,9 @@ namespace Plato.Labels
 
             // Label service
             services.AddScoped<ILabelService<LabelBase>, LabelService<LabelBase>>();
+
+            // Full text index providers
+            services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
 
         }
 
