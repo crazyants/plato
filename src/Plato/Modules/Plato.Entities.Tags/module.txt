@@ -1,18 +1,18 @@
-Name: Plato Tags
-Description: Adds tagging capabilities to Plato.
+Name: Plato Entities Tags
+Description: Adds tagging capabilities for entities to Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Core
+Category: Entities
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.WebAPI",
+		Id: "Plato.Entities",
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Admin",
+		Id: "Plato.Tags",
 		Version: "1.0.0"
 	}
 ]

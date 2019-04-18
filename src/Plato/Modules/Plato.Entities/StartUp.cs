@@ -61,7 +61,6 @@ namespace Plato.Entities
             services.AddScoped<IEntityUsersStore, EntityUsersStore>();
             services.AddScoped<IFeatureEntityMetricsStore, FeatureEntityMetricsStore>();
            
-
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();
@@ -77,7 +76,7 @@ namespace Plato.Entities
             // Full text index providers
             services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
             
-            // Federated query manager 
+            // Federated search
             services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
             services.AddScoped<IFederatedQueryProvider<Entity>, EntitySearchQueries<Entity>>();
 

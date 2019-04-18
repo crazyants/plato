@@ -35,6 +35,8 @@ namespace Plato.Entities
                 : BuildSqlQueries(entityQuery);
         }
 
+        // ----------
+
         List<string> BuildSqlQueries(EntityQuery<TModel> query)
         {
             
@@ -60,8 +62,8 @@ namespace Plato.Entities
 
             var q2 = new StringBuilder();
             q2.Append("SELECT er.EntityId, 0 AS [Rank] FROM ")
-                .Append("{prefix}_EntityReplies")
-                .Append(" er INNER JOIN {prefix}_Entities ")
+                .Append("{prefix}_EntityReplies ")
+                .Append("er INNER JOIN {prefix}_Entities ")
                 .Append("e ON e.Id = er.EntityId ")
                 .Append(" WHERE (");
             if (!string.IsNullOrEmpty(query.Builder.Where))
@@ -80,8 +82,7 @@ namespace Plato.Entities
             };
             
         }
-
-
+        
         List<string> BuildFullTextQueries(EntityQuery<TModel> query)
         {
             
