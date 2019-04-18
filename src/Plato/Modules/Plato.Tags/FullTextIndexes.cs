@@ -8,7 +8,7 @@ namespace Plato.Tags
     {
 
         public static readonly FullTextIndex Tags =
-            new FullTextIndex("Tags", new string[] {"[Name]", "[Description]" });
+            new FullTextIndex("Tags", new string[] {"Name", "Description" });
 
         public IEnumerable<FullTextIndex> GetIndexes()
         {

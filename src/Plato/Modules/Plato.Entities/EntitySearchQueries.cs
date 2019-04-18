@@ -18,7 +18,7 @@ namespace Plato.Entities
             _fullTextQueryParser = fullTextQueryParser;
         }
 
-        public IEnumerable<string> GetQueries(IQuery<TModel> query)
+        public IEnumerable<string> Build(IQuery<TModel> query)
         {
 
             // Ensure correct query type for federated query

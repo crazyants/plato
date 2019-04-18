@@ -8,7 +8,7 @@ namespace Plato.Labels
     {
 
         public static readonly FullTextIndex Labels =
-            new FullTextIndex("Labels", new string[] {"[Name]", "[Description]" });
+            new FullTextIndex("Labels", new string[] {"Name", "Description" });
 
         public IEnumerable<FullTextIndex> GetIndexes()
         {

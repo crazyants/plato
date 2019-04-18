@@ -19,7 +19,7 @@ namespace Plato.Entities.Tags
             _fullTextQueryParser = fullTextQueryParser;
         }
 
-        public IEnumerable<string> GetQueries(IQuery<TModel> query)
+        public IEnumerable<string> Build(IQuery<TModel> query)
         {
 
             // Ensure correct query type for federated query
@@ -100,7 +100,7 @@ namespace Plato.Entities.Tags
             {
                 return null;
             }
-            
+
             /*
                 Produces the following federated query...
                 -----------------
@@ -108,6 +108,7 @@ namespace Plato.Entities.Tags
                 FROM plato_Tags t INNER JOIN 
                 CONTAINSTABLE(plato_Tags, *, 'FORMSOF(INFLECTIONAL, percent)') AS i ON i.[Key] = t.Id 
                 INNER JOIN plato_EntityTags et ON et.TagId = t.Id
+                INNER JOIN plato_Entities e ON e.Id = et.EntityId
                 WHERE (t.Id IN (IsNull(i.[Key], 0))) GROUP BY et.EntityId;             
              */
 
@@ -126,6 +127,7 @@ namespace Plato.Entities.Tags
                 q1.Append(", ").Append(query.Options.MaxResults.ToString());
             q1.Append(") AS i ON i.[Key] = t.Id ")
                 .Append("INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id ")
+                .Append("INNER JOIN plato_Entities e ON e.Id = et.EntityId ")
                 .Append("WHERE ");
             if (!string.IsNullOrEmpty(query.Builder.Where))
             {

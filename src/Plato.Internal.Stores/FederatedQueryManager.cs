@@ -31,14 +31,14 @@ namespace Plato.Internal.Stores
                 {
                     try
                     {
-                        var providedQueries = provider.GetQueries(query);
-                        if (providedQueries != null)
+                        var builders = provider.Build(query);
+                        if (builders != null)
                         {
-                            foreach (var providedQuery in providedQueries)
+                            foreach (var builder in builders)
                             {
-                                if (!string.IsNullOrEmpty(providedQuery))
+                                if (!string.IsNullOrEmpty(builder))
                                 {
-                                    queries.Add(ReplaceTablePrefix(providedQuery, query.Options.TablePrefix));
+                                    queries.Add(ReplaceTablePrefix(builder, query.Options.TablePrefix));
                                 }
                             }
                         }

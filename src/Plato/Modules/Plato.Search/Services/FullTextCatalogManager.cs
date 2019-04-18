@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
@@ -276,7 +277,7 @@ namespace Plato.Search.Services
                 ? _shellSettings.TablePrefix + tableName
                 : tableName;
         }
-
+    
     }
 
 }
