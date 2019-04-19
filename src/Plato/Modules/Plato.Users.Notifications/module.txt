@@ -2,7 +2,7 @@ Name: Plato Users Notifications
 Description: Adds the ability for users to receive and manage notification settings.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Notifications
+Category: Users
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 

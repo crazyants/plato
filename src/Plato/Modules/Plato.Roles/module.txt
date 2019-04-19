@@ -1,8 +1,10 @@
 Name: Plato Roles
 Description: Provides role based security functionality for Plato.
-Category: Security
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

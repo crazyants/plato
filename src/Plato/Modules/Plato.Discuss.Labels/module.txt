@@ -1,9 +1,10 @@
 Name: Plato Discuss Labels
 Description: Adds the ability to label topics.
-Category: Discuss
 Author: InstantASP
-Version: 1.0.0
+WebSite: https://www.instantasp.co.uk/
+Category: Discuss
 PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

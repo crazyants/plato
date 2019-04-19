@@ -1,6 +1,8 @@
 Name: Plato Admin
 Description: Provides the admin dashboard for Plato.
 Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
 Dependencies: 
 [
 	{

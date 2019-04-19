@@ -1,9 +1,10 @@
 Name: Plato Follows
 Description: Adds the ability to follow entities, categories & users via email within Plato.
-Category: Discussions
 Author: InstantASP
-Version: 1.0.0
+WebSite: https://www.instantasp.co.uk/
+Category: Core
 PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

@@ -1,8 +1,10 @@
 Name: Plato Search
 Description: Provides indexing and search services for entities & users within Plato.
-Category: Security
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
+Category: Search
+PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

@@ -1,9 +1,10 @@
 Name: Plato Entities Reactions
 Description: Adds the ability to react to entities.
-Category: Core
 Author: InstantASP
-Version: 1.0.0
+WebSite: https://www.instantasp.co.uk/
+Category: Entities
 PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

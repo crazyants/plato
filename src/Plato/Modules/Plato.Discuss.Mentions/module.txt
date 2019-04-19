@@ -2,7 +2,7 @@ Name: Plato Discuss Mentions
 Description: Adds the ability to @mention users within discussions.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Discussions
+Category: Discuss
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 

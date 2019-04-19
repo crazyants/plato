@@ -2,7 +2,7 @@ Name: Plato Media
 Description: Provides functionality to manage images and video within Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Core
+Category: Media
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 

@@ -1,9 +1,10 @@
 Name: Plato Questions
 Description: Adds public Q&A capabilities to Plato.
-Category: Questions
 Author: InstantASP
-Version: 1.0.0
+WebSite: https://www.instantasp.co.uk/
+Category: Questions
 PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

@@ -1,9 +1,10 @@
 Name: Plato Ideas
 Description: Adds public ideation capabilities to Plato.
-Category: Ideas
 Author: InstantASP
-Version: 1.0.0
+WebSite: https://www.instantasp.co.uk/
+Category: Ideas
 PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

@@ -1,10 +1,10 @@
 Name: Plato Discuss
 Description: Add public discussions to Plato.
-Category: Discuss
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Version: 1.0.0
+Category: Discuss
 PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{

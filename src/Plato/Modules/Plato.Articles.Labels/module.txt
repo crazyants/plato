@@ -1,7 +1,8 @@
 Name: Plato Articles Labels
 Description: Adds the ability to label articles.
-Category: Articles
 Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Articles
 Version: 1.0.0
 PlatoVersion: 1.0.0
 Dependencies: 

@@ -2,7 +2,7 @@ Name: Plato Messages
 Description: Adds core functionality to allow messaging.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Core
+Category: Messaging
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 

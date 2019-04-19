@@ -1,9 +1,10 @@
 Name: Plato Docs
 Description: Add public documentation capabilities to Plato.
-Category: Docs
 Author: InstantASP
-Version: 1.0.0
+WebSite: https://www.instantasp.co.uk/
+Category: Docs
 PlatoVersion: 1.0.0
+Version: 1.0.0
 Dependencies: 
 [
 	{
