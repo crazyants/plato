@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Plato.Internal.Models.Modules;
 
 namespace Plato.Internal.Models.Features
 {
@@ -8,10 +9,8 @@ namespace Plato.Internal.Models.Features
         int Id { get; set; }
 
         string ModuleId { get; set; }
-
-        string Name { get; set; }
-
-        string Description { get; set; }
+        
+        IModuleDescriptor Descriptor { get; set; }
 
         bool IsEnabled { get; set; }
 

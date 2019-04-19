@@ -19,6 +19,7 @@ namespace Plato.Internal.Modules.Locator
         private const string NameSection = "name";
         private const string PathSection = "path";
         private const string DescriptionSection = "description";
+        private const string CategorySection = "category";
         private const string VersionSection = "version";
         private const string PlatoVersionSection = "platoversion";
         private const string AuthorSection = "author";
@@ -187,6 +188,7 @@ namespace Plato.Internal.Modules.Locator
                 Name = GetValue(manifest, NameSection) ?? moduleId,
                 Path = GetValue(manifest, PathSection),
                 Description = GetValue(manifest, DescriptionSection),
+                Category = GetValue(manifest, CategorySection),
                 Version = GetValue(manifest, VersionSection),
                 PlatoVersion = GetValue(manifest, PlatoVersionSection),
                 Author = GetValue(manifest, AuthorSection),
@@ -250,6 +252,9 @@ namespace Plato.Internal.Modules.Locator
                             break;
                         case DescriptionSection:
                             manifest.Add(DescriptionSection, field[1]);
+                            break;
+                        case CategorySection:
+                            manifest.Add(CategorySection, field[1]);
                             break;
                         case VersionSection:
                             manifest.Add(VersionSection, field[1]);

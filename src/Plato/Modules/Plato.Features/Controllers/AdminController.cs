@@ -17,7 +17,7 @@ namespace Plato.Features.Controllers
     {
 
         private readonly IViewProviderManager<FeaturesViewModel> _viewProvider;
-        private readonly IShellDescriptorManager _shellDescriptorManager;
+        //private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
@@ -37,7 +37,7 @@ namespace Plato.Features.Controllers
         {
             _shellFeatureManager = shellFeatureManager;
             _viewProvider = viewProvider;
-            _shellDescriptorManager = shellDescriptorManager;
+            //_shellDescriptorManager = shellDescriptorManager;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
 
@@ -56,14 +56,11 @@ namespace Plato.Features.Controllers
                 ).Add(S["Features"]);
             });
             
-            var features = await _shellDescriptorManager.GetFeaturesAsync();
+            //var features = await _shellDescriptorManager.GetFeaturesAsync();
             
             //var enabledFeatures = _shellFEatureManager.
 
-            var model = new FeaturesViewModel()
-            {
-                Features = features
-            };
+            var model = new FeaturesViewModel();
             
             return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
             

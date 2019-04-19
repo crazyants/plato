@@ -1,5 +1,5 @@
 Name: Plato Discuss Tags
-Description: Adds tagging capabilities for discussions.
+Description: Adds tagging capabilities to topics and replies within Plato.Discuss.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Discuss

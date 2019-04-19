@@ -1,7 +1,8 @@
 Name: Plato Discuss Channels
 Description: Add channels to help organize topics within Plato Discuss.
-Category: Discussions
 Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Discuss
 Version: 1.0.0
 PlatoVersion: 1.0.0
 Dependencies: 

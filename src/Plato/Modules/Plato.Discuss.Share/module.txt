@@ -2,7 +2,7 @@ Name: Plato Discuss Share
 Description: Adds the ability to share topics and replies.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Core
+Category: Discuss
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 

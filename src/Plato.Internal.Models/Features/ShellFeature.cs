@@ -15,10 +15,8 @@ namespace Plato.Internal.Models.Features
 
         public string ModuleId { get; set; }
 
-        public string Name { get; set; }
+        public IModuleDescriptor Descriptor { get; set; }
         
-        public string Description { get; set; }
-
         public bool IsEnabled { get; set; }
 
         public bool IsRequired { get; set; }
@@ -42,25 +40,25 @@ namespace Plato.Internal.Models.Features
 
         public ShellFeature(ShellModule module)
         {
-            this.Id = module.Id;
-            this.ModuleId = module.ModuleId;
-            this.Version = module.Version;
+            Id = module.Id;
+            ModuleId = module.ModuleId;
+            Version = module.Version;
         }
 
         public ShellFeature(ModuleDependency dependency)
         {
             // dependency.Id to  this.ModuleId is intended
             // dependency.Id is the value deserialized from module.txt
-            this.ModuleId = dependency.Id;
-            this.Version = dependency.Version;
+            ModuleId = dependency.Id;
+            Version = dependency.Version;
         }
         
         public ShellFeature(IModuleEntry entry)
         {
-            this.ModuleId = entry.Descriptor.Id;
-            this.Name = entry.Descriptor.Name;
-            this.Description = entry.Descriptor.Description;
-            this.Version = entry.Descriptor.Version;
+
+            ModuleId = entry.Descriptor.Id;
+            Descriptor = entry.Descriptor;
+            Version = entry.Descriptor.Version;
 
             // Add minimal set of dependencies
             var dependencies = new List<ShellFeature>();
