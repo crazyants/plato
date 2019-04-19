@@ -39,50 +39,38 @@ namespace Plato.Entities.Tags
         List<string> BuildSqlQueries(EntityQuery<TModel> query)
         {
             
-            // Entities
-            // ----------------------
+            /*
+                Produces the following federated query...
+                -----------------
+                SELECT et.EntityId, 0 FROM plato_Tags t
+                INNER JOIN plato_EntityTags et ON et.TagId = t.Id
+                INNER JOIN plato_Entities e ON e.Id = et.EntityId
+                WHERE (t.[Name] LIKE '%percent') GROUP BY et.EntityId;     
+             */
 
             var q1 = new StringBuilder();
-            q1.Append("SELECT e.Id, 0 AS [Rank] FROM ")
-                .Append("{prefix}_Entities")
-                .Append(" e WHERE (");
+            q1.Append("SELECT et.EntityId, 0 FROM {prefix}_Tags t ")
+                .Append("INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id ")
+                .Append("INNER JOIN {prefix}_Entities e ON e.Id = et.EntityId ")
+                .Append(" WHERE (");
             if (!string.IsNullOrEmpty(query.Builder.Where))
             {
                 q1.Append("(").Append(query.Builder.Where).Append(") AND ");
             }
             q1.Append("(")
-                .Append(query.Params.Keywords.ToSqlString("e.Title", "Keywords"))
+                .Append(query.Params.Keywords.ToSqlString("t.[Name]", "Keywords"))
                 .Append(" OR ")
-                .Append(query.Params.Keywords.ToSqlString("e.Message", "Keywords"))
+                .Append(query.Params.Keywords.ToSqlString("t.[Description]", "Keywords"))
                 .Append("));");
-
-            // Entity Replies
-            // ----------------------
-
-            var q2 = new StringBuilder();
-            q2.Append("SELECT er.EntityId, 0 AS [Rank] FROM ")
-                .Append("{prefix}_EntityReplies")
-                .Append(" er INNER JOIN {prefix}_Entities ")
-                .Append("e ON e.Id = er.EntityId ")
-                .Append(" WHERE (");
-            if (!string.IsNullOrEmpty(query.Builder.Where))
-            {
-                q2.Append("(").Append(query.Builder.Where).Append(") AND ");
-            }
-            q2.Append("(")
-                .Append(query.Params.Keywords.ToSqlString("er.Message", "Keywords"))
-                .Append(")) GROUP BY er.EntityId");
 
             // Return queries
             return new List<string>()
             {
-                q1.ToString(),
-                q2.ToString()
+                q1.ToString()
             };
             
         }
-
-
+        
         List<string> BuildFullTextQueries(EntityQuery<TModel> query)
         {
             
@@ -115,19 +103,15 @@ namespace Plato.Entities.Tags
             var q1 = new StringBuilder();
             q1
                 .Append("SELECT et.EntityId, SUM(i.[Rank]) ")
-                .Append("FROM ")
-                .Append("{prefix}_Tags")
-                .Append(" t ")
-                .Append("INNER JOIN ")
+                .Append("FROM {prefix}_Tags t INNER JOIN ")
                 .Append(query.Options.SearchType.ToString().ToUpper())
-                .Append("(")
-                .Append("{prefix}_Tags")
+                .Append("({prefix}_Tags")
                 .Append(", *, '").Append(fullTextQuery).Append("'");
             if (query.Options.MaxResults > 0)
                 q1.Append(", ").Append(query.Options.MaxResults.ToString());
             q1.Append(") AS i ON i.[Key] = t.Id ")
                 .Append("INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id ")
-                .Append("INNER JOIN plato_Entities e ON e.Id = et.EntityId ")
+                .Append("INNER JOIN {prefix}_Entities e ON e.Id = et.EntityId ")
                 .Append("WHERE ");
             if (!string.IsNullOrEmpty(query.Builder.Where))
             {

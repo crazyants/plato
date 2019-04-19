@@ -105,12 +105,9 @@ namespace Plato.Entities
             q1
                 .Append("SELECT i.[Key], i.[Rank] ")
                 .Append("FROM ")
-                .Append("{prefix}_Entities")
-                .Append(" e ")
-                .Append("INNER JOIN ")
+                .Append("{prefix}_Entities e INNER JOIN ")
                 .Append(query.Options.SearchType.ToString().ToUpper())
-                .Append("(")
-                .Append("{prefix}_Entities")
+                .Append("({prefix}_Entities")
                 .Append(", *, '").Append(fullTextQuery).Append("'");
             if (query.Options.MaxResults > 0)
                 q1.Append(", ").Append(query.Options.MaxResults.ToString());

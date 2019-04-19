@@ -975,7 +975,7 @@ namespace Plato.Entities.Stores
                     .Append(Environment.NewLine);
             }
 
-            // Build final distinct and aggregated results from temporary federated results
+            // Build final distinct and aggregated results from federated results
             sb.Append("DECLARE @results TABLE (Id int, [Rank] int); ")
                 .Append(Environment.NewLine)
                 .Append("INSERT INTO @results ")

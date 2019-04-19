@@ -277,7 +277,7 @@ namespace Plato.Search.Services
                 ? _shellSettings.TablePrefix + tableName
                 : tableName;
         }
-    
+
     }
 
 }
