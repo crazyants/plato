@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.Localizers;
 using Plato.Internal.Layout.ViewAdapters;
@@ -48,7 +49,7 @@ namespace Plato.Internal.Layout.Extensions
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
                 options.Filters.Add(typeof(AlertFilter));
-
+                options.Filters.Add(typeof(ModularFilter));
             });
 
             // model binding model accessor

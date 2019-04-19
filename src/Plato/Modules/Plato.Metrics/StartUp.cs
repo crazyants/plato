@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ActionFilters;
+using Plato.Metrics.ActionFilters;
 using Plato.Metrics.Handlers;
 using Plato.Metrics.Models;
 using Plato.Metrics.Repositories;
@@ -37,6 +39,9 @@ namespace Plato.Metrics
       
             // Managers
             services.AddScoped<IMetricsManager<Metric>, MetricsManager>();
+
+            // Action filter
+            services.AddScoped<IModularActionFilter, MetricFilter>();
 
         }
 
