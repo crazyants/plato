@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Admin.Models;
 using Plato.Admin.Navigation;
-using Plato.Internal.Navigation;
+using Plato.Admin.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Admin
@@ -16,6 +18,10 @@ namespace Plato.Admin
         {
             // register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // View providers
+            services.AddScoped<IViewProviderManager<AdminIndex>, ViewProviderManager<AdminIndex>>();
+            services.AddScoped<IViewProvider<AdminIndex>, AdminViewProvider>();
 
         }
 

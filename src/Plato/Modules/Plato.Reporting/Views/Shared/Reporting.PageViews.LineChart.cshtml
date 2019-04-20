@@ -1,0 +1,193 @@
+﻿
+
+
+<div class="row">
+    <div class="col-4">
+        <div class="bg-primary text-white rounded p-3">
+            <div>
+                <i class="fal fa-eye float-right"></i>
+                @T["Page Views"]
+            </div>
+            <div class="position-relative mt-3" style="height: 100px;">
+                <canvas id="visitsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="bg-info text-white rounded p-3">
+            <div>
+                <i class="fal fa-user float-right"></i>
+                @T["Sign Ups"]
+            </div>
+            <div class="position-relative mt-3" style="height: 100px;">
+                <canvas id="visitsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="bg-warning text-white rounded p-3">
+            <div>
+                <i class="fal fa-trophy float-right"></i>
+                @T["Badges"]
+            </div>
+            <div class="position-relative mt-3" style="height: 100px;">
+                <canvas id="visitsChart"></canvas>
+            </div>
+        </div>
+    </div>
+  
+</div>
+
+
+<div class="position-relative" style="height: 100px;">
+    <canvas id="visitsChart"></canvas>
+</div>
+
+
+
+<card class="card card-primary">
+    <card-title>
+        <h6 class="card-title">@T["Badges"]</h6>
+    </card-title>
+    <card-body>
+        <canvas id="canvas" style="height: 300px;"></canvas>
+    </card-body>
+</card>
+
+<script section="Footer">
+
+    window.chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)',
+        white: 'rgb(255, 255, 255)'
+    };
+
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var color = Chart.helpers.color;
+
+    var barChartData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+                label: 'Dataset 1',
+                backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.red,
+                borderWidth: 1,
+                data: [
+                    25,
+                    40,
+                    30,
+                    90,
+                    45,
+                    75,
+                    65
+                ]
+            },
+            {
+                label: 'Dataset 2',
+                backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.blue,
+                borderWidth: 1,
+                data: [
+                    85,
+                    56,
+                    35,
+                    72,
+                    65,
+                    20,
+                    12
+                ]
+            }]
+
+    };
+
+    window.onload = function () {
+
+        var ctx = document.getElementById('canvas').getContext('2d');
+        window.myBar = new Chart(ctx, {
+            type: 'line',
+            data: barChartData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Bar Chart'
+                }
+            }
+        });
+
+        // ----------------------------------
+
+        var data = {
+            labels: ['Saturday, April 13, 2019','Sunday, April 14, 2019','Monday, April 15, 2019','Tuesday, April 16, 2019','Wednesday, April 17, 2019','Thursday, April 18, 2019','Friday, April 19, 2019','Saturday, April 20, 2019'],
+            datasets: [
+                {
+                    label: 'Page Views',
+                    fill: false,
+                    backgroundColor: color(window.chartColors.white).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.white,
+                    borderWidth: 2,
+                    backgroundColor: color(window.chartColors.gray).alpha(0.5).rgbString(),                      
+                    lineWidth: 4,
+                        pointRadius: 0,
+                    pointHoverRadius: 0,                         
+                    data: [74,87,130,54,46,37,56,32]
+                }
+            ]
+        };
+
+
+        var chart = document.getElementById('visitsChart').getContext('2d');
+        window.visitsChart = new Chart(chart,
+            {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend:
+                    {
+                        display: false,
+                        position: 'bottom'
+                    },
+                    title:
+                    {
+                        display: false
+                    },
+                    tooltips: false,
+                    animation: false,                     
+                    scales: {
+                     
+                        xAxes: [{
+                            display: false,
+                            gridLines: {
+                                drawBorder: false,
+                                drawOnChartArea: true,
+                                drawTicks: false,
+                                color: color(window.chartColors.white).alpha(0.5).rgbString()
+                            },
+                            ticks: {
+                                stepSize: 10,
+                                callback: function (dataLabel, index) {
+                                    return '';
+                                    //return index % 3 === 0 ? dataLabel : '';
+                                }
+                            }
+                        }],
+                        yAxes: [{
+                            display: false
+                        }]
+                    }
+                }
+            });
+        
+    };
+
+</script>

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Email.Models;
 using Plato.Email.ViewModels;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
@@ -64,11 +65,8 @@ namespace Plato.Email.Controllers
                 ).Add(S["Email"]);
             });
 
-            // Build view
-            var result = await _viewProvider.ProvideEditAsync(new EmailSettings(), this);
-
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(new EmailSettings(), this));
             
         }
         

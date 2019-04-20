@@ -1,31 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Navigation;
+using Plato.Admin.Models;
+using Plato.Internal.Layout;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Admin.Controllers
 {
 
-    public class AdminController : Controller
+    public class AdminController : Controller, IUpdateModel
     {
 
         private readonly IBreadCrumbManager _breadCrumbManager;
-        
+        private readonly IViewProviderManager<AdminIndex> _viewProvider;
+
         public IStringLocalizer S { get; }
         
         public AdminController(
-            IStringLocalizer<AdminController> stringLocalizer,
-            IBreadCrumbManager breadCrumbManager)
+            IStringLocalizer stringLocalizer,
+            IBreadCrumbManager breadCrumbManager,
+            IViewProviderManager<AdminIndex> viewProvider)
         {
 
             _breadCrumbManager = breadCrumbManager;
+            _viewProvider = viewProvider;
 
             S = stringLocalizer;
 
         }
-        
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
 
             _breadCrumbManager.Configure(builder =>
@@ -33,7 +39,10 @@ namespace Plato.Admin.Controllers
                 builder.Add(S["Home"]);
             });
 
-            return View();
+            return View((LayoutViewModel)await _viewProvider.ProvideIndexAsync(new AdminIndex(), this));
+
         }
+
     }
+
 }

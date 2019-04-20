@@ -1,6 +1,16 @@
 ﻿/* ReSharper disable once UnknownCssVendorExtension */
 /* ReSharper disable once UnknownCssVendorExtension */
 
+canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+/* ------------------------- */
+/* disabled elements */
+/* ------------------------- */
+
 .disabled { cursor: not-allowed !important; }
 
 /* ------------------------- */
