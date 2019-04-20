@@ -57,6 +57,11 @@ namespace Plato.Internal.Abstractions.Extensions
             return input.DayDifference(date.Value.DateTime);
         }
 
+        public static string ToSortableDateTimePattern(this DateTimeOffset input)
+        {
+            return input.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern);
+        }
+
     }
 
 }

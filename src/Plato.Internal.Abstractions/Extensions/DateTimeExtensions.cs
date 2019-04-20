@@ -9,8 +9,7 @@ namespace Plato.Internal.Abstractions.Extensions
         {
             return input ?? System.DateTime.UtcNow;
         }
-
-
+        
         public static string ToPrettyDate(this DateTime? d)
         {
             return d == null ? string.Empty : ToPrettyDate((DateTime) d);
@@ -76,6 +75,11 @@ namespace Plato.Internal.Abstractions.Extensions
         {
             var timeSpan = date.Subtract(input);
             return timeSpan.Days;
+        }
+
+        public static string ToSortableDateTimePattern(this DateTime input)
+        {
+            return input.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern);
         }
 
     }

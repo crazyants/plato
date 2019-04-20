@@ -1,0 +1,213 @@
+﻿@model OverviewReportViewModel
+@{
+    var pageViewsLabels = Model.PageViews?.SerializeLabels() ?? "[]";
+    var pageViewsData = Model.PageViews?.SerializeCounts() ?? "[]";
+    var newUsersLabels = Model.NewUsers?.SerializeLabels() ?? "[]";
+    var newUsersData = Model.NewUsers?.SerializeCounts() ?? "[]";
+    var engagementsLabels = Model.Engagements?.SerializeLabels() ?? "[]";
+    var engagementsData = Model.Engagements?.SerializeCounts() ?? "[]";
+}
+
+<div class="row">
+    <div class="col-4">
+        <div class="bg-primary text-white rounded p-3">
+            <div>
+                <i class="fal fa-eye float-right"></i>
+                @if (Model.PageViews != null)
+                {
+                    <h5 class="d-inline">@Model.PageViews.Total().ToPrettyInt()</h5>
+                }
+                else
+                {
+                    <h5>0</h5>
+                }
+                <br />
+                @T["Page Views"]
+            </div>
+            <div class="position-relative mt-3" style="height: 100px;">
+                <canvas id="pageViewsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="bg-info text-white rounded p-3">
+            <div>
+                <i class="fal fa-user float-right"></i>
+                @if (Model.NewUsers != null)
+                {
+                    <h5 class="d-inline">@Model.NewUsers.Total().ToPrettyInt()</h5>
+                }
+                else
+                {
+                    <h5>0</h5>
+                }
+                <br />
+                @T["Sign Ups"]
+            </div>
+            <div class="position-relative mt-3" style="height: 100px;">
+                <canvas id="newUsersChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="bg-warning text-white rounded p-3">
+            <div>
+                <i class="fal fa-thumbs-up float-right"></i>
+                @if (Model.Engagements != null)
+                {
+                    <h5 class="d-inline">@Model.Engagements.Total().ToPrettyInt()</h5>
+                }
+                else
+                {
+                    <h5>0</h5>
+                }
+                <br />
+                @T["Engagements"]
+            </div>
+            <div class="position-relative mt-3" style="height: 100px;">
+                <canvas id="engagementsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script section="Footer">
+
+    window.chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)',
+        white: 'rgb(255, 255, 255)'
+    };
+
+    
+    $(function(win, doc, $) {
+
+        "use strict";
+
+        var app = win.$.Plato,
+            scales = {
+                xAxes: [
+                    {
+                        display: false,
+                        gridLines: {
+                            drawBorder: false,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            color: win.Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString()
+                        },
+                        ticks: {
+                            stepSize: 10,
+                            callback: function(dataLabel, index) {
+                                return '';
+                                //return index % 3 === 0 ? dataLabel : '';
+                            }
+                        }
+                    }
+                ],
+                yAxes: [
+                    {
+                        display: false
+                    }
+                ]
+            },
+            charts = [
+                {
+                    id: "pageViewsChart",
+                    data: {
+                        labels: @Html.Raw(pageViewsLabels),
+                        datasets: [
+                            {
+                                label: 'Page Views',
+                                fill: false,
+                                backgroundColor: Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString(),
+                                borderColor: win.chartColors.white,
+                                borderWidth: 2,
+                                backgroundColor: Chart.helpers.color(win.chartColors.gray).alpha(0.5).rgbString(),
+                                lineWidth: 4,
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                data: @Html.Raw(pageViewsData)
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: "newUsersChart",
+                    data: {
+                        labels: @Html.Raw(newUsersLabels),
+                        datasets: [
+                            {
+                                label: 'New Users',
+                                fill: false,
+                                backgroundColor: win.Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString(),
+                                borderColor: win.chartColors.white,
+                                borderWidth: 2,
+                                backgroundColor: win.Chart.helpers.color(win.chartColors.gray).alpha(0.5).rgbString(),
+                                lineWidth: 4,
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                data: @Html.Raw(newUsersData)
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: "engagementsChart",
+                    data: {
+                        labels: @Html.Raw(engagementsLabels),
+                        datasets: [
+                            {
+                                label: 'Engagements',
+                                fill: false,
+                                backgroundColor: win.Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString(),
+                                borderColor: win.chartColors.white,
+                                borderWidth: 2,
+                                backgroundColor: win.Chart.helpers.color(win.chartColors.gray).alpha(0.5).rgbString(),
+                                lineWidth: 4,
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                data: @Html.Raw(engagementsData)
+                            }
+                        ]
+                    }
+                }
+            ];
+
+        app.ready(function() {
+
+            for (var i = 0; i < charts.length; i++) {
+
+                    var c = new win.Chart(doc.getElementById(charts[i].id).getContext('2d'),
+                    {
+                        type: 'line',
+                        data: charts[i].data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            legend:
+                            {
+                                display: false,
+                                position: 'bottom'
+                            },
+                            title:
+                            {
+                                display: false
+                            },
+                            tooltips: false,
+                            animation: false,
+                            scales: scales
+                        }
+                    });
+            }
+            
+        });
+
+    }(window, document, jQuery));
+
+</script>

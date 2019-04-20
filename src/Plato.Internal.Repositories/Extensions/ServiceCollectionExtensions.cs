@@ -9,6 +9,7 @@ using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Repositories.Badges;
+using Plato.Internal.Repositories.Metrics;
 using Plato.Internal.Repositories.Reputations;
 using Plato.Internal.Repositories.Roles;
 using Plato.Internal.Repositories.Schema;
@@ -44,13 +45,18 @@ namespace Plato.Internal.Repositories.Extensions
 
             // User reputations
             services.AddScoped<IUserReputationsRepository<UserReputation>, UserReputationsRepository>();
-           
+            services.AddScoped<IAggregatedReputationMetricsRepository, AggregatedReputationMetricsRepository>();
+
             // User badges
             services.AddScoped<IUserBadgeRepository<UserBadge>, UserBadgeRepository>();
 
             // Schema 
             services.AddScoped<IConstraintRepository, ConstraintRepository>();
-            
+
+            // Metrics 
+            services.AddScoped<IAggregatedUserMetricsRepository, AggregatedUserMetricsRepository>();
+
+
             return services;
 
         }

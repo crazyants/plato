@@ -29,7 +29,7 @@ namespace Plato.Reporting
 
             // View providers
             services.AddScoped<IViewProviderManager<AdminIndex>, ViewProviderManager<AdminIndex>>();
-            services.AddScoped<IViewProvider<AdminIndex>, AdminViewProvider>();
+            services.AddScoped<IViewProvider<AdminIndex>, AdminIndexViewProvider>();
 
         }
 

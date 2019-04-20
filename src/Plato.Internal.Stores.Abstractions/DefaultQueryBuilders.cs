@@ -323,7 +323,9 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
             Value = value;
-            _builder.Append("{0} > @{0}");
+            _builder.Append("{0} > '")
+                .Append(NormalizeDate(value))
+                .Append("'");
             return this;
         }
 
@@ -332,7 +334,9 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
             Value = value;
-            _builder.Append("{0} >= @{0}");
+            _builder.Append("{0} >= '")
+                .Append(NormalizeDate(value))
+                .Append("'");
             return this;
         }
 
@@ -341,7 +345,9 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
             Value = value;
-            _builder.Append("{0} < @{0}");
+            _builder.Append("{0} < '")
+                .Append(NormalizeDate(value))
+                .Append("'");
             return this;
         }
 
@@ -350,7 +356,9 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
             Value = value;
-            _builder.Append("{0} <= @{0}");
+            _builder.Append("{0} <= '")
+                .Append(NormalizeDate(value))
+                .Append("'");
             return this;
         }
         
@@ -359,7 +367,9 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
             Value = value;
-            _builder.Append("{0} <> @{0}");
+            _builder.Append("{0} <> '")
+                .Append(NormalizeDate(value))
+                .Append("'");
             return this;
         }
 
@@ -370,7 +380,7 @@ namespace Plato.Internal.Stores.Abstractions
 
         string NormalizeDate(DateTime dateTime)
         {
-            return dateTime.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern);
+            return dateTime.ToSortableDateTimePattern();
         }
     }
 

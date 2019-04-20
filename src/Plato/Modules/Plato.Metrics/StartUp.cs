@@ -6,6 +6,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ActionFilters;
+using Plato.Internal.Repositories.Metrics;
 using Plato.Metrics.ActionFilters;
 using Plato.Metrics.Handlers;
 using Plato.Metrics.Models;
@@ -33,7 +34,8 @@ namespace Plato.Metrics
 
             // Repositories
             services.AddScoped<IMetricsRepository<Metric>, MetricsRepository>();
-
+            services.AddScoped<IAggregatedMetricsRepository, AggregatedMetricsRepository>();
+            
             // Stores
             services.AddScoped<IMetricsStore<Metric>, MetricsStore>();
       

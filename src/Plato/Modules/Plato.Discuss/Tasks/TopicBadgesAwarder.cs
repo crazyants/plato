@@ -61,8 +61,7 @@ namespace Plato.Discuss.Tasks
                 CLOSE MSGCURSOR;
                 DEALLOCATE MSGCURSOR;
                 SELECT UserId FROM @myTable;";
-
-
+        
         public int IntervalInSeconds => 120;
 
         public IEnumerable<Badge> Badges => new[]
