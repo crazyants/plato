@@ -1,4 +1,5 @@
-﻿@model OverviewReportViewModel
+﻿@using Plato.Internal.Models.Extensions
+@model OverviewReportViewModel
 @{
     var pageViewsLabels = Model.PageViews?.SerializeLabels() ?? "[]";
     var pageViewsData = Model.PageViews?.SerializeCounts() ?? "[]";
@@ -9,7 +10,7 @@
 }
 
 <div class="row">
-    <div class="col-4">
+    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
         <div class="bg-primary text-white rounded p-3">
             <div>
                 <i class="fal fa-eye float-right"></i>
@@ -25,11 +26,11 @@
                 @T["Page Views"]
             </div>
             <div class="position-relative mt-3" style="height: 100px;">
-                <canvas id="pageViewsChart"></canvas>
+                <canvas id="pageViewsChart" class="w-100"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
         <div class="bg-info text-white rounded p-3">
             <div>
                 <i class="fal fa-user float-right"></i>
@@ -45,11 +46,11 @@
                 @T["Sign Ups"]
             </div>
             <div class="position-relative mt-3" style="height: 100px;">
-                <canvas id="newUsersChart"></canvas>
+                <canvas id="newUsersChart" class="w-100"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
         <div class="bg-warning text-white rounded p-3">
             <div>
                 <i class="fal fa-thumbs-up float-right"></i>
@@ -65,27 +66,14 @@
                 @T["Engagements"]
             </div>
             <div class="position-relative mt-3" style="height: 100px;">
-                <canvas id="engagementsChart"></canvas>
+                <canvas id="engagementsChart" class="w-100"></canvas>
             </div>
         </div>
     </div>
-
 </div>
 
 <script section="Footer">
 
-    window.chartColors = {
-        red: 'rgb(255, 99, 132)',
-        orange: 'rgb(255, 159, 64)',
-        yellow: 'rgb(255, 205, 86)',
-        green: 'rgb(75, 192, 192)',
-        blue: 'rgb(54, 162, 235)',
-        purple: 'rgb(153, 102, 255)',
-        grey: 'rgb(201, 203, 207)',
-        white: 'rgb(255, 255, 255)'
-    };
-
-    
     $(function(win, doc, $) {
 
         "use strict";
@@ -97,15 +85,14 @@
                         display: false,
                         gridLines: {
                             drawBorder: false,
-                            drawOnChartArea: true,
+                            drawOnChartArea: false,
                             drawTicks: false,
-                            color: win.Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString()
+                            color: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString()
                         },
                         ticks: {
                             stepSize: 10,
                             callback: function(dataLabel, index) {
-                                return '';
-                                //return index % 3 === 0 ? dataLabel : '';
+                                return index % 3 === 0 ? dataLabel : '';
                             }
                         }
                     }
@@ -125,10 +112,10 @@
                             {
                                 label: 'Page Views',
                                 fill: false,
-                                backgroundColor: Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString(),
-                                borderColor: win.chartColors.white,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.white,
                                 borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(win.chartColors.gray).alpha(0.5).rgbString(),
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString(),
                                 lineWidth: 4,
                                 pointRadius: 0,
                                 pointHoverRadius: 0,
@@ -145,10 +132,10 @@
                             {
                                 label: 'New Users',
                                 fill: false,
-                                backgroundColor: win.Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString(),
-                                borderColor: win.chartColors.white,
+                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.white,
                                 borderWidth: 2,
-                                backgroundColor: win.Chart.helpers.color(win.chartColors.gray).alpha(0.5).rgbString(),
+                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString(),
                                 lineWidth: 4,
                                 pointRadius: 0,
                                 pointHoverRadius: 0,
@@ -165,10 +152,10 @@
                             {
                                 label: 'Engagements',
                                 fill: false,
-                                backgroundColor: win.Chart.helpers.color(win.chartColors.white).alpha(0.5).rgbString(),
-                                borderColor: win.chartColors.white,
+                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.white,
                                 borderWidth: 2,
-                                backgroundColor: win.Chart.helpers.color(win.chartColors.gray).alpha(0.5).rgbString(),
+                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString(),
                                 lineWidth: 4,
                                 pointRadius: 0,
                                 pointHoverRadius: 0,

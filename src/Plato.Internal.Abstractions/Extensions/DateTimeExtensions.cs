@@ -82,5 +82,15 @@ namespace Plato.Internal.Abstractions.Extensions
             return input.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern);
         }
 
+        public static DateTime Floor(this DateTime d)
+        {
+            return new DateTime(d.Year, d.Month, d.Day, 0, 0, 0);
+        }
+
+        public static DateTime Ceil(this DateTime d)
+        {
+            return new DateTime(d.Year, d.Month, d.Day, 23, 59, 59);
+        }
+
     }
 }

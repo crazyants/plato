@@ -112,6 +112,16 @@ $(function (win, doc, $) {
     
     /* Plato UI */
     var platoUi = {
+        chartColors: {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)',
+            white: 'rgb(255, 255, 255)'
+        },
         init: function($ele) {
 
             if (!$ele) {
@@ -130,7 +140,7 @@ $(function (win, doc, $) {
         logError: function(message) {
             platoLogger.logError(message);
         },
-        initToolTips: function ($el) {
+        initToolTips: function($el) {
 
             if (!$el) {
                 $el = $("body");
@@ -143,17 +153,17 @@ $(function (win, doc, $) {
                 if ($el) {
                     $el.find(win.$.Plato.defaults.bsToolTipSelector).tooltip({ trigger: "hover" });
                     $el.find(win.$.Plato.defaults.bsToolTipAlternativeSelector).tooltip({ trigger: "hover" });
-                    
+
                 }
                 this.logInfo("Bootstrap tooltips initialized.");
             }
         },
-        initDropDowns: function ($el) {
+        initDropDowns: function($el) {
 
             if (!$el) {
                 $el = $("body");
             }
-            
+
             this.logInfo("initDropDowns()");
 
             // Enable nested dropdown support
@@ -175,7 +185,7 @@ $(function (win, doc, $) {
 
 
         },
-        initAvatar: function ($el) {
+        initAvatar: function($el) {
 
             if (!$el) {
                 $el = $("body");

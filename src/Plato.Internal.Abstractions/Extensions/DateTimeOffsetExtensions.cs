@@ -62,6 +62,16 @@ namespace Plato.Internal.Abstractions.Extensions
             return input.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern);
         }
 
+        public static DateTimeOffset Floor(this DateTimeOffset d)
+        {
+            return d.DateTime.Floor();
+        }
+
+        public static DateTimeOffset Ceil(this DateTimeOffset d)
+        {
+            return d.DateTime.Ceil();
+        }
+
     }
 
 }

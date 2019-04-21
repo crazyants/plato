@@ -23,41 +23,7 @@ namespace Plato.Internal.Models.Metrics
             return output;
 
         }
-
-        public string SerializeLabels()
-        {
-            var output = new List<string>();
-            foreach (var item in Data)
-            {
-
-                string value = null;
-                if (item.Aggregate is DateTimeOffset)
-                {
-                    value = ((DateTimeOffset)Convert.ChangeType(item.Aggregate, typeof(DateTimeOffset))).ToPrettyDate();
-                }
-
-                if (value == null)
-                {
-                    value = item.Aggregate.ToString(); ;
-                }
-                    
-                output.Add(value);
-
-            }
-
-            return output.Serialize<string>();
-
-        }
-
-        public string SerializeCounts()
-        {
-            var output = new List<int>();
-            foreach (var item in Data)
-            {
-                output.Add(item.Count);
-            }
-            return output.Serialize<int>();
-        }
+        
     }
 
     public class AggregatedCount<T> where T : struct
