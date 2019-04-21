@@ -4,8 +4,7 @@ using Plato.Internal.Models.Metrics;
 
 namespace Plato.Internal.Repositories.Metrics
 {
-
-    public interface IAggregatedMetricsRepository
+    public interface IAggregatedRepository
     {
 
         Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(
@@ -14,5 +13,6 @@ namespace Plato.Internal.Repositories.Metrics
             DateTimeOffset end);
 
     }
+
 
 }

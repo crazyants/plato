@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Discuss.Models;
+using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
@@ -13,15 +14,15 @@ namespace Plato.Discuss.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
-        private readonly IFeatureEntityMetricsStore _featureEntityMetricsStore;
+        private readonly IAggregatedEntityMetricsRepository _aggregatedEntityMetricsRepository;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public UserViewProvider(
-            IPlatoUserStore<User> platoUserStore,
-            IFeatureEntityMetricsStore featureEntityMetricsStore)
+            IPlatoUserStore<User> platoUserStore, 
+            IAggregatedEntityMetricsRepository aggregatedEntityMetricsRepository)
         {
             _platoUserStore = platoUserStore;
-            _featureEntityMetricsStore = featureEntityMetricsStore;
+            _aggregatedEntityMetricsRepository = aggregatedEntityMetricsRepository;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex,
@@ -43,11 +44,16 @@ namespace Plato.Discuss.ViewProviders
                     $"A view model of type {typeof(EntityIndexViewModel<Topic>).ToString()} has not been registered on the HttpContext!");
             }
 
+            var featureEntityMetrics = new FeatureEntityMetrics()
+            {
+                Metrics = await _aggregatedEntityMetricsRepository.SelectGroupedByFeature(user.Id)
+            };
+            
             var userDisplayViewModel = new UserDisplayViewModel<Topic>()
             {
                 User = user,
                 IndexViewModel = indexViewModel,
-                Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id)
+                Metrics = featureEntityMetrics
             };
 
             return Views(

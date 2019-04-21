@@ -36,7 +36,7 @@ namespace Plato.Questions.Navigation
             var areaName = "Plato.Questions";
 
             // Get feature metrics
-            var metric = model?.Metrics?.FirstOrDefault(m => m.ModuleId.Equals(areaName, StringComparison.OrdinalIgnoreCase));
+            var metric = model?.Metrics?.Data.FirstOrDefault(m => m.Aggregate.Equals(areaName, StringComparison.OrdinalIgnoreCase));
 
             // Get route values
             var context = builder.ActionContext;

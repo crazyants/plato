@@ -7,7 +7,7 @@ namespace Plato.Internal.Repositories.Metrics
     
   
 
-    public interface IAggregatedUserMetricsRepository : IAggregatedMetricsRepository
+    public interface IAggregatedUserMetricsRepository : IAggregatedRepository
     {
 
 

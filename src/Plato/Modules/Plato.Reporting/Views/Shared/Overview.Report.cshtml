@@ -168,9 +168,10 @@
 
         app.ready(function() {
 
+            var chart = null;
             for (var i = 0; i < charts.length; i++) {
 
-                    var c = new win.Chart(doc.getElementById(charts[i].id).getContext('2d'),
+                chart = new win.Chart(doc.getElementById(charts[i].id).getContext('2d'),
                     {
                         type: 'line',
                         data: charts[i].data,

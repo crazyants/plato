@@ -9,6 +9,7 @@ using Plato.Internal.Models.Metrics;
 using Plato.Internal.Repositories.Metrics;
 using Plato.Reporting.ViewModels;
 using Plato.Internal.Repositories.Reputations;
+using Plato.Metrics.Repositories;
 
 namespace Plato.Reporting.ViewProviders
 {

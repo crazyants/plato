@@ -52,6 +52,7 @@ namespace Plato.Entities
             services.AddScoped<IEntityDataRepository<IEntityData>, EntityDataRepository>();
             services.AddScoped<IEntityReplyRepository<EntityReply>, EntityReplyRepository<EntityReply>>();
             services.AddScoped<IEntityUsersRepository, EntityUsersRepository>();
+            services.AddScoped<IAggregatedEntityMetricsRepository, AggregatedEntityMetricsRepository>();
 
             // Stores
             services.AddScoped<IEntityStore<Entity>, EntityStore<Entity>>();
@@ -59,8 +60,7 @@ namespace Plato.Entities
             services.AddScoped<IEntityDataItemStore<EntityData>, EntityDataItemStore<EntityData>>();
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore<EntityReply>>();
             services.AddScoped<IEntityUsersStore, EntityUsersStore>();
-            services.AddScoped<IFeatureEntityMetricsStore, FeatureEntityMetricsStore>();
-           
+            
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();

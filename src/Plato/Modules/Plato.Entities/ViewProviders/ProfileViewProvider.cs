@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Entities.Models;
+using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
@@ -11,16 +12,18 @@ namespace Plato.Entities.ViewProviders
 {
     public class ProfileViewProvider : BaseViewProvider<Profile>
     {
-        
-        private readonly IFeatureEntityMetricsStore _featureEntityMetricsStore;
+
+        private readonly IAggregatedEntityMetricsRepository _aggregatedEntityMetricsRepository;
+
+        //private readonly IFeatureEntityMetricsStore _featureEntityMetricsStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
         
         public ProfileViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            IFeatureEntityMetricsStore featureEntityMetricsStore)
+            IAggregatedEntityMetricsRepository aggregatedEntityMetricsRepository)
         {
             _platoUserStore = platoUserStore;
-            _featureEntityMetricsStore = featureEntityMetricsStore;
+            _aggregatedEntityMetricsRepository = aggregatedEntityMetricsRepository;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile, IViewProviderContext context)
@@ -34,11 +37,17 @@ namespace Plato.Entities.ViewProviders
             {
                 return await BuildIndexAsync(profile, context);
             }
+
+
+            var featureEntityMetrics = new FeatureEntityMetrics()
+            {
+                Metrics = await _aggregatedEntityMetricsRepository.SelectGroupedByFeature(user.Id)
+            };
             
             var viewModel = new UserDisplayViewModel<Entity>()
             {
                 User = user,
-                Metrics = await _featureEntityMetricsStore.GetEntityCountGroupedByFeature(user.Id),
+                Metrics = featureEntityMetrics,
                 IndexViewModel = new EntityIndexViewModel<Entity>()
                 {
                     Options = new EntityIndexOptions()

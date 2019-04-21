@@ -37,7 +37,7 @@ namespace Plato.Ideas.Navigation
             var areaName = "Plato.Ideas";
 
             // Get feature metrics
-            var metric = model?.Metrics?.FirstOrDefault(m => m.ModuleId.Equals(areaName, StringComparison.OrdinalIgnoreCase));
+            var metric = model?.Metrics?.Data.FirstOrDefault(m => m.Aggregate.Equals(areaName, StringComparison.OrdinalIgnoreCase));
 
             // Get route values
             var context = builder.ActionContext;

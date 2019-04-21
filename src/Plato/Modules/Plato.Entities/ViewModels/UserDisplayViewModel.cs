@@ -1,4 +1,5 @@
 ﻿using Plato.Entities.Stores;
+using Plato.Internal.Models.Metrics;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.ViewModels
@@ -14,7 +15,7 @@ namespace Plato.Entities.ViewModels
     {
         public User User { get; set; }
 
-        public FeatureEntityMetrics Metrics { get; set; }
+        public FeatureEntityMetrics Metrics { get; set; } = new FeatureEntityMetrics();
 
     }
 }

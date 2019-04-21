@@ -6,7 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 namespace Plato.Internal.Models.Metrics
 {
 
-    public class AggregatedResult<T> where T : struct
+    public class AggregatedResult<T>  
     {
 
         public ICollection<AggregatedCount<T>> Data { get; set; } = new List<AggregatedCount<T>>();
@@ -26,7 +26,7 @@ namespace Plato.Internal.Models.Metrics
         
     }
 
-    public class AggregatedCount<T> where T : struct
+    public class AggregatedCount<T> 
     {
 
         public T Aggregate { get; set; }

@@ -10,7 +10,7 @@ using Plato.Internal.Repositories.Metrics;
 namespace Plato.Internal.Repositories.Reputations
 {
 
-    public interface IAggregatedReputationMetricsRepository : IAggregatedMetricsRepository
+    public interface IAggregatedReputationMetricsRepository : IAggregatedRepository
     {
 
     }
@@ -24,8 +24,7 @@ namespace Plato.Internal.Repositories.Reputations
         {
             _dbHelper = dbHelper;
         }
-
-
+        
         public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end)
         {
             // Sql query
