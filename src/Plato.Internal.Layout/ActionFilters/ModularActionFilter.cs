@@ -66,7 +66,7 @@ namespace Plato.Internal.Layout.ActionFilters
             {
                 try
                 {
-                    await provider.OnResultExecutionAsync(context, next);
+                   await provider.OnResultExecutionAsync(context, next);
                 }
                 catch (Exception e)
                 {
@@ -76,6 +76,8 @@ namespace Plato.Internal.Layout.ActionFilters
                     }
                 }
             }
+
+            await next();
 
         }
     }

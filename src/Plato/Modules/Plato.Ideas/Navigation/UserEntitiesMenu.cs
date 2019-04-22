@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Routing;
-using Plato.Entities.Stores;
+using Plato.Entities.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 

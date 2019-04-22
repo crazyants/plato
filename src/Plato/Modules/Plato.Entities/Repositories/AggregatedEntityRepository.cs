@@ -4,20 +4,23 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Metrics;
-using Plato.Internal.Repositories.Metrics;
 
 namespace Plato.Entities.Repositories
 {
     
-    public class AggregatedEntityMetricsRepository : IAggregatedEntityMetricsRepository
+    public class AggregatedEntityRepository : IAggregatedEntityRepository
     {
 
         private readonly IDbHelper _dbHelper;
 
-        public AggregatedEntityMetricsRepository(IDbHelper dbHelper)
+        public AggregatedEntityRepository(IDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
+        
+        // ----------------
+        // Grouped by date
+        // ----------------
 
         public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end)
         {
@@ -27,7 +30,7 @@ namespace Plato.Entities.Repositories
                     COUNT(Id) AS [Count], 
                     MAX({groupBy}) AS [Aggregate] 
                 FROM 
-                    {prefix}_UserReputations
+                    {prefix}_Entities
                 WHERE 
                     {groupBy} >= '{start}' AND {groupBy} <= '{end}'
                 GROUP BY 
@@ -58,6 +61,10 @@ namespace Plato.Entities.Repositories
             });
 
         }
+
+        // ----------------
+        // Grouped by feature
+        // ----------------
 
         public async Task<AggregatedResult<string>> SelectGroupedByFeature()
         {
@@ -96,10 +103,16 @@ namespace Plato.Entities.Repositories
 
         public async Task<AggregatedResult<string>> SelectGroupedByFeature(int userId)
         {
+
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
+
             // Sql query
             const string sql = @"
                 SELECT 
-                    f.ModuleId AS [Aggregate] ,
+                    f.ModuleId AS [Aggregate],
                     COUNT(e.Id) AS Count
                 FROM 
                     {prefix}_Entities e INNER JOIN {prefix}_ShellFeatures f ON f.Id = e.FeatureId               
@@ -127,8 +140,9 @@ namespace Plato.Entities.Repositories
                 }
                 return output;
             });
-
-
+            
         }
+
     }
+
 }

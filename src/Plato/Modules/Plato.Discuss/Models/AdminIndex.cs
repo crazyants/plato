@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Discuss.Models
+﻿namespace Plato.Discuss.Models
 {
     public class AdminIndex
     {
+        // A marker class used for the admin index of this feature
     }
 }

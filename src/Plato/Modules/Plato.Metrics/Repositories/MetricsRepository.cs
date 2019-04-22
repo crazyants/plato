@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -35,6 +34,7 @@ namespace Plato.Metrics.Repositories
 
             var id = await InsertUpdateInternal(
                 metric.Id,
+                metric.FeatureId,
                 metric.AreaName,
                 metric.ControllerName,
                 metric.ActionName,
@@ -145,6 +145,7 @@ namespace Plato.Metrics.Repositories
 
         async Task<int> InsertUpdateInternal(
             int id,
+            int featureId,
             string areaName,
             string controllerName,
             string actionName,
@@ -162,6 +163,7 @@ namespace Plato.Metrics.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateMetric",
                     id,
+                    featureId,
                     areaName.TrimToSize(100).ToEmptyIfNull(),
                     controllerName.TrimToSize(100).ToEmptyIfNull(),
                     actionName.TrimToSize(100).ToEmptyIfNull(),

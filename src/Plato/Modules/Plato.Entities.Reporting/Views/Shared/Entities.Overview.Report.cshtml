@@ -1,0 +1,153 @@
+﻿@using Plato.Internal.Models.Extensions
+@model EntitiesOverviewReportViewModel
+@{
+    var entitiesLabels = Model.Entities?.SerializeLabels() ?? "[]";
+    var entitiesData = Model.Entities?.SerializeCounts() ?? "[]";
+    var repliesLabels = Model.Replies?.SerializeLabels() ?? "[]";
+    var repliesData = Model.Replies?.SerializeCounts() ?? "[]";
+
+    var entities = Model.Entities?.Total() == 1
+        ? "new topic"
+        : "new topics";
+    var replies = Model.Replies?.Total() == 1
+        ? "new reply"
+        : "new replies";
+}
+
+
+<div class="row">
+    <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
+                
+        <card>
+            <card-title>
+              
+                @if (Model.Entities != null)
+                {
+                    <h6 class="card-title">
+                        @Model.Entities.Total().ToPrettyInt()
+                        @T[entities],
+                        @Model.Replies.Total().ToPrettyInt()
+                        @T[replies]
+                    </h6>
+                }
+                else
+                {
+                    <h6 class="card-title">
+                        0 @T[entities]
+                    </h6>
+                }
+              
+              
+            </card-title>
+            <card-body>
+                    <div class="position-relative mt-3" style="height: 200px;">
+                        <canvas id="entitiesOverviewChart" class="w-100"></canvas>
+                    </div>
+            </card-body>
+        </card>
+    </div>
+</div>
+
+<script section="Footer">
+
+    $(function(win, doc, $) {
+
+        "use strict";
+
+        var app = win.$.Plato,
+            scales = {
+                xAxes: [
+                    {
+                        display: false,
+                        stacked: true,
+                        gridLines: {
+                            drawBorder: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            color: win.Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString()
+                        },
+                        ticks: {
+                            stepSize: 10,
+                            callback: function(dataLabel, index) {
+                                return index % 3 === 0 ? dataLabel : '';
+                            }
+                        }
+                    }
+                ],
+                yAxes: [
+                    {
+                        display: false
+                    }
+                ]
+            },
+            charts = [
+                {
+                    id: "entitiesOverviewChart",
+                    data: {
+                        labels: @Html.Raw(entitiesLabels),
+                        datasets: [
+                            {
+                                label: 'Topics',
+                                fill: true,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.blue,
+                                borderWidth: 2,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                lineWidth: 4,
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                data: @Html.Raw(entitiesData)
+                            },
+                            {
+                                label: 'Replies',
+                                fill: true,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.green).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.green,
+                                borderWidth: 2,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.green).alpha(0.5).rgbString(),
+                                lineWidth: 4,
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                data: @Html.Raw(repliesData)
+                            }
+                        ]
+                    }
+                }
+            ];
+
+        app.ready(function() {
+
+            var chart = null;
+            for (var i = 0; i < charts.length; i++) {
+
+                chart = new win.Chart(doc.getElementById(charts[i].id).getContext('2d'),
+                    {
+                        type: 'line',
+                        data: charts[i].data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            legend:
+                            {
+                                display: false,
+                                position: 'bottom'
+                            },
+                            title:
+                            {
+                                display: false
+                            },
+                            tooltips: {
+                                position: 'nearest',
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            scales: scales
+                        }
+                    });
+            }
+            
+        });
+
+    }(window, document, jQuery));
+
+</script>

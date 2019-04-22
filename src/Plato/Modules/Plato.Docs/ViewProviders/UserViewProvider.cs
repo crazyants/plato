@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Docs.Models;
+using Plato.Entities.Models;
 using Plato.Entities.Repositories;
-using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -14,15 +14,15 @@ namespace Plato.Docs.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
-        private readonly IAggregatedEntityMetricsRepository _aggregatedEntityMetricsRepository;
+        private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public UserViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            IAggregatedEntityMetricsRepository aggregatedEntityMetricsRepository)
+            IAggregatedEntityRepository aggregatedEntityRepository)
         {
             _platoUserStore = platoUserStore;
-            _aggregatedEntityMetricsRepository = aggregatedEntityMetricsRepository;
+            _aggregatedEntityRepository = aggregatedEntityRepository;
         }
         
         public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex, IViewProviderContext context)
@@ -42,7 +42,7 @@ namespace Plato.Docs.ViewProviders
 
             var featureEntityMetrics = new FeatureEntityMetrics()
             {
-                Metrics = await _aggregatedEntityMetricsRepository.SelectGroupedByFeature(user.Id)
+                Metrics = await _aggregatedEntityRepository.SelectGroupedByFeature(user.Id)
             };
 
             var userDisplayViewModel = new UserDisplayViewModel<Doc>()

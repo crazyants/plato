@@ -45,7 +45,7 @@ namespace Plato.Internal.Repositories.Extensions
 
             // User reputations
             services.AddScoped<IUserReputationsRepository<UserReputation>, UserReputationsRepository>();
-            services.AddScoped<IAggregatedReputationMetricsRepository, AggregatedReputationMetricsRepository>();
+            services.AddScoped<IAggregatedUserReputationRepository, AggregatedUserReputationRepository>();
 
             // User badges
             services.AddScoped<IUserBadgeRepository<UserBadge>, UserBadgeRepository>();

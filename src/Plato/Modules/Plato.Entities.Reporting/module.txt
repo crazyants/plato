@@ -1,0 +1,22 @@
+Name: Plato Entities Reporting
+Description: Adds basic reporting capabilities for entities within Plato.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Reporting
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Admin",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Reporting",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Entities.Metrics",
+		Version: "1.0.0"
+	}
+]

@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Metrics;
-using Plato.Internal.Repositories.Metrics;
 
-namespace Plato.Internal.Repositories.Reputations
+namespace Plato.Entities.Metrics.Repositories
 {
-
-    public interface IAggregatedReputationMetricsRepository : IAggregatedRepository
-    {
-
-    }
-
-    public class AggregatedReputationMetricsRepository : IAggregatedReputationMetricsRepository
+    
+    public class AggregatedEntityMetricsRepository : IAggregatedEntityMetricsRepository
     {
 
         private readonly IDbHelper _dbHelper;
 
-        public AggregatedReputationMetricsRepository(IDbHelper dbHelper)
+        public AggregatedEntityMetricsRepository(IDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
-        
+
         public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end)
         {
             // Sql query
@@ -33,7 +26,7 @@ namespace Plato.Internal.Repositories.Reputations
                     COUNT(Id) AS [Count], 
                     MAX({groupBy}) AS [Aggregate] 
                 FROM 
-                    {prefix}_UserReputations
+                    {prefix}_EntityMetrics
                 WHERE 
                     {groupBy} >= '{start}' AND {groupBy} <= '{end}'
                 GROUP BY 

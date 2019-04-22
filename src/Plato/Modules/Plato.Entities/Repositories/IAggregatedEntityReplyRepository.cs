@@ -4,8 +4,7 @@ using Plato.Internal.Repositories.Metrics;
 
 namespace Plato.Entities.Repositories
 {
-
-    public interface IAggregatedEntityMetricsRepository : IAggregatedRepository
+    public interface IAggregatedEntityReplyRepository : IAggregatedRepository
     {
         Task<AggregatedResult<string>> SelectGroupedByFeature();
 

@@ -27,6 +27,11 @@ namespace Plato.Metrics.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "FeatureId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "AreaName",
                         Length = "100",
                         DbType = DbType.String

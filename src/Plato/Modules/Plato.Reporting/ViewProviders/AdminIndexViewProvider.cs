@@ -19,16 +19,16 @@ namespace Plato.Reporting.ViewProviders
 
         private readonly IAggregatedMetricsRepository _aggregatedMetricsRepository;
         private readonly IAggregatedUserMetricsRepository _aggregatedUserMetricsRepository;
-        private readonly IAggregatedReputationMetricsRepository _aggregatedReputationMetricsRepository;
+        private readonly IAggregatedUserReputationRepository _aggregatedUserReputationRepository;
 
         public AdminIndexViewProvider(
             IAggregatedMetricsRepository aggregatedMetricsRepository,
             IAggregatedUserMetricsRepository aggregatedUserMetricsRepository,
-            IAggregatedReputationMetricsRepository aggregatedReputationMetricsRepository)
+            IAggregatedUserReputationRepository aggregatedUserReputationRepository)
         {
             _aggregatedMetricsRepository = aggregatedMetricsRepository;
             _aggregatedUserMetricsRepository = aggregatedUserMetricsRepository;
-            _aggregatedReputationMetricsRepository = aggregatedReputationMetricsRepository;
+            _aggregatedUserReputationRepository = aggregatedUserReputationRepository;
         }
 
         public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
@@ -41,7 +41,7 @@ namespace Plato.Reporting.ViewProviders
 
             var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
             var newUsers = await _aggregatedUserMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
-            var engagements = await _aggregatedReputationMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
+            var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDate("CreatedDate", start, end);
             
             var overviewViewModel = new OverviewReportViewModel()
             {

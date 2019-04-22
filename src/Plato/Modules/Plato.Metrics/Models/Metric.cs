@@ -12,6 +12,8 @@ namespace Plato.Metrics.Models
 
         public int Id { get; set; }
         
+        public int FeatureId { get; set; }
+
         public string AreaName { get; set; }
         
         public string ControllerName { get; set; }

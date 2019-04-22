@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Metrics;
-using Plato.Internal.Repositories.Metrics;
 
 namespace Plato.Metrics.Repositories
 {
     
-    public interface IAggregatedMetricsRepository : IAggregatedRepository
-    {
-
-
-    }
-
     public class AggregatedMetricsRepository : IAggregatedMetricsRepository
     {
 

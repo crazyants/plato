@@ -1,5 +1,4 @@
-﻿using Plato.Entities.Stores;
-using Plato.Internal.Models.Metrics;
+﻿using Plato.Entities.Models;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.ViewModels

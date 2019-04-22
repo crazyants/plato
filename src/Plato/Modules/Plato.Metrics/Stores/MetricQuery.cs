@@ -65,6 +65,7 @@ namespace Plato.Metrics.Stores
 
 
         private WhereInt _id;
+        private WhereInt _featureId;
         private WhereString _areaName;
         private WhereString _controllerName;
         private WhereString _actionName;
@@ -77,6 +78,12 @@ namespace Plato.Metrics.Stores
         {
             get => _id ?? (_id = new WhereInt());
             set => _id = value;
+        }
+
+        public WhereInt FeatureId
+        {
+            get => _featureId ?? (_featureId = new WhereInt());
+            set => _featureId = value;
         }
 
         public WhereString AreaName
@@ -228,9 +235,17 @@ namespace Plato.Metrics.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("er.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("m.Id"));
             }
 
+            // FeatureId
+            if (_query.Params.FeatureId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.FeatureId.Operator);
+                sb.Append(_query.Params.FeatureId.ToSqlString("m.FeatureId"));
+            }
+            
             // AreaName
             if (!String.IsNullOrEmpty(_query.Params.AreaName.Value))
             {
