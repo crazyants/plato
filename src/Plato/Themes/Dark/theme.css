@@ -219,6 +219,10 @@ a.label.active {
     color: #fff !important;
 }
 
+.list-group-hover .list-group-item-action:not(.active):hover hr  {
+    border-color: #fff !important;
+}
+
 .list-group-check-list input:checked + label {
     color: white;
     background-color: #2A9FD6;

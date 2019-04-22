@@ -19,6 +19,7 @@ namespace Plato.Internal.Abstractions.Extensions
         {
             
             var s = DateTime.UtcNow.Subtract(d);
+
             var dayDiff = (int)s.TotalDays;
             var secDiff = (int)s.TotalSeconds;
 
@@ -66,7 +67,10 @@ namespace Plato.Internal.Abstractions.Extensions
             }
             if (dayDiff < 31)
             {
-                return $"{Math.Ceiling((double) dayDiff / 7)} weeks ago";
+                var weekDiff = (int)Math.Ceiling((double) dayDiff / 7);
+                return weekDiff == 1 
+                    ? $"{weekDiff} week ago" 
+                    : $"{weekDiff} weeks ago";
             }
             return null;
         }

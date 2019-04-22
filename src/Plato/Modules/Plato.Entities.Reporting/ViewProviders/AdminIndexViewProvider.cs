@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Admin.Models;
+using Plato.Entities.Metrics.Repositories;
 using Plato.Entities.Reporting.ViewModels;
 using Plato.Entities.Repositories;
 using Plato.Internal.Abstractions.Extensions;
@@ -15,14 +16,17 @@ namespace Plato.Entities.Reporting.ViewProviders
     {
         
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
+        private readonly IAggregatedEntityMetricsRepository _aggregatedEntityMetricsRepository;
         private readonly IAggregatedEntityReplyRepository _aggregatedEntityReplyRepository;
 
         public AdminIndexViewProvider(
             IAggregatedEntityRepository aggregatedEntityRepository,
-            IAggregatedEntityReplyRepository aggregatedEntityReplyRepository)
+            IAggregatedEntityReplyRepository aggregatedEntityReplyRepository,
+            IAggregatedEntityMetricsRepository aggregatedEntityMetricsRepository)
         {
             _aggregatedEntityRepository = aggregatedEntityRepository;
             _aggregatedEntityReplyRepository = aggregatedEntityReplyRepository;
+            _aggregatedEntityMetricsRepository = aggregatedEntityMetricsRepository;
         }
 
         public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
@@ -34,11 +38,13 @@ namespace Plato.Entities.Reporting.ViewProviders
             
             var entities = await _aggregatedEntityRepository.SelectGroupedByDate("CreatedDate", start, end);
             var replies = await _aggregatedEntityReplyRepository.SelectGroupedByDate("CreatedDate", start, end);
-            
+            var views = await _aggregatedEntityMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
+
             var overviewViewModel = new EntitiesOverviewReportViewModel()
             {
                 Entities = entities.MergeIntoRange(start, end),
                 Replies = replies.MergeIntoRange(start, end),
+                Views = views.MergeIntoRange(start, end)
             };
 
             return Views(

@@ -14,7 +14,6 @@
         : "new replies";
 }
 
-
 <div class="row">
     <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
                 
@@ -24,10 +23,7 @@
                 @if (Model.Entities != null)
                 {
                     <h6 class="card-title">
-                        @Model.Entities.Total().ToPrettyInt()
-                        @T[entities],
-                        @Model.Replies.Total().ToPrettyInt()
-                        @T[replies]
+                        @Model.Entities.Total().ToPrettyInt() @T[entities], @Model.Replies.Total().ToPrettyInt() @T[replies]
                     </h6>
                 }
                 else

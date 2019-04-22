@@ -11,8 +11,10 @@
 
 <div class="row">
     <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        <div class="bg-primary text-white rounded p-3">
-            <div>
+        
+        <card>
+            <card-body>
+              
                 <i class="fal fa-eye float-right"></i>
                 @if (Model.PageViews != null)
                 {
@@ -22,17 +24,21 @@
                 {
                     <h5>0</h5>
                 }
-                <br />
+                <br/>
                 @T["Page Views"]
-            </div>
-            <div class="position-relative mt-3" style="height: 100px;">
-                <canvas id="pageViewsChart" class="w-100"></canvas>
-            </div>
-        </div>
+         
+                <div class="position-relative mt-3" style="height: 100px;">
+                    <canvas id="pageViewsChart" class="w-100"></canvas>
+                </div>
+            </card-body>
+        </card>
+      
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        <div class="bg-info text-white rounded p-3">
-            <div>
+        
+        <card>
+            <card-body>
+            
                 <i class="fal fa-user float-right"></i>
                 @if (Model.NewUsers != null)
                 {
@@ -42,17 +48,21 @@
                 {
                     <h5>0</h5>
                 }
-                <br />
+                <br/>
                 @T["Sign Ups"]
-            </div>
-            <div class="position-relative mt-3" style="height: 100px;">
-                <canvas id="newUsersChart" class="w-100"></canvas>
-            </div>
-        </div>
+          
+                <div class="position-relative mt-3" style="height: 100px;">
+                    <canvas id="newUsersChart" class="w-100"></canvas>
+                </div>
+            </card-body>
+        </card>
+  
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        <div class="bg-warning text-white rounded p-3">
-            <div>
+        
+        <card>
+            <card-body>
+
                 <i class="fal fa-thumbs-up float-right"></i>
                 @if (Model.Engagements != null)
                 {
@@ -62,13 +72,15 @@
                 {
                     <h5>0</h5>
                 }
-                <br />
+                <br/>
                 @T["Engagements"]
-            </div>
-            <div class="position-relative mt-3" style="height: 100px;">
-                <canvas id="engagementsChart" class="w-100"></canvas>
-            </div>
-        </div>
+                <div class="position-relative mt-3" style="height: 100px;">
+                    <canvas id="engagementsChart" class="w-100"></canvas>
+                </div>
+
+            </card-body>
+        </card>
+     
     </div>
 </div>
 
@@ -111,12 +123,12 @@
                         datasets: [
                             {
                                 label: 'Page Views',
-                                fill: false,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.white,
+                                fill: true,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.blue,
                                 borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString(),
-                                lineWidth: 4,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                lineWidth: 2,
                                 pointRadius: 0,
                                 pointHoverRadius: 0,
                                 data: @Html.Raw(pageViewsData)
@@ -131,12 +143,12 @@
                         datasets: [
                             {
                                 label: 'New Users',
-                                fill: false,
-                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.white,
+                                fill: true,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.blue,
                                 borderWidth: 2,
-                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString(),
-                                lineWidth: 4,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                lineWidth: 2,
                                 pointRadius: 0,
                                 pointHoverRadius: 0,
                                 data: @Html.Raw(newUsersData)
@@ -151,12 +163,12 @@
                         datasets: [
                             {
                                 label: 'Engagements',
-                                fill: false,
-                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.white,
+                                fill: true,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                borderColor: app.ui.chartColors.blue,
                                 borderWidth: 2,
-                                backgroundColor: win.Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString(),
-                                lineWidth: 4,
+                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                                lineWidth: 2,
                                 pointRadius: 0,
                                 pointHoverRadius: 0,
                                 data: @Html.Raw(engagementsData)
@@ -187,7 +199,11 @@
                             {
                                 display: false
                             },
-                            tooltips: false,
+                            tooltips: {
+                                position: 'nearest',
+                                mode: 'index',
+                                intersect: false
+                            },
                             animation: false,
                             scales: scales
                         }
