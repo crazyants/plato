@@ -121,6 +121,55 @@ $(function(win, doc, $) {
                 }
             });
         },
+        initBar: function (id, data) {
+            this.init(id, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend:
+                    {
+                        display: false,
+                        position: 'bottom'
+                    },
+                    title:
+                    {
+                        display: false
+                    },
+                    tooltips: {
+                        position: 'nearest',
+                        mode: 'index',
+                        intersect: false
+                    },
+                    animation: false,
+                    scales: {
+                        xAxes: [
+                            {
+                                display: false,
+                                gridLines: {
+                                    drawBorder: false,
+                                    drawOnChartArea: false,
+                                    drawTicks: false,
+                                    color: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString()
+                                },
+                                ticks: {
+                                    stepSize: 10,
+                                    callback: function (dataLabel, index) {
+                                        return index % 3 === 0 ? dataLabel : '';
+                                    }
+                                }
+                            }
+                        ],
+                        yAxes: [
+                            {
+                                display: false
+                            }
+                        ]
+                    }
+                }
+            });
+        },
         initDoughnut: function(id, data) {
             this.init(id,
                 {

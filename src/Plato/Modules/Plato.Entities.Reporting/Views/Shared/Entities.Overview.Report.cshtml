@@ -106,131 +106,86 @@
 
 <script section="Footer">
 
+    if (typeof window.$.Plato.Reporting === "undefined") {
+        throw new Error("$.Plato.Reporting Required");
+    }
+
+    if (typeof window.$.Plato.Charts === "undefined") {
+        throw new Error("$.Plato.Charts Required");
+    }
+
     $(function(win, doc, $) {
 
         "use strict";
-
+             
         var app = win.$.Plato,
-            scales = {
-                xAxes: [
-                    {
-                        display: false,
-                        stacked: false,
-                        gridLines: {
-                            drawBorder: false,
-                            drawOnChartArea: true,
-                            drawTicks: false,
-                            color: win.Chart.helpers.color(app.ui.chartColors.gray).alpha(0.5).rgbString()
-                        },
-                        ticks: {
-                            stepSize: 1,
-                            callback: function(dataLabel, index) {
-                                return index % 3 === 0 ? dataLabel : '';
-                            }
-                        }
-                    }
-                ],
-                yAxes: [
-                    {
-                        display: false
-                    }
-                ]
-            },
-            charts = [
-                {
-                    id: "entityViewsChart",
-                    data: {
-                        labels: @Html.Raw(entitiesLabels),
-                        datasets: [
-                            {
-                                label: 'View',
-                                fill: true,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.blue,
-                                borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                lineWidth: 2,
-                                pointRadius: 0,
-                                pointHoverRadius: 0,
-                                data: @Html.Raw(viewsData)
-                            }
-                        ]
-                    }
-                },
-                 {
-                    id: "newEntitiesChart",
-                    data: {
-                        labels: @Html.Raw(entitiesLabels),
-                        datasets: [
-                            {
-                                label: 'New',
-                                fill: true,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.blue,
-                                borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                lineWidth: 2,
-                                pointRadius: 0,
-                                pointHoverRadius: 0,
-                                data: @Html.Raw(entitiesData)
-                            }
-                        ]
-                    }
-                },
-                {
-                    id: "newRepliesChart",
-                    data: {
-                        labels: @Html.Raw(entitiesLabels),
-                        datasets: [
-                            {
-                                label: 'Replies',
-                                fill: true,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.blue,
-                                borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                lineWidth: 2,
-                                pointRadius: 0,
-                                pointHoverRadius: 0,
-                                data: @Html.Raw(repliesData)
-                            }
-                        ]
-                    }
-                }
-            ];
+            charts = win.$.Plato.Charts;
 
         app.ready(function() {
 
-            var chart = null;
-            for (var i = 0; i < charts.length; i++) {
+            // ---------------
+            // Entity Views
+            // ---------------
 
-                chart = new win.Chart(doc.getElementById(charts[i].id).getContext('2d'),
+            charts.initLine("entityViewsChart", {
+                labels: @Html.Raw(entitiesLabels),
+                datasets: [
                     {
-                        type: 'line',
-                        data: charts[i].data,
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            legend:
-                            {
-                                display: false,
-                                position: 'bottom'
-                            },
-                            title:
-                            {
-                                display: false
-                            },
-                            tooltips: {
-                                position: 'nearest',
-                                mode: 'index',
-                                intersect: false
-                            },
-                            animation: false,
-                            scales: scales
-                        }
-                    });
-            }
+                        label: 'View',
+                        fill: true,
+                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.1).rgbString(),
+                        borderColor: app.ui.chartColors.blue,
+                        borderWidth: 1,
+                        lineWidth: 1,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        data: @Html.Raw(viewsData)
+                    }
+                ]
+            });
             
+            // ---------------
+            // New Entities
+            // ---------------
+
+            charts.initLine("newEntitiesChart", {
+                labels: @Html.Raw(entitiesLabels),
+                datasets: [
+                    {
+                        label: 'New',
+                        fill: true,
+                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.1).rgbString(),
+                        borderColor: app.ui.chartColors.blue,
+                        borderWidth: 1,
+                        lineWidth: 1,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        data: @Html.Raw(entitiesData)
+                    }
+                ]
+            });
+            
+            // ---------------
+            // New Replies
+            // ---------------
+
+            charts.initLine("newRepliesChart", {
+                labels: @Html.Raw(entitiesLabels),
+                datasets: [
+                    {
+                        label: 'Replies',
+                        fill: true,
+                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.1).rgbString(),
+                        borderColor: app.ui.chartColors.blue,
+                        borderWidth: 1,
+                        lineWidth: 1,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        data: @Html.Raw(repliesData)
+                    }
+                ]
+            });
+
         });
 
     }(window, document, jQuery));
