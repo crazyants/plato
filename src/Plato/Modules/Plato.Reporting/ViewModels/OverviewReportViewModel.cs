@@ -5,7 +5,7 @@ namespace Plato.Reporting.ViewModels
 {
     public class OverviewReportViewModel
     {
-
+        
         public AggregatedResult<DateTimeOffset> PageViews { get; set; }
 
         public AggregatedResult<string> PageViewsByFeature { get; set; }

@@ -1,0 +1,42 @@
+﻿@model ReportIndexViewModel
+
+    <form class="form-inline" asp-action="Index" method="post" enctype="multipart/form-data">
+        <div class="input-group mr-sm-2" style="width: 225px;">
+            <label class="sr-only" asp-for="StartDate">
+                @T["Start Date"]
+            </label>
+            <input type="text"
+                   asp-for="StartDate"
+                   asp-date-picker="StartDate"
+                   value="@Model.StartDate.ToString("yyyy/MM/dd")"
+                   data-date-autoclose="true"
+                   data-date-format="yyyy/mm/dd"
+                   class="form-control" />
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <i class="fal fa-calendar"></i>
+                </div>
+            </div>
+        </div>
+        <div class="input-group mr-sm-2" style="width: 225px;">
+            <label class="sr-only" asp-for="EndDate">
+                @T["End Date"]
+            </label>
+            <input type="text"
+                   asp-for="EndDate"
+                   asp-date-picker="EndDate"
+                   value="@Model.EndDate.ToString("yyyy/MM/dd")"
+                   data-date-autoclose="true"
+                   data-date-format="yyyy/mm/dd"
+                   class="form-control" />
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <i class="fal fa-calendar"></i>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            @T["GO"]
+        </button>
+    </form>
+

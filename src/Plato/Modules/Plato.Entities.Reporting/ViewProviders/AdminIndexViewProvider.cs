@@ -70,26 +70,6 @@ namespace Plato.Entities.Reporting.ViewProviders
             return await BuildEditAsync(viewModel, context);
         }
         
-        private AggregatedResult<DateTimeOffset> BuildChartData(
-            DateTimeOffset start,
-            DateTimeOffset end)
-        {
-
-            var delta = start.DayDifference(end);
-            var output = new AggregatedResult<DateTimeOffset>();
-            for (var i = delta; i > 0; i--)
-            {
-                output.Data.Add(new AggregatedCount<DateTimeOffset>()
-                {
-                    Aggregate = end.AddDays(i),
-                    Count = 0
-                });
-            }
-
-            return output;
-
-        }
-        
     }
     
 }

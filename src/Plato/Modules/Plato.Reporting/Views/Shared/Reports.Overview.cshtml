@@ -11,11 +11,9 @@
     var engagementsData = Model.Engagements?.SerializeCounts() ?? "[]";
 }
 
-
-
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
-        
+
         <card>
             <card-body>
                 <i class="fal fa-eye float-right"></i>
@@ -34,14 +32,14 @@
                 </div>
             </card-body>
         </card>
-     
+
 
     </div>
     <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
 
         <card>
             <card-body>
-                
+
                 <i class="fal fa-eye float-right"></i>
                 @if (Model.PageViewsByFeature != null)
                 {
@@ -59,7 +57,7 @@
 
             </card-body>
         </card>
-        
+
 
     </div>
 </div>
@@ -112,7 +110,7 @@
 </div>
 
 <script section="Footer">
-    
+
     if (typeof window.$.Plato.Reporting === "undefined") {
         throw new Error("$.Plato.Reporting Required");
     }
@@ -127,13 +125,13 @@
 
         var app = win.$.Plato,
             charts = win.$.Plato.Charts;
-        
+
         app.ready(function() {
-            
+
             // ---------
             // View by feature
             // ---------
-            
+
             var data = @Html.Raw(pageViewsByFeatureData),
                 randomColors = charts.randomColors(data.length);
 
@@ -148,12 +146,12 @@
                         pointHoverRadius: 0,
                         backgroundColor: randomColors.backgroundColors,
                         borderColor: randomColors.borderColors,
-                        hoverColor: randomColors.hoverBackgroundColors,
+                        hoverBackgroundColor: randomColors.hoverBackgroundColors,
                         data: data
                     }
                 ]
             });
-         
+
             // ---------------
             // Page views
             // ---------------

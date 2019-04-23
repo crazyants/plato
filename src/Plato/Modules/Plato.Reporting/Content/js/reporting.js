@@ -46,18 +46,19 @@ $(function(win, doc, $) {
             var graphColors = [], graphOutlines = [], hoverColor = [], i = 0;
 
             while (i <= length) {
-                var randomR = Math.floor(Math.random() * 130 + 100);
-                var randomG = Math.floor(Math.random() * 130 + 100);
-                var randomB = Math.floor(Math.random() * 130 + 100);
+
+                var randomR = Math.floor(Math.random() * 100 + 100);
+                var randomG = Math.floor(Math.random() * 100 + 100);
+                var randomB = Math.floor(Math.random() * 255 + 100);
 
                 var graphBackground = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
-                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.5).rgbString());
+                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.3).rgbString());
 
-                var graphOutline = "rgb(" + (randomR - 80) + ", " + (randomG - 80) + ", " + (randomB - 80) + ")";
+                var graphOutline = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
                 graphOutlines.push(graphOutline);
 
-                var hoverColors = "rgb(" + (randomR + 25) + ", " + (randomG + 25) + ", " + (randomB + 25) + ")";
-                hoverColor.push(hoverColors);
+                var hoverColors = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
+                hoverColor.push(win.Chart.helpers.color(hoverColors).alpha(0.7).rgbString());
 
                 i++;
             }
@@ -93,16 +94,15 @@ $(function(win, doc, $) {
                         mode: 'index',
                         intersect: false
                     },
-                    animation: false,
                     scales: {
                         xAxes: [
                             {
                                 display: false,
                                 gridLines: {
                                     drawBorder: false,
-                                    drawOnChartArea: false,
+                                    drawOnChartArea: true,
                                     drawTicks: false,
-                                    color: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString()
+                                    color: win.Chart.helpers.color(app.ui.chartColors.grey).alpha(0.5).rgbString()
                                 },
                                 ticks: {
                                     stepSize: 10,
@@ -114,7 +114,19 @@ $(function(win, doc, $) {
                         ],
                         yAxes: [
                             {
-                                display: false
+                                display: false,
+                                gridLines: {
+                                    drawBorder: false,
+                                    drawOnChartArea: false,
+                                    drawTicks: false,
+                                    color: win.Chart.helpers.color(app.ui.chartColors.grey).alpha(0.1).rgbString()
+                                },
+                                ticks: {
+                                    stepSize: 10,
+                                    callback: function (dataLabel, index) {
+                                        return index % 3 === 0 ? dataLabel : '';
+                                    }
+                                }
                             }
                         ]
                     }
@@ -142,7 +154,6 @@ $(function(win, doc, $) {
                         mode: 'index',
                         intersect: false
                     },
-                    animation: false,
                     scales: {
                         xAxes: [
                             {
@@ -178,24 +189,32 @@ $(function(win, doc, $) {
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        cutoutPercentage: 70,
+                    
                         legend:
                         {
-                            display: true,
+                            display: false,
                             position: 'right'
                         },
                         title:
                         {
                             display: false
                         },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
+                        },
                         scales: {
                             xAxes: [
                                 {
-                                    display: false
+                                    display: false,
+                                    exploded: true
                                 }
                             ],
                             yAxes: [
                                 {
-                                    display: false
+                                    display: false,
+                                    exploded: true
                                 }
                             ]
                         }

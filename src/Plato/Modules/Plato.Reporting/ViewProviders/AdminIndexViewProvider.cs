@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Admin.Models;
 using Plato.Internal.Abstractions.Extensions;
@@ -34,28 +36,36 @@ namespace Plato.Reporting.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
             IViewProviderContext context)
         {
-
-            var start = DateTimeOffset.UtcNow.AddDays(-7);
-            var end = DateTimeOffset.UtcNow;
             
+            // Get range to display
+            var range = new RouteValueDateRangeStorage(context.Controller.ControllerContext);
 
-            var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
-            var pageViewsByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeature(start, end);
-
-            var newUsers = await _aggregatedUserMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
-            var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDate("CreatedDate", start, end);
+            // Build index view model
+            var reportIndexViewModel = new ReportIndexViewModel()
+            {
+                StartDate = range.Start,
+                EndDate = range.End
+            };
             
+            // Get report data
+            var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
+            var pageViewsByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeature(range.Start, range.End);
+            var newUsers = await _aggregatedUserMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
+            var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
 
+            // Build report view model
             var overviewViewModel = new OverviewReportViewModel()
             {
-                PageViews = pageViews.MergeIntoRange(start, end),
+                PageViews = pageViews.MergeIntoRange(range.Start, range.End),
                 PageViewsByFeature = pageViewsByFeature,
-                NewUsers = newUsers.MergeIntoRange(start, end),
-                Engagements = engagements.MergeIntoRange(start, end)
+                NewUsers = newUsers.MergeIntoRange(range.Start, range.End),
+                Engagements = engagements.MergeIntoRange(range.Start, range.End)
             };
 
             return Views(
-                View<OverviewReportViewModel>("Overview.Report", model => overviewViewModel).Zone("content")
+                View<ReportIndexViewModel>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
+                    .Order(int.MinValue),
+                View<OverviewReportViewModel>("Reports.Overview", model => overviewViewModel).Zone("content")
                     .Order(int.MinValue)
             );
 
@@ -74,26 +84,21 @@ namespace Plato.Reporting.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(AdminIndex viewModel,
             IViewProviderContext context)
         {
-            return await BuildEditAsync(viewModel, context);
-        }
-        
-        private AggregatedResult<DateTimeOffset> BuildChartData(
-            DateTimeOffset start,
-            DateTimeOffset end)
-        {
 
-            var delta = start.DayDifference(end);
-            var output = new AggregatedResult<DateTimeOffset>();
-            for (var i = delta; i > 0; i--)
+            var model = new ReportIndexViewModel();
+
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                output.Data.Add(new AggregatedCount<DateTimeOffset>()
-                {
-                    Aggregate = end.AddDays(i),
-                    Count = 0
-                });
+                return await BuildIndexAsync(viewModel, context);
+            }
+            
+            if (context.Updater.ModelState.IsValid)
+            {
+                var storage = new RouteValueDateRangeStorage(context.Controller.ControllerContext);
+                storage.Set(model.StartDate, model.EndDate);
             }
 
-            return output;
+            return await BuildIndexAsync(viewModel, context);
 
         }
         

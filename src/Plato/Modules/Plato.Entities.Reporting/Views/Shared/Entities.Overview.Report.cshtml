@@ -20,7 +20,6 @@
 
 <div class="row">
     <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-
         <card>
             <card-body>
                 <i class="fal fa-eye float-right"></i>
@@ -39,10 +38,8 @@
                 </div>
             </card-body>
         </card>
-          
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        
         <card>
             <card-body>
                 <div>
@@ -67,40 +64,28 @@
                 </div>
             </card-body>
         </card>
-      
-           
-        
-
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        
         <card>
             <card-body>
-                
-                    <i class="fal fa-reply float-right"></i>
-                
-                    @if (Model.Replies != null)
-                    {
-                        <h5  class="d-inline">
-                            @Model.Replies.Total().ToPrettyInt()
-                        </h5>
-                    }
-                    else
-                    {
-                        <h5  class="d-inline">0</h5>
-                    }
-                    <br/>
-                    @T[replies]
-          
+                <i class="fal fa-reply float-right"></i>
+                @if (Model.Replies != null)
+                {
+                    <h5  class="d-inline">
+                        @Model.Replies.Total().ToPrettyInt()
+                    </h5>
+                }
+                else
+                {
+                    <h5  class="d-inline">0</h5>
+                }
+                <br/>
+                @T[replies]
                 <div class="position-relative mt-3" style="height: 100px;">
                     <canvas id="newRepliesChart" class="w-100"></canvas>
                 </div>
-
             </card-body>
         </card>
-    
-
-
     </div>
 </div>
 

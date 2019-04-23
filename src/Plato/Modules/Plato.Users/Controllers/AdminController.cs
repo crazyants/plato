@@ -31,8 +31,8 @@ namespace Plato.Users.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserManager<User> _platoUserManager;
-        private readonly IAlerter _alerter;
         private readonly IContextFacade _contextFacade;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -204,7 +204,7 @@ namespace Plato.Users.Controllers
 
         }
         
-        [HttpPost, ActionName(nameof(Create))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditUserViewModel model)
         {
 
