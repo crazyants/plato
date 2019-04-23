@@ -26,8 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Content\js\" />
-    <Folder Include="Content\css\" />
     <Folder Include="ViewComponents\" />
   </ItemGroup>
 

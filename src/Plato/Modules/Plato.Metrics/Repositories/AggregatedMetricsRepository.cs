@@ -59,6 +59,52 @@ namespace Plato.Metrics.Repositories
 
         }
 
+
+        // ----------------
+        // Grouped by feature
+        // ----------------
+
+        public async Task<AggregatedResult<string>> SelectGroupedByFeature(DateTimeOffset start, DateTimeOffset end)
+        {
+
+            // Sql query
+            const string sql = @"
+                SELECT 
+                    f.ModuleId AS [Aggregate] ,
+                    COUNT(m.Id) AS Count
+                FROM 
+                    {prefix}_Metrics m INNER JOIN {prefix}_ShellFeatures f ON f.Id = m.FeatureId
+                WHERE 
+                    m.CreatedDate >= '{start}' AND m.CreatedDate <= '{end}'
+                GROUP BY 
+                    f.ModuleId
+            ";
+            
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<string>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<string>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
+
+
+        }
+
+
     }
 
 }

@@ -3,6 +3,8 @@
 @{
     var pageViewsLabels = Model.PageViews?.SerializeLabels() ?? "[]";
     var pageViewsData = Model.PageViews?.SerializeCounts() ?? "[]";
+    var pageViewsByFeatureLabels = Model.PageViewsByFeature?.SerializeLabels() ?? "[]";
+    var pageViewsByFeatureData = Model.PageViewsByFeature?.SerializeCounts() ?? "[]";
     var newUsersLabels = Model.NewUsers?.SerializeLabels() ?? "[]";
     var newUsersData = Model.NewUsers?.SerializeCounts() ?? "[]";
     var engagementsLabels = Model.Engagements?.SerializeLabels() ?? "[]";
@@ -10,11 +12,10 @@
 }
 
 <div class="row">
-    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        
-        <card>
+    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+        <card class="card mb-3">
             <card-body>
-              
+
                 <i class="fal fa-eye float-right"></i>
                 @if (Model.PageViews != null)
                 {
@@ -24,21 +25,42 @@
                 {
                     <h5>0</h5>
                 }
-                <br/>
+                <br />
                 @T["Page Views"]
-         
-                <div class="position-relative mt-3" style="height: 100px;">
+                <div class="position-relative mt-3" style="height: 250px;">
                     <canvas id="pageViewsChart" class="w-100"></canvas>
                 </div>
             </card-body>
         </card>
-      
     </div>
-    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        
+    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+        <card class="card mb-3">
+            <card-body>
+
+                <i class="fal fa-eye float-right"></i>
+                @if (Model.PageViewsByFeature != null)
+                {
+                    <h5 class="d-inline">@Model.PageViewsByFeature.Total().ToPrettyInt()</h5>
+                }
+                else
+                {
+                    <h5>0</h5>
+                }
+                <br />
+                @T["Views By Feature"]
+                <div class="position-relative mt-3" style="height: 250px;">
+                    <canvas id="pageViewsByFeatureChart" class="w-100"></canvas>
+                </div>
+            </card-body>
+        </card>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
         <card>
             <card-body>
-            
+
                 <i class="fal fa-user float-right"></i>
                 @if (Model.NewUsers != null)
                 {
@@ -48,18 +70,16 @@
                 {
                     <h5>0</h5>
                 }
-                <br/>
+                <br />
                 @T["Sign Ups"]
-          
+
                 <div class="position-relative mt-3" style="height: 100px;">
                     <canvas id="newUsersChart" class="w-100"></canvas>
                 </div>
             </card-body>
         </card>
-  
     </div>
-    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        
+    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
         <card>
             <card-body>
 
@@ -72,7 +92,7 @@
                 {
                     <h5>0</h5>
                 }
-                <br/>
+                <br />
                 @T["Engagements"]
                 <div class="position-relative mt-3" style="height: 100px;">
                     <canvas id="engagementsChart" class="w-100"></canvas>
@@ -80,136 +100,115 @@
 
             </card-body>
         </card>
-     
     </div>
 </div>
 
 <script section="Footer">
+    
+    if (typeof window.$.Plato.Reporting === "undefined") {
+        throw new Error("$.Plato.Reporting Required");
+    }
+
+    if (typeof window.$.Plato.Charts === "undefined") {
+        throw new Error("$.Plato.Charts Required");
+    }
 
     $(function(win, doc, $) {
 
         "use strict";
 
         var app = win.$.Plato,
-            scales = {
-                xAxes: [
+            charts = win.$.Plato.Charts;
+        
+        app.ready(function() {
+            
+            // ---------
+            // View by feature
+            // ---------
+            
+            var data = @Html.Raw(pageViewsByFeatureData),
+                randomColors = charts.randomColors(data.length);
+
+            charts.initDoughnut("pageViewsByFeatureChart",  {
+                labels: @Html.Raw(pageViewsByFeatureLabels),
+                datasets: [
                     {
-                        display: false,
-                        gridLines: {
-                            drawBorder: false,
-                            drawOnChartArea: false,
-                            drawTicks: false,
-                            color: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString()
-                        },
-                        ticks: {
-                            stepSize: 10,
-                            callback: function(dataLabel, index) {
-                                return index % 3 === 0 ? dataLabel : '';
-                            }
-                        }
-                    }
-                ],
-                yAxes: [
-                    {
-                        display: false
+                        fill: true,
+                        borderWidth: 0,
+                        lineWidth: 0,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        backgroundColor: randomColors.backgroundColors,
+                        borderColor: randomColors.borderColors,
+                        hoverColor: randomColors.hoverBackgroundColors,
+                        data: data
                     }
                 ]
-            },
-            charts = [
-                {
-                    id: "pageViewsChart",
-                    data: {
-                        labels: @Html.Raw(pageViewsLabels),
-                        datasets: [
-                            {
-                                label: 'Page Views',
-                                fill: true,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.blue,
-                                borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                lineWidth: 2,
-                                pointRadius: 0,
-                                pointHoverRadius: 0,
-                                data: @Html.Raw(pageViewsData)
-                            }
-                        ]
-                    }
-                },
-                {
-                    id: "newUsersChart",
-                    data: {
-                        labels: @Html.Raw(newUsersLabels),
-                        datasets: [
-                            {
-                                label: 'New Users',
-                                fill: true,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.blue,
-                                borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                lineWidth: 2,
-                                pointRadius: 0,
-                                pointHoverRadius: 0,
-                                data: @Html.Raw(newUsersData)
-                            }
-                        ]
-                    }
-                },
-                {
-                    id: "engagementsChart",
-                    data: {
-                        labels: @Html.Raw(engagementsLabels),
-                        datasets: [
-                            {
-                                label: 'Engagements',
-                                fill: true,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                borderColor: app.ui.chartColors.blue,
-                                borderWidth: 2,
-                                backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
-                                lineWidth: 2,
-                                pointRadius: 0,
-                                pointHoverRadius: 0,
-                                data: @Html.Raw(engagementsData)
-                            }
-                        ]
-                    }
-                }
-            ];
+            });
+         
+            // ---------------
+            // Page views
+            // ---------------
 
-        app.ready(function() {
-
-            var chart = null;
-            for (var i = 0; i < charts.length; i++) {
-
-                chart = new win.Chart(doc.getElementById(charts[i].id).getContext('2d'),
+            charts.initLine("pageViewsChart", {
+                labels: @Html.Raw(pageViewsLabels),
+                    datasets: [
                     {
-                        type: 'line',
-                        data: charts[i].data,
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            legend:
-                            {
-                                display: false,
-                                position: 'bottom'
-                            },
-                            title:
-                            {
-                                display: false
-                            },
-                            tooltips: {
-                                position: 'nearest',
-                                mode: 'index',
-                                intersect: false
-                            },
-                            animation: false,
-                            scales: scales
-                        }
-                    });
-            }
-            
+                        label: 'Page Views',
+                        fill: true,
+                        backgroundColor: Chart.helpers.color(charts.colors.blue).alpha(0.5).rgbString(),
+                        borderColor: charts.colors.blue,
+                        borderWidth: 2,
+                        lineWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        data: @Html.Raw(pageViewsData)
+                    }
+                ]
+            });
+
+            // ---------------
+            // New Users
+            // ---------------
+
+            charts.initLine("newUsersChart", {
+                labels: @Html.Raw(newUsersLabels),
+                datasets: [
+                    {
+                        label: 'New Users',
+                        fill: true,
+                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                        borderColor: app.ui.chartColors.blue,
+                        borderWidth: 2,
+                        lineWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        data: @Html.Raw(newUsersData)
+                    }
+                ]
+            });
+
+            // ---------------
+            // Engagements
+            // ---------------
+
+            charts.initLine("engagementsChart", {
+                labels: @Html.Raw(engagementsLabels),
+                datasets: [
+                    {
+                        label: 'Engagements',
+                        fill: true,
+                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.5).rgbString(),
+                        borderColor: app.ui.chartColors.blue,
+                        borderWidth: 2,
+                        lineWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        data: @Html.Raw(engagementsData)
+                    }
+                ]
+            });
+
         });
 
     }(window, document, jQuery));

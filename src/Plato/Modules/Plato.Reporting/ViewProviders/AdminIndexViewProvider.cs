@@ -40,12 +40,16 @@ namespace Plato.Reporting.ViewProviders
             
 
             var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
+            var pageViewsByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeature(start, end);
+
             var newUsers = await _aggregatedUserMetricsRepository.SelectGroupedByDate("CreatedDate", start, end);
             var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDate("CreatedDate", start, end);
             
+
             var overviewViewModel = new OverviewReportViewModel()
             {
                 PageViews = pageViews.MergeIntoRange(start, end),
+                PageViewsByFeature = pageViewsByFeature,
                 NewUsers = newUsers.MergeIntoRange(start, end),
                 Engagements = engagements.MergeIntoRange(start, end)
             };

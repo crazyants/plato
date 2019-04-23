@@ -211,7 +211,7 @@ a.label:hover, .label.active {
 }
 
 .list-group-hover .list-group-item-action:not(.active):hover hr  {
-    border-color: #fff !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .list-group-check-list input:checked + label {

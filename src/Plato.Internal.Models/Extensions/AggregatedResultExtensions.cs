@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Storage;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Metrics;
 
@@ -10,7 +9,7 @@ namespace Plato.Internal.Models.Extensions
     public static class AggregatedResultExtensions
     {
         
-        public static string SerializeLabels<T>(this AggregatedResult<T> result) where T : struct
+        public static string SerializeLabels<T>(this AggregatedResult<T> result) 
         {
             var output = new List<string>();
             if (result.Data != null)
@@ -38,7 +37,7 @@ namespace Plato.Internal.Models.Extensions
 
         }
 
-        public static string SerializeCounts<T>(this AggregatedResult<T> result) where T : struct
+        public static string SerializeCounts<T>(this AggregatedResult<T> result) 
         {
             var output = new List<int>();
             if (result.Data != null)
@@ -51,7 +50,7 @@ namespace Plato.Internal.Models.Extensions
             return output.Serialize<int>();
         }
         
-        public static AggregatedResult<T> MergeIntoRange<T>(this AggregatedResult<T> result, T start, T end) where T : struct
+        public static AggregatedResult<T> MergeIntoRange<T>(this AggregatedResult<T> result, T start, T end) 
         {
 
             // Final output

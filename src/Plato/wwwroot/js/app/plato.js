@@ -122,6 +122,33 @@ $(function (win, doc, $) {
             grey: 'rgb(201, 203, 207)',
             white: 'rgb(255, 255, 255)'
         },
+        randomChartColors: function(length) {
+
+            var graphColors = [], graphOutlines = [], hoverColor = [], i = 0;
+
+            while (i <= length) {
+                var randomR = Math.floor(Math.random() * 130 + 100);
+                var randomG = Math.floor(Math.random() * 130 + 100);
+                var randomB = Math.floor(Math.random() * 130 + 100);
+
+                var graphBackground = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
+                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.5).rgbString());
+
+                var graphOutline = "rgb(" + (randomR - 80) + ", " + (randomG - 80) + ", " + (randomB - 80) + ")";
+                graphOutlines.push(graphOutline);
+
+                var hoverColors = "rgb(" + (randomR + 25) + ", " + (randomG + 25) + ", " + (randomB + 25) + ")";
+                hoverColor.push(hoverColors);
+
+                i++;
+            }
+
+            return {
+                backgroundColors: graphColors,
+                borderColors: graphOutlines,
+                hoverBackgroundColors: hoverColor
+            };
+        },
         init: function($ele) {
 
             if (!$ele) {
