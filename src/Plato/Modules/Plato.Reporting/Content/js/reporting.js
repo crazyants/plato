@@ -1,9 +1,5 @@
 ﻿// <reference path="/wwwroot/js/app.js" />
 
-if (typeof $().modal === 'undefined') {
-    throw new Error("BootStrap 4.1.1 or above Required");
-}
-
 if (typeof window.$.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
@@ -52,13 +48,13 @@ $(function(win, doc, $) {
                 var randomB = Math.floor(Math.random() * 255 + 100);
 
                 var graphBackground = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
-                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.3).rgbString());
+                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.5).rgbString());
 
                 var graphOutline = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
                 graphOutlines.push(graphOutline);
 
                 var hoverColors = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
-                hoverColor.push(win.Chart.helpers.color(hoverColors).alpha(0.7).rgbString());
+                hoverColor.push(win.Chart.helpers.color(hoverColors).alpha(1).rgbString());
 
                 i++;
             }

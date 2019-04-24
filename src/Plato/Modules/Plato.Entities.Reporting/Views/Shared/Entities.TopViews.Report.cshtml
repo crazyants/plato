@@ -1,5 +1,5 @@
 ﻿@using Plato.Internal.Models.Extensions
-@model DiscussOverviewReportViewModel
+@model EntitiesOverviewReportViewModel
 @{
     var entitiesLabels = Model.Entities?.SerializeLabels() ?? "[]";
     var entitiesData = Model.Entities?.SerializeCounts() ?? "[]";
@@ -8,14 +8,14 @@
     var viewsLabels = Model.Views?.SerializeLabels() ?? "[]";
     var viewsData = Model.Views?.SerializeCounts() ?? "[]";
     var entities = Model.Entities?.Total() == 1
-        ? "New Topic"
-        : "New Topics";
+        ? "New Entity"
+        : "New Entities";
     var replies = Model.Replies?.Total() == 1
         ? "New Reply"
         : "New Replies";
     var views = Model.Views?.Total() == 1
-        ? "view"
-        : "views";
+        ? "Entity View"
+        : "Entity Views";
 }
 
 <div class="row">
@@ -45,18 +45,18 @@
                 <div>
                     <i class="fal fa-plus float-right"></i>
 
-
+      
                     @if (Model.Entities != null)
                     {
-                        <h5 class="d-inline">
+                        <h5  class="d-inline">
                             @Model.Entities.Total().ToPrettyInt()
                         </h5>
                     }
                     else
                     {
-                        <h5 class="d-inline">0</h5>
+                        <h5  class="d-inline">0</h5>
                     }
-                    <br />
+                    <br/>
                     @T[entities]
                 </div>
                 <div class="position-relative mt-3" style="height: 100px;">
@@ -71,15 +71,15 @@
                 <i class="fal fa-reply float-right"></i>
                 @if (Model.Replies != null)
                 {
-                    <h5 class="d-inline">
+                    <h5  class="d-inline">
                         @Model.Replies.Total().ToPrettyInt()
                     </h5>
                 }
                 else
                 {
-                    <h5 class="d-inline">0</h5>
+                    <h5  class="d-inline">0</h5>
                 }
-                <br />
+                <br/>
                 @T[replies]
                 <div class="position-relative mt-3" style="height: 100px;">
                     <canvas id="newRepliesChart" class="w-100"></canvas>
@@ -102,7 +102,7 @@
     $(function(win, doc, $) {
 
         "use strict";
-
+             
         var app = win.$.Plato,
             charts = win.$.Plato.Charts;
 
@@ -128,7 +128,7 @@
                     }
                 ]
             });
-
+            
             // ---------------
             // New Entities
             // ---------------
@@ -149,7 +149,7 @@
                     }
                 ]
             });
-
+            
             // ---------------
             // New Replies
             // ---------------

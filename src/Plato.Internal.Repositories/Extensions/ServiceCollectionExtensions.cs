@@ -54,7 +54,7 @@ namespace Plato.Internal.Repositories.Extensions
             services.AddScoped<IConstraintRepository, ConstraintRepository>();
 
             // Metrics 
-            services.AddScoped<IAggregatedUserMetricsRepository, AggregatedUserMetricsRepository>();
+            services.AddScoped<IAggregatedUserRepository, AggregatedUserRepository>();
 
 
             return services;

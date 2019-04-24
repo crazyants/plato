@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
+﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Admin.Models;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Extensions;
-using Plato.Internal.Models.Metrics;
 using Plato.Internal.Repositories.Metrics;
 using Plato.Reporting.ViewModels;
 using Plato.Internal.Repositories.Reputations;
 using Plato.Metrics.Repositories;
+using Plato.Reporting.Services;
 
 namespace Plato.Reporting.ViewProviders
 {
@@ -20,26 +15,29 @@ namespace Plato.Reporting.ViewProviders
     {
 
         private readonly IAggregatedMetricsRepository _aggregatedMetricsRepository;
-        private readonly IAggregatedUserMetricsRepository _aggregatedUserMetricsRepository;
+        private readonly IAggregatedUserRepository _aggregatedUserRepository;
         private readonly IAggregatedUserReputationRepository _aggregatedUserReputationRepository;
+        private readonly IDateRangeStorage _dateRangeStorage;
 
         public AdminIndexViewProvider(
             IAggregatedMetricsRepository aggregatedMetricsRepository,
-            IAggregatedUserMetricsRepository aggregatedUserMetricsRepository,
-            IAggregatedUserReputationRepository aggregatedUserReputationRepository)
+            IAggregatedUserRepository aggregatedUserRepository,
+            IAggregatedUserReputationRepository aggregatedUserReputationRepository,
+            IDateRangeStorage dateRangeStorage)
         {
             _aggregatedMetricsRepository = aggregatedMetricsRepository;
-            _aggregatedUserMetricsRepository = aggregatedUserMetricsRepository;
+            _aggregatedUserRepository = aggregatedUserRepository;
             _aggregatedUserReputationRepository = aggregatedUserReputationRepository;
+            _dateRangeStorage = dateRangeStorage;
         }
 
         public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
             IViewProviderContext context)
         {
-            
-            // Get range to display
-            var range = new RouteValueDateRangeStorage(context.Controller.ControllerContext);
 
+            // Get range to display
+            var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
+       
             // Build index view model
             var reportIndexViewModel = new ReportIndexViewModel()
             {
@@ -50,7 +48,7 @@ namespace Plato.Reporting.ViewProviders
             // Get report data
             var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
             var pageViewsByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeature(range.Start, range.End);
-            var newUsers = await _aggregatedUserMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
+            var newUsers = await _aggregatedUserRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
             var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
 
             // Build report view model
@@ -94,7 +92,7 @@ namespace Plato.Reporting.ViewProviders
             
             if (context.Updater.ModelState.IsValid)
             {
-                var storage = new RouteValueDateRangeStorage(context.Controller.ControllerContext);
+                var storage = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
                 storage.Set(model.StartDate, model.EndDate);
             }
 

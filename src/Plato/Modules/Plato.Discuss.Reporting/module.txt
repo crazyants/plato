@@ -8,7 +8,7 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Reporting",
+		Id: "Plato.Entities.Reporting",
 		Version: "1.0.0"
 	},
 	{

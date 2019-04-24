@@ -10,5 +10,8 @@ namespace Plato.Discuss.Reporting.ViewModels
 
         public AggregatedResult<DateTimeOffset> Replies { get; set; }
 
+        public AggregatedResult<DateTimeOffset> Views { get; set; }
+
     }
+
 }

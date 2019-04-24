@@ -1,5 +1,4 @@
 Name: Plato Markdown
-Author: InstantASP
 Description: Adds a markdown editor component. Uses Markdig 0.15.0 for Markdown processing.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/

@@ -8,6 +8,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Reporting.Assets;
+using Plato.Reporting.Services;
 using Plato.Reporting.ViewProviders;
 
 namespace Plato.Reporting
@@ -31,6 +32,10 @@ namespace Plato.Reporting
             services.AddScoped<IViewProviderManager<AdminIndex>, ViewProviderManager<AdminIndex>>();
             services.AddScoped<IViewProvider<AdminIndex>, AdminIndexViewProvider>();
 
+            // Services
+            services.AddScoped<IDateRangeStorage, RouteValueDateRangeStorage>();
+
+            
         }
 
         public override void Configure(

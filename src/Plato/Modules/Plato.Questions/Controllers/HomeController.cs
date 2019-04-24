@@ -484,7 +484,7 @@ namespace Plato.Questions.Controllers
                     await _replyViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Everything was OK
-                    _alerter.Success(T["Comment Added Successfully!"]);
+                    _alerter.Success(T["Answer Added Successfully!"]);
 
                     // Redirect
                     return RedirectToAction(nameof(Reply), new RouteValueDictionary()

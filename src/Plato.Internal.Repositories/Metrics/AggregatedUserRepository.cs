@@ -8,14 +8,13 @@ using Plato.Internal.Models.Metrics;
 namespace Plato.Internal.Repositories.Metrics
 {
     
-    public class AggregatedUserMetricsRepository : IAggregatedUserMetricsRepository
+    public class AggregatedUserRepository : IAggregatedUserRepository
     {
       
         private readonly IDbHelper _dbHelper;
 
-        public AggregatedUserMetricsRepository(IDbHelper dbHelper)
+        public AggregatedUserRepository(IDbHelper dbHelper)
         {
-        
             _dbHelper = dbHelper;
         }
 
