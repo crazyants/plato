@@ -12,7 +12,7 @@
 }
 
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+    <div class="col-lg-8 col-md-12 col-sm-12">
 
         <card>
             <card-body>
@@ -27,7 +27,7 @@
                 }
                 <br />
                 @T["Page Views"]
-                <div class="position-relative mt-3" style="height: 250px;">
+                <div class="position-relative mt-3" style="height: 150px;">
                     <canvas id="pageViewsChart" class="w-100"></canvas>
                 </div>
             </card-body>
@@ -35,12 +35,12 @@
 
 
     </div>
-    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+    <div class="col-lg-4 col-md-12 col-sm-12">
 
         <card>
             <card-body>
 
-                <i class="fal fa-eye float-right"></i>
+               <i class="fal fa-eye float-right"></i>
                 @if (Model.PageViewsByFeature != null)
                 {
                     <h5 class="d-inline">@Model.PageViewsByFeature.Total().ToPrettyInt()</h5>
@@ -51,7 +51,7 @@
                 }
                 <br />
                 @T["Views By Feature"]
-                <div class="position-relative mt-3" style="height: 250px;">
+                <div class="position-relative mt-3" style="height: 150px;">
                     <canvas id="pageViewsByFeatureChart" class="w-100"></canvas>
                 </div>
 
@@ -63,7 +63,7 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+    <div class="col-lg-6 col-md-12 col-sm-12">
         <card>
             <card-body>
 
@@ -85,7 +85,7 @@
             </card-body>
         </card>
     </div>
-    <div class="col-lg-6 col-md-12 col-sm-12 mb-3">
+    <div class="col-lg-6 col-md-12 col-sm-12">
         <card>
             <card-body>
 

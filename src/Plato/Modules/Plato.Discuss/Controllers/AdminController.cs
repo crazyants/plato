@@ -15,6 +15,7 @@ namespace Plato.Discuss.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
+
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IViewProviderManager<AdminIndex> _viewProvider;

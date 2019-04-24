@@ -1,7 +1,7 @@
 ﻿@model ReportIndexViewModel
 
-    <form class="form-inline" asp-action="Index" method="post" enctype="multipart/form-data">
-        <div class="input-group mr-sm-2" style="width: 225px;">
+    <form class="form-inline" asp-route-action="Index" method="post" enctype="multipart/form-data">
+        <div class="input-group mr-sm-2" style="width: 175px;">
             <label class="sr-only" asp-for="StartDate">
                 @T["Start Date"]
             </label>
@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-        <div class="input-group mr-sm-2" style="width: 225px;">
+        <div class="input-group mr-sm-2" style="width: 175px;">
             <label class="sr-only" asp-for="EndDate">
                 @T["End Date"]
             </label>

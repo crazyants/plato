@@ -12,5 +12,17 @@ namespace Plato.Entities.Metrics.Repositories
             DateTimeOffset start,
             DateTimeOffset end,
             int featureId);
+
+        Task<AggregatedResult<int>> SelectGroupedByInt(
+            string groupBy,
+            DateTimeOffset start,
+            DateTimeOffset end);
+
+        Task<AggregatedResult<int>> SelectGroupedByInt(
+            string groupBy,
+            DateTimeOffset start,
+            DateTimeOffset end,
+            int featureId);
+
     }
 }

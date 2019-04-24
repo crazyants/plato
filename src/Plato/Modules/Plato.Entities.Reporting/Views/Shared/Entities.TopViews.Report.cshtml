@@ -1,178 +1,58 @@
-﻿@using Plato.Internal.Models.Extensions
-@model EntitiesOverviewReportViewModel
-@{
-    var entitiesLabels = Model.Entities?.SerializeLabels() ?? "[]";
-    var entitiesData = Model.Entities?.SerializeCounts() ?? "[]";
-    var repliesLabels = Model.Replies?.SerializeLabels() ?? "[]";
-    var repliesData = Model.Replies?.SerializeCounts() ?? "[]";
-    var viewsLabels = Model.Views?.SerializeLabels() ?? "[]";
-    var viewsData = Model.Views?.SerializeCounts() ?? "[]";
-    var entities = Model.Entities?.Total() == 1
-        ? "New Entity"
-        : "New Entities";
-    var replies = Model.Replies?.Total() == 1
-        ? "New Reply"
-        : "New Replies";
-    var views = Model.Views?.Total() == 1
-        ? "Entity View"
-        : "Entity Views";
-}
+﻿@model CombinedEntityMetricsViewModel<int>
 
 <div class="row">
-    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        <card>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        
+        <card class="card card-body-flush">
+            <card-title>
+                <h6 class="card-title">@T["Most Viewed"]</h6>
+            </card-title>
             <card-body>
-                <i class="fal fa-eye float-right"></i>
-                @if (Model.Views != null)
+                @if (Model.Results != null)
                 {
-                    <h5 class="d-inline">@Model.Views.Total().ToPrettyInt()</h5>
-                }
-                else
-                {
-                    <h5>0</h5>
-                }
-                <br />
-                @T[views]
-                <div class="position-relative mt-3" style="height: 100px;">
-                    <canvas id="entityViewsChart" class="w-100"></canvas>
-                </div>
-            </card-body>
-        </card>
-    </div>
-    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        <card>
-            <card-body>
-                <div>
-                    <i class="fal fa-plus float-right"></i>
+                    
+                    <ul class="list-group list-group-flush list-group-hover">
+                        @foreach (var result in Model.Results)
+                        {
+                            var views = result.Aggregate?.Count == 1
+                                ? "view"
+                                : "views";
+                            <li class="list-group-item list-group-item-action">
+                                <div class="float-right">                                 
+                                  
+                                        <h6 class="d-inline">
+                                            @result.Aggregate.Count.ToPrettyInt()
+                                        </h6>
+                                  
+                                    @T[views]
+                                </div>
+                                @if (result.Entity.CreatedBy != null)
+                                {
+                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Entity.CreatedBy.Id" asp-route-opts.alias="@result.Entity.CreatedBy.Alias">
+                                        <avatar data-toggle="tooltip" class="avatar avatar-sm" url="@result.Entity.CreatedBy.Avatar.Url"/>
+                                    </a>
+                                }
+                                <a asp-route-area="@result.Entity.ModuleId" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Entity.Id" asp-route-opts.alias="@result.Entity.Alias">
+                                    @result.Entity.Title
+                                </a>
 
-      
-                    @if (Model.Entities != null)
-                    {
-                        <h5  class="d-inline">
-                            @Model.Entities.Total().ToPrettyInt()
-                        </h5>
-                    }
-                    else
-                    {
-                        <h5  class="d-inline">0</h5>
-                    }
-                    <br/>
-                    @T[entities]
-                </div>
-                <div class="position-relative mt-3" style="height: 100px;">
-                    <canvas id="newEntitiesChart" class="w-100"></canvas>
-                </div>
-            </card-body>
-        </card>
-    </div>
-    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
-        <card>
-            <card-body>
-                <i class="fal fa-reply float-right"></i>
-                @if (Model.Replies != null)
-                {
-                    <h5  class="d-inline">
-                        @Model.Replies.Total().ToPrettyInt()
-                    </h5>
+                            </li>
+                        }
+                    </ul>
                 }
                 else
                 {
-                    <h5  class="d-inline">0</h5>
+                    <ul class="list-group list-group-flush list-group-hover">
+                        <li class="list-group-item">
+                            <h6>@T["No results found"]</h6>
+                        </li>
+                    </ul>
                 }
-                <br/>
-                @T[replies]
-                <div class="position-relative mt-3" style="height: 100px;">
-                    <canvas id="newRepliesChart" class="w-100"></canvas>
-                </div>
             </card-body>
         </card>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        
+    
     </div>
 </div>
-
-<script section="Footer">
-
-    if (typeof window.$.Plato.Reporting === "undefined") {
-        throw new Error("$.Plato.Reporting Required");
-    }
-
-    if (typeof window.$.Plato.Charts === "undefined") {
-        throw new Error("$.Plato.Charts Required");
-    }
-
-    $(function(win, doc, $) {
-
-        "use strict";
-             
-        var app = win.$.Plato,
-            charts = win.$.Plato.Charts;
-
-        app.ready(function() {
-
-            // ---------------
-            // Entity Views
-            // ---------------
-
-            charts.initLine("entityViewsChart", {
-                labels: @Html.Raw(entitiesLabels),
-                datasets: [
-                    {
-                        label: 'View',
-                        fill: true,
-                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.1).rgbString(),
-                        borderColor: app.ui.chartColors.blue,
-                        borderWidth: 1,
-                        lineWidth: 1,
-                        pointRadius: 0,
-                        pointHoverRadius: 0,
-                        data: @Html.Raw(viewsData)
-                    }
-                ]
-            });
-            
-            // ---------------
-            // New Entities
-            // ---------------
-
-            charts.initLine("newEntitiesChart", {
-                labels: @Html.Raw(entitiesLabels),
-                datasets: [
-                    {
-                        label: 'New',
-                        fill: true,
-                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.1).rgbString(),
-                        borderColor: app.ui.chartColors.blue,
-                        borderWidth: 1,
-                        lineWidth: 1,
-                        pointRadius: 0,
-                        pointHoverRadius: 0,
-                        data: @Html.Raw(entitiesData)
-                    }
-                ]
-            });
-            
-            // ---------------
-            // New Replies
-            // ---------------
-
-            charts.initLine("newRepliesChart", {
-                labels: @Html.Raw(entitiesLabels),
-                datasets: [
-                    {
-                        label: 'Replies',
-                        fill: true,
-                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.1).rgbString(),
-                        borderColor: app.ui.chartColors.blue,
-                        borderWidth: 1,
-                        lineWidth: 1,
-                        pointRadius: 0,
-                        pointHoverRadius: 0,
-                        data: @Html.Raw(repliesData)
-                    }
-                ]
-            });
-
-        });
-
-    }(window, document, jQuery));
-
-</script>

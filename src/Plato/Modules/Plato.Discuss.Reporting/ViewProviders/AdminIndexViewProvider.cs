@@ -1,14 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Reporting.ViewModels;
 using Plato.Entities.Metrics.Repositories;
 using Plato.Entities.Repositories;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Extensions;
-using Plato.Internal.Models.Metrics;
 using Plato.Reporting.Services;
 using Plato.Reporting.ViewModels;
 

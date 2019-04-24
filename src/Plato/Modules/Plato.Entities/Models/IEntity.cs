@@ -2,29 +2,50 @@
 using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
-    
-    public interface IEntity  : 
-        IEntityMetaData<IEntityData>,
-        INestable<IEntity>
+
+    public class SimpleEntity : ISimpleEntity
     {
+        
+        public int Id { get; set; }
 
+        public int FeatureId { get; set; }
+
+        public string ModuleId { get; set; }
+
+        public string Title { get; set; }
+
+        public string Alias { get; set; }
+
+    }
+
+    public interface ISimpleEntity
+    {
         int Id { get; set; }
-
-        int ParentId { get; set; }
 
         int FeatureId { get; set; }
 
-        string ModuleId { get; }
-
-        int CategoryId { get; set; }
+        string ModuleId { get; set; }
 
         string Title { get; set; }
 
         string Alias { get; set; }
+        
+    }
+
+    public interface IEntity  :
+        ISimpleEntity,
+        IEntityMetaData<IEntityData>,
+        INestable<IEntity>
+    {
+        
+        int ParentId { get; set; }
+        
+        int CategoryId { get; set; }
         
         string Message { get; set; }
 
@@ -65,8 +86,7 @@ namespace Plato.Entities.Models
         int TotalRatings { get; set; }
 
         int SummedRating { get; set; }
-
-
+        
         int MeanRating { get; set; }
 
         int TotalLinks { get; set; }
@@ -92,6 +112,7 @@ namespace Plato.Entities.Models
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }
+
         int EditedUserId { get; set; }
 
         DateTimeOffset? EditedDate { get; set; }
@@ -146,3 +167,4 @@ namespace Plato.Entities.Models
     }
 
 }
+

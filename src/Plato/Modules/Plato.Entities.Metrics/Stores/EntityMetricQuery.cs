@@ -117,6 +117,7 @@ namespace Plato.Entities.Metrics.Stores
 
         private readonly string _entityMetricsTableName;
         private readonly string _entitiesTableName;
+        private readonly string _shellFeaturesTableName;
         private readonly string _usersTableName;
         private readonly EntityMetricQuery _query;
 
@@ -126,6 +127,7 @@ namespace Plato.Entities.Metrics.Stores
             _entityMetricsTableName = GetTableNameWithPrefix("EntityMetrics");
             _entitiesTableName = GetTableNameWithPrefix("Entities");
             _usersTableName = GetTableNameWithPrefix("Users");
+            _shellFeaturesTableName = GetTableNameWithPrefix("ShellFeatures");
 
         }
 
@@ -159,7 +161,7 @@ namespace Plato.Entities.Metrics.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(m.Id) FROM ")
+            sb.Append("SELECT COUNT(em.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -169,7 +171,11 @@ namespace Plato.Entities.Metrics.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("m.*, ")
+            sb.Append("em.*, ")
+                .Append("e.Title,")
+                .Append("e.Alias,")
+                .Append("e.FeatureId, ")
+                .Append("f.ModuleId,")
                 .Append("u.UserName,")
                 .Append("u.DisplayName,")
                 .Append("u.Alias,")
@@ -183,12 +189,22 @@ namespace Plato.Entities.Metrics.Stores
         {
             var sb = new StringBuilder();
             sb.Append(_entityMetricsTableName)
-                .Append(" m ");
+                .Append(" em ");
+
+            // join entities
+            sb.Append("INNER JOIN ")
+                .Append(_entitiesTableName)
+                .Append(" e ON em.EntityId = e.Id ");
+
+            // join features
+            sb.Append("INNER JOIN ")
+                .Append(_shellFeaturesTableName)
+                .Append(" f ON e.FeatureId = f.Id ");
 
             // join user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" u ON m.CreatedUserId = u.Id ");
+                .Append(" u ON em.CreatedUserId = u.Id ");
             return sb.ToString();
 
         }
@@ -206,6 +222,7 @@ namespace Plato.Entities.Metrics.Stores
 
         private string BuildWhereClause()
         {
+
             var sb = new StringBuilder();
 
             // Id
@@ -253,7 +270,7 @@ namespace Plato.Entities.Metrics.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.CreatedUserId.Operator);
-                sb.Append(_query.Params.CreatedUserId.ToSqlString("er.CreatedUserId"));
+                sb.Append(_query.Params.CreatedUserId.ToSqlString("em.CreatedUserId"));
             }
 
 
@@ -270,7 +287,7 @@ namespace Plato.Entities.Metrics.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "er." + columnName;
+                : "em." + columnName;
         }
 
         private string BuildOrderBy()

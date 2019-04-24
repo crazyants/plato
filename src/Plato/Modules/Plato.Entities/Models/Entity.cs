@@ -21,7 +21,7 @@ namespace Plato.Entities.Models
 
         public int FeatureId { get; set; }
 
-        public string ModuleId { get; private set; }
+        public string ModuleId { get; set; }
 
         public int CategoryId { get; set; }
         
