@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
@@ -12,6 +13,7 @@ using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Extensions;
+using Plato.Internal.Models.Metrics;
 using Plato.Reporting.Services;
 
 namespace Plato.Entities.Reporting.ViewProviders
@@ -55,51 +57,24 @@ namespace Plato.Entities.Reporting.ViewProviders
             // Get data
             var entities = await _aggregatedEntityRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
             var replies = await _aggregatedEntityReplyRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
-            var views = await _aggregatedEntityMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
-
-
-            var topViews = await _aggregatedEntityMetricsRepository.SelectGroupedByInt("EntityId", range.Start, range.End);
-            
-            var topEntities = await _entityStore.QueryAsync()
-                .Take(1, 10)
-                .Select<EntityQueryParams>(q =>
-                {
-                    q.Id.IsIn(topViews.Data.Select(d => d.Aggregate).ToArray());
-                })
-                .OrderBy("CreatedDate", OrderBy.Desc)
-                .ToList();
-
-            var combinedEntityMetrics = new List<AggregatedEntityMetric<int>>();
-
-            foreach (var entity in topEntities.Data)
-            {
-                var aggregate = topViews?.Data.FirstOrDefault(m => m.Aggregate == entity.Id);
-                combinedEntityMetrics.Add(new AggregatedEntityMetric<int>()
-                {
-                    Aggregate = aggregate,
-                    Entity = entity
-                });
-
-            }
-
-            var combinedEntityMetricsViewModel = new CombinedEntityMetricsViewModel<int>()
-            {
-                Results = combinedEntityMetrics.OrderByDescending(o => o.Aggregate.Count),
-            };
-
+            var viewsByDate = await _aggregatedEntityMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
+        
             // Build model
             var overviewViewModel = new EntitiesOverviewReportViewModel()
             {
                 Entities = entities.MergeIntoRange(range.Start, range.End),
                 Replies = replies.MergeIntoRange(range.Start, range.End),
-                Views = views.MergeIntoRange(range.Start, range.End)
+                Views = viewsByDate.MergeIntoRange(range.Start, range.End)
             };
+
+            // Build most viewed view model
+            var mostViewedViewModel = await GetMostViewedViewModel(range.Start, range.End);
 
             // Return view
             return Views(
                 View<EntitiesOverviewReportViewModel>("Entities.Overview.Report", model => overviewViewModel).Zone("content").Order(1)
                     .Order(1),
-                View<CombinedEntityMetricsViewModel<int>>("Entities.TopViews.Report", model => combinedEntityMetricsViewModel).Zone("content").Order(1)
+                View<EntityMetricsViewModel<int>>("Entities.TopViews.Report", model => mostViewedViewModel).Zone("content").Order(1)
                     .Order(1)
             );
 
@@ -120,7 +95,52 @@ namespace Plato.Entities.Reporting.ViewProviders
         {
             return await BuildEditAsync(viewModel, context);
         }
-        
+
+
+        async Task<EntityMetricsViewModel<int>> GetMostViewedViewModel(DateTimeOffset start, DateTimeOffset end)
+        {
+
+            // Get views by id for specified range
+            var viewsById = await _aggregatedEntityMetricsRepository.SelectGroupedByInt("EntityId", start, end);
+
+            // Get all entities matching ids
+            IPagedResults<Entity> mostViewedEntities = null;
+            if (viewsById != null)
+            {
+                mostViewedEntities = await _entityStore.QueryAsync()
+                    .Take(1, 10)
+                    .Select<EntityQueryParams>(q =>
+                    {
+                        q.Id.IsIn(viewsById.Data.Select(d => d.Aggregate).ToArray());
+                    })
+                    .OrderBy("CreatedDate", OrderBy.Desc)
+                    .ToList();
+            }
+
+            // No results to display
+            if (mostViewedEntities?.Data == null)
+            {
+                return null;
+            }
+
+            // Build combined result
+            var entityMetrics = new List<AggregatedEntityMetric<int>>();
+            foreach (var entity in mostViewedEntities.Data)
+            {
+                // Get or add aggregate
+                var aggregate = viewsById?.Data.FirstOrDefault(m => m.Aggregate == entity.Id) ??
+                                new AggregatedCount<int>();
+                entityMetrics.Add(new AggregatedEntityMetric<int>(aggregate, entity));
+            }
+
+            // Return view model
+            return new EntityMetricsViewModel<int>()
+            {
+                Results = entityMetrics.OrderByDescending(o => o.Aggregate.Count),
+            };
+
+        }
+
     }
     
 }

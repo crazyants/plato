@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Entities.Metrics.Models;
-using Plato.Internal.Data.Abstractions;
+﻿using System.Collections.Generic;
 using Plato.Entities.Models;
 using Plato.Internal.Models.Metrics;
 
@@ -11,15 +7,18 @@ namespace Plato.Entities.Reporting.ViewModels
 
     public class AggregatedEntityMetric<T>
     {
+        public AggregatedCount<T> Aggregate { get; private set; }
 
-        public AggregatedCount<T> Aggregate { get; set; } = new AggregatedCount<T>();
+        public Entity Entity { get; private set; }
 
-        public Entity Entity { get; set; }
-
-
+        public AggregatedEntityMetric(AggregatedCount<T> aggregate, Entity entity)
+        {
+            Aggregate = aggregate;
+            Entity = Entity;
+        }
     }
 
-    public class CombinedEntityMetricsViewModel<T>
+    public class EntityMetricsViewModel<T>
     {
 
         public IEnumerable<AggregatedEntityMetric<T>> Results { get; set; }

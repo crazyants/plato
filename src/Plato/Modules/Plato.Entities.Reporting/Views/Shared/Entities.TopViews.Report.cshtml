@@ -1,4 +1,4 @@
-﻿@model CombinedEntityMetricsViewModel<int>
+﻿@model EntityMetricsViewModel<int>
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
@@ -14,22 +14,17 @@
                     <ul class="list-group list-group-flush list-group-hover">
                         @foreach (var result in Model.Results)
                         {
-                            var views = result.Aggregate?.Count == 1
+                            var views = result.Aggregate.Count == 1
                                 ? "view"
                                 : "views";
                             <li class="list-group-item list-group-item-action">
-                                <div class="float-right">                                 
-                                  
-                                        <h6 class="d-inline">
-                                            @result.Aggregate.Count.ToPrettyInt()
-                                        </h6>
-                                  
-                                    @T[views]
+                                <div class="badge badge-info float-right" data-toggle="tooltip" title="@T["views"]">                                 
+                                    @result.Aggregate.Count.ToPrettyInt()
                                 </div>
                                 @if (result.Entity.CreatedBy != null)
                                 {
                                     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Entity.CreatedBy.Id" asp-route-opts.alias="@result.Entity.CreatedBy.Alias">
-                                        <avatar data-toggle="tooltip" class="avatar avatar-sm" url="@result.Entity.CreatedBy.Avatar.Url"/>
+                                        <avatar data-toggle="tooltip" title="@result.Entity.CreatedBy.DisplayName" class="avatar avatar-sm mr-2" url="@result.Entity.CreatedBy.Avatar.Url"/>
                                     </a>
                                 }
                                 <a asp-route-area="@result.Entity.ModuleId" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Entity.Id" asp-route-opts.alias="@result.Entity.Alias">
