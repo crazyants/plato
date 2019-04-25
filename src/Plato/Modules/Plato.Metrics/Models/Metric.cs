@@ -14,11 +14,9 @@ namespace Plato.Metrics.Models
         
         public int FeatureId { get; set; }
 
-        public string AreaName { get; set; }
+        public string Title { get; set; }
         
-        public string ControllerName { get; set; }
-        
-        public string ActionName { get; set; }
+        public string Url { get; set; }
         
         public string IpV4Address { get; set; }
 
@@ -38,14 +36,11 @@ namespace Plato.Metrics.Models
             if (dr.ColumnIsNotNull("Id"))
                 Id = Convert.ToInt32(dr["Id"]);
 
-            if (dr.ColumnIsNotNull("AreaName"))
-                AreaName = Convert.ToString(dr["AreaName"]);
+            if (dr.ColumnIsNotNull("Title"))
+                Title = Convert.ToString(dr["Title"]);
 
-            if (dr.ColumnIsNotNull("ControllerName"))
-                ControllerName = Convert.ToString(dr["ControllerName"]);
-
-            if (dr.ColumnIsNotNull("ActionName"))
-                ActionName = Convert.ToString(dr["ActionName"]);
+            if (dr.ColumnIsNotNull("Url"))
+                Url = Convert.ToString(dr["Url"]);
 
             if (dr.ColumnIsNotNull("IpV4Address"))
                 IpV4Address = Convert.ToString(dr["IpV4Address"]);

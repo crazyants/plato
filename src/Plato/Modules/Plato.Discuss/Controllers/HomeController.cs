@@ -51,6 +51,7 @@ namespace Plato.Discuss.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -74,7 +75,8 @@ namespace Plato.Discuss.Controllers
             IBreadCrumbManager breadCrumbManager,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade,
-            IAlerter alerter)
+            IAlerter alerter,
+            IPageTitleBuilder pageTitleBuilder)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -91,6 +93,7 @@ namespace Plato.Discuss.Controllers
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
             _alerter = alerter;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -418,7 +421,10 @@ namespace Plato.Discuss.Controllers
                 ["opts.id"] = entity.Id,
                 ["opts.alias"] = entity.Alias
             });
-            
+
+            // Build page title
+            _pageTitleBuilder.AddSegment(T[entity.Title], int.MaxValue);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

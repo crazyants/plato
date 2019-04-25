@@ -32,20 +32,14 @@ namespace Plato.Metrics.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "AreaName",
-                        Length = "100",
+                        Name = "Title",
+                        Length = "255",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
                     {
-                        Name = "ControllerName",
-                        Length = "100",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ActionName",
-                        Length = "100",
+                        Name = "Url",
+                        Length = "255",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
@@ -230,21 +224,15 @@ namespace Plato.Metrics.Handlers
                     {
                         new SchemaColumn()
                         {
-                            Name = "AreaName",
+                            Name = "Title",
                             DbType = DbType.String,
-                            Length = "100"
+                            Length = "255"
                         },
                         new SchemaColumn()
                         {
-                            Name = "ControllerName",
+                            Name = "Url",
                             DbType = DbType.String,
-                            Length = "100"
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "ActionName",
-                            DbType = DbType.String,
-                            Length = "100"
+                            Length = "255"
                         },
                         new SchemaColumn()
                         {

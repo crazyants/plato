@@ -1,10 +1,13 @@
 ﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
+@{
+    var settings = await ContextFacade.GetSiteSettingsAsync();
+}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Plato</title>
+    <title asp-separator=" - ">@settings.SiteName - Admin</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />
@@ -57,7 +60,7 @@
                         </li>
                     </ul>
                 }
-                 
+
             </div>
             <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
                 <navigation name="admin"
@@ -111,7 +114,7 @@
                 <div class="row" aria-label="breadcrumb">
                     <breadcrumb class="breadcrumb mb-0 w-100 rounded-0" />
                 </div>
-                <div class="row">
+                <div class="row bg-secondary">
                     <div class="col-12 py-4">
                         @RenderBody()
                         <footer class="mt-2">

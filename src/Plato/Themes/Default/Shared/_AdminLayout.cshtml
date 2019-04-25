@@ -1,11 +1,13 @@
-﻿@using Microsoft.AspNetCore.Html
-@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
+﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
+@{
+    var settings = await ContextFacade.GetSiteSettingsAsync();
+}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@Title.GenerateTitle(new HtmlString(" - "))</title>
+    <title asp-separator=" - ">@settings.SiteName - Admin</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />

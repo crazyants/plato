@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Microsoft.AspNetCore.Html;
 
 namespace Plato.Internal.Layout.Titles
@@ -19,13 +19,12 @@ namespace Plato.Internal.Layout.Titles
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            _parts.Clear();
         }
 
         public void AddSegment(IHtmlContent segment, int position = 0)
         {
             _title = null;
-
             _parts.Add(new PageTitlePart
             {
                 Value = segment,
@@ -40,8 +39,7 @@ namespace Plato.Internal.Layout.Titles
                 AddSegment(part, position);
             }
         }
-
-
+        
         public IHtmlContent GenerateTitle(IHtmlContent separator)
         {
             if (_title != null)
@@ -53,27 +51,25 @@ namespace Plato.Internal.Layout.Titles
             {
                 separator = new HtmlString(" - ");
             }
-
-            //_parts.Sort();
-
-            var htmlContentBuilder = new HtmlContentBuilder();
+            
+            var builder = new HtmlContentBuilder();
 
             if (_parts.Count == 0)
             {
                 return HtmlString.Empty;
             }
 
+            _parts.Sort();
             for (var i = 0; i < _parts.Count; i++)
             {
-                htmlContentBuilder.AppendHtml(_parts[i].Value);
-
+                builder.AppendHtml(_parts[i].Value);
                 if (i < _parts.Count - 1)
                 {
-                    htmlContentBuilder.AppendHtml(separator);
+                    builder.AppendHtml(separator);
                 }
             }
 
-            _title = htmlContentBuilder;
+            _title = builder;
 
             return _title;
 

@@ -42,9 +42,8 @@ namespace Plato.Metrics.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.AreaName.Value,
-                Params.ControllerName.Value,
-                Params.ActionName.Value,
+                Params.Title.Value,
+                Params.Url.Value,
                 Params.IpV4Address.Value,
                 Params.IpV6Address.Value,
                 Params.UserAgent.Value
@@ -66,9 +65,9 @@ namespace Plato.Metrics.Stores
 
         private WhereInt _id;
         private WhereInt _featureId;
-        private WhereString _areaName;
-        private WhereString _controllerName;
-        private WhereString _actionName;
+        private WhereString _title;
+        private WhereString _url;
+
         private WhereString _ipV4Address;
         private WhereString _ipV6Address;
         private WhereString _userAgent;
@@ -86,24 +85,18 @@ namespace Plato.Metrics.Stores
             set => _featureId = value;
         }
 
-        public WhereString AreaName
+        public WhereString Title
         {
-            get => _areaName ?? (_areaName = new WhereString());
-            set => _areaName = value;
+            get => _title ?? (_title = new WhereString());
+            set => _title = value;
         }
 
-        public WhereString ControllerName
+        public WhereString Url
         {
-            get => _controllerName ?? (_controllerName = new WhereString());
-            set => _controllerName = value;
+            get => _url ?? (_url = new WhereString());
+            set => _url = value;
         }
 
-        public WhereString ActionName
-        {
-            get => _actionName ?? (_actionName = new WhereString());
-            set => _actionName = value;
-        }
-        
         public WhereString IpV4Address
         {
             get => _ipV4Address ?? (_ipV4Address = new WhereString());
@@ -247,29 +240,21 @@ namespace Plato.Metrics.Stores
             }
             
             // AreaName
-            if (!String.IsNullOrEmpty(_query.Params.AreaName.Value))
+            if (!String.IsNullOrEmpty(_query.Params.Title.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.AreaName.Operator);
-                sb.Append(_query.Params.AreaName.ToSqlString("m.AreaName", "AreaName"));
+                    sb.Append(_query.Params.Title.Operator);
+                sb.Append(_query.Params.Title.ToSqlString("m.Title", "Title"));
             }
 
             // ControllerName
-            if (!String.IsNullOrEmpty(_query.Params.ControllerName.Value))
+            if (!String.IsNullOrEmpty(_query.Params.Url.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.ControllerName.Operator);
-                sb.Append(_query.Params.ControllerName.ToSqlString("m.ControllerName", "ControllerName"));
+                    sb.Append(_query.Params.Url.Operator);
+                sb.Append(_query.Params.Url.ToSqlString("m.Url", "Url"));
             }
             
-            // ActionName
-            if (!String.IsNullOrEmpty(_query.Params.ActionName.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.ActionName.Operator);
-                sb.Append(_query.Params.ActionName.ToSqlString("m.ActionName", "ActionName"));
-            }
-
             // IpV4Address
             if (!String.IsNullOrEmpty(_query.Params.IpV4Address.Value))
             {

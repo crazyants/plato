@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.ActionFilters;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Net.Abstractions;
 using Plato.Metrics.Models;
@@ -19,15 +23,18 @@ namespace Plato.Metrics.ActionFilters
         private readonly IMetricsManager<Metric> _metricManager;
         private readonly IClientIpAddress _clientIpAddress;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
 
         public MetricFilter(
             IMetricsManager<Metric> metricManager,
             IClientIpAddress clientIpAddress, 
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade, 
+            IPageTitleBuilder pageTitleBuilder)
         {
             _metricManager = metricManager;
             _clientIpAddress = clientIpAddress;
             _featureFacade = featureFacade;
+            _pageTitleBuilder = pageTitleBuilder;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
@@ -66,28 +73,18 @@ namespace Plato.Metrics.ActionFilters
             }
 
             // Get route data
+            var test = result.ViewData["PageTitle"].ToString();
 
-            var pageTitle = context.ActionDescriptor.DisplayName;
-            var text = result.ViewData["Title"];
+            var title = _pageTitleBuilder.GenerateTitle(new HtmlString(" - "));
+            var url = context.HttpContext.Request.GetDisplayUrl();
 
+            // Get area name
             var areaName = "";
             if (context.RouteData.Values["area"] != null)
             {
                 areaName = context.RouteData.Values["area"].ToString();
             }
-
-            var controllerName = "";
-            if (context.RouteData.Values["controller"] != null)
-            {
-                controllerName = context.RouteData.Values["controller"].ToString();
-            }
-
-            var actionName = "";
-            if (context.RouteData.Values["action"] != null)
-            {
-                actionName = context.RouteData.Values["action"].ToString();
-            }
-
+            
             // Get feature from area
             var feature = await _featureFacade.GetFeatureByIdAsync(areaName);
             
@@ -95,9 +92,8 @@ namespace Plato.Metrics.ActionFilters
             await _metricManager.CreateAsync(new Metric()
             {
                 FeatureId = feature?.Id ?? 0,
-                AreaName = areaName,
-                ControllerName = controllerName,
-                ActionName = actionName,
+                Title = title.ToHtmlString().ToString(),
+                Url = url,
                 IpV4Address = ipV4Address,
                 IpV6Address = ipV6Address,
                 UserAgent = userAgent,

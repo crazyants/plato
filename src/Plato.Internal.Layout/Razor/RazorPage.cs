@@ -62,16 +62,16 @@ namespace Plato.Internal.Layout.Razor
             (_contextFacade = Context.RequestServices.GetRequiredService<IContextFacade>());
 
 
-        public void AddTitleSegment(IHtmlContent segment, int position = 0)
+        public void AddTitleSegment(IHtmlContent segment, int order = 0)
         {
-            Title.AddSegment(segment, position);
+            Title.AddSegment(segment, order);
         }
 
-        public IHtmlContent RenderTitleSegments(string segment, int position = 0, IHtmlContent separator = null)
+        public IHtmlContent RenderTitleSegments(string segment, int order = 0, IHtmlContent separator = null)
         {
             if (!String.IsNullOrEmpty(segment))
             {
-                Title.AddSegment(new HtmlString(HtmlEncoder.Encode(segment)), position);
+                Title.AddSegment(new HtmlString(HtmlEncoder.Encode(segment)), order);
             }
 
             return Title.GenerateTitle(separator);
