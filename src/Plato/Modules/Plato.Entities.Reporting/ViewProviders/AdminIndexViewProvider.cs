@@ -14,6 +14,10 @@ using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Extensions;
 using Plato.Internal.Models.Metrics;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Repositories.Reputations;
+using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Reporting.Services;
 
 namespace Plato.Entities.Reporting.ViewProviders
@@ -24,10 +28,14 @@ namespace Plato.Entities.Reporting.ViewProviders
 
         private readonly IEntityStore<Entity> _entityStore;
 
+        private readonly IAggregatedUserReputationRepository _aggregatedUserReputationRepository;
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
         private readonly IAggregatedEntityMetricsRepository _aggregatedEntityMetricsRepository;
         private readonly IAggregatedEntityReplyRepository _aggregatedEntityReplyRepository;
         private readonly IEntityMetricsStore<EntityMetric> _entityMetricStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+
+        
 
         private readonly IDateRangeStorage _dateRangeStorage;
 
@@ -35,16 +43,22 @@ namespace Plato.Entities.Reporting.ViewProviders
             IAggregatedEntityRepository aggregatedEntityRepository,
             IAggregatedEntityReplyRepository aggregatedEntityReplyRepository,
             IAggregatedEntityMetricsRepository aggregatedEntityMetricsRepository,
+            IAggregatedUserReputationRepository aggregatedUserReputationRepository,
             IDateRangeStorage dateRangeStorage, 
             IEntityMetricsStore<EntityMetric> entityMetricStore,
-            IEntityStore<Entity> entityStore)
+            IEntityStore<Entity> entityStore,
+            IPlatoUserStore<User> platoUserStore)
         {
             _aggregatedEntityRepository = aggregatedEntityRepository;
             _aggregatedEntityReplyRepository = aggregatedEntityReplyRepository;
             _aggregatedEntityMetricsRepository = aggregatedEntityMetricsRepository;
+            _aggregatedUserReputationRepository = aggregatedUserReputationRepository;
+
             _dateRangeStorage = dateRangeStorage;
             _entityMetricStore = entityMetricStore;
             _entityStore = entityStore;
+            _platoUserStore = platoUserStore;
+            
         }
 
         public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
@@ -55,9 +69,9 @@ namespace Plato.Entities.Reporting.ViewProviders
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
 
             // Get data
-            var entities = await _aggregatedEntityRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
-            var replies = await _aggregatedEntityReplyRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
-            var viewsByDate = await _aggregatedEntityMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
+            var entities = await _aggregatedEntityRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
+            var replies = await _aggregatedEntityReplyRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
+            var viewsByDate = await _aggregatedEntityMetricsRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
         
             // Build model
             var overviewViewModel = new EntitiesOverviewReportViewModel()
@@ -68,13 +82,17 @@ namespace Plato.Entities.Reporting.ViewProviders
             };
 
             // Build most viewed view model
-            var mostViewedViewModel = await GetMostViewedViewModel(range.Start, range.End);
+            var mostViewedViewModel = new TopViewModel()
+            {
+                Entities = await SelectEntitiesGroupedByViewsAsync(range.Start, range.End),
+                Users = await SelectUsersByReputationAsync(range.Start, range.End)
+            };
 
             // Return view
             return Views(
                 View<EntitiesOverviewReportViewModel>("Entities.Overview.Report", model => overviewViewModel).Zone("content").Order(1)
                     .Order(1),
-                View<EntityMetricsViewModel<int>>("Entities.TopViews.Report", model => mostViewedViewModel).Zone("content").Order(1)
+                View<TopViewModel>("Entities.TopViews.Report", model => mostViewedViewModel).Zone("content").Order(1)
                     .Order(1)
             );
 
@@ -97,7 +115,7 @@ namespace Plato.Entities.Reporting.ViewProviders
         }
 
 
-        async Task<EntityMetricsViewModel<int>> GetMostViewedViewModel(DateTimeOffset start, DateTimeOffset end)
+        async Task<IEnumerable<AggregatedModel<int, Entity>>> SelectEntitiesGroupedByViewsAsync(DateTimeOffset start, DateTimeOffset end)
         {
 
             // Get views by id for specified range
@@ -118,29 +136,73 @@ namespace Plato.Entities.Reporting.ViewProviders
             }
 
             // No results to display
-            if (mostViewedEntities?.Data == null)
+            List<AggregatedModel<int, Entity>> entityMetrics = null;
+            if (mostViewedEntities?.Data != null)
             {
-                return null;
+                // Build combined result
+                foreach (var entity in mostViewedEntities.Data)
+                {
+                    // Get or add aggregate
+                    var aggregate = viewsById?.Data.FirstOrDefault(m => m.Aggregate == entity.Id);
+                    if (aggregate != null)
+                    {
+                        if (entityMetrics == null)
+                        {
+                            entityMetrics = new List<AggregatedModel<int, Entity>>();
+                        }
+                        entityMetrics.Add(new AggregatedModel<int, Entity>(aggregate, entity));
+                    }
+                }
+            }
+            
+            return entityMetrics?.OrderByDescending(o => o.Aggregate.Count) ?? null;
+            
+        }
+
+        async Task<IEnumerable<AggregatedModel<int, User>>> SelectUsersByReputationAsync(DateTimeOffset start, DateTimeOffset end)
+        {
+
+            // Get views by id for specified range
+            var viewsById = await _aggregatedUserReputationRepository.SelectSummedByInt("CreatedUserId", start, end);
+
+            // Get all entities matching ids
+            IPagedResults<User> mostViewedEntities = null;
+            if (viewsById != null)
+            {
+                mostViewedEntities = await _platoUserStore.QueryAsync()
+                    .Take(1, 10)
+                    .Select<UserQueryParams>(q =>
+                    {
+                        q.Id.IsIn(viewsById.Data.Select(d => d.Aggregate).ToArray());
+                    })
+                    .OrderBy("CreatedDate", OrderBy.Desc)
+                    .ToList();
             }
 
-            // Build combined result
-            var entityMetrics = new List<AggregatedEntityMetric<int>>();
-            foreach (var entity in mostViewedEntities.Data)
+            // No results to display
+            List<AggregatedModel<int, User>> entityMetrics = null;
+            if (mostViewedEntities?.Data != null)
             {
-                // Get or add aggregate
-                var aggregate = viewsById?.Data.FirstOrDefault(m => m.Aggregate == entity.Id) ??
-                                new AggregatedCount<int>();
-                entityMetrics.Add(new AggregatedEntityMetric<int>(aggregate, entity));
+                // Build combined result
+                foreach (var entity in mostViewedEntities.Data)
+                {
+                    // Get or add aggregate
+                    var aggregate = viewsById?.Data.FirstOrDefault(m => m.Aggregate == entity.Id);
+                    if (aggregate != null)
+                    {
+                        if (entityMetrics == null)
+                        {
+                            entityMetrics = new List<AggregatedModel<int, User>>();
+                        }
+                        entityMetrics.Add(new AggregatedModel<int, User>(aggregate, entity));
+                    }
+                }
             }
-
-            // Return view model
-            return new EntityMetricsViewModel<int>()
-            {
-                Results = entityMetrics.OrderByDescending(o => o.Aggregate.Count),
-            };
+           
+            return entityMetrics?.OrderByDescending(o => o.Aggregate.Count) ?? null;
 
         }
 
     }
-    
+
 }

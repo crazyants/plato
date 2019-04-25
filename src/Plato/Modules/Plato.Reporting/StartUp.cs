@@ -7,7 +7,10 @@ using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Reporting.Assets;
+using Plato.Reporting.Models;
+using Plato.Reporting.Navigation;
 using Plato.Reporting.Services;
 using Plato.Reporting.ViewProviders;
 
@@ -28,7 +31,14 @@ namespace Plato.Reporting
             // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 
-            // View providers
+            // Register navigation provider
+            services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // Register admin view providers
+            services.AddScoped<IViewProviderManager<Report>, ViewProviderManager<Report>>();
+            services.AddScoped<IViewProvider<Report>, AdminViewProvider>();
+
+            // Register admin index View providers
             services.AddScoped<IViewProviderManager<AdminIndex>, ViewProviderManager<AdminIndex>>();
             services.AddScoped<IViewProvider<AdminIndex>, AdminIndexViewProvider>();
 

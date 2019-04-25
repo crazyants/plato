@@ -5,6 +5,7 @@ using Plato.Internal.Models.Extensions;
 using Plato.Internal.Repositories.Metrics;
 using Plato.Reporting.ViewModels;
 using Plato.Internal.Repositories.Reputations;
+using Plato.Metrics.Models;
 using Plato.Metrics.Repositories;
 using Plato.Reporting.Services;
 
@@ -39,17 +40,17 @@ namespace Plato.Reporting.ViewProviders
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
        
             // Build index view model
-            var reportIndexViewModel = new ReportIndexViewModel()
+            var reportIndexViewModel = new ReportIndexOptions()
             {
                 StartDate = range.Start,
                 EndDate = range.End
             };
             
             // Get report data
-            var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
+            var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
             var pageViewsByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeature(range.Start, range.End);
-            var newUsers = await _aggregatedUserRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
-            var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDate("CreatedDate", range.Start, range.End);
+            var newUsers = await _aggregatedUserRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
+            var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
 
             // Build report view model
             var overviewViewModel = new OverviewReportViewModel()
@@ -61,7 +62,7 @@ namespace Plato.Reporting.ViewProviders
             };
 
             return Views(
-                View<ReportIndexViewModel>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
+                View<ReportIndexOptions>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
                     .Order(int.MinValue),
                 View<OverviewReportViewModel>("Reports.Overview", model => overviewViewModel).Zone("content")
                     .Order(int.MinValue)
@@ -83,7 +84,7 @@ namespace Plato.Reporting.ViewProviders
             IViewProviderContext context)
         {
 
-            var model = new ReportIndexViewModel();
+            var model = new ReportIndexOptions();
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {

@@ -1,0 +1,7 @@
+﻿@model ReportIndexViewModel<Metric>
+
+@await DisplayAsync(new View("MetricList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))

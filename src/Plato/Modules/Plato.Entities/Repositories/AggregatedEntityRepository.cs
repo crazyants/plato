@@ -22,7 +22,7 @@ namespace Plato.Entities.Repositories
         // Grouped by date
         // ----------------
 
-        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end)
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(string groupBy, DateTimeOffset start, DateTimeOffset end)
         {
             // Sql query
             const string sql = @"

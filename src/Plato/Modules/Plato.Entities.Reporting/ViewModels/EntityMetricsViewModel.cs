@@ -1,27 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Plato.Entities.Models;
 using Plato.Internal.Models.Metrics;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Reporting.ViewModels
 {
-
-    public class AggregatedEntityMetric<T>
-    {
-        public AggregatedCount<T> Aggregate { get; private set; }
-
-        public Entity Entity { get; private set; }
-
-        public AggregatedEntityMetric(AggregatedCount<T> aggregate, Entity entity)
-        {
-            Aggregate = aggregate;
-            Entity = Entity;
-        }
-    }
-
-    public class EntityMetricsViewModel<T>
+    
+    public class TopViewModel
     {
 
-        public IEnumerable<AggregatedEntityMetric<T>> Results { get; set; }
+        public IEnumerable<AggregatedModel<int, Entity>> Entities { get; set; }
+
+        public IEnumerable<AggregatedModel<int, User>> Users { get; set; }
         
     }
+
+
 }

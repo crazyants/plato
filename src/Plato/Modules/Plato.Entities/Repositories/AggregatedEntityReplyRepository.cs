@@ -20,7 +20,7 @@ namespace Plato.Entities.Repositories
             _dbHelper = dbHelper;
         }
         
-        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(
             string groupBy, 
             DateTimeOffset start,
             DateTimeOffset end)

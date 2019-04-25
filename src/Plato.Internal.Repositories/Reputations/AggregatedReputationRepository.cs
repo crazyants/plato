@@ -18,7 +18,7 @@ namespace Plato.Internal.Repositories.Reputations
             _dbHelper = dbHelper;
         }
         
-        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end)
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(string groupBy, DateTimeOffset start, DateTimeOffset end)
         {
             // Sql query
             const string sql = @"
@@ -57,6 +57,50 @@ namespace Plato.Internal.Repositories.Reputations
             });
             
         }
+
+        public async Task<AggregatedResult<int>> SelectSummedByInt(string groupBy, DateTimeOffset start, DateTimeOffset end)
+        {
+
+            // Sql query
+            const string sql = @"             
+                SELECT  
+                    MAX(ur.{groupBy}) AS [Aggregate], 
+                    SUM(ur.Points) AS [Count]
+                FROM 
+                    {prefix}_UserReputations ur INNER JOIN {prefix}_Users u ON ur.CreatedUserId = u.Id
+                  WHERE 
+                    ur.CreatedDate >= '{start}' AND ur.CreatedDate <= '{end}'
+                GROUP BY 
+                    ur.{groupBy}
+                ORDER BY 
+                    [Count] DESC
+            ";
+
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{groupBy}"] = groupBy,
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<int>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<int>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
+
+
+        }
+
 
     }
 

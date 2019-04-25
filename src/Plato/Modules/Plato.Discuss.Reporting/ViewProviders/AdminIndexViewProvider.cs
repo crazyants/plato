@@ -6,6 +6,7 @@ using Plato.Entities.Metrics.Repositories;
 using Plato.Entities.Repositories;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Extensions;
+using Plato.Metrics.Models;
 using Plato.Reporting.Services;
 using Plato.Reporting.ViewModels;
 
@@ -46,7 +47,7 @@ namespace Plato.Discuss.Reporting.ViewProviders
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
             
             // Build index view model
-            var reportIndexViewModel = new ReportIndexViewModel()
+            var reportIndexViewModel = new ReportIndexOptions()
             {
                 StartDate = range.Start,
                 EndDate = range.End
@@ -80,7 +81,7 @@ namespace Plato.Discuss.Reporting.ViewProviders
             };
 
             return Views(
-                View<ReportIndexViewModel>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
+                View<ReportIndexOptions>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
                     .Order(int.MinValue),
                 View<DiscussOverviewReportViewModel>("Discuss.Overview.Report", model => overviewViewModel).Zone("content").Order(1)
                     .Order(1)
@@ -102,7 +103,7 @@ namespace Plato.Discuss.Reporting.ViewProviders
             IViewProviderContext context)
         {
 
-            var model = new ReportIndexViewModel();
+            var model = new ReportIndexOptions();
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {

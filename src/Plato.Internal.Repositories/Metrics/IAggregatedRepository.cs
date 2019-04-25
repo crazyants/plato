@@ -7,7 +7,7 @@ namespace Plato.Internal.Repositories.Metrics
     public interface IAggregatedRepository
     {
 
-        Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(
+        Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(
             string groupBy,
             DateTimeOffset start,
             DateTimeOffset end);

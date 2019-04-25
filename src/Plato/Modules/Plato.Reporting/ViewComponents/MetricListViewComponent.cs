@@ -1,20 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Docs.Models;
-using Plato.Entities.Services;
-using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Security.Abstractions;
+using Plato.Reporting.ViewModels;
+using Plato.Metrics.Models;
+using Plato.Metrics.Stores;
 
-namespace Plato.Docs.ViewComponents
+namespace Plato.Reporting.ViewComponents
 {
-    public class DocListViewComponent : ViewComponent
+    public class MetricListViewComponent : ViewComponent
     {
 
-        private readonly ICollection<Filter> _defaultFilters = new List<Filter>()
+        private readonly IList<Filter> _defaultFilters = new List<Filter>()
         {
             new Filter()
             {
@@ -27,7 +25,7 @@ namespace Plato.Docs.ViewComponents
             },
             new Filter()
             {
-                Text = "Started",
+                Text = "My Topics",
                 Value = FilterBy.Started
             },
             new Filter()
@@ -61,7 +59,7 @@ namespace Plato.Docs.ViewComponents
             }
         };
 
-        private readonly ICollection<SortColumn> _defaultSortColumns = new List<SortColumn>()
+        private readonly IList<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
             new SortColumn()
             {
@@ -90,16 +88,6 @@ namespace Plato.Docs.ViewComponents
             },
             new SortColumn()
             {
-                Text = "Follows",
-                Value =  SortBy.Follows
-            },
-            new SortColumn()
-            {
-                Text = "Stars",
-                Value =  SortBy.Stars
-            },
-            new SortColumn()
-            {
                 Text = "Created",
                 Value = SortBy.Created
             },
@@ -110,7 +98,7 @@ namespace Plato.Docs.ViewComponents
             }
         };
 
-        private readonly ICollection<SortOrder> _defaultSortOrder = new List<SortOrder>()
+        private readonly IList<SortOrder> _defaultSortOrder = new List<SortOrder>()
         {
             new SortOrder()
             {
@@ -123,78 +111,52 @@ namespace Plato.Docs.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-        
-        private readonly IEntityService<Doc> _entityService;
-        private readonly IAuthorizationService _authorizationService;
 
-        public DocListViewComponent(
-            IEntityService<Doc> entityService,
-            IAuthorizationService authorizationService)
+
+        private readonly IMetricsStore<Metric> _metricStore;
+
+        public MetricListViewComponent(
+            IMetricsStore<Metric> metricStore)
         {
-            _entityService = entityService;
-            _authorizationService = authorizationService;
+            _metricStore = metricStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            EntityIndexOptions options,
+            ReportIndexOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new EntityIndexOptions();
+                options = new ReportIndexOptions();
             }
 
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
-            
+
             return View(await GetViewModel(options, pager));
 
         }
-        
-        async Task<EntityIndexViewModel<Doc>> GetViewModel(
-            EntityIndexOptions options,
+
+
+        async Task<ReportIndexViewModel<Metric>> GetViewModel(
+            ReportIndexOptions options,
             PagerOptions pager)
         {
-            
+
             // Get results
-            var results = await _entityService
-                .ConfigureQuery(async q =>
-                {
-
-                    // Hide private?
-                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateDocs))
-                    {
-                        q.HidePrivate.True();
-                    }
-
-                    // Hide spam?
-                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewSpamDocs))
-                    {
-                        q.HideSpam.True();
-                    }
-
-                    // Hide deleted?
-                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewDeletedDocs))
-                    {
-                        q.HideDeleted.True();
-                    }
-
-
-
-                })
-                .GetResultsAsync(options, pager);
-
+            var results = await _metricStore.QueryAsync()
+                .Take(pager.Page, pager.Size)
+                .Select<MetricQueryParams>(q => { })
+                .ToList();
+              
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
-            
+
             // Return view model
-            return new EntityIndexViewModel<Doc>
+            return new ReportIndexViewModel<Metric>
             {
                 SortColumns = _defaultSortColumns,
                 SortOrder = _defaultSortOrder,
@@ -202,10 +164,9 @@ namespace Plato.Docs.ViewComponents
                 Results = results,
                 Options = options,
                 Pager = pager
-            }; 
+            };
 
         }
 
     }
-    
 }
