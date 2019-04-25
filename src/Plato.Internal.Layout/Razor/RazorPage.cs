@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
@@ -62,21 +63,16 @@ namespace Plato.Internal.Layout.Razor
             (_contextFacade = Context.RequestServices.GetRequiredService<IContextFacade>());
 
 
-        public void AddTitleSegment(IHtmlContent segment, int order = 0)
+        public void AddTitleSegment(LocalizedString segment, int order = 0)
         {
             Title.AddSegment(segment, order);
         }
 
-        public IHtmlContent RenderTitleSegments(string segment, int order = 0, IHtmlContent separator = null)
+        public void AddTitleSegment(LocalizedHtmlString segment, int order = 0)
         {
-            if (!String.IsNullOrEmpty(segment))
-            {
-                Title.AddSegment(new HtmlString(HtmlEncoder.Encode(segment)), order);
-            }
-
-            return Title.GenerateTitle(separator);
+            Title.AddSegment(new LocalizedString(segment.Name, segment.Value), order);
         }
-        
+
 
         private void EnsureViewHelper()
         {

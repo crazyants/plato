@@ -4,9 +4,15 @@
     <date utc="Model.Metric.CreatedDate"></date>
 </div>
 
-<a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Metric.CreatedUserId" asp-route-opts.alias="@Model.Metric.CreatedBy.Alias" class="mr-2">
-    <avatar data-toggle="tooltip" title="@Model.Metric.CreatedBy.DisplayName" class="avatar avatar-sm" url="@Model.Metric.CreatedBy.Avatar.Url" />
+@if (Model.Metric.CreatedBy != null)
+{
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Metric.CreatedUserId" asp-route-opts.alias="@Model.Metric.CreatedBy.Alias" class="mr-2">
+        <avatar data-toggle="tooltip" title="@Model.Metric.CreatedBy.DisplayName" class="avatar avatar-sm" url="@Model.Metric.CreatedBy.Avatar.Url" />
+    </a>
+}
+
+<a href="@Model.Metric.Url">
+    @Model.Metric.Title
 </a>
 
-@Model.Metric.AreaName
 

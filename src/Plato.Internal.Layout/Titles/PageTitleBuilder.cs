@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Internal.Layout.Titles
 {
@@ -17,12 +20,13 @@ namespace Plato.Internal.Layout.Titles
             _parts = new List<PageTitlePart>();
         }
 
-        public void Clear()
+        public IPageTitleBuilder Clear()
         {
             _parts.Clear();
+            return this;
         }
 
-        public void AddSegment(IHtmlContent segment, int position = 0)
+        public IPageTitleBuilder AddSegment(LocalizedString segment, int position = 0)
         {
             _title = null;
             _parts.Add(new PageTitlePart
@@ -30,9 +34,26 @@ namespace Plato.Internal.Layout.Titles
                 Value = segment,
                 Position = position
             });
+            return this;
         }
 
-        public void AddSegments(IEnumerable<IHtmlContent> parts, int position)
+
+        public IPageTitleBuilder FromNavigationBuilder(INavigationBuilder builder)
+        {
+
+            _title = null;
+            foreach (var item in builder.Build())
+            {
+                _parts.Add(new PageTitlePart
+                {
+                    Value = item.Text
+                });
+            }
+
+            return this;
+        }
+
+        public void AddSegments(IEnumerable<LocalizedString> parts, int position)
         {
             foreach (var part in parts)
             {
@@ -81,7 +102,7 @@ namespace Plato.Internal.Layout.Titles
 
         public int Position { get; set; }
 
-        public IHtmlContent Value { get; set; }
+        public LocalizedString Value { get; set; }
 
         public int CompareTo(object other)
         {

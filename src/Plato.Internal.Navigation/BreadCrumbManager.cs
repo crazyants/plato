@@ -17,6 +17,10 @@ namespace Plato.Internal.Navigation
 
         private List<MenuItem> _menuItems;
 
+        private INavigationBuilder _builder;
+
+        public INavigationBuilder Builder => _builder;
+
         private readonly IShellSettings _shellSettings;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private IUrlHelper _urlHelper;
@@ -29,11 +33,11 @@ namespace Plato.Internal.Navigation
             _shellSettings = shellSettings;
         }
 
-        public void Configure(Action<INavigationBuilder> configureBuilder)
+        public void Configure(Action<INavigationBuilder> configure)
         {
-            var builder = new NavigationBuilder();
-            configureBuilder(builder);
-            _menuItems = builder.Build();
+            _builder = new NavigationBuilder();
+            configure(_builder);
+            _menuItems = _builder.Build();
         }
 
         public IEnumerable<MenuItem> BuildMenu(ActionContext actionContext)

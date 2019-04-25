@@ -11,6 +11,8 @@ namespace Plato.Internal.Navigation.Abstractions
 
         IEnumerable<MenuItem> BuildMenu(ActionContext actionContext);
 
+        INavigationBuilder Builder { get; }
+
     }
 
 }

@@ -20,7 +20,6 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities;
-using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
@@ -28,7 +27,6 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Titles;
-using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
@@ -404,7 +402,6 @@ namespace Plato.Discuss.Controllers
             HttpContext.Items[typeof(EntityViewModel<Topic, Reply>)] = viewModel;
             HttpContext.Items[typeof(Topic)] = entity;
             
-
             // If we have a pager.page querystring value return paged view
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
@@ -422,8 +419,8 @@ namespace Plato.Discuss.Controllers
                 ["opts.alias"] = entity.Alias
             });
 
-            // Build page title
-            _pageTitleBuilder.AddSegment(T[entity.Title], int.MaxValue);
+
+            _pageTitleBuilder.AddSegment(S["Home"]);
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -438,6 +435,9 @@ namespace Plato.Discuss.Controllers
                     .LocalNav()
                 );
             });
+
+            // Build page title
+            //_pageTitleBuilder.FromNavigationBuilder(_breadCrumbManager.Builder);
 
             // Return view
             return View((LayoutViewModel) await _topicViewProvider.ProvideDisplayAsync(entity, this));
