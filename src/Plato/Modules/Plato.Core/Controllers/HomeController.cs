@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Plato.Core.Models;
 using Plato.Core.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Core.Controllers
@@ -19,21 +22,24 @@ namespace Plato.Core.Controllers
         
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IViewProviderManager<HomeIndex> _viewProvider;
 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IStringLocalizer<HomeController> stringLocalizer,
-            IHtmlLocalizer<HomeController> localizer,
+            IStringLocalizer stringLocalizer,
+            IHtmlLocalizer localizer,
             IContextFacade contextFacade,
             IAlerter alerter,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IViewProviderManager<HomeIndex> viewProvider)
         {
 
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
+            _viewProvider = viewProvider;
 
             T = localizer;
             S = stringLocalizer;
@@ -49,23 +55,21 @@ namespace Plato.Core.Controllers
         // ---------------------
 
         [HttpGet, AllowAnonymous]
-        public Task<IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Core")
-                    .LocalNav()
-                ).Add(S["Discuss"]);
+                builder
+                    .Add(S["Home"], home => home
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav()
+                    );
             });
 
-            // Build view
-            //var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
-
             // Return view
-            return Task.FromResult((IActionResult) View());
+            return View((LayoutViewModel)await _viewProvider.ProvideIndexAsync(new HomeIndex(), this));
 
         }
 

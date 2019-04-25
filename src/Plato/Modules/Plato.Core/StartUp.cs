@@ -6,9 +6,12 @@ using Plato.Core.Assets;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Handlers;
 using Plato.Core.Middleware;
+using Plato.Core.Models;
+using Plato.Core.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions.Models;
 
 namespace Plato.Core
@@ -35,6 +38,10 @@ namespace Plato.Core
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
 
+            // Register view providers
+            services.AddScoped<IViewProviderManager<HomeIndex>, ViewProviderManager<HomeIndex>>();
+            services.AddScoped<IViewProvider<HomeIndex>, HomeViewProvider>();
+            
             // Configure current culture
             services.Configure<LocaleOptions>(options =>
             {
