@@ -54,7 +54,7 @@ namespace Plato.Internal.Layout.Titles
                 separator = new HtmlString(" - ");
             }
 
-            _parts.Sort();
+            //_parts.Sort();
 
             var htmlContentBuilder = new HtmlContentBuilder();
 

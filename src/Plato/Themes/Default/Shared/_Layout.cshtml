@@ -1,11 +1,14 @@
-﻿@using Microsoft.AspNetCore.Html
-@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
+﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
+@{
+    var settings = await ContextFacade.GetSiteSettingsAsync();
+    Title.AddSegment(T[settings.SiteName]);
+}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@Title.GenerateTitle(new HtmlString("/"))</title>
+    <title>@Title.GenerateTitle(new HtmlString(" - "))</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />
@@ -28,7 +31,9 @@
             <div class="navbar d-block px-4" role="navigation">
                 <div class="row no-gutters">
                     <div class="col-1">
-                        <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">@T["Plato"]</a>
+                        <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">
+                            @settings.SiteName
+                        </a>
                     </div>
                     <div class="col-6">
                         <navigation name="site-search"

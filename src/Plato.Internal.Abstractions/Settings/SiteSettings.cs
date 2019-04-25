@@ -6,7 +6,7 @@ namespace Plato.Internal.Abstractions.Settings
     public sealed class SiteSettings : Serializable, ISiteSettings
     {
 
-        public string SiteName { get; set; }
+        public string SiteName { get; set; } = "Plato";
 
         public string SiteSalt { get; set; }
 

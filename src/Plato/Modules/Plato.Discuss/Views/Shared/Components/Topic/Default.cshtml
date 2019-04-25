@@ -1,4 +1,7 @@
 ﻿@model EntityViewModel<Topic, Reply>
+@{
+    AddTitleSegment(T[Model.Entity.Title]);
+}
 
 <div class="list-row">
     <navigation name="topic-details"

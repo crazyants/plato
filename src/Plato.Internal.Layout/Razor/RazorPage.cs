@@ -17,10 +17,12 @@ namespace Plato.Internal.Layout.Razor
     public abstract class RazorPage<TModel> :
         Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
+
         private IViewLocalizer _t;
         private User _currentUser;
         private IViewDisplayHelper _viewDisplayHelper;
         private IPageTitleBuilder _pageTitleBuilder;
+        private IContextFacade _contextFacade;
 
         public User CurrentUser
         {
@@ -51,18 +53,14 @@ namespace Plato.Internal.Layout.Razor
         }
 
     
-        public IPageTitleBuilder Title
-        {
-            get
-            {
-                if (_pageTitleBuilder == null)
-                {
-                    _pageTitleBuilder = Context.RequestServices.GetRequiredService<IPageTitleBuilder>();
-                }
+        public IPageTitleBuilder Title =>
+            _pageTitleBuilder ??
+            (_pageTitleBuilder = Context.RequestServices.GetRequiredService<IPageTitleBuilder>());
 
-                return _pageTitleBuilder;
-            }
-        }
+        public IContextFacade ContextFacade =>
+            _contextFacade ??
+            (_contextFacade = Context.RequestServices.GetRequiredService<IContextFacade>());
+
 
         public void AddTitleSegment(IHtmlContent segment, int position = 0)
         {

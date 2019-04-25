@@ -42,8 +42,8 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
 
-            // Page title builder
-            services.AddSingleton<IPageTitleBuilder, PageTitleBuilder>();
+            // Add page title builder
+            services.AddScoped<IPageTitleBuilder, PageTitleBuilder>();
             
             // Add theming conventions - configures theme layout based on controller prefix
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
@@ -56,10 +56,10 @@ namespace Plato.Internal.Layout.Extensions
                 options.Filters.Add(typeof(ModularFilter));
             });
 
-            // model binding model accessor
+            // Model binding model accessor
             services.AddScoped<IUpdateModelAccessor, LocalModelBinderAccessor>();
 
-            // Alerter - scoped to ensure alerter is only alive for each request
+            // Alerter
             services.AddScoped<IAlerter, Alerter>();
             
             return services;
