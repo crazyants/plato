@@ -35,10 +35,15 @@ namespace Plato.Entities.Metrics.ActionFilters
         {
             return;
         }
-
-        public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        
+        public Task OnActionExecutingAsync(ResultExecutingContext context)
         {
-            
+            return Task.CompletedTask;
+        }
+
+        public async Task OnActionExecutedAsync(ResultExecutingContext context)
+        {
+
             // The controller action didn't return a view result so no need to continue execution
             var result = context.Result as ViewResult;
 
@@ -48,7 +53,7 @@ namespace Plato.Entities.Metrics.ActionFilters
             {
                 return;
             }
-            
+
             // Check for the id route value 
             var id = context.RouteData.Values["opts.id"];
             if (id == null)
@@ -76,7 +81,7 @@ namespace Plato.Entities.Metrics.ActionFilters
             {
                 userAgent = context.HttpContext.Request.Headers["User-Agent"].ToString();
             }
-            
+
             // Add metric
             await _entityMetricManager.CreateAsync(new EntityMetric()
             {
@@ -87,9 +92,8 @@ namespace Plato.Entities.Metrics.ActionFilters
                 CreatedUserId = user?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow
             });
-            
-        }
 
+        }
     }
 
 }

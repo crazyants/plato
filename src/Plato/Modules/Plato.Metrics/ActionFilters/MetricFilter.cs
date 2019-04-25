@@ -46,8 +46,13 @@ namespace Plato.Metrics.ActionFilters
         {
             return;
         }
+        
+        public Task OnActionExecutingAsync(ResultExecutingContext context)
+        {
+            return Task.CompletedTask;
+        }
 
-        public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        public async Task OnActionExecutedAsync(ResultExecutingContext context)
         {
             
             // The controller action didn't return a view result so no need to continue execution
@@ -59,7 +64,7 @@ namespace Plato.Metrics.ActionFilters
             {
                 return;
             }
-            
+
             // Get authenticated user from context
             var user = context.HttpContext.Features[typeof(User)] as User;
 
@@ -73,26 +78,28 @@ namespace Plato.Metrics.ActionFilters
             }
 
             // Get route data
-            var test = result.ViewData["PageTitle"].ToString();
-
-            var title = _pageTitleBuilder.GenerateTitle(new HtmlString(" - "));
             var url = context.HttpContext.Request.GetDisplayUrl();
 
+            // Get page title from context
+            var title = context.HttpContext.Items[typeof(PageTitle)] is PageTitle pageTitle 
+                ? pageTitle.Title 
+                : string.Empty;
+            
             // Get area name
             var areaName = "";
             if (context.RouteData.Values["area"] != null)
             {
                 areaName = context.RouteData.Values["area"].ToString();
             }
-            
+
             // Get feature from area
             var feature = await _featureFacade.GetFeatureByIdAsync(areaName);
-            
+
             // Add metric
             await _metricManager.CreateAsync(new Metric()
             {
                 FeatureId = feature?.Id ?? 0,
-                Title = title.ToHtmlString().ToString(),
+                Title = title,
                 Url = url,
                 IpV4Address = ipV4Address,
                 IpV6Address = ipV6Address,
@@ -101,9 +108,7 @@ namespace Plato.Metrics.ActionFilters
                 CreatedDate = DateTimeOffset.UtcNow
             });
 
-
         }
-
     }
 
 }

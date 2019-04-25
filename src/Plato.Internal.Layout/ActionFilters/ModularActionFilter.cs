@@ -62,11 +62,13 @@ namespace Plato.Internal.Layout.ActionFilters
 
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
+
+            // do something before the action executes
             foreach (var provider in _providers)
             {
                 try
                 {
-                   await provider.OnResultExecutionAsync(context, next);
+                   await provider.OnActionExecutingAsync(context);
                 }
                 catch (Exception e)
                 {
@@ -78,6 +80,23 @@ namespace Plato.Internal.Layout.ActionFilters
             }
 
             await next();
+
+            // do something after the action executes; resultContext.Result will be set
+            foreach (var provider in _providers)
+            {
+                try
+                {
+                    await provider.OnActionExecutedAsync(context);
+                }
+                catch (Exception e)
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                    {
+                        _logger.LogError(e, e.Message);
+                    }
+                }
+            }
+
 
         }
     }

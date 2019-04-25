@@ -37,22 +37,23 @@ namespace Plato.Internal.Layout.TagHelpers
             output.TagName = "title";
             output.TagMode = TagMode.StartTagAndEndTag;
 
-            var pageTitle = _pageTitleBuilder.GenerateTitle(new HtmlString(this.Separator));
-            if (!Equals(pageTitle, HtmlString.Empty))
+            var title = _pageTitleBuilder.GenerateTitle(new HtmlString(this.Separator));
+            if (!Equals(title, HtmlString.Empty))
             {
                 if (!content.IsEmptyOrWhiteSpace)
                 {
                     output.PostContent.AppendHtml(new HtmlString(Separator));
                 }
-                output.PostContent.AppendHtml(pageTitle);
+                output.PostContent.AppendHtml(title);
+
+                // Add generated page title to context for general access
+                ViewContext.HttpContext.Items[typeof(PageTitle)] = new PageTitle()
+                {
+                    Title = title.ToHtmlString().ToString()
+                };
+
             }
-            
-            // Get updated content
-            var updatedContent = await output.GetChildContentAsync();
-
-            // Add generated title to view data for general access
-            ViewContext.ViewData["PageTitle"] = updatedContent.ToHtmlString().ToString();
-
+          
         }
 
     }
