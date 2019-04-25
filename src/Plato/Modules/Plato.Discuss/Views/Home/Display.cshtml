@@ -1,10 +1,11 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Topic";
+    AddTitleSegment(T["Seg 1"]);
+    AddTitleSegment(T["Seg 2"]);
+    AddTitleSegment(T["Seg 3"]);
 }
 
 <div class="layout">
-
     <div class="layout-header">
         @if (Model.Alerts != null)
         {
@@ -31,7 +32,6 @@
             </div>
         }
     </div>
-
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
@@ -44,15 +44,14 @@
                     <div class="resizable-bar">
                         <i class="fal fa-bars"></i>
                     </div>
-                    <div class="resizable-container">    
+                    <div class="resizable-container">
                         <div class="resizable-header">
                             <h6 class="d-inline-block text-uppercase">@T["Your Reply"]</h6>
                             <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
                         </div>
                         <div class="resizable-body">
-                            
-                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
 
+                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
                                 <div id="postReply">
                                     @if (Model.Footer != null)
                                     {
@@ -67,9 +66,7 @@
                                         </div>
                                     }
                                 </div>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -85,22 +82,21 @@
     else
     {
         @if (Model.Content != null)
-         {
-             <view model="@Model.Content"></view>
-         }
+        {
+            <view model="@Model.Content"></view>
+        }
         <div class="resizable resizable-bottom resizable-hidden transition" data-provide="resizeable">
             <div class="resizable-bar">
                 <i class="fal fa-bars"></i>
             </div>
-            <div class="resizable-container">    
+            <div class="resizable-container">
                 <div class="resizable-header">
                     <h6 class="d-inline-block text-uppercase">@T["Your Reply"]</h6>
                     <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
                 </div>
                 <div class="resizable-body">
-                            
-                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
 
+                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
                         @if (Model.Footer != null)
                         {
                             <div>
@@ -110,18 +106,14 @@
                         @if (Model.Actions != null)
                         {
                             <div>
-                                <view model="@Model.Actions"/>
+                                <view model="@Model.Actions" />
                             </div>
                         }
-
                     </form>
-
                 </div>
             </div>
         </div>
-        
-    }
 
-    
+    }
 
 </div>

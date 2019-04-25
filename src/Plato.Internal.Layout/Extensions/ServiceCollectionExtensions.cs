@@ -11,6 +11,7 @@ using Plato.Internal.Layout.Localizers;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Theming;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
 
 namespace Plato.Internal.Layout.Extensions
@@ -41,6 +42,9 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
 
+            // Page title builder
+            services.AddSingleton<IPageTitleBuilder, PageTitleBuilder>();
+            
             // Add theming conventions - configures theme layout based on controller prefix
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 

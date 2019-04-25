@@ -1,0 +1,104 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.AspNetCore.Html;
+
+namespace Plato.Internal.Layout.Titles
+{
+    
+    public class PageTitleBuilder : IPageTitleBuilder
+    {
+
+        private readonly List<PageTitlePart> _parts;
+        private IHtmlContent _title;
+
+        public PageTitleBuilder()
+        {
+            _parts = new List<PageTitlePart>();
+        }
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddSegment(IHtmlContent segment, int position = 0)
+        {
+            _title = null;
+
+            _parts.Add(new PageTitlePart
+            {
+                Value = segment,
+                Position = position
+            });
+        }
+
+        public void AddSegments(IEnumerable<IHtmlContent> parts, int position)
+        {
+            foreach (var part in parts)
+            {
+                AddSegment(part, position);
+            }
+        }
+
+
+        public IHtmlContent GenerateTitle(IHtmlContent separator)
+        {
+            if (_title != null)
+            {
+                return _title;
+            }
+
+            if (separator == null)
+            {
+                separator = new HtmlString(" - ");
+            }
+
+            _parts.Sort();
+
+            var htmlContentBuilder = new HtmlContentBuilder();
+
+            if (_parts.Count == 0)
+            {
+                return HtmlString.Empty;
+            }
+
+            for (var i = 0; i < _parts.Count; i++)
+            {
+                htmlContentBuilder.AppendHtml(_parts[i].Value);
+
+                if (i < _parts.Count - 1)
+                {
+                    htmlContentBuilder.AppendHtml(separator);
+                }
+            }
+
+            _title = htmlContentBuilder;
+
+            return _title;
+
+        }
+    }
+
+    public class PageTitlePart : IComparable
+    {
+
+        public int Position { get; set; }
+
+        public IHtmlContent Value { get; set; }
+
+        public int CompareTo(object other)
+        {
+            if (other == null)
+                return 1;
+            var sortOrderCompare = ((PageTitlePart)other).Position;
+            if (this.Position == sortOrderCompare)
+                return 0;
+            if (this.Position < sortOrderCompare)
+                return -1;
+            if (this.Position > sortOrderCompare)
+                return 1;
+            return 0;
+        }
+    }
+}

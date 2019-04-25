@@ -8,9 +8,10 @@
                 <h6 class="card-title">@T["Most Viewed"]</h6>
             </card-title>
             <card-body>
+                
                 @if (Model.Entities != null)
                 {
-                    
+
                     <ul class="list-group list-group-flush list-group-hover">
                         @foreach (var result in Model.Entities)
                         {
@@ -18,7 +19,7 @@
                                 ? "view"
                                 : "views";
                             <li class="list-group-item list-group-item-action">
-                                <div class="badge badge-info float-right" data-toggle="tooltip" title="@T["views"]">                                 
+                                <div class="badge badge-info float-right" data-toggle="tooltip" title="@T["views"]">
                                     @result.Aggregate.Count.ToPrettyInt()
                                 </div>
                                 @if (result.Model.CreatedBy != null)

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Models.Users;
 
@@ -18,6 +20,7 @@ namespace Plato.Internal.Layout.Razor
         private IViewLocalizer _t;
         private User _currentUser;
         private IViewDisplayHelper _viewDisplayHelper;
+        private IPageTitleBuilder _pageTitleBuilder;
 
         public User CurrentUser
         {
@@ -46,7 +49,37 @@ namespace Plato.Internal.Layout.Razor
                 return _t;
             }
         }
+
+    
+        public IPageTitleBuilder Title
+        {
+            get
+            {
+                if (_pageTitleBuilder == null)
+                {
+                    _pageTitleBuilder = Context.RequestServices.GetRequiredService<IPageTitleBuilder>();
+                }
+
+                return _pageTitleBuilder;
+            }
+        }
+
+        public void AddTitleSegment(IHtmlContent segment, int position = 0)
+        {
+            Title.AddSegment(segment, position);
+        }
+
+        public IHtmlContent RenderTitleSegments(string segment, int position = 0, IHtmlContent separator = null)
+        {
+            if (!String.IsNullOrEmpty(segment))
+            {
+                Title.AddSegment(new HtmlString(HtmlEncoder.Encode(segment)), position);
+            }
+
+            return Title.GenerateTitle(separator);
+        }
         
+
         private void EnsureViewHelper()
         {
             if (_viewDisplayHelper == null)
@@ -80,6 +113,7 @@ namespace Plato.Internal.Layout.Razor
             var facade = Context.RequestServices.GetService<IContextFacade>();
             return facade.GetRouteUrl(routeValues);
         }
+
     }
     
 }

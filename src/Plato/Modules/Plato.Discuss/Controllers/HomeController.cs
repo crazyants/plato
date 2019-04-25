@@ -27,6 +27,7 @@ using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Discuss.Controllers
@@ -50,6 +51,7 @@ namespace Plato.Discuss.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -73,6 +75,7 @@ namespace Plato.Discuss.Controllers
             IBreadCrumbManager breadCrumbManager,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade,
+            IPageTitleBuilder pageTitleBuilder,
             IAlerter alerter)
         {
             _topicViewProvider = topicViewProvider;
@@ -89,6 +92,7 @@ namespace Plato.Discuss.Controllers
             _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
+            _pageTitleBuilder = pageTitleBuilder;
             _alerter = alerter;
 
             T = localizer;
@@ -417,6 +421,9 @@ namespace Plato.Discuss.Controllers
                 ["opts.id"] = entity.Id,
                 ["opts.alias"] = entity.Alias
             });
+
+            // Build page title
+            _pageTitleBuilder.AddSegment(T[entity.Title]);
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>

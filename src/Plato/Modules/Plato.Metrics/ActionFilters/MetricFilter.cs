@@ -67,6 +67,9 @@ namespace Plato.Metrics.ActionFilters
 
             // Get route data
 
+            var pageTitle = context.ActionDescriptor.DisplayName;
+            var text = result.ViewData["Title"];
+
             var areaName = "";
             if (context.RouteData.Values["area"] != null)
             {

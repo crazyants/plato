@@ -1,12 +1,11 @@
-﻿@using Plato.Internal.Models.Extensions
-@using Plato.Internal.Security.Abstractions
+﻿@using Microsoft.AspNetCore.Html
 @inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Plato</title>
+    <title>@Title.GenerateTitle(new HtmlString("/"))</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />
