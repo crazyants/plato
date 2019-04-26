@@ -1,6 +1,7 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Edit Comment";
+    AddTitleSegment(T["Questions"]);
+    AddTitleSegment(T["Edit Answer"]);
 }
 
 <form asp-controller="Home" asp-action="EditReply" method="post" enctype="multipart/form-data">

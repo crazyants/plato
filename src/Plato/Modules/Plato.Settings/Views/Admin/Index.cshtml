@@ -1,6 +1,7 @@
 ﻿@model SiteSettingsViewModel
 @{
-    ViewData["Title"] = "General";
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Settings"]);
 }
 
 <h4>@T[ViewData["Title"].ToString()]</h4>

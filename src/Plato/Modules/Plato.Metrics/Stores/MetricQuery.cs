@@ -355,8 +355,16 @@ namespace Plato.Metrics.Stores
                     return "m.FeatureId";
                 case "title":
                     return "m.Title";
-                case "Url":
+                case "url":
                     return "m.Url";
+                case "ipaddress":
+                    return "m.IpV4Address";
+                case "ipv4address":
+                    return "m.IpV4Address";
+                case "ipv6address":
+                    return "m.IpV4Address";
+                case "useragent":
+                    return "m.UserAgent";
                 case "createduserid":
                     return "m.CreatedUserId";
                 case "created":

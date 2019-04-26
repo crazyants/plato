@@ -1,7 +1,9 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Questions Overview";
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Questions"]);
 }
+
 <div class="layout">
     <div class="layout-header">
         @if (Model.Alerts != null)

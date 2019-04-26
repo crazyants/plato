@@ -26,9 +26,14 @@
     }
     else
     {
-        <a href="@Model.Metric.Url">
+        <h6>
+            <a href="@Model.Metric.Url">
+                @T["No title provided"]
+            </a>
+        </h6>
+        <div class="text-muted">
             @Model.Metric.Url
-        </a>
+        </div>
     }
 </div>
 

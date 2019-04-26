@@ -21,6 +21,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -49,6 +50,7 @@ namespace Plato.Ideas.Controllers
         private readonly IEntityReplyService<IdeaComment> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
   
         public IHtmlLocalizer T { get; }
@@ -71,7 +73,9 @@ namespace Plato.Ideas.Controllers
             IEntityReplyService<IdeaComment> replyService,
             IFeatureFacade featureFacade,
             IReportEntityManager<Idea> reportEntityManager,
-            IReportEntityManager<IdeaComment> reportReplyManager, IEntityReplyStore<IdeaComment> entityReplyStore)
+            IReportEntityManager<IdeaComment> reportReplyManager,
+            IEntityReplyStore<IdeaComment> entityReplyStore,
+            IPageTitleBuilder pageTitleBuilder)
         {
             _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -89,6 +93,7 @@ namespace Plato.Ideas.Controllers
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
             _entityReplyStore = entityReplyStore;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -262,30 +267,34 @@ namespace Plato.Ideas.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newTopic = await _ideaManager.CreateAsync(entity);
+                var newEntity = await _ideaManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
-                if (newTopic.Succeeded)
+                if (newEntity.Succeeded)
                 {
 
                     // Indicate new topic to prevent topic update
                     // on first creation within our topic view provider
-                    newTopic.Response.IsNewIdea = true;
+                    newEntity.Response.IsNewIdea = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _entityViewProvider.ProvideUpdateAsync(newTopic.Response, this);
+                    await _entityViewProvider.ProvideUpdateAsync(newEntity.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Idea Created Successfully!"]);
 
-                    // Redirect to topic
-                    return RedirectToAction(nameof(Display), new {Id = newTopic.Response.Id});
+                    // Redirect to entity
+                    return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                    {
+                        ["opts.id"] = newEntity.Response.Id,
+                        ["opts.alias"] = newEntity.Response.Alias
+                    });
 
                 }
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in newTopic.Errors)
+                    foreach (var error in newEntity.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -414,7 +423,10 @@ namespace Plato.Ideas.Controllers
                 ["opts.id"] = entity.Id,
                 ["opts.alias"] = entity.Alias
             });
-            
+
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[entity.Title], int.MaxValue);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

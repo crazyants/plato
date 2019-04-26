@@ -1,7 +1,9 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = T["Manage Themes"];
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Themes"]);
 }
+
 <form asp-route-action="Index" method="post" enctype="multipart/form-data">
     <div class="layout">
         <div class="layout-header">

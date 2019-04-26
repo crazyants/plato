@@ -21,6 +21,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -47,6 +48,7 @@ namespace Plato.Questions.Controllers
         private readonly IEntityReplyService<Answer> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         private readonly IReportEntityManager<Question> _reportEntityManager;
@@ -73,7 +75,8 @@ namespace Plato.Questions.Controllers
             IViewProviderManager<UserIndex> userIndexProvider,
             IFeatureFacade featureFacade,
             IReportEntityManager<Question> reportEntityManager,
-            IReportEntityManager<Answer> reportReplyManager)
+            IReportEntityManager<Answer> reportReplyManager, 
+            IPageTitleBuilder pageTitleBuilder)
         {
             _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -90,6 +93,7 @@ namespace Plato.Questions.Controllers
             _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
+            _pageTitleBuilder = pageTitleBuilder;
             _alerter = alerter;
 
             T = localizer;
@@ -281,7 +285,11 @@ namespace Plato.Questions.Controllers
                     _alerter.Success(T["Question Created Successfully!"]);
 
                     // Redirect to entity
-                    return RedirectToAction(nameof(Display), new {Id = newEntity.Response.Id});
+                    return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                    {
+                        ["opts.id"] = newEntity.Response.Id,
+                        ["opts.alias"] = newEntity.Response.Alias
+                    });
 
                 }
                 else
@@ -416,7 +424,10 @@ namespace Plato.Questions.Controllers
                 ["opts.id"] = entity.Id,
                 ["opts.alias"] = entity.Alias
             });
-            
+
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[entity.Title], int.MaxValue);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

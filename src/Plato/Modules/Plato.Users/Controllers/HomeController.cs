@@ -11,6 +11,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Models.Users;
@@ -29,7 +30,6 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditAccountViewModel> _editAccountViewProvider;
         private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
         private readonly IViewProviderManager<EditSignatureViewModel> _editSignatureViewProvider;
-
         private readonly IViewProviderManager<Profile> _viewProvider;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -38,6 +38,7 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
         private readonly IUserEmails _userEmails;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -56,6 +57,7 @@ namespace Plato.Users.Controllers
             IPlatoUserStore<User> platoUserStore,
             IBreadCrumbManager breadCrumbManager,
             ITimeZoneProvider timeZoneProvider,
+            IPageTitleBuilder pageTitleBuilder,
             UserManager<User> userManager,
             IContextFacade contextFacade,
             IUserEmails userEmails,
@@ -74,7 +76,8 @@ namespace Plato.Users.Controllers
             _viewProvider = viewProvider;
             _userManager = userManager;
             _alerter = alerter;
-            
+            _pageTitleBuilder = pageTitleBuilder;
+
             _userEmails = userEmails;
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -170,8 +173,11 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
+            
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[user.DisplayName], int.MaxValue);
 
-            // Breadcrumb
+            // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home

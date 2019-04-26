@@ -303,10 +303,14 @@ namespace Plato.Docs.Controllers
                     await _docViewProvider.ProvideUpdateAsync(newEntity.Response, this);
 
                     // Everything was OK
-                    _alerter.Success(T["Topic Created Successfully!"]);
+                    _alerter.Success(T["Doc Created Successfully!"]);
 
                     // Redirect to entity
-                    return RedirectToAction(nameof(Display), new {Id = newEntity.Response.Id});
+                    return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                    {
+                        ["opts.id"] = newEntity.Response.Id,
+                        ["opts.alias"] = newEntity.Response.Alias
+                    });
 
                 }
                 else

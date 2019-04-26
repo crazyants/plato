@@ -21,6 +21,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -48,7 +49,7 @@ namespace Plato.Articles.Controllers
         private readonly IEntityReplyService<Comment> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
-
+        private readonly IPageTitleBuilder _pageTitleBuilder;
 
         private readonly IReportEntityManager<Article> _reportEntityManager;
         private readonly IReportEntityManager<Comment> _reportReplyManager;
@@ -74,7 +75,8 @@ namespace Plato.Articles.Controllers
             IViewProviderManager<UserIndex> userIndexProvider,
             IFeatureFacade featureFacade,
             IReportEntityManager<Article> reportEntityManager,
-            IReportEntityManager<Comment> reportReplyManager)
+            IReportEntityManager<Comment> reportReplyManager,
+            IPageTitleBuilder pageTitleBuilder)
         {
             _entityViewProvider = entityViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -92,6 +94,7 @@ namespace Plato.Articles.Controllers
             _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -265,30 +268,34 @@ namespace Plato.Articles.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newTopic = await _topicManager.CreateAsync(entity);
+                var newEntity = await _topicManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
-                if (newTopic.Succeeded)
+                if (newEntity.Succeeded)
                 {
 
                     // Indicate new topic to prevent topic update
                     // on first creation within our topic view provider
-                    newTopic.Response.IsNewTopic = true;
+                    newEntity.Response.IsNewTopic = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _entityViewProvider.ProvideUpdateAsync(newTopic.Response, this);
+                    await _entityViewProvider.ProvideUpdateAsync(newEntity.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Article Created Successfully!"]);
-
-                    // Redirect to topic
-                    return RedirectToAction(nameof(Display), new {Id = newTopic.Response.Id});
+                    
+                    // Redirect to entity
+                    return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                    {
+                        ["opts.id"] = newEntity.Response.Id,
+                        ["opts.alias"] = newEntity.Response.Alias
+                    });
 
                 }
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in newTopic.Errors)
+                    foreach (var error in newEntity.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -417,6 +424,9 @@ namespace Plato.Articles.Controllers
                 ["opts.id"] = entity.Id,
                 ["opts.alias"] = entity.Alias
             });
+
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[entity.Title], int.MaxValue);
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>

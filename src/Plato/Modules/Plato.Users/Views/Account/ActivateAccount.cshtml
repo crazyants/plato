@@ -1,7 +1,8 @@
 ﻿@model ActivateAccountViewModel
 @{
-    ViewData["Title"] = T["Activate Account"];
+    AddTitleSegment(T["Activate Account"]);
 }
+
 @if (Model.IsValidConfirmationToken)
 {
     <h4>@ViewData["Title"]</h4>

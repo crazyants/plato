@@ -1,6 +1,8 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Create Role";
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Roles"]);
+    AddTitleSegment(T["New Role"]);
 }
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">

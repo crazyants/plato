@@ -282,7 +282,11 @@ namespace Plato.Discuss.Controllers
                     _alerter.Success(T["Topic Created Successfully!"]);
 
                     // Redirect to entity
-                    return RedirectToAction(nameof(Display), new {Id = newEntity.Response.Id});
+                    return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                    {
+                        ["opts.id"] = newEntity.Response.Id,
+                        ["opts.alias"] = newEntity.Response.Alias
+                    });
 
                 }
                 else
