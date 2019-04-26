@@ -1,11 +1,10 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Edit Reply";
+    AddTitleSegment(T["Edit Reply"]);
 }
 
 <form asp-controller="Home" asp-action="EditReply" method="post" enctype="multipart/form-data">
     <div class="layout">
-
         <div class="layout-header">
             @if (Model.Alerts != null)
             {
@@ -43,7 +42,7 @@
                     @if (Model.Actions != null || Model.Footer != null)
                     {
                         <div class="layout-footer">
-                            
+
                             <div class="list-left"></div>
                             <div class="list-body">
                                 <card>
@@ -107,6 +106,5 @@
                 }
             </div>
         }
-
     </div>
 </form>

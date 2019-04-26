@@ -1,10 +1,9 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Latest Docs";
+    AddTitleSegment(T["Docs"]);
 }
 
 <div class="layout">
-
     <div class="layout-header">
         @if (Model.Alerts != null)
         {
@@ -31,7 +30,6 @@
             </div>
         }
     </div>
-
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
@@ -47,7 +45,6 @@
                     <view model="@Model.Content"></view>
                 }
             </div>
-
         </div>
     }
     else
@@ -57,7 +54,6 @@
             <view model="@Model.Content"></view>
         }
     }
-
     <div class="layout-footer">
         @if (Model.Actions != null)
         {
@@ -72,5 +68,4 @@
             </div>
         }
     </div>
-
 </div>

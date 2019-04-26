@@ -63,38 +63,28 @@ namespace Plato.Reporting.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Last Reply",
-                Value = SortBy.LastReply
-            },
-            new SortColumn()
-            {
-                Text = "Replies",
-                Value =  SortBy.Replies
-            },
-            new SortColumn()
-            {
-                Text = "Views",
-                Value = SortBy.Views
-            },
-            new SortColumn()
-            {
-                Text = "Participants",
-                Value =  SortBy.Participants
-            },
-            new SortColumn()
-            {
-                Text = "Reactions",
-                Value =  SortBy.Reactions
-            },
-            new SortColumn()
-            {
-                Text = "Created",
+                Text = "Created Date",
                 Value = SortBy.Created
             },
             new SortColumn()
             {
-                Text = "Modified",
-                Value = SortBy.Modified
+                Text = "Title",
+                Value =  SortBy.Title
+            },
+            new SortColumn()
+            {
+                Text = "Url",
+                Value = SortBy.Url
+            },
+            new SortColumn()
+            {
+                Text = "IP Address",
+                Value =  SortBy.IpV4Address
+            },
+            new SortColumn()
+            {
+                Text = "User Agent",
+                Value =  SortBy.UserAgent
             }
         };
 
@@ -149,7 +139,11 @@ namespace Plato.Reporting.ViewComponents
             // Get results
             var results = await _metricStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
-                .Select<MetricQueryParams>(q => { })
+                .Select<MetricQueryParams>(q =>
+                    {
+
+                    })
+                .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
               
             // Set total on pager

@@ -419,8 +419,8 @@ namespace Plato.Discuss.Controllers
                 ["opts.alias"] = entity.Alias
             });
 
-
-            _pageTitleBuilder.AddSegment(S["Home"]);
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[entity.Title], int.MaxValue);
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -435,9 +435,6 @@ namespace Plato.Discuss.Controllers
                     .LocalNav()
                 );
             });
-
-            // Build page title
-            //_pageTitleBuilder.FromNavigationBuilder(_breadCrumbManager.Builder);
 
             // Return view
             return View((LayoutViewModel) await _topicViewProvider.ProvideDisplayAsync(entity, this));

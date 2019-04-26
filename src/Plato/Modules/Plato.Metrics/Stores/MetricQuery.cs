@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -309,7 +310,7 @@ namespace Plato.Metrics.Stores
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
                 sb.Append(GetQualifiedColumnName(sortColumn.Key));
                 if (sortColumn.Value != OrderBy.Asc)
@@ -319,6 +320,53 @@ namespace Plato.Metrics.Stores
                 i += 1;
             }
             return sb.ToString();
+        }
+
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var output = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (String.IsNullOrEmpty(columnName))
+                {
+                    throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                }
+                output.Add(columnName, sortColumn.Value);
+
+            }
+
+            return output;
+        }
+
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLowerInvariant())
+            {
+                case "id":
+                    return "m.Id";
+                case "featureid":
+                    return "m.FeatureId";
+                case "title":
+                    return "m.Title";
+                case "Url":
+                    return "m.Url";
+                case "createduserid":
+                    return "m.CreatedUserId";
+                case "created":
+                    return "m.CreatedDate";
+                case "createddate":
+                    return "m.CreatedDate";
+            }
+
+            return string.Empty;
+
         }
 
         #endregion

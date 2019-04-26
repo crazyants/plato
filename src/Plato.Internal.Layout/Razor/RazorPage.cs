@@ -72,8 +72,7 @@ namespace Plato.Internal.Layout.Razor
         {
             Title.AddSegment(new LocalizedString(segment.Name, segment.Value), order);
         }
-
-
+        
         private void EnsureViewHelper()
         {
             if (_viewDisplayHelper == null)

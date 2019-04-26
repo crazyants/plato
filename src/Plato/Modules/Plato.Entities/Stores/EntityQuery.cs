@@ -1121,28 +1121,8 @@ namespace Plato.Entities.Stores
 
             return _query.Params.Keywords.Value;
 
-            //No need to modify keywords
-            //if (_query.Options.SearchType == SearchTypes.Tsql)
-            //{
-            //    return _query.Params.Keywords.Value;
-            //}
-
-            // Parse keywords into valid full text query syntax
-            //var fullTextSearchQuery =
-            //    _query.Options.FullTextQueryParser.ToFullTextSearchQuery(
-            //        _query.Params.Keywords.Value);
-
-            //// Ensure parse was successful
-            //if (!String.IsNullOrEmpty(fullTextSearchQuery))
-            //{
-            //    return fullTextSearchQuery.Replace("'", "''");
-            //}
-
-            return string.Empty;
-
         }
-
-
+        
         #endregion
 
     }

@@ -52,6 +52,19 @@ namespace Plato.Metrics
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+       
+
+            // Index
+            routes.MapAreaRoute(
+                name: "ReportsPageViews",
+                areaName: "Plato.Reporting",
+                template: "admin/reports/page-views/{pager.offset:int?}",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
+
         }
+
     }
+
 }

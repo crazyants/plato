@@ -26,6 +26,7 @@ using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
+using Plato.Internal.Layout.Titles;
 
 namespace Plato.Docs.Controllers
 {
@@ -48,6 +49,7 @@ namespace Plato.Docs.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -71,6 +73,7 @@ namespace Plato.Docs.Controllers
             IBreadCrumbManager breadCrumbManager,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade,
+            IPageTitleBuilder pageTitleBuilder,
             IAlerter alerter)
         {
             _docViewProvider = docViewProvider;
@@ -88,6 +91,7 @@ namespace Plato.Docs.Controllers
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
             _alerter = alerter;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -442,6 +446,9 @@ namespace Plato.Docs.Controllers
 
             // Get any parents 
             var parents = await _entityStore.GetParentsByIdAsync(entity.Id);
+
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[entity.Title], int.MaxValue);
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>

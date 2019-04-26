@@ -36,7 +36,7 @@ namespace Plato.Reporting.ViewModels
 
         public string Search { get; set; }
 
-        public SortBy Sort { get; set; }
+        public SortBy Sort { get; set; } = SortBy.Created;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;
 
@@ -69,18 +69,14 @@ namespace Plato.Reporting.ViewModels
 
     public enum SortBy
     {
-        Auto = 0,
-        Rank = 1,
-        LastReply = 2,
-        Replies = 3,
-        Views = 4,
-        Participants = 5,
-        Reactions = 6,
-        Follows = 7,
-        Stars = 8,
-        SortOrder = 9,
-        Created = 10,
-        Modified = 11
+        Id = 1,
+        FeatureId = 2,
+        Title = 3,
+        Url = 4,
+        IpV4Address = 5,
+        IpV6Address = 6,
+        UserAgent = 7,
+        Created = 8
     }
 
     public enum FilterBy
