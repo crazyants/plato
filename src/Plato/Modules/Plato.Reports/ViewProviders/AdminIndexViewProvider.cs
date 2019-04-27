@@ -52,19 +52,19 @@ namespace Plato.Reports.ViewProviders
             var newUsers = await _aggregatedUserRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
             var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
 
-            // Build report view model
-            var overviewViewModel = new OverviewReportViewModel()
-            {
-                PageViews = pageViews.MergeIntoRange(range.Start, range.End),
-                PageViewsByFeature = pageViewsByFeature,
-                NewUsers = newUsers.MergeIntoRange(range.Start, range.End),
-                Engagements = engagements.MergeIntoRange(range.Start, range.End)
-            };
+            //// Build report view model
+            //var overviewViewModel = new OverviewReportViewModel()
+            //{
+            //    PageViews = pageViews.MergeIntoRange(range.Start, range.End),
+            //    PageViewsByFeature = pageViewsByFeature,
+            //    NewUsers = newUsers.MergeIntoRange(range.Start, range.End),
+            //    Engagements = engagements.MergeIntoRange(range.Start, range.End)
+            //};
 
             return Views(
                 View<ReportIndexOptions>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
                     .Order(int.MinValue),
-                View<OverviewReportViewModel>("Reports.Overview", model => overviewViewModel).Zone("content")
+                View<ReportIndexOptions>("Admin.Reports", model => reportIndexViewModel).Zone("content")
                     .Order(int.MinValue)
             );
 

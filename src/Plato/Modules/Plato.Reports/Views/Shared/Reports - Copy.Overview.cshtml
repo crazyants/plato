@@ -14,48 +14,12 @@
 <div class="row">
     <div class="col-lg-8 col-md-12 col-sm-12">
 
-        <card>
-            <card-body>
-                <i class="fal fa-eye float-right"></i>
-                @if (Model.PageViews != null)
-                {
-                    <h5 class="d-inline">@Model.PageViews.Total().ToPrettyInt()</h5>
-                }
-                else
-                {
-                    <h5>0</h5>
-                }
-                <br />
-                @T["Page Views"]
-                <div class="position-relative mt-3" style="height: 150px;">
-                    <canvas id="pageViewsChart" class="w-100"></canvas>
-                </div>
-            </card-body>
-        </card>
+      
         
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12">
 
-        <card>
-            <card-body>
-
-               <i class="fal fa-eye float-right"></i>
-                @if (Model.PageViewsByFeature != null)
-                {
-                    <h5 class="d-inline">@Model.PageViewsByFeature.Total().ToPrettyInt()</h5>
-                }
-                else
-                {
-                    <h5>0</h5>
-                }
-                <br />
-                @T["Views By Feature"]
-                <div class="position-relative mt-3" style="height: 150px;">
-                    <canvas id="pageViewsByFeatureChart" class="w-100"></canvas>
-                </div>
-
-            </card-body>
-        </card>
+     
 
 
     </div>
@@ -110,8 +74,8 @@
 
 <script section="Footer">
 
-    if (typeof window.$.Plato.Reporting === "undefined") {
-        throw new Error("$.Plato.Reporting Required");
+    if (typeof window.$.Plato.Reports === "undefined") {
+        throw new Error("$.Plato.Reports Required");
     }
 
     if (typeof window.$.Plato.Charts === "undefined") {
@@ -131,46 +95,11 @@
             // View by feature
             // ---------
 
-            var data = @Html.Raw(pageViewsByFeatureData),
-                randomColors = charts.randomColors(data.length);
-
-            charts.initDoughnut("pageViewsByFeatureChart",  {
-                labels: @Html.Raw(pageViewsByFeatureLabels),
-                datasets: [
-                    {
-                        fill: true,
-                        borderWidth: 0,
-                        lineWidth: 0,
-                        pointRadius: 0,
-                        pointHoverRadius: 0,
-                        backgroundColor: randomColors.backgroundColors,
-                        borderColor: randomColors.borderColors,
-                        hoverBackgroundColor: randomColors.hoverBackgroundColors,
-                        data: data
-                    }
-                ]
-            });
-
             // ---------------
             // Page views
             // ---------------
 
-            charts.initLine("pageViewsChart", {
-                labels: @Html.Raw(pageViewsLabels),
-                    datasets: [
-                    {
-                        label: 'Page Views',
-                        fill: true,
-                        backgroundColor: Chart.helpers.color(charts.colors.blue).alpha(0.1).rgbString(),
-                        borderColor: charts.colors.blue,
-                        borderWidth: 1,
-                        lineWidth: 1,
-                        pointRadius: 0,
-                        pointHoverRadius: 0,
-                        data: @Html.Raw(pageViewsData)
-                    }
-                ]
-            });
+         
 
             // ---------------
             // New Users

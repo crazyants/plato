@@ -1,0 +1,59 @@
+﻿@using Plato.Internal.Models.Extensions
+@model ReportIndexOptions
+
+<div class="row">
+    <div class="col-lg-8 col-md-12 col-sm-12">
+        
+        @await DisplayAsync(new View("ViewsByDateChart", new
+        {
+            options = @Model
+        }))
+        
+    </div>
+    <div class="col-lg-4 col-md-12 col-sm-12">
+        
+        @await DisplayAsync(new View("ViewsByFeatureChart", new
+        {
+            options = @Model
+        }))
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+    
+
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        
+   
+
+    </div>
+</div>
+
+<script section="Footer">
+
+    if (typeof window.$.Plato.Reporting === "undefined") {
+        throw new Error("$.Plato.Reporting Required");
+    }
+
+    if (typeof window.$.Plato.Charts === "undefined") {
+        throw new Error("$.Plato.Charts Required");
+    }
+
+    $(function(win, doc, $) {
+
+        "use strict";
+
+        var app = win.$.Plato,
+            charts = win.$.Plato.Charts;
+
+        app.ready(function() {
+
+
+        });
+
+    }(window, document, jQuery));
+
+</script>

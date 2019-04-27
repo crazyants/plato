@@ -11,10 +11,10 @@ $(function(win, doc, $) {
     // --------
 
     var app = win.$.Plato,
-        featureId = "Plato.Reporting";
+        featureId = "Plato.Reports";
 
     /* reporting */
-    var reporting = {
+    var reports = {
         init: function() {
             app.logger.logInfo(featureId + " initializing");
             this.bind();
@@ -221,14 +221,14 @@ $(function(win, doc, $) {
     
     // Extend $.Plato
 
-    win.$.Plato.Reporting = reporting;
+    win.$.Plato.Reports = reports;
     win.$.Plato.Charts = charts;
 
     // --------
 
     // app ready
     app.ready(function () {
-        reporting.init();
+        reports.init();
     });
 
 }(window, document, jQuery));
