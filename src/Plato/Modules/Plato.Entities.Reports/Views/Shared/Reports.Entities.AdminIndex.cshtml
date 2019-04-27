@@ -1,0 +1,30 @@
+﻿@using Plato.Internal.Models.Extensions
+@model ReportIndexOptions
+
+<div class="row">
+    <div class="col-lg-4 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("EntityViewsByDateChart", new
+        {
+            options = @Model
+        }))
+
+    </div>
+    <div class="col-lg-4 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("NewEntitiesByDateChart", new
+        {
+            options = @Model
+        }))
+
+    </div>
+    <div class="col-lg-4 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("NewRepliesByDateChart", new
+        {
+            options = @Model
+        }))
+
+    </div>
+
+</div>

@@ -1,0 +1,69 @@
+﻿
+@model Plato.Internal.Models.Metrics.AggregatedResult<DateTimeOffset>
+@{
+    var labels = Model?.SerializeLabels() ?? "[]";
+    var data = Model?.SerializeCounts() ?? "[]";
+    var chartId = "newEntitiesByDateChart";
+}
+
+<card>
+    <card-body>
+        <i class="fal fa-eye float-right"></i>
+        @if (Model != null)
+        {
+            <h5 class="d-inline">@Model.Total().ToPrettyInt()</h5>
+        }
+        else
+        {
+            <h5>0</h5>
+        }
+        <br />
+        @T["New Entities"]
+        <div class="position-relative mt-3" style="height: 150px;">
+            <canvas id="@chartId" class="w-100"></canvas>
+        </div>
+    </card-body>
+</card>
+
+<script section="Footer">
+    
+    if (typeof window.$.Plato.Reports === "undefined") {
+        throw new Error("$.Plato.Reports Required");
+    }
+
+    if (typeof window.$.Plato.Charts === "undefined") {
+        throw new Error("$.Plato.Charts Required");
+    }
+
+    $(function (win, doc, $) {
+
+        "use strict";
+
+        var app = win.$.Plato,
+            charts = win.$.Plato.Charts;
+
+        app.ready(function() {
+
+            charts.initLine("@chartId", {
+                labels: @Html.Raw(labels),
+                datasets: [
+                    {
+                        label: 'New Entities',
+                        fill: true,
+                        backgroundColor: Chart.helpers.color(charts.colors.blue).alpha(0.1).rgbString(),
+                        borderColor: charts.colors.blue,
+                        borderWidth: 1,
+                        lineWidth: 1,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        data: @Html.Raw(data)
+                    }
+                ]
+            });
+
+        });
+
+
+    }(window, document, jQuery));
+
+</script>

@@ -19,6 +19,7 @@ using Plato.Internal.Repositories.Reputations;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Reports.Services;
+using Plato.Reports.ViewModels;
 
 namespace Plato.Entities.Reports.ViewProviders
 {
@@ -68,6 +69,12 @@ namespace Plato.Entities.Reports.ViewProviders
             // Get range to display
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
 
+            var reportIndexOptions = new ReportIndexOptions()
+            {
+                Start = range.Start,
+                End = range.End
+            };
+
             // Get data
             var entities = await _aggregatedEntityRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
             var replies = await _aggregatedEntityReplyRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
@@ -90,7 +97,7 @@ namespace Plato.Entities.Reports.ViewProviders
 
             // Return view
             return Views(
-                View<EntitiesOverviewReportViewModel>("Entities.Overview.Report", model => overviewViewModel).Zone("content").Order(1)
+                View<ReportIndexOptions>("Reports.Entities.AdminIndex", model => reportIndexOptions).Zone("content").Order(1)
                     .Order(1),
                 View<TopViewModel>("Entities.TopViews.Report", model => mostViewedViewModel).Zone("content").Order(1)
                     .Order(1)
