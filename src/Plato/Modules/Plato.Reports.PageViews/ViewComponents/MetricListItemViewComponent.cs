@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Metrics.Models;
-using Plato.Reports.ViewModels;
+using Plato.Reports.PageViews.ViewModels;
 
-namespace Plato.Reports.ViewComponents
+namespace Plato.Reports.PageViews.ViewComponents
 {
     public class MetricListItemViewComponent : ViewComponent
     {

@@ -2,12 +2,12 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Reports.Navigation
+namespace Plato.Reports.PageViews.Navigation
 {
 
     public class AdminMenu : INavigationProvider
     {
-        public AdminMenu(IStringLocalizer localizer)
+        public AdminMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
         }
@@ -24,8 +24,8 @@ namespace Plato.Reports.Navigation
             builder
                 .Add(T["Reports"], int.MaxValue - 4, questions => questions
                     .IconCss("fal fa-chart-bar")
-                    .Add(T["Overview"], int.MinValue, home => home
-                        .Action("Index", "Admin", "Plato.Reports")
+                    .Add(T["Page Views"], int.MinValue, home => home
+                        .Action("Index", "Admin", "Plato.Reports.PageViews")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav())
                 );

@@ -18,8 +18,15 @@ namespace Plato.Reports.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(ReportIndexOptions options)
         {
-            var views = await _aggregatedMetricsRepository.SelectGroupedByDateAsync("CreatedDate", options.StartDate, options.EndDate);
-            return View(views.MergeIntoRange(options.StartDate, options.EndDate));
+            
+            if (options == null)
+            {
+                options = new ReportIndexOptions();
+            }
+
+            var views = await _aggregatedMetricsRepository.SelectGroupedByDateAsync("CreatedDate", options.Start, options.End);
+            return View(views.MergeIntoRange(options.Start, options.End));
+
         }
 
     }

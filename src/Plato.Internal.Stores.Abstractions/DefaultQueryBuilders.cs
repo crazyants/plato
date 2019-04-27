@@ -329,6 +329,11 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
+        public WhereDate GreaterThan(DateTimeOffset value)
+        {
+            return GreaterThan(value.DateTime);
+        }
+
         public WhereDate GreaterThanOrEqual(DateTime value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
@@ -340,6 +345,11 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
+        public WhereDate GreaterThanOrEqual(DateTimeOffset value)
+        {
+            return GreaterThanOrEqual(value.DateTime);
+        }
+        
         public WhereDate LessThan(DateTime value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
@@ -351,6 +361,12 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
+        public WhereDate LessThan(DateTimeOffset value)
+        {
+            return LessThan(value.DateTime);
+        }
+        
+
         public WhereDate LessThanOrEqual(DateTime value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
@@ -361,7 +377,13 @@ namespace Plato.Internal.Stores.Abstractions
                 .Append("'");
             return this;
         }
-        
+
+
+        public WhereDate LessThanOrEqual(DateTimeOffset value)
+        {
+            return LessThanOrEqual(value.DateTime);
+        }
+
         public WhereDate NotEqual(DateTime value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
@@ -373,6 +395,11 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
+        public WhereDate NotEqual(DateTimeOffset value)
+        {
+            return NotEqual(value.DateTime);
+        }
+        
         public string ToSqlString(string parameterName)
         {
             return _builder.ToString().Replace("{0}", parameterName);

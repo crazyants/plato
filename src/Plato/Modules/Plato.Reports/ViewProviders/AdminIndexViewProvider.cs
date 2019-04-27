@@ -1,11 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Admin.Models;
-using Plato.Internal.Models.Extensions;
-using Plato.Internal.Repositories.Metrics;
-using Plato.Internal.Repositories.Reputations;
-using Plato.Metrics.Models;
-using Plato.Metrics.Repositories;
 using Plato.Reports.Services;
 using Plato.Reports.ViewModels;
 
@@ -14,25 +9,15 @@ namespace Plato.Reports.ViewProviders
 
     public class AdminIndexViewProvider : BaseViewProvider<AdminIndex>
     {
-
-        private readonly IAggregatedMetricsRepository _aggregatedMetricsRepository;
-        private readonly IAggregatedUserRepository _aggregatedUserRepository;
-        private readonly IAggregatedUserReputationRepository _aggregatedUserReputationRepository;
+        
         private readonly IDateRangeStorage _dateRangeStorage;
 
-        public AdminIndexViewProvider(
-            IAggregatedMetricsRepository aggregatedMetricsRepository,
-            IAggregatedUserRepository aggregatedUserRepository,
-            IAggregatedUserReputationRepository aggregatedUserReputationRepository,
-            IDateRangeStorage dateRangeStorage)
+        public AdminIndexViewProvider(IDateRangeStorage dateRangeStorage)
         {
-            _aggregatedMetricsRepository = aggregatedMetricsRepository;
-            _aggregatedUserRepository = aggregatedUserRepository;
-            _aggregatedUserReputationRepository = aggregatedUserReputationRepository;
             _dateRangeStorage = dateRangeStorage;
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
+        public override Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
             IViewProviderContext context)
         {
 
@@ -40,33 +25,18 @@ namespace Plato.Reports.ViewProviders
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
        
             // Build index view model
-            var reportIndexViewModel = new ReportIndexOptions()
+            var reportIndexOptions = new ReportIndexOptions()
             {
-                StartDate = range.Start,
-                EndDate = range.End
+                Start = range.Start,
+                End = range.End
             };
             
-            // Get report data
-            var pageViews = await _aggregatedMetricsRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
-            var pageViewsByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeature(range.Start, range.End);
-            var newUsers = await _aggregatedUserRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
-            var engagements = await _aggregatedUserReputationRepository.SelectGroupedByDateAsync("CreatedDate", range.Start, range.End);
-
-            //// Build report view model
-            //var overviewViewModel = new OverviewReportViewModel()
-            //{
-            //    PageViews = pageViews.MergeIntoRange(range.Start, range.End),
-            //    PageViewsByFeature = pageViewsByFeature,
-            //    NewUsers = newUsers.MergeIntoRange(range.Start, range.End),
-            //    Engagements = engagements.MergeIntoRange(range.Start, range.End)
-            //};
-
-            return Views(
-                View<ReportIndexOptions>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
+            return Task.FromResult(Views(
+                View<ReportIndexOptions>("Reports.Admin.Index.Tools", model => reportIndexOptions).Zone("tools")
                     .Order(int.MinValue),
-                View<ReportIndexOptions>("Admin.Reports", model => reportIndexViewModel).Zone("content")
+                View<ReportIndexOptions>("Reports.AdminIndex", model => reportIndexOptions).Zone("content")
                     .Order(int.MinValue)
-            );
+            ));
 
         }
 
@@ -94,7 +64,7 @@ namespace Plato.Reports.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
                 var storage = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
-                storage.Set(model.StartDate, model.EndDate);
+                storage.Set(model.Start, model.End);
             }
 
             return await BuildIndexAsync(viewModel, context);

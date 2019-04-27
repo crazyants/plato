@@ -1,13 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Security.Abstractions;
 using Plato.Metrics.Stores;
 using Plato.Metrics.Models;
 using Plato.Reports.ViewModels;
 
-namespace Plato.Reports.ViewComponents
+namespace Plato.Reports.PageViews.ViewComponents
 {
     public class GetMetricListViewComponent : ViewComponent
     {
@@ -49,7 +47,8 @@ namespace Plato.Reports.ViewComponents
                 .Take(pager.Page, pager.Size)
                 .Select<MetricQueryParams>(q =>
                 {
-
+                    q.StartDate.GreaterThanOrEqual(options.Start);
+                    q.EndDate.LessThanOrEqual(options.End);
                 })
                 .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();

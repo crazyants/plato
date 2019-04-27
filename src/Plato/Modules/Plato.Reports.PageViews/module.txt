@@ -1,5 +1,5 @@
-Name: Plato Reports
-Description: Adds basic reporting capabilities to Plato.
+Name: Plato Reports PageViews
+Description: Adds detailed page view reports to the Plato dashboard.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Reports
@@ -8,11 +8,7 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Metrics",
-		Version: "1.0.0"
-	},
-	{
-		Id: "Plato.Admin",
+		Id: "Plato.Reports",
 		Version: "1.0.0"
 	}
 ]

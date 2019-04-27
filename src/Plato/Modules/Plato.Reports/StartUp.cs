@@ -34,14 +34,10 @@ namespace Plato.Reports
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
-            // Register report index view providers
+            // Register admin view providers
             services.AddScoped<IViewProviderManager<ReportIndex>, ViewProviderManager<ReportIndex>>();
             services.AddScoped<IViewProvider<ReportIndex>, AdminViewProvider>();
         
-            // Register report page views view providers
-            services.AddScoped<IViewProviderManager<PageViewsReport>, ViewProviderManager<PageViewsReport>>();
-            services.AddScoped<IViewProvider<PageViewsReport>, PageViewsViewProvider>();
-
             // Register admin index View providers
             services.AddScoped<IViewProviderManager<AdminIndex>, ViewProviderManager<AdminIndex>>();
             services.AddScoped<IViewProvider<AdminIndex>, AdminIndexViewProvider>();
@@ -66,15 +62,8 @@ namespace Plato.Reports
                 defaults: new { controller = "Admin", action = "Index" }
             );
             
-            // Page Views
-            routes.MapAreaRoute(
-                name: "ReportsPageViews",
-                areaName: "Plato.Reports",
-                template: "admin/reports/page-views/{pager.offset:int?}",
-                defaults: new { controller = "Admin", action = "PageViews" }
-            );
-
-
         }
+
     }
+
 }

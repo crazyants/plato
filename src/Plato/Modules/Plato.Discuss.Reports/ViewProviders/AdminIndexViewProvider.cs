@@ -49,8 +49,8 @@ namespace Plato.Discuss.Reporting.ViewProviders
             // Build index view model
             var reportIndexViewModel = new ReportIndexOptions()
             {
-                StartDate = range.Start,
-                EndDate = range.End
+                Start = range.Start,
+                End = range.End
             };
 
 
@@ -113,7 +113,7 @@ namespace Plato.Discuss.Reporting.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
                 var storage = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
-                storage.Set(model.StartDate, model.EndDate);
+                storage.Set(model.Start, model.End);
             }
 
             return await BuildIndexAsync(viewModel, context);

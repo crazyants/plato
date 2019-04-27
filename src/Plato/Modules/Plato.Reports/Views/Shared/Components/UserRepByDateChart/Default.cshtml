@@ -1,13 +1,14 @@
-﻿@model Plato.Internal.Models.Metrics.AggregatedResult<DateTimeOffset>
+﻿@model AggregatedResult<DateTimeOffset>
 @{
     var labels = Model?.SerializeLabels() ?? "[]";
     var data = Model?.SerializeCounts() ?? "[]";
-    var chartId = "pageViewsByFeatureChart";
+    var chartId = "newReputationByDate";
 }
+
 <card>
     <card-body>
 
-        <i class="fal fa-eye float-right"></i>
+        <i class="fal fa-thumbs-up float-right"></i>
         @if (Model != null)
         {
             <h5 class="d-inline">@Model.Total().ToPrettyInt()</h5>
@@ -17,14 +18,13 @@
             <h5>0</h5>
         }
         <br />
-        @T["Views By Feature"]
+        @T["Engagements"]
         <div class="position-relative mt-3" style="height: 150px;">
             <canvas id="@chartId" class="w-100"></canvas>
         </div>
 
     </card-body>
 </card>
-
 
 <script section="Footer">
     
@@ -43,25 +43,21 @@
         var app = win.$.Plato,
             charts = win.$.Plato.Charts;
 
-        app.ready(function() {
-
-        
-            var data = @Html.Raw(data),
-                randomColors = charts.randomColors(data.length);
-
-            charts.initDoughnut("@chartId",  {
+        app.ready(function () {
+    
+            charts.initBar("@chartId", {
                 labels: @Html.Raw(labels),
                 datasets: [
                     {
+                        label: 'Engagements',
                         fill: true,
-                        borderWidth: 0,
-                        lineWidth: 0,
+                        backgroundColor: Chart.helpers.color(app.ui.chartColors.blue).alpha(0.1).rgbString(),
+                        borderColor: app.ui.chartColors.blue,
+                        borderWidth: 1,
+                        lineWidth: 1,
                         pointRadius: 0,
                         pointHoverRadius: 0,
-                        backgroundColor: randomColors.backgroundColors,
-                        borderColor: randomColors.borderColors,
-                        hoverBackgroundColor: randomColors.hoverBackgroundColors,
-                        data: data
+                        data: @Html.Raw(data)
                     }
                 ]
             });

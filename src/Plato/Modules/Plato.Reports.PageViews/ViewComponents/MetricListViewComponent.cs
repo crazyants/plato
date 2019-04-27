@@ -7,7 +7,7 @@ using Plato.Metrics.Models;
 using Plato.Metrics.Stores;
 using Plato.Reports.ViewModels;
 
-namespace Plato.Reports.ViewComponents
+namespace Plato.Reports.PageViews.ViewComponents
 {
     public class MetricListViewComponent : ViewComponent
     {
@@ -140,9 +140,10 @@ namespace Plato.Reports.ViewComponents
             var results = await _metricStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
                 .Select<MetricQueryParams>(q =>
-                    {
-
-                    })
+                {
+                    q.StartDate.GreaterThanOrEqual(options.Start);
+                    q.EndDate.LessThanOrEqual(options.End);
+                })
                 .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
               

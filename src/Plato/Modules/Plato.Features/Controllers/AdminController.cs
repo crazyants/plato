@@ -15,9 +15,8 @@ namespace Plato.Features.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
-
-        private readonly IViewProviderManager<FeaturesViewModel> _viewProvider;
-        //private readonly IShellDescriptorManager _shellDescriptorManager;
+        
+        private readonly IViewProviderManager<FeaturesIndexViewModel> _viewProvider;
         private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
@@ -30,14 +29,12 @@ namespace Plato.Features.Controllers
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IShellFeatureManager shellFeatureManager,
-            IShellDescriptorManager shellDescriptorManager,
-            IViewProviderManager<FeaturesViewModel> viewProvider, 
+            IViewProviderManager<FeaturesIndexViewModel> viewProvider, 
             IBreadCrumbManager breadCrumbManager,
             IAlerter alerter)
         {
             _shellFeatureManager = shellFeatureManager;
             _viewProvider = viewProvider;
-            //_shellDescriptorManager = shellDescriptorManager;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
 
@@ -45,8 +42,13 @@ namespace Plato.Features.Controllers
             S = stringLocalizer;
         }
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(FeatureIndexOptions opts)
         {
+
+            if (opts == null)
+            {
+                opts = new FeatureIndexOptions();
+            }
 
             _breadCrumbManager.Configure(builder =>
             {
@@ -55,12 +57,11 @@ namespace Plato.Features.Controllers
                     .LocalNav()
                 ).Add(S["Features"]);
             });
-            
-            //var features = await _shellDescriptorManager.GetFeaturesAsync();
-            
-            //var enabledFeatures = _shellFEatureManager.
 
-            var model = new FeaturesViewModel();
+            var model = new FeaturesIndexViewModel()
+            {
+                Options = opts
+            };
             
             return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
             
@@ -117,4 +118,5 @@ namespace Plato.Features.Controllers
         }
         
     }
+
 }

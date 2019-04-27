@@ -26,9 +26,9 @@ namespace Plato.Reports.ViewModels
     public class ReportIndexOptions
     { 
 
-        public DateTimeOffset StartDate { get; set; } = DateTimeOffset.UtcNow.AddDays(-7);
+        public DateTimeOffset Start { get; set; } = DateTimeOffset.UtcNow.AddDays(-7);
         
-        public DateTimeOffset EndDate { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset End { get; set; } = DateTimeOffset.UtcNow;
 
         public FilterBy Filter { get; set; } = FilterBy.All;
 

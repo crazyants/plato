@@ -66,9 +66,10 @@ namespace Plato.Metrics.Stores
 
         private WhereInt _id;
         private WhereInt _featureId;
+        private WhereDate _startDate;
+        private WhereDate _endDate;
         private WhereString _title;
         private WhereString _url;
-
         private WhereString _ipV4Address;
         private WhereString _ipV6Address;
         private WhereString _userAgent;
@@ -85,7 +86,18 @@ namespace Plato.Metrics.Stores
             get => _featureId ?? (_featureId = new WhereInt());
             set => _featureId = value;
         }
+        public WhereDate StartDate
+        {
+            get => _startDate ?? (_startDate = new WhereDate());
+            set => _startDate = value;
+        }
 
+        public WhereDate EndDate
+        {
+            get => _endDate ?? (_endDate = new WhereDate());
+            set => _endDate = value;
+        }
+        
         public WhereString Title
         {
             get => _title ?? (_title = new WhereString());
@@ -239,8 +251,24 @@ namespace Plato.Metrics.Stores
                     sb.Append(_query.Params.FeatureId.Operator);
                 sb.Append(_query.Params.FeatureId.ToSqlString("m.FeatureId"));
             }
-            
-            // AreaName
+
+            // StartDate
+            if (_query.Params.StartDate.Value != null)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.StartDate.Operator);
+                sb.Append(_query.Params.StartDate.ToSqlString("m.CreatedDate"));
+            }
+
+            // EndDate
+            if (_query.Params.EndDate.Value != null)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EndDate.Operator);
+                sb.Append(_query.Params.EndDate.ToSqlString("m.CreatedDate"));
+            }
+
+            // Title
             if (!String.IsNullOrEmpty(_query.Params.Title.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -248,7 +276,7 @@ namespace Plato.Metrics.Stores
                 sb.Append(_query.Params.Title.ToSqlString("m.Title", "Title"));
             }
 
-            // ControllerName
+            // Url
             if (!String.IsNullOrEmpty(_query.Params.Url.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))

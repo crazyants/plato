@@ -322,7 +322,7 @@ namespace Plato.Users.Controllers
 
         }
         
-        [HttpPost, ActionName(nameof(Edit))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(string id)
         {
 

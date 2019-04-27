@@ -16,8 +16,8 @@ namespace Plato.Reports.Services
 
         private ActionContext _context;
 
-        private const string ByStartName = "start";
-        private const string ByEndName = "end";
+        private const string ByStartName = "opts.start";
+        private const string ByEndName = "opts.end";
         
         public void Set(DateTimeOffset start, DateTimeOffset end)
         {
