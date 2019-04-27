@@ -1,4 +1,5 @@
-﻿@model AdminIndex
+﻿@using Plato.Features.ViewModels
+@model AdminIndex
 
 <card>
     <card-title>
@@ -77,10 +78,13 @@
     </card-title>
     <card-body>
 
-        @await DisplayAsync(new View("FeatureList", new
+        @await DisplayAsync(new View("SimpleFeatureList", new
         {
-            category = "Discuss",
-            showEnabled = false
+            options = new FeatureIndexOptions()
+            {
+                Category = "Discuss",
+                HideEnabled = true
+            }
         }))
 
     </card-body>

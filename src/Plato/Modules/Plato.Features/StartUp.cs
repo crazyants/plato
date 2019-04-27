@@ -36,19 +36,13 @@ namespace Plato.Features
             IServiceProvider serviceProvider)
         {
 
-            //routes.MapAreaRoute(
-            //    name: "AdminFeatures",
-            //    areaName: "Plato.Features",
-            //    template: "admin/features/{action}/{id?}",
-            //    defaults: new { controller = "Admin", action = "Index" }
-            //);
-
-            //routes.MapAreaRoute(
-            //    name: "AdminEnableFeatures",
-            //    areaName: "Plato.Features",
-            //    template: "admin/features/{action}/{id?}",
-            //    defaults: new { controller = "Admin", action = "Enable" }
-            //);
+            // Index
+            routes.MapAreaRoute(
+                name: "FeaturesIndex",
+                areaName: "Plato.Features",
+                template: "admin/features",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
 
         }
     }

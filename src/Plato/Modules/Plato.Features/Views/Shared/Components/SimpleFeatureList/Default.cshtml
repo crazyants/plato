@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Routing
+@model FeaturesIndexViewModel
+
+<ul class="list-group list-group-flush list-group-hover">
+    @{
+        var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
+    }
+    @if (features != null)
+    {
+        foreach (var feature in features)
+        {
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h6>
+                            @feature.Descriptor.Name
+                        </h6>
+
+                        @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
+                        {
+                            @feature.Descriptor.Description<br/>
+                        }
+                    
+                    </div>
+                </div>
+            </li>
+        }
+        <li class="list-group-item">
+            
+            <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Index" asp-route-opts.category="@Model.Options.Category" class="btn btn-secondary" itemprop="UnsafeUrl">
+                @T["Manage Features"]
+            </a>
+
+
+        </li>
+    }
+    else
+    {
+            <li class="list-group-item list-group-item-action">
+                @T["No features available to enable."]
+            </li>
+    }
+
+</ul>

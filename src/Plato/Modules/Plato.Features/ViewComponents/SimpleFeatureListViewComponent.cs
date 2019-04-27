@@ -12,7 +12,7 @@ using Plato.Internal.Features.Abstractions;
 namespace Plato.Features.ViewComponents
 {
 
-    public class FeatureListViewComponent : ViewComponent
+    public class SimpleFeatureListViewComponent : ViewComponent
     {
 
         private readonly IShellDescriptorManager _shellDescriptorManager;
@@ -21,7 +21,7 @@ namespace Plato.Features.ViewComponents
 
         public IStringLocalizer S { get; }
 
-        public FeatureListViewComponent(
+        public SimpleFeatureListViewComponent(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IShellDescriptorManager shellDescriptorManager)
@@ -60,37 +60,10 @@ namespace Plato.Features.ViewComponents
             return View(new FeaturesIndexViewModel()
             {
                 Options = options,
-                AvailableCategories = await GetAvailableFeatureCategoriesAsync(),
                 Features = features
             });
         }
-
-        async Task<IEnumerable<SelectListItem>> GetAvailableFeatureCategoriesAsync()
-        {
-
-            var output = new List<SelectListItem>()
-            {
-                new SelectListItem
-                {
-                    Text = S["All"],
-                    Value = null
-                }
-            };
-
-            var features = await _shellDescriptorManager.GetFeaturesAsync();
-            foreach (var feature in features.GroupBy(f => f.Descriptor.Category).OrderBy(o => o.Key))
-            {
-                output.Add(new SelectListItem
-                {
-                    Text = feature.Key,
-                    Value = feature.Key
-                });
-            }
-
-            return output;
-        }
-
-
+        
     }
 
 }

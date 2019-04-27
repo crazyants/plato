@@ -21,7 +21,7 @@ namespace Plato.Features.ViewModels
 
         public string Category { get; set; }
 
-        public bool ShowEnabled { get; set; }
+        public bool HideEnabled { get; set; }
 
     }
     

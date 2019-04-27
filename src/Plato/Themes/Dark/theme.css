@@ -2558,11 +2558,11 @@ a.bg-primary:hover, a.bg-primary:focus, button.bg-primary:hover, button.bg-prima
 }
 
 .bg-secondary {
-    background-color: #555 !important
+    background-color: #0a0a0a !important
 }
 
 a.bg-secondary:hover, a.bg-secondary:focus, button.bg-secondary:hover, button.bg-secondary:focus {
-    background-color: #3c3b3b !important
+    background-color: #111 !important
 }
 
 .bg-success {

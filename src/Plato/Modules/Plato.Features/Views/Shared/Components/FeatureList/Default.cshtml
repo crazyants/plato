@@ -10,26 +10,26 @@
                     @T["Filter By Category"]
                 </a>
                 <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="filterDropDown">
-                    <div style="min-width: 300px; max-height: 300px; overflow: auto;">
+                    <div class="dropdown-header">
+                        <h6>@T["Categories"]</h6>
+                        
+                    </div>
+                    <hr class="m-0"/>
+                    <div class="row no-gutters m-2" style="min-width: 700px; max-height: 400px; overflow: auto;">
+
                         @foreach (var option in Model.AvailableCategories)
                         {
+                            var iconCss = option.Value == Model.Options.Category ? "fal fa-fw fa-check" : "fal fa-fw";
                             var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
                             {
                                 ["opts.category"] = option.Value,
                             };
-                            if (option.Text == "-")
-                            {
-                                <div class="dropdown-divider"></div>
-                            }
-                            else
-                            {
-                                var iconCss = option.Value == Model.Options.Category ? "fal fa-fw fa-check" : "fal fa-fw";
-                                <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <div class="col-3">
+                                <a class="dropdown-item" href="@GetRouteUrl(routeValues)">
                                     <i class="@iconCss"></i>
                                     @T[option.Text]
                                 </a>
-                            }
-
+                            </div>
                         }
                     </div>
                 </div>
@@ -40,99 +40,109 @@
         
         <ul class="list-group list-group-flush list-group-hover">
             @{
-                var features = Model.Features.OrderBy(o => o.Descriptor.Name);
+                var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
             }
-            @foreach (var feature in features)
+            @if (features != null)
             {
-                <li class="list-group-item list-group-item-action">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h6>
-                                @feature.Descriptor.Name
-                                @if (!String.IsNullOrEmpty(feature.Version))
-                                {
-                                    <span class="badge badge-secondary badge-pill">
-                                        @feature.Version
-                                    </span>
-                                }
-                            </h6>
-
-                            @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
-                            {
-                                @feature.Descriptor.Description<br />
-                            }
-
-                            @if (!string.IsNullOrEmpty(feature.Descriptor.Category))
-                            {
-                                <div class="text-muted">
-                                    @T["By"]
-                                    @if (!string.IsNullOrEmpty(feature.Descriptor.WebSite))
+                foreach (var feature in features)
+                {
+                    <li class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h6>
+                                    @feature.Descriptor.Name
+                                    @if (!String.IsNullOrEmpty(feature.Version))
                                     {
-                                        <a href="@feature.Descriptor.WebSite" target="_blank">@feature.Descriptor.Author</a>
+                                        <span class="badge badge-secondary badge-pill">
+                                            @feature.Version
+                                        </span>
+                                    }
+                                </h6>
+
+                                @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
+                                {
+                                    @feature.Descriptor.Description<br/>
+                                }
+
+                                @if (!string.IsNullOrEmpty(feature.Descriptor.Category))
+                                {
+                                    <div class="text-muted">
+                                        @T["By"]
+                                        @if (!string.IsNullOrEmpty(feature.Descriptor.WebSite))
+                                        {
+                                            <a href="@feature.Descriptor.WebSite" target="_blank">@feature.Descriptor.Author</a>
+                                        }
+                                        else
+                                        {
+                                            @feature.Descriptor.Author
+                                        }
+                                        @if (!string.IsNullOrEmpty(@feature.Descriptor.Category))
+                                        {
+                                            <span>- @feature.Descriptor.Category</span>
+                                        }
+
+                                    </div>
+                                }
+
+                                @{
+                                    var dependencyNames = feature.FeatureDependencies
+                                        .OrderBy(o => o.ModuleId)
+                                        .Select(d => d.ModuleId).ToArray();
+                                    var dependentNames = feature.DependentFeatures
+                                        .OrderBy(o => o.ModuleId)
+                                        .Select(d => d.ModuleId).ToArray();
+                                }
+
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <span data-toggle="tooltip" title="@T["Feature dependencies:"] @String.Join(", ", dependencyNames)" class="text-muted mx-2">
+                                    @if (dependencyNames.Length > 0)
+                                    {
+                                        <i class="fal fa-code-branch fa-flip-vertical"></i>
                                     }
                                     else
                                     {
-                                        @feature.Descriptor.Author
+                                        @T["No dependencies"]
                                     }
-                                    @if (!string.IsNullOrEmpty(@feature.Descriptor.Category))
+                                </span>
+                                <span data-toggle="tooltip" title="@T["Dependentt feature:"] @String.Join(", ", dependentNames)" class="text-muted mx-2">
+                                    @if (dependentNames.Length > 0)
                                     {
-                                        <span>- @feature.Descriptor.Category</span>
+                                        <i class="fal fa-code-branch"></i>
                                     }
+                                    else
+                                    {
+                                        @T["No dependent features"]
+                                    }
+                                </span>
+                                @if (!feature.IsRequired)
+                                {
+                                    @if (!feature.IsEnabled)
+                                     {
+                                         <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                             @T["Enable"]
+                                         </button>
+                                     }
+                                     else
+                                     {
+                                         <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
+                                             @T["Disable"]
+                                         </button>
+                                     }
+                                }
 
-                                </div>
-                            }
-
-                            @{
-                                var dependencyNames = feature.FeatureDependencies
-                                    .OrderBy(o => o.ModuleId)
-                                    .Select(d => d.ModuleId).ToArray();
-                                var dependentNames = feature.DependentFeatures
-                                    .OrderBy(o => o.ModuleId)
-                                    .Select(d => d.ModuleId).ToArray();
-                            }
-
+                            </div>
                         </div>
-                        <div class="col-md-3 text-right">
-                            <span data-toggle="tooltip" title="@T["Feature dependencies:"] @String.Join(", ", dependencyNames)" class="text-muted mx-2">
-                                @if (dependencyNames.Length > 0)
-                                {
-                                    <i class="fal fa-code-branch fa-flip-vertical"></i>
-                                }
-                                else
-                                {
-                                    @T["No dependencies"]
-                                }
-                            </span>
-                            <span data-toggle="tooltip" title="@T["Dependentt feature:"] @String.Join(", ", dependentNames)" class="text-muted mx-2">
-                                @if (dependentNames.Length > 0)
-                                {
-                                    <i class="fal fa-code-branch"></i>
-                                }
-                                else
-                                {
-                                    @T["No dependent features"]
-                                }
-                            </span>
-                            @if (!feature.IsRequired)
-                            {
-                                @if (!feature.IsEnabled)
-                                {
-                                    <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
-                                        @T["Enable"]
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
-                                        @T["Disable"]
-                                    </button>
-                                }
-                            }
-
-                        </div>
-                    </div>
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item list-group-item-action">
+                    @T["No features available!"]
                 </li>
             }
+
         </ul>
         
     </card-body>
