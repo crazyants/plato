@@ -1,77 +1,25 @@
-﻿@model AdminIndex
-<card>
+﻿@using Plato.Features.ViewModels
+@model AdminIndex
+
+<card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title">@T["Overview"]</h6>
+        <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Index" asp-route-opts.category="Articles" class="btn btn-secondary float-right">
+            @T["All Features"]
+        </a>
+        <h6 class="card-title">@T["Enhance Plato.Articles"]</h6>
+        <div class="text-muted">@T["Additional features available to enhance articles."]</div>
     </card-title>
     <card-body>
 
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-comment fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            23
-                        </h1><br />
-                        <span class="text-muted">
-                            @T["public articles"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-reply fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            23
-                        </h1><br />
-                        <span class="text-muted">
-                            @T["private articles"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-heart fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            11
-                        </h1><br />
-                        <span class="text-muted">
-                            @T["public comments:"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-heart fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            11
-                        </h1><br />
-                        <span class="text-muted">
-                            @T["private comments"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @await DisplayAsync(new View("SimpleFeatureList", new
+        {
+            options = new FeatureIndexOptions()
+            {
+                Category = "Articles",
+                HideEnabled = true
+            }
+        }))
 
     </card-body>
 </card>
-<ul>
-    <li>Enhance Plato.Articles</li>
-    <li>Article Settings</li>
-    <li>Article Reports</li>
-</ul>
+

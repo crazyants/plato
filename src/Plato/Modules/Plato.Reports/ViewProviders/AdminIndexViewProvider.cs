@@ -25,16 +25,16 @@ namespace Plato.Reports.ViewProviders
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
        
             // Build index view model
-            var reportIndexOptions = new ReportIndexOptions()
+            var reportIndexOptions = new ReportOptions()
             {
                 Start = range.Start,
                 End = range.End
             };
             
             return Task.FromResult(Views(
-                View<ReportIndexOptions>("Reports.Admin.Index.Tools", model => reportIndexOptions).Zone("tools")
+                View<ReportOptions>("Reports.Admin.Index.Tools", model => reportIndexOptions).Zone("tools")
                     .Order(int.MinValue),
-                View<ReportIndexOptions>("Reports.AdminIndex", model => reportIndexOptions).Zone("content")
+                View<ReportOptions>("Reports.AdminIndex", model => reportIndexOptions).Zone("content")
                     .Order(int.MinValue)
             ));
 
@@ -54,7 +54,7 @@ namespace Plato.Reports.ViewProviders
             IViewProviderContext context)
         {
 
-            var model = new ReportIndexOptions();
+            var model = new ReportOptions();
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {

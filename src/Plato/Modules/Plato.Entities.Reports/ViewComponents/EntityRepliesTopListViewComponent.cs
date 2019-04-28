@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Reports.ViewModels;
-using Plato.Entities.Metrics.Repositories;
 using Plato.Internal.Models.Metrics;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -27,26 +26,43 @@ namespace Plato.Entities.Reports.ViewComponents
             _entityStore = entityStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ReportIndexOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(
+            ReportOptions options,
+            ChartOptions chart)
         {
-            
+
             if (options == null)
             {
-                options = new ReportIndexOptions();
+                options = new ReportOptions();
+            }
+
+            if (chart == null)
+            {
+                chart = new ChartOptions();
             }
             
-            return View(await SelectEntitiesGroupedByViewsAsync(options.Start, options.End));
+            return View(new ChartViewModel<IEnumerable<AggregatedModel<int, Entity>>>()
+            {
+                Options = chart,
+                Data = await SelectEntitiesGroupedByViewsAsync(options)
+            });
 
         }
-        
-        async Task<IEnumerable<AggregatedModel<int, Entity>>> SelectEntitiesGroupedByViewsAsync(DateTimeOffset start, DateTimeOffset end)
+
+        async Task<IEnumerable<AggregatedModel<int, Entity>>> SelectEntitiesGroupedByViewsAsync(ReportOptions options)
         {
 
             // Get views by grouped by entity id for specified range
-            var viewsById = await _aggregatedEntityReplyRepository.SelectGroupedByIntAsync(
-                "EntityId",
-                start,
-                end);
+            var viewsById = options.FeatureId > 0
+                ? await _aggregatedEntityReplyRepository.SelectGroupedByIntAsync(
+                    "EntityId",
+                    options.Start,
+                    options.End,
+                    options.FeatureId)
+                : await _aggregatedEntityReplyRepository.SelectGroupedByIntAsync(
+                    "EntityId",
+                    options.Start,
+                    options.End);
 
             // Get all entities matching ids
             IPagedResults<Entity> entities = null;
@@ -54,10 +70,7 @@ namespace Plato.Entities.Reports.ViewComponents
             {
                 entities = await _entityStore.QueryAsync()
                     .Take(1, 10)
-                    .Select<EntityQueryParams>(q =>
-                    {
-                        q.Id.IsIn(viewsById.Data.Select(d => d.Aggregate).ToArray());
-                    })
+                    .Select<EntityQueryParams>(q => { q.Id.IsIn(viewsById.Data.Select(d => d.Aggregate).ToArray()); })
                     .OrderBy("CreatedDate", OrderBy.Desc)
                     .ToList();
             }
@@ -76,6 +89,7 @@ namespace Plato.Entities.Reports.ViewComponents
                         {
                             metrics = new List<AggregatedModel<int, Entity>>();
                         }
+
                         metrics.Add(new AggregatedModel<int, Entity>(aggregate, entity));
                     }
                 }
@@ -84,7 +98,7 @@ namespace Plato.Entities.Reports.ViewComponents
             return metrics?.OrderByDescending(o => o.Aggregate.Count) ?? null;
 
         }
-        
+
     }
 
 }

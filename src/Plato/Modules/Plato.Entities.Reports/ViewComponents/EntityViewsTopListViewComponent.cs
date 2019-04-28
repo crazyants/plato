@@ -8,6 +8,7 @@ using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Antiforgery.Internal;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Entities.Reports.ViewComponents
@@ -26,26 +27,43 @@ namespace Plato.Entities.Reports.ViewComponents
             _entityStore = entityStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ReportIndexOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(
+            ReportOptions options,
+            ChartOptions chart)
         {
             
             if (options == null)
             {
-                options = new ReportIndexOptions();
+                options = new ReportOptions();
+            }
+
+            if (chart == null)
+            {
+                chart = new ChartOptions();
             }
             
-            return View(await SelectEntitiesGroupedByViewsAsync(options.Start, options.End));
+            return View(new ChartViewModel<IEnumerable<AggregatedModel<int, Entity>>>()
+            {
+                Options = chart,
+                Data = await SelectEntitiesGroupedByViewsAsync(options)
+            });
 
         }
         
-        async Task<IEnumerable<AggregatedModel<int, Entity>>> SelectEntitiesGroupedByViewsAsync(DateTimeOffset start, DateTimeOffset end)
+        async Task<IEnumerable<AggregatedModel<int, Entity>>> SelectEntitiesGroupedByViewsAsync(ReportOptions options)
         {
 
             // Get views by grouped by entity id for specified range
-            var viewsById = await _aggregatedEntityMetricsRepository.SelectGroupedByIntAsync(
-                "EntityId",
-                start,
-                end);
+            var viewsById = options.FeatureId > 0
+                ? await _aggregatedEntityMetricsRepository.SelectGroupedByIntAsync(
+                    "EntityId",
+                    options.Start,
+                    options.End,
+                    options.FeatureId)
+                : await _aggregatedEntityMetricsRepository.SelectGroupedByIntAsync(
+                    "EntityId",
+                    options.Start,
+                    options.End);
 
             // Get all entities matching ids
             IPagedResults<Entity> entities = null;

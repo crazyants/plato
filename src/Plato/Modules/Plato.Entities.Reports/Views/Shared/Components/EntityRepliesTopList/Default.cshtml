@@ -1,20 +1,26 @@
-﻿@model IEnumerable<AggregatedModel<int, Entity>>
+﻿@model ChartViewModel<IEnumerable<AggregatedModel<int, Entity>>>
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title">@T["Most Participation"]</h6>
+        <h6 class="card-title">
+            @if (string.IsNullOrEmpty(Model.Options.Title))
+            {
+                @T["Most Participation"]
+            }
+            else
+            {
+                @T[Model.Options.Title]
+            }
+        </h6>
     </card-title>
     <card-body>
 
-        @if (Model != null)
+        @if (Model.Data != null)
         {
 
             <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var result in Model)
+                @foreach (var result in Model.Data)
                 {
-                    var views = result.Aggregate.Count == 1
-                        ? "view"
-                        : "views";
                     <li class="list-group-item list-group-item-action">
                         <div class="badge badge-info float-right" data-toggle="tooltip" title="@T["Replies"]">
                             @result.Aggregate.Count.ToPrettyInt()

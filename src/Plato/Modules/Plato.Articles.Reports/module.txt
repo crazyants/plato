@@ -1,0 +1,18 @@
+Name: Plato Articles Reports
+Description: Adds basic reporting capabilities to Plato.Articles.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Articles
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Entities.Reports",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Articles",
+		Version: "1.0.0"
+	}
+]

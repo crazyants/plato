@@ -133,6 +133,7 @@ namespace Plato.Entities.Repositories
             DateTimeOffset start,
             DateTimeOffset end)
         {
+         
             // Sql query
             const string sql = @"
                 SELECT 
@@ -169,7 +170,54 @@ namespace Plato.Entities.Repositories
             });
 
         }
+        
+        public async Task<AggregatedResult<int>> SelectGroupedByIntAsync(
+            string groupBy, 
+            DateTimeOffset start,
+            DateTimeOffset end, 
+            int featureId)
+        {
 
+            // Sql query
+            const string sql = @"
+                SELECT 
+                    COUNT(er.Id) AS [Count], 
+                    MAX(er.{groupBy}) AS [Aggregate] 
+                FROM 
+                    {prefix}_EntityReplies er INNER JOIN {prefix}_Entities e ON er.EntityId = e.Id
+                WHERE (
+                    (er.CreatedDate >= '{start}' AND er.CreatedDate <= '{end}') AND
+                    (e.FeatureId = {featureId})
+                )
+                GROUP BY 
+                    er.{groupBy}
+                ORDER BY [Count] DESC
+            ";
+
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{groupBy}"] = groupBy,
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern(),
+                ["{featureId}"] = featureId.ToString()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<int>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<int>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
+
+        }
 
 
     }

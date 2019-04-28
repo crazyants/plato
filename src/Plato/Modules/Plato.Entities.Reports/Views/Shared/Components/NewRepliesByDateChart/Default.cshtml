@@ -1,5 +1,4 @@
-﻿
-@model ChartViewModel<AggregatedResult<DateTimeOffset>>
+﻿@model ChartViewModel<AggregatedResult<DateTimeOffset>>
 @{
     var labels = Model.Data?.SerializeLabels() ?? "[]";
     var data = Model.Data?.SerializeCounts() ?? "[]";

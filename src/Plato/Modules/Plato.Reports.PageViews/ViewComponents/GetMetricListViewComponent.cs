@@ -17,13 +17,13 @@ namespace Plato.Reports.PageViews.ViewComponents
             _metricStore = metricStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ReportIndexOptions options, PagerOptions pager)
+        public async Task<IViewComponentResult> InvokeAsync(ReportOptions options, PagerOptions pager)
         {
 
             // Build default
             if (options == null)
             {
-                options = new ReportIndexOptions();
+                options = new ReportOptions();
             }
 
             // Build default
@@ -38,7 +38,7 @@ namespace Plato.Reports.PageViews.ViewComponents
         }
 
         async Task<ReportIndexViewModel<Metric>> GetViewModel(
-            ReportIndexOptions options,
+            ReportOptions options,
             PagerOptions pager)
         {
 

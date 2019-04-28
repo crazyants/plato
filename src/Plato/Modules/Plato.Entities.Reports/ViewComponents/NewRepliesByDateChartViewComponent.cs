@@ -18,13 +18,13 @@ namespace Plato.Entities.Reports.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ReportIndexOptions options,
+            ReportOptions options,
             ChartOptions chart)
         {
             
             if (options == null)
             {
-                options = new ReportIndexOptions();
+                options = new ReportOptions();
             }
 
             if (chart == null)

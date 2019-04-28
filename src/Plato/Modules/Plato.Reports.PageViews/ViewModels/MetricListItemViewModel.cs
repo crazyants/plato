@@ -7,7 +7,7 @@ namespace Plato.Reports.PageViews.ViewModels
 
         public TModel Metric { get; set; }
 
-        public ReportIndexOptions Options { get; set; }
+        public ReportOptions Options { get; set; }
 
     }
 }

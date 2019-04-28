@@ -12,18 +12,17 @@ namespace Plato.Reports.ViewModels
 
         public PagerOptions Pager { get; set; }
 
-        public ReportIndexOptions Options { get; set; }
+        public ReportOptions Options { get; set; }
 
         public ICollection<SortColumn> SortColumns { get; set; }
 
         public ICollection<SortOrder> SortOrder { get; set; }
 
         public ICollection<Filter> Filters { get; set; }
-
-
+        
     }
 
-    public class ReportIndexOptions
+    public class ReportOptions
     { 
 
         public DateTimeOffset Start { get; set; } = DateTimeOffset.UtcNow.AddDays(-7);

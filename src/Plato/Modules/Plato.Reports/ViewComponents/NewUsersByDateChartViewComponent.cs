@@ -16,12 +16,12 @@ namespace Plato.Reports.ViewComponents
             _aggregatedUserRepository = aggregatedUserRepository;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ReportIndexOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(ReportOptions options)
         {
 
             if (options == null)
             {
-                options = new ReportIndexOptions();
+                options = new ReportOptions();
             }
 
             var users = await _aggregatedUserRepository.SelectGroupedByDateAsync("CreatedDate", options.Start, options.End);

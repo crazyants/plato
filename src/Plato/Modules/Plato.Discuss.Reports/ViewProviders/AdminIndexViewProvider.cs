@@ -33,7 +33,7 @@ namespace Plato.Discuss.Reports.ViewProviders
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
             
             // Build index view model
-            var reportIndexViewModel = new ReportIndexOptions()
+            var reportIndexViewModel = new ReportOptions()
             {
                 Start = range.Start,
                 End = range.End,
@@ -41,9 +41,9 @@ namespace Plato.Discuss.Reports.ViewProviders
             };
 
             return Views(
-                View<ReportIndexOptions>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
+                View<ReportOptions>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
                     .Order(int.MinValue),
-                View<ReportIndexOptions>("Reports.Discuss.AdminIndex", model => reportIndexViewModel).Zone("content").Order(1)
+                View<ReportOptions>("Reports.Discuss.AdminIndex", model => reportIndexViewModel).Zone("content").Order(1)
                     .Order(1)
             );
 
@@ -63,7 +63,7 @@ namespace Plato.Discuss.Reports.ViewProviders
             IViewProviderContext context)
         {
 
-            var model = new ReportIndexOptions();
+            var model = new ReportOptions();
 
             if (!await context.Updater.TryUpdateModelAsync(model))
             {

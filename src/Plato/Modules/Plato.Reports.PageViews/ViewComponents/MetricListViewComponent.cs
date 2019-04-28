@@ -112,13 +112,13 @@ namespace Plato.Reports.PageViews.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ReportIndexOptions options,
+            ReportOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new ReportIndexOptions();
+                options = new ReportOptions();
             }
 
             if (pager == null)
@@ -132,7 +132,7 @@ namespace Plato.Reports.PageViews.ViewComponents
 
 
         async Task<ReportIndexViewModel<Metric>> GetViewModel(
-            ReportIndexOptions options,
+            ReportOptions options,
             PagerOptions pager)
         {
 

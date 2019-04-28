@@ -1,38 +1,51 @@
 ﻿using System.Threading.Tasks;
+using Plato.Articles.Models;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Admin.Models;
+using Plato.Internal.Features.Abstractions;
 using Plato.Reports.Services;
 using Plato.Reports.ViewModels;
 
-namespace Plato.Entities.Reports.ViewProviders
+namespace Plato.Articles.Reports.ViewProviders
 {
 
     public class AdminIndexViewProvider : BaseViewProvider<AdminIndex>
     {
         
         private readonly IDateRangeStorage _dateRangeStorage;
+        private readonly IFeatureFacade _featureFacade;
 
-        public AdminIndexViewProvider(IDateRangeStorage dateRangeStorage)
+        public AdminIndexViewProvider(
+            IDateRangeStorage dateRangeStorage,
+            IFeatureFacade featureFacade)
         {
             _dateRangeStorage = dateRangeStorage;
+            _featureFacade = featureFacade;
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel,
+            IViewProviderContext context)
         {
+
+            // Get feature
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
 
             // Get range to display
             var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
-
-            var reportIndexOptions = new ReportOptions()
+            
+            // Build index view model
+            var reportIndexViewModel = new ReportOptions()
             {
                 Start = range.Start,
-                End = range.End
+                End = range.End,
+                FeatureId = feature?.Id ?? 0
             };
-            
-            // Return view
-            return Task.FromResult(Views(
-                View<ReportOptions>("Reports.Entities.AdminIndex", model => reportIndexOptions).Zone("content").Order(1).Order(1)
-            ));
+
+            return Views(
+                View<ReportOptions>("Reports.Admin.Index.Tools", model => reportIndexViewModel).Zone("tools")
+                    .Order(int.MinValue),
+                View<ReportOptions>("Reports.Articles.AdminIndex", model => reportIndexViewModel).Zone("content").Order(1)
+                    .Order(1)
+            );
 
         }
 
@@ -68,5 +81,5 @@ namespace Plato.Entities.Reports.ViewProviders
         }
         
     }
-
+    
 }

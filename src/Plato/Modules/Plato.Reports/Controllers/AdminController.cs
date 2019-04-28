@@ -51,13 +51,13 @@ namespace Plato.Reports.Controllers
 
         }
 
-        public async Task<IActionResult> Index(ReportIndexOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Index(ReportOptions opts, PagerOptions pager)
         {
 
             // Default options
             if (opts == null)
             {
-                opts = new ReportIndexOptions();
+                opts = new ReportOptions();
             }
 
             // Default pager
@@ -68,7 +68,7 @@ namespace Plato.Reports.Controllers
 
 
             // Get default options
-            var defaultViewOptions = new ReportIndexOptions();
+            var defaultViewOptions = new ReportOptions();
             var defaultPagerOptions = new PagerOptions();
 
             // Add non default route data for pagination purposes
@@ -113,7 +113,7 @@ namespace Plato.Reports.Controllers
         }
         
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Index))]
-        public async Task<IActionResult> IndexPost(ReportIndexOptions opts)
+        public async Task<IActionResult> IndexPost(ReportOptions opts)
         {
 
             // Execute view providers
@@ -143,7 +143,7 @@ namespace Plato.Reports.Controllers
 
         //// ----------------------
 
-        async Task<ReportIndexViewModel<Metric>> GetIndexViewModelAsync(ReportIndexOptions options, PagerOptions pager)
+        async Task<ReportIndexViewModel<Metric>> GetIndexViewModelAsync(ReportOptions options, PagerOptions pager)
         {
 
             // Get current feature
