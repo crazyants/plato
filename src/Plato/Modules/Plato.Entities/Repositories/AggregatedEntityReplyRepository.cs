@@ -19,7 +19,11 @@ namespace Plato.Entities.Repositories
         {
             _dbHelper = dbHelper;
         }
-        
+
+        // ----------------
+        // Grouped by date
+        // ----------------
+
         public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(
             string groupBy, 
             DateTimeOffset start,
@@ -106,6 +110,10 @@ namespace Plato.Entities.Repositories
 
         }
 
+        // ----------------
+        // Grouped by feature
+        // ----------------
+
         public Task<AggregatedResult<string>> SelectGroupedByFeature()
         {
             throw new NotImplementedException();
@@ -115,5 +123,54 @@ namespace Plato.Entities.Repositories
         {
             throw new NotImplementedException();
         }
+
+        // ----------------
+        // Grouped by int
+        // ----------------
+
+        public async Task<AggregatedResult<int>> SelectGroupedByIntAsync(
+            string groupBy,
+            DateTimeOffset start,
+            DateTimeOffset end)
+        {
+            // Sql query
+            const string sql = @"
+                SELECT 
+                    COUNT(Id) AS [Count], 
+                    MAX(er.{groupBy}) AS [Aggregate] 
+                FROM 
+                    {prefix}_EntityReplies er
+                WHERE 
+                    er.CreatedDate >= '{start}' AND er.CreatedDate <= '{end}'
+                GROUP BY 
+                    er.{groupBy}
+                ORDER BY [Count] DESC
+            ";
+
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{groupBy}"] = groupBy,
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<int>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<int>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
+        }
+
+
+
     }
 }

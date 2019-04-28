@@ -25,11 +25,17 @@ namespace Plato.Reports.Services
             if (_context == null)
             {
                 throw new Exception("Context cannot be null. You must call Contextualize first passing in a valid ActionContext");
-                ;
             }
 
-            _context.RouteData.Values.Add(ByStartName, start.ToString("yyyy/MM/dd"));
-            _context.RouteData.Values.Add(ByEndName, end.ToString("yyyy/MM/dd"));
+            if (!_context.RouteData.Values.ContainsKey(ByStartName))
+            {
+                _context.RouteData.Values.Add(ByStartName, start.ToString("yyyy/MM/dd"));
+            }
+
+            if (!_context.RouteData.Values.ContainsKey(ByEndName))
+            {
+                _context.RouteData.Values.Add(ByEndName, end.ToString("yyyy/MM/dd"));
+            }
         }
 
         public RouteValueDateRangeStorage Contextualize(ActionContext context)

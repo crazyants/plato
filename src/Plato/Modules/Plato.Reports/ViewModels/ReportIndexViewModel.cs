@@ -27,8 +27,21 @@ namespace Plato.Reports.ViewModels
     { 
 
         public DateTimeOffset Start { get; set; } = DateTimeOffset.UtcNow.AddDays(-7);
-        
-        public DateTimeOffset End { get; set; } = DateTimeOffset.UtcNow;
+
+        private DateTimeOffset _end = DateTimeOffset.UtcNow;
+
+        public DateTimeOffset End
+        {
+            get
+            {
+                if (_end.Equals(Start))
+                {
+                    _end = _end.AddDays(1);
+                }
+                return _end;
+            }
+            set => _end = value;
+        }
 
         public FilterBy Filter { get; set; } = FilterBy.All;
 

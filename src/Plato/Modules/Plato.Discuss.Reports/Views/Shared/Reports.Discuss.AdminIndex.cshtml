@@ -37,20 +37,14 @@
         }))
 
     </div>
-    
+
     <div class="col-lg-6 col-md-12 col-sm-12">
-        
+
         @await DisplayAsync(new View("EntityRepliesTopList", new
         {
             options = @Model
         }))
-        
+
     </div>
 
 </div>
-
-
-@await DisplayAsync(new View("UserRepTopList", new
-{
-    options = @Model
-}))

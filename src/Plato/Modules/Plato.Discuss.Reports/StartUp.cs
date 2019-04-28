@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Discuss.Reporting.ViewProviders;
 using Plato.Discuss.Models;
+using Plato.Discuss.Reports.ViewProviders;
 
-namespace Plato.Discuss.Reporting
+namespace Plato.Discuss.Reports
 {
     public class Startup : StartupBase
     {

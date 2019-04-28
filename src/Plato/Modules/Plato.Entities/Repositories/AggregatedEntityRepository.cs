@@ -187,11 +187,7 @@ namespace Plato.Entities.Repositories
             });
             
         }
-
-
-
-
-
+        
     }
 
 }

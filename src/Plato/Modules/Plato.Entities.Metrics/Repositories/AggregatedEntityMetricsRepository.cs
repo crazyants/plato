@@ -139,12 +139,9 @@ namespace Plato.Entities.Metrics.Repositories
                 }
                 return output;
             });
-
-
+            
 
         }
-
-        // --------------------
 
         public async Task<AggregatedResult<int>> SelectGroupedByInt(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
         {
@@ -190,8 +187,7 @@ namespace Plato.Entities.Metrics.Repositories
 
 
         }
-
-
+        
     }
 
 }

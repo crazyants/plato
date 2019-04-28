@@ -43,7 +43,11 @@ namespace Plato.Features.ViewComponents
             // No features
             if (features == null)
             {
-                return View(new FeaturesIndexViewModel());
+                return View(new FeaturesIndexViewModel()
+                {
+                    Options = options,
+                    AvailableCategories = await GetAvailableFeatureCategoriesAsync()
+                });
             }
 
             // Filter features by category
@@ -89,8 +93,7 @@ namespace Plato.Features.ViewComponents
 
             return output;
         }
-
-
+        
     }
 
 }

@@ -3,42 +3,53 @@
 
 <ul class="list-group list-group-flush list-group-hover">
     @{
-        var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
+        var features = Model.Features?.OrderBy(o => o.Descriptor.Name).ToList();
     }
-    @if (features != null)
+    @if (features?.Count > 0)
     {
         foreach (var feature in features)
         {
-            <li class="list-group-item">
+            <li class="list-group-item list-group-item-action">
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-12">
+
+                        <div class="float-right">
+                            @if (!feature.IsRequired)
+                            {
+                                @if (!feature.IsEnabled)
+                                 {
+                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                         @T["Enable"]
+                                     </a>
+                                 }
+                                 else
+                                 {
+                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
+                                         @T["Disable"]
+                                     </a>
+                                 }
+                            }
+                        </div>
+
                         <h6>
                             @feature.Descriptor.Name
                         </h6>
 
                         @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
                         {
-                            @feature.Descriptor.Description<br/>
+                            @feature.Descriptor.Description<br />
                         }
-                    
+
+
                     </div>
                 </div>
             </li>
         }
-        <li class="list-group-item">
-            
-            <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Index" asp-route-opts.category="@Model.Options.Category" class="btn btn-secondary" itemprop="UnsafeUrl">
-                @T["Manage Features"]
-            </a>
-
-
-        </li>
     }
     else
     {
-            <li class="list-group-item list-group-item-action">
-                @T["No features available to enable."]
-            </li>
+        <li class="list-group-item">
+            @T["No features available to enable."]
+        </li>
     }
-
 </ul>

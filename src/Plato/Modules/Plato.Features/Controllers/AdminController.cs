@@ -66,8 +66,7 @@ namespace Plato.Features.Controllers
             return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
             
         }
-
-        [HttpPost]
+        
         public async Task<IActionResult> Enable(string id)
         {
             
@@ -91,8 +90,7 @@ namespace Plato.Features.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-        [HttpPost]
+        
         public async Task<IActionResult> Disable(string id)
         {
 

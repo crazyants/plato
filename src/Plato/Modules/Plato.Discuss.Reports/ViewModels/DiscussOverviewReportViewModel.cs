@@ -1,7 +1,7 @@
 ﻿using System;
 using Plato.Internal.Models.Metrics;
 
-namespace Plato.Discuss.Reporting.ViewModels
+namespace Plato.Discuss.Reports.ViewModels
 {
     public class DiscussOverviewReportViewModel
     {

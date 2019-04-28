@@ -1,0 +1,43 @@
+﻿@model IEnumerable<AggregatedModel<int, User>>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Most Reputation"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model != null)
+        {
+
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var result in Model)
+                {
+                    var views = result.Aggregate.Count == 1
+                        ? "view"
+                        : "views";
+                    <li class="list-group-item list-group-item-action">
+                        <div class="badge badge-info float-right" data-toggle="tooltip" title="@T["Earned Reputation"]">
+                            @result.Aggregate.Count.ToPrettyInt()
+                        </div>
+
+                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias">
+                            <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-sm mr-2" url="@result.Model.Avatar.Url" />
+                        </a>
+
+                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias">
+                            @result.Model.DisplayName
+                        </a>
+                        
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    <h6>@T["No results found"]</h6>
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>
