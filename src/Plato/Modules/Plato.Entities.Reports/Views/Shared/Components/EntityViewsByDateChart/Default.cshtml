@@ -1,24 +1,30 @@
-﻿
-@model Plato.Internal.Models.Metrics.AggregatedResult<DateTimeOffset>
+﻿@model ChartViewModel<AggregatedResult<DateTimeOffset>>
 @{
-    var labels = Model?.SerializeLabels() ?? "[]";
-    var data = Model?.SerializeCounts() ?? "[]";
+    var labels = Model.Data?.SerializeLabels() ?? "[]";
+    var data = Model.Data?.SerializeCounts() ?? "[]";
     var chartId = "entityViewsByDateChart";
 }
 
 <card>
     <card-body>
         <i class="fal fa-eye float-right"></i>
-        @if (Model != null)
+        @if (Model.Data != null)
         {
-            <h5 class="d-inline">@Model.Total().ToPrettyInt()</h5>
+            <h5 class="d-inline">@Model.Data.Total().ToPrettyInt()</h5>
         }
         else
         {
             <h5>0</h5>
         }
         <br />
-        @T["Entity Views"]
+        @if (string.IsNullOrEmpty(Model.Options.Title))
+        {
+            @T["Entity Views"]
+        }
+        else
+        {
+            @T[Model.Options.Title]
+        }
         <div class="position-relative mt-3" style="height: 150px;">
             <canvas id="@chartId" class="w-100"></canvas>
         </div>

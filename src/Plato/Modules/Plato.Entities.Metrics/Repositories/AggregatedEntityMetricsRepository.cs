@@ -58,7 +58,7 @@ namespace Plato.Entities.Metrics.Repositories
             
         }
 
-        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
         {
             // Sql query
             const string sql = @"
@@ -102,7 +102,7 @@ namespace Plato.Entities.Metrics.Repositories
 
         }
 
-        public async Task<AggregatedResult<int>> SelectGroupedByInt(string groupBy, DateTimeOffset start, DateTimeOffset end)
+        public async Task<AggregatedResult<int>> SelectGroupedByIntAsync(string groupBy, DateTimeOffset start, DateTimeOffset end)
         {
             // Sql query
             const string sql = @"             
@@ -143,7 +143,7 @@ namespace Plato.Entities.Metrics.Repositories
 
         }
 
-        public async Task<AggregatedResult<int>> SelectGroupedByInt(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
+        public async Task<AggregatedResult<int>> SelectGroupedByIntAsync(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
         {
 
             // Sql query

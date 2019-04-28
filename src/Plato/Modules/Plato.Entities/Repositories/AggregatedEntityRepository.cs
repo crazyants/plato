@@ -62,7 +62,7 @@ namespace Plato.Entities.Repositories
 
         }
         
-        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
         {
 
             // Sql query
@@ -111,7 +111,7 @@ namespace Plato.Entities.Repositories
         // Grouped by feature
         // ----------------
 
-        public async Task<AggregatedResult<string>> SelectGroupedByFeature()
+        public async Task<AggregatedResult<string>> SelectGroupedByFeatureAsync()
         {
 
             // Sql query
@@ -146,7 +146,7 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<AggregatedResult<string>> SelectGroupedByFeature(int userId)
+        public async Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(int userId)
         {
 
             if (userId <= 0)

@@ -7,18 +7,18 @@ namespace Plato.Entities.Metrics.Repositories
 {
     public interface IAggregatedEntityMetricsRepository : IAggregatedRepository
     {
-        Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(
+        Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(
             string groupBy,
             DateTimeOffset start,
             DateTimeOffset end,
             int featureId);
 
-        Task<AggregatedResult<int>> SelectGroupedByInt(
+        Task<AggregatedResult<int>> SelectGroupedByIntAsync(
             string groupBy,
             DateTimeOffset start,
             DateTimeOffset end);
 
-        Task<AggregatedResult<int>> SelectGroupedByInt(
+        Task<AggregatedResult<int>> SelectGroupedByIntAsync(
             string groupBy,
             DateTimeOffset start,
             DateTimeOffset end,

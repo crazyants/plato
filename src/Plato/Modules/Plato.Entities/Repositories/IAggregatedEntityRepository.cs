@@ -9,15 +9,15 @@ namespace Plato.Entities.Repositories
     public interface IAggregatedEntityRepository : IAggregatedRepository
     {
 
-        Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(
+        Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(
             string groupBy,
             DateTimeOffset start,
             DateTimeOffset end,
             int featureId);
 
-        Task<AggregatedResult<string>> SelectGroupedByFeature();
+        Task<AggregatedResult<string>> SelectGroupedByFeatureAsync();
 
-        Task<AggregatedResult<string>> SelectGroupedByFeature(int userId);
+        Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(int userId);
 
 
     }

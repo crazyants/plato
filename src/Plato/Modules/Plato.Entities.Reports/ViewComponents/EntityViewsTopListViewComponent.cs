@@ -42,7 +42,7 @@ namespace Plato.Entities.Reports.ViewComponents
         {
 
             // Get views by grouped by entity id for specified range
-            var viewsById = await _aggregatedEntityMetricsRepository.SelectGroupedByInt(
+            var viewsById = await _aggregatedEntityMetricsRepository.SelectGroupedByIntAsync(
                 "EntityId",
                 start,
                 end);

@@ -1,13 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Models.Extensions;
 using Plato.Reports.ViewModels;
 using Plato.Entities.Repositories;
+using Plato.Internal.Models.Metrics;
 
 namespace Plato.Entities.Reports.ViewComponents
 {
     public class NewEntitiesByDateChartViewComponent : ViewComponent
     {
+
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
 
         public NewEntitiesByDateChartViewComponent(IAggregatedEntityRepository aggregatedEntityRepository)
@@ -15,7 +18,9 @@ namespace Plato.Entities.Reports.ViewComponents
             _aggregatedEntityRepository = aggregatedEntityRepository;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ReportIndexOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(
+            ReportIndexOptions options,
+            ChartOptions chart)
         {
             
             if (options == null)
@@ -23,9 +28,28 @@ namespace Plato.Entities.Reports.ViewComponents
                 options = new ReportIndexOptions();
             }
 
-            var data = await _aggregatedEntityRepository.SelectGroupedByDateAsync("CreatedDate", options.Start,
-                options.End);
-            return View(data.MergeIntoRange(options.Start, options.End));
+            if (chart == null)
+            {
+                chart = new ChartOptions();
+            }
+
+
+            var data = options.FeatureId > 0
+                ? await _aggregatedEntityRepository.SelectGroupedByDateAsync(
+                    "CreatedDate",
+                    options.Start,
+                    options.End,
+                    options.FeatureId)
+                : await _aggregatedEntityRepository.SelectGroupedByDateAsync(
+                    "CreatedDate",
+                    options.Start,
+                    options.End);
+
+            return View(new ChartViewModel<AggregatedResult<DateTimeOffset>>()
+            {
+                Options = chart,
+                Data = data.MergeIntoRange(options.Start, options.End)
+            });
 
         }
 

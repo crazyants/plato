@@ -47,7 +47,7 @@ namespace Plato.Questions.ViewProviders
 
             var featureEntityMetrics = new FeatureEntityMetrics()
             {
-                Metrics = await _aggregatedEntityRepository.SelectGroupedByFeature(user.Id)
+                Metrics = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
             };
 
             // Build view model

@@ -1,12 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Discuss.Reports.ViewModels;
-using Plato.Entities.Metrics.Repositories;
-using Plato.Entities.Repositories;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Models.Extensions;
-using Plato.Metrics.Models;
 using Plato.Reports.Services;
 using Plato.Reports.ViewModels;
 
@@ -15,8 +10,7 @@ namespace Plato.Discuss.Reports.ViewProviders
 
     public class AdminIndexViewProvider : BaseViewProvider<AdminIndex>
     {
-
-
+        
         private readonly IDateRangeStorage _dateRangeStorage;
         private readonly IFeatureFacade _featureFacade;
 

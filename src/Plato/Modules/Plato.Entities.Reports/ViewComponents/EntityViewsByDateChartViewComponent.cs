@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Models.Extensions;
 using Plato.Reports.ViewModels;
 using Plato.Entities.Metrics.Repositories;
+using Plato.Internal.Models.Metrics;
 
 namespace Plato.Entities.Reports.ViewComponents
 {
@@ -16,7 +18,9 @@ namespace Plato.Entities.Reports.ViewComponents
             _aggregatedEntityMetricsRepository = aggregatedEntityMetricsRepository;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ReportIndexOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(
+            ReportIndexOptions options,
+            ChartOptions chart)
         {
             
             if (options == null)
@@ -24,9 +28,27 @@ namespace Plato.Entities.Reports.ViewComponents
                 options = new ReportIndexOptions();
             }
 
-            var views = await _aggregatedEntityMetricsRepository.SelectGroupedByDateAsync("CreatedDate", options.Start,
-                options.End);
-            return View(views.MergeIntoRange(options.Start, options.End));
+            if (chart == null)
+            {
+                chart = new ChartOptions();
+            }
+
+            var data = options.FeatureId > 0
+                ? await _aggregatedEntityMetricsRepository.SelectGroupedByDateAsync(
+                    "CreatedDate",
+                    options.Start,
+                    options.End,
+                    options.FeatureId)
+                : await _aggregatedEntityMetricsRepository.SelectGroupedByDateAsync(
+                    "CreatedDate",
+                    options.Start,
+                    options.End);
+            
+            return View(new ChartViewModel<AggregatedResult<DateTimeOffset>>()
+            {
+                Options = chart,
+                Data = data.MergeIntoRange(options.Start, options.End)
+            });
 
         }
 

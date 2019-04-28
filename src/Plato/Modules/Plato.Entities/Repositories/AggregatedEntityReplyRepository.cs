@@ -67,7 +67,7 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDate(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(string groupBy, DateTimeOffset start, DateTimeOffset end, int featureId)
         {
             // Sql query
             const string sql = @"
@@ -114,12 +114,12 @@ namespace Plato.Entities.Repositories
         // Grouped by feature
         // ----------------
 
-        public Task<AggregatedResult<string>> SelectGroupedByFeature()
+        public Task<AggregatedResult<string>> SelectGroupedByFeatureAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<AggregatedResult<string>> SelectGroupedByFeature(int userId)
+        public Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(int userId)
         {
             throw new NotImplementedException();
         }
