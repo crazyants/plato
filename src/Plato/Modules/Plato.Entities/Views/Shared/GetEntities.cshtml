@@ -1,0 +1,11 @@
+﻿@model EntityIndexViewModel<Entity>
+@{
+    Layout = null;
+}
+
+@await DisplayAsync(new View("GetEntityList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
+

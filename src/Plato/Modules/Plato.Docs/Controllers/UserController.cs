@@ -15,6 +15,7 @@ using Plato.Docs.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
+using Plato.Internal.Layout.Titles;
 
 namespace Plato.Docs.Controllers
 {
@@ -26,6 +27,7 @@ namespace Plato.Docs.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,13 +40,15 @@ namespace Plato.Docs.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IViewProviderManager<UserIndex> userViewProvider,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IPageTitleBuilder pageTitleBuilder)
         {
             _contextFacade = contextFacade;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _userViewProvider = userViewProvider;
             _featureFacade = featureFacade;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -105,6 +109,12 @@ namespace Plato.Docs.Controllers
                 if (page > 0)
                     return View("GetDocs", viewModel);
             }
+            
+            // Build page title
+            _pageTitleBuilder
+                .AddSegment(S["Users"])
+                .AddSegment(S[user.DisplayName])
+                .AddSegment(S["Docs"]);
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>

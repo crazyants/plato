@@ -15,6 +15,7 @@ using Plato.Articles.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
+using Plato.Internal.Layout.Titles;
 
 namespace Plato.Articles.Controllers
 {
@@ -26,6 +27,7 @@ namespace Plato.Articles.Controllers
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,12 +40,14 @@ namespace Plato.Articles.Controllers
             IViewProviderManager<UserIndex> userViewProvider,
             IPlatoUserStore<User> platoUserStore,
             IContextFacade contextFacade,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IPageTitleBuilder pageTitleBuilder)
         {
             _breadCrumbManager = breadCrumbManager;
             _userViewProvider = userViewProvider;
             _platoUserStore = platoUserStore;
             _featureFacade = featureFacade;
+            _pageTitleBuilder = pageTitleBuilder;
             _contextFacade = contextFacade;
 
             T = localizer;
@@ -106,6 +110,12 @@ namespace Plato.Articles.Controllers
                     return View("GetArticles", viewModel);
             }
             
+            // Build page title
+            _pageTitleBuilder
+                .AddSegment(S["Users"])
+                .AddSegment(S[user.DisplayName])
+                .AddSegment(S["Articles"]);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

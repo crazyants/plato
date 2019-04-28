@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
@@ -15,6 +14,7 @@ using Plato.Discuss.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
+using Plato.Internal.Layout.Titles;
 
 namespace Plato.Discuss.Controllers
 {
@@ -26,6 +26,7 @@ namespace Plato.Discuss.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,13 +39,15 @@ namespace Plato.Discuss.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IViewProviderManager<UserIndex> userViewProvider,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IPageTitleBuilder pageTitleBuilder)
         {
             _contextFacade = contextFacade;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _userViewProvider = userViewProvider;
             _featureFacade = featureFacade;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -106,6 +109,12 @@ namespace Plato.Discuss.Controllers
                     return View("GetTopics", viewModel);
             }
 
+            // Build page title
+            _pageTitleBuilder
+                .AddSegment(S["Users"])
+                .AddSegment(S[user.DisplayName])
+                .AddSegment(S["Topics"]);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -125,7 +134,6 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Topics"]);
             });
             
-
             //// Return view
             return View((LayoutViewModel) await _userViewProvider.ProvideDisplayAsync(new UserIndex()
             {
