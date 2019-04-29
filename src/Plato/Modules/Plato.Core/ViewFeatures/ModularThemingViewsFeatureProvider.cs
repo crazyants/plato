@@ -15,7 +15,7 @@ namespace Plato.Core.ViewFeatures
         /// Add theming conventions. Configures theme layout based on controller type.
         /// If a controller is prefixed with Admin the _AdminLayout.cshtml layout file will be used
         /// See ModularThemeViewStart for implementation
-        /// 
+
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ViewsFeature feature)
         {
             feature.ViewDescriptors.Add(new CompiledViewDescriptor()

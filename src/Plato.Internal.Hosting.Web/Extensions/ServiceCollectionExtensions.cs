@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
 using Plato.Internal.FileSystem.Abstractions;
@@ -199,7 +200,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoMvc(this IServiceCollection services)
         {
-            
+
+            // Configure site options
+            services.Configure<SiteOptions>(options =>
+            {
+                options.SiteName = "Plato";
+            });
+
             // Action filters
             services.Configure<MvcOptions>(options =>
             {
@@ -339,11 +346,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Monitor changes to locale directories
             app.UsePlatoLocalization();
 
-            // Allow static files within modules
+            // Allow static files within /modules
             app.UseModuleStaticFiles(env);
 
-            // Allow static files within current theme
+            // Allow static files within /themes
             app.UseThemeStaticFiles(env);
+
+            // Allow static files within /sites
+            app.UseSiteStaticFiles(env);
 
             // Add custom features
             app.AddThemingApplicationParts();
@@ -366,7 +376,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             var themingViewsFeatureProvider = app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
             applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
         }
-        
+
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {
             var mvcTagHelpersAssembly = typeof(InputTagHelper).Assembly;

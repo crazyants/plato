@@ -1,6 +1,6 @@
 ﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
 @{
-    var settings = await ContextFacade.GetSiteSettingsAsync();
+    var settings = GetOptions<SiteOptions>();
 }
 <!DOCTYPE html>
 <html>

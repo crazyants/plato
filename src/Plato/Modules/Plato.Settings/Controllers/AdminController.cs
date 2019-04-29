@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Localization.Abstractions;
-using Plato.Internal.Navigation;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Theming.Abstractions;
@@ -29,8 +30,10 @@ namespace Plato.Settings.Controllers
         private readonly ITimeZoneProvider _timeZoneProvider;
         private readonly ISiteThemeLoader _themeLoader;
         private readonly ILocaleProvider _localeProvider;
+        private readonly IShellSettings _shellSettings;
+        private readonly IPlatoHost _platoHost;
         private readonly IAlerter _alerter;
-        
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -45,6 +48,8 @@ namespace Plato.Settings.Controllers
             ITimeZoneProvider timeZoneProvider,
             ILocaleProvider localeProvider,
             ISiteThemeLoader themeLoader,
+            IPlatoHost platoHost,
+            IShellSettings shellSettings,
             IAlerter alerter)
         {
 
@@ -55,6 +60,8 @@ namespace Plato.Settings.Controllers
             _localeProvider = localeProvider;
             _themeLoader = themeLoader;
             _alerter = alerter;
+            _platoHost = platoHost;
+            _shellSettings = shellSettings;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -158,6 +165,10 @@ namespace Plato.Settings.Controllers
             var result = await _siteSettingsStore.SaveAsync(settings);
             if (result != null)
             {
+
+                // Recycle shell context to ensure changes take effect
+                _platoHost.RecycleShellContext(_shellSettings);
+
                 _alerter.Success(T["Settings Updated Successfully!"]);
             }
             else

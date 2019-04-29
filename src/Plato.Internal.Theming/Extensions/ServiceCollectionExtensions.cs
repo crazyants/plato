@@ -55,6 +55,13 @@ namespace Plato.Internal.Theming.Extensions
                 });
             }
 
+        }
+
+        public static void UseSiteStaticFiles(
+            this IApplicationBuilder app,
+            IHostingEnvironment env)
+        {
+
             // Add sites folder
             var sitesFolder = app.ApplicationServices.GetRequiredService<ISitesFolder>();
             if (sitesFolder != null)
@@ -66,8 +73,8 @@ namespace Plato.Internal.Theming.Extensions
                 });
             }
 
+
         }
-        
     }
 
 }

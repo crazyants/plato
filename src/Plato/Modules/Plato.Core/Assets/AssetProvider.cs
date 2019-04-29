@@ -1,32 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Assets.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Core.Assets
 {
 
     public class AssetProvider : IAssetProvider
     {
+        
+        private readonly IOptions<ThemeOptions> _themeOptions;
+        private readonly IOptions<SiteOptions> _siteOptions;
 
-        private readonly IContextFacade _contextFacade;
-
-        public AssetProvider(IContextFacade contextFacade)
+        public AssetProvider(
+            IOptions<ThemeOptions> themeOptions,
+            IOptions<SiteOptions> siteOptions)
         {
-            _contextFacade = contextFacade;
+            _siteOptions = siteOptions;
+            _themeOptions = themeOptions;
         }
 
-        public async Task<IEnumerable<AssetEnvironment>> GetAssetEnvironments()
+        public Task<IEnumerable<AssetEnvironment>> GetAssetEnvironments()
         {
 
-            var theme = await _contextFacade.GetCurrentThemeAsync();
-            if (String.IsNullOrEmpty(theme))
+            var path = "";
+            if (!string.IsNullOrEmpty(_siteOptions.Value.Theme))
             {
-                return null;
+                path = _siteOptions.Value.Theme;
+            }
+            else
+            {
+                path = _themeOptions.Value.VirtualPathToThemesFolder + "/default";
             }
 
-            return new List<AssetEnvironment>
+
+            IEnumerable<AssetEnvironment> assets = new List<AssetEnvironment>
             {
 
                 // Development
@@ -34,7 +43,7 @@ namespace Plato.Core.Assets
                 {
                     new Asset()
                     {
-                        Url = $"/{theme}/theme.css",
+                        Url = $"/{path}/theme.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header,
                         Order = int.MaxValue
@@ -47,7 +56,7 @@ namespace Plato.Core.Assets
                     /* Css */
                     new Asset()
                     {
-                        Url =  $"/{theme}/theme.min.css",
+                        Url = $"/{path}/theme.min.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header,
                         Order = int.MaxValue
@@ -60,7 +69,7 @@ namespace Plato.Core.Assets
                     /* Css */
                     new Asset()
                     {
-                        Url = $"/{theme}/theme.min.css",
+                        Url = $"/{path}/theme.min.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header,
                         Order = int.MaxValue
@@ -68,9 +77,10 @@ namespace Plato.Core.Assets
                 })
 
             };
-        }
-        
 
+            return Task.FromResult(assets);
+
+        }
 
     }
 

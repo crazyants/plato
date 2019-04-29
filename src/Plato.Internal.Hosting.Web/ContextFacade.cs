@@ -33,15 +33,13 @@ namespace Plato.Internal.Hosting.Web
             IPlatoUserStore<User> platoUserStore,
             IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
-            IUrlHelperFactory urlHelperFactory, 
-            IOptions<ThemeOptions> themeOptions)
+            IUrlHelperFactory urlHelperFactory)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
-            _themeOptions = themeOptions;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()
@@ -135,7 +133,7 @@ namespace Plato.Internal.Hosting.Web
                 }
             }
 
-            return $"{_themeOptions.Value.VirtualPathToThemesFolder.ToLower()}/default";
+            return string.Empty;
 
         }
 

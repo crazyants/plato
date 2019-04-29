@@ -162,12 +162,6 @@ namespace Plato.Internal.Hosting.Web.Routing
             // Use router
             appBuilder.UseRouter(router);
 
-            // Add IModularViewsFeatureProvider application part
-            // Required to allow modules to extend features
-            var applicationPartManager = serviceProvider.GetService<ApplicationPartManager>();
-            var modularViewsFeatureProvider = serviceProvider.GetService<IModularViewsFeatureProvider<ViewsFeature>>();
-            applicationPartManager.FeatureProviders.Add(modularViewsFeatureProvider);
-            
             // Create a captured HttpContext for use outside of application context
             var capturedHttpContext = serviceProvider.GetService<ICapturedHttpContext>();
             capturedHttpContext.Configure(state => { state.Contextualize(httpContext); });
@@ -187,18 +181,16 @@ namespace Plato.Internal.Hosting.Web.Routing
                 subscriber?.Subscribe();
             }
             
-            // Activate all background tasks 
+            // Activate all tasks 
             var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
             backgroundTaskManager?.StartTasks();
 
-            // Return new pipeline
+            // Build & return new pipeline
             var pipeline = appBuilder.Build();
             return pipeline;
+
         }
-
-
-
-
+        
     }
 
 }

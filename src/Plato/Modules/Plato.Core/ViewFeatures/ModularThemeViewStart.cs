@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Razor;
 
@@ -12,9 +10,7 @@ namespace Plato.Core.ViewFeatures
 
         public override async Task ExecuteAsync()
         {
-
-            // Compute layout based on controller type
-
+            
             // Required services
             var contextFacade = this.Context.RequestServices.GetService<IContextFacade>();
 
@@ -28,10 +24,8 @@ namespace Plato.Core.ViewFeatures
                     Layout = $"~/{await contextFacade.GetCurrentThemeAsync()}/Shared/_Layout.cshtml";
                     break;
             }
-
-
+            
         }
-
 
     }
 

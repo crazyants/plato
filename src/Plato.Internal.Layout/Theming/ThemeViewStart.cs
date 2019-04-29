@@ -15,11 +15,19 @@ namespace Plato.Internal.Layout.Theming
 
             // Compute layout based on controller type
 
-            // Required services
-            var contextFacade = this.Context.RequestServices.GetService<IContextFacade>();
-
             var themeOptions = this.Context.RequestServices.GetService<IOptions<ThemeOptions>>();
-            var path = $"{themeOptions.Value.VirtualPathToThemesFolder.ToLower()}/default";
+            var siteOptions = this.Context.RequestServices.GetService<IOptions<SiteOptions>>();
+
+            var path = "";
+            if (!string.IsNullOrEmpty(siteOptions.Value.Theme))
+            {
+                path = siteOptions.Value.Theme;
+            }
+            else
+            {
+                path = themeOptions.Value.VirtualPathToThemesFolder + "/default";
+            }
+
 
             var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
             switch (controllerName)

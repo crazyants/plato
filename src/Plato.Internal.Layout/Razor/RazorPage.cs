@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
@@ -24,6 +26,7 @@ namespace Plato.Internal.Layout.Razor
         private IViewDisplayHelper _viewDisplayHelper;
         private IPageTitleBuilder _pageTitleBuilder;
         private IContextFacade _contextFacade;
+        private IOptions<SiteOptions> _siteOptions;
 
         public User CurrentUser
         {
@@ -62,6 +65,10 @@ namespace Plato.Internal.Layout.Razor
             _contextFacade ??
             (_contextFacade = Context.RequestServices.GetRequiredService<IContextFacade>());
 
+        public TOptions GetOptions<TOptions>() where TOptions : class, new()
+        {
+            return Context.RequestServices.GetRequiredService<IOptions<TOptions>>().Value;
+        }
 
         public void AddTitleSegment(LocalizedString segment, int order = 0)
         {
