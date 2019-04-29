@@ -536,8 +536,7 @@ namespace Plato.Users.Handlers
         private readonly IUserColorProvider _userColorProvider;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
-
-
+        
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
             UserManager<User> userManager,
@@ -581,7 +580,7 @@ namespace Plato.Users.Handlers
                 {
                     reportError(error, $"SetUp within {this.GetType().FullName} - {error}");
                 }
-
+                
 
             }
 

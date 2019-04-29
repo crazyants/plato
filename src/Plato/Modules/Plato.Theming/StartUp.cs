@@ -41,9 +41,7 @@ namespace Plato.Theming
             services.Replace<ISiteThemeLoader, SiteThemeLoader>(ServiceLifetime.Scoped);
             services.Replace<ISiteThemeFileManager, SiteThemeFileManager>(ServiceLifetime.Scoped);
          
-            // Add theming conventions - configures theme layout based on controller prefix
-            //services.AddSingleton<IModularViewsFeatureProvider<ViewsFeature>, ModularThemingViewsFeatureProvider>();
-
+      
         }
 
         public override void Configure(

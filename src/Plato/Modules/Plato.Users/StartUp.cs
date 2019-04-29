@@ -162,7 +162,7 @@ namespace Plato.Users
             services.AddScoped<IUserService, UserService>();
 
             // Register action filters
-            //services.AddScoped<IModularActionFilter, SignOutIfUserNotFoundFilter>();
+            services.AddScoped<IModularActionFilter, SignOutIfUserNotFoundFilter>();
             
         }
 

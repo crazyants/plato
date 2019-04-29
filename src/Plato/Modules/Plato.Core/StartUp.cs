@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Core.Assets;
@@ -7,10 +8,12 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Handlers;
 using Plato.Core.Middleware;
 using Plato.Core.Models;
+using Plato.Core.ViewFeatures;
 using Plato.Core.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewFeatures;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions.Models;
 
@@ -42,6 +45,9 @@ namespace Plato.Core
             services.AddScoped<IViewProviderManager<HomeIndex>, ViewProviderManager<HomeIndex>>();
             services.AddScoped<IViewProvider<HomeIndex>, HomeViewProvider>();
             
+            // Add theming conventions - configures theme layout based on controller prefix
+            services.AddSingleton<IModularViewsFeatureProvider<ViewsFeature>, ModularThemingViewsFeatureProvider>();
+
             // Configure current culture
             services.Configure<LocaleOptions>(options =>
             {

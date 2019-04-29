@@ -2,150 +2,138 @@
 @model Plato.SetUp.ViewModels.SetUpViewModel
 
 <form asp-controller="SetUp" asp-action="Index">
-    
-    <div class="jumbotron mt-5">
-        <h1>@T["Setup"]</h1>
-        <p class="lead">@T["Please answer a few questions to configure your site."]</p>
+
+    <div class="mt-5">
+        <h3>@T["Plato Setup"]</h3>
+        <p>@T["Configure your plato installation."]</p>
+        <hr />
     </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h6 class="card-title">
+                @T["Set-Up"]
+            </h6>
+        </div>
+        <div class="card-body">
+
     
-    <table class="model-state">
-        @foreach (var item in ViewContext.ViewData.ModelState)
-        {
-            if (item.Value.Errors.Any())
+            <table class="model-state">
+                @foreach (var item in ViewContext.ViewData.ModelState)
+                {
+                    if (item.Value.Errors.Any())
+                    {
+                        <tr>
+                            <td><b>@item.Key</b></td>
+                        </tr>
+                        <tr>
+                            <td>@(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))</td>
+                        </tr>
+                    }
+                }
+            </table>
+
+            <fieldset class="row" asp-validation-class-for="SiteName">
+                <div class="form-group col-md-12">
+                    <h6>@T["Site Name"]</h6>
+                    <label asp-for="SiteName">@T["What is the name of your site?"]</label>
+                    <input asp-for="SiteName" class="form-control" style="width: 100%;"/>
+                    <span asp-validation-for="SiteName" class="text-danger"></span>
+                </div>
+            </fieldset>
+
+            @if (!Model.TablePrefixPreset || !Model.ConnectionStringPreset)
             {
-                <tr>
-                    <td><b>@item.Key</b></td>
-                </tr>
-                <tr>
-
-                    <td>@(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))</td>
-                </tr>
+                <div class="form-group">
+                    <h6>@T["Database"]</h6>
+                    @T["The database is used to store the site's configuration and contents."]
+                </div>
             }
-        }
-    </table>
-    
-    <fieldset class="row" asp-validation-class-for="SiteName">
-        <div class="form-group col-md-12">
+            @if (Model.ConnectionStringPreset)
+            {
+                <input asp-for="ConnectionString" type="hidden"/>
+            }
+            else
+            {
+                <fieldset class="row" asp-validation-class-for="ConnectionString">
+                    <div class="form-group col-md-12">
+                        <label asp-for="ConnectionString">@T["Connection string"]</label>
+                        <div class="input-group mb-2 mb-sm-0">
+                            <input asp-for="ConnectionString" class="form-control" type="text" required/>
 
-            <h5>@T["Site Name"]</h5>
-            <label asp-for="SiteName">@T["What is the name of your site?"]</label>
-            <input asp-for="SiteName" class="form-control" style="width: 100%;" />
-            <span asp-validation-for="SiteName" class="text-danger"></span>
-            <span class="text-muted form-text small">@T["This is used as the default title of your pages."]</span>
-
-        </div>
-    </fieldset>
-
-
-    @if (!Model.TablePrefixPreset || !Model.ConnectionStringPreset)
-    {
-
-        <h5>
-            @T["Database"]
-            <span class="text-muted form-text small">@T["The database is used to store the site's configuration and its contents."]</span>
-        </h5>
-    }
-
-    @if (Model.ConnectionStringPreset)
-    {
-        <input asp-for="ConnectionString" type="hidden" />
-    }
-    else
-    {
-        <fieldset class="row" asp-validation-class-for="ConnectionString">
-            <div class="form-group col-md-12">
-
-                <label asp-for="ConnectionString">@T["Connection string"]</label>
-                <div class="input-group mb-2 mb-sm-0">
-                    <input asp-for="ConnectionString" class="form-control" type="text" required />
-                    <div class="input-group-append reveal" title="@T["Show/hide connection string"]">
-                        <button type="button" class="btn btn-secondary" tabindex="-1" aria-hidden="true"><i class="fa fa-check"></i></button>
+                        </div>
+                        <span asp-validation-for="ConnectionString" class="text-danger"></span>
+                        <span class="text-muted form-text small">@T["The connection string to your database. e.g., server=localhost;uid=your_username;pwd=your_password;database=plato"]</span>
                     </div>
-                </div>
+                </fieldset>
+            }
+            @if (Model.TablePrefixPreset)
+            {
+                <input asp-for="TablePrefix" type="hidden"/>
+            }
+            else
+            {
+                <fieldset class="row" asp-validation-class-for="TablePrefix">
+                    <div class="form-group col-md-12">
+                        <label asp-for="TablePrefix">@T["Table Prefix"]</label>
+                        <input asp-for="TablePrefix" class="form-control"/>
+                        <span asp-validation-for="TablePrefix" class="text-danger"></span>
+                        <span class="text-muted form-text small">@T["You can specify a custom table prefix if you intend to reuse the same database for multiple sites."]</span>
+                    </div>
+                </fieldset>
+            }
 
-                <span asp-validation-for="ConnectionString" class="text-danger"></span>
-                <span class="text-muted form-text small">@T["The connection string to your database. e.g., server=localhost;uid=your_username;pwd=your_password;database=plato"]</span>
+            <div class="form-group">
+                <h6>@T["Administrator Account"]</h6>
+                @T["The default administrator account can be used after the set up is complete to login and manage the site."]
             </div>
-        </fieldset>
-    }
+            <div class="row">
+                <div class="col-md-6">
+                    <fieldset class="row" asp-validation-class-for="TablePrefix">
+                        <div class="form-group col-md-12">
+                            <label asp-for="UserName">@T["Username"]</label>
+                            <input asp-for="UserName" class="form-control"/>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                            <span class="text-muted form-text small">@T["You must specify an username for the default administrator account"]</span>
+                        </div>
+                    </fieldset>
+                    <fieldset class="row" asp-validation-class-for="TablePrefix">
+                        <div class="form-group col-md-12">
+                            <label asp-for="Email">@T["Email Address"]</label>
+                            <input asp-for="Email" class="form-control"/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <span class="text-muted form-text small">@T["You must specify an email address for the default administrator account"]</span>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
 
-    @if (Model.TablePrefixPreset)
-    {
-        <input asp-for="TablePrefix" type="hidden" />
-    }
-    else
-    {
+                    <fieldset class="row" asp-validation-class-for="TablePrefix">
+                        <div class="form-group col-md-12">
+                            <label asp-for="Password">@T["Password"]</label>
+                            <input asp-for="Password" class="form-control"/>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                            <span class="text-muted form-text small">@T["You must specify a password for the default administrator account"]</span>
+                        </div>
+                    </fieldset>
 
-        <fieldset class="row" asp-validation-class-for="TablePrefix">
-            <div class="form-group col-md-12">
-                <label asp-for="TablePrefix">@T["Table Prefix"]</label>
-                <input asp-for="TablePrefix" class="form-control" />
-                <span asp-validation-for="TablePrefix" class="text-danger"></span>
-                <span class="text-muted form-text small">@T["You can specify a custom table prefix if you intend to reuse the same database for multiple sites."]</span>
+                    <fieldset class="row" asp-validation-class-for="TablePrefix">
+                        <div class="form-group col-md-12">
+                            <label asp-for="PasswordConfirmation">@T["Confirm Password"]</label>
+                            <input asp-for="PasswordConfirmation" class="form-control"/>
+                            <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+                            <span class="text-muted form-text small">@T["Please retype your password to ensure you've entered this correctly."]</span>
+                        </div>
+                    </fieldset>
+                </div>
             </div>
-        </fieldset>
-    }
-    
-    <h5>
-        @T["Administrator Account"]
-        <span class="text-muted form-text small">@T["The default administrator account can be used after the set up is complete to login and manage the site."]</span>
-    </h5>
-
-    <div class="row">
-        <div class="col-md-6">
-
-            <fieldset class="row" asp-validation-class-for="TablePrefix">
-                <div class="form-group col-md-12">
-                    <label asp-for="UserName">@T["Username"]</label>
-                    <input asp-for="UserName" class="form-control" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                    <span class="text-muted form-text small">@T["You must specify an username for the default administrator account"]</span>
-                </div>
-            </fieldset>
-
-            <fieldset class="row" asp-validation-class-for="TablePrefix">
-                <div class="form-group col-md-12">
-                    <label asp-for="Email">@T["Email Address"]</label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                    <span class="text-muted form-text small">@T["You must specify an email address for the default administrator account"]</span>
-                </div>
-            </fieldset>
-
+           
         </div>
-
-        <div class="col-md-6">
-            
-            <fieldset class="row" asp-validation-class-for="TablePrefix">
-                <div class="form-group col-md-12">
-                    <label asp-for="Password">@T["Password"]</label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                    <span class="text-muted form-text small">@T["You must specify a password for the default administrator account"]</span>
-                </div>
-            </fieldset>
-            
-            <fieldset class="row" asp-validation-class-for="TablePrefix">
-                <div class="form-group col-md-12">
-                    <label asp-for="PasswordConfirmation">@T["Confirm Password"]</label>
-                    <input asp-for="PasswordConfirmation" class="form-control" />
-                    <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
-                    <span class="text-muted form-text small">@T["Please retype your password to ensure you've entered this correctly."]</span>
-                </div>
-            </fieldset>
-
+        <div class="card-footer">
+     
+            <button class="btn btn-primary" type="submit" id="SubmitButton">@T["Finish Setup"]</button>
+       
         </div>
     </div>
-
-    <fieldset class="form-group">
-        <div>
-            <button class="btn btn-primary" type="submit" id="SubmitButton">@T["Finish Setup"]</button>
-        </div>
-    </fieldset>
-
-
-
-
-    <br /><br />
 
 </form>

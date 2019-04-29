@@ -8,9 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewFeatures;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Settings;
@@ -158,6 +161,12 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             // Use router
             appBuilder.UseRouter(router);
+
+            // Add IModularViewsFeatureProvider application part
+            // Required to allow modules to extend features
+            var applicationPartManager = serviceProvider.GetService<ApplicationPartManager>();
+            var modularViewsFeatureProvider = serviceProvider.GetService<IModularViewsFeatureProvider<ViewsFeature>>();
+            applicationPartManager.FeatureProviders.Add(modularViewsFeatureProvider);
             
             // Create a captured HttpContext for use outside of application context
             var capturedHttpContext = serviceProvider.GetService<ICapturedHttpContext>();
@@ -177,7 +186,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             {
                 subscriber?.Subscribe();
             }
-
+            
             // Activate all background tasks 
             var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
             backgroundTaskManager?.StartTasks();
@@ -187,6 +196,9 @@ namespace Plato.Internal.Hosting.Web.Routing
             return pipeline;
         }
 
+
+
+
     }
-    
+
 }
