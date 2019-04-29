@@ -325,6 +325,9 @@ a.label.active {
     border-top: 1px solid rgba(200, 200, 200, 0.1);
 }
 
+.nav-asides > .navbar::-webkit-scrollbar-thumb:vertical { margin: 0; background-color: #222;  }
+.nav-asides > .navbar::-webkit-scrollbar-thumb:vertical:hover { background-color: #444; }
+
 /* ------------------- */
 /* Markdown Editor */
 /* ------------------- */

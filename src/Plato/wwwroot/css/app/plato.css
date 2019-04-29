@@ -491,7 +491,15 @@ canvas {
         z-index: 1020;
     }
 
-    .nav-asides > .navbar::-webkit-scrollbar { display: none; }
+    .nav-asides .navbar-collapse  {
+        margin-bottom: 3rem;
+    }
+
+    .nav-asides > .navbar::-webkit-scrollbar { background: transparent; }
+    .nav-asides > .navbar::-webkit-scrollbar-thumb:vertical { margin: 0; }
+    .nav-asides > .navbar::-webkit-scrollbar-button:start:decrement,
+    .nav-asides > .navbar::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
+
     .nav-asides > .navbar .navbar-brand {  padding: 1rem 1rem;  }
     
     .nav-asides > .navbar .navbar-collapse {
