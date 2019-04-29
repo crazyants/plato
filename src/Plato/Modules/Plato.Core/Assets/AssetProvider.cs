@@ -33,8 +33,7 @@ namespace Plato.Core.Assets
             {
                 path = _themeOptions.Value.VirtualPathToThemesFolder + "/default";
             }
-
-
+            
             IEnumerable<AssetEnvironment> assets = new List<AssetEnvironment>
             {
 

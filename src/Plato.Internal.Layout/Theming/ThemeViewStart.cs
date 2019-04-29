@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions.Settings;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Razor;
 
 namespace Plato.Internal.Layout.Theming
@@ -27,8 +26,7 @@ namespace Plato.Internal.Layout.Theming
             {
                 path = themeOptions.Value.VirtualPathToThemesFolder + "/default";
             }
-
-
+            
             var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
             switch (controllerName)
             {
