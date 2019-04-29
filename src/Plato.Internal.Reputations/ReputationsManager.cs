@@ -32,7 +32,7 @@ namespace Plato.Internal.Reputations
             _typedModuleProvider = typedModuleProvider;
         }
 
-        public async Task<IEnumerable<TReputation>> GetReputations()
+        public async Task<IEnumerable<TReputation>> GetReputationsAsync()
         {
             if (_reputations == null)
             {

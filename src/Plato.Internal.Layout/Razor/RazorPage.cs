@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
@@ -25,8 +23,6 @@ namespace Plato.Internal.Layout.Razor
         private User _currentUser;
         private IViewDisplayHelper _viewDisplayHelper;
         private IPageTitleBuilder _pageTitleBuilder;
-        private IContextFacade _contextFacade;
-        private IOptions<SiteOptions> _siteOptions;
 
         public User CurrentUser
         {
@@ -60,10 +56,6 @@ namespace Plato.Internal.Layout.Razor
         public IPageTitleBuilder Title =>
             _pageTitleBuilder ??
             (_pageTitleBuilder = Context.RequestServices.GetRequiredService<IPageTitleBuilder>());
-
-        public IContextFacade ContextFacade =>
-            _contextFacade ??
-            (_contextFacade = Context.RequestServices.GetRequiredService<IContextFacade>());
 
         public TOptions GetOptions<TOptions>() where TOptions : class, new()
         {

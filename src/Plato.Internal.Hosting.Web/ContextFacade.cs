@@ -24,10 +24,9 @@ namespace Plato.Internal.Hosting.Web
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IOptions<ThemeOptions> _themeOptions;
-
+        
         private IUrlHelper _urlHelper;
-
+        
         public ContextFacade(
             IHttpContextAccessor httpContextAccessor,
             IPlatoUserStore<User> platoUserStore,

@@ -4,25 +4,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
-namespace Plato.Internal.Hosting.Web.Filters
+namespace Plato.Users.ActionFilters
 {
-
-    /// <summary>
-    /// Periodically updates the current authenticated users last login date based on the existence of the plato_active client side cookie.
-    /// </summary>
-    public class UpdateUserLastLoginDateFilter : IActionFilter, IAsyncResultFilter
+    public class UpdateUserLastLoginDateFilter : IModularActionFilter
     {
 
         internal const string CookieName = "plato_active";
         private bool _active = false;
         readonly string _tenantPath;
-        
+
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly IUserReputationAwarder _userReputationAwarder;
@@ -40,7 +37,7 @@ namespace Plato.Internal.Hosting.Web.Filters
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-        
+
             // Get tracking cookie
             var value = Convert.ToString(context.HttpContext.Request.Cookies[CookieName]);
 
@@ -61,20 +58,18 @@ namespace Plato.Internal.Hosting.Web.Filters
             return;
         }
 
-        public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        public async Task OnActionExecutingAsync(ResultExecutingContext context)
         {
 
             // Not a view result
             if (!(context.Result is ViewResult))
             {
-                await next();
                 return;
             }
 
             // Tracking cookie already exists, simply execute the controller result
             if (_active)
             {
-                await next();
                 return;
             }
 
@@ -84,21 +79,20 @@ namespace Plato.Internal.Hosting.Web.Filters
             // Not authenticated, simply execute the controller result
             if (user == null)
             {
-                await next();
                 return;
             }
 
             user.Visits += 1;
             user.VisitsUpdatedDate = DateTimeOffset.UtcNow;
             user.LastLoginDate = DateTimeOffset.UtcNow;
-            
+
             var result = await _userStore.UpdateAsync(user);
             if (result != null)
             {
 
                 // Award visit reputation
                 await _userReputationAwarder.AwardAsync(new Reputation("Visit", 1), result.Id, "Unique Visit");
-             
+
                 // Set client cookie to ensure update does not
                 // occur again for as long as the cookie exists
                 context.HttpContext.Response.Cookies.Append(
@@ -112,12 +106,13 @@ namespace Plato.Internal.Hosting.Web.Filters
                     });
 
             }
-            
-            // Finally execute the controller result
-            await next();
 
         }
-        
+
+        public Task OnActionExecutedAsync(ResultExecutingContext context)
+        {
+            return Task.CompletedTask;
+        }
     }
 
 }

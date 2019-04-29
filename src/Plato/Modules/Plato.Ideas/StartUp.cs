@@ -11,7 +11,6 @@ using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Badges;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
@@ -31,8 +30,10 @@ using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores;
 using Plato.Internal.Stores.Abstractions;
 
@@ -84,7 +85,10 @@ namespace Plato.Ideas
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
-
+            
+            // Register reputation provider
+            services.AddScoped<IReputationsProvider<Reputation>, Reputations>();
+            
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
             

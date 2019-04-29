@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Reputations.Abstractions;
-using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Reputations.Extensions
 {
@@ -21,10 +20,6 @@ namespace Plato.Internal.Reputations.Extensions
 
             // User reputation manager
             services.TryAddScoped<IUserReputationManager<UserReputation>, UserReputationManager>();
-
-            //// Points & Rank Aggregator background tasks
-            //services.TryAddScoped<IBackgroundTaskProvider, UserRankAggregator>();
-            //services.TryAddScoped<IBackgroundTaskProvider, UserReputationAggregator>();
 
             return services;
 

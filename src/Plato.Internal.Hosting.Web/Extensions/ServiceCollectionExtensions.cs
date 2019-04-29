@@ -47,7 +47,6 @@ using Plato.Internal.Assets.Extensions;
 using Plato.Internal.Badges.Extensions;
 using Plato.Internal.Drawing.Extensions;
 using Plato.Internal.Hosting.Web.Configuration;
-using Plato.Internal.Hosting.Web.Filters;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Navigation.Extensions;
 using Plato.Internal.Net.Extensions;
@@ -205,12 +204,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             services.Configure<SiteOptions>(options =>
             {
                 options.SiteName = "Plato";
-            });
-
-            // Action filters
-            services.Configure<MvcOptions>(options =>
-            {
-                options.Filters.Add(typeof(UpdateUserLastLoginDateFilter));
             });
             
             // Add mvc core services

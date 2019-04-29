@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Hosting.Web.Filters;
 using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
@@ -163,7 +160,8 @@ namespace Plato.Users
 
             // Register action filters
             services.AddScoped<IModularActionFilter, SignOutIfUserNotFoundFilter>();
-            
+            services.AddScoped<IModularActionFilter, UpdateUserLastLoginDateFilter>();
+
         }
 
         public override void Configure(

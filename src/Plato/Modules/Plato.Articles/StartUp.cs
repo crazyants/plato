@@ -30,8 +30,10 @@ using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores;
 using Plato.Internal.Stores.Abstractions;
 
@@ -83,6 +85,9 @@ namespace Plato.Articles
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+        
+            // Register reputation provider
+            services.AddScoped<IReputationsProvider<Reputation>, Reputations>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
@@ -97,10 +102,6 @@ namespace Plato.Articles
             services.AddScoped<IViewProviderManager<Comment>, ViewProviderManager<Comment>>();
             services.AddScoped<IViewProvider<Comment>, CommentViewProvider>();
 
-            //// Add profile views
-            //services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
-            //services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
-            
             // Add user views
             services.AddScoped<IViewProviderManager<UserIndex>, ViewProviderManager<UserIndex>>();
             services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();
@@ -117,8 +118,7 @@ namespace Plato.Articles
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, ArticleBadgesAwarder>();
             services.AddScoped<IBackgroundTaskProvider, CommentBadgesAwarder>();
-
-
+            
             // Notification types
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();
             services.AddScoped<INotificationTypeProvider, WebNotifications>();

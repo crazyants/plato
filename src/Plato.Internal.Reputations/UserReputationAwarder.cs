@@ -98,7 +98,7 @@ namespace Plato.Internal.Reputations
         async Task<int> GetReputationFeatureId(IReputation reputation)
         {
 
-            var reputations = await _reputationManager.GetReputations();
+            var reputations = await _reputationManager.GetReputationsAsync();
             var providedReputation = reputations.FirstOrDefault(r => r.Name.Equals(reputation.Name));
             if (providedReputation != null)
             {

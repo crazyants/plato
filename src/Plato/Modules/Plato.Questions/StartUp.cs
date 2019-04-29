@@ -30,8 +30,10 @@ using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores;
 using Plato.Internal.Stores.Abstractions;
 
@@ -83,6 +85,9 @@ namespace Plato.Questions
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+            
+            // Register reputation provider
+            services.AddScoped<IReputationsProvider<Reputation>, Reputations>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
@@ -96,11 +101,7 @@ namespace Plato.Questions
             services.AddScoped<IViewProvider<Question>, QuestionViewProvider>();
             services.AddScoped<IViewProviderManager<Answer>, ViewProviderManager<Answer>>();
             services.AddScoped<IViewProvider<Answer>, AnswerViewProvider>();
-
-            //// Add profile views
-            //services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
-            //services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
-            
+          
             // Add user views
             services.AddScoped<IViewProviderManager<UserIndex>, ViewProviderManager<UserIndex>>();
             services.AddScoped<IViewProvider<UserIndex>, UserViewProvider>();

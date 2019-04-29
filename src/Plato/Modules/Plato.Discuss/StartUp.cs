@@ -30,8 +30,10 @@ using Plato.Discuss.NotificationTypes;
 using Plato.Discuss.Notifications;
 using Plato.Entities;
 using Plato.Entities.Models;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores;
 using Plato.Internal.Stores.Abstractions;
 
@@ -83,6 +85,9 @@ namespace Plato.Discuss
             
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
+            // Register reputation provider
+            services.AddScoped<IReputationsProvider<Reputation>, Reputations>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
