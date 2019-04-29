@@ -1,16 +1,19 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+//using Plato.Internal.Layout.ViewFeatures;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Theming.Navigation;
 using Plato.Theming.Models;
 using Plato.Theming.Services;
+using Plato.Theming.ViewFeatures;
 using Plato.Theming.ViewProviders;
 
 namespace Plato.Theming
@@ -37,7 +40,10 @@ namespace Plato.Theming
             // Replace dummy site theme services with tenant specific implementations
             services.Replace<ISiteThemeLoader, SiteThemeLoader>(ServiceLifetime.Scoped);
             services.Replace<ISiteThemeFileManager, SiteThemeFileManager>(ServiceLifetime.Scoped);
-            
+         
+            // Add theming conventions - configures theme layout based on controller prefix
+            //services.AddSingleton<IModularViewsFeatureProvider<ViewsFeature>, ModularThemingViewsFeatureProvider>();
+
         }
 
         public override void Configure(

@@ -93,7 +93,7 @@ namespace Plato.Internal.Stores.Shell
                 }
             }
 
-            // Distint list of features to add
+            // Distinct list of features to add
             var featuresToAdd = distinctDictionary.Values.ToList();
 
             // Get all currently registered features

@@ -33,6 +33,7 @@ namespace Plato.Internal.Repositories.Reputations
 
             var id = await InsertUpdateInternal(
                 model.Id,
+                model.FeatureId,
                 model.Name,
                 model.Description,
                 model.Points,
@@ -140,6 +141,7 @@ namespace Plato.Internal.Repositories.Reputations
 
         async Task<int> InsertUpdateInternal(
             int id,
+            int featureId,
             string name,
             string description,
             int points,
@@ -154,6 +156,7 @@ namespace Plato.Internal.Repositories.Reputations
                     CommandType.StoredProcedure,
                     "InsertUpdateUserReputation",
                     id,
+                    featureId,
                     name.ToEmptyIfNull().TrimToSize(255),
                     description.ToEmptyIfNull().TrimToSize(255),
                     points,

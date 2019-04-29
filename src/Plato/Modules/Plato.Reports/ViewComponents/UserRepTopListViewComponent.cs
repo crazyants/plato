@@ -27,7 +27,9 @@ namespace Plato.Reports.ViewComponents
             _platoUserStore = platoUserStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ReportOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(
+            ReportOptions options,
+            ChartOptions chart)
         {
             
             if (options == null)
@@ -35,15 +37,32 @@ namespace Plato.Reports.ViewComponents
                 options = new ReportOptions();
             }
 
+            if (chart == null)
+            {
+                chart = new ChartOptions();
+            }
             
-            return View(await SelectUsersByReputationAsync(options.Start, options.End));
+            return View(new ChartViewModel<IEnumerable<AggregatedModel<int, User>>>()
+            {
+                Options = chart,
+                Data = await SelectUsersByReputationAsync(options)
+            });
 
         }
-        async Task<IEnumerable<AggregatedModel<int, User>>> SelectUsersByReputationAsync(DateTimeOffset start, DateTimeOffset end)
+        async Task<IEnumerable<AggregatedModel<int, User>>> SelectUsersByReputationAsync(ReportOptions options)
         {
 
             // Get views by id for specified range
-            var viewsById = await _aggregatedUserReputationRepository.SelectSummedByInt("CreatedUserId", start, end);
+            var viewsById = options.FeatureId > 0
+                ? await _aggregatedUserReputationRepository.SelectSummedByIntAsync(
+                    "CreatedUserId",
+                    options.Start,
+                    options.End,
+                    options.FeatureId)
+                : await _aggregatedUserReputationRepository.SelectSummedByIntAsync(
+                    "CreatedUserId",
+                    options.Start,
+                    options.End);
 
             // Get all entities matching ids
             IPagedResults<User> mostViewedEntities = null;

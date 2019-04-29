@@ -25,6 +25,11 @@ namespace Plato.Reputations.Handlers
                 },
                 new SchemaColumn()
                 {
+                    Name = "FeatureId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
                     Name = "[Name]",
                     DbType = DbType.String,
                     Length = "255"

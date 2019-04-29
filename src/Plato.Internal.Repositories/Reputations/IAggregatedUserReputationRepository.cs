@@ -8,10 +8,16 @@ namespace Plato.Internal.Repositories.Reputations
     public interface IAggregatedUserReputationRepository : IAggregatedRepository
     {
 
-        Task<AggregatedResult<int>> SelectSummedByInt(
+        Task<AggregatedResult<int>> SelectSummedByIntAsync(
             string groupBy,
             DateTimeOffset start,
             DateTimeOffset end);
+
+        Task<AggregatedResult<int>> SelectSummedByIntAsync(
+            string groupBy,
+            DateTimeOffset start,
+            DateTimeOffset end,
+            int featureId);
 
     }
 

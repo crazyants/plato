@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Models.Reputations;
 
@@ -8,15 +10,24 @@ namespace Plato.Internal.Reputations
     public class UserReputationAwarder : IUserReputationAwarder
     {
 
+        private readonly IReputationsManager<Reputation> _reputationManager;
         private readonly IUserReputationManager<UserReputation> _userReputationManager;
+        private readonly IFeatureFacade _featureFacade;
 
         public UserReputationAwarder(
-            IUserReputationManager<UserReputation> userReputationManager)
+            IUserReputationManager<UserReputation> userReputationManager,
+            IReputationsManager<Reputation> reputationManager,
+            IFeatureFacade featureFacade)
         {
             _userReputationManager = userReputationManager;
+            _reputationManager = reputationManager;
+            _featureFacade = featureFacade;
         }
 
-        public async Task<UserReputation> AwardAsync(IReputation reputation, int userId, string description)
+        public async Task<UserReputation> AwardAsync(
+            IReputation reputation, 
+            int userId, 
+            string description)
         {
 
             if (reputation == null)
@@ -31,6 +42,7 @@ namespace Plato.Internal.Reputations
 
             var userReputation = new UserReputation()
             {
+                FeatureId = await GetReputationFeatureId(reputation),
                 Name = reputation.Name,
                 Description = description,
                 Points = reputation.Points,
@@ -47,7 +59,10 @@ namespace Plato.Internal.Reputations
 
         }
 
-        public async Task<UserReputation> RevokeAsync(IReputation reputation, int userId, string description)
+        public async Task<UserReputation> RevokeAsync(
+            IReputation reputation,
+            int userId, 
+            string description)
         {
 
             if (reputation == null)
@@ -62,6 +77,7 @@ namespace Plato.Internal.Reputations
 
             var userReputation = new UserReputation()
             {
+                FeatureId = await GetReputationFeatureId(reputation),
                 Name = reputation.Name,
                 Description = description,
                 Points = -reputation.Points,
@@ -78,6 +94,26 @@ namespace Plato.Internal.Reputations
             
         }
 
+
+        async Task<int> GetReputationFeatureId(IReputation reputation)
+        {
+
+            var reputations = await _reputationManager.GetReputations();
+            var providedReputation = reputations.FirstOrDefault(r => r.Name.Equals(reputation.Name));
+            if (providedReputation != null)
+            {
+                if (!string.IsNullOrEmpty(providedReputation.ModuleId))
+                {
+                    var feature = await _featureFacade.GetFeatureByIdAsync(providedReputation.ModuleId);
+                    if (feature != null)
+                    {
+                        return feature.Id;
+                    }
+                }
+            }
+
+            return 0;
+        }
     }
 
 }

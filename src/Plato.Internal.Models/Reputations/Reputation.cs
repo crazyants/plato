@@ -14,6 +14,8 @@ namespace Plato.Internal.Models.Reputations
 
         public string Category { get; set; }
 
+        public string ModuleId { get; set; }
+
         public DateTimeOffset? AwardedDate { get; set; }
         
         protected Reputation(string name)

@@ -7,8 +7,7 @@
         <h1>@T["Setup"]</h1>
         <p class="lead">@T["Please answer a few questions to configure your site."]</p>
     </div>
-
-
+    
     <table class="model-state">
         @foreach (var item in ViewContext.ViewData.ModelState)
         {
@@ -65,7 +64,7 @@
                 </div>
 
                 <span asp-validation-for="ConnectionString" class="text-danger"></span>
-                <span class="text-muted form-text small">@T["The connection string to your database instance. e.g., server=localhost;trusted_connection=true;database=plato"]</span>
+                <span class="text-muted form-text small">@T["The connection string to your database. e.g., server=localhost;uid=your_username;pwd=your_password;database=plato"]</span>
             </div>
         </fieldset>
     }

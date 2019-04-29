@@ -18,7 +18,10 @@ namespace Plato.Internal.Repositories.Reputations
             _dbHelper = dbHelper;
         }
         
-        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(string groupBy, DateTimeOffset start, DateTimeOffset end)
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(
+            string groupBy, 
+            DateTimeOffset start,
+            DateTimeOffset end)
         {
             // Sql query
             const string sql = @"
@@ -58,7 +61,10 @@ namespace Plato.Internal.Repositories.Reputations
             
         }
 
-        public async Task<AggregatedResult<int>> SelectSummedByInt(string groupBy, DateTimeOffset start, DateTimeOffset end)
+        public async Task<AggregatedResult<int>> SelectSummedByIntAsync(
+            string groupBy, 
+            DateTimeOffset start,
+            DateTimeOffset end)
         {
 
             // Sql query
@@ -96,12 +102,17 @@ namespace Plato.Internal.Repositories.Reputations
                 }
                 return output;
             });
-
-
-
+            
         }
 
-
+        public Task<AggregatedResult<int>> SelectSummedByIntAsync(
+            string groupBy,
+            DateTimeOffset start,
+            DateTimeOffset end,
+            int featureId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

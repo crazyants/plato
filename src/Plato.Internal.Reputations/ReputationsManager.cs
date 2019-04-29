@@ -32,16 +32,22 @@ namespace Plato.Internal.Reputations
             _typedModuleProvider = typedModuleProvider;
         }
 
-        public IEnumerable<TReputation> GetReputations()
+        public async Task<IEnumerable<TReputation>> GetReputations()
         {
             if (_reputations == null)
             {
                 var reputations = new List<TReputation>();
                 foreach (var provider in _providers)
                 {
+                    var module = await _typedModuleProvider.GetModuleForDependency(provider.GetType());
                     try
                     {
-                        reputations.AddRange(provider.GetReputations());
+                        foreach (var reputation in provider.GetReputations())
+                        {
+                            reputation.ModuleId = module?.Descriptor?.Id;
+                            reputations.Add(reputation);
+                        }
+                  
                     }
                     catch (Exception e)
                     {

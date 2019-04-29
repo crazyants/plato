@@ -573,7 +573,7 @@ namespace Plato.Users.Handlers
                 // banner schema
                 UserBanner(builder);
 
-                // meta aata schema
+                // meta data schema
                 UserData(builder);
                 
                 var errors = await _schemaManager.ExecuteAsync(builder.Statements);

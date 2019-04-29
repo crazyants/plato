@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Hosting.Web.Filters;
+using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
@@ -24,6 +26,7 @@ using Plato.Users.Handlers;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 using Plato.Internal.Security.Abstractions;
+using Plato.Users.ActionFilters;
 using Plato.Users.Middleware;
 using Plato.Users.Navigation;
 using Plato.Users.Services;
@@ -158,7 +161,9 @@ namespace Plato.Users
             // Register user service
             services.AddScoped<IUserService, UserService>();
 
-
+            // Register action filters
+            //services.AddScoped<IModularActionFilter, SignOutIfUserNotFoundFilter>();
+            
         }
 
         public override void Configure(

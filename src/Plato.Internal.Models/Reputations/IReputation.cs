@@ -11,6 +11,8 @@ namespace Plato.Internal.Models.Reputations
 
         string Category { get; set; }
 
+        string ModuleId { get; set; }
+
     }
 
 }

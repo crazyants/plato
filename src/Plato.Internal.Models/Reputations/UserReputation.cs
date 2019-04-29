@@ -11,6 +11,8 @@ namespace Plato.Internal.Models.Reputations
 
         public int Id { get; set; }
 
+        public int FeatureId { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -26,6 +28,9 @@ namespace Plato.Internal.Models.Reputations
 
             if (dr.ColumnIsNotNull("Id"))
                 Id = Convert.ToInt32(dr["Id"]);
+
+            if (dr.ColumnIsNotNull("FeatureId"))
+                Id = Convert.ToInt32(dr["FeatureId"]);
 
             if (dr.ColumnIsNotNull("Name"))
                 Name = Convert.ToString(dr["Name"]);

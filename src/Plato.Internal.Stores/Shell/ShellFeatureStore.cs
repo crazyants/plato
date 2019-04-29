@@ -133,12 +133,11 @@ namespace Plato.Internal.Stores.Shell
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
-                IList<ShellFeature> output = null;
+                IList<ShellFeature> output = new List<ShellFeature>();
                 var features = await _featureRepository.SelectFeatures();
                 if (features != null)
                 {
                     // Deserialize before storing in cache
-                    output = new List<ShellFeature>();
                     foreach (var feature in features)
                     {
                         feature.FeatureSettings = await feature.Settings.DeserializeAsync<FeatureSettings>();

@@ -199,16 +199,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoMvc(this IServiceCollection services)
         {
-
-
+            
             // Action filters
             services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(typeof(UpdateUserLastLoginDateFilter));
-                options.Filters.Add(typeof(SignOutRequestIfUserNotFoundFilter));
             });
-
-
+            
             // Add mvc core services
             // --------------
 
