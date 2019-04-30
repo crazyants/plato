@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Tasks
 {
-
+    
     public class SafeTimerFactory : ISafeTimerFactory
     {
 
         private IList<ISafeTimer> _timers = null;
-
         private readonly ILogger<SafeTimerFactory> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -49,9 +44,9 @@ namespace Plato.Internal.Tasks
             safeTimer.Elapsed += (sender, args) => action(sender, args);
             safeTimer.Options = options;
             safeTimer.Start();
-
+            
             _timers.Add(safeTimer);
-
+      
         }
 
         public void Stop()
@@ -66,7 +61,9 @@ namespace Plato.Internal.Tasks
             {
                 timer.WaitToStop();
             }
-       
+
+            _timers.Clear();
+
         }
     }
 }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Hosting
 {
@@ -14,10 +16,12 @@ namespace Plato.Internal.Hosting
 
         #region "Private Variables"
 
-        readonly IShellSettingsManager _shellSettingsManager;
-        readonly IShellContextFactory _shellContextFactory;
-        readonly IRunningShellTable _runningShellTable;
-        readonly ILogger _logger;
+        private readonly IShellSettingsManager _shellSettingsManager;
+        private readonly IShellContextFactory _shellContextFactory;
+        private readonly IRunningShellTable _runningShellTable;
+        private readonly IBackgroundTaskManager _taskManager;
+        private readonly IBroker _broker;
+        private readonly ILogger _logger;
 
         static readonly object SyncLock = new object();
         ConcurrentDictionary<string, ShellContext> _shellContexts;
@@ -30,12 +34,16 @@ namespace Plato.Internal.Hosting
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
             IRunningShellTable runningShellTable, 
-            ILogger<DefaultPlatoHost> logger)
+            ILogger<DefaultPlatoHost> logger,
+            IBroker broker,
+            IBackgroundTaskManager taskManager)
         {
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
             _logger = logger;
+            _broker = broker;
+            _taskManager = taskManager;
         }
 
         #endregion
@@ -92,14 +100,8 @@ namespace Plato.Internal.Hosting
             }
 
             // Dispose
-            _runningShellTable.Remove(settings);
-            if (_shellContexts.TryRemove(settings.Name, out var context))
-            {
-                if (_shellContexts.Count == 0)
-                    _shellContexts = null;
-                context.Dispose();
-            }
-            
+            DisposeShellContext(settings);
+
             // Recreate
             GetOrCreateShellContext(settings);
 
@@ -116,6 +118,15 @@ namespace Plato.Internal.Hosting
                     _shellContexts = null;
                 context.Dispose();
             }
+
+            // Dispose all message broker subscriptions 
+            // These will be activated again via BuildTenantPipeline within
+            // Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
+            _broker?.Dispose();
+
+            // Stop all background timers
+            // These will be restarted again via BuildTenantPipeline
+            _taskManager.StopTasks();
 
         }
 

@@ -164,7 +164,7 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             // Create a captured HttpContext for use outside of application context
             var capturedHttpContext = serviceProvider.GetService<ICapturedHttpContext>();
-            capturedHttpContext.Configure(state => { state.Contextualize(httpContext); });
+            capturedHttpContext.Configure(state => state.Contextualize(httpContext));
 
             // Create a captured router for use outside of application context
             var capturedRouter = serviceProvider.GetService<ICapturedRouter>();

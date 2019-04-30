@@ -476,7 +476,6 @@ namespace Plato.Internal.Features
                             Logger = _logger
                         };
                         
-                   
                         // Get event handler for feature we are invoking
                         var featureHandler = handlersList.FirstOrDefault(h => h.ModuleId == feature.ModuleId);
 
@@ -516,13 +515,7 @@ namespace Plato.Internal.Features
                         }
                         
                     }
-
-                    // Deactivate all message broker subscriptions 
-                    // These will be activated again via BuildTenantPipeline within
-                    // Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
-                    var broker = scope.ServiceProvider.GetService<IBroker>();
-                    broker?.Dispose();
-                 
+                    
                 }
 
             }

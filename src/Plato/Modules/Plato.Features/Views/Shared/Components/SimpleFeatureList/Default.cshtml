@@ -18,13 +18,13 @@
                             {
                                 @if (!feature.IsEnabled)
                                  {
-                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Enable" asp-route-id="@feature.ModuleId" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary" itemprop="UnsafeUrl">
                                          @T["Enable"]
                                      </a>
                                  }
                                  else
                                  {
-                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
+                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Disable" asp-route-id="@feature.ModuleId" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary" itemprop="UnsafeUrl">
                                          @T["Disable"]
                                      </a>
                                  }

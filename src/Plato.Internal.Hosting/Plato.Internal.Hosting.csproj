@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Shell.Abstractions\Plato.Internal.Shell.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Shell\Plato.Internal.Shell.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Tasks.Abstractions\Plato.Internal.Tasks.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

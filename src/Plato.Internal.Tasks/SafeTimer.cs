@@ -47,8 +47,7 @@ namespace Plato.Internal.Tasks
                 // prevent the timer from restarting. Specify zero (0)
                 // to restart the timer immediately.
                 var dueTime = Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000;
-                //dueTime = Options.RunOnce ? Timeout.Infinite : dueTime;
-
+         
                 _timer.Change(dueTime, Timeout.Infinite);
 
                 if (_logger.IsEnabled(LogLevel.Information))

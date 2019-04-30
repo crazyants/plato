@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Features.ViewModels;
 using Plato.Internal.Features.Abstractions;
@@ -50,13 +51,31 @@ namespace Plato.Features.Controllers
                 opts = new FeatureIndexOptions();
             }
 
-            _breadCrumbManager.Configure(builder =>
+            if (!string.IsNullOrEmpty(opts.Category))
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Features"]);
-            });
+                _breadCrumbManager.Configure(builder =>
+                {
+                    builder
+                        .Add(S["Home"], home => home
+                            .Action("Index", "Admin", "Plato.Admin")
+                            .LocalNav())
+                        .Add(S["Features"], features => features
+                            .Action("Index", "Admin", "Plato.Features")
+                            .LocalNav())
+                        .Add(S[opts.Category]);
+                });
+            }
+            else
+            {
+                _breadCrumbManager.Configure(builder =>
+                {
+                    builder.Add(S["Home"], home => home
+                        .Action("Index", "Admin", "Plato.Admin")
+                        .LocalNav()
+                    ).Add(S["Features"]);
+                });
+            }
+       
 
             var model = new FeaturesIndexViewModel()
             {
@@ -67,7 +86,10 @@ namespace Plato.Features.Controllers
             
         }
         
-        public async Task<IActionResult> Enable(string id)
+        public async Task<IActionResult> Enable(
+            string id, 
+            string category,
+            string returnUrl)
         {
             
             var contexts = await _shellFeatureManager.EnableFeatureAsync(id);
@@ -86,12 +108,27 @@ namespace Plato.Features.Controllers
                 }
                 
             }
-            
-            return RedirectToAction(nameof(Index));
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                // Redirect to returnUrl
+                return RedirectToLocal(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index), new RouteValueDictionary()
+                {
+                    ["opts.category"] = category
+                });
+            }
+
 
         }
         
-        public async Task<IActionResult> Disable(string id)
+        public async Task<IActionResult> Disable(
+            string id, 
+            string category,
+            string returnUrl)
         {
 
             var contexts = await _shellFeatureManager.DisableFeatureAsync(id);
@@ -110,11 +147,35 @@ namespace Plato.Features.Controllers
                 }
                 
             }
-            
-            return RedirectToAction(nameof(Index));
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                // Redirect to returnUrl
+                return RedirectToLocal(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index), new RouteValueDictionary()
+                {
+                    ["opts.category"] = category
+                });
+            }
+
 
         }
-        
+
+        IActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return Redirect("~/");
+            }
+        }
+
     }
 
 }

@@ -12,12 +12,12 @@ namespace Plato.Internal.Reputations.Extensions
             this IServiceCollection services)
         {
             
-            // Individual user reputation awarder
-            services.TryAddScoped<IUserReputationAwarder, UserReputationAwarder>();
-
-            // User reputation provider manager
+            // User reputation provider
             services.TryAddScoped<IReputationsManager<Reputation>, ReputationsManager<Reputation>>();
 
+            // User reputation awarder
+            services.TryAddScoped<IUserReputationAwarder, UserReputationAwarder>();
+            
             // User reputation manager
             services.TryAddScoped<IUserReputationManager<UserReputation>, UserReputationManager>();
 
