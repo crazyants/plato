@@ -5,9 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Settings.Handlers;
+using Plato.Settings.Models;
 using Plato.Settings.Navigation;
+using Plato.Settings.ViewProviders;
 
 namespace Plato.Settings
 {
@@ -30,7 +33,12 @@ namespace Plato.Settings
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
-            
+
+            // View providers
+            services.AddScoped<IViewProviderManager<SettingsIndex>, ViewProviderManager<SettingsIndex>>();
+            services.AddScoped<IViewProvider<SettingsIndex>, AdminViewProvider>();
+
+
         }
 
         public override void Configure(

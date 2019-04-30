@@ -119,13 +119,14 @@ namespace Plato.Internal.Hosting
                 context.Dispose();
             }
 
-            // Dispose all message broker subscriptions 
+            // Dispose all shell message broker subscriptions 
             // These will be activated again via BuildTenantPipeline within
             // Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
             _broker?.Dispose();
 
-            // Stop all background timers
-            // These will be restarted again via BuildTenantPipeline
+            // Stop all shell background tasks
+            // These will be activated again via BuildTenantPipeline within
+            // Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
             _taskManager.StopTasks();
 
         }

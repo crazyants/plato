@@ -83,7 +83,7 @@ namespace Plato.Email.ViewProviders
                     // Recycle shell context to ensure changes take effect
                     _platoHost.RecycleShellContext(_shellSettings);
                 }
-                
+              
             }
 
             return await BuildEditAsync(emailSettings, context);

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Plato.Email.Configuration;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Email.Handlers;
 using Plato.Email.Models;
