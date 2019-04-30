@@ -10,6 +10,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Features
 {
@@ -27,6 +28,9 @@ namespace Plato.Features
             // View providers
             services.AddScoped<IViewProviderManager<FeaturesIndexViewModel>, ViewProviderManager<FeaturesIndexViewModel>>();
             services.AddScoped<IViewProvider<FeaturesIndexViewModel>, AdminViewProvider>();
+       
+            // Register moderation permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 
@@ -40,7 +44,7 @@ namespace Plato.Features
             routes.MapAreaRoute(
                 name: "FeaturesIndex",
                 areaName: "Plato.Features",
-                template: "admin/features",
+                template: "admin/features/{opts.category}",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 

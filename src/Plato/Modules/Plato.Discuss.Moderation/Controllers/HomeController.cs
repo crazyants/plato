@@ -16,15 +16,15 @@ namespace Plato.Discuss.Moderation.Controllers
 {
     public class HomeController : Controller
     {
-        
+
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IPostManager<Topic> _topicManager;
         private readonly IPostManager<Reply> _replyManager;
-        private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Topic> _entityStore;
-        private readonly IEntityReplyStore<Reply> _entityReplyStore;
+        private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
-        private readonly IAuthorizationService _authorizationService;
-
+   
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }

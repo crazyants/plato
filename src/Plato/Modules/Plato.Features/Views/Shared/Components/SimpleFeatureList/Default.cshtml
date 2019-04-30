@@ -1,5 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Features
 @model FeaturesIndexViewModel
+@{
+    var enablePermission = Permissions.EnableFeatures;
+    var disablePermission = Permissions.DisableFeatures;
+}
 
 <ul class="list-group list-group-flush list-group-hover">
     @{
@@ -18,15 +23,24 @@
                             {
                                 @if (!feature.IsEnabled)
                                  {
-                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Enable" asp-route-id="@feature.ModuleId" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary" itemprop="UnsafeUrl">
-                                         @T["Enable"]
-                                     </a>
+                                     <authorize asp-permission="@enablePermission.Name">
+                                         <authorize-success>
+                                             <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Enable" asp-route-id="@feature.ModuleId" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary" itemprop="UnsafeUrl">
+                                                 @T["Enable"]
+                                             </a>
+                                         </authorize-success>
+                                     </authorize>
                                  }
                                  else
                                  {
-                                     <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Disable" asp-route-id="@feature.ModuleId" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary" itemprop="UnsafeUrl">
-                                         @T["Disable"]
-                                     </a>
+                                     <authorize asp-permission="@disablePermission.Name">
+                                         <authorize-success>
+                                             <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Disable" asp-route-id="@feature.ModuleId" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary" itemprop="UnsafeUrl">
+                                                 @T["Disable"]
+                                             </a>
+                                         </authorize-success>
+                                     </authorize>
+                                
                                  }
                             }
                         </div>

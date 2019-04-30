@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Plato.Internal.Navigation;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Features.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
+
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
@@ -26,16 +26,12 @@ namespace Plato.Features.Navigation
                     .IconCss("fal fa-cube")
                     .Add(T["Manage Features"], "15", manage => manage
                         .Action("Index", "Admin", "Plato.Features")
-                        //.Permission(Permissions.ManageRoles)
+                        .Permission(Permissions.ManageFeatures)
                         .LocalNav())
-                    //.Add(T["Feature Gallery"], "16", gallary => gallary
-                    //    .Action("Create", "Admin", "Plato.Features")
-                    //    //.Permission(Permissions.ManageRoles)
-                    //    .LocalNav())
                 );
 
-
         }
+
     }
 
 }

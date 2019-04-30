@@ -1,7 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Features
 @model FeaturesIndexViewModel
+@{
+    var enablePermission = Permissions.EnableFeatures;
+    var disablePermission = Permissions.DisableFeatures;
+}
 
-<input type="hidden" name="category" value="@Model.Options.Category"/>
+<input type="hidden" name="category" value="@Model.Options.Category" />
 
 <card class="card card-body-flush">
     <card-title>
@@ -14,9 +19,9 @@
                 <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="filterDropDown">
                     <div class="dropdown-header">
                         <h6>@T["Categories"]</h6>
-                        
+
                     </div>
-                    <hr class="m-0"/>
+                    <hr class="m-0" />
                     <div class="row no-gutters m-2" style="min-width: 700px; max-height: 400px; overflow: auto;">
 
                         @foreach (var option in Model.AvailableCategories)
@@ -39,7 +44,7 @@
         </ul>
     </card-title>
     <card-body>
-        
+
         <ul class="list-group list-group-flush list-group-hover">
             @{
                 var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
@@ -63,7 +68,7 @@
 
                                 @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
                                 {
-                                    @feature.Descriptor.Description<br/>
+                                    @feature.Descriptor.Description<br />
                                 }
 
                                 @if (!string.IsNullOrEmpty(feature.Descriptor.Category))
@@ -120,17 +125,27 @@
                                 @if (!feature.IsRequired)
                                 {
                                     @if (!feature.IsEnabled)
-                                     {
-                                         <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
-                                             @T["Enable"]
-                                         </button>
-                                     }
-                                     else
-                                     {
-                                         <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
-                                             @T["Disable"]
-                                         </button>
-                                     }
+                                    {
+                                        <authorize asp-permission="@enablePermission.Name">
+                                            <authorize-success>
+                                                <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                                    @T["Enable"]
+                                                </button>
+                                            </authorize-success>
+                                        </authorize>
+
+                                    }
+                                    else
+                                    {
+                                        <authorize asp-permission="@disablePermission.Name">
+                                            <authorize-success>
+                                                <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
+                                                    @T["Disable"]
+                                                </button>
+                                            </authorize-success>
+                                        </authorize>
+
+                                    }
                                 }
 
                             </div>
@@ -146,6 +161,6 @@
             }
 
         </ul>
-        
+
     </card-body>
 </card>

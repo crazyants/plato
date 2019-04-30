@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
@@ -11,6 +12,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Features.Controllers
 {
@@ -18,6 +20,7 @@ namespace Plato.Features.Controllers
     {
         
         private readonly IViewProviderManager<FeaturesIndexViewModel> _viewProvider;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
@@ -32,11 +35,13 @@ namespace Plato.Features.Controllers
             IShellFeatureManager shellFeatureManager,
             IViewProviderManager<FeaturesIndexViewModel> viewProvider, 
             IBreadCrumbManager breadCrumbManager,
+            IAuthorizationService authorizationService,
             IAlerter alerter)
         {
             _shellFeatureManager = shellFeatureManager;
             _viewProvider = viewProvider;
             _breadCrumbManager = breadCrumbManager;
+            _authorizationService = authorizationService;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -46,6 +51,12 @@ namespace Plato.Features.Controllers
         public async Task<IActionResult> Index(FeatureIndexOptions opts)
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageFeatures))
+            {
+                return Unauthorized();
+            }
+            
             if (opts == null)
             {
                 opts = new FeatureIndexOptions();
@@ -91,7 +102,13 @@ namespace Plato.Features.Controllers
             string category,
             string returnUrl)
         {
-            
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.EnableFeatures))
+            {
+                return Unauthorized();
+            }
+
             var contexts = await _shellFeatureManager.EnableFeatureAsync(id);
             foreach (var context in contexts)
             {
@@ -131,6 +148,12 @@ namespace Plato.Features.Controllers
             string returnUrl)
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.DisableFeatures))
+            {
+                return Unauthorized();
+            }
+            
             var contexts = await _shellFeatureManager.DisableFeatureAsync(id);
             foreach (var context in contexts)
             {
@@ -175,7 +198,7 @@ namespace Plato.Features.Controllers
                 return Redirect("~/");
             }
         }
-
+        
     }
 
 }
