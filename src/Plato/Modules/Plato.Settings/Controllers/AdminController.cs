@@ -11,6 +11,7 @@ using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Settings.Models;
 using Plato.Settings.ViewModels;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Settings.Controllers
 {
@@ -21,7 +22,6 @@ namespace Plato.Settings.Controllers
         #region "Constructor"
 
         private readonly IAuthorizationService _authorizationService;
- 
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IViewProviderManager<SettingsIndex> _viewProvider;
@@ -30,8 +30,7 @@ namespace Plato.Settings.Controllers
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-
-
+        
         public AdminController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
@@ -58,11 +57,12 @@ namespace Plato.Settings.Controllers
 
         public async Task<IActionResult> Index()
         {
-
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
+            
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageGeneralSettings))
+            {
+                return Unauthorized();
+            }
 
             _breadCrumbManager.Configure(builder =>
             {
@@ -84,6 +84,12 @@ namespace Plato.Settings.Controllers
         public async Task<IActionResult> IndexPost(SiteSettingsViewModel viewModel)
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageGeneralSettings))
+            {
+                return Unauthorized();
+            }
+            
             // Execute view providers ProvideUpdateAsync method
             await _viewProvider.ProvideUpdateAsync(new SettingsIndex(), this);
 
@@ -93,69 +99,17 @@ namespace Plato.Settings.Controllers
             // Redirect
             return RedirectToAction(nameof(Index));
 
-            //// TODO: Implement security
-            ////if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            ////{
-            ////    return Unauthorized();
-            ////}
-
-            //if (!ModelState.IsValid)
-            //{
-            //    foreach (var modelState in ViewData.ModelState.Values)
-            //    {
-            //        foreach (var error in modelState.Errors)
-            //        {
-            //            _alerter.Danger(T[error.ErrorMessage]);
-            //        }
-            //    }
-            //    return View();
-            //}
-
-            //// Update existing settings
-            //var settings = await _siteSettingsStore.GetAsync();
-            //if (settings != null)
-            //{
-            //    settings.SiteName = viewModel.SiteName;
-            //    settings.TimeZone = viewModel.TimeZone;
-            //    settings.DateTimeFormat = viewModel.DateTimeFormat;
-            //    settings.Culture = viewModel.Culture;
-            //    settings.Theme = viewModel.Theme;
-            //}
-            //else
-            //{
-            //    // Create new settings
-            //    settings = new SiteSettings()
-            //    {
-            //        SiteName = viewModel.SiteName,
-            //        TimeZone = viewModel.TimeZone,
-            //        DateTimeFormat = viewModel.DateTimeFormat,
-            //        Culture = viewModel.Culture,
-            //        Theme = viewModel.Theme
-            //    };
-            //}
-        
-            //// Update settings
-            //var result = await _siteSettingsStore.SaveAsync(settings);
-            //if (result != null)
-            //{
-
-            //    // Recycle shell context to ensure changes take effect
-            //    _platoHost.RecycleShellContext(_shellSettings);
-
-            //    _alerter.Success(T["Settings Updated Successfully!"]);
-            //}
-            //else
-            //{
-            //    _alerter.Danger(T["A problem occurred updating the settings. Please try again!"]);
-            //}
-            
-            //return RedirectToAction(nameof(Index));
-            
         }
         
         public async Task<IActionResult> CreateApiKey()
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageGeneralSettings))
+            {
+                return Unauthorized();
+            }
+            
             var settings = await _siteSettingsStore.GetAsync();
             if (settings == null)
             {

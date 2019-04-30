@@ -20,6 +20,7 @@ using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Email
 {
@@ -64,6 +65,9 @@ namespace Plato.Email
 
             // Email manager
             services.AddSingleton<IEmailManager, EmailManager>();
+       
+            // Register moderation permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

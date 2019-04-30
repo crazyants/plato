@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Plato.Internal.Navigation;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Email.Navigation
 {
+
     public class AdminMenu : INavigationProvider
     {
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
@@ -26,11 +26,12 @@ namespace Plato.Email.Navigation
                     .IconCss("fal fa-cog")
                     .Add(T["Email"], 2, installed => installed
                         .Action("Index", "Admin", "Plato.Email")
-                        //.Permission(Permissions.ManageUsers)
+                        .Permission(Permissions.ManageEmailSettings)
                         .LocalNav()
                     ));
 
         }
+
     }
 
 }

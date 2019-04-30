@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Internal.Navigation;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Navigation
 {
+
     public class AdminMenu : INavigationProvider
     {
 
@@ -29,15 +27,16 @@ namespace Plato.Users.Navigation
                     .IconCss("fal fa-users")
                     .Add(T["Manage"], 1, manage => manage
                         .Action("Index", "Admin", "Plato.Users")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ).Add(T["Add"], 2, create => create
+                        .Permission(Permissions.ManageUsers)
+                        .LocalNav())
+                    .Add(T["Add"], 2, create => create
                         .Action("Create", "Admin", "Plato.Users")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ));
-            
+                        .Permission(Permissions.AddUsers)
+                        .LocalNav())
+                );
+
         }
+
     }
 
 }

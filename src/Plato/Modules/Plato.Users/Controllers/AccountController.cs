@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -19,7 +16,6 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -312,7 +308,10 @@ namespace Plato.Users.Controllers
                 var model = await _registerViewProvider.GetComposedType(this);
 
                 // Create the user from composed type
-                var result = await _platoUserManager.CreateAsync(model.UserName, model.Email, model.Password);
+                var result = await _platoUserManager.CreateAsync(
+                    model.UserName,
+                    model.Email,
+                    model.Password);
         
                 //var result = await _userManager.CreateAsync(registerViewModel, registerViewModel.Password);
                 if (result.Succeeded)

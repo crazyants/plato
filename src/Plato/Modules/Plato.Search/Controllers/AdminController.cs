@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Search.Models;
 using Plato.Search.Services;
 using Plato.Search.ViewModels;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Search.Controllers
 {
@@ -51,11 +52,12 @@ namespace Plato.Search.Controllers
         
         public async Task<IActionResult> Index()
         {
-
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
+            
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageSearchSettings))
+            {
+                return Unauthorized();
+            }
 
             _breadCrumbManager.Configure(builder =>
             {
@@ -68,18 +70,21 @@ namespace Plato.Search.Controllers
                 ).Add(S["Search"]);
             });
 
-            // Build view
-            var result = await _viewProvider.ProvideEditAsync(new SearchSettings(), this);
-
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(new SearchSettings(), this));
 
         }
         
-        [HttpPost, ActionName(nameof(Index))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(SearchSettingsViewModel viewModel)
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageSearchSettings))
+            {
+                return Unauthorized();
+            }
+            
             // Execute view providers ProvideUpdateAsync method
             await _viewProvider.ProvideUpdateAsync(new SearchSettings(), this);
 
@@ -89,12 +94,17 @@ namespace Plato.Search.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-        // ------------
-
+        
         public async Task<IActionResult> CreateCatalog()
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageSearchSettings))
+            {
+                return Unauthorized();
+            }
+            
+            // Create catalog
             var result = await _fullTextCatalogManager.CreateCatalogAsync();
             if (result.Succeeded)
             {
@@ -111,11 +121,17 @@ namespace Plato.Search.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-
+        
         public async Task<IActionResult> DeleteCatalog()
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageSearchSettings))
+            {
+                return Unauthorized();
+            }
+            
+            // Delete catalog
             var result = await _fullTextCatalogManager.DropCatalogAsync();
             if (result.Succeeded)
             {
@@ -136,6 +152,13 @@ namespace Plato.Search.Controllers
         public async Task<IActionResult> RebuildCatalog()
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageSearchSettings))
+            {
+                return Unauthorized();
+            }
+            
+            // Rebuild catalog
             var result = await _fullTextCatalogManager.RebuildCatalogAsync();
             if (result.Succeeded)
             {

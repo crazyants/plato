@@ -153,6 +153,9 @@ namespace Plato.Users.Services
                 model.IpV6Address = _clientIpAddress.GetIpV6Address();
             }
 
+            // Add security stamp
+            await _securityStampStore.SetSecurityStampAsync(model, System.Guid.NewGuid().ToString(), new CancellationToken());
+            
             // Add new roles
             foreach (var role in model.RoleNames)
             {
@@ -161,10 +164,7 @@ namespace Plato.Users.Services
                     await _userManager.AddToRoleAsync(model, role);
                 }
             }
-
-            // Add security stamp
-            await _securityStampStore.SetSecurityStampAsync(model, System.Guid.NewGuid().ToString(), new CancellationToken());
-
+            
             // Invoke UserCreating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this, "UserCreating"))
             {

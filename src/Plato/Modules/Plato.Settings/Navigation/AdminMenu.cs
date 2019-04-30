@@ -26,7 +26,7 @@ namespace Plato.Settings.Navigation
                     .IconCss("fal fa-cog")
                     .Add(T["General"], 1, installed => installed
                         .Action("Index", "Admin", "Plato.Settings")
-                        //.Permission(Permissions.ManageUsers)
+                        .Permission(Permissions.ManageGeneralSettings)
                         .LocalNav()
                     ));
 

@@ -7,6 +7,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Settings.Handlers;
 using Plato.Settings.Models;
 using Plato.Settings.Navigation;
@@ -37,7 +38,9 @@ namespace Plato.Settings
             // View providers
             services.AddScoped<IViewProviderManager<SettingsIndex>, ViewProviderManager<SettingsIndex>>();
             services.AddScoped<IViewProvider<SettingsIndex>, AdminViewProvider>();
-
+            
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

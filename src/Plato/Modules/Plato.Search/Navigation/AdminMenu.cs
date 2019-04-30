@@ -4,6 +4,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Search.Navigation
 {
+
     public class AdminMenu : INavigationProvider
     {
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
@@ -25,11 +26,12 @@ namespace Plato.Search.Navigation
                     .IconCss("fal fa-cog")
                     .Add(T["Search"], int.MaxValue - 6, installed => installed
                         .Action("Index", "Admin", "Plato.Search")
-                        //.Permission(Permissions.ManageUsers)
+                        .Permission(Permissions.ManageSearchSettings)
                         .LocalNav()
                     ));
 
         }
+
     }
 
 }

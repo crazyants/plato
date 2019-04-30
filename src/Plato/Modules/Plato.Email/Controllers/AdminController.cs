@@ -11,6 +11,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Email.Controllers
 {
@@ -49,11 +50,12 @@ namespace Plato.Email.Controllers
         public async Task<IActionResult> Index()
         {
 
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
-
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageEmailSettings))
+            {
+                return Unauthorized();
+            }
+            
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -73,7 +75,13 @@ namespace Plato.Email.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(EmailSettingsViewModel viewModel)
         {
-      
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageEmailSettings))
+            {
+                return Unauthorized();
+            }
+
             // Execute view providers ProvideUpdateAsync method
             await _viewProvider.ProvideUpdateAsync(new EmailSettings(), this);
         
