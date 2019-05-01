@@ -637,13 +637,14 @@ namespace Plato.Discuss.Controllers
 
                 // Everything was OK
                 _alerter.Success(T["Topic Updated Successfully!"]);
-
-                // Redirect to topic
-                return RedirectToAction(nameof(Display), new
+                
+                // Redirect to entity
+                return RedirectToAction(nameof(Display), new RouteValueDictionary()
                 {
-                    Id = entity.Id,
-                    Alias = entity.Alias
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias
                 });
+
 
             }
 

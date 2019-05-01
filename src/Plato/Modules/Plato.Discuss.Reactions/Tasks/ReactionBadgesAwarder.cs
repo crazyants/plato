@@ -64,7 +64,7 @@ namespace Plato.Discuss.Reactions.Tasks
                 SELECT UserId FROM @myTable;";
 
 
-        public int IntervalInSeconds => 120;
+        public int IntervalInSeconds => 240;
 
         public IEnumerable<Badge> Badges => new[]
         {

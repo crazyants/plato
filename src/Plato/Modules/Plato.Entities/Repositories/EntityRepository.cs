@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Internal.Abstractions;
@@ -93,6 +92,7 @@ namespace Plato.Entities.Repositories
                 entity.LastReplyUserId,
                 entity.LastReplyDate,
                 entity.Data);
+
             if (id > 0)
             {
                 return await SelectByIdAsync(id);

@@ -20,7 +20,7 @@ namespace Plato.Docs.ViewProviders
 
         private readonly IEntityViewIncrementer<Doc> _viewIncrementer;
         private readonly IEntityStore<Doc> _entityStore;
-        private readonly IPostManager<Doc> _topicManager;
+        private readonly IPostManager<Doc> _docManager;
         private readonly IFeatureFacade _featureFacade;
 
         private readonly HttpRequest _request;
@@ -28,14 +28,14 @@ namespace Plato.Docs.ViewProviders
         public DocViewProvider(
             IEntityViewIncrementer<Doc> viewIncrementer,
             IHttpContextAccessor httpContextAccessor,
-            IPostManager<Doc> topicManager,
+            IPostManager<Doc> docManager,
             IEntityStore<Doc> entityStore,
             IFeatureFacade featureFacade)
         {
             _request = httpContextAccessor.HttpContext.Request;
             _viewIncrementer = viewIncrementer;
             _featureFacade = featureFacade;
-            _topicManager = topicManager;
+            _docManager = docManager;
             _entityStore = entityStore;
         }
 
@@ -185,7 +185,7 @@ namespace Plato.Docs.ViewProviders
             {
                 return await BuildIndexAsync(doc, context);
             }
-            
+
             // Validate 
             if (await ValidateModelAsync(doc, context.Updater))
             {
@@ -193,7 +193,7 @@ namespace Plato.Docs.ViewProviders
                 doc.ParentId = GetParentSelection();
 
                 // Update
-                var result = await _topicManager.UpdateAsync(doc);
+                var result = await _docManager.UpdateAsync(doc);
 
                 // Was there a problem updating the entity?
                 if (!result.Succeeded)

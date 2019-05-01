@@ -121,7 +121,7 @@ namespace Plato.Docs.Controllers
                 pager = new PagerOptions();
             }
 
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -698,10 +698,10 @@ namespace Plato.Docs.Controllers
                 _alerter.Success(T["Doc Updated Successfully!"]);
 
                 // Redirect to entity
-                return RedirectToAction(nameof(Display), new
+                return RedirectToAction(nameof(Display), new RouteValueDictionary()
                 {
-                    Id = entity.Id,
-                    Alias = entity.Alias
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias
                 });
 
             }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
@@ -29,6 +30,13 @@ namespace Plato.Docs.Subscribers
 
         public void Subscribe()
         {
+
+            // Creating
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityCreating"
+            }, async message => await EntityCreating(message.What));
+            
             // Created
             _broker.Sub<TEntity>(new MessageOptions()
             {
@@ -45,6 +53,12 @@ namespace Plato.Docs.Subscribers
 
         public void Unsubscribe()
         {
+
+            // Creating
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityCreating"
+            }, async message => await EntityCreating(message.What));
 
             // Created
             _broker.Unsub<TEntity>(new MessageOptions()
@@ -63,7 +77,19 @@ namespace Plato.Docs.Subscribers
         #endregion
 
         #region "Private Methods"
+        
+        async Task<TEntity> EntityCreating(TEntity entity)
+        {
+            // Get the next available sort order for new entries
+            if (entity.SortOrder == 0)
+            {
+                entity.SortOrder = await GetNextAvailableSortOrder(entity);
+            }
 
+            return entity;
+
+        }
+        
         async Task<TEntity> EntityCreated(TEntity entity)
         {
 
@@ -118,12 +144,37 @@ namespace Plato.Docs.Subscribers
                     }
                 }
             }
-
+            
+            // If the parent changes ensure we update the sort order
+            if (entity.ParentId != existingEntity.ParentId)
+            {
+                entity.SortOrder = await GetNextAvailableSortOrder(entity);
+            }
+         
             // Return
             return entity;
 
         }
+        
+        async Task<int> GetNextAvailableSortOrder(TEntity model)
+        {
 
+            var sortOrder = 0;
+            var entities = await _entityRepository
+                .SelectByFeatureIdAsync(model.FeatureId);
+
+            if (entities != null)
+            {
+                foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
+                {
+                    sortOrder = entity.SortOrder;
+                }
+            }
+
+            return sortOrder + 1;
+
+        }
+        
         #endregion
 
     }

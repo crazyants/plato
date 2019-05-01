@@ -635,10 +635,10 @@ namespace Plato.Questions.Controllers
                 _alerter.Success(T["Question Updated Successfully!"]);
 
                 // Redirect to entity
-                return RedirectToAction(nameof(Display), new
+                return RedirectToAction(nameof(Display), new RouteValueDictionary()
                 {
-                    Id = entity.Id,
-                    Alias = entity.Alias
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias
                 });
 
             }

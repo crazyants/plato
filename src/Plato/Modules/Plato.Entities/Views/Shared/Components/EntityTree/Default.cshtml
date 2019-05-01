@@ -57,7 +57,7 @@
                         Model.RouteValues["opts.alias"] = entity.Value.Alias;
                         url = base.GetRouteUrl(Model.RouteValues);
                     }
-                
+
                     var listItemStyle =
                     sb.Append("<li id=\"")
                         .Append(nodeId)
@@ -124,6 +124,10 @@
                             .Append("\">");
                     }
                     sb.Append(entity.Value.Title);
+
+                    sb.Append(" - id: ").Append(entity.Value.ParentId);
+                    sb.Append(" - sort: ").Append(entity.Value.SortOrder);
+
                     if (!string.IsNullOrEmpty(url))
                     {
                         sb.Append("</a>");
@@ -137,11 +141,11 @@
                     {
                         var view = await DisplayAsync(new View(Model.EditMenuViewName, new
                         {
-                            entityId = entity.Value.Id
+                            entity = entity.Value
                         }));
                         sb.Append(view.ToHtmlString());
                     }
-                 
+
 
                     sb.Append("</div>");
 

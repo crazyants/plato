@@ -595,9 +595,10 @@ namespace Plato.Articles.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditEntityViewModel model)
         {
+
             // Get entity we are editing 
-            var topic = await _entityStore.GetByIdAsync(model.Id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(model.Id);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -614,33 +615,33 @@ namespace Plato.Articles.Controllers
                 var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                 // Only update edited information if the message changes
-                if (model.Message != topic.Message)
+                if (model.Message != entity.Message)
                 {
-                    topic.EditedUserId = user?.Id ?? 0;
-                    topic.EditedDate = DateTimeOffset.UtcNow;
+                    entity.EditedUserId = user?.Id ?? 0;
+                    entity.EditedDate = DateTimeOffset.UtcNow;
                 }
 
                 // Always update modified information
-                topic.ModifiedUserId = user?.Id ?? 0;
-                topic.ModifiedDate = DateTimeOffset.UtcNow;
+                entity.ModifiedUserId = user?.Id ?? 0;
+                entity.ModifiedDate = DateTimeOffset.UtcNow;
                 
                 // Update title & message
-                topic.Title = model.Title;
-                topic.Message = model.Message;
+                entity.Title = model.Title;
+                entity.Message = model.Message;
 
                 // Execute view providers ProvideUpdateAsync method
-                await _entityViewProvider.ProvideUpdateAsync(topic, this);
+                await _entityViewProvider.ProvideUpdateAsync(entity, this);
 
                 // Everything was OK
                 _alerter.Success(T["Topic Updated Successfully!"]);
 
-                // Redirect to topic
-                return RedirectToAction(nameof(Display), new
+                // Redirect to entity
+                return RedirectToAction(nameof(Display), new RouteValueDictionary()
                 {
-                    Id = topic.Id,
-                    Alias = topic.Alias
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias
                 });
-
+                
             }
 
             // if we reach this point some view model validation

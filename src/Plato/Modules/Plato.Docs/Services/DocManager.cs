@@ -28,6 +28,7 @@ namespace Plato.Docs.Services
 
         public async Task<ICommandResult<Doc>> CreateAsync(Doc model)
         {
+
             if (model.FeatureId == 0)
             {
                 var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
@@ -37,18 +38,15 @@ namespace Plato.Docs.Services
                 }
             }
 
-            // Get the next available sort order when adding new categories
-            if (model.SortOrder == 0)
-            {
-                model.SortOrder = await GetNextAvailableSortOrder(model);
-            }
-
+        
             return await _entityManager.CreateAsync(model);
+
         }
 
         public async Task<ICommandResult<Doc>> UpdateAsync(Doc model)
         {
 
+            // We always need a feature
             if (model.FeatureId == 0)
             {
                 var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
@@ -58,7 +56,18 @@ namespace Plato.Docs.Services
                 }
             }
 
+            //// If the parent changes ensure we update the sort order
+            //var existingEntity = await _entityStore.GetByIdAsync(model.Id);
+            //if (existingEntity != null)
+            //{
+            //    if (model.ParentId != existingEntity.ParentId)
+            //    {
+            //        model.SortOrder = await GetNextAvailableSortOrder(model);
+            //    }
+            //}
+
             return await _entityManager.UpdateAsync(model);
+
         }
 
         public async Task<ICommandResult<Doc>> DeleteAsync(Doc model)
@@ -73,24 +82,24 @@ namespace Plato.Docs.Services
 
         // -------------
 
-        async Task<int> GetNextAvailableSortOrder(Doc model)
-        {
+        //async Task<int> GetNextAvailableSortOrder(Doc model)
+        //{
 
-            var sortOrder = 0;
-            var entities = await _entityStore
-                .GetByFeatureIdAsync(model.FeatureId);
+        //    var sortOrder = 0;
+        //    var entities = await _entityStore
+        //        .GetByFeatureIdAsync(model.FeatureId);
                
-            if (entities != null)
-            {
-                foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
-                {
-                    sortOrder = entity.SortOrder;
-                }
-            }
+        //    if (entities != null)
+        //    {
+        //        foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
+        //        {
+        //            sortOrder = entity.SortOrder;
+        //        }
+        //    }
 
-            return sortOrder + 1;
+        //    return sortOrder + 1;
 
-        }
+        //}
 
     }
 

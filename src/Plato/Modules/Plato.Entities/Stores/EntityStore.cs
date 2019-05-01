@@ -22,15 +22,15 @@ namespace Plato.Entities.Stores
 
         public const string  ById = "ById";
         public const string ByFeatureId = "ByFeatureId";
-        
+
+        private readonly IFederatedQueryManager<TEntity> _federatedQueryManager;
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly ILogger<EntityStore<TEntity>> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
-        private readonly IFederatedQueryManager<TEntity> _federatedQueryManager;
-
+        
         public EntityStore(
             IEntityDataStore<IEntityData> entityDataStore,
             IEntityRepository<TEntity> entityRepository,
@@ -40,11 +40,11 @@ namespace Plato.Entities.Stores
             ICacheManager cacheManager, 
             IFederatedQueryManager<TEntity> federatedQueryManager)
         {
+            _federatedQueryManager = federatedQueryManager;
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
             _entityDataStore = entityDataStore;
             _cacheManager = cacheManager;
-            _federatedQueryManager = federatedQueryManager;
             _dbQuery = dbQuery;
             _logger = logger;
         }

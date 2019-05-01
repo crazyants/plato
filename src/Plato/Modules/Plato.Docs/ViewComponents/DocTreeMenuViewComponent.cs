@@ -2,30 +2,27 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Docs.Models;
-using Plato.Entities.Stores;
+using Plato.Entities.Models;
 
 namespace Plato.Docs.ViewComponents
 {
     
     public class DocTreeMenuViewComponent : ViewComponent
     {
-
-        private readonly IEntityStore<Doc> _entityStore;
-       
-        public DocTreeMenuViewComponent(IEntityStore<Doc> entityStore)
+        
+        public DocTreeMenuViewComponent()
         {
-            _entityStore = entityStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int entityId)
+        public Task<IViewComponentResult> InvokeAsync(IEntity entity)
         {
-
-            if (entityId <= 0)
+            
+            if (entity == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(entityId));
+                throw new ArgumentNullException(nameof(entity));
             }
 
-            return View(await _entityStore.GetByIdAsync(entityId));
+            return Task.FromResult((IViewComponentResult) View((Doc) entity));
 
         }
 

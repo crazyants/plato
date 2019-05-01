@@ -58,7 +58,7 @@ namespace Plato.Users.Badges.Tasks
             DEALLOCATE MSGCURSOR;
             SELECT UserId FROM @myTable;";
         
-        public int IntervalInSeconds => 120;
+        public int IntervalInSeconds => 240;
 
         public IBadge Badge => ProfileBadges.Autobiographer;
 
