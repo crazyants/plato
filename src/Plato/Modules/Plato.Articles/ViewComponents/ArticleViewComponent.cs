@@ -45,8 +45,8 @@ namespace Plato.Articles.ViewComponents
                 throw new ArgumentOutOfRangeException(nameof(options.Id));
             }
 
-            var topic = await _entityStore.GetByIdAsync(options.Id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(options.Id);
+            if (entity == null)
             {
                 throw new ArgumentNullException();
             }
@@ -55,7 +55,7 @@ namespace Plato.Articles.ViewComponents
             return new EntityViewModel<Article, Comment>
             {
                 Options = options,
-                Entity = topic
+                Entity = entity
         };
 
         }

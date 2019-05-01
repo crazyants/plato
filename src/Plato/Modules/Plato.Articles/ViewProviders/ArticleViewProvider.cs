@@ -148,7 +148,7 @@ namespace Plato.Articles.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(Article article, IViewProviderContext context)
         {
             
-            if (article.IsNewTopic)
+            if (article.IsNew)
             {
                 return default(IViewProviderResult);
             }

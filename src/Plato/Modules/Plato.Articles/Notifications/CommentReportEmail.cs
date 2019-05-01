@@ -28,7 +28,7 @@ namespace Plato.Articles.Notifications
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
-        private readonly IEntityStore<Article> _topicStore;
+        private readonly IEntityStore<Article> _articleStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -41,13 +41,13 @@ namespace Plato.Articles.Notifications
             ILocaleStore localeStore,
             IEmailManager emailManager,
             ICapturedRouterUrlHelper capturedRouterUrlHelper,
-            IEntityStore<Article> topicStore)
+            IEntityStore<Article> articleStore)
         {
             _contextFacade = contextFacade;
             _localeStore = localeStore;
             _emailManager = emailManager;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
-            _topicStore = topicStore;
+            _articleStore = articleStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -76,25 +76,25 @@ namespace Plato.Articles.Notifications
                     $"No email template with the Id '{templateId}' exists within the 'locales/{culture}/emails.json' file!");
             }
 
-            // Get topic for reply
-            var topic = await _topicStore.GetByIdAsync(context.Model.What.EntityId);
+            // Get entity for reply
+            var entity = await _articleStore.GetByIdAsync(context.Model.What.EntityId);
 
-            // We need an topic for the reply
-            if (topic == null)
+            // We need an entity for the reply
+            if (entity == null)
             {
                 return result.Failed(
                     $"No entity with id '{context.Model.What.EntityId}' exists. Failed to send reply spam email notification.");
             }
-        
-            // Build topic url
+
+            // Build entity url
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
                 ["area"] = "Plato.Articles",
                 ["controller"] = "Home",
                 ["action"] = "Reply",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias,
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = context.Model.What.Id
             });
 
@@ -110,7 +110,7 @@ namespace Plato.Articles.Notifications
             message.Body = string.Format(
                 email.Message,
                 context.Notification.To.DisplayName,
-                topic.Title,
+                entity.Title,
                 reasonText.Value,
                 context.Model.Who.DisplayName,
                 context.Model.Who.UserName,

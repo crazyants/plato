@@ -29,7 +29,7 @@ namespace Plato.Articles.Tasks
                 DECLARE @badgeName nvarchar(255) = '{name}';
                 DECLARE @threshold int = {threshold};                  
                 DECLARE @userId int;
-                DECLARE @topics int;
+                DECLARE @count int;
                 DECLARE @myTable TABLE
                 (
                     Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
@@ -44,10 +44,10 @@ namespace Plato.Articles.Tasks
                 GROUP BY e.CreatedUserId
                 ORDER BY Total DESC
 
-                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId, @topics;                    
+                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId, @count;                    
                 WHILE @@FETCH_STATUS = 0
                 BEGIN
-                    IF (@topics >= @threshold)
+                    IF (@count >= @threshold)
                     BEGIN
                         DECLARE @identity int;
                         EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
@@ -56,13 +56,12 @@ namespace Plato.Articles.Tasks
                             INSERT INTO @myTable (UserId) VALUES (@userId);                     
                         END
                     END;
-                    FETCH NEXT FROM MSGCURSOR INTO @userId, @topics;	                    
+                    FETCH NEXT FROM MSGCURSOR INTO @userId, @count;	                    
                 END;
                 CLOSE MSGCURSOR;
                 DEALLOCATE MSGCURSOR;
                 SELECT UserId FROM @myTable;";
-
-
+        
         public int IntervalInSeconds => 240;
 
         public IEnumerable<Badge> Badges => new[]

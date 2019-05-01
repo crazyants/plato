@@ -57,7 +57,7 @@ namespace Plato.Categories.Subscribers
             // Updating
             _broker.Unsub<TCategory>(new MessageOptions()
             {
-                Key = "EntityUpdating"
+                Key = "CategoryUpdating"
             }, async message => await CategoryUpdating(message.What));
 
         }

@@ -78,7 +78,7 @@ namespace Plato.Articles.Notifications
                 reasonText = S[ReportReasons.Reasons[context.Model.Why]];
             }
             
-            // Build topic url
+            // Build entity url
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {

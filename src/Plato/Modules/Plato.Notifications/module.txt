@@ -1,5 +1,5 @@
 Name: Plato Notifications
-Description: Adds cire notification services to Plato.
+Description: Adds core notification services to Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Notifications

@@ -40,9 +40,8 @@ namespace Plato.Articles.Controllers
         private readonly IViewProviderManager<Comment> _replyViewProvider;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<Comment> _entityReplyStore;
-        private readonly IPostManager<Article> _topicManager;
-        private readonly IPostManager<Comment> _replyManager;
-        private readonly IAlerter _alerter;
+        private readonly IPostManager<Article> _articleManager;
+        private readonly IPostManager<Comment> _commentManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
@@ -50,9 +49,9 @@ namespace Plato.Articles.Controllers
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IFeatureFacade _featureFacade;
         private readonly IPageTitleBuilder _pageTitleBuilder;
-
         private readonly IReportEntityManager<Article> _reportEntityManager;
         private readonly IReportEntityManager<Comment> _reportReplyManager;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -66,8 +65,8 @@ namespace Plato.Articles.Controllers
             IViewProviderManager<Article> entityViewProvider,
             IEntityReplyStore<Comment> entityReplyStore,
             IViewProviderManager<Comment> replyViewProvider,
-            IPostManager<Article> topicManager,
-            IPostManager<Comment> replyManager,
+            IPostManager<Article> articleManager,
+            IPostManager<Comment> commentManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IAuthorizationService authorizationService,
@@ -83,8 +82,8 @@ namespace Plato.Articles.Controllers
             _entityStore = entityStore;
             _contextFacade = contextFacade;
             _entityReplyStore = entityReplyStore;
-            _topicManager = topicManager;
-            _replyManager = replyManager;
+            _articleManager = articleManager;
+            _commentManager = commentManager;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
@@ -216,10 +215,10 @@ namespace Plato.Articles.Controllers
                 return Unauthorized();
             }
 
-            var topic = new Article();
+            var entity = new Article();
             if (channel > 0)
             {
-                topic.CategoryId = channel;
+                entity.CategoryId = channel;
             }
 
             // Build breadcrumb
@@ -237,7 +236,7 @@ namespace Plato.Articles.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(topic, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -268,15 +267,15 @@ namespace Plato.Articles.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newEntity = await _topicManager.CreateAsync(entity);
+                var newEntity = await _articleManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
                 if (newEntity.Succeeded)
                 {
 
-                    // Indicate new topic to prevent topic update
-                    // on first creation within our topic view provider
-                    newEntity.Response.IsNewTopic = true;
+                    // Indicate new entity to prevent entity update
+                    // on first creation within our view provider
+                    newEntity.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
                     await _entityViewProvider.ProvideUpdateAsync(newEntity.Response, this);
@@ -482,7 +481,7 @@ namespace Plato.Articles.Controllers
 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
-                var result = await _replyManager.CreateAsync(reply);
+                var result = await _commentManager.CreateAsync(reply);
 
                 // Ensure the insert was successful
                 if (result.Succeeded)
@@ -540,7 +539,7 @@ namespace Plato.Articles.Controllers
 
         public async Task<IActionResult> Edit(EntityOptions opts)
         {
-            // Get topic we are editing
+            // Get entity we are editing
             var entity = await _entityStore.GetByIdAsync(opts.Id);
             if (entity == null)
             {
@@ -633,7 +632,7 @@ namespace Plato.Articles.Controllers
                 await _entityViewProvider.ProvideUpdateAsync(entity, this);
 
                 // Everything was OK
-                _alerter.Success(T["Topic Updated Successfully!"]);
+                _alerter.Success(T["Article Updated Successfully!"]);
 
                 // Redirect to entity
                 return RedirectToAction(nameof(Display), new RouteValueDictionary()
@@ -673,8 +672,8 @@ namespace Plato.Articles.Controllers
             }
 
             // Get reply entity
-            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
             {
                 return NotFound();
             }
@@ -683,7 +682,7 @@ namespace Plato.Articles.Controllers
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Do we have permission
-            if (!await _authorizationService.AuthorizeAsync(this.User, topic.CategoryId,
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                 user?.Id == reply.CreatedUserId
                     ? Permissions.EditOwnArticleComment
                     : Permissions.EditAnyArticleComment))
@@ -700,11 +699,11 @@ namespace Plato.Articles.Controllers
                     ).Add(S["Articles"], articles => articles
                         .Action("Index", "Home", "Plato.Articles")
                         .LocalNav()
-                    ).Add(S[topic.Title.TrimToAround(75)], post => post
+                    ).Add(S[entity.Title.TrimToAround(75)], post => post
                         .Action("Display", "Home", "Plato.Articles", new RouteValueDictionary()
                         {
-                            ["opts.id"] = topic.Id,
-                            ["opts.alias"] = topic.Alias
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias
                         })
                         .LocalNav()
                     )
@@ -974,13 +973,13 @@ namespace Plato.Articles.Controllers
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Update topic
+            // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
             entity.IsPinned = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1035,7 +1034,7 @@ namespace Plato.Articles.Controllers
             entity.IsPinned = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1090,7 +1089,7 @@ namespace Plato.Articles.Controllers
             entity.IsPrivate = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1146,7 +1145,7 @@ namespace Plato.Articles.Controllers
             entity.IsPrivate = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1201,7 +1200,7 @@ namespace Plato.Articles.Controllers
             entity.IsLocked = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1257,7 +1256,7 @@ namespace Plato.Articles.Controllers
             entity.IsLocked = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1312,7 +1311,7 @@ namespace Plato.Articles.Controllers
             entity.IsSpam = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1367,7 +1366,7 @@ namespace Plato.Articles.Controllers
             entity.IsSpam = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
 
             if (result.Succeeded)
             {
@@ -1433,7 +1432,7 @@ namespace Plato.Articles.Controllers
             entity.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
                 _alerter.Success(T["Article Deleted Successfully"]);
@@ -1498,7 +1497,7 @@ namespace Plato.Articles.Controllers
             entity.IsDeleted = false;
 
             // Save changes and return results
-            var result = await _topicManager.UpdateAsync(entity);
+            var result = await _articleManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
                 _alerter.Success(T["Article Restored Successfully"]);
@@ -1562,7 +1561,7 @@ namespace Plato.Articles.Controllers
             reply.IsPrivate = true;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _commentManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1625,7 +1624,7 @@ namespace Plato.Articles.Controllers
             reply.IsPrivate = false;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _commentManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1688,7 +1687,7 @@ namespace Plato.Articles.Controllers
             reply.IsSpam = true;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _commentManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1752,7 +1751,7 @@ namespace Plato.Articles.Controllers
             reply.IsSpam = false;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _commentManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1824,7 +1823,7 @@ namespace Plato.Articles.Controllers
             reply.IsDeleted = true;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _commentManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -1896,7 +1895,7 @@ namespace Plato.Articles.Controllers
             reply.IsDeleted = false;
 
             // Save changes and return results
-            var result = await _replyManager.UpdateAsync(reply);
+            var result = await _commentManager.UpdateAsync(reply);
 
             if (result.Succeeded)
             {
@@ -2024,7 +2023,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
             var randomUser = users?.Data[rnd.Next(0, totalUsers)];
             var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
 
-            var topic = new Article()
+            var entity = new Article()
             {
                 Title = "Test Article " + rnd.Next(0, 2000).ToString(),
                 Message = GetSampleMarkDown(rnd.Next(0, 2000)),
@@ -2033,8 +2032,8 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            // create topic
-            var data = await _topicManager.CreateAsync(topic);
+            // create entity
+            var data = await _articleManager.CreateAsync(entity);
             if (data.Succeeded)
             {
                 for (var i = 0; i < 25; i++)
@@ -2049,7 +2048,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
                         CreatedUserId = randomUser?.Id ?? 0,
                         CreatedDate = DateTimeOffset.UtcNow
                     };
-                    var newReply = await _replyManager.CreateAsync(reply);
+                    var newReply = await _commentManager.CreateAsync(reply);
                 }
             }
 

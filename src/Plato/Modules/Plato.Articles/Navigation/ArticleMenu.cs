@@ -53,8 +53,7 @@ namespace Plato.Articles.Navigation
                     ? Permissions.DeleteOwnArticles
                     : Permissions.DeleteAnyArticle;
             }
-
-            // Add topic options
+            
             builder
                 .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
@@ -153,7 +152,7 @@ namespace Plato.Articles.Navigation
                                 ? new List<string>() {"dropdown-item", "dropdown-item-success"}
                                 : new List<string>() {"dropdown-item", "dropdown-item-danger"}
                         )
-                    , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                    , new List<string>() {"article-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
             
             // If entity is not hidden or locked allow replies
@@ -176,7 +175,7 @@ namespace Plato.Articles.Navigation
                                 })
                             .Permission(Permissions.PostArticleComments)
                             .LocalNav()
-                        , new List<string>() {"topic-reply", "text-muted", "text-hidden"}
+                        , new List<string>() {"article-reply", "text-muted", "text-hidden"}
                     );
 
             }

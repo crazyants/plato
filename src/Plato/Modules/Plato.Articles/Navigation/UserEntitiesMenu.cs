@@ -55,7 +55,7 @@ namespace Plato.Articles.Navigation
                 css = "active";
             }
 
-            builder.Add(T["Articles"], 3, topics => topics
+            builder.Add(T["Articles"], 3, articles => articles
                 .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
                 .Action("Index", "User", "Plato.Articles", new RouteValueDictionary()
                 {

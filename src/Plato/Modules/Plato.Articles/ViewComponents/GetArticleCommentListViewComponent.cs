@@ -49,8 +49,8 @@ namespace Plato.Articles.ViewComponents
         async Task<EntityViewModel<Article, Comment>> GetViewModel(EntityOptions options, PagerOptions pager)
         {
             
-            var topic = await _entityStore.GetByIdAsync(options.Id);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(options.Id);
+            if (entity == null)
             {
                 throw new ArgumentNullException();
             }
@@ -91,7 +91,7 @@ namespace Plato.Articles.ViewComponents
             {
                 Options = options,
                 Pager = pager,
-                Entity = topic,
+                Entity = entity,
                 Replies = results
             };
 

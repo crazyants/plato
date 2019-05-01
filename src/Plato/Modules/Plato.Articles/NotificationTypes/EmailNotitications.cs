@@ -14,7 +14,7 @@ namespace Plato.Articles.NotificationTypes
                 "Send me an email notification each time an article is reported.");
 
         public static readonly EmailNotification CommentReport =
-            new EmailNotification("CommentReportEmail", "Reported Comments",
+            new EmailNotification("CommentReportEmail", "Reported Article Comments",
                 "Send me an email notification each time an article comment is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

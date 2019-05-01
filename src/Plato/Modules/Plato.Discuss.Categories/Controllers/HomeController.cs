@@ -130,12 +130,12 @@ namespace Plato.Discuss.Categories.Controllers
                     : null;
                 if (parents == null)
                 {
-                    builder.Add(S["Channels"]);
+                    builder.Add(S["Categories"]);
                 }
                 else
                 {
 
-                    builder.Add(S["Channels"], channels => channels
+                    builder.Add(S["Categories"], c => c
                         .Action("Index", "Home", "Plato.Discuss.Categories", new RouteValueDictionary()
                         {
                             ["opts.categoryId"] = null,
@@ -185,7 +185,7 @@ namespace Plato.Discuss.Categories.Controllers
                 options.FeatureId = feature.Id;
             }
             
-            // Include child channels
+            // Include child categories
             if (category != null)
             {
                 if (category.Children.Any())

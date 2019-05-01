@@ -48,7 +48,7 @@ namespace Plato.Articles.Navigation
             }
 
             builder
-                .Add(T["Articles"], 2, topics => topics
+                .Add(T["Articles"], 2, entity => entity
                         .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                         {
                             ["opts.featureId"] = feature.Id,
