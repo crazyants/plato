@@ -125,6 +125,8 @@
 
                     sb.Append(channel.Value.Name);
 
+                    sb.Append("- ").Append(channel.Value.SortOrder);
+
                     sb.Append("</label>");
 
                     if (!String.IsNullOrEmpty(Model.EditMenuViewName))

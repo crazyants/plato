@@ -13,6 +13,7 @@ using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Categories.Subscribers;
 using Plato.Ideas.Categories.Models;
 using Plato.Ideas.Categories.ViewAdapters;
 using Plato.Ideas.Categories.ViewProviders;
@@ -72,7 +73,8 @@ namespace Plato.Ideas.Categories
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<IdeaComment>>();
-            
+            services.AddScoped<IBrokerSubscriber, CategorySubscriber<Category>>();
+
             // Channel details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
 

@@ -56,15 +56,6 @@ namespace Plato.Docs.Services
                 }
             }
 
-            //// If the parent changes ensure we update the sort order
-            //var existingEntity = await _entityStore.GetByIdAsync(model.Id);
-            //if (existingEntity != null)
-            //{
-            //    if (model.ParentId != existingEntity.ParentId)
-            //    {
-            //        model.SortOrder = await GetNextAvailableSortOrder(model);
-            //    }
-            //}
 
             return await _entityManager.UpdateAsync(model);
 
@@ -80,27 +71,7 @@ namespace Plato.Docs.Services
             return await _entityManager.Move(model, direction);
         }
 
-        // -------------
-
-        //async Task<int> GetNextAvailableSortOrder(Doc model)
-        //{
-
-        //    var sortOrder = 0;
-        //    var entities = await _entityStore
-        //        .GetByFeatureIdAsync(model.FeatureId);
-               
-        //    if (entities != null)
-        //    {
-        //        foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
-        //        {
-        //            sortOrder = entity.SortOrder;
-        //        }
-        //    }
-
-        //    return sortOrder + 1;
-
-        //}
-
+      
     }
 
 }

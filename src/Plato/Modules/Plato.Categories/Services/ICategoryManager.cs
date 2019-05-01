@@ -23,7 +23,9 @@ namespace Plato.Categories.Services
     public enum MoveDirection
     {
         Up,
-        Down
+        Down,
+        ToTop,
+        ToBottom
     }
 
 }

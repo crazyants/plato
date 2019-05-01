@@ -19,6 +19,7 @@ using Plato.Articles.Categories.ViewAdapters;
 using Plato.Articles.Categories.ViewProviders;
 using Plato.Articles.Models;
 using Plato.Articles.Categories.Services;
+using Plato.Categories.Subscribers;
 
 namespace Plato.Articles.Categories
 {
@@ -73,7 +74,8 @@ namespace Plato.Articles.Categories
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
-            
+            services.AddScoped<IBrokerSubscriber, CategorySubscriber<Category>>();
+
             // Channel details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
 

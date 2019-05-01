@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
-using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Categories.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;

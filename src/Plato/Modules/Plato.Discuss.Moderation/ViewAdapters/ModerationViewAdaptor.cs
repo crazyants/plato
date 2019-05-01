@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Categories.Stores;
-using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Categories.Models;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Moderation.Models;
 

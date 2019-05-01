@@ -5,22 +5,22 @@
     <div class="dropdown list-group-flush">
         <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="categoryDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
             <i class="fal fa-cog float-right"></i>
-            @T["Channel"]
+            @T["Category"]
         </a>
         <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in p-0" style="width: 450px;" aria-labelledby="categoryDropdown">
             <div class="dropdown-header my-2">
                 <a href="#" class="text-muted float-right" data-toggle="dropdown">
                     <i class="fal fa-times"></i>
                 </a>
-                @T["Select a channel for this post..."]
+                @T["Select a category..."]
             </div>
             <div class="my-2 mx-3">
                 <input type="search" class="form-control" 
                        data-filter-list-empty=".no-channel-results"
-                       placeholder="@T["Search channels..."]" />
+                       placeholder="@T["Search categories..."]" />
             </div>
             <div class="dropdown-header hidden">
-                @T["No channel found"]
+                @T["No categories found"]
             </div>
             @if (Model.Categories != null)
             {
@@ -49,12 +49,12 @@
     </div>
   
     @{
-        // get selected channels for preview
+        // get selected categories for preview
         var selectedCategories = Model.Categories?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<CategoryBase>>();
     }
     @if (selectedCategories.Count > 0)
     {
-        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group list-group-flush select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No categories selected."]" class="list-group list-group-flush select-dropdown-preview">
             @foreach (var channel in selectedCategories)
             {
                 <li class="list-group-item">
@@ -77,9 +77,9 @@
     }
     else
     {
-        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group list-group-flush select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No categories selected."]" class="list-group list-group-flush select-dropdown-preview">
             <li class="list-group-item">
-                @T["No channels selected."]
+                @T["No categories selected."]
             </li>
         </ul>
     }

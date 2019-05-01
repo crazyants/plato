@@ -8,9 +8,11 @@ using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Categories.Subscribers;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 
 namespace Plato.Categories
@@ -49,7 +51,9 @@ namespace Plato.Categories
             // Client assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 
-
+            // Subscribers
+            services.AddScoped<IBrokerSubscriber, CategorySubscriber<CategoryBase>>();
+            
         }
 
         public override void Configure(

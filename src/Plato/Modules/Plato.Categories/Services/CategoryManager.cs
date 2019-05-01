@@ -79,12 +79,6 @@ namespace Plato.Categories.Services
             model.CreatedDate = DateTime.UtcNow;
             model.Alias = await ParseAlias(model.Name);
             
-            // Get the next available sort order when adding new categories
-            if (model.SortOrder == 0)
-            {
-                model.SortOrder = await GetNextAvailableSortOrder(model);
-            }
-            
             // Invoke CategoryCreating subscriptions
             foreach (var handler in _broker.Pub<TCategory>(this, "CategoryCreating"))
             {
@@ -370,9 +364,8 @@ namespace Plato.Categories.Services
             {
                 return result.Failed($"No categories was found matching FeatureId '{model.FeatureId}'");
             }
-
-
-            var currentSortOrder = model.SortOrder;
+            
+            List<TCategory> children = null;
             switch (direction)
             {
 
@@ -382,7 +375,7 @@ namespace Plato.Categories.Services
                     TCategory above = null;
                     foreach (var category in categories.Where(c => c.ParentId == model.ParentId))
                     {
-                        if (category.SortOrder < currentSortOrder)
+                        if (category.SortOrder < model.SortOrder)
                         {
                             above = (TCategory)category;
                         }
@@ -392,7 +385,7 @@ namespace Plato.Categories.Services
                     if (above != null)
                     {
                         await UpdateSortOrder(model, above.SortOrder);
-                        await UpdateSortOrder(above, currentSortOrder);
+                        await UpdateSortOrder(above, model.SortOrder);
                     }
 
                     break;
@@ -401,12 +394,12 @@ namespace Plato.Categories.Services
                     
                     // Find category below the supplied category
                     TCategory below = null;
-                    var children = categories
+                     children = categories
                         .Where(c => c.ParentId == model.ParentId)
                         .ToList();
                     for (var i = children.Count - 1; i >= 0; i--)
                     {
-                        if (children[i].SortOrder > currentSortOrder)
+                        if (children[i].SortOrder > model.SortOrder)
                         {
                             below = (TCategory)children[i];
                         }
@@ -416,7 +409,44 @@ namespace Plato.Categories.Services
                     if (below != null)
                     {
                         await UpdateSortOrder(model, below.SortOrder);
-                        await UpdateSortOrder(below, currentSortOrder);
+                        await UpdateSortOrder(below, model.SortOrder);
+                    }
+
+                    break;
+
+                case MoveDirection.ToTop:
+
+                    // Find entity at the top of the current level
+                    TCategory top = null;
+                    children = categories.Where(c => c.ParentId == model.ParentId).ToList();
+                    for (var i = children.Count - 1; i >= 0; i--)
+                    {
+                        top = (TCategory)children[i];
+                    }
+
+                    // Ensure we found the entity and we are not attempting to move
+                    // the entity if it's already the top most entity
+                    if (top != null && top.Id != model.Id)
+                    {
+                        await UpdateSortOrder(model, top.SortOrder - 1);
+                    }
+
+                    break;
+
+                case MoveDirection.ToBottom:
+
+                    // Find entity at the bottom of the current level
+                    TCategory bottom = null;
+                    foreach (var entity in categories.Where(c => c.ParentId == model.ParentId))
+                    {
+                        bottom = (TCategory)entity;
+                    }
+
+                    // Ensure we found the entity and we are not attempting to move
+                    // the entity if it's already the bottom most entity
+                    if (bottom != null && bottom.Id != model.Id)
+                    {
+                        await UpdateSortOrder(model, bottom.SortOrder + 1);
                     }
 
                     break;
@@ -431,23 +461,6 @@ namespace Plato.Categories.Services
 
         #region "Private Methods"
         
-        async Task<int> GetNextAvailableSortOrder(TCategory model)
-        {
-
-            var sortOrder = 0;
-            var categories = await _categoryStore.GetByFeatureIdAsync(model.FeatureId);
-            if (categories != null)
-            {
-                foreach (var category in categories.Where(c => c.ParentId == model.ParentId))
-                {
-                    sortOrder = category.SortOrder;
-                }
-            }
-
-            return sortOrder + 1;
-
-        }
-
         async Task<ICommandResult<TCategory>> UpdateSortOrder(TCategory model, int sortOrder)
         {
             model.SortOrder = sortOrder;

@@ -237,26 +237,24 @@ namespace Plato.Entities.Services
             // Our result
             var result = new CommandResult<TEntity>();
 
-            // All categories for supplied category feature
+            // All entities for supplied category feature
             var entities = await _entityStore.GetByFeatureIdAsync(model.FeatureId);
             if (entities == null)
             {
                 return result.Failed($"No entities were found matching FeatureId '{model.FeatureId}'");
             }
             
-            var currentSortOrder = model.SortOrder;
             List<TEntity> children = null;
             switch (direction)
             {
 
                 case MoveDirection.Up:
 
-                    // Find entity above the supplied entity
+                    // Find entity above the supplied entity at the same level
                     TEntity above = null;
-
                     foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
                     {
-                        if (entity.SortOrder < currentSortOrder)
+                        if (entity.SortOrder < model.SortOrder)
                         {
                             above = (TEntity)entity;
                         }
@@ -274,7 +272,7 @@ namespace Plato.Entities.Services
                         above.ModifiedDate = model.ModifiedDate;
                         
                         // Update target
-                        await UpdateSortOrder(above, currentSortOrder);
+                        await UpdateSortOrder(above, model.SortOrder);
 
                     }
 
@@ -282,14 +280,12 @@ namespace Plato.Entities.Services
 
                 case MoveDirection.Down:
 
-                    // Find category below the supplied category
+                    // Find entity below the supplied entity at the same level
                     TEntity below = null;
-                    children = entities
-                        .Where(c => c.ParentId == model.ParentId)
-                        .ToList();
+                    children = entities.Where(c => c.ParentId == model.ParentId).ToList();
                     for (var i = children.Count - 1; i >= 0; i--)
                     {
-                        if (children[i].SortOrder > currentSortOrder)
+                        if (children[i].SortOrder > model.SortOrder)
                         {
                             below = (TEntity)children[i];
                         }
@@ -307,7 +303,7 @@ namespace Plato.Entities.Services
                         below.ModifiedDate = model.ModifiedDate;
                         
                         // Update target
-                        await UpdateSortOrder(below, currentSortOrder);
+                        await UpdateSortOrder(below, model.SortOrder);
 
                     }
 
@@ -322,7 +318,9 @@ namespace Plato.Entities.Services
                     {
                         top = (TEntity)children[i];
                     }
-                  
+
+                    // Ensure we found the entity and we are not attempting to move
+                    // the entity if it's already the top most entity
                     if (top != null && top.Id != model.Id)
                     {
                         await UpdateSortOrder(model, top.SortOrder - 1);
@@ -338,7 +336,9 @@ namespace Plato.Entities.Services
                     {
                         bottom = (TEntity)entity;
                     }
-                    
+
+                    // Ensure we found the entity and we are not attempting to move
+                    // the entity if it's already the bottom most entity
                     if (bottom != null && bottom.Id != model.Id)
                     {
                         await UpdateSortOrder(model, bottom.SortOrder + 1);

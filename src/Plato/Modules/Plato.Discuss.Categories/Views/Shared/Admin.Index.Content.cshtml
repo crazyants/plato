@@ -1,0 +1,19 @@
+﻿@model CategoryIndexViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Categories"]</h6>
+    </card-title>
+    <card-body>
+        @await DisplayAsync(new View("CategoryTree", new
+        {
+            options = new CategoryTreeOptions()
+            {
+                IndexOptions = Model.Options,
+                SelectedCategories = new List<int>(),
+                EditMenuViewName = "EditChannelMenu"
+            }
+        }))
+    </card-body>
+</card>
+

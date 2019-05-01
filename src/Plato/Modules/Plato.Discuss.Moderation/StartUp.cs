@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Categories.Models;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
