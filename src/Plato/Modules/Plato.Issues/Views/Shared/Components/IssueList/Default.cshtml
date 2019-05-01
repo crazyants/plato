@@ -1,0 +1,135 @@
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Internal.Data.Abstractions
+@model EntityIndexViewModel<Issue>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title float-left">@T["Issues"]</h6>
+        <ul class="nav navbar p-0 float-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="filterDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @T["Filter"]
+                </a>
+                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="filterDropDown">
+                    @foreach (var option in Model.Filters)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = Model.Options.Sort,
+                            ["opts.order"] = Model.Options.Order,
+                            ["opts.filter"] = option.Value
+                        };
+                        if (option.Text == "-")
+                        {
+                            <div class="dropdown-divider"></div>
+                        }
+                        else
+                        {
+                            var iconCss = option.Value == Model.Options.Filter ? "fal fa-fw fa-check" : "fal fa-fw";
+                            <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                                <i class="@iconCss"></i>
+                                @T[option.Text]
+                            </a>
+                        }
+                        
+                    }
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="sortByDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @T["Sort By"]
+                </a>
+                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="sortByDropdown">
+                    @foreach (var option in Model.SortColumns)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = option.Value
+                        };
+                        if (Model.Options.Order != OrderBy.Desc)
+                        {
+                            if (!routeValues.ContainsKey("opts.order"))
+                            {
+                                routeValues.Add("opts.order", Model.Options.Order);
+                            }
+                        }
+                        var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                    <div class="dropdown-divider"></div>
+                    @foreach (var option in Model.SortOrder)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = Model.Options.Sort,
+                            ["opts.order"] = option.Value
+                        };
+                        var iconCss = option.Value == Model.Options.Order ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                </div>
+            </li>
+        </ul>
+    </card-title>
+    <card-body>
+        
+        @if (Model.Results?.Data != null)
+        {
+            var offset = Model.Pager.Offset;
+            var rowOffset = Model.Pager.RowOffset;
+            <ul data-provide="infiniteScroll"
+                data-infinite-scroll-url="@Model.Pager.Url"
+                data-infinite-scroll-offset="@offset"
+                data-infinite-scroll-row-offset="@rowOffset"
+                data-infinite-scroll-page="@Model.Pager.Page"
+                data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
+                class="list-group list-group-flush list-group-hover infinite-scroll">
+                <li class="list-group-item infinite-scroll-loader" data-type="previous"></li>
+                @foreach (var article in Model.Results.Data)
+                {
+                    var css = rowOffset == offset
+                        ? "p-3 infinite-scroll-item infinite-scroll-item-active"
+                        : "p-3 infinite-scroll-item";
+                    <li class="list-group-item list-group-item-action p-0">
+                        <div class="@css" data-infinite-scroll-offset="@rowOffset" data-infinite-scroll-highlight="@rowOffset">
+                            @await DisplayAsync(new View("IssueListItem", new
+                            {
+                                model = new EntityListItemViewModel<Issue>()
+                                {
+                                    Entity = article,
+                                    Options = Model.Options
+                                }
+                            }))
+                        </div>
+                    </li>
+                    {
+                         rowOffset++;
+                     }
+                }
+                <li class="list-group-item infinite-scroll-loader" data-type="next"></li>
+            </ul>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No articles found"]
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>
+
+@if (Model.Pager.Enabled)
+{
+    <div class="mt-4 mb-4">
+        <pager model="@Model.Pager"></pager>
+    </div>
+}
+

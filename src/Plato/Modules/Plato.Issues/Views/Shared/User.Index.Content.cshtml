@@ -1,0 +1,12 @@
+﻿@model UserDisplayViewModel<Issue>
+
+@await DisplayAsync(new View("IssueList", new
+{
+    options = @Model.IndexViewModel.Options,
+    pager = @Model.IndexViewModel.Pager
+}))
+
+     
+
+
+

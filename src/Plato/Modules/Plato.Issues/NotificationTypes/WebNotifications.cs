@@ -3,19 +3,19 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Articles.NotificationTypes
+namespace Plato.Issues.NotificationTypes
 {
 
     public class WebNotifications : INotificationTypeProvider
     {
 
-        public static readonly WebNotification ArticleReport =
-            new WebNotification("ArticleReportWeb", "Reported Articles",
-                "Show me a web notification each time an article is reported.");
+        public static readonly WebNotification IssueReport =
+            new WebNotification("IssueReportWeb", "Reported Issues",
+                "Show me a web notification each time an issue is reported.");
 
-        public static readonly WebNotification CommentReport =
-            new WebNotification("CommentReportWeb", "Reported Article Comments",
-                "Show me a web notification each time an article comment is reported.");
+        public static readonly WebNotification IssueCommentReport =
+            new WebNotification("IssueCommentReportWeb", "Reported Issue Comments",
+                "Show me a web notification each time an issue comment is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
@@ -26,8 +26,8 @@ namespace Plato.Articles.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        ArticleReport,
-                        CommentReport
+                        IssueReport,
+                        IssueCommentReport
                     }
                 },
                 new DefaultNotificationTypes
@@ -35,8 +35,8 @@ namespace Plato.Articles.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        ArticleReport,
-                        CommentReport
+                        IssueReport,
+                        IssueCommentReport
                     }
                 }
 
@@ -52,8 +52,8 @@ namespace Plato.Articles.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        ArticleReport,
-                        CommentReport
+                        IssueReport,
+                        IssueCommentReport
                     }
                 },
                 new DefaultNotificationTypes
@@ -61,8 +61,8 @@ namespace Plato.Articles.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        ArticleReport,
-                        CommentReport
+                        IssueReport,
+                        IssueCommentReport
                     }
                 }
             };

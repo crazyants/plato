@@ -1,0 +1,14 @@
+Name: Plato Issues
+Description: Add public issue tracking to Plato.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Issues
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Entities",
+		Version: "1.0.0"
+	}
+]

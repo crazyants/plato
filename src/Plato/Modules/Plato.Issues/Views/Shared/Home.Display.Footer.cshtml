@@ -1,0 +1,27 @@
+﻿@model EditEntityReplyViewModel
+
+<div class="list-left reply-left">
+    @if (this.CurrentUser != null)
+    {
+        <avatar data-toggle="tooltip" title="@this.CurrentUser.DisplayName" class="avatar" url="@this.CurrentUser.Avatar.Url" />
+    }
+    else
+    {
+        <avatar data-toggle="tooltip" title="@T["Anonymous"]" class="avatar" url="/images/photo.png" user-id="0" />
+    }
+</div>
+<div class="list-body reply-body">
+    <card>
+        <card-body>
+            <input type="hidden" asp-for="EntityId" />
+            @await DisplayAsync(new View("Editor", new
+            {
+                value = string.Empty,
+                placeHolderText = T["Post a reply..."],
+                htmlName = @Model.EditorHtmlName,
+                autoFocus = false
+            }))
+        </card-body>
+    </card>
+</div>
+

@@ -1,0 +1,17 @@
+﻿@model EditEntityViewModel
+
+@if (Model.Id == 0)
+{
+    <h4>@T["New Issue"]</h4>
+    <span class="text-muted">@T["Create an issue below."]</span>
+    <hr />
+}
+else
+{
+    <h4>@T["Edit Issue"]</h4>
+    <span class="text-muted">@T["Edit the issue below."]</span>
+    <hr />
+}
+
+
+

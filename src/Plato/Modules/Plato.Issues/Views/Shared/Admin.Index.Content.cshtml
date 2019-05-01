@@ -1,0 +1,31 @@
+﻿@using Plato.Features.ViewModels
+@model AdminIndex
+@{
+    var manageFeaturesPermission = Plato.Features.Permissions.ManageFeatures;
+}
+
+<authorize asp-permission="@manageFeaturesPermission.Name">
+    <authorize-success>
+        <card class="card card-body-flush">
+            <card-title>
+                <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Index" asp-route-opts.category="Issues" class="btn btn-secondary float-right">
+                    @T["All Features"]
+                </a>
+                <h6 class="card-title">@T["Enhance Plato.Issues"]</h6>
+                <div class="text-muted">@T["Additional features available to enhance issues."]</div>
+            </card-title>
+            <card-body>
+
+                @await DisplayAsync(new View("SimpleFeatureList", new
+                {
+                    options = new FeatureIndexOptions()
+                    {
+                        Category = "Issues",
+                        HideEnabled = true
+                    }
+                }))
+
+            </card-body>
+        </card>
+    </authorize-success>
+</authorize>

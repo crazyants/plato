@@ -1,0 +1,22 @@
+{
+  "Emails": [
+    {
+      "Id": "NewIssueReport",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - Issue Reported",
+      "Message": "Hi {0},\n\nThe issue \"{1}\" has been reported for the reason \"{2}\" by {3} (@{4}). You can review this issue at the link below.\n\n{5}\n\n[SiteName]\n[SiteUrl]"
+    },
+    {
+      "Id": "NewIssueCommentReport",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - Comment Reported",
+      "Message": "Hi {0},\n\nA comment to the issue \"{1}\" has been reported for the reason \"{2}\" by {3} (@{4}). You can review this comment at the link below.\n\n{5}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}

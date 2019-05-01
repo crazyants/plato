@@ -1,0 +1,28 @@
+﻿@using Plato.Entities.Extensions
+@model Issue
+
+@if (Model.IsLocked)
+{
+    <authorize asp-permission="PostArticleComments">
+        <authorize-success>
+            <div class="btn btn-danger" style="cursor: default;" title="@T["This article is locked and is not accepting new comments"]" data-toggle="tooltip">
+                <i class="fal fa-fw fa-lock"></i>
+                @T["Locked"]
+            </div>
+        </authorize-success>
+    </authorize>
+}
+else
+{
+    @if (!Model.IsHidden())
+     {
+         <authorize asp-permission="PostArticleComments">
+             <authorize-success>
+                 <a asp-route-action="Create" class="btn btn-primary" data-provide="postReply" title="@T["Add Reply"]">
+                     <i class="fal fa-fw fa-plus"></i>
+                     @T["Add Comment"]
+                 </a>
+             </authorize-success>
+         </authorize>
+     }
+}

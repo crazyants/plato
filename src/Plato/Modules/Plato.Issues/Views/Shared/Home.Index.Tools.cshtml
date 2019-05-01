@@ -1,0 +1,10 @@
+﻿@model EntityIndexViewModel<Issue>
+
+<div asp-permission="PostArticles">
+    <authorize-success>
+        <a asp-route-action="Create" class="btn btn-primary" title="@T["New Article"]">
+            <i class="fal fa-fw fa-plus"></i>
+            @T["New Issue"]
+        </a>
+    </authorize-success>
+</div>
