@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Plato.Internal.Navigation;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.WebApi.Navigation
 {
+
     public class AdminMenu : INavigationProvider
     {
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
@@ -24,13 +24,14 @@ namespace Plato.WebApi.Navigation
             builder
                 .Add(T["Settings"], int.MaxValue, configuration => configuration
                     .IconCss("fal fa-cog")
-                    .Add(T["Web Api"], 6, webApiSettings => webApiSettings
+                    .Add(T["Web Api"], int.MaxValue, webApiSettings => webApiSettings
                         .Action("Index", "Admin", "Plato.WebApi")
-                        //.Permission(Permissions.ManageUsers)
-                        .LocalNav()
-                    ));
+                        .Permission(Permissions.ManageWebApiSettings)
+                        .LocalNav())
+                );
 
         }
+
     }
 
 }

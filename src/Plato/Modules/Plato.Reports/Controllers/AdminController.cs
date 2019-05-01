@@ -143,27 +143,18 @@ namespace Plato.Reports.Controllers
 
         //// ----------------------
 
-        async Task<ReportIndexViewModel<Metric>> GetIndexViewModelAsync(ReportOptions options, PagerOptions pager)
+        Task<ReportIndexViewModel<Metric>> GetIndexViewModelAsync(ReportOptions options, PagerOptions pager)
         {
-
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
+            
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Return updated model
-            return new ReportIndexViewModel<Metric>()
+            return Task.FromResult(new ReportIndexViewModel<Metric>()
             {
                 Options = options,
                 Pager = pager
-            };
+            });
 
         }
 

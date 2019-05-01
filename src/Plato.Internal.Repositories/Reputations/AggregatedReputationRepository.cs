@@ -105,14 +105,99 @@ namespace Plato.Internal.Repositories.Reputations
             
         }
 
-        public Task<AggregatedResult<int>> SelectSummedByIntAsync(
+        public async Task<AggregatedResult<int>> SelectSummedByIntAsync(
             string groupBy,
             DateTimeOffset start,
             DateTimeOffset end,
             int featureId)
         {
-            throw new NotImplementedException();
+            // Sql query
+            const string sql = @"             
+                SELECT  
+                    MAX(ur.{groupBy}) AS [Aggregate], 
+                    SUM(ur.Points) AS [Count]
+                FROM 
+                    {prefix}_UserReputations ur INNER JOIN {prefix}_Users u ON ur.CreatedUserId = u.Id
+                  WHERE (
+                    (ur.CreatedDate >= '{start}' AND ur.CreatedDate <= '{end}') AND
+                    (ur.FeatureId = {featureId})
+                )
+                GROUP BY 
+                    ur.{groupBy}
+                ORDER BY 
+                    [Count] DESC
+            ";
+
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{groupBy}"] = groupBy,
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern(),
+                ["{featureId}"] = featureId.ToString()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<int>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<int>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
         }
+        
+        // ----------------
+        // Grouped by feature
+        // ----------------
+
+        public async Task<AggregatedResult<string>> SelectGroupedByFeature(DateTimeOffset start, DateTimeOffset end)
+        {
+
+            // Sql query
+            const string sql = @"
+                SELECT 
+                    f.ModuleId AS [Aggregate] ,
+                    COUNT(ur.Id) AS Count
+                FROM 
+                    {prefix}_UserReputations ur INNER JOIN {prefix}_ShellFeatures f ON f.Id = ur.FeatureId
+                WHERE 
+                    ur.CreatedDate >= '{start}' AND ur.CreatedDate <= '{end}'
+                GROUP BY 
+                    f.ModuleId
+            ";
+
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<string>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<string>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
+
+
+        }
+
+
+
     }
 
 }

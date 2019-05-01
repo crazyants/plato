@@ -11,13 +11,11 @@
             {
                 @T[Model.Options.Title]
             }
-
         </h6>
     </card-title>
     <card-body>
         @if (Model.Data != null)
         {
-
             <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var result in Model.Data)
                 {               
@@ -42,7 +40,7 @@
         {
             <ul class="list-group list-group-flush list-group-hover">
                 <li class="list-group-item">
-                    <h6>@T["No results found"]</h6>
+                    @T["No results found"]
                 </li>
             </ul>
         }

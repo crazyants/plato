@@ -19,6 +19,8 @@ namespace Plato.Internal.Repositories.Reputations
             DateTimeOffset end,
             int featureId);
 
+        Task<AggregatedResult<string>> SelectGroupedByFeature(DateTimeOffset start, DateTimeOffset end);
+
     }
 
 }

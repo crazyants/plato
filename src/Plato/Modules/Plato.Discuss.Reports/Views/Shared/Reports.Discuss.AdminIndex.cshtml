@@ -67,3 +67,12 @@
     </div>
 
 </div>
+
+@await DisplayAsync(new View("UserRepTopList", new
+{
+    options = @Model,
+    chart = new ChartOptions()
+    {
+        Title = "Most Participation"
+    }
+}))

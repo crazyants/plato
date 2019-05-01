@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +48,7 @@ namespace Plato.Reports.ViewComponents
             });
 
         }
+
         async Task<IEnumerable<AggregatedModel<int, User>>> SelectUsersByReputationAsync(ReportOptions options)
         {
 
@@ -78,11 +78,10 @@ namespace Plato.Reports.ViewComponents
                     .ToList();
             }
 
-            // No results to display
+            // Build combined result
             List<AggregatedModel<int, User>> entityMetrics = null;
             if (mostViewedEntities?.Data != null)
             {
-                // Build combined result
                 foreach (var entity in mostViewedEntities.Data)
                 {
                     // Get or add aggregate
@@ -101,8 +100,7 @@ namespace Plato.Reports.ViewComponents
             return entityMetrics?.OrderByDescending(o => o.Aggregate.Count) ?? null;
 
         }
-
-
+        
     }
 
 }

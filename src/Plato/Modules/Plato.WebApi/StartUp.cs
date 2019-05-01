@@ -8,6 +8,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Text.Abstractions;
 using Plato.WebApi.Middleware;
 using Plato.WebApi.Models;
@@ -50,7 +51,10 @@ namespace Plato.WebApi
             // Services
             services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
             services.AddScoped<IWebApiOptionsFactory, WebApiOptionsFactory>();
-            
+
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
         }
 
         public override void Configure(
