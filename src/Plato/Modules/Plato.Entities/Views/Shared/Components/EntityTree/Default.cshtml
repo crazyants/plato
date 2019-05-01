@@ -124,10 +124,7 @@
                             .Append("\">");
                     }
                     sb.Append(entity.Value.Title);
-
-                    sb.Append(" - id: ").Append(entity.Value.ParentId);
-                    sb.Append(" - sort: ").Append(entity.Value.SortOrder);
-
+                    
                     if (!string.IsNullOrEmpty(url))
                     {
                         sb.Append("</a>");

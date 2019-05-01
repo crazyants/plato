@@ -21,7 +21,9 @@ namespace Plato.Entities.Services
     public enum MoveDirection
     {
         Up,
-        Down
+        Down,
+        ToTop,
+        ToBottom
     }
 
 }

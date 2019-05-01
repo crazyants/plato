@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
@@ -244,6 +245,7 @@ namespace Plato.Entities.Services
             }
             
             var currentSortOrder = model.SortOrder;
+            List<TEntity> children = null;
             switch (direction)
             {
 
@@ -282,7 +284,7 @@ namespace Plato.Entities.Services
 
                     // Find category below the supplied category
                     TEntity below = null;
-                    var children = entities
+                    children = entities
                         .Where(c => c.ParentId == model.ParentId)
                         .ToList();
                     for (var i = children.Count - 1; i >= 0; i--)
@@ -311,6 +313,38 @@ namespace Plato.Entities.Services
 
                     break;
 
+                case MoveDirection.ToTop:
+
+                    // Find entity at the top of the current level
+                    TEntity top = null;
+                    children = entities.Where(c => c.ParentId == model.ParentId).ToList();
+                    for (var i = children.Count - 1; i >= 0; i--)
+                    {
+                        top = (TEntity)children[i];
+                    }
+                  
+                    if (top != null && top.Id != model.Id)
+                    {
+                        await UpdateSortOrder(model, top.SortOrder - 1);
+                    }
+
+                    break;
+
+                case MoveDirection.ToBottom:
+
+                    // Find entity at the bottom of the current level
+                    TEntity bottom = null;
+                    foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
+                    {
+                        bottom = (TEntity)entity;
+                    }
+                    
+                    if (bottom != null && bottom.Id != model.Id)
+                    {
+                        await UpdateSortOrder(model, bottom.SortOrder + 1);
+                    }
+
+                    break;
             }
 
             return result.Success();

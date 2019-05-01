@@ -38,7 +38,7 @@
             <authorize asp-permission="@editPermission.Name">
                 <authorize-success>
                     <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Edit" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" class="dropdown-item">
-                        @T["Edit Doc"]
+                        @T["Edit"]
                     </a>
                 </authorize-success>
             </authorize>
@@ -51,12 +51,21 @@
             </authorize>
             <authorize asp-permission="@sortPermission.Name">
                 <authorize-success>
+                    <div class="dropdown-divider"></div>
                     <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveUp" asp-route-id="@Model.Id" class="dropdown-item">
                         @T["Move Up"]
                     </a>
                     <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
                         @T["Move Down"]
                     </a>
+                    <div class="dropdown-divider"></div>
+                    <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveToTop" asp-route-id="@Model.Id" class="dropdown-item">
+                        @T["Move To Top"]
+                    </a>
+                    <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="MoveToBottom" asp-route-id="@Model.Id" class="dropdown-item">
+                        @T["Move To Bottom"]
+                    </a>
+                    <div class="dropdown-divider"></div>
                 </authorize-success>
             </authorize>
             @if (Model.IsDeleted)
@@ -74,7 +83,7 @@
                 <authorize asp-permission="@deletePermission.Name">
                     <authorize-success>
                         <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Delete" data-provide="confirm" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
-                            @T["Delete Doc"]
+                            @T["Delete"]
                         </a>
                     </authorize-success>
                 </authorize>
