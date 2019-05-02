@@ -1,81 +1,30 @@
 ﻿@model AdminIndex
+@{
+    var manageFeaturesPermission = Plato.Features.Permissions.ManageFeatures;
+}
 
-<card>
-    <card-title>
-        <h6 class="card-title">@T["Overview"]</h6>
-    </card-title>
-    <card-body>
-      
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-comment fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            23
-                        </h1><br/>
-                        <span class="text-muted">
-                            @T["public topics"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-reply fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            23
-                        </h1><br />
-                        <span class="text-muted">
-                            @T["private topics"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-heart fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            11
-                        </h1><br />
-                        <span class="text-muted">
-                            @T["public replies:"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="row">
-                    <div class="col-3 text-center">
-                        <i class="fal fa-heart fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-9">
-                        <h1 class="d-inline-block" data-toggle="tooltip">
-                            11
-                        </h1><br />
-                        <span class="text-muted">
-                            @T["private replies"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+<authorize asp-permission="@manageFeaturesPermission.Name">
+    <authorize-success>
+        <card class="card card-body-flush">
+            <card-title>
+                <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Index" asp-route-opts.category="Docs" class="btn btn-secondary float-right">
+                    @T["All Features"]
+                </a>
+                <h6 class="card-title">@T["Enhance Plato.Docs"]</h6>
+                <div class="text-muted">@T["Additional features available to enhance docs."]</div>
+            </card-title>
+            <card-body>
 
-        
+                @await DisplayAsync(new View("SimpleFeatureList", new
+                {
+                    options = new FeatureIndexOptions()
+                    {
+                        Category = "Docs",
+                        HideEnabled = true
+                    }
+                }))
 
-    </card-body>
-</card>
-
-<ul>
-    <li>Enhance Plato.Docs</li>
-    <li>Discuss Settings</li>
-    <li>Discuss Reports</li>
-</ul>
+            </card-body>
+        </card>
+    </authorize-success>
+</authorize>

@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Entities.Models;
-using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -56,7 +55,7 @@ namespace Plato.Questions.Navigation
                 css = "active";
             }
             
-            builder.Add(T["Questions"], 4, topics => topics
+            builder.Add(T["Questions"], 5, questions => questions
                 .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
                 .Action("Index", "User", "Plato.Questions", new RouteValueDictionary()
                 {

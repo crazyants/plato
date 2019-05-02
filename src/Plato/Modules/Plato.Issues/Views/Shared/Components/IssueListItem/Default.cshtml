@@ -2,40 +2,25 @@
 @{
     var details = Model.Entity.GetOrCreate<ArticleDetails>();
     var voteText = Model.Entity.TotalRatings == 1 ? T["vote"] : T["votes"];
-    var answersText = Model.Entity.TotalReplies == 1 ? T["answer"] : T["answers"];
-    string voteCss = "votes", answerCss = "answers", ratingCss = "rating";
+    var repliesText = Model.Entity.TotalReplies == 1 ? T["reply"] : T["replies"];
+    string voteCss = "votes", replyCss = "comments";
 
     if (Model.Entity.TotalReplies > 0)
     {
-        answerCss = "counter-outline-success";
+        replyCss = "counter-outline-success";
     }
-    if (Model.Entity.TotalAnswers > 0)
+    if (Model.Entity.IsClosed)
     {
-        answerCss = "counter-success";
-    }
-    if (Model.Entity.SummedRating > 0)
-    {
-        ratingCss = "counter-outline-primary";
-    }
-    if (Model.Entity.SummedRating < 0)
-    {
-        ratingCss = "counter-outline-danger";
-    }
-    if (Model.Entity.SummedRating < -10)
-    {
-        ratingCss = "counter-danger";
+        replyCss = "counter-success";
     }
 }
 
-<div class="list-left list-left-3x counter-group">
+<div class="list-left list-left-2x counter-group">
     <div class="counter @voteCss">
         <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @voteText.Value
     </div>
-    <div class="counter @answerCss">
-        <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @answersText.Value
-    </div>
-    <div class="counter @ratingCss">
-        <h6>@Model.Entity.SummedRating.ToPrettyInt()</h6> @T["rating"]
+    <div class="counter @replyCss">
+        <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @repliesText.Value
     </div>
 </div>
 <div class="list-body">
@@ -58,7 +43,7 @@
             </div>
             <div class="col-12">
                 <div class="float-right">
-                    <span class="text-muted">@T["last answer"]</span>
+                    <span class="text-muted">@T["last post"]</span>
                     <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
                         <date utc="@Model.Entity.LastReplyDate"></date>
                     </a>
@@ -67,7 +52,7 @@
         }
     </div>
 
-    <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
+    <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
     {
         <span title="@T["This question is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
@@ -85,14 +70,13 @@
         <span class="pl-2">
             @foreach (var label in Model.Labels)
             {
-                <a asp-route-area="Plato.Questions.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                <a asp-route-area="Plato.Issues.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                     @label.Name
                 </a>
             }
         </span>
     }
-
-
+    
     <br />
 
     @if (Model.Entity.CreatedUserId > 0)
@@ -106,24 +90,21 @@
     @if (@Model.Channel != null)
     {
         <span>@T["in"]</span>
-        <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
+        <a asp-route-area="Plato.Issues.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
             @Model.Channel.Name
         </a>
     }
     @if (Model.Entity.IsPrivate)
     {
-        <span class="badge badge-primary" data-toggle="tooltip" title="@T["This question is hidden and only visible as you have permission to view hidden questions"]">@T["Hidden"]</span>
+        <span class="badge badge-primary" data-toggle="tooltip" title="@T["This issue is hidden and only visible as you have permission to view hidden issues"]">@T["Hidden"]</span>
     }
     @if (Model.Entity.IsSpam)
     {
-        <span class="badge badge-info" data-toggle="tooltip" title="@T["This question has been flagged as SPAM and is only visible as you have permission to view questions flagged as SPAM"]">@T["SPAM"]</span>
+        <span class="badge badge-info" data-toggle="tooltip" title="@T["This issue has been flagged as SPAM and is only visible as you have permission to view issues flagged as SPAM"]">@T["SPAM"]</span>
     }
     @if (Model.Entity.IsDeleted)
     {
-        <span class="badge badge-danger" data-toggle="tooltip" title="@T["This question has been deleted and is only visible as you have permission to view deleted questions"]">@T["Deleted"]</span>
+        <span class="badge badge-danger" data-toggle="tooltip" title="@T["This issue has been deleted and is only visible as you have permission to view deleted issues"]">@T["Deleted"]</span>
     }
-
-
-
-
+    
 </div>

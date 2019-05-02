@@ -1,35 +1,40 @@
 ﻿@model Issue
 @{
     var replies = @Model.TotalReplies == 1
-        ? "comment"
-        : "comments";
+        ? "reply"
+        : "replies";
 }
 
-<h4>
-    <span title=" @Model.Title">
-        @Model.Title.TrimToAround(75)
+<div class="list-left">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias">
+        <avatar data-toggle="tooltip" title="@Model.CreatedBy.DisplayName" class="avatar" url="@Model.CreatedBy.Avatar.Url" />
+    </a>
+</div>
+<div class="list-body">
+    <h4>
+        <span title=" @Model.Title">
+            @Model.Title.TrimToAround(75)
+        </span>
+        @if (Model.IsPinned)
+        {
+            <span title="@T["This topic is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-thumbtack"></i>
+            </span>
+        }
+        @if (Model.IsLocked)
+        {
+            <span title="@T["This topic is locked and is not accepting new replies"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-lock"></i>
+            </span>
+        }
+    </h4>
+    <span class="text-muted">
+        @T["Posted"]
+        <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        @T["by"]
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias">@Model.CreatedBy.DisplayName</a>
+        - @Model.TotalReplies.ToPrettyInt() @T[replies]
     </span>
-    @if (Model.IsPinned)
-    {
-        <span title="@T["This issue is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
-            <i class="fal fa-thumbtack"></i>
-        </span>
-    }
-    @if (Model.IsLocked)
-    {
-        <span title="@T["This issue is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
-            <i class="fal fa-lock"></i>
-        </span>
-    }
-</h4>
-<span class="text-muted">
-    @T["Posted"]
-    <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-    @T["by"]
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias">@Model.CreatedBy.DisplayName</a>
-    - @Model.TotalReplies.ToPrettyInt() @T[replies]
-</span>
-
+</div>
 <hr />
-
 
