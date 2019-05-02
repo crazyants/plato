@@ -1,0 +1,17 @@
+﻿@model TagListViewModel
+
+@if (Model.Tags != null && Model.Tags.Any())
+{
+    <div class="p-3">
+        @foreach (var tag in Model.Tags)
+        {
+        var tooltip = $"{T["Show all topics tagged"].Value} '{tag.Name}...'";
+        <div title="@tooltip" class="btn-group">
+            <a asp-route-area="Plato.Questions.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.TagId" asp-route-opts.alias="@tag.Alias" class="btn btn-sm label">
+                <span class=" font-weight-bold">@tag.Name</span>
+                <span>x</span>@tag.TotalEntities.ToPrettyInt()
+            </a>
+        </div>
+        }
+    </div>
+}
