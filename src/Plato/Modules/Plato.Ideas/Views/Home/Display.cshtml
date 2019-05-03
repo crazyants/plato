@@ -49,7 +49,7 @@
                         </div>
                         <div class="resizable-body">
 
-                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
+                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
                                 <div id="postReply">
                                     @if (Model.Footer != null)
                                     {
@@ -94,7 +94,7 @@
                 </div>
                 <div class="resizable-body">
 
-                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
+                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
                         @if (Model.Footer != null)
                         {
                             <div>

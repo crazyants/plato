@@ -17,7 +17,15 @@ canvas {
 /* Validation */
 /* ------------------------- */
 
-.validation-summary-valid { display: none; }
+.validation-summary-valid {
+    padding: 0 1.25rem;
+    margin-bottom: 0.75rem;
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
 .validation-summary-errors {
     border-style: solid;
     border-width: 1px;
@@ -25,12 +33,18 @@ canvas {
     padding: 0.75rem 1.25rem;
     margin-bottom: 0.75rem;
     border-radius: 0.25rem;
-
+    visibility: visible;
+    height: auto;
+    opacity: 1;
+    overflow: visible;
+    -ms-transition: all 0.10s ease;
+    -o-transition: all 0.10s ease;
+    -webkit-transition: all 0.10s ease;
+    transition: all 0.10s ease;
 }
 
 .validation-summary-errors ul { display: block; padding: 0 0 0 1rem; margin: 0;  }
 .validation-summary-errors ul li { padding: 0; margin: 0; }
-
 
 /* ------------------------- */
 /* Helpers */

@@ -45,12 +45,6 @@ namespace Plato.Internal.Assets.Abstractions
                     },
                     new Asset()
                     {
-                        Url = "/js/vendors/jquery-validator-plugins.js",
-                        Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
-                    },
-                    new Asset()
-                    {
                         Url = "/js/vendors/bootstrap.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer

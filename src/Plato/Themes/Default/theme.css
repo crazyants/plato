@@ -43,7 +43,7 @@
 /* blockquotes */
 
 .markdown-body blockquote {
-    border-left: .25em solid rgba(50, 50, 50, 0.75);
+    border-left: .25em solid rgba(50, 50, 50, 0.25);
     color: #6a737d;
 }
 

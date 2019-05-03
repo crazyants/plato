@@ -3,7 +3,7 @@
     AddTitleSegment(T["Register"]);
 }
 
-<form asp-action="Register" method="post" enctype="multipart/form-data">
+<form asp-action="Register" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
     <div class="layout">
         <div class="layout-header">
             @if (Model.Alerts != null)

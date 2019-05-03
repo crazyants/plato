@@ -54,7 +54,7 @@
                             <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
                         </div>
                         <div class="resizable-body">
-                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
+                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
                                 <div id="postReply">
                                     @if (Model.Footer != null)
                                     {
@@ -93,7 +93,7 @@
                 </div>
                 <div class="resizable-body">
 
-                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data">
+                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
                         @if (Model.Footer != null)
                         {
                             <div>
