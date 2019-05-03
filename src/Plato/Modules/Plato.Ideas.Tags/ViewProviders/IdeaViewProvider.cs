@@ -20,7 +20,7 @@ using Plato.Tags.ViewModels;
 
 namespace Plato.Ideas.Tags.ViewProviders
 {
-    public class QuestionViewProvider : BaseViewProvider<Idea>
+    public class IdeaViewProvider : BaseViewProvider<Idea>
     {
         private const string TagsHtmlName = "tags";
 
@@ -34,7 +34,7 @@ namespace Plato.Ideas.Tags.ViewProviders
 
         private readonly HttpRequest _request;
         
-        public QuestionViewProvider(
+        public IdeaViewProvider(
             ITagStore<Tag> tagStore,
             IEntityStore<Idea> entityStore,
             IEntityTagStore<EntityTag> entityTagStore,
@@ -76,7 +76,7 @@ namespace Plato.Ideas.Tags.ViewProviders
                 .ToList();
 
             return Views(
-                View<TagsViewModel<Tag>>("Question.Tags.Index.Sidebar", model =>
+                View<TagsViewModel<Tag>>("Idea.Tags.Index.Sidebar", model =>
                 {
                     model.Tags = tags?.Data;
                     return model;
@@ -88,7 +88,7 @@ namespace Plato.Ideas.Tags.ViewProviders
         public override Task<IViewProviderResult> BuildDisplayAsync(Idea topic, IViewProviderContext context)
         {
             return Task.FromResult(Views(
-                View<EditEntityTagsViewModel>("Question.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
+                View<EditEntityTagsViewModel>("Idea.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         HtmlName = TagsHtmlName
                     }).Zone("footer")
@@ -156,7 +156,7 @@ namespace Plato.Ideas.Tags.ViewProviders
             }
 
             return Views(
-                View<EditEntityTagsViewModel>("Question.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
+                View<EditEntityTagsViewModel>("Idea.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         Tags = tagsJson,
                         HtmlName = TagsHtmlName

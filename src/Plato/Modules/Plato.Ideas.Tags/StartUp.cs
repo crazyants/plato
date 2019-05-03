@@ -41,14 +41,14 @@ namespace Plato.Ideas.Tags
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
-            services.AddScoped<INavigationProvider, QuestionFooterMenu>();
+            services.AddScoped<INavigationProvider, IdeaFooterMenu>();
             services.AddScoped<INavigationProvider, IdeaCommentFooterMenu>();
             
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Idea>, ViewProviderManager<Idea>>();
-            services.AddScoped<IViewProvider<Idea>, QuestionViewProvider>();
+            services.AddScoped<IViewProvider<Idea>, IdeaViewProvider>();
             services.AddScoped<IViewProviderManager<IdeaComment>, ViewProviderManager<IdeaComment>>();
-            services.AddScoped<IViewProvider<IdeaComment>, AnswerViewProvider>();
+            services.AddScoped<IViewProvider<IdeaComment>, IdeaCommentViewProvider>();
         
             // Admin view providers
             services.AddScoped<IViewProviderManager<TagAdmin>, ViewProviderManager<TagAdmin>>();
@@ -59,7 +59,7 @@ namespace Plato.Ideas.Tags
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
          
             // Register view adapters
-            services.AddScoped<IViewAdapterProvider, QuestionListItemViewAdapter>();
+            services.AddScoped<IViewAdapterProvider, IdeaListItemViewAdapter>();
 
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();
@@ -86,17 +86,17 @@ namespace Plato.Ideas.Tags
 
             // Tag Index
             routes.MapAreaRoute(
-                name: "QuestionsTagIndex",
+                name: "IdeasTagIndex",
                 areaName: "Plato.Ideas.Tags",
-                template: "questions/tags/{pager.offset:int?}/{opts.search?}",
+                template: "ideas/tags/{pager.offset:int?}/{opts.search?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
             // Tag Entities
             routes.MapAreaRoute(
-                name: "QuestionsTagDisplay",
+                name: "IdeasTagDisplay",
                 areaName: "Plato.Ideas.Tags",
-                template: "questions/tag/{opts.tagId:int}/{opts.alias}/{pager.offset:int?}",
+                template: "ideas/tag/{opts.tagId:int}/{opts.alias}/{pager.offset:int?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
             

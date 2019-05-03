@@ -10,7 +10,7 @@ using Plato.Tags.Services;
 namespace Plato.Ideas.Tags.ViewComponents
 {
 
-    public class QuestionsTagListViewComponent : ViewComponent
+    public class IdeasTagListViewComponent : ViewComponent
     {
 
         private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
@@ -64,7 +64,7 @@ namespace Plato.Ideas.Tags.ViewComponents
 
         private readonly ITagService<Tag> _tagService;
         
-        public QuestionsTagListViewComponent(
+        public IdeasTagListViewComponent(
             ITagService<Tag> tagService)
         {
             _tagService = tagService;

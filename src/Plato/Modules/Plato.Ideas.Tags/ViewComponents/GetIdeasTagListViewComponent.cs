@@ -7,12 +7,12 @@ using Plato.Tags.Services;
 
 namespace Plato.Ideas.Tags.ViewComponents
 {
-    public class GetQuestionsTagListViewComponent : ViewComponent
+    public class GetIdeasTagListViewComponent : ViewComponent
     {
         
         private readonly ITagService<Tag> _tagService;
 
-        public GetQuestionsTagListViewComponent(
+        public GetIdeasTagListViewComponent(
             ITagService<Tag> tagService)
         {
             _tagService = tagService;

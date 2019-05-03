@@ -1,8 +1,8 @@
-Name: Plato Questions Tags
-Description: Adds tagging capabilities to questions & answers.
+Name: Plato Ideas Tags
+Description: Adds tagging capabilities for ideas.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Questions
+Category: Ideas
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 

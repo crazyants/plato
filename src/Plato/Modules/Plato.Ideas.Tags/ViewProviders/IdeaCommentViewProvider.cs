@@ -19,7 +19,7 @@ using Plato.Tags.ViewModels;
 
 namespace Plato.Ideas.Tags.ViewProviders
 {
-    public class AnswerViewProvider : BaseViewProvider<IdeaComment>
+    public class IdeaCommentViewProvider : BaseViewProvider<IdeaComment>
     {
 
         private const string TagsHtmlName = "tags";
@@ -36,7 +36,7 @@ namespace Plato.Ideas.Tags.ViewProviders
 
         private readonly HttpRequest _request;
 
-        public AnswerViewProvider(
+        public IdeaCommentViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IStringLocalizer stringLocalize,
             IEntityTagManager<EntityTag> entityTagManager,

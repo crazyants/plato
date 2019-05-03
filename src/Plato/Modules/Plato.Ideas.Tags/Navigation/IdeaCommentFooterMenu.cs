@@ -20,7 +20,7 @@ namespace Plato.Ideas.Tags.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "question-answer-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "idea-comment-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -39,7 +39,7 @@ namespace Plato.Ideas.Tags.Navigation
 
             builder
                 .Add(T["Tags"], react => react
-                    .View("QuestionTags", new
+                    .View("IdeaTags", new
                     {
                         entity,
                         reply

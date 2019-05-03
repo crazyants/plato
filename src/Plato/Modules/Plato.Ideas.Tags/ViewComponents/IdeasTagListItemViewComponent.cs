@@ -6,11 +6,11 @@ using Plato.Tags.ViewModels;
 namespace Plato.Ideas.Tags.ViewComponents
 {
 
-    public class QuestionsTagListItemViewComponent : ViewComponent
+    public class IdeasTagListItemViewComponent : ViewComponent
     {
 
    
-        public QuestionsTagListItemViewComponent()
+        public IdeasTagListItemViewComponent()
         {
         
         }

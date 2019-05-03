@@ -14,14 +14,14 @@ using Plato.Tags.Stores;
 namespace Plato.Ideas.Tags.ViewAdapters
 {
 
-    public class QuestionListItemViewAdapter : BaseAdapterProvider
+    public class IdeaListItemViewAdapter : BaseAdapterProvider
     {
         
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
         private readonly IEntityService<Idea> _entityService;
         private readonly IActionContextAccessor _actionContextAccessor;
 
-        public QuestionListItemViewAdapter(
+        public IdeaListItemViewAdapter(
             IEntityService<Idea> entityService, 
             IEntityTagStore<EntityTag> entityTagStore,
             IActionContextAccessor actionContextAccessor)

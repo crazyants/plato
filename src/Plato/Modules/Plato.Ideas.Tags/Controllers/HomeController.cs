@@ -109,7 +109,7 @@ namespace Plato.Ideas.Tags.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Questions"], questions => questions
+                ).Add(S["Ideas"], ideas => ideas
                     .Action("Index", "Home", "Plato.Ideas")
                     .LocalNav()
                 ).Add(S["Tags"]);
@@ -172,7 +172,7 @@ namespace Plato.Ideas.Tags.Controllers
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
-                    return View("GetQuestions", viewModel);
+                    return View("GetIdeas", viewModel);
             }
             
             // Breadcrumb
@@ -181,7 +181,7 @@ namespace Plato.Ideas.Tags.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Questions"], questions => questions
+                ).Add(S["Ideas"], ideas => ideas
                     .Action("Index", "Home", "Plato.Ideas")
                     .LocalNav()
                 ).Add(S["Tags"], labels => labels
