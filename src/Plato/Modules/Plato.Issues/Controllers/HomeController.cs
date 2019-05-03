@@ -227,7 +227,7 @@ namespace Plato.Issues.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Issues"], articles => articles
+                ).Add(S["Issues"], issues => issues
                     .Action("Index", "Home", "Plato.Issues")
                     .LocalNav()
                 ).Add(S["New Issue"], post => post
@@ -433,7 +433,7 @@ namespace Plato.Issues.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Issues"], articles => articles
+                ).Add(S["Issues"], issues => issues
                     .Action("Index", "Home", "Plato.Issues")
                     .LocalNav()
                 ).Add(S[entity.Title.TrimToAround(75)], post => post
@@ -632,7 +632,7 @@ namespace Plato.Issues.Controllers
                 await _entityViewProvider.ProvideUpdateAsync(entity, this);
 
                 // Everything was OK
-                _alerter.Success(T["Article Updated Successfully!"]);
+                _alerter.Success(T["Issue Updated Successfully!"]);
 
                 // Redirect to entity
                 return RedirectToAction(nameof(Display), new RouteValueDictionary()
@@ -696,7 +696,7 @@ namespace Plato.Issues.Controllers
                 builder.Add(S["Home"], home => home
                         .Action("Index", "Home", "Plato.Core")
                         .LocalNav()
-                    ).Add(S["Issues"], articles => articles
+                    ).Add(S["Issues"], issue => issue
                         .Action("Index", "Home", "Plato.Issues")
                         .LocalNav()
                     ).Add(S[entity.Title.TrimToAround(75)], post => post
@@ -858,7 +858,7 @@ namespace Plato.Issues.Controllers
 
             _alerter.Success(reply != null
                 ? T["Thank You. Comment Reported Successfully!"]
-                : T["Thank You. Article Reported Successfully!"]);
+                : T["Thank You. Issue Reported Successfully!"]);
 
             // Redirect
             return RedirectToAction(nameof(Reply), new RouteValueDictionary()
@@ -987,7 +987,7 @@ namespace Plato.Issues.Controllers
             }
             else
             {
-                _alerter.Danger(T["Could not pin the article"]);
+                _alerter.Danger(T["Could not pin the issue"]);
             }
 
             // Redirect back to entity
@@ -1093,11 +1093,11 @@ namespace Plato.Issues.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Hidden Successfully"]);
+                _alerter.Success(T["Issue Hidden Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not hide the article"]);
+                _alerter.Danger(T["Could not hide the issue"]);
             }
 
             // Redirect back to entity
@@ -1149,11 +1149,11 @@ namespace Plato.Issues.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Made Public Successfully"]);
+                _alerter.Success(T["Issue Made Public Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not update the article"]);
+                _alerter.Danger(T["Could not update the issue"]);
             }
 
             // Redirect back to entity
@@ -1204,11 +1204,11 @@ namespace Plato.Issues.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Locked Successfully"]);
+                _alerter.Success(T["Issue Locked Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not lock the article"]);
+                _alerter.Danger(T["Could not lock the issue"]);
             }
 
             // Redirect back to entity
@@ -1260,11 +1260,11 @@ namespace Plato.Issues.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Unlocked Successfully"]);
+                _alerter.Success(T["Issue Unlocked Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not unlock the article"]);
+                _alerter.Danger(T["Could not unlock the issue"]);
             }
 
             // Redirect back to entity
@@ -1278,6 +1278,118 @@ namespace Plato.Issues.Controllers
             }));
 
         }
+
+        public async Task<IActionResult> Close(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out int entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.CloseIssues))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsClosed = true;
+
+            // Save changes and return results
+            var result = await _issueManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Issue Closed Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not close the issue"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Issues",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
+        public async Task<IActionResult> Open(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.OpenIssues))
+            {
+                return Unauthorized();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Update entity
+            entity.ModifiedUserId = user?.Id ?? 0;
+            entity.ModifiedDate = DateTimeOffset.UtcNow;
+            entity.IsClosed = false;
+
+            // Save changes and return results
+            var result = await _issueManager.UpdateAsync(entity);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Issue Opened Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not open the issue"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Issues",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
 
         public async Task<IActionResult> ToSpam(string id)
         {
@@ -1315,11 +1427,11 @@ namespace Plato.Issues.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Marked as SPAM"]);
+                _alerter.Success(T["Issue Marked as SPAM"]);
             }
             else
             {
-                _alerter.Danger(T["Could not mark article as SPAM"]);
+                _alerter.Danger(T["Could not mark the issue as SPAM"]);
             }
 
             // Redirect back to entity
@@ -1370,11 +1482,11 @@ namespace Plato.Issues.Controllers
 
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Removed from SPAM"]);
+                _alerter.Success(T["Issue Removed from SPAM"]);
             }
             else
             {
-                _alerter.Danger(T["Could not remove the article from SPAM"]);
+                _alerter.Danger(T["Could not remove the issue from SPAM"]);
             }
 
             // Redirect back to entity
@@ -1435,11 +1547,11 @@ namespace Plato.Issues.Controllers
             var result = await _issueManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Deleted Successfully"]);
+                _alerter.Success(T["Issue Deleted Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not delete the article"]);
+                _alerter.Danger(T["Could not delete the issue"]);
             }
 
             // Redirect back to entity
@@ -1500,11 +1612,11 @@ namespace Plato.Issues.Controllers
             var result = await _issueManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Article Restored Successfully"]);
+                _alerter.Success(T["Issue Restored Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not restore the article"]);
+                _alerter.Danger(T["Could not restore the issue"]);
             }
 
             // Redirect back to entity
@@ -2002,7 +2114,7 @@ namespace Plato.Issues.Controllers
         {
             return @"Hi There, 
 
-This is just a sample article to demonstrate articles within Plato. Articles use markdown for formatting and can be organized using tags, labels or categories. 
+This is just a sample issue to demonstrate issues within Plato. Issues use markdown for formatting and can be organized using tags, labels or categories. 
 
 We hope you enjoy this early version of Plato :)
 

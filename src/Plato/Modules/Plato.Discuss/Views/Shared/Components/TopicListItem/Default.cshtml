@@ -12,6 +12,28 @@
     
     <div class="float-right text-right">
         <ol class="list-inline text-muted">
+            @if (Model.Tags != null)
+            {
+                var sb = new System.Text.StringBuilder();
+                var tagList = Model.Tags.ToList();
+                if (tagList.Count > 0)
+                {
+                    sb.Append(T["Tags:"].Value).Append(" ");
+                    for (var i = 0; i < tagList.Count; i++)
+                    {
+                        sb.Append(tagList[i].Name);
+                        if (i < tagList.Count - 1)
+                        {
+                            sb.Append(", ");
+                        }
+                    }
+                }
+                <li class="list-inline-item">
+                    <span title="@sb.ToString()" data-toggle="tooltip">
+                        @tagList.Count.ToPrettyInt() <i class="fal fa-tag"></i>
+                    </span>
+                </li>
+            }
             @if (Model.Entity.TotalReplies > 0)
             {
                 <li class="list-inline-item">
@@ -90,17 +112,7 @@
                 @Model.Channel.Name
             </a>
         }
-        @if (Model.Tags != null)
-        {
-            <span class="pl-2">
-                @foreach (var tag in Model.Tags)
-                {
-                    <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.Id" asp-route-opts.alias="@tag.Alias" title="@tag.Description" class="btn btn-sm label font-weight-bold">
-                        @tag.Name
-                    </a>
-                }
-            </span>
-        }
+     
         @if (Model.Entity.IsPrivate)
         {
             <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This topic is hidden and only visible as you have permission to view hidden topics"]">@T["Hidden"]</span>

@@ -85,6 +85,18 @@ namespace Plato.Issues.Navigation
                                 : Permissions.PinIssues)
                             .LocalNav()
                         )
+                        .Add(entity.IsClosed ? T["Open"] : T["Close"], 2, edit => edit
+                            .Action(entity.IsClosed ? "Open" : "Close", "Home", "Plato.Issues",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id
+                                })
+                            .Resource(entity.CategoryId)
+                            .Permission(entity.IsClosed
+                                ? Permissions.OpenIssues
+                                : Permissions.CloseIssues)
+                            .LocalNav()
+                        )
                         .Add(entity.IsLocked ? T["Unlock"] : T["Lock"], 2, edit => edit
                             .Action(entity.IsLocked ? "Unlock" : "Lock", "Home", "Plato.Issues",
                                 new RouteValueDictionary()

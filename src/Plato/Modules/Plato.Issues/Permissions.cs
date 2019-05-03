@@ -72,6 +72,12 @@ namespace Plato.Issues
         public static readonly Permission UnlockIssues =
             new Permission("UnlockIssues", "Unlock issues");
 
+        public static readonly Permission CloseIssues =
+            new Permission("CloseIssues", "Close issues");
+
+        public static readonly Permission OpenIssues =
+            new Permission("OpenIssues", "Re-open issues");
+        
         public static readonly Permission HideIssues =
             new Permission("HideIssues", "Hide issues");
 
@@ -134,6 +140,8 @@ namespace Plato.Issues
                 UnpinIssues,
                 LockIssues,
                 UnlockIssues,
+                OpenIssues,
+                CloseIssues,
                 HideIssues,
                 ShowIssues,
                 ViewPrivateIssues,
@@ -180,6 +188,8 @@ namespace Plato.Issues
                         UnpinIssues,
                         LockIssues,
                         UnlockIssues,
+                        OpenIssues,
+                        CloseIssues,
                         HideIssues,
                         ShowIssues,
                         ViewPrivateIssues,
@@ -199,6 +209,9 @@ namespace Plato.Issues
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
+                        PostIssues,
+                        EditOwnIssues,
+                        DeleteOwnIssues,
                         PostIssueComments,
                         EditOwnIssueComments,
                         DeleteOwnIssueComments,
@@ -227,6 +240,8 @@ namespace Plato.Issues
                         UnpinIssues,
                         LockIssues,
                         UnlockIssues,
+                        OpenIssues,
+                        CloseIssues,
                         HideIssues,
                         ShowIssues,
                         ViewPrivateIssues,

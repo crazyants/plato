@@ -1,6 +1,8 @@
 ﻿/* ReSharper disable once UnknownCssVendorExtension */
 /* ReSharper disable once UnknownCssVendorExtension */
 
+.cursor-default { cursor: default !important; }
+
 canvas {
     -moz-user-select: none;
     -webkit-user-select: none;
