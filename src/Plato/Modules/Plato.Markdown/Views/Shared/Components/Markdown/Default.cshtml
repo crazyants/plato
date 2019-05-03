@@ -1,16 +1,16 @@
-﻿@model Plato.Markdown.ViewComponents.MarkdownViewModel
+﻿@model MarkdownViewModel
 
 <span asp-validation-for="Value" class="text-danger"></span>
 
 <textarea value="@Model.Value"
-          id="@Model.Id"
-          name="@Model.HtmlName"
-          asp-autofocus="@Model.AutoFocus"
-          data-provide="markdown"
-          tabindex="@Model.TabIndex"
-          class="form-control md-textarea"
-          placeholder="@Model.PlaceHolderText"
-          rows="10">@if (!String.IsNullOrEmpty(@Model.Value))
+        asp-for="Value"
+        name="@Model.HtmlName"
+        asp-autofocus="@Model.AutoFocus"
+        data-provide="markdown"
+        tabindex="@Model.TabIndex"
+        class="form-control md-textarea"
+        placeholder="@Model.PlaceHolderText"
+        rows="10">@if (!String.IsNullOrEmpty(Model.Value))
     {
         @Model.Value
     }

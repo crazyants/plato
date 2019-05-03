@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Plato.Articles.Models;
+using Plato.Questions.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
@@ -11,18 +11,18 @@ using Plato.Internal.Layout.ViewAdapters;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
 
-namespace Plato.Articles.Tags.ViewAdapters
+namespace Plato.Questions.Tags.ViewAdapters
 {
 
-    public class ArticleListItemViewAdapter : BaseAdapterProvider
+    public class QuestionListItemViewAdapter : BaseAdapterProvider
     {
         
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
-        private readonly IEntityService<Article> _entityService;
+        private readonly IEntityService<Question> _entityService;
         private readonly IActionContextAccessor _actionContextAccessor;
 
-        public ArticleListItemViewAdapter(
-            IEntityService<Article> entityService, 
+        public QuestionListItemViewAdapter(
+            IEntityService<Question> entityService, 
             IEntityTagStore<EntityTag> entityTagStore,
             IActionContextAccessor actionContextAccessor)
         {
@@ -36,15 +36,15 @@ namespace Plato.Articles.Tags.ViewAdapters
             
             // Build a dictionary we can use below within our AdaptModel
             // method to add the correct tags for each displayed entity
-            var entityLabelsDictionary = await BuildLookUpTable();
+            var entityTagsDictionary = await BuildLookUpTable();
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Tags
             // Instead we update the model for the entity list item view component
             // here via our view adapter to include the tag data for the entity
             // This way the tag data is only ever populated if the tags feature is enabled
-            return await Adapt("ArticleListItem", v =>
+            return await Adapt("QuestionListItem", v =>
             {
-                v.AdaptModel<EntityListItemViewModel<Article>>(model  =>
+                v.AdaptModel<EntityListItemViewModel<Question>>(model  =>
                 {
                     if (model.Entity == null)
                     {
@@ -56,7 +56,7 @@ namespace Plato.Articles.Tags.ViewAdapters
                     }
 
                     // No need to modify if we don't have a lookup table
-                    if (entityLabelsDictionary == null)
+                    if (entityTagsDictionary == null)
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -66,7 +66,7 @@ namespace Plato.Articles.Tags.ViewAdapters
                     }
 
                     // No need to modify the model if no labels have been found
-                    if (!entityLabelsDictionary.ContainsKey(model.Entity.Id))
+                    if (!entityTagsDictionary.ContainsKey(model.Entity.Id))
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -76,7 +76,7 @@ namespace Plato.Articles.Tags.ViewAdapters
                     }
 
                     // Get labels for entity
-                    var entityTags = entityLabelsDictionary[model.Entity.Id];
+                    var entityTags = entityTagsDictionary[model.Entity.Id];
 
                     // Add labels to the model from our dictionary
                     var modelLabels = new List<EntityTag>();
@@ -102,7 +102,7 @@ namespace Plato.Articles.Tags.ViewAdapters
         {
             
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Article>)] as EntityIndexViewModel<Article>;
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(EntityIndexViewModel<Question>)] as EntityIndexViewModel<Question>;
             if (viewModel == null)
             {
                 return null;
@@ -121,6 +121,7 @@ namespace Plato.Articles.Tags.ViewAdapters
                     .Select<EntityTagQueryParams>(q =>
                     {
                         q.EntityId.IsIn(entities.Data.Select(e => e.Id).ToArray());
+                        q.EntityReplyId.Equals(0);
                     })
                     .ToList();
             }

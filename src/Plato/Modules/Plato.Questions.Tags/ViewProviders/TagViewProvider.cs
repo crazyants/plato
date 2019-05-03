@@ -85,7 +85,7 @@ namespace Plato.Questions.Tags.ViewProviders
                 View<TagBase>("Home.Display.Header", model => tag).Zone("header").Order(1),
                 View<TagBase>("Home.Display.Tools", model => tag).Zone("tools").Order(1),
                 View<TagDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<TagsViewModel<Tag>>("Article.Tags.Index.Sidebar", model =>
+                View<TagsViewModel<Tag>>("Question.Tags.Index.Sidebar", model =>
                 {
                     model.SelectedTagId = tag?.Id ?? 0;
                     model.Tags = tags?.Data;

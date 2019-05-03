@@ -8,16 +8,11 @@ namespace Plato.Entities.ViewModels
 
         public int Id { get; set; }
 
-        [Required]
-        [MinLength(4)]
-        [MaxLength(255)]
-        [DataType(DataType.Text)]
+        [Required, MinLength(4), MaxLength(255), DataType(DataType.Text)]
         [Display(Name = "title")]
         public string Title { get; set; }
 
-        [Required]
-        [MinLength(5)]
-        [DataType(DataType.MultilineText)]
+        [Required, MinLength(5), DataType(DataType.MultilineText)]
         [Display(Name = "message")]
         public string Message { get; set; }
 

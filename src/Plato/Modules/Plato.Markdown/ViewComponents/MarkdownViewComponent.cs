@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Markdown.Services;
+using Plato.Markdown.ViewModels;
 
 namespace Plato.Markdown.ViewComponents
 {
@@ -37,27 +37,10 @@ namespace Plato.Markdown.ViewComponents
             };
 
             return Task.FromResult((IViewComponentResult)View(model));
+
         }
 
     }
     
-    public class MarkdownViewModel
-    {
-
-        public string Id { get; set; }
-
-        [Required]
-        public string Value { get; set; }
-
-        public string PlaceHolderText { get; set; }
-
-        public string HtmlName { get; set; }
-        
-        public bool AutoFocus { get; set; }
-        
-        public int TabIndex { get; set; }
-
-    }
-
 }
 

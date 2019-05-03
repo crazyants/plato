@@ -48,7 +48,7 @@ namespace Plato.Questions.Tags
             services.AddScoped<IViewProviderManager<Question>, ViewProviderManager<Question>>();
             services.AddScoped<IViewProvider<Question>, QuestionViewProvider>();
             services.AddScoped<IViewProviderManager<Answer>, ViewProviderManager<Answer>>();
-            services.AddScoped<IViewProvider<Answer>, CommentViewProvider>();
+            services.AddScoped<IViewProvider<Answer>, AnswerViewProvider>();
         
             // Admin view providers
             services.AddScoped<IViewProviderManager<TagAdmin>, ViewProviderManager<TagAdmin>>();
@@ -59,7 +59,7 @@ namespace Plato.Questions.Tags
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
          
             // Register view adapters
-            services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();
+            services.AddScoped<IViewAdapterProvider, QuestionListItemViewAdapter>();
 
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();

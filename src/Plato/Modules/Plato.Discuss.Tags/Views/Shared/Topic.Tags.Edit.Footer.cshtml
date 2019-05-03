@@ -10,7 +10,11 @@
 
                 <fieldset>
 
-                    <input asp-for="Tags" type="hidden" name="@Model.HtmlName" id="@Model.HtmlName"/>
+                    <input asp-for="Tags" 
+                           type="hidden"
+                           data-validation-optional="true"
+                           name="@Model.HtmlName" 
+                           id="@Model.HtmlName"/>
                   
                     <div class="dropdown">
                         <ul class="tagit form-control list-inline" data-provide="tagTagIt" data-tagit-store="#@Model.HtmlName">
@@ -18,6 +22,7 @@
                                 <input type="text"
                                        autocomplete="off"
                                        class="form-control"
+                                       data-validation-optional="true"
                                        data-autocomplete-target="#tagsDropDown"
                                        placeholder="@T["Optionally add up to 5 tags separated with a comma or by hitting enter / carriage return..."]">
                             </li>

@@ -4488,6 +4488,169 @@ $(function (win, doc, $) {
 
     }();
 
+    /* disableForm */
+    var disableForm = function () {
+
+        var dataKey = "disableForm",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            validateHiddenFields: false
+        };
+
+        var methods = {
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                var validateHiddenFields = methods._getValidateHiddenFields($caller),
+                    toggleFormState = function($form, state) {
+                        if (state === 'disabled') {
+                            $form.find('*[type="submit"]')
+                                .addClass("disabled")
+                                .attr("disabled", "disabled");
+                        } else {
+                            $form.find('*[type="submit"]')
+                                .removeClass("disabled")
+                                .removeAttr("disabled");
+                        }
+                    },
+                    isFormValid = function($form) {
+                        var allValid = true;
+                        $form.find('[data-val="true"]').each(function () {
+
+                            var value = $(this).val(),
+                                isValid = $(this).hasClass("valid"),
+                                isOptional = $(this).valAttr('optional') === 'true',
+                                isDisabled = $(this).attr('disabled'),
+                                isHidden = !$(this).is(':visible') && !validateHiddenFields,
+                                isHiddenWithValue = isHidden && value !== "";
+                            
+                            if (isDisabled || isHidden || isHiddenWithValue) {
+                                isValid = true;
+                            }
+
+                            console.log($(this).attr("id") + " - " + isValid);
+
+                            if (!isValid && !isOptional) {
+                                allValid = false;
+                                return false;
+                            }
+                        });
+                        return allValid;
+                    },
+                    validate = function($form) {
+                        var valid = isFormValid($form);
+                        if (valid) {
+                            toggleFormState($form, "enabled");
+                        } else {
+                            toggleFormState($form, "disabled");
+                        }
+                    };
+                
+                // Initially validate form
+                validate($caller);
+
+                // Track validation changes
+                $caller.find("input,textarea,select").each(function() {
+                 
+                    $(this).bind("blur",
+                        function (e) {
+                            validate($caller);
+                        });
+
+                    $(this).bind("keyup",
+                        function(e) {
+                            if (e.keyCode !== 9) {
+                                validate($caller);
+
+                            }
+                        });
+
+                });
+
+
+            },
+            unbind: function ($caller) {
+                $caller.find("input,textarea,select").each(function () {
+                    $(this).unbind("blur");
+                    $(this).unbind("keyup");
+                });
+            },
+            _toggleFormState($caller, state) {
+                if (state === 'disabled') {
+                    $caller.find('*[type="submit"]')
+                        .addClass("disabled")
+                        .attr("disabled", "disabled");
+                } else {
+                    $caller.find('*[type="submit"]')
+                        .removeClass("disabled")
+                        .removeAttr("disabled");
+                }
+            },
+            _getValidateHiddenFields: function($caller) {
+                if ($caller.data("validateHiddenFields") === true) {
+                    return true;
+                }
+                return $caller.data(dataKey).validateHiddenFields;
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).disableForm()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().disableForm()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+        };
+
+    }();
+
+
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -4510,12 +4673,24 @@ $(function (win, doc, $) {
         markdownBody: markdownBody.init,
         confirm: confirm.init,
         resizeable: resizeable.init,
-        replySpy: replySpy.init
+        replySpy: replySpy.init,
+        disableForm: disableForm.init
     });
 
     // ---------------------------
     // Initialize core plug-ins
     // ----------------------------
+   
+    $.fn.valAttr = function (name, val) {
+        if (val === undefined) {
+            return this.attr('data-validation-' + name);
+        } else if (val === false || val === null) {
+            return this.removeAttr('data-validation-' + name);
+        } else {
+            name = ((name.length > 0) ? '-' + name : '');
+            return this.attr('data-validation' + name, val);
+        }
+    };
 
     $.fn.platoUI = function(opts) {
         
@@ -4567,6 +4742,9 @@ $(function (win, doc, $) {
         /* resizeable */
         this.find('[data-provide="resizeable"]').resizeable();
 
+        /* disableForm */
+        //this.find('[data-provide="disableForm"]').disableForm();
+
         /* replySpy */
         this.replySpy();
 
@@ -4594,7 +4772,58 @@ $(function (win, doc, $) {
             $ele.replySpy("bind");
 
         }, "ready");
+        
+        // Raised when the form is submitted but invalid
+        $("form").bind("invalid-form.validate",
+            function () {
 
+                // Scroll to errors if any
+                var $errors = $(this).find(".validation-summary-errors");
+                if ($errors.length > 0) {
+                    $().scrollTo({
+                            target: $errors,
+                            offset: -20,
+                            interval: 500
+                        },
+                        "go");
+                }
+
+                // Scroll to first invalid field if input-validation-error css has been applied
+                // input-validation-error classes are only applied on the first validation pass
+                var $invalidFields = $(this).find(".input-validation-error");
+                if ($invalidFields.length > 0) {
+                    $().scrollTo({
+                        target: $invalidFields,
+                            offset: -20,
+                            interval: 500
+                        },
+                        "go");
+                }
+
+
+            });
+        
     });
-    
+
+    // --------------
+    // Customize jQuery validation defaults
+    // --------------
+
+    $.validator.setDefaults({
+        focusInvalid: true,
+        submitHandler: function (form) {
+            var $form = $(form);
+            if ($form.data("disableSubmit")) {
+                $form.find('*[type="submit"]')
+                    .addClass("disabled")
+                    .attr("disabled", "disabled");
+            }
+            form.submit();
+        },
+        invalidHandler: function (event, validator) {
+            // Cannot be updated after MVC initialization
+            // https://github.com/jquery-validation/jquery-validation/issues/765
+        }
+    });
+
 }(window, document, jQuery));
