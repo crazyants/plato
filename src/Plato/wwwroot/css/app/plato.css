@@ -244,6 +244,13 @@ canvas {
 .btn-expand.active i { transform: rotate(90deg); } 
 .btn.disabled { opacity: 0.5;  }
 
+.btn-xs, .btn-group-xs > .btn {
+    padding: 0.125rem 0.25rem;
+    font-size: 0.875rem;
+    line-height: 0.75;
+    border-radius: 0.1rem;
+}
+
 /* ------------------------- */
 /* Card */
 /* ------------------------- */

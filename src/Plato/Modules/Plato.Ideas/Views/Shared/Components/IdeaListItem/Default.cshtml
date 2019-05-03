@@ -34,28 +34,86 @@
 </div>
 <div class="list-body">
     
-    <div class="float-right">
-        <ol class="list-inline text-muted text-right">
-            @if (Model.Entity.TotalReplies > 0)
-            {
-                <li class="list-inline-item">
-                    <span title="@T["Comments"]" data-toggle="tooltip">
-                        @Model.Entity.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
-                    </span>
-                </li>
-            }
-            @if (Model.Entity.TotalViews > 0)
-            {
-                <li class="list-inline-item">
-                    <span title="@T["Views"]" data-toggle="tooltip">
-                        @Model.Entity.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
-                    </span>
-                </li>
-            }
-        </ol>
+    <div>
+
+        <div class="float-right">
+            
+
+            <ol class="list-inline d-inline text-muted text-right">
+                
+                @if (Model.Tags != null)
+                {
+                    var sb = new System.Text.StringBuilder();
+                    var tagList = Model.Tags.ToList();
+                    if (tagList.Count > 0)
+                    {
+                        sb.Append(T["Tags:"].Value).Append(" ");
+                        for (var i = 0; i < tagList.Count; i++)
+                        {
+                            sb.Append(tagList[i].Name);
+                            if (i < tagList.Count - 1)
+                            {
+                                sb.Append(", ");
+                            }
+                        }
+                    }
+                
+                    <li class="list-inline-item">
+                        <span title="@sb.ToString()" data-toggle="tooltip">
+                            @tagList.Count.ToPrettyInt() <i class="fal fa-tag"></i>
+                        </span>
+                    </li>
+
+                }
+                @if (Model.Entity.TotalReplies > 0)
+                {
+                    <li class="list-inline-item">
+                        <span title="@T["Comments"]" data-toggle="tooltip">
+                            @Model.Entity.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
+                        </span>
+                    </li>
+                }
+                @if (Model.Entity.TotalViews > 0)
+                {
+                    <li class="list-inline-item">
+                        <span title="@T["Views"]" data-toggle="tooltip">
+                            @Model.Entity.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
+                        </span>
+                    </li>
+                }
+            </ol>
+        </div>
+
+        <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
+        @if (Model.Entity.IsPinned)
+        {
+            <span title="@T["This idea is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-thumbtack"></i>
+            </span>
+        }
+        @if (Model.Entity.IsLocked)
+        {
+            <span title="@T["This idea is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                <i class="fal fa-lock"></i>
+            </span>
+        }
+        @if (Model.Labels != null)
+        {
+            <span class="pl-2">
+                @foreach (var label in Model.Labels)
+                {
+                    <a asp-route-area="Plato.Ideas.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                        @label.Name
+                    </a>
+                }
+            </span>
+        }
+    </div>
+    <div>
+        
         @if (details?.LatestUsers != null)
         {
-            <div class="avatar-group  float-right">
+            <div class="avatar-group float-right">
                 @foreach (var user in details.LatestUsers)
                 {
                     var replies = user.TotalReplies == 1
@@ -67,42 +125,15 @@
                 }
             </div>
         }
-    </div>
-    
-    <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
-    @if (Model.Entity.IsPinned)
-    {
-        <span title="@T["This idea is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
-            <i class="fal fa-thumbtack"></i>
-        </span>
-    }
-    @if (Model.Entity.IsLocked)
-    {
-        <span title="@T["This idea is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
-            <i class="fal fa-lock"></i>
-        </span>
-    }
-    @if (Model.Labels != null)
-    {
-        <span class="pl-2">
-            @foreach (var label in Model.Labels)
-            {
-                <a asp-route-area="Plato.Ideas.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
-                    @label.Name
-                </a>
-            }
-        </span>
-    }
-    
-    <div>
+
         @if (Model.Entity.CreatedUserId > 0)
         {
             <span>
-                @T["By"]
+                @T["Suggested By"]
                 <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
             </span>
         }
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
         @if (@Model.Channel != null)
         {
             <span>@T["in"]</span>
