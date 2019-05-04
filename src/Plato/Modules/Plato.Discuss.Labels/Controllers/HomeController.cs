@@ -13,8 +13,8 @@ using Plato.Discuss.Models;
 using Plato.Discuss.Labels.Models;
 using Plato.Labels.ViewModels;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout;
+using Plato.Internal.Layout.Titles;
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -24,6 +24,7 @@ namespace Plato.Discuss.Labels.Controllers
         private readonly IViewProviderManager<Label> _labelViewProvider;
         private readonly ILabelStore<Label> _labelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
@@ -38,13 +39,15 @@ namespace Plato.Discuss.Labels.Controllers
             ILabelStore<Label> labelStore,
             IBreadCrumbManager breadCrumbManager,
             IContextFacade contextFacade1,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IPageTitleBuilder pageTitleBuilder)
         {
             _labelStore = labelStore;
             _labelViewProvider = labelViewProvider;
             _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -151,6 +154,9 @@ namespace Plato.Discuss.Labels.Controllers
                     return View("GetTopics", viewModel);
             }
             
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[label.Name], int.MaxValue);
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

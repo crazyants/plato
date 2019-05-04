@@ -15,6 +15,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -26,6 +27,7 @@ namespace Plato.Discuss.Categories.Controllers
         private readonly IViewProviderManager<Channel> _channelViewProvider;
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
@@ -43,7 +45,7 @@ namespace Plato.Discuss.Categories.Controllers
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade1, 
             IFeatureFacade featureFacade,
-            IAlerter alerter)
+            IAlerter alerter, IPageTitleBuilder pageTitleBuilder)
         {
       
             _channelViewProvider = channelViewProvider;
@@ -52,6 +54,7 @@ namespace Plato.Discuss.Categories.Controllers
             _featureFacade = featureFacade;
             _channelStore = channelStore;
             _alerter = alerter;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -112,6 +115,12 @@ namespace Plato.Discuss.Categories.Controllers
                     return View("GetTopics", viewModel);
             }
 
+            // Build page title
+            if (category != null)
+            {
+                _pageTitleBuilder.AddSegment(S[category.Name], int.MaxValue);
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(async builder =>
             {

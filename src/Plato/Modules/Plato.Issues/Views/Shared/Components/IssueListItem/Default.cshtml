@@ -73,13 +73,13 @@
         @if (Model.Entity.IsClosed)
         {
             <span title="@T["This issue has been closed"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-check-circle"></i> 
+                <i class="fal fa-check"></i> 
             </span>
         }
         else
         {
             <span title="@T["This issue is open and awaiting a resolution"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-dot-circle"></i> 
+                <i class="fal fa-exclamation-circle"></i> 
            
             </span>
         }

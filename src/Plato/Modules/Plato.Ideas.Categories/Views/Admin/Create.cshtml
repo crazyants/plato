@@ -1,12 +1,14 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Add Channel";
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Ideas"]);
+    AddTitleSegment(T["Categories"]);
+    AddTitleSegment(T["Add Category"]);
 }
+
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="layout">
-
         <div class="layout-header">
-
             @if (Model.Tools != null)
             {
                 <div class="float-right layout-tools">
@@ -26,7 +28,6 @@
                 </div>
             }
         </div>
-
         @if (Model.SideBar != null)
         {
             <div class="row layout-content">
@@ -59,7 +60,6 @@
                         </div>
 
                     }
-
                 </div>
                 <div class="col-md-4">
                     @if (Model.SideBar != null)
@@ -101,7 +101,5 @@
                 }
             </div>
         }
-
     </div>
 </form>
-

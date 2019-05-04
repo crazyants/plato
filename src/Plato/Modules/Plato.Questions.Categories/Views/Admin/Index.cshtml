@@ -1,10 +1,11 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Edit Channels";
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Questions"]);
+    AddTitleSegment(T["Categories"]);
 }
 
 <div class="layout">
-
     <div class="layout-header">
         @if (Model.Alerts != null)
         {
@@ -31,7 +32,6 @@
             </div>
         }
     </div>
-
     @if (Model.SideBar != null)
     {
         <div class="row layout-content">
@@ -52,13 +52,12 @@
     else
     {
         @if (Model.Content != null)
-         {
-             <div class="layout-content">
-                 <view model="@Model.Content"></view>
-             </div>
-         }
+        {
+            <div class="layout-content">
+                <view model="@Model.Content"></view>
+            </div>
+        }
     }
-
     <div class="layout-footer">
         @if (Model.Actions != null)
         {
@@ -73,5 +72,4 @@
             </div>
         }
     </div>
-
 </div>

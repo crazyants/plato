@@ -14,6 +14,7 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -23,12 +24,12 @@ namespace Plato.Articles.Categories.Controllers
     {
      
         private readonly IViewProviderManager<Category> _viewProvider;
-        private readonly ISiteSettingsStore _settingsStore;
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IAlerter _alerter;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -40,19 +41,19 @@ namespace Plato.Articles.Categories.Controllers
             IHtmlLocalizer<HomeController> localizer,
             IBreadCrumbManager breadCrumbManager,
             ICategoryStore<Category> categoryStore,
-            ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IAlerter alerter,
             IContextFacade contextFacade1, 
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade, IPageTitleBuilder pageTitleBuilder)
         {
-            _settingsStore = settingsStore;
+       
             _categoryStore = categoryStore;
             _viewProvider = viewProvider;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
+            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;
@@ -111,6 +112,12 @@ namespace Plato.Articles.Categories.Controllers
             {
                 if (page > 0 && !pager.Enabled)
                     return View("GetArticles", viewModel);
+            }
+            
+            // Build page title
+            if (category != null)
+            {
+                _pageTitleBuilder.AddSegment(S[category.Name], int.MaxValue);
             }
 
             // Build breadcrumb

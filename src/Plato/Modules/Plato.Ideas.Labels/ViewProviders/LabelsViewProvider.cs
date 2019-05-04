@@ -78,7 +78,7 @@ namespace Plato.Ideas.Labels.ViewProviders
                 View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Display.Tools", model => label).Zone("tools").Order(1),
                 View<EntityIndexViewModel<Idea>>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<LabelsViewModel<Label>>("Question.Labels.Index.Sidebar", model =>
+                View<LabelsViewModel<Label>>("Idea.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
                     model.Labels = labels?.Data;

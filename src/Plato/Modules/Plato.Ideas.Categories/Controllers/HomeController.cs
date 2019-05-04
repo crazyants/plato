@@ -13,6 +13,7 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -24,6 +25,7 @@ namespace Plato.Ideas.Categories.Controllers
         private readonly IViewProviderManager<Category> _viewProvider;
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
     
@@ -37,15 +39,16 @@ namespace Plato.Ideas.Categories.Controllers
             IViewProviderManager<Category> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             ICategoryStore<Category> categoryStore,
-            ISiteSettingsStore settingsStore,
             IContextFacade contextFacade1, 
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IPageTitleBuilder pageTitleBuilder)
         {
       
             _viewProvider = viewProvider;
             _breadCrumbManager = breadCrumbManager;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
+            _pageTitleBuilder = pageTitleBuilder;
             _categoryStore = categoryStore;
         
             T = localizer;
@@ -106,7 +109,13 @@ namespace Plato.Ideas.Categories.Controllers
                 if (page > 0 && !pager.Enabled)
                     return View("GetIdeas", viewModel);
             }
-
+            
+            // Build page title
+            if (category != null)
+            {
+                _pageTitleBuilder.AddSegment(S[category.Name], int.MaxValue);
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(async builder =>
             {

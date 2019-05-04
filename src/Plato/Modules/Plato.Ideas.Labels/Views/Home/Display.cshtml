@@ -1,10 +1,10 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Label";
+    AddTitleSegment(T["Ideas"]);
+    AddTitleSegment(T["Labels"]);
 }
 
 <div class="layout">
-
     <div class="layout-header">
         @if (Model.Alerts != null)
         {
@@ -31,7 +31,6 @@
             </div>
         }
     </div>
-
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
@@ -56,7 +55,6 @@
             <view model="@Model.Content"></view>
         }
     }
-
     <div class="layout-footer">
         @if (Model.Actions != null)
         {
@@ -71,5 +69,4 @@
             </div>
         }
     </div>
-
 </div>

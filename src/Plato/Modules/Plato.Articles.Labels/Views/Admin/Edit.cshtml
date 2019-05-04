@@ -1,7 +1,11 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Edit Label";
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Articles"]);
+    AddTitleSegment(T["Labels"]);
+    AddTitleSegment(T["Add Label"]);
 }
+
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     <div class="layout">
 

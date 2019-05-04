@@ -4584,7 +4584,7 @@ $(function (win, doc, $) {
     };
 
     // --------------
-    // doc ready
+    // ready
     // --------------
 
     app.ready(function () {
@@ -4609,7 +4609,6 @@ $(function (win, doc, $) {
         // Raised when the form is submitted but invalid
         $("form").bind("invalid-form.validate",
             function () {
-
                 // Scroll to errors if any
                 var $errors = $(this).find(".validation-summary-errors");
                 if ($errors.length > 0) {
@@ -4620,30 +4619,76 @@ $(function (win, doc, $) {
                         },
                         "go");
                 }
-                
             });
         
     });
 
-    // --------------
-    // Customize jQuery validation defaults
-    // --------------
+}(window, document, jQuery));
 
+// --------------
+// Customize validation
+// --------------
+
+$(function (win, doc, $) {
+
+    'use strict';
+
+    // formAction
+    // ------------------
+    // Accomodate for custom "formaction" attributes added
+    // when using multiple submit elements for example...
+    // <button type="submit" asp-controller="Admin" asp-action="Delete" asp-route-id="@Model.Id.ToString()" data-provide="confirm" class="btn btn-danger btn-sm">
+    //      <i class="fal fa-trash"></i>      
+    // </button>
+    // Produces the following HTML...
+    // <button type="submit" formaction="/action">
+    //      <i class="fal fa-trash"></i>
+    // Delete
+    // </button>
+
+    var app = win.$.Plato,
+        formAction = null;
+
+    app.ready(function () {
+        // Populate formAction on any submit click
+        $('*[type="submit"]').click(function () {
+            var attr = $(this).attr("formaction");
+            if (attr) {
+                formAction = attr;
+            }
+        });
+    });
+
+    // Update jQuery validation defaults
     $.validator.setDefaults({
         focusInvalid: true,
-        submitHandler: function (form) {
+        submitHandler: function(form) {
+
             var $form = $(form);
             if ($form.data("disableSubmit")) {
                 $form.find('*[type="submit"]')
                     .addClass("disabled")
                     .attr("disabled", "disabled");
+                
+                // Do we need to update the form action?
+                if (formAction) {
+                    form.action = formAction;
+                }
+
+                // Note don't call $(form).submit() as this 
+                // internally calls the submitHandler again
+                form.submit();
+
+                // Reset form action
+                formAction = null;
+
+            },
+            invalidHandler: function(event, validator) {
+                // Cannot be updated after MVC initialization
+                // https://github.com/jquery-validation/jquery-validation/issues/765
             }
-            form.submit();
-        },
-        invalidHandler: function (event, validator) {
-            // Cannot be updated after MVC initialization
-            // https://github.com/jquery-validation/jquery-validation/issues/765
-        }
-    });
+        });
+
+
 
 }(window, document, jQuery));

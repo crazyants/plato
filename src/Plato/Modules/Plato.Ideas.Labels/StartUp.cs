@@ -49,7 +49,7 @@ namespace Plato.Ideas.Labels
             services.AddScoped<IViewProvider<LabelAdmin>, AdminViewProvider>();
        
             // Register view adapters
-            services.AddScoped<IViewAdapterProvider, QuestionListItemViewAdapter>();
+            services.AddScoped<IViewAdapterProvider, IdeaListItemViewAdapter>();
 
             // Labels view providers
             services.AddScoped<IViewProviderManager<Label>, ViewProviderManager<Label>>();

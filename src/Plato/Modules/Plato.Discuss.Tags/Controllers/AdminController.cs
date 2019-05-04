@@ -283,13 +283,13 @@ namespace Plato.Discuss.Tags.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             
-            var ok = int.TryParse(id, out int categoryId);
+            var ok = int.TryParse(id, out var tagId);
             if (!ok)
             {
                 return NotFound();
             }
 
-            var currentTag = await _tagStore.GetByIdAsync(categoryId);
+            var currentTag = await _tagStore.GetByIdAsync(tagId);
 
             if (currentTag == null)
             {
@@ -304,7 +304,6 @@ namespace Plato.Discuss.Tags.Controllers
             }
             else
             {
-
                 _alerter.Danger(T["Could not delete the tag"]);
             }
 

@@ -16,7 +16,7 @@ using Label = Plato.Ideas.Labels.Models.Label;
 namespace Plato.Ideas.Labels.ViewAdapters
 {
 
-    public class QuestionListItemViewAdapter : BaseAdapterProvider
+    public class IdeaListItemViewAdapter : BaseAdapterProvider
     {
         
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
@@ -25,7 +25,7 @@ namespace Plato.Ideas.Labels.ViewAdapters
         private readonly ILabelStore<Label> _labelStore;
         private readonly IFeatureFacade _featureFacade;
 
-        public QuestionListItemViewAdapter(
+        public IdeaListItemViewAdapter(
             IEntityLabelStore<EntityLabel> entityLabelStore,
             IActionContextAccessor actionContextAccessor,
             IEntityService<Idea> entityService,
