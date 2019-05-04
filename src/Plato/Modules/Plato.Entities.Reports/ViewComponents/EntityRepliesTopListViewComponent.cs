@@ -40,11 +40,12 @@ namespace Plato.Entities.Reports.ViewComponents
             {
                 chart = new ChartOptions();
             }
-            
+
+            var data = await SelectEntitiesGroupedByViewsAsync(options);
             return View(new ChartViewModel<IEnumerable<AggregatedModel<int, Entity>>>()
             {
                 Options = chart,
-                Data = await SelectEntitiesGroupedByViewsAsync(options)
+                Data = data
             });
 
         }

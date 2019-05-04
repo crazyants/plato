@@ -16,7 +16,7 @@ namespace Plato.Internal.Layout.ViewProviders
 
         public ViewProviderResult(params IPositionedView[] views)
         {
-            Views = views ?? ((IEnumerable<IView>)new List<IView>());
+            Views = views ?? ((IEnumerable<IView>) new List<IView>());
         }
         
     }

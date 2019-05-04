@@ -23,15 +23,25 @@ namespace Plato.Internal.Layout.TagHelpers
 
         private IViewDisplayHelper _viewDisplayHelper;
 
+        /// <summary>
+        /// Override the default order property to ensure our view tag helpers are
+        /// always processed first. This is necessary to ensure the view tag helpers
+        /// populate the TagHelperExecutionContext used throughout the request
+        /// early in the request pipeline.
+        /// https://github.com/aspnet/Razor/blob/1e5ad1154dd272cdfa4bdebab26468af28ea68b4/src/Microsoft.AspNet.Razor.Runtime/TagHelpers/TagHelperRunner.cs
+        /// </summary>
+        public override int Order => int.MinValue;
+
         public ViewTagHelper(
             IViewHelperFactory viewHelperFactory)
         {
             _viewHelperFactory = viewHelperFactory;
+
         }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-
+            
             if (this.Model == null)
             {
                 throw new ArgumentNullException(nameof(this.Model));
@@ -57,7 +67,7 @@ namespace Plato.Internal.Layout.TagHelpers
             }
         }
 
-        private async Task<IHtmlContent> Build()
+        async Task<IHtmlContent> Build()
         {
 
             EnsureViewHelper();
@@ -69,7 +79,8 @@ namespace Plato.Internal.Layout.TagHelpers
                 builder = new HtmlContentBuilder();
                 foreach (var view in Model)
                 {
-                    builder.AppendHtml(await _viewDisplayHelper.DisplayAsync(view));
+                    var result = await _viewDisplayHelper.DisplayAsync(view);
+                    builder.AppendHtml(result);
                 }
             }
             else
@@ -77,7 +88,8 @@ namespace Plato.Internal.Layout.TagHelpers
                 if (this.Model is IView)
                 {
                     builder = new HtmlContentBuilder();
-                    builder.AppendHtml(await _viewDisplayHelper.DisplayAsync(this.Model));
+                    var result = await _viewDisplayHelper.DisplayAsync(this.Model);
+                    builder.AppendHtml(result);
                 }
             }
        

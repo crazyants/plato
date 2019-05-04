@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -11,21 +10,21 @@ namespace Plato.Internal.Layout.ViewAdapters
     public class ViewAdapterManager : IViewAdapterManager
     {
 
-        private readonly ConcurrentDictionary<string, IList<IViewAdapterResult>> _viewAdaptorResults
+        private readonly ConcurrentDictionary<string, IList<IViewAdapterResult>> _viewAdapterResults
             = new ConcurrentDictionary<string, IList<IViewAdapterResult>>();
 
-        private readonly IList<IViewAdapterProvider> _viewAdapterProviders;
+        private readonly IEnumerable<IViewAdapterProvider> _viewAdapterProviders;
         private readonly ILogger<ViewAdapterManager> _logger;
    
         public ViewAdapterManager(
-            IEnumerable<IViewAdapterProvider> viewAdaptrrProviders, 
+            IEnumerable<IViewAdapterProvider> viewAdapterProviders, 
             ILogger<ViewAdapterManager> logger)
         {
-            _viewAdapterProviders = viewAdaptrrProviders.ToList();
+            _viewAdapterProviders = viewAdapterProviders;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<IViewAdapterResult>> GetViewAdapters(string viewName)
+        public async Task<IEnumerable<IViewAdapterResult>> GetViewAdaptersAsync(string viewName)
         {
 
             // Populate all providers
@@ -33,7 +32,7 @@ namespace Plato.Internal.Layout.ViewAdapters
 
             // Find providers matching our view name
             var matchingAdapterResults = new List<IViewAdapterResult>();
-            foreach (var viewAdapterResult in _viewAdaptorResults)
+            foreach (var viewAdapterResult in _viewAdapterResults)
             {
                 if (viewAdapterResult.Key.Equals(viewName))
                 {
@@ -48,9 +47,9 @@ namespace Plato.Internal.Layout.ViewAdapters
         async Task EnsureConfiguredProviders()
         {
 
-            if (_viewAdaptorResults.Count == 0)
+            if (_viewAdapterResults.Count == 0)
             {
-                if (_viewAdapterProviders?.Count > 0)
+                if (_viewAdapterProviders != null)
                 {
                     foreach (var provider in _viewAdapterProviders)
                     {
@@ -59,7 +58,7 @@ namespace Plato.Internal.Layout.ViewAdapters
                             var viewAdapterResult = await provider.ConfigureAsync();
                             if (viewAdapterResult != null)
                             {
-                                _viewAdaptorResults.AddOrUpdate(viewAdapterResult.Builder.ViewName,
+                                _viewAdapterResults.AddOrUpdate(viewAdapterResult.Builder.ViewName,
                                     new List<IViewAdapterResult>()
                                     {
                                         viewAdapterResult

@@ -44,7 +44,7 @@ namespace Plato.Internal.Layout.Views
 
             // Get registered view adapter providers for the view
             var viewAdapterManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdapterManager>();
-            var viewAdapterResults = await viewAdapterManager.GetViewAdapters(view.ViewName);
+            var viewAdapterResults = await viewAdapterManager.GetViewAdaptersAsync(view.ViewName);
 
             // Invoke the view with supplied context
             return await _viewFactory.InvokeAsync(new ViewDisplayContext()

@@ -51,8 +51,7 @@ namespace Plato.Internal.Layout.Razor
                 return _t;
             }
         }
-
-    
+        
         public IPageTitleBuilder Title =>
             _pageTitleBuilder ??
             (_pageTitleBuilder = Context.RequestServices.GetRequiredService<IPageTitleBuilder>());

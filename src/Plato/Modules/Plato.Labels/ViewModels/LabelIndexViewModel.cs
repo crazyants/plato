@@ -18,7 +18,11 @@ namespace Plato.Labels.ViewModels
         public IEnumerable<SortColumn> SortColumns { get; set; }
 
         public IEnumerable<SortOrder> SortOrder { get; set; }
-        
+
+        public LabelIndexViewModel()
+        {
+
+        }
     }
 
     [DataContract(Name = "opts")]

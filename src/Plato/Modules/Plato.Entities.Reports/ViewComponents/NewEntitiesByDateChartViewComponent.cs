@@ -32,8 +32,7 @@ namespace Plato.Entities.Reports.ViewComponents
             {
                 chart = new ChartOptions();
             }
-
-
+            
             var data = options.FeatureId > 0
                 ? await _aggregatedEntityRepository.SelectGroupedByDateAsync(
                     "CreatedDate",

@@ -1,9 +1,9 @@
 ﻿@model EntityTreeViewModel
 @functions {
 
-    async Task<string> BuildCategories(EntityTreeViewModel model)
+    async Task<string> BuildAsync(EntityTreeViewModel model)
     {
-        return await BuildRecursively(model.SelectedEntities, model.HtmlName);
+        return await BuildRecursivelyAsync(model.SelectedEntities, model.HtmlName);
     }
 
     bool IsParentOfSelected(int id, IEnumerable<IEntity> selectedParents)
@@ -11,7 +11,7 @@
         return selectedParents?.FirstOrDefault(p => p.Id == id) != null ? true : false;
     }
 
-    async Task<string> BuildRecursively(
+    async Task<string> BuildRecursivelyAsync(
         IList<Selection<IEntity>> entities,
         string htmlName,
         System.Text.StringBuilder sb = null,
@@ -147,7 +147,7 @@
                     sb.Append("</div>");
 
                     // Recurse
-                    await BuildRecursively(entities, htmlName, sb, entity.Value.Id);
+                    await BuildRecursivelyAsync(entities, htmlName, sb, entity.Value.Id);
 
                     sb.Append("</li>");
 
@@ -173,7 +173,8 @@
     var css = string.IsNullOrEmpty(Model.CssClass)
         ? "tree"
         : "tree " + Model.CssClass;
+    var html = await BuildAsync(Model);
 }
 <div class="@css" data-provide="tree">
-    @Html.Raw(await BuildCategories(Model))
+    @Html.Raw(html)
 </div>
