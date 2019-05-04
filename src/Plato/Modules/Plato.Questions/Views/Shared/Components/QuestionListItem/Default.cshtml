@@ -113,19 +113,7 @@
                 }
             </span>
         }
-        @if (Model.Tags != null)
-        {
-            <span class="pl-2">
-                @foreach (var tag in Model.Tags)
-                {
-                    <a asp-route-area="Plato.Questions.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.Id" asp-route-opts.alias="@tag.Alias" title="@tag.Description" class="btn btn-sm label font-weight-bold">
-                        @tag.Name
-                    </a>
-                }
-            </span>
-        }
-        
-
+     
     </div>
     <div>
         

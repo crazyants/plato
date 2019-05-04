@@ -649,7 +649,7 @@ namespace Plato.Questions.Controllers
             {
                 foreach (var error in modelState.Errors)
                 {
-                    _alerter.Danger(T[error.ErrorMessage]);
+                    //_alerter.Danger(T[error.ErrorMessage]);
                 }
             }
 

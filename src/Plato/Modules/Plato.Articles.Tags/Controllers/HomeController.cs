@@ -13,6 +13,7 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.ViewModels;
@@ -25,6 +26,7 @@ namespace Plato.Articles.Tags.Controllers
         
         private readonly IViewProviderManager<Tag> _tagViewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly ITagStore<TagBase> _tagStore;
@@ -42,10 +44,12 @@ namespace Plato.Articles.Tags.Controllers
             IContextFacade contextFacade1,
             IFeatureFacade featureFacade,
             ITagStore<TagBase> tagStore,
+            IPageTitleBuilder pageTitleBuilder,
             IAlerter alerter)
         {
             
             _breadCrumbManager = breadCrumbManager;
+            _pageTitleBuilder = pageTitleBuilder;
             _tagViewProvider = tagViewProvider;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
@@ -174,7 +178,10 @@ namespace Plato.Articles.Tags.Controllers
                 if (page > 0)
                     return View("GetArticles", viewModel);
             }
-            
+
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[tag.Name], int.MaxValue);
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {

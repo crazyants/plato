@@ -159,7 +159,7 @@ namespace Plato.Tags.Stores
                 .Append("t.FeatureId,")
                 .Append("t.[Name],")
                 .Append("t.NameNormalized,")
-                .Append("t.Description,")
+                .Append("t.[Description],")
                 .Append("t.Alias,")
                 .Append("t.TotalEntities,")
                 .Append("t.TotalFollows,")

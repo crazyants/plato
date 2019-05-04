@@ -203,6 +203,7 @@ namespace Plato.Ideas
                         PostIdeaComments,
                         EditOwnIdeas,
                         EditOwnIdeaComments,
+                        DeleteOwnIdeas,
                         DeleteOwnIdeaComments,
                         ReportIdeas,
                         ReportIdeaComments

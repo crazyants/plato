@@ -539,6 +539,7 @@ namespace Plato.Issues.Controllers
 
         public async Task<IActionResult> Edit(EntityOptions opts)
         {
+
             // Get entity we are editing
             var entity = await _entityStore.GetByIdAsync(opts.Id);
             if (entity == null)
@@ -649,7 +650,7 @@ namespace Plato.Issues.Controllers
             {
                 foreach (var error in modelState.Errors)
                 {
-                    _alerter.Danger(T[error.ErrorMessage]);
+                    //_alerter.Danger(T[error.ErrorMessage]);
                 }
             }
 

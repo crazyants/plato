@@ -75,17 +75,17 @@ namespace Plato.Articles.Tags.ViewAdapters
                         };
                     }
 
-                    // Get labels for entity
-                    var entityTags = entityTagsDictionary[model.Entity.Id];
-
-                    // Add labels to the model from our dictionary
-                    var modelLabels = new List<EntityTag>();
-                    foreach (var tag in entityTags)
+                    // Add tags to the model from our dictionary
+                    var entityTags = new List<EntityTag>();
+                    if (entityTagsDictionary.ContainsKey(model.Entity.Id))
                     {
-                        modelLabels.Add(tag);
+                        foreach (var tag in entityTagsDictionary[model.Entity.Id])
+                        {
+                            entityTags.Add(tag);
+                        }
                     }
 
-                    model.Tags = modelLabels;
+                    model.Tags = entityTags;
 
                     // Return an anonymous type as we are adapting a view component
                     return new
@@ -132,7 +132,7 @@ namespace Plato.Articles.Tags.ViewAdapters
             {
                 foreach (var entityTag in entityTags.Data)
                 {
-                    var tag = entityTags.Data.FirstOrDefault(t => t.Id == entityTag.TagId);
+                    var tag = entityTags.Data.FirstOrDefault(t => t.TagId == entityTag.TagId);
                     if (tag != null)
                     {
                         output.AddOrUpdate(entityTag.EntityId, new List<EntityTag>()

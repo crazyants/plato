@@ -4669,26 +4669,23 @@ $(function (win, doc, $) {
                 $form.find('*[type="submit"]')
                     .addClass("disabled")
                     .attr("disabled", "disabled");
-                
-                // Do we need to update the form action?
-                if (formAction) {
-                    form.action = formAction;
-                }
-
-                // Note don't call $(form).submit() as this 
-                // internally calls the submitHandler again
-                form.submit();
-
-                // Reset form action
-                formAction = null;
-
-            },
-            invalidHandler: function(event, validator) {
-                // Cannot be updated after MVC initialization
-                // https://github.com/jquery-validation/jquery-validation/issues/765
             }
-        });
 
+            // Do we need to update the form action?
+            if (formAction) {
+                form.action = formAction;
+                formAction = null;
+            }
 
-
+            // Note don't call $(form).submit() as this 
+            // internally calls the validators submitHandler again
+            form.submit();
+            
+        },
+        invalidHandler: function(event, validator) {
+            // Cannot be updated after MVC initialization
+            // https://github.com/jquery-validation/jquery-validation/issues/765
+        }
+    });
+    
 }(window, document, jQuery));
