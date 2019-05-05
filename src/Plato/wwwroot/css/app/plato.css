@@ -424,10 +424,12 @@ canvas {
 /* Nav */
 /* ------------------------- */
 
-.nav-site .collapse,
-.nav-site .collapsing,
-.nav-v .collapse,
-.nav-v .collapsing { width: 100%; }
+.nav .collapse,
+.nav .collapsing { width: 100%; }
+.nav .dropdown.account > .dropdown-menu { width: 350px; }
+.nav .navbar-brand img { width: 200px; }
+.nav li a .nav-text { margin-left: 0.50rem; }
+.nav li a.text-hidden .nav-text { display: none;  }
 
 .nav-link[data-toggle="collapse"]:after {
     width: 0;
@@ -456,43 +458,27 @@ canvas {
 /* Site Nav */
 /* ------------------------- */
 
+.nav-search { display: block; margin-top: 3px; }
+
 .nav-site a.nav-link { height: 44px; }
 .nav-site .dropdown .dropdown-menu { min-width: 200px; }
-
-.dropdown.account > a.nav-link { line-height: normal; }
-.dropdown.account > .dropdown-menu { width: 350px; }
-
-.nav .navbar-brand img { width: 200px; }
-.nav li > a .nav-text { margin-left: 0.50rem; }
-.nav li > a.text-hidden .nav-text { display: none;  }
-
-.nav-search { display: block; margin-top: 3px; }
 
 .nav-site .navbar-expand-lg .navbar-nav .nav-link {
     padding: 0.5rem 1rem !important
 }
 
-.nav-site .navbar-expand-lg .navbar-nav { float: left; }
-
-
-.nav-site .navbar-collapse.collapsing .nav li,
-.nav-site .navbar-collapse.show .nav li {
-    display: block;
-    width: 100%;
+.nav-site .navbar-nav .nav-link {
+    padding: 0.5rem 1rem !important
 }
 
-.nav-site .navbar-collapse.collapsing .nav li > a.text-hidden .nav-text,
-.nav-site .navbar-collapse.show .nav li > a.text-hidden .nav-text {
-    display: inline-block !important;
-}
+.nav-site .nav-mobile,
+.nav-site .nav-desktop { width: 100%; }
+.nav-site .nav-desktop  { display: none; }
 
 @media (min-width: 992px) {
-
-    .nav-site .navbar-expand-lg .navbar-nav .nav-link {
-        padding: 0.5rem 1rem !important
-    }
-
-    .nav-site .navbar-expand-lg  .navbar-nav { float: right; }
+    
+    .nav-site .nav-mobile { display: none; }
+    .nav-site .nav-desktop { display: block; }
 
 }
 
@@ -568,8 +554,7 @@ canvas {
     }
     
     .nav-asides > .navbar hr { width: 100%; display: block; }
-    
-    .nav-asides  .site-nav { display: flex; }
+    .nav-asides .site-nav { display: flex; }
 } 
 
 /* ------------------------- */

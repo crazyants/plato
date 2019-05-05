@@ -3,9 +3,10 @@
 @if (Model != null)
 {
     <div class="dropdown notifications-dropdown" data-provide="notificationsDropdown">
-        <a class="nav-link dropdown-toggle dropdown-toggle-no-caret" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="@T["Notifications"]" data-provide="tooltip" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle dropdown-toggle-no-caret text-hidden" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="@T["Notifications"]" data-provide="tooltip" aria-haspopup="true" aria-expanded="false">
             <i class="fal fa-bell"></i>
             <span class="badge badge-danger hidden" data-provide="notificationsBadge"></span>
+            <span class="nav-text">Notifications</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="notificationDropdown">
             <div class="dropdown-header">
