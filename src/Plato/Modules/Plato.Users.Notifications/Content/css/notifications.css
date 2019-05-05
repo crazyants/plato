@@ -1,12 +1,17 @@
 ﻿/* mptofocatopm dropdown */
 
-.notifications-dropdown .dropdown-menu {
-    width: 500px;
+.notifications-dropdown .dropdown-toggle {
+    position: relative;
 }
 
 .notifications-dropdown .badge {
-    margin-left: -6px;
-    margin-top: -10px;
+    position: absolute;
+    right: 6px;
+    top: 6px;
+}
+
+.notifications-dropdown .dropdown-menu {
+    width: 500px;
 }
 
 .dropdown-menu .list-left + .list-body {

@@ -4487,7 +4487,101 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    /* navSite */
+    var navSite = function () {
+
+        var dataKey = "navSite",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            collapsedNavSelector: "#navbar-collapse",
+            toggleCollapsedNavSelector: '[data-target="#navbar-collapse"]'
+        };
+
+        var methods = {
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                
+                var $toggle = $caller.find(defaults.toggleCollapsedNavSelector);
+                if ($toggle.length > 0) {
+                    // Toggle collapsed mobile navigation
+                    $toggle.bind("click", function () {
+                        // Dispose tooltips for mobile navigation
+                        var $nav = $caller.find("#navbar-collapse");
+                        if ($nav.length > 0) {
+                            app.ui.disposeToolTips($nav);
+                        }
+                    });
+                }
+              
+            },
+            unbind: function ($caller) {
+
+                var $toggle = $caller.find(defaults.toggleCollapsedNavSelector);
+                if ($toggle.length > 0) {
+                    $toggle.unbind("click");
+                }
+
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).navSite()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().navSite()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+        };
+
+    }();
+
+
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -4510,7 +4604,8 @@ $(function (win, doc, $) {
         markdownBody: markdownBody.init,
         confirm: confirm.init,
         resizeable: resizeable.init,
-        replySpy: replySpy.init
+        replySpy: replySpy.init,
+        navSite: navSite.init
     });
 
     // ---------------------------
@@ -4577,6 +4672,9 @@ $(function (win, doc, $) {
 
         /* resizeable */
         this.find('[data-provide="resizeable"]').resizeable();
+
+        /* resizeable */
+        this.find(".nav-site").navSite();
         
         /* replySpy */
         this.replySpy();

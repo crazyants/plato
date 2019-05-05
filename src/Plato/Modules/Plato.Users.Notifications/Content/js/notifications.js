@@ -297,6 +297,7 @@ $(function (win, doc, $) {
             onShow: null,
             onHide: null,
             count: 0,
+            prevCount: -1,
             onPollComplete: null,
             pollInterval: 60 // the seconds to wait between polls for new notifications
         };
@@ -344,6 +345,7 @@ $(function (win, doc, $) {
                     url: "api/notifications/user/unread",
                     method: "GET"
                 }).done(function (data) {
+                    console.log(JSON.stringify(data))
                     if (data.statusCode === 200) {
 
                         if (app.logger) {
@@ -359,8 +361,8 @@ $(function (win, doc, $) {
 
             },
             show: function($caller) {
-                
-                $caller.text($caller.data(dataKey).count);
+
+                $caller.text($caller.data(dataKey).count.toString());
                 
                 if ($caller.hasClass("hidden")) {
                     $caller.removeClass("hidden");
@@ -369,7 +371,7 @@ $(function (win, doc, $) {
                 if (!$caller.hasClass("show")) {
                     $caller.addClass("show");
                 }
-
+                
                 if ($caller.data(dataKey).onShow) {
                     $caller.data(dataKey).onShow($caller);
                 }
@@ -575,8 +577,7 @@ $(function (win, doc, $) {
     app.ready(function () {
 
         var $dropdown = $('[data-provide="notificationsDropdown"]'),
-            $badge = $('[data-provide="notificationsBadge"]'),
-            previousCount = -1;
+            $badge = $('[data-provide="notificationsBadge"]');
 
         // Init dropdown
         $dropdown.notificationsDropdown();
@@ -584,17 +585,19 @@ $(function (win, doc, $) {
         // Init unread count badge
         $badge.notificationsBadge({
             onShow: function () { },
-            onHide: function () {
+            onHide: function ($caller) {
                 // If the badge is hidden the user may have expanded the dropdown which marks
                 // all notifications as read and hides the badge. In this case ensure we reset
                 // the previousCount back to 0 so if new message arrive the polling updates the list
-                previousCount = 0;
+                $caller.data("notificationsBadge").prevCount = 0;
             },
             onPollComplete: function($caller, count) {
 
                 // Ensure we only update if we have unread notifications 
                 // Ensure the unread count has changed since the previous poll
-                if (previousCount !== count && count > 0) {
+                if ($caller.data("notificationsBadge").prevCount !== count && count > 0) {
+
+                    console.log("count: " + count);
 
                     // Update count & ensure badge is visible
                     $caller.notificationsBadge({ count: count }, "show");
@@ -605,7 +608,7 @@ $(function (win, doc, $) {
                 }
 
                 // Track changes between polls
-                previousCount = count;
+                $caller.data("notificationsBadge").prevCount = count;
 
             }
         });

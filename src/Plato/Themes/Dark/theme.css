@@ -1,4 +1,10 @@
 
+/* ------------------- */
+/* Search within navigation  */
+/* ------------------- */
+
+.nav-site { border-color: rgba(255, 255, 255, 0.15); }
+.nav .search-input-group > .btn { color: rgba(255,255,255,0.5) !important; }
 
 /* ------------------- */
 /* Validation */

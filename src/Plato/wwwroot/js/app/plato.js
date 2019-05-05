@@ -185,6 +185,16 @@ $(function (win, doc, $) {
                 this.logInfo("Bootstrap tooltips initialized.");
             }
         },
+        disposeToolTips: function($el) {
+            if (win.$.Plato.defaults.bsToolTipEnabled) {
+                if ($el) {
+                    $el.find(win.$.Plato.defaults.bsToolTipSelector).tooltip('dispose');
+                    $el.find(win.$.Plato.defaults.bsToolTipAlternativeSelector).tooltip('dispose');
+
+                }
+                this.logInfo("Bootstrap tooltips disposed.");
+            }
+        },
         initDropDowns: function($el) {
 
             if (!$el) {

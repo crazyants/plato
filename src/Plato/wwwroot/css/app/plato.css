@@ -460,32 +460,37 @@ canvas {
 .nav li a .nav-text { margin-left: 0.50rem; }
 .nav li a.text-hidden .nav-text { display: none;  }
 
-.nav-site > .navbar .navbar-collapse,
-.nav-site > .navbar .navbar-collapse.collapsing,
-.nav-site > .navbar .navbar-collapse.show {
-    width: 100%;
+.nav-site { border: 0; border-bottom-width: 1px; border-style: solid; }
+
+.nav-site .collapsing {
     overflow: hidden;
 }
+
+.nav-site .navbar-collapse {
+    width: 100%;
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+.navbar-mobile .navbar-collapse .notifications-dropdown { display: none; }
 
 .nav-site .dropdown .dropdown-menu { min-width: 200px; }
 .nav-site .navbar-nav a.nav-link { height: 44px; padding: 0.5rem 1rem !important }
 
-.nav-mobile,
-.nav-desktop { width: 100%; }
-.nav-desktop  { display: none; flex-flow:nowrap; }
-
-.nav-desktop .navbar-brand {  }
-.nav-desktop .navbar-search { width: 80%; margin: 0 2rem; }
-.nav-desktop .navbar-search .nav-search { display: block; margin-top: 3px; }
-.nav-desktop .navbar-search .nav-search .form-control { transition: all 0.10s ease; }
-.nav-desktop .navbar-search .nav-search .dropdown-menu {  }
-.nav-desktop .navbar-nav { margin-left: auto; flex-direction: row; }
-.nav-desktop .navbar-nav .nav { flex-flow:nowrap; flex-wrap: nowrap; }
+.navbar-mobile,
+.navbar-desktop { width: 100%; }
+.navbar-desktop  { display: none; flex-flow:nowrap; }
+.navbar-desktop .navbar-search { width: 80%; margin: 0 2rem; }
+.navbar-desktop .navbar-search .nav-search { display: block; margin-top: 3px; }
+.navbar-desktop .navbar-search .nav-search .form-control { transition: all 0.10s ease; }
+.navbar-desktop .navbar-nav { margin-left: auto; flex-direction: row; }
+.navbar-desktop .navbar-nav .nav { flex-flow:nowrap; flex-wrap: nowrap; }
+.navbar-desktop .navbar-nav .dropdown-menu { position: absolute !important; }
 
 @media (min-width: 992px) {
     
-    .nav-site .nav-mobile { display: none; }
-    .nav-site .nav-desktop { display: flex; }
+    .nav-site .navbar-mobile { display: none; }
+    .nav-site .navbar-desktop { display: flex; }
 
 }
 
@@ -1081,6 +1086,12 @@ canvas {
 .anim-8x { animation-duration: 0.45s; }
 .anim-9x { animation-duration: 0.50s; }
 .anim-10x { animation-duration: 0.55s; }
+.anim-11x { animation-duration: 0.60s; }
+.anim-12x { animation-duration: 0.65s; }
+.anim-13x { animation-duration: 0.70s; }
+.anim-14x { animation-duration: 0.75s; }
+.anim-15x { animation-duration: 0.80s; }
+.anim-16x { animation-duration: 0.85s; }
 
 .anim-infinite { animation-iteration-count: infinite; }
 

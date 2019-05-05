@@ -25,7 +25,7 @@ namespace Plato.Search.Navigation
             }
             
             builder
-                .Add(T["Navigation"], int.MaxValue - 5, nav => nav
+                .Add(T["More"], int.MaxValue - 5, nav => nav
                         .IconCss("fal fa-bars")
                         .Attributes(new Dictionary<string, object>()
                         {
