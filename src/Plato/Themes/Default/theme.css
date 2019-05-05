@@ -1,5 +1,19 @@
 ﻿
 
+.navbar-dark .navbar-search .form-control {
+    background: rgba(255, 255, 255, 0.15);
+    border: 0;
+    color: #aaa;
+}
+
+.navbar-dark .form-control:focus {
+    background: white;
+    color: black;
+}
+
+.nav .search-input-group > .btn {
+    color: #aaa !important;
+}
 
 /* ------------------- */
 /* Validation */

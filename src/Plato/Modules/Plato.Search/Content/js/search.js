@@ -128,7 +128,7 @@ $(function (win, doc, $) {
                 }
             },
             itemTemplate:
-                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url({createdBy.avatar.url});"></span></span>{title}{relevance}</a>',
+                '<a class="{itemCss}" href="{url}"><div style=\"display:inline-block; width: 85%; overflow:hidden; text-overflow: ellipsis;\"><span class="avatar avatar-sm mr-2"><span style="background-image: url({createdBy.avatar.url});"></span></span>{title}</div>{relevance}</a>',
             parseItemTemplate: function(html, result) {
 
                 if (result.id) {
