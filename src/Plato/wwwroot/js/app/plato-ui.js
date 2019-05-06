@@ -4504,19 +4504,35 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
-                
-                var $toggle = $caller.find(defaults.toggleCollapsedNavSelector);
-                if ($toggle.length > 0) {
-                    // Toggle collapsed mobile navigation
-                    $toggle.bind("click", function () {
+
+                var entered = false,
+                    breakpoint = 992,
+                    $nav = $caller.find(defaults.collapsedNavSelector);
+
+                $nav.bind("mouseleave",
+                    function() {
+                        entered = false;
+                    });
+
+                $nav.bind("mouseenter", function () {
+                    if (entered) {
+                        return;
+                    }
+                    entered = true;
+                    if ($(win).width() < breakpoint) {
                         // Dispose tooltips for mobile navigation
-                        var $nav = $caller.find("#navbar-collapse");
                         if ($nav.length > 0) {
                             app.ui.disposeToolTips($nav);
                         }
-                    });
-                }
-              
+                    } else {
+                        // Init tooltips for desktop navigation
+                        if ($nav.length > 0) {
+                            app.ui.initToolTips($nav);
+                        }
+                    }
+                });
+
+
             },
             unbind: function ($caller) {
 

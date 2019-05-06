@@ -1,6 +1,9 @@
 ﻿@model EntityIndexViewModel<Doc>
+@{
+    var postPermission = Plato.Docs.Permissions.PostDocs;
+}
 
-<div asp-permission="PostDocs">
+<div asp-permission="@postPermission.Name">
     <authorize-success>
         <a asp-route-action="Create" class="btn btn-primary" title="@T["New Doc"]">
             <i class="fal fa-fw fa-plus"></i>

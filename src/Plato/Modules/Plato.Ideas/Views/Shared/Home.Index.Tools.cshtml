@@ -1,8 +1,11 @@
 ﻿@model EntityIndexViewModel<Idea>
+@{
+    var postPermission = Plato.Ideas.Permissions.PostIdeas;
+}
 
-<div asp-permission="PostIdeas">
+<div asp-permission="@postPermission.Name">
     <authorize-success>
-        <a asp-route-action="Create" class="btn btn-primary" title="@T["New Article"]">
+        <a asp-route-action="Create" class="btn btn-primary" title="@T["New Idea"]">
             <i class="fal fa-fw fa-plus"></i>
             @T["New Idea"]
         </a>
@@ -10,7 +13,7 @@
     <authorize-fail>
         @if (base.CurrentUser == null)
         {
-            <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary" title="@T["New Topic"]">
+            <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary" title="@T["New Idea"]">
                 <i class="fal fa-fw fa-lock"></i>
                 @T["Login to Post"]
             </a>

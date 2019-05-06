@@ -20,8 +20,6 @@ canvas {
 /* ------------------------- */
 
 .validation-summary-valid {
-    padding: 0 1.25rem;
-    margin-bottom: 0.75rem;
     visibility: hidden;
     height: 0;
     opacity: 0;
@@ -470,9 +468,11 @@ canvas {
 .nav-site .navbar-nav a.nav-link { height: 44px; padding: 0.5rem 1rem !important }
 
 .nav-site > .navbar { width: 100%; }
-.nav-site > .navbar .navbar-search { display: none; }
 .nav-site > .navbar .navbar-mobile { display: flex; }
+.nav-site > .navbar .navbar-search { width: 100%; }
+.nav-site > .navbar .navbar-search .nav { display: block; }
  .nav-site > .navbar .navbar-user { display: none; }
+
 .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav {
     float: none;
     display: flex;
@@ -502,9 +502,7 @@ canvas {
     .nav-site > .navbar,
     .nav-site > .navbar .navbar-user,
     .nav-site > .navbar-expand-lg .navbar-collapse .notifications-dropdown { display: flex; flex-flow:nowrap; }
-   
-    .nav-site > .navbar-expand-lg .collapse,
-    .nav-site > .navbar-expand-lg .navbar-collapse, 
+  
     .nav-site > .navbar .navbar-mobile { display: none; }
 
     .nav-site > .navbar .navbar-search {
@@ -522,6 +520,7 @@ canvas {
         width: auto;
     }
 
+    .nav-site .navbar-user .navbar-nav .nav,
     .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .nav {
         padding: 0;
         width: auto;

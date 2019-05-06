@@ -24,8 +24,8 @@
 }
 
 .nav .search-input-group > .btn { color: #aaa !important; }
-.nav .search-input-group > .btn:hover,
-.nav .search-input-group > .btn:focus { color: white !important; }
+.navbar-dark .search-input-group > .btn:hover,
+.navbar-dark .search-input-group > .btn:focus { color: white !important; }
 
 .navbar-dark.navbar-collapse .navbar-nav .dropdown-divider { border-color: rgba(255, 255, 255, 0.1) !important; }
 
