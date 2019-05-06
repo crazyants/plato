@@ -1,10 +1,16 @@
 ﻿@model User
 
-<h4>@Model.DisplayName</h4>
-<span class="text-muted">
+<h4 class="d-inline-block">@Model.DisplayName</h4>
+@if (Model.IsVerified)
+{
+    <div data-provide="tooltip" title="@T["Verified Member"]" class="badge badge-sm badge-primary rounded-circle align-top mt-1">
+        <i class="fal fa-check"></i>
+    </div>
+}
+<div class="text-muted">
     @T["Joined "] <date utc="@Model.CreatedDate"></date>,
     @T["Seen:"] <date utc="@Model.LastLoginDate"></date>
-</span>
+</div>
 <hr />
 
 

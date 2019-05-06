@@ -81,11 +81,6 @@ namespace Plato.Discuss.Mentions.Subscribers
 
         }
         
-        public void Dispose()
-        {
-            Unsubscribe();
-        }
-
         #endregion
 
         #region "Private Methods"

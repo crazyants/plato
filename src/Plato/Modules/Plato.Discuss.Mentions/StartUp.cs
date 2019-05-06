@@ -43,6 +43,7 @@ namespace Plato.Discuss.Mentions
             services.AddScoped<INotificationProvider<Topic>, NewEntityMentionEmail>();
             services.AddScoped<INotificationProvider<Topic>, NewEntityMentionWeb>();
             services.AddScoped<INotificationProvider<Reply>, NewReplyMentionWeb>();
+            services.AddScoped<INotificationProvider<Reply>, NewReplyMentionEmail>();
 
         }
 
