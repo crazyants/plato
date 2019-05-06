@@ -19,7 +19,7 @@
     <scripts section="Body" />
 
 <nav class="nav-site">
-    <div class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">
             @settings.SiteName
         </a>
@@ -70,12 +70,10 @@
             </div>
         </div>
         <div class="navbar-search collapse" id="search-collapse">
-            <div class="py-2">
-                <navigation name="site-search" class="nav nav-search"/>
-            </div>
+            <navigation name="site-search" class="nav nav-search"/>
         </div>
         <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
-            <div class="navbar-nav py-2">
+            <div class="navbar-nav">
                 <navigation name="site"
                             class="nav nav-pills"
                             child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in"/>

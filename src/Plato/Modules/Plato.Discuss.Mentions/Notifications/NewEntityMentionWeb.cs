@@ -10,13 +10,12 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Discuss.Mentions.NotificationTypes;
-using Plato.Notifications.Models;
-using Plato.Notifications.Services;
+using Plato.Entities.Extensions;
 
 namespace Plato.Discuss.Mentions.Notifications
 {
 
-    public class NewMentionWeb : INotificationProvider<Topic>
+    public class NewEntityMentionWeb : INotificationProvider<Topic>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -26,7 +25,7 @@ namespace Plato.Discuss.Mentions.Notifications
 
         public IStringLocalizer S { get; }
         
-        public NewMentionWeb(
+        public NewEntityMentionWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
@@ -45,6 +44,13 @@ namespace Plato.Discuss.Mentions.Notifications
             
             // Ensure correct notification provider
             if (!context.Notification.Type.Name.Equals(WebNotifications.NewMention.Name, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+
+            // The entity should be visible
+            if (context.Model.IsHidden())
             {
                 return null;
             }

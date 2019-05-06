@@ -5,29 +5,42 @@
 
 .nav-site { border-color: rgba(0, 0, 0, 0.15); }
 
-.nav-site .navbar-light .navbar-nav .nav-pills .show > .nav-link,
-.nav-site .navbar-light .navbar-nav .nav-pills .active > .nav-link,
-.nav-site .navbar-light .navbar-nav .nav-pills .nav-link.show,
-.nav-site .navbar-light .navbar-nav .nav-pills .nav-link.active {
+.nav-site > .navbar-light .navbar-nav .nav-pills .show > .nav-link,
+.nav-site > .navbar-light .navbar-nav .nav-pills .active > .nav-link,
+.nav-site > .navbar-light .navbar-nav .nav-pills .nav-link.show,
+.nav-site > .navbar-light .navbar-nav .nav-pills .nav-link.active {
     color: white !important;
 }
 
-.navbar-dark .navbar-search .form-control {
+.nav-site > .navbar-dark .navbar-search .form-control {
     background: rgba(255, 255, 255, 0.15);
     border: 0;
     color: #aaa;
 }
 
-.navbar-dark .form-control:focus {
+.nav-site > .navbar-dark .form-control:focus {
     background: white;
     color: black;
 }
 
-.nav .search-input-group > .btn { color: #aaa !important; }
-.navbar-dark .search-input-group > .btn:hover,
-.navbar-dark .search-input-group > .btn:focus { color: white !important; }
+.nav-site .nav .search-input-group > .btn { color: #aaa !important; }
+.nav-site > .navbar-dark .search-input-group > .btn:hover,
+.nav-site > .navbar-dark .search-input-group > .btn:focus { color: white !important; }
 
-.navbar-dark.navbar-collapse .navbar-nav .dropdown-divider { border-color: rgba(255, 255, 255, 0.1) !important; }
+.nav-site > .navbar-dark .search-input-group .form-control::placeholder { 
+    color: #aaa;
+    opacity: 1;
+}
+
+.nav-site > .navbar-dark .search-input-group .form-control:-ms-input-placeholder,
+.nav-site > .navbar-dark .search-input-group .form-control::-ms-input-placeholder   {
+    color: #aaa;
+}
+
+.nav-site > .navbar-dark .collapsing .nav,
+.nav-site > .navbar-dark .collapse .nav,
+.nav-site > .navbar-dark.navbar-collapse .navbar-nav .dropdown-divider { border-color: rgba(255, 255, 255, 0.1) !important; }
+
 
 /* ------------------- */
 /* Validation */

@@ -37,10 +37,12 @@ namespace Plato.Discuss.Mentions
 
             // Notification managers
             services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+            services.AddScoped<INotificationManager<Reply>, NotificationManager<Reply>>();
 
             // Notification Providers
-            services.AddScoped<INotificationProvider<Topic>, NewMentionEmail>();
-            services.AddScoped<INotificationProvider<Topic>, NewMentionWeb>();
+            services.AddScoped<INotificationProvider<Topic>, NewEntityMentionEmail>();
+            services.AddScoped<INotificationProvider<Topic>, NewEntityMentionWeb>();
+            services.AddScoped<INotificationProvider<Reply>, NewReplyMentionWeb>();
 
         }
 

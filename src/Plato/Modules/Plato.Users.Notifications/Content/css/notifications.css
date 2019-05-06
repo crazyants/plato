@@ -10,8 +10,11 @@
     top: 6px;
 }
 
-.notifications-dropdown .dropdown-menu {
-    width: 500px;
+.notifications-dropdown .dropdown-menu { width: 100%; }
+
+/* full screen */
+@media (min-width: 992px) {
+    .notifications-dropdown .dropdown-menu { width: 500px; }
 }
 
 .dropdown-menu .list-left + .list-body {

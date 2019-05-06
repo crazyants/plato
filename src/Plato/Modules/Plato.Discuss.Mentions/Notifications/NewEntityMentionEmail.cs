@@ -13,18 +13,19 @@ using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Discuss.Mentions.NotificationTypes;
+using Plato.Entities.Extensions;
 
 namespace Plato.Discuss.Mentions.Notifications
 {
 
-    public class NewMentionEmail : INotificationProvider<Topic>
+    public class NewEntityMentionEmail : INotificationProvider<Topic>
     {
 
         private readonly IContextFacade _contextFacade;
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
 
-        public NewMentionEmail(
+        public NewEntityMentionEmail(
             IContextFacade contextFacade,
             ILocaleStore localeStore,
             IEmailManager emailManager)
@@ -42,7 +43,14 @@ namespace Plato.Discuss.Mentions.Notifications
             {
                 return null;
             }
-            
+
+            // The entity should be visible
+            if (context.Model.IsHidden())
+            {
+                return null;
+            }
+
+
             // Create result
             var result = new CommandResult<Topic>();
 

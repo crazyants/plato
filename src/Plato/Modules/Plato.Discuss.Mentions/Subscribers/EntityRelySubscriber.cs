@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Plato.Discuss.Mentions.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Notifications;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Extensions;
 using Plato.Mentions.Models;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
@@ -12,25 +18,33 @@ using Plato.Mentions.Stores;
 namespace Plato.Discuss.Mentions.Subscribers
 {
     
-    /// <typeparam name="TEntityReply"></typeparam>
     public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 
         private readonly IEntityMentionsManager<EntityMention> _entityMentionsManager;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IEntityMentionsStore<EntityMention> _entityMentionsStore;
+        private readonly ILogger<EntityReplySubscriber<TEntityReply>> _logger;
+        private readonly INotificationManager<TEntityReply> _notificationManager;
         private readonly IMentionsParser _mentionParser;
         private readonly IBroker _broker;
 
         public EntityReplySubscriber(
             IEntityMentionsManager<EntityMention> entityMentionsManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            IEntityMentionsStore<EntityMention> entityMentionsStore,
+            INotificationManager<TEntityReply> notificationManager,
+            ILogger<EntityReplySubscriber<TEntityReply>> logger,
             IMentionsParser mentionParser,
-            IBroker broker,
-            IEntityMentionsStore<EntityMention> entityMentionsStore)
+            IBroker broker)
         {
-            _mentionParser = mentionParser;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _entityMentionsManager = entityMentionsManager;
-            _broker = broker;
             _entityMentionsStore = entityMentionsStore;
+            _notificationManager = notificationManager;
+            _mentionParser = mentionParser;
+            _broker = broker;
+            _logger = logger;
         }
         
         #region "Implementation"
@@ -98,6 +112,7 @@ namespace Plato.Discuss.Mentions.Subscribers
             }
 
             // Add users mentioned within entity to EntityMentions
+            var usersToNotify = new List<User>();
             foreach (var user in users)
             {
                 var result = await _entityMentionsManager.CreateAsync(new EntityMention()
@@ -106,7 +121,24 @@ namespace Plato.Discuss.Mentions.Subscribers
                     EntityReplyId = reply.Id,
                     UserId = user.Id
                 });
+                if (result.Succeeded)
+                {
+                    usersToNotify.Add(user);
+                }
+                else
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            _logger.LogCritical(error.Code, error.Description);
+                        }
+                    }
+                }
             }
+
+            // Send mention notifications
+            await SendNotifications(usersToNotify, reply);
 
             return reply;
 
@@ -186,6 +218,36 @@ namespace Plato.Discuss.Mentions.Subscribers
             foreach (var mention in mentionsToAdd)
             {
                 await _entityMentionsManager.CreateAsync(mention);
+            }
+
+            return reply;
+
+        }
+
+        async Task<TEntityReply> SendNotifications(IEnumerable<User> users, TEntityReply reply)
+        {
+            // Send mention notifications
+            foreach (var user in users)
+            {
+
+                // Email notifications
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewMention))
+                {
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewMention)
+                    {
+                        To = user,
+                    }, reply);
+                }
+
+                // Web notifications
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewMention))
+                {
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewMention)
+                    {
+                        To = user,
+                    }, reply);
+                }
+
             }
 
             return reply;

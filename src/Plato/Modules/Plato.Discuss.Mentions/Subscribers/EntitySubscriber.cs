@@ -22,29 +22,29 @@ namespace Plato.Discuss.Mentions.Subscribers
     {
         
         private readonly IEntityMentionsManager<EntityMention> _entityMentionsManager;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IEntityMentionsStore<EntityMention> _entityMentionsStore;
         private readonly INotificationManager<TEntity> _notificationManager;
-        private readonly IMentionsParser _mentionParser;
         private readonly ILogger<EntitySubscriber<TEntity>> _logger;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IMentionsParser _mentionParser;
         private readonly IBroker _broker;
 
         public EntitySubscriber(
             IEntityMentionsManager<EntityMention> entityMentionsManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
             IEntityMentionsStore<EntityMention> entityMentionsStore,
             INotificationManager<TEntity> notificationManager,
             IMentionsParser mentionParser,
             ILogger<EntitySubscriber<TEntity>> logger,
-            IBroker broker,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults)
+            IBroker broker)
         {
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _entityMentionsManager = entityMentionsManager;
             _entityMentionsStore = entityMentionsStore;
+            _notificationManager = notificationManager;
             _mentionParser = mentionParser;
             _broker = broker;
-            _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _logger = logger;
-            _notificationManager = notificationManager;
         }
 
         #region "Implementation"
