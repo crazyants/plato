@@ -30,12 +30,12 @@ namespace Plato.Discuss.Mentions.Notifications
         public NewReplyMentionWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IContextFacade contextFacade,
             IUserNotificationsManager<UserNotification> userNotificationManager,
+            IContextFacade contextFacade,
             IEntityStore<Topic> entityStore)
         {
-            _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
+            _contextFacade = contextFacade;
             _entityStore = entityStore;
 
             T = htmlLocalizer;
@@ -48,6 +48,18 @@ namespace Plato.Discuss.Mentions.Notifications
 
             // Ensure correct notification provider
             if (!context.Notification.Type.Name.Equals(WebNotifications.NewMention.Name, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            // We always need a model
+            if (context.Model == null)
+            {
+                return null;
+            }
+
+            // The reply should be visible
+            if (context.Model.IsHidden())
             {
                 return null;
             }
@@ -66,10 +78,10 @@ namespace Plato.Discuss.Mentions.Notifications
             {
                 return null;
             }
-
+            
             // Create result
             var result = new CommandResult<Reply>();
-
+            
             // Build user notification
             var userNotification = new UserNotification()
             {
@@ -85,7 +97,7 @@ namespace Plato.Discuss.Mentions.Notifications
                     ["action"] = "Reply",
                     ["opts.id"] = entity.Id,
                     ["opts.alias"] = entity.Alias,
-                    ["opts.replyId"] = result.Response.Id
+                    ["opts.replyId"] = context.Model.Id
                 })
             };
 
@@ -100,6 +112,5 @@ namespace Plato.Discuss.Mentions.Notifications
         }
 
     }
-
-
+    
 }

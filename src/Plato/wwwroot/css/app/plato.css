@@ -459,6 +459,8 @@ canvas {
 .nav li a.text-hidden .nav-text { display: none;  }
 
 .nav-site { border: 0; border-bottom-width: 1px; border-style: solid; }
+.nav-site .navbar { border: 0 !important; }
+
 .nav-site .collapsing { overflow: hidden; }
 
 .nav-site > .navbar .navbar-nav a.nav-link { height: 44px; padding: 0.5rem 1rem !important }

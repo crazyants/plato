@@ -47,7 +47,12 @@ namespace Plato.Discuss.Mentions.Notifications
             {
                 return null;
             }
-
+            
+            // We always need a model
+            if (context.Model == null)
+            {
+                return null;
+            }
 
             // The entity should be visible
             if (context.Model.IsHidden())

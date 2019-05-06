@@ -18,29 +18,21 @@
     <assets section="Body" />
     <scripts section="Body" />
 
-    <div class="collapse" id="navbar-header">
-        <div class="container-fluid bg-dark p-1">
-            <h3>Collapsed content</h3>
-            <p>Toggleable via the navbar brand.</p>
-        </div>
-    </div>
-
-    <nav class="nav-site nav-tabs">
-        <div class="navbar navbar-expand-lg navbar-dark">
-
-            <div class="nav-mobile">
-                <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand d-inline-block">
-                    @settings.SiteName
-                </a>
-                <div class="navbar-nav float-right">
+    <nav class="nav-site">
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">
+                @settings.SiteName
+            </a>
+            <div class="navbar-mobile">
+                <div class="navbar-nav">
                     <ul class="nav nav-pills">
                         <li class="nav-item">
-                            <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="@T["Navigation"]">
+                            <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="@T["Navigation"]" data-provide="tooltip" title="@T["Navigation"]">
                                 <i class="fal fa-bars"></i>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#search-collapse" aria-controls="search-collapse" aria-expanded="false" aria-label="@T["Search"]">
+                            <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#search-collapse" aria-controls="search-collapse" aria-expanded="false" aria-label="@T["Search"]" data-provide="tooltip" title="@T["Search"]">
                                 <i class="fal fa-search"></i>
                             </a>
                         </li>
@@ -68,36 +60,27 @@
                                 </form>
                             </li>
                         }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                            </li>
+                        }
                     </ul>
                 </div>
-                <div class="collapse navbar-collapse" id="navbar-collapse" role="navigation">
-                    <hr />
-                    <navigation name="site"
-                                collaspsable="true"
-                                class="navbar-nav d-block"
-                                child-ul-css-class="nav flex-column"
-                                link-css-class="nav-link" />
-
-                </div>
-                <div class="collapse navbar-collapse" id="search-collapse">
-                    <hr />
-                    <navigation name="site-search" class="nav nav-search" />
-                </div>
             </div>
-
-            <div class="nav-desktop">
-                <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">
-                    @settings.SiteName
-                </a>
-                <div class="navbar-search">
-                    <navigation name="site-search" class="nav nav-search" />
-                </div>
+            <div class="navbar-search collapse" id="search-collapse">
+                <navigation name="site-search" class="nav nav-search" />
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
                 <div class="navbar-nav">
-
                     <navigation name="site"
                                 class="nav nav-pills"
                                 child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
-
+                </div>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-nav">
                     @if (this.CurrentUser != null)
                     {
                         <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="form-inline">
@@ -142,14 +125,10 @@
                             </li>
                         </ul>
                     }
-
                 </div>
             </div>
-
         </div>
     </nav>
-
-
 
     <div class="container-fluid">
         <div class=" p-4">

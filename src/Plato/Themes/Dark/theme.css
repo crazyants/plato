@@ -3,7 +3,7 @@
 /* Search within navigation  */
 /* ------------------- */
 
-.nav-site { border-color: rgba(255, 255, 255, 0.15); }
+.nav-site { border-color: rgba(255, 255, 255, 0.10); }
 .nav .search-input-group > .btn { color: rgba(255,255,255,0.5) !important; }
 
 /* ------------------- */
@@ -559,7 +559,7 @@ a.label.active {
 
 body {
     color: #aaa;
-    background-color: #060606
+    background-color: #0a0a0a;
 }
 
 a {

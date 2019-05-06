@@ -41,6 +41,7 @@
 .nav-site > .navbar-dark .collapse .nav,
 .nav-site > .navbar-dark.navbar-collapse .navbar-nav .dropdown-divider { border-color: rgba(255, 255, 255, 0.1) !important; }
 
+.nav-site > .navbar-light { border-bottom: 1px solid rgba(0, 0, 0, 0.15); }
 
 /* ------------------- */
 /* Validation */

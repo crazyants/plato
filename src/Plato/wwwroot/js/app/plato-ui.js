@@ -4505,42 +4505,47 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
+                // Disable bootstrap tooltips within .nav-site dependent on screen size 
+
                 var entered = false,
-                    breakpoint = 992,
+                    breakpoint = 992, // tooltips will be disabled at this width and below
                     $nav = $caller.find(defaults.collapsedNavSelector);
+
+                if ($nav.length === 0) {
+                    return;
+                }
 
                 $nav.bind("mouseleave",
                     function() {
                         entered = false;
                     });
 
-                $nav.bind("mouseenter", function () {
-                    if (entered) {
-                        return;
-                    }
-                    entered = true;
-                    if ($(win).width() < breakpoint) {
-                        // Dispose tooltips for mobile navigation
-                        if ($nav.length > 0) {
-                            app.ui.disposeToolTips($nav);
+                $nav.bind("mouseenter",
+                    function() {
+                        if (entered) {
+                            return;
                         }
-                    } else {
-                        // Init tooltips for desktop navigation
-                        if ($nav.length > 0) {
-                            app.ui.initToolTips($nav);
+                        entered = true;
+                        if ($(win).width() < breakpoint) {
+                            // Dispose tooltips for mobile navigation
+                            if ($nav.length > 0) {
+                                app.ui.disposeToolTips($nav);
+                            }
+                        } else {
+                            // Enable tooltips for desktop navigation
+                            if ($nav.length > 0) {
+                                app.ui.initToolTips($nav);
+                            }
                         }
-                    }
-                });
-
+                    });
 
             },
             unbind: function ($caller) {
-
-                var $toggle = $caller.find(defaults.toggleCollapsedNavSelector);
-                if ($toggle.length > 0) {
-                    $toggle.unbind("click");
+                var $nav = $caller.find(defaults.collapsedNavSelector);
+                if ($nav.length > 0) {
+                    $nav.unbind("mouseenter");
+                    $nav.unbind("mouseleave");
                 }
-
             }
         };
 

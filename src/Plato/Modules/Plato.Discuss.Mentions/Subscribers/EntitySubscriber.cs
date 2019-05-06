@@ -238,7 +238,7 @@ namespace Plato.Discuss.Mentions.Subscribers
                 {
                     await _notificationManager.SendAsync(new Notification(WebNotifications.NewMention)
                     {
-                        To = user,
+                        To = user
                     }, entity);
                 }
 
