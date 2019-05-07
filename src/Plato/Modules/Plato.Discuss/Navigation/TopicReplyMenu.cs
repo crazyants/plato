@@ -80,14 +80,14 @@ namespace Plato.Discuss.Navigation
                                 Permissions.EditOwnReplies :
                                 Permissions.EditAnyReply)
                             .LocalNav())
-                        .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Discuss",
+                        .Add(reply.IsHidden ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(reply.IsHidden ? "ShowReply" : "HideReply", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = reply?.Id ?? 0
                                 })
                             .Resource(entity.CategoryId)
-                            .Permission(reply.IsPrivate
+                            .Permission(reply.IsHidden
                                 ? Permissions.ShowReplies
                                 : Permissions.HideReplies)
                             .LocalNav()

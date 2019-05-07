@@ -24,7 +24,7 @@ namespace Plato.Entities.Models
 
         string Urls { get; set; }
 
-        bool IsPrivate { get; set; }
+        bool IsHidden { get; set; }
 
         bool IsSpam { get; set; }
 

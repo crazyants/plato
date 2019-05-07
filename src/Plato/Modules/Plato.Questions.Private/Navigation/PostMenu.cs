@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
+using Plato.Questions.Models;
+using Plato.Questions.Private.ViewModels;
 
 namespace Plato.Questions.Private.Navigation
 {
@@ -36,10 +38,22 @@ namespace Plato.Questions.Private.Navigation
                 return;
             }
 
+            // Get entity from builder context
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
+         
+            // Set isPrivate flag
+            var isPrivate = entity?.IsPrivate ?? false;
+            
             // Build navigation
             builder
-                .Add(T["Public"], int.MinValue + 10, create => create                                             
-                        .View("QuestionPrivateMenu", new { })
+                .Add(isPrivate ? T["Private"] : T["Public"], int.MinValue + 10, create => create                                             
+                        .View("QuestionPrivateMenu", new
+                        {
+                            model = new PrivateMenuViewModel()
+                            {
+                                IsPrivate = isPrivate
+                            }
+                        })
                     , new List<string>() {"nav-item", "text-muted"});
 
         }

@@ -63,7 +63,7 @@ namespace Plato.Issues.ViewComponents
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateIssueComments))
                     {
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                     }
 
                     // Hide spam?

@@ -359,10 +359,10 @@ namespace Plato.Discuss.Controllers
             }
 
             // Ensure we have permission to view private entities
-            if (entity.IsPrivate)
+            if (entity.IsHidden)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
-                    Permissions.ViewPrivateTopics))
+                    Permissions.ViewHiddenTopics))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -565,6 +565,9 @@ namespace Plato.Discuss.Controllers
             {
                 return Unauthorized();
             }
+
+            // Add entity we are editing to context
+            HttpContext.Items[typeof(Topic)] = entity;
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -1090,7 +1093,7 @@ namespace Plato.Discuss.Controllers
             // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
-            entity.IsPrivate = true;
+            entity.IsHidden = true;
 
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(entity);
@@ -1146,7 +1149,7 @@ namespace Plato.Discuss.Controllers
             // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
-            entity.IsPrivate = false;
+            entity.IsHidden = false;
 
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(entity);
@@ -1562,7 +1565,7 @@ namespace Plato.Discuss.Controllers
             // Update entity
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsPrivate = true;
+            reply.IsHidden = true;
 
             // Save changes and return results
             var result = await _replyManager.UpdateAsync(reply);
@@ -1625,7 +1628,7 @@ namespace Plato.Discuss.Controllers
             // Update entity
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsPrivate = false;
+            reply.IsHidden = false;
 
             // Save changes and return results
             var result = await _replyManager.UpdateAsync(reply);

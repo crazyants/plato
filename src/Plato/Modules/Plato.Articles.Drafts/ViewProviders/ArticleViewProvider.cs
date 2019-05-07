@@ -48,7 +48,7 @@ namespace Plato.Articles.Drafts.ViewProviders
                 View<DraftViewModel>("Article.Draft.Edit.Sidebar", model =>
                 {
                     model.HtmlName = HtmlName;
-                    model.Published = !entity?.IsPrivate ?? false;
+                    model.Published = !entity?.IsHidden ?? false;
                     return model;
                 }).Zone("sidebar").Order(10)
             );
@@ -81,7 +81,7 @@ namespace Plato.Articles.Drafts.ViewProviders
             }
             
             // Change private flag
-            entity.IsPrivate = !published;
+            entity.IsHidden = !published;
 
             // Update entity
             await _entityStore.UpdateAsync(entity);

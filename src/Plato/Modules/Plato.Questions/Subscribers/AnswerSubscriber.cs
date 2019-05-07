@@ -182,7 +182,7 @@ namespace Plato.Questions.Subscribers
                 .Select<EntityUserQueryParams>(q =>
                 {
                     q.EntityId.Equals(entity.Id);
-                    q.HidePrivate.True();
+                    q.HideHidden.True();
                     q.HideDeleted.True();
                     q.HideSpam.True();
                 })

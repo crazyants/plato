@@ -70,7 +70,7 @@ namespace Plato.Ideas.ViewComponents
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateIdeaComments))
                     {
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                     }
 
                     // Hide spam?

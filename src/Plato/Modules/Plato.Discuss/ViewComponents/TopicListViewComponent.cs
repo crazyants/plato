@@ -165,11 +165,11 @@ namespace Plato.Discuss.ViewComponents
                 .ConfigureQuery(async q =>
                 {
 
-                    // Hide private?
+                    // Hide hidden?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateTopics))
+                        Permissions.ViewHiddenTopics))
                     {
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                     }
 
                     // Hide spam?

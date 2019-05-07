@@ -98,14 +98,14 @@ namespace Plato.Discuss.Navigation
                                 : Permissions.LockTopics)
                             .LocalNav()
                         )
-                        .Add(entity.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(entity.IsPrivate ? "Show" : "Hide", "Home", "Plato.Discuss",
+                        .Add(entity.IsHidden ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(entity.IsHidden ? "Show" : "Hide", "Home", "Plato.Discuss",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = entity.Id
                                 })
                             .Resource(entity.CategoryId)
-                            .Permission(entity.IsPrivate
+                            .Permission(entity.IsHidden
                                 ? Permissions.ShowTopics
                                 : Permissions.HideTopics)
                             .LocalNav()

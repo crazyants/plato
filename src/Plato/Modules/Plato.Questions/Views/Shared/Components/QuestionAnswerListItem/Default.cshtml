@@ -41,7 +41,7 @@
                         {
                             <span class="badge badge-info" data-toggle="tooltip" title="@T["This answer has been flagged as SPAM and is only visible as you have permission to view answers flagged as SPAM"]">@T["SPAM"]</span>
                         }
-                        @if (Model.Reply.IsPrivate)
+                        @if (Model.Reply.IsHidden)
                         {
                             <span data-toggle="tooltip" title="@T["This answer is hidden and only visible as you have permission to view hidden answers"]" class="badge badge-primary">@T["Hidden"]</span>
                         }

@@ -63,7 +63,7 @@ namespace Plato.Articles.ViewComponents
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateArticleComments))
                     {
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                     }
 
                     // Hide spam?

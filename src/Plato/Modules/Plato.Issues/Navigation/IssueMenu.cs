@@ -109,14 +109,14 @@ namespace Plato.Issues.Navigation
                                 : Permissions.LockIssues)
                             .LocalNav()
                         )
-                        .Add(entity.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(entity.IsPrivate ? "Show" : "Hide", "Home", "Plato.Issues",
+                        .Add(entity.IsHidden ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(entity.IsHidden ? "Show" : "Hide", "Home", "Plato.Issues",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = entity.Id
                                 })
                             .Resource(entity.CategoryId)
-                            .Permission(entity.IsPrivate
+                            .Permission(entity.IsHidden
                                 ? Permissions.ShowIssues
                                 : Permissions.HideIssues)
                             .LocalNav()

@@ -67,8 +67,12 @@ namespace Plato.Entities.Stores
         private WhereInt _labelId;
         private WhereInt _tagId;
         private WhereString _keywords;
+
+        private WhereBool _showHidden;
+        private WhereBool _hideHidden;
         private WhereBool _showPrivate;
         private WhereBool _hidePrivate;
+
         private WhereBool _showSpam;
         private WhereBool _hideSpam;
         private WhereBool _showClosed;
@@ -141,6 +145,18 @@ namespace Plato.Entities.Stores
             set => _keywords = value;
         }
         
+        public WhereBool ShowHidden
+        {
+            get => _showHidden ?? (_showHidden = new WhereBool());
+            set => _showHidden = value;
+        }
+
+        public WhereBool HideHidden
+        {
+            get => _hideHidden ?? (_hideHidden = new WhereBool());
+            set => _hideHidden = value;
+        }
+
         public WhereBool ShowPrivate
         {
             get => _showPrivate ?? (_showPrivate = new WhereBool());
@@ -677,7 +693,27 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // private 
+            // IsHidden 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideHidden.Value && !_query.Params.ShowHidden.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideHidden.Operator);
+                sb.Append("e.IsHidden = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowHidden.Value && !_query.Params.HideHidden.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowHidden.Operator);
+                sb.Append("e.IsHidden = 1");
+            }
+
+            // -----------------
+            // IsPrivate 
             // -----------------
 
             // hide = true, show = false
@@ -695,9 +731,9 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowPrivate.Operator);
                 sb.Append("e.IsPrivate = 1");
             }
-
+            
             // -----------------
-            // spam 
+            // IsSpam 
             // -----------------
 
             // hide = true, show = false

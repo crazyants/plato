@@ -11,7 +11,7 @@ namespace Plato.Entities.Extensions
         public static bool IsHidden(this IEntity entity)
         {
 
-            if (entity.IsPrivate)
+            if (entity.IsHidden)
             {
                 return true;
             }

@@ -70,7 +70,7 @@ namespace Plato.Docs.ViewComponents
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateDocComments))
                     {
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                     }
 
                     // Hide spam?

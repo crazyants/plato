@@ -59,8 +59,8 @@ namespace Plato.Entities.Stores
         private WhereInt _entityId;
         private WhereInt _categoryId;
         private WhereString _keywords;
-        private WhereBool _hidePrivate;
-        private WhereBool _showPrivate;
+        private WhereBool _hideHidden;
+        private WhereBool _showHidden;
         private WhereBool _hideSpam;
         private WhereBool _showSpam;
         private WhereBool _hideDeleted;
@@ -97,16 +97,16 @@ namespace Plato.Entities.Stores
             set => _keywords = value;
         }
 
-        public WhereBool HidePrivate
+        public WhereBool HideHidden
         {
-            get => _hidePrivate ?? (_hidePrivate = new WhereBool());
-            set => _hidePrivate = value;
+            get => _hideHidden ?? (_hideHidden = new WhereBool());
+            set => _hideHidden = value;
         }
 
-        public WhereBool ShowPrivate
+        public WhereBool ShowHidden
         {
-            get => _showPrivate ?? (_showPrivate = new WhereBool());
-            set => _showPrivate = value;
+            get => _showHidden ?? (_showHidden = new WhereBool());
+            set => _showHidden = value;
         }
         
         public WhereBool HideSpam
@@ -320,29 +320,29 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.CategoryId.ToSqlString("CategoryId"))
                     .Append("))");
             }
-            
+
             // -----------------
-            // private 
+            // IsHidden 
             // -----------------
 
             // hide = true, show = false
-            if (_query.Params.HidePrivate.Value && !_query.Params.ShowPrivate.Value)
+            if (_query.Params.HideHidden.Value && !_query.Params.ShowHidden.Value)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.HidePrivate.Operator);
-                sb.Append("r.IsPrivate = 0");
+                    sb.Append(_query.Params.HideHidden.Operator);
+                sb.Append("r.IsHidden = 0");
             }
 
             // show = true, hide = false
-            if (_query.Params.ShowPrivate.Value && !_query.Params.HidePrivate.Value)
+            if (_query.Params.ShowHidden.Value && !_query.Params.HideHidden.Value)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.ShowPrivate.Operator);
-                sb.Append("r.IsPrivate = 1");
+                    sb.Append(_query.Params.ShowHidden.Operator);
+                sb.Append("r.IsHidden = 1");
             }
 
             // -----------------
-            // spam 
+            // IsSpam 
             // -----------------
 
             // hide = true, show = false
@@ -362,7 +362,7 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // deleted 
+            // IsDeleted 
             // -----------------
 
             // hide = true, show = false
@@ -382,7 +382,7 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // answers 
+            // IsAnswer 
             // -----------------
 
             // hide = true, show = false
@@ -400,15 +400,11 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowAnswers.Operator);
                 sb.Append("r.IsAnswer = 1");
             }
-
-
-
-
+            
             return sb.ToString();
 
         }
-
-
+        
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)
@@ -473,10 +469,10 @@ namespace Plato.Entities.Stores
                     return "r.Html";
                 case "abstract":
                     return "r.Abtract";
-                case "private":
-                    return "r.IsPrivate";
-                case "isprivate":
-                    return "r.IsPrivate";
+                case "hidden":
+                    return "r.IsHidden";
+                case "ishidden":
+                    return "r.IsHidden";
                 case "spam":
                     return "r.IsSpam";
                 case "isspam":

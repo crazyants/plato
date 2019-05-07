@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Http;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
+using Plato.Internal.Layout.ModelBinding;
 using Plato.Questions.Models;
+using Plato.Questions.Private.ViewModels;
 
 namespace Plato.Questions.Private.ViewProviders
 {
     public class QuestionViewProvider : BaseViewProvider<Question>
     {
 
-        private const string FollowHtmlName = "visibility";
-        
         private readonly IContextFacade _contextFacade;     
         private readonly IEntityStore<Question> _entityStore;
         private readonly HttpRequest _request;
@@ -44,35 +44,72 @@ namespace Plato.Questions.Private.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Question topic, IViewProviderContext updater)
+        public override async Task ComposeTypeAsync(Question question, IUpdateModel updater)
+        {
+
+            var model = new PrivateMenuViewModel
+            {
+                IsPrivate = GetIsPrivate()
+            };
+
+            await updater.TryUpdateModelAsync(model);
+
+            if (updater.ModelState.IsValid)
+            {
+                question.IsPrivate = GetIsPrivate();
+            }
+
+        }
+        
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Question question, IViewProviderContext context)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(question.Id);
             if (entity == null)
             {
-                return await BuildEditAsync(topic, updater);
+                return await BuildEditAsync(question, context);
+            }
+            
+            // Validate model
+            if (await ValidateModelAsync(question, context.Updater))
+            {
+                if (!question.IsNewQuestion)
+                {
+                    question.IsPrivate = GetIsPrivate();
+                    await _entityStore.UpdateAsync(question);
+                }
+          
             }
 
+            return await BuildEditAsync(question, context);
+
+        }
+
+        bool GetIsPrivate()
+        {
+
             // Get the follow checkbox value
-            var follow = false;
+            var htmlName = new PrivateMenuViewModel().HtmlName;
             foreach (var key in _request.Form.Keys)
             {
-                if (key == FollowHtmlName)
+                if (key.StartsWith(htmlName))
                 {
                     var values = _request.Form[key];
-                    if (!String.IsNullOrEmpty(values))
+                    foreach (var value in values)
                     {
-                        follow = true;
-                        break;
+                        if (value.Equals("private", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
                     }
                 }
             }
 
-           
-            return await BuildEditAsync(topic, updater);
+            return false;
 
         }
 
     }
+
 }

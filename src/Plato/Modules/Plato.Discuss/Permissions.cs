@@ -78,8 +78,8 @@ namespace Plato.Discuss
         public static readonly Permission ShowTopics =
             new Permission("ShowTopics", "Unhide topics");
 
-        public static readonly Permission ViewPrivateTopics =
-            new Permission("ViewPrivateTopics", "View hidden topics");
+        public static readonly Permission ViewHiddenTopics =
+            new Permission("ViewHiddenTopics", "View hidden topics");
 
         public static readonly Permission HideReplies =
             new Permission("HideReplies", "Hide replies");
@@ -87,8 +87,8 @@ namespace Plato.Discuss
         public static readonly Permission ShowReplies =
             new Permission("ShowReplies", "Unhide replies");
         
-        public static readonly Permission ViewPrivateReplies =
-            new Permission("ViewPrivateReplies", "View hidden replies");
+        public static readonly Permission ViewHiddenReplies =
+            new Permission("ViewHiddenReplies", "View hidden replies");
 
         public static readonly Permission TopicToSpam =
             new Permission("TopicsToSpam", "Move topics to SPAM");
@@ -136,10 +136,10 @@ namespace Plato.Discuss
                 UnlockTopics,
                 HideTopics,
                 ShowTopics,
-                ViewPrivateTopics,
+                ViewHiddenTopics,
                 HideReplies,
                 ShowReplies,
-                ViewPrivateReplies,
+                ViewHiddenReplies,
                 TopicToSpam,
                 TopicFromSpam,
                 ViewSpamTopics,
@@ -174,8 +174,8 @@ namespace Plato.Discuss
                         RestoreAnyReply,
                         ReportTopics,
                         ReportReplies,
-                        ViewPrivateTopics,
-                        ViewPrivateReplies,
+                        ViewHiddenTopics,
+                        ViewHiddenReplies,
                         ViewSpamTopics,
                         ViewSpamReplies,
                         ViewDeletedTopics,
@@ -224,8 +224,8 @@ namespace Plato.Discuss
                         RestoreOwnReplies,
                         ReportTopics,
                         ReportReplies,
-                        ViewPrivateTopics,
-                        ViewPrivateReplies,
+                        ViewHiddenTopics,
+                        ViewHiddenReplies,
                         ViewSpamTopics,
                         ViewSpamReplies,
                         ViewDeletedTopics,

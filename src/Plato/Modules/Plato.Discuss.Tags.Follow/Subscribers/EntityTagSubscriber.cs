@@ -105,7 +105,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             }
             
             // No need to send notifications for entities flagged as private
-            if (entity.IsPrivate)
+            if (entity.IsHidden)
             {
                 return entityTag;
             }

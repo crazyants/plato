@@ -3239,7 +3239,7 @@ $(function (win, doc, $) {
                         }
                     });
 
-                // Provide stopPropagation option for labels
+                // Provide optional stopPropagation support for labels
                 $dropdown.find("label").click(function (e) {
                     if ($(this).data("stopPropagation")) {
                         e.stopPropagation();

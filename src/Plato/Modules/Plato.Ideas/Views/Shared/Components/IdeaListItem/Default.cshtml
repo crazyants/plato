@@ -134,7 +134,7 @@
                 @Model.Channel.Name
             </a>
         }
-        @if (Model.Entity.IsPrivate)
+        @if (Model.Entity.IsHidden)
         {
             <span class="badge badge-primary" data-toggle="tooltip" title="@T["This idea is hidden and only visible as you have permission to view hidden ideas"]">@T["Hidden"]</span>
         }

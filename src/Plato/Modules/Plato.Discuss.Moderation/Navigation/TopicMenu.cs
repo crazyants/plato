@@ -101,14 +101,14 @@ namespace Plato.Discuss.Moderation.Navigation
                                 : ModeratorPermissions.LockTopics)
                             .LocalNav()
                         )
-                        .Add(topic.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(topic.IsPrivate ? "Show" : "Hide", "Home", "Plato.Discuss.Moderation",
+                        .Add(topic.IsHidden ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(topic.IsHidden ? "Show" : "Hide", "Home", "Plato.Discuss.Moderation",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = topic.Id
                                 })
                             .Resource(topic.CategoryId)
-                            .Permission(topic.IsPrivate
+                            .Permission(topic.IsHidden
                                 ? ModeratorPermissions.ShowTopics
                                 : ModeratorPermissions.HideTopics)
                             .LocalNav()

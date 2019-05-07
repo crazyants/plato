@@ -65,7 +65,7 @@ namespace Plato.Articles.Categories.Services
                         }
 
                         q.HideSpam.True();
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                         q.HideDeleted.True();
                     })
                     .OrderBy("LastReplyDate", OrderBy.Desc)
@@ -93,7 +93,7 @@ namespace Plato.Articles.Categories.Services
                         }
 
                         q.HideSpam.True();
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                         q.HideDeleted.True();
                     })
                     .OrderBy("CreatedDate", OrderBy.Desc)

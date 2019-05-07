@@ -37,6 +37,8 @@ namespace Plato.Entities.Models
 
         public string Urls { get; set; }
         
+        public bool IsHidden { get; set; }
+
         public bool IsPrivate { get; set; }
 
         public bool IsSpam { get; set; }
@@ -223,6 +225,9 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("Urls")) 
                 Urls = Convert.ToString(dr["Urls"]);
             
+            if (dr.ColumnIsNotNull("IsHidden"))
+                IsHidden = Convert.ToBoolean(dr["IsHidden"]);
+
             if (dr.ColumnIsNotNull("IsPrivate"))
                 IsPrivate = Convert.ToBoolean(dr["IsPrivate"]);
 

@@ -79,14 +79,14 @@ namespace Plato.Articles.Navigation
                                 Permissions.EditOwnArticleComment :
                                 Permissions.EditAnyArticleComment)
                             .LocalNav())
-                        .Add(reply.IsPrivate ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(reply.IsPrivate ? "ShowReply" : "HideReply", "Home", "Plato.Articles",
+                        .Add(reply.IsHidden ? T["Unhide"] : T["Hide"], 2, edit => edit
+                            .Action(reply.IsHidden ? "ShowReply" : "HideReply", "Home", "Plato.Articles",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = reply?.Id ?? 0
                                 })
                             .Resource(entity.CategoryId)
-                            .Permission(reply.IsPrivate
+                            .Permission(reply.IsHidden
                                 ? Permissions.ShowArticleComments
                                 : Permissions.HideArticleComments)
                             .LocalNav()

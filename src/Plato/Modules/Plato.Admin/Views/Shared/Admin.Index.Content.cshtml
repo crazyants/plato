@@ -1,56 +1,83 @@
-﻿
+﻿@using Microsoft.AspNetCore.Routing
+@model AdminViewModel
 
 <card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Extend Plato"]</h6>
+    </card-title>
     <card-body>
         
+        @if (Model.FeatureCategories != null)
+        {
+            <div class="row no-gutters m-2" style="min-width: 700px; max-height: 400px; overflow: auto;">
+                @foreach (var option in Model.FeatureCategories)
+                {
+         
+                    var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                    {
+                        ["area"] = "Plato.Features",
+                        ["controller"] = "Admin",
+                        ["action"] = "Index",
+                        ["opts.category"] = option.Value,
+                    };
+                    <div class="col-3">
+                        <a class="dropdown-item" href="@GetRouteUrl(routeValues)">
+                            @T[option.Text]
+                        </a>
+                    </div>
+                }
+            </div>
+
+        }
+
+    </card-body>
+</card>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Quick Links"]</h6>
+    </card-title>
+    <card-body>
+
         <div class="list-group list-group-flush list-group-hover">
             <div class="row no-gutters">
-                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
-                    <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
-                        <i class="fal fa-cube mr-2"></i>
-                        Features
-                        <hr />
-                        Plato is very extensible and can be customized by installing features.
-                        <br /><br />
-                        <span class="btn btn-secondary">
-                            Goto Features
-                        </span>
-                    </a>
-                </div>
-                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
+                
+                <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0">
                     <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
-                        <i class="fal fa-users mr-2"></i>
-                        Users
-                        <hr />
-                        Manage user profiles, ban users or associate users with additional roles.
-                        <br /><br />
+                        <i class="fal fa-fw fa-2x float-right fa-users opacity-50"></i>
+                        <h6>Users</h6>
+                        <p>
+                            Manage profiles, ban users or associate users with additional roles.
+                        </p>
                         <span class="btn btn-secondary">
                             Goto Users
                         </span>
+
                     </a>
                 </div>
-                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
+                <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0">
                     <a asp-route-area="Plato.Roles" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
-                        <i class="fal fa-lock mr-2"></i>
-                        Roles
-                        <hr />
-                        Roles control access to content and functionality within Plato.
-                        <br /><br />
+                        <i class="fal fa-fw fa-2x float-right fa-lock opacity-50"></i>
+                        <h6>Roles</h6>
+                        <p>
+                            Roles control access to content and functionality within Plato.
+                        </p>
                         <span class="btn btn-secondary">
                             Goto Roles
                         </span>
                     </a>
                 </div>
-                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
+                <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0">
                     <a asp-route-area="Plato.Settings" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
-                        <i class="fal fa-cog mr-2"></i>
-                        Settings
-                        <hr />
-                        Manage general settings, configure outbound email & more...
-                        <br /><br />
+                        <i class="fal fa-fw fa-2x float-right fa-cog opacity-50"></i>
+                        <h6>Settings</h6>
+                        <p>
+                            Manage general settings, configure outbound email & more...
+                        </p>
                         <span class="btn btn-secondary">
                             Goto Settings
                         </span>
+                    
                     </a>
                 </div>
             </div>

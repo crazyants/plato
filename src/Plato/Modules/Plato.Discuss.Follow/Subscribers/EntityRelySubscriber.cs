@@ -99,7 +99,7 @@ namespace Plato.Discuss.Follow.Subscribers
             }
 
             // No need to send notifications for private replies
-            if (reply.IsPrivate)
+            if (reply.IsHidden)
             {
                 return Task.FromResult(reply);
             }

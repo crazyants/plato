@@ -195,7 +195,7 @@ namespace Plato.Discuss.Moderation.Controllers
             // Update topic
             topic.ModifiedUserId = user?.Id ?? 0;
             topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsPrivate = true;
+            topic.IsHidden = true;
             
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(topic);
@@ -251,7 +251,7 @@ namespace Plato.Discuss.Moderation.Controllers
             // Update topic
             topic.ModifiedUserId = user?.Id ?? 0;
             topic.ModifiedDate = DateTimeOffset.UtcNow;
-            topic.IsPrivate = false;
+            topic.IsHidden = false;
 
             // Save changes and return results
             var result = await _topicManager.UpdateAsync(topic);
@@ -647,7 +647,7 @@ namespace Plato.Discuss.Moderation.Controllers
             // Update topic
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsPrivate = true;
+            reply.IsHidden = true;
 
             // Save changes and return results
             var result = await _replyManager.UpdateAsync(reply);
@@ -710,7 +710,7 @@ namespace Plato.Discuss.Moderation.Controllers
             // Update topic
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsPrivate = false;
+            reply.IsHidden = false;
 
             // Save changes and return results
             var result = await _replyManager.UpdateAsync(reply);

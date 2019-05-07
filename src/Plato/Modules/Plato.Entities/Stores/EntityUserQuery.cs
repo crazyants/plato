@@ -59,8 +59,8 @@ namespace Plato.Entities.Stores
         
         private WhereInt _entityId;
         private WhereString _userName;
-        private WhereBool _showPrivate;
-        private WhereBool _hidePrivate;
+        private WhereBool _showHidden;
+        private WhereBool _hideHidden;
         private WhereBool _showSpam;
         private WhereBool _hideSpam;
         private WhereBool _hideDeleted;
@@ -78,19 +78,18 @@ namespace Plato.Entities.Stores
             set => _userName = value;
         }
         
-        public WhereBool ShowPrivate
+        public WhereBool ShowHidden
         {
-            get => _showPrivate ?? (_showPrivate = new WhereBool());
-            set => _showPrivate = value;
+            get => _showHidden ?? (_showHidden = new WhereBool());
+            set => _showHidden = value;
         }
 
-        public WhereBool HidePrivate
+        public WhereBool HideHidden
         {
-            get => _hidePrivate ?? (_hidePrivate = new WhereBool());
-            set => _hidePrivate = value;
+            get => _hideHidden ?? (_hideHidden = new WhereBool());
+            set => _hideHidden = value;
         }
-
-
+        
         public WhereBool HideSpam
         {
             get => _hideSpam ?? (_hideSpam = new WhereBool());
@@ -259,27 +258,27 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // private 
+            // IsHidden 
             // -----------------
 
             // hide = true, show = false
-            if (_query.Params.HidePrivate.Value && !_query.Params.ShowPrivate.Value)
+            if (_query.Params.HideHidden.Value && !_query.Params.ShowHidden.Value)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.HidePrivate.Operator);
-                sb.Append("r.IsPrivate = 0");
+                    sb.Append(_query.Params.HideHidden.Operator);
+                sb.Append("r.IsHidden = 0");
             }
 
             // show = true, hide = false
-            if (_query.Params.ShowPrivate.Value && !_query.Params.HidePrivate.Value)
+            if (_query.Params.ShowHidden.Value && !_query.Params.HideHidden.Value)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.ShowPrivate.Operator);
-                sb.Append("r.IsPrivate = 1");
+                    sb.Append(_query.Params.ShowHidden.Operator);
+                sb.Append("r.IsHidden = 1");
             }
 
             // -----------------
-            // spam 
+            // IsSpam 
             // -----------------
 
             // hide = true, show = false
@@ -297,9 +296,9 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowSpam.Operator);
                 sb.Append("r.IsSpam = 1");
             }
-            
+
             // -----------------
-            // deleted 
+            // IsDeleted 
             // -----------------
 
             // hide = true, show = false

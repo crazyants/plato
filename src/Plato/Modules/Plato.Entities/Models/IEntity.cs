@@ -2,7 +2,6 @@
 using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
@@ -55,6 +54,8 @@ namespace Plato.Entities.Models
 
         string Urls { get; set; }
         
+        bool IsHidden { get; set; }
+
         bool IsPrivate { get; set; }
 
         bool IsSpam { get; set; }

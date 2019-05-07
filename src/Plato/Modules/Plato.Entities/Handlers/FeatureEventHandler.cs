@@ -78,7 +78,12 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsPrivate", // if true the entity if only visible to the author
+                        Name = "IsHidden",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsPrivate", 
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
@@ -366,7 +371,7 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsPrivate",
+                        Name = "IsHidden",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()

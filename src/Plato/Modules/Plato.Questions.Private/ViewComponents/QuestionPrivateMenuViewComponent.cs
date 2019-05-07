@@ -1,23 +1,28 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Questions.Private.ViewModels;
 
 namespace Plato.Questions.Private.ViewComponents
 {
   
     public class QuestionPrivateMenuViewComponent : ViewComponent
     {
-
-        private readonly IContextFacade _contextFacade;
-      
+  
         public QuestionPrivateMenuViewComponent(IContextFacade contextFacade)
         {
-            _contextFacade = contextFacade;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public Task<IViewComponentResult> InvokeAsync(PrivateMenuViewModel model)
         {
-            return View(await _contextFacade.GetAuthenticatedUserAsync());
+
+            if (model == null)
+            {
+                model = new PrivateMenuViewModel();
+            }
+
+            return Task.FromResult((IViewComponentResult) View(model));
+
         }
 
     }

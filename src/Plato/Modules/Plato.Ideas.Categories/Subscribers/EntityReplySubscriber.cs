@@ -77,7 +77,7 @@ namespace Plato.Ideas.Categories.Subscribers
         {
 
             // No need to update category for private entities
-            if (reply.IsPrivate)
+            if (reply.IsHidden)
             {
                 return reply;
             }

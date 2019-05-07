@@ -1,9 +1,6 @@
 ﻿/* ReSharper disable once UnknownCssVendorExtension */
 /* ReSharper disable once UnknownCssVendorExtension */
 
-.cursor-default { cursor: default !important; }
-.cursor-pointer { cursor: pointer !important; }
-
 canvas {
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -11,7 +8,28 @@ canvas {
 }
 
 /* ------------------------- */
-/* disabled elements */
+/* Cursors */
+/* ------------------------- */
+
+.cursor-default { cursor: default !important; }
+.cursor-pointer { cursor: pointer !important; }
+
+/* ------------------------- */
+/* Opacity */
+/* ------------------------- */
+
+.opacity-10 { opacity: .1; }
+.opacity-20 { opacity: .2; }
+.opacity-30 { opacity: .3; }
+.opacity-40 { opacity: .4; }
+.opacity-50 { opacity: .5; }
+.opacity-60 { opacity: .6; }
+.opacity-70 { opacity: .7; }
+.opacity-80 { opacity: .8; }
+.opacity-90 { opacity: .9; }
+
+/* ------------------------- */
+/* Disabled elements */
 /* ------------------------- */
 
 .disabled { cursor: not-allowed !important; }
@@ -58,13 +76,14 @@ canvas {
 
 .hidden { display: none !important; }
 
+/* ------------------------- */
 /* Animate Bootstrap tooltips */
+/* ------------------------- */
 
 .tooltip.show .arrow,
 .tooltip.show .tooltip-inner {
     animation: scale-in 200ms cubic-bezier(0.2, 0, 0.25, 1.75);
 }
-
 
 /* ------------------------- */
 /* Badge */
@@ -496,8 +515,8 @@ canvas {
 
 .nav-site > .navbar { width: 100%; }
 
-.nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .dropdown-menu { position: static; }
 .nav-site > .navbar .dropdown .dropdown-menu { min-width: 200px; }
+.nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .dropdown-menu { position: static; }
 .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .dropdown-menu:before,
 .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .dropdown-menu:after { display: none; }
 
@@ -555,6 +574,11 @@ canvas {
 
     .nav-site > .navbar-expand-lg .navbar-collapse {
         width: auto;
+    }
+    
+    .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav {
+        width: auto;
+        margin-left: auto;
     }
 
     .nav-site .navbar-user .navbar-nav .nav,

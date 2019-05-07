@@ -361,7 +361,7 @@ namespace Plato.Questions.Controllers
             }
 
             // Ensure we have permission to view private entities
-            if (entity.IsPrivate)
+            if (entity.IsHidden)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateQuestions))
                 {
@@ -564,7 +564,10 @@ namespace Plato.Questions.Controllers
             {
                 return Unauthorized();
             }
-            
+
+            // Add entity we are editing to context
+            HttpContext.Items[typeof(Question)] = entity;
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -1086,7 +1089,7 @@ namespace Plato.Questions.Controllers
             // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
-            entity.IsPrivate = true;
+            entity.IsHidden = true;
 
             // Save changes and return results
             var result = await _questionManager.UpdateAsync(entity);
@@ -1142,7 +1145,7 @@ namespace Plato.Questions.Controllers
             // Update entity
             entity.ModifiedUserId = user?.Id ?? 0;
             entity.ModifiedDate = DateTimeOffset.UtcNow;
-            entity.IsPrivate = false;
+            entity.IsHidden = false;
 
             // Save changes and return results
             var result = await _questionManager.UpdateAsync(entity);
@@ -1558,7 +1561,7 @@ namespace Plato.Questions.Controllers
             // Update entity
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsPrivate = true;
+            reply.IsHidden = true;
 
             // Save changes and return results
             var result = await _answerManager.UpdateAsync(reply);
@@ -1621,7 +1624,7 @@ namespace Plato.Questions.Controllers
             // Update entity
             reply.ModifiedUserId = user?.Id ?? 0;
             reply.ModifiedDate = DateTimeOffset.UtcNow;
-            reply.IsPrivate = false;
+            reply.IsHidden = false;
 
             // Save changes and return results
             var result = await _answerManager.UpdateAsync(reply);

@@ -8,7 +8,7 @@ namespace Plato.Entities.Extensions
         public static bool IsHidden(this IEntityReply reply)
         {
 
-            if (reply.IsPrivate)
+            if (reply.IsHidden)
             {
                 return true;
             }

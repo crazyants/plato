@@ -1,25 +1,36 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Plato.Admin.Models;
+using Plato.Admin.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Admin.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<AdminIndex>
     {
-        
-        public AdminViewProvider()
+        private readonly IShellDescriptorManager _shellDescriptorManager;
+
+        public AdminViewProvider(IShellDescriptorManager shellDescriptorManager)
         {
-      
+            _shellDescriptorManager = shellDescriptorManager;
         }
         
-        public override Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(AdminIndex viewModel, IViewProviderContext context)
         {
 
-            return Task.FromResult(Views(
-                View<AdminIndex>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
-                View<AdminIndex>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
-                View<AdminIndex>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
-            ));
+            var adminViewModel = new AdminViewModel()
+            {
+                FeatureCategories = await GetAvailableFeatureCategoriesAsync()
+            };
+
+            return Views(
+                View<AdminViewModel>("Admin.Index.Header", model => adminViewModel).Zone("header").Order(1),
+                View<AdminViewModel>("Admin.Index.Tools", model => adminViewModel).Zone("tools").Order(1),
+                View<AdminViewModel>("Admin.Index.Content", model => adminViewModel).Zone("content").Order(1)
+            );
             
         }
         
@@ -37,7 +48,27 @@ namespace Plato.Admin.ViewProviders
         {
             return await BuildEditAsync(viewModel, context);
         }
-        
+
+
+        async Task<IEnumerable<SelectListItem>> GetAvailableFeatureCategoriesAsync()
+        {
+
+            var output = new List<SelectListItem>();
+
+            var features = await _shellDescriptorManager.GetFeaturesAsync();
+            foreach (var feature in features.GroupBy(f => f.Descriptor.Category).OrderBy(o => o.Key))
+            {
+                output.Add(new SelectListItem
+                {
+                    Text = feature.Key,
+                    Value = feature.Key
+                });
+            }
+
+            return output;
+        }
+
+
     }
 
 }

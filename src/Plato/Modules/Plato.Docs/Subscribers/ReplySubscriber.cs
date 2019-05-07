@@ -95,7 +95,7 @@ namespace Plato.Docs.Subscribers
                 throw new ArgumentNullException(nameof(reply));
             }
             
-            if (reply.IsPrivate)
+            if (reply.IsHidden)
             {
                 return reply;
             }
@@ -142,7 +142,7 @@ namespace Plato.Docs.Subscribers
                 throw new ArgumentNullException(nameof(reply));
             }
 
-            if (reply.IsPrivate)
+            if (reply.IsHidden)
             {
                 return reply;
             }
@@ -193,7 +193,7 @@ namespace Plato.Docs.Subscribers
                 .Select<EntityUserQueryParams>(q =>
                 {
                     q.EntityId.Equals(entity.Id);
-                    q.HidePrivate.True();
+                    q.HideHidden.True();
                     q.HideDeleted.True();
                     q.HideSpam.True();
                 })

@@ -149,6 +149,18 @@
         }
         @if (Model.Entity.IsPrivate)
         {
+            if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+             {
+                 <span class="badge badge-warning" data-toggle="tooltip" title="@T["This question is private and only visible as you are the question author"]">@T["Private"]</span>
+            }
+             else
+             {
+                 <span class="badge badge-warning" data-toggle="tooltip" title="@T["This question is private and only visible as you have permission to view private questions"]">@T["Private"]</span>
+             }
+        }
+
+        @if (Model.Entity.IsHidden)
+        {
             <span class="badge badge-primary" data-toggle="tooltip" title="@T["This question is hidden and only visible as you have permission to view hidden questions"]">@T["Hidden"]</span>
         }
         @if (Model.Entity.IsSpam)

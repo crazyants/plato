@@ -68,9 +68,9 @@ namespace Plato.Discuss.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateReplies))
+                        Permissions.ViewHiddenReplies))
                     {
-                        q.HidePrivate.True();
+                        q.HideHidden.True();
                     }
 
                     // Hide spam?

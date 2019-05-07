@@ -113,7 +113,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             }
 
             // No need to send notifications for entities flagged as private
-            if (entity.IsPrivate)
+            if (entity.IsHidden)
             {
                 return Task.FromResult(entity);
             }
@@ -209,7 +209,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             }
             
             // No need to send notifications for entities flagged as private
-            if (entity.IsPrivate)
+            if (entity.IsHidden)
             {
                 return Task.FromResult(entity);
             }

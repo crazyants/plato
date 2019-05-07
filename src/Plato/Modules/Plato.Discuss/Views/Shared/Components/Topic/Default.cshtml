@@ -8,7 +8,7 @@
         <card>
             <card-title>
                 <h6 class="card-title d-inline-block">@T["Topic"]</h6>
-                @if (Model.Entity.IsPrivate)
+                @if (Model.Entity.IsHidden)
                 {
                     <span data-toggle="tooltip" title="@T["This topic is hidden and only visible as you have permission to view hidden topics"]" class="badge badge-primary">@T["Hidden"]</span>
                 }

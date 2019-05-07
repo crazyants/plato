@@ -8,7 +8,11 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
+		Id: "Plato.Discuss.Labels",
+		Version: "1.0.0"
+	},
+	{
 		Id: "Plato.Follows",
 		Version: "1.0.0"
-	}
+	}	
 ]

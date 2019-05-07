@@ -94,7 +94,7 @@
             }
         </span>
     }
-    @if (Model.Entity.IsPrivate)
+    @if (Model.Entity.IsHidden)
     {
         <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This doc is hidden and only visible as you have permission to view hidden docs"]">@T["Hidden"]</span>
     }
