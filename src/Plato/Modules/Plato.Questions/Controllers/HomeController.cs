@@ -363,7 +363,7 @@ namespace Plato.Questions.Controllers
             // Ensure we have permission to view private entities
             if (entity.IsHidden)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateQuestions))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewHiddenQuestions))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()

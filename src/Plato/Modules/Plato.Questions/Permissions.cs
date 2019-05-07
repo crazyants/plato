@@ -78,17 +78,20 @@ namespace Plato.Questions
         public static readonly Permission ShowQuestions =
             new Permission("ShowQuestions", "Unhide questions");
 
+        public static readonly Permission ViewHiddenQuestions =
+            new Permission("ViewHiddenQuestions", "View hidden questions");
+        
         public static readonly Permission ViewPrivateQuestions =
-            new Permission("ViewPrivateQuestions", "View hidden questions");
-
+            new Permission("ViewPrivateQuestions", "View private questions");
+        
         public static readonly Permission HideAnswers =
             new Permission("HideAnswers", "Hide answers");
 
         public static readonly Permission ShowAnswers =
             new Permission("ShowAnswers", "Unhide answers");
 
-        public static readonly Permission ViewPrivateAnswers =
-            new Permission("ViewPrivateAnswers", "View hidden answers");
+        public static readonly Permission ViewHiddenAnswers =
+            new Permission("ViewHiddenAnswers", "View hidden answers");
 
         public static readonly Permission QuestionToSpam =
             new Permission("QuestionToSpam", "Move questions to SPAM");
@@ -136,10 +139,11 @@ namespace Plato.Questions
                 UnlockQuestions,
                 HideQuestions,
                 ShowQuestions,
+                ViewHiddenQuestions,
                 ViewPrivateQuestions,
                 HideAnswers,
                 ShowAnswers,
-                ViewPrivateAnswers,
+                ViewHiddenAnswers,
                 QuestionToSpam,
                 QuestionFromSpam,
                 ViewSpamQuestions,
@@ -182,10 +186,11 @@ namespace Plato.Questions
                         UnlockQuestions,
                         HideQuestions,
                         ShowQuestions,
+                        ViewHiddenQuestions,
                         ViewPrivateQuestions,
                         HideAnswers,
                         ShowAnswers,
-                        ViewPrivateAnswers,
+                        ViewHiddenAnswers,
                         QuestionToSpam,
                         QuestionFromSpam,
                         ViewSpamQuestions,
@@ -237,10 +242,11 @@ namespace Plato.Questions
                         UnlockQuestions,
                         HideQuestions,
                         ShowQuestions,
+                        ViewHiddenQuestions,
                         ViewPrivateQuestions,
                         HideAnswers,
                         ShowAnswers,
-                        ViewPrivateAnswers,
+                        ViewHiddenAnswers,
                         QuestionToSpam,
                         QuestionFromSpam,
                         ViewSpamQuestions,

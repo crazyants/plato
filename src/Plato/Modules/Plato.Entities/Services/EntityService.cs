@@ -71,7 +71,15 @@ namespace Plato.Entities.Services
                 .Configure(_configureDb)
                 .Select<EntityQueryParams>(q =>
                 {
-                    
+
+                    // ----------------
+                    // Set current authenticated user id
+                    // This is required for various security checks
+                    // i.e. Role based security & displaying private entities
+                    // ----------------
+
+                    q.UserId.Equals(user?.Id ?? 0);
+
                     // ----------------
                     // Basic parameters
                     // ----------------
@@ -145,8 +153,7 @@ namespace Plato.Entities.Services
                             q.TotalReplies.Equals(0);
                             break;
                     }
-
-
+                    
                     // ----------------
                     // Additional parameter configuration
                     // ----------------
@@ -168,18 +175,7 @@ namespace Plato.Entities.Services
                     //        }
                     //    }
                     //}
-
-
-                    //q.IsPinned.True();
-                    //if (!string.IsNullOrEmpty(filterOptions.Search))
-                    //{
-                    //    q.UserName.IsIn(filterOptions.Search).Or();
-                    //    q.Email.IsIn(filterOptions.Search);
-                    //}
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
-
+                    
                 })
                 .OrderBy("IsPinned", OrderBy.Desc)
                 .OrderBy(options.Sort.ToString(), options.Order)

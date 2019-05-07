@@ -521,6 +521,8 @@ canvas {
 .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .dropdown-menu:after { display: none; }
 
 .nav-site > .navbar .navbar-mobile { display: flex; }
+.nav-site > .navbar .navbar-mobile .nav-item-bars { display: block }
+.nav-site > .navbar .navbar-mobile .nav-item-search { display: none; }
 .nav-site > .navbar .navbar-search { width: 100%; }
 .nav-site > .navbar .navbar-search .nav { display: block; }
  .nav-site > .navbar .navbar-user { display: none; }

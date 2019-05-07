@@ -67,12 +67,10 @@ namespace Plato.Entities.Stores
         private WhereInt _labelId;
         private WhereInt _tagId;
         private WhereString _keywords;
-
         private WhereBool _showHidden;
         private WhereBool _hideHidden;
         private WhereBool _showPrivate;
         private WhereBool _hidePrivate;
-
         private WhereBool _showSpam;
         private WhereBool _hideSpam;
         private WhereBool _showClosed;
@@ -105,7 +103,7 @@ namespace Plato.Entities.Stores
 
         public WhereInt UserId
         {
-            get => _userId ?? (_id = new WhereInt());
+            get => _userId ?? (_userId = new WhereInt());
             set => _userId = value;
         }
         
@@ -715,13 +713,24 @@ namespace Plato.Entities.Stores
             // -----------------
             // IsPrivate 
             // -----------------
-
+            
             // hide = true, show = false
             if (_query.Params.HidePrivate.Value && !_query.Params.ShowPrivate.Value)
             {
+                // Hide all private entities except those created by the current user
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.HidePrivate.Operator);
-                sb.Append("e.IsPrivate = 0");
+                if (_query.Params.UserId.Value > 0)
+                {
+                    sb.Append("(")
+                        .Append("(e.IsPrivate = 0) OR (e.IsPrivate = 1 AND e.CreatedUserId = ")
+                        .Append(_query.Params.UserId.Value)
+                        .Append("))");
+                }
+                else
+                {
+                    sb.Append("e.IsPrivate = 0");
+            }
             }
 
             // show = true, hide = false
@@ -731,6 +740,7 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowPrivate.Operator);
                 sb.Append("e.IsPrivate = 1");
             }
+            
             
             // -----------------
             // IsSpam 

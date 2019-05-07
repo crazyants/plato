@@ -7,6 +7,7 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Entities.ViewModels;
 using Plato.Entities.Services;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Questions.ViewComponents
@@ -124,7 +125,7 @@ namespace Plato.Questions.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-
+        
         private readonly IEntityService<Question> _articleService;
         private readonly IAuthorizationService _authorizationService;
 
@@ -155,15 +156,22 @@ namespace Plato.Questions.ViewComponents
         
         async Task<EntityIndexViewModel<Question>> GetViewModel(EntityIndexOptions options, PagerOptions pager)
         {
-          
+            
             // Get results
             var results = await _articleService
                 .ConfigureQuery(async q =>
                 {
-
+                    
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateQuestions))
+                    {
+                        q.HidePrivate.True();
+                    }
+                  
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenQuestions))
                     {
                         q.HideHidden.True();
                     }
