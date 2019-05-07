@@ -1,0 +1,27 @@
+﻿
+<div class="dropdown" data-provide="select-dropdown">
+    <a href="#" class="nav-link dropdown-toggle nav-item text-hidden text-muted" id="visibilityDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @T["Public"]
+    </a>
+    <div class="dropdown-menu dropdown-menu-500 dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="visibilityDropdownMenuButton">
+        <div class="dropdown-header">
+            <h6>@T["Visibility"]</h6>
+        </div>
+        <hr class="m-0" />
+        <div class="btn-group d-block">
+            <label id='Radio 1' class="dropdown-item m-0 p-3 cursor-pointer" data-stop-propagation="true">
+                <input data-nav-text="@T["Public"]" type="radio" name="options" id="option1" checked="checked" autocomplete="off">
+                <i class="fal float-right check-icon"></i>
+                <strong>@T["Public"]</strong><br />
+                @T["Your question will be visible to everyone. Chose this option if your sharing public information"]
+            </label>
+            <label class="dropdown-item m-0 p-3 cursor-pointer" data-stop-propagation="true">
+                <input data-nav-text="@T["Private"]" type="radio" name="options" id="option2" autocomplete="off">
+                <i class="fal float-right check-icon"></i>
+                <strong>@T["Private"]</strong><br />
+                @T["Your question will only be visible to our team. Choose this option if your sharing private information."]
+            </label>
+        </div>
+
+    </div>
+</div>

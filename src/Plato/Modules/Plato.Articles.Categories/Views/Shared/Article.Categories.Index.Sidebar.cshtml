@@ -17,7 +17,7 @@
                         var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
                         <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
                             <span data-toggle="tooltip" title="@T["Total Topics"]" class="badge badge-info float-right">
-                                @channelDetails.TotalTopics.ToPrettyInt()
+                                @channelDetails.TotalEntities.ToPrettyInt()
                             </span>
                             @if (!String.IsNullOrWhiteSpace(channel.IconCss))
                             {

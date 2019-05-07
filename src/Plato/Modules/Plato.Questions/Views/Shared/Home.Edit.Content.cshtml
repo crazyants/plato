@@ -18,20 +18,20 @@
                 @if (Model.Id == 0)
                 {
                     <h6 class="card-title float-left">@T["New Question"]</h6>
-                    <navigation name="post"
-                                class="nav navbar p-0 float-right"
-                                child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
                 }
                 else
                 {
                     <h6 class="card-title">@T["Edit Question"]</h6>
                 }
+                <navigation name="post"
+                            class="nav navbar p-0 float-right"
+                            child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
             </card-title>
             <card-body>
 
                 <div asp-validation-summary="ModelOnly"></div>
                 <input type="hidden" asp-for="Id"/>
-
+            
                 <fieldset>
                     <div class="form-group">
                         <input asp-for="Title" placeholder="@T["Title"]" tabindex="1" class="form-control" autofocus/>

@@ -2,6 +2,7 @@
 /* ReSharper disable once UnknownCssVendorExtension */
 
 .cursor-default { cursor: default !important; }
+.cursor-pointer { cursor: pointer !important; }
 
 canvas {
     -moz-user-select: none;
@@ -234,6 +235,13 @@ canvas {
     border-radius: 0.1rem;
 }
 
+/* add check box to toggle style radio buttons */
+.btn-group > label > input { display: none; }
+.btn-group > label > input + i.check-icon:after { vertical-align: middle; width: 20px; content: '\f00c'; opacity: 0; }
+.btn-group > label > input:checked + i.check-icon:after { opacity: 1; }
+
+
+
 /* ------------------------- */
 /* Card */
 /* ------------------------- */
@@ -313,6 +321,27 @@ canvas {
 .dropdown-menu-no-arrow:before {
     display: none;
 }
+
+.dropdown-menu-100 { width: 200px; }
+.dropdown-menu-200 { width: 200px; }
+.dropdown-menu-300 { width: 300px; }
+.dropdown-menu-400 { width: 400px; }
+.dropdown-menu-500 { width: 500px; }
+.dropdown-menu-600 { width: 600px; }
+.dropdown-menu-700 { width: 700px; }
+.dropdown-menu-800 { width: 800px; }
+
+.dropdown-menu-100 .dropdown-item,
+.dropdown-menu-200 .dropdown-item,
+.dropdown-menu-300 .dropdown-item,
+.dropdown-menu-400 .dropdown-item,
+.dropdown-menu-500 .dropdown-item,
+.dropdown-menu-600 .dropdown-item,
+.dropdown-menu-700 .dropdown-item,
+.dropdown-menu-800 .dropdown-item {
+    white-space: normal;
+}
+
 
 /* ------------------------- */
 /* avatar */

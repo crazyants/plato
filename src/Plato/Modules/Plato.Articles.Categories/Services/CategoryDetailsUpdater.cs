@@ -13,35 +13,35 @@ namespace Plato.Articles.Categories.Services
     public class CategoryDetailsUpdater : ICategoryDetailsUpdater
     {
 
-        private readonly ICategoryStore<Category> _channelStore;
-        private readonly ICategoryManager<Category> _channelManager;
+        private readonly ICategoryStore<Category> _categoryStore;
+        private readonly ICategoryManager<Category> _categoryManager;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<Comment> _replyStore;
 
         public CategoryDetailsUpdater(
-            ICategoryStore<Category> channelStore, 
-            ICategoryManager<Category> channelManager,
+            ICategoryStore<Category> categoryStore, 
+            ICategoryManager<Category> categoryManager,
             IEntityStore<Article> entityStore, 
             IEntityReplyStore<Comment> replyStore)
         {
-            _channelStore = channelStore;
-            _channelManager = channelManager;
+            _categoryStore = categoryStore;
+            _categoryManager = categoryManager;
             _entityStore = entityStore;
             _replyStore = replyStore;
         }
         
-        public async Task UpdateAsync(int channelId)
+        public async Task UpdateAsync(int categoryId)
         {
             
-            // Get supplied channel and all parent channels
-            var parents = await _channelStore.GetParentsByIdAsync(channelId);
+            // Get supplied category and all parent categories
+            var parents = await _categoryStore.GetParentsByIdAsync(categoryId);
 
             // Update details within current and all parents
             foreach (var parent in parents)
             {
                 
-                // Get all children for current channel
-                var children = await _channelStore.GetChildrenByIdAsync(parent.Id);
+                // Get all children for current category
+                var children = await _categoryStore.GetChildrenByIdAsync(parent.Id);
 
                 // Get latest entity & total entity count for current category
                 var entities = await _entityStore.QueryAsync()
@@ -52,15 +52,15 @@ namespace Plato.Articles.Categories.Services
                         // If the category has children also include all child categories
                         if (children != null)
                         {
-                            var channelIds = children
+                            var categoryIds = children
                                 .Select(c => c.Id)
                                 .Append(parent.Id)
                                 .ToArray();
-                            q.CategoryId.IsIn(channelIds);
+                            q.CategoryId.IsIn(categoryIds);
                         }
                         else
                         {
-                            // Get entities for current channel
+                            // Get entities for current categories
                             q.CategoryId.Equals(parent.Id);
                         }
 
@@ -71,24 +71,24 @@ namespace Plato.Articles.Categories.Services
                     .OrderBy("LastReplyDate", OrderBy.Desc)
                     .ToList();
 
-                // Get latest reply & total reply count for current channel
+                // Get latest reply & total reply count for current category
                 var replies = await _replyStore.QueryAsync()
                     .Take(1, 1) // we only need the latest reply
                     .Select<EntityReplyQueryParams>(q =>
                     {
 
-                        // If the channel has children also include all child replies
+                        // If the category has children also include all child replies
                         if (children != null)
                         {
-                            var channelIds = children
+                            var categoryIds = children
                                 .Select(c => c.Id)
                                 .Append(parent.Id)
                                 .ToArray();
-                            q.CategoryId.IsIn(channelIds);
+                            q.CategoryId.IsIn(categoryIds);
                         }
                         else
                         {
-                            // Get entities for current channel
+                            // Get entities for current category
                             q.CategoryId.Equals(parent.Id);
                         }
 
@@ -115,30 +115,44 @@ namespace Plato.Articles.Categories.Services
                     latestReply = replies.Data[0];
                 }
 
-                // Update channel details with latest entity details
+                // Update category details with latest entity details
                 var details = parent.GetOrCreate<CategoryDetails>();
-                details.TotalTopics = totalTopics;
+                details.TotalEntities = totalTopics;
                 details.TotalReplies = totalReplies;
 
                 if (latestTopic != null)
                 {
-                    details.LastTopic.Id = latestTopic.Id;
-                    details.LastTopic.Alias = latestTopic.Alias;
-                    details.LastTopic.CreatedBy = latestTopic.CreatedBy;
-                    details.LastTopic.CreatedDate = latestTopic.CreatedDate;
+                    details.LatestEntity = new LastPost
+                    {
+                        Id = latestTopic.Id,
+                        Alias = latestTopic.Alias,
+                        CreatedBy = latestTopic.CreatedBy,
+                        CreatedDate = latestTopic.CreatedDate
+                    };
+                }
+                else
+                {
+                    details.LatestEntity = null;
                 }
 
                 if (latestReply != null)
                 {
-                    details.LastReply.Id = latestReply.Id;
-                    details.LastReply.CreatedBy = latestReply.CreatedBy;
-                    details.LastReply.CreatedDate = latestReply.CreatedDate;
+                    details.LatestReply = new LastPost
+                    {
+                        Id = latestReply.Id,
+                        CreatedBy = latestReply.CreatedBy,
+                        CreatedDate = latestReply.CreatedDate
+                    };
+                }
+                else
+                {
+                    details.LatestReply = null;
                 }
 
                 parent.AddOrUpdate<CategoryDetails>(details);
 
                 // Save the updated details 
-                await _channelManager.UpdateAsync(parent);
+                await _categoryManager.UpdateAsync(parent);
 
             }
             

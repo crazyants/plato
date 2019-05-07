@@ -7,13 +7,13 @@ namespace Plato.Articles.Categories.Models
 
     public class CategoryDetails : Serializable
     {
-        public int TotalTopics { get; set; }
+        public int TotalEntities { get; set; }
 
         public int TotalReplies { get; set; }
 
-        public LastPost LastTopic { get; set; } = new LastPost();
+        public LastPost LatestEntity { get; set; } = new LastPost();
 
-        public LastPost LastReply { get; set; } = new LastPost();
+        public LastPost LatestReply { get; set; } = new LastPost();
 
     }
     

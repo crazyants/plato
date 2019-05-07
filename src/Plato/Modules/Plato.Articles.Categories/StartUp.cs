@@ -73,6 +73,7 @@ namespace Plato.Articles.Categories
             services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();
 
             // Register message broker subscribers
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Article>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
             services.AddScoped<IBrokerSubscriber, CategorySubscriber<Category>>();
 

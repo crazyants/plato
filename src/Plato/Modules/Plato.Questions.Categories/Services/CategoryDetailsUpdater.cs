@@ -122,17 +122,31 @@ namespace Plato.Questions.Categories.Services
 
                 if (latestEntity != null)
                 {
-                    details.LatestEntity.Id = latestEntity.Id;
-                    details.LatestEntity.Alias = latestEntity.Alias;
-                    details.LatestEntity.CreatedBy = latestEntity.CreatedBy;
-                    details.LatestEntity.CreatedDate = latestEntity.CreatedDate;
+                    details.LatestEntity = new LatestPost
+                    {
+                        Id = latestEntity.Id,
+                        Alias = latestEntity.Alias,
+                        CreatedBy = latestEntity.CreatedBy,
+                        CreatedDate = latestEntity.CreatedDate
+                    };
+                }
+                else
+                {
+                    details.LatestEntity = null;
                 }
 
                 if (latestReply != null)
                 {
-                    details.LatestReply.Id = latestReply.Id;
-                    details.LatestReply.CreatedBy = latestReply.CreatedBy;
-                    details.LatestReply.CreatedDate = latestReply.CreatedDate;
+                    details.LatestReply = new LatestPost
+                    {
+                        Id = latestReply.Id,
+                        CreatedBy = latestReply.CreatedBy,
+                        CreatedDate = latestReply.CreatedDate
+                    };
+                }
+                else
+                {
+                    details.LatestReply = null;
                 }
 
                 parent.AddOrUpdate<CategoryDetails>(details);

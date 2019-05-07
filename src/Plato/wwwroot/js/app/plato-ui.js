@@ -3154,8 +3154,42 @@ $(function (win, doc, $) {
                 }
                 return html;
             }, // provides a method to parse our itemTemplate with data returned from service url
-            onShow: null, // triggers when the dropdown is shown
-            onChange: null, // triggers when a checkbox or radio button is changed within the dropdown
+            onShow: function($caller, $dropdown) {
+
+                $('input[type="radio"], input[type="checkbox"]').each(function() {
+                    if ($(this).is(":checked")) {
+                        var $parent = $(this).parent(".dropdown-item");
+                        if (!$parent.hasClass("active")) {
+                            $parent.addClass("active");
+                        }
+                    }
+                });
+
+            }, // triggers when the dropdown is shown
+            onChange: function ($caller, $input, e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Clear active
+                $caller.find(".dropdown-item").removeClass("active");
+
+                // Apply active
+                var $active = $input.parent(".dropdown-item");
+                if (!$active.hasClass("active")) {
+                    $active.addClass("active");
+                }
+
+                // Optionally update .dropdown-toggle text upon input change
+                var text = $input.data("navText");
+                if (text) {
+                    var $a = $caller.find(".dropdown-toggle");
+                    if ($a.length > 0) {
+                        $a.html(text);
+                    }
+                }
+
+            }, // triggers when a checkbox or radio button is changed within the dropdown
             onUpdated: null // triggers whenever our items array is rendered
         };
 
@@ -3205,6 +3239,12 @@ $(function (win, doc, $) {
                         }
                     });
 
+                // Provide stopPropagation option for labels
+                $dropdown.find("label").click(function (e) {
+                    if ($(this).data("stopPropagation")) {
+                        e.stopPropagation();
+                    }
+                });
 
             },
             unbind: function ($caller) {
@@ -4601,8 +4641,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,

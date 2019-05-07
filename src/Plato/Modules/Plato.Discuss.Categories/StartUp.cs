@@ -74,6 +74,7 @@ namespace Plato.Discuss.Categories
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
 
             // Register message broker subscribers
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
             services.AddScoped<IBrokerSubscriber, CategorySubscriber<Channel>>();
 
