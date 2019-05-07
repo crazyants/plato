@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Questions.Private</AssemblyName>
-    <PackageId>Plato.Questions.Private</PackageId>
+    <AssemblyName>Plato.Discuss.Private</AssemblyName>
+    <PackageId>Plato.Discuss.Private</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -22,8 +22,8 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
+    <ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
     <ProjectReference Include="..\Plato.Entities.Private\Plato.Entities.Private.csproj" />
-    <ProjectReference Include="..\Plato.Questions\Plato.Questions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

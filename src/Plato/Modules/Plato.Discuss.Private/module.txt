@@ -1,14 +1,14 @@
-Name: Plato Questions Private
-Description: Adds the ability to create private questions.
+Name: Plato Discuss Private
+Description: Adds the ability to create private discussions.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Questions
+Category: Discuss
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Questions",
+		Id: "Plato.Discuss",
 		Version: "1.0.0"
 	},
 	{

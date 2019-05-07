@@ -24,14 +24,14 @@
         }
 
         var isParentOrRoot = id == 0 || IsParentOfSelected(id, Model.SelectedParents);
-
         var style = isParentOrRoot ? "display:block" : "display:none";
-        sb.Append("<ul style=\"")
-            .Append(style)
-            .Append("\" class=\"list-group list-group-flush\">");
 
         if (Model.SelectedEntities != null)
         {
+
+            sb.Append("<ul style=\"")
+                .Append(style)
+                .Append("\" class=\"list-group list-group-flush\">");
 
             foreach (var entity in Model.SelectedEntities)
             {
@@ -124,7 +124,7 @@
                             .Append("\">");
                     }
                     sb.Append(entity.Value.Title);
-                    
+
                     if (!string.IsNullOrEmpty(url))
                     {
                         sb.Append("</a>");
@@ -154,14 +154,19 @@
                 }
 
             }
+            sb.Append("</ul>");
         }
         else
         {
+            sb.Append("<ul class=\"list-group list-group-flush\">");
             sb.Append("<li class=\"py-2 px-3\">");
+            sb.Append("<div class=\"py-1\">");
             sb.Append(T["No results found"].Value);
+            sb.Append("</div>");
             sb.Append("</li>");
+            sb.Append("</ul>");
         }
-        sb.Append("</ul>");
+
 
         return sb.ToString();
 

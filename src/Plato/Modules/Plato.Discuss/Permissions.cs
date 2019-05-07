@@ -81,6 +81,9 @@ namespace Plato.Discuss
         public static readonly Permission ViewHiddenTopics =
             new Permission("ViewHiddenTopics", "View hidden topics");
 
+        public static readonly Permission ViewPrivateTopics =
+            new Permission("ViewPrivateTopics", "View private topics");
+
         public static readonly Permission HideReplies =
             new Permission("HideReplies", "Hide replies");
 
@@ -137,6 +140,7 @@ namespace Plato.Discuss
                 HideTopics,
                 ShowTopics,
                 ViewHiddenTopics,
+                ViewPrivateTopics,
                 HideReplies,
                 ShowReplies,
                 ViewHiddenReplies,
@@ -175,6 +179,7 @@ namespace Plato.Discuss
                         ReportTopics,
                         ReportReplies,
                         ViewHiddenTopics,
+                        ViewPrivateTopics,
                         ViewHiddenReplies,
                         ViewSpamTopics,
                         ViewSpamReplies,
@@ -225,6 +230,7 @@ namespace Plato.Discuss
                         ReportTopics,
                         ReportReplies,
                         ViewHiddenTopics,
+                        ViewPrivateTopics,
                         ViewHiddenReplies,
                         ViewSpamTopics,
                         ViewSpamReplies,

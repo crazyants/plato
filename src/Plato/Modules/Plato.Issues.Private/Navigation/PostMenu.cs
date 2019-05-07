@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Questions.Models;
 using Plato.Entities.Private.ViewModels;
+using Plato.Issues.Models;
 
-namespace Plato.Questions.Private.Navigation
+namespace Plato.Issues.Private.Navigation
 {
     public class PostMenu : INavigationProvider
     {
@@ -33,13 +33,13 @@ namespace Plato.Questions.Private.Navigation
             }
 
             // Ensure we are in the correct area
-            if (!String.Equals(areaName, "Plato.Questions", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(areaName, "Plato.Issues", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get entity from builder context
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Question)] as Question;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Issue)] as Issue;
          
             // Set isPrivate flag
             var isPrivate = entity?.IsPrivate ?? false;

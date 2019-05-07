@@ -2,15 +2,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Questions.Private.Navigation;
-using Plato.Questions.Models;
+using Plato.Discuss.Private.Navigation;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Questions.Private.ViewProviders;
+using Plato.Discuss.Private.ViewProviders;
 
-namespace Plato.Questions.Private
+namespace Plato.Discuss.Private
 {
     public class Startup : StartupBase
     {
@@ -25,8 +25,8 @@ namespace Plato.Questions.Private
         {
 
             // View providers
-            services.AddScoped<IViewProviderManager<Question>, ViewProviderManager<Question>>();
-            services.AddScoped<IViewProvider<Question>, QuestionViewProvider>();
+            services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
+            services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, PostMenu>();

@@ -5,22 +5,22 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Questions.Models;
+using Plato.Issues.Models;
 using Plato.Entities.Private.ViewModels;
 
-namespace Plato.Questions.Private.ViewProviders
+namespace Plato.Issues.Private.ViewProviders
 {
-    public class QuestionViewProvider : BaseViewProvider<Question>
+    public class IssueViewProvider : BaseViewProvider<Issue>
     {
 
         private readonly IContextFacade _contextFacade;     
-        private readonly IEntityStore<Question> _entityStore;
+        private readonly IEntityStore<Issue> _entityStore;
         private readonly HttpRequest _request;
  
-        public QuestionViewProvider(
+        public IssueViewProvider(
             IContextFacade contextFacade,
             IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Question> entityStore)
+            IEntityStore<Issue> entityStore)
         {
             _contextFacade = contextFacade;       
             _entityStore = entityStore;
@@ -28,23 +28,23 @@ namespace Plato.Questions.Private.ViewProviders
             _request = httpContextAccessor.HttpContext.Request;
         }
         
-        public override Task<IViewProviderResult> BuildIndexAsync(Question entity, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Issue entity, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(Question entity, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Issue entity, IViewProviderContext updater)
         {
 
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Question entity, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Issue entity, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task ComposeTypeAsync(Question question, IUpdateModel updater)
+        public override async Task ComposeTypeAsync(Issue issue, IUpdateModel updater)
         {
 
             var model = new PrivateMenuViewModel
@@ -56,33 +56,33 @@ namespace Plato.Questions.Private.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                question.IsPrivate = GetIsPrivate();
+                issue.IsPrivate = GetIsPrivate();
             }
 
         }
         
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Question question, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Issue model, IViewProviderContext context)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(question.Id);
+            var entity = await _entityStore.GetByIdAsync(model.Id);
             if (entity == null)
             {
-                return await BuildEditAsync(question, context);
+                return await BuildEditAsync(model, context);
             }
             
             // Validate model
-            if (await ValidateModelAsync(question, context.Updater))
+            if (await ValidateModelAsync(model, context.Updater))
             {
-                if (!question.IsNewQuestion)
+                if (!model.IsNew)
                 {
-                    question.IsPrivate = GetIsPrivate();
-                    await _entityStore.UpdateAsync(question);
+                    model.IsPrivate = GetIsPrivate();
+                    await _entityStore.UpdateAsync(model);
                 }
           
             }
 
-            return await BuildEditAsync(question, context);
+            return await BuildEditAsync(model, context);
 
         }
 

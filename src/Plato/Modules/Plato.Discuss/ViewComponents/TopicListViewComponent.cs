@@ -165,6 +165,14 @@ namespace Plato.Discuss.ViewComponents
                 .ConfigureQuery(async q =>
                 {
 
+
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewPrivateTopics))
+                    {
+                        q.HidePrivate.True();
+                    }
+
                     // Hide hidden?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewHiddenTopics))

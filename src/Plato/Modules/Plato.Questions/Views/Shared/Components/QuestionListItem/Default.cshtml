@@ -73,7 +73,7 @@
             @if (Model.Entity.TotalReplies > 0)
             {
                 <li class="list-inline-item">
-                    <span title="@T["Comments"]" data-toggle="tooltip">
+                    <span title="@T["Answers"]" data-toggle="tooltip">
                         @Model.Entity.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
                     </span>
                 </li>
@@ -158,7 +158,6 @@
                  <span class="badge badge-warning" data-toggle="tooltip" title="@T["This question is private and only visible as you have permission to view private questions"]">@T["Private"]</span>
              }
         }
-
         @if (Model.Entity.IsHidden)
         {
             <span class="badge badge-primary" data-toggle="tooltip" title="@T["This question is hidden and only visible as you have permission to view hidden questions"]">@T["Hidden"]</span>

@@ -8,6 +8,17 @@
         <card>
             <card-title>
                 <h6 class="card-title d-inline-block">@T["Topic"]</h6>
+                @if (Model.Entity.IsPrivate)
+                {
+                    if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                    {
+                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This topic is private and only visible as you are the topic author"]">@T["Private"]</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This topic is private and only visible as you have permission to view private topics"]">@T["Private"]</span>
+                    }
+                }
                 @if (Model.Entity.IsHidden)
                 {
                     <span data-toggle="tooltip" title="@T["This topic is hidden and only visible as you have permission to view hidden topics"]" class="badge badge-primary">@T["Hidden"]</span>

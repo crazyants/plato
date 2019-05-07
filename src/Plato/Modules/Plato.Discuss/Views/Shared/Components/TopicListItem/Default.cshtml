@@ -10,7 +10,6 @@
 </div>
 <div class="list-body">
     
-    
     <ol class="list-inline text-muted float-right text-right">
         <li class="list-inline-item">
             <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
@@ -114,7 +113,17 @@
                 @Model.Channel.Name
             </a>
         }
-     
+        @if (Model.Entity.IsPrivate)
+        {
+            if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+            {
+                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This topic is private and only visible as you are the topic author"]">@T["Private"]</span>
+            }
+            else
+            {
+                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This topic is private and only visible as you have permission to view private topics"]">@T["Private"]</span>
+            }
+        }
         @if (Model.Entity.IsHidden)
         {
             <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This topic is hidden and only visible as you have permission to view hidden topics"]">@T["Hidden"]</span>

@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Entities.Private.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Questions.Private.ViewModels;
 
-namespace Plato.Questions.Private.ViewComponents
+namespace Plato.Entities.Private.ViewComponents
 {
   
-    public class QuestionPrivateMenuViewComponent : ViewComponent
+    public class EntityPrivateMenuViewComponent : ViewComponent
     {
   
-        public QuestionPrivateMenuViewComponent(IContextFacade contextFacade)
+        public EntityPrivateMenuViewComponent(IContextFacade contextFacade)
         {
         }
 

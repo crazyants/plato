@@ -55,6 +55,13 @@ namespace Plato.Questions.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewPrivateQuestions))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewHiddenQuestions))
                     {
                         q.HideHidden.True();

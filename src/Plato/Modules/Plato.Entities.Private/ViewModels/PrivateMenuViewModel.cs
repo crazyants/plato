@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Questions.Private.ViewModels
+﻿namespace Plato.Entities.Private.ViewModels
 {
     public class PrivateMenuViewModel
     {
