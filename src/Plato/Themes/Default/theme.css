@@ -360,8 +360,15 @@ a.label:hover, .label.active {
     border-top: 1px solid rgba(200, 200, 200, 0.1);
 }
 
-.nav-asides > .navbar::-webkit-scrollbar-thumb:vertical { margin: 0; background-color: #888;  }
+.nav-asides > .navbar::-webkit-scrollbar-thumb:vertical {  background-color: #888;  }
 .nav-asides > .navbar::-webkit-scrollbar-thumb:vertical:hover { background-color: #999; }
+
+/* ------------------- */
+/* Overflow */
+/* ------------------- */
+
+.overflow-auto::-webkit-scrollbar-thumb:vertical {  background-color: rgba(0, 0, 0, 0.2);  }
+.overflow-auto::-webkit-scrollbar-thumb:vertical:hover {  background-color: rgba(0, 0, 0, 0.4); }
 
 /* ------------------- */
 /* Markdown Editor */

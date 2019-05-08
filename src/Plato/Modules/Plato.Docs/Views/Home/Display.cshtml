@@ -48,10 +48,17 @@
                     <div class="resizable-bar">
                         <i class="fal fa-bars"></i>
                     </div>
-                    <div class="resizable-container">
+                    <div class="resizable-container overflow-auto">
                         <div class="resizable-header">
                             <h6 class="d-inline-block text-uppercase">@T["Your Comment"]</h6>
-                            <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
+                            <ul class="nav navbar">
+                                <li class="nav-item">
+                                    <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="nav-link text-muted resizable-close"><i class="fal fa-fw fa-times"></i></a>
+                                </li>
+                            </ul>
+                            <navigation name="post-reply"
+                                        class="nav navbar"
+                                        child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
                         </div>
                         <div class="resizable-body">
                             <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
@@ -86,10 +93,17 @@
             <div class="resizable-bar">
                 <i class="fal fa-bars"></i>
             </div>
-            <div class="resizable-container">
+            <div class="resizable-container overflow-auto">
                 <div class="resizable-header">
                     <h6 class="d-inline-block text-uppercase">@T["Your Comment"]</h6>
-                    <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="btn btn-sm float-right resizable-close"><i class="fal fa-fw fa-times"></i></a>
+                    <ul class="nav navbar">
+                        <li class="nav-item">
+                            <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="nav-link text-muted resizable-close"><i class="fal fa-fw fa-times"></i></a>
+                        </li>
+                    </ul>
+                    <navigation name="post-reply"
+                                class="nav navbar"
+                                child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
                 </div>
                 <div class="resizable-body">
 

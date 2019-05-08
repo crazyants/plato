@@ -335,6 +335,13 @@ a.label.active {
 .nav-asides > .navbar::-webkit-scrollbar-thumb:vertical:hover { background-color: #444; }
 
 /* ------------------- */
+/* Overflow */
+/* ------------------- */
+
+.overflow-auto::-webkit-scrollbar-thumb:vertical {  background-color: rgba(255, 255, 255, 0.3);  }
+.overflow-auto::-webkit-scrollbar-thumb:vertical:hover {  background-color: rgba(255, 255, 255, 0.5); }
+
+/* ------------------- */
 /* Markdown Editor */
 /* ------------------- */
 
@@ -470,6 +477,7 @@ a.label.active {
     border-color: #EE7E6F;
     color: #dc3545;
 }
+
 
 /* ------------------------- */
 /* Markdown Editor */

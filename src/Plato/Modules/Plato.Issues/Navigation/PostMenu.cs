@@ -3,7 +3,6 @@ using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Issues.Models;
 
 namespace Plato.Issues.Navigation
 {
@@ -50,7 +49,9 @@ namespace Plato.Issues.Navigation
                         .Permission(Permissions.PostIssues)
                         .LocalNav()
                     ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
+
         }
+
     }
 
 }

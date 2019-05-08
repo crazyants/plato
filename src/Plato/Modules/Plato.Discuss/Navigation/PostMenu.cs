@@ -1,10 +1,8 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Discuss.Models;
 
 namespace Plato.Discuss.Navigation
 {
@@ -40,7 +38,7 @@ namespace Plato.Discuss.Navigation
             }
 
             builder
-                .Add(T["New"], 2, create => create
+                .Add(T["New"], 1, create => create
                     .IconCss("fal fa-plus")
                     .Attributes(new Dictionary<string, object>()
                     {
@@ -51,7 +49,9 @@ namespace Plato.Discuss.Navigation
                         .Permission(Permissions.PostTopics)
                         .LocalNav()
                     ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
+
         }
+
     }
 
 }

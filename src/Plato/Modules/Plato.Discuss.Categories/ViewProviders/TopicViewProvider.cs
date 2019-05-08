@@ -148,16 +148,19 @@ namespace Plato.Discuss.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            // Get all categories & return views
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+
+            return default(IViewProviderResult);
+
+            //// Get all categories & return views
+            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(
-                View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Display.Sidebar", model =>
-                {
-                    model.Categories = categories?.Where(c => c.Id == topic.CategoryId);
-                    return model;
-                }).Zone("sidebar").Order(2)
-            );
+            //return Views(
+            //    View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Display.Sidebar", model =>
+            //    {
+            //        model.Categories = categories?.Where(c => c.Id == topic.CategoryId);
+            //        return model;
+            //    }).Zone("sidebar").Order(2)
+            //);
 
         }
         

@@ -1891,7 +1891,7 @@
                                 css: "dropdown-menu-right",
                                 items: null,
                                 html:
-                                    '<div class="md-emoji-dropdown"><p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p></div>'
+                                    '<div class="md-emoji-dropdown overflow-auto"><p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p></div>'
                             },
                             icon: {
                                 glyph: 'glyphicon glyphicon-search',

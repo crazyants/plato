@@ -1,11 +1,8 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Routing;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Docs.Models;
 
 namespace Plato.Docs.Navigation
 {
@@ -52,7 +49,9 @@ namespace Plato.Docs.Navigation
                         .Permission(Permissions.PostDocs)
                         .LocalNav()
                     ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
+
         }
+
     }
 
 }

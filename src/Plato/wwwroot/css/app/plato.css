@@ -1,11 +1,7 @@
 ﻿/* ReSharper disable once UnknownCssVendorExtension */
 /* ReSharper disable once UnknownCssVendorExtension */
 
-canvas {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-}
+canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
 
 /* ------------------------- */
 /* Cursors */
@@ -27,6 +23,70 @@ canvas {
 .opacity-70 { opacity: .7; }
 .opacity-80 { opacity: .8; }
 .opacity-90 { opacity: .9; }
+
+/* ------------------------- */
+/* Max & Min */
+/* ------------------------- */
+
+.max-h-100 { max-height: 100px; }
+.max-h-150 { max-height: 150px; }
+.max-h-200 { max-height: 200px; }
+.max-h-250 { max-height: 250px; }
+.max-h-300 { max-height: 300px; }
+.max-h-350 { max-height: 350px; }
+.max-h-400 { max-height: 400px; }
+.max-h-450 { max-height: 450px; }
+.max-h-500 { max-height: 500px; }
+.max-h-550 { max-height: 550px; }
+.max-h-600 { max-height: 600px; }
+
+.max-w-100 { max-width: 100px; }
+.max-w-150 { max-width: 150px; }
+.max-w-200 { max-width: 200px; }
+.max-w-250 { max-width: 250px; }
+.max-w-300 { max-width: 300px; }
+.max-w-350 { max-width: 350px; }
+.max-w-400 { max-width: 400px; }
+.max-w-450 { max-width: 450px; }
+.max-w-500 { max-width: 500px; }
+.max-w-550 { max-width: 550px; }
+.max-w-600 { max-width: 600px; }
+
+.min-h-100 { min-height: 100px; }
+.min-h-150 { min-height: 150px; }
+.min-h-200 { min-height: 200px; }
+.min-h-250 { min-height: 250px; }
+.min-h-300 { min-height: 300px; }
+.min-h-350 { min-height: 350px; }
+.min-h-400 { min-height: 400px; }
+.min-h-450 { min-height: 450px; }
+.min-h-500 { min-height: 500px; }
+.min-h-550 { min-height: 550px; }
+.min-h-600 { min-height: 600px; }
+
+.min-w-100 { min-width: 100px; }
+.min-w-150 { min-width: 150px; }
+.min-w-200 { min-width: 200px; }
+.min-w-250 { min-width: 250px; }
+.min-w-300 { min-width: 300px; }
+.min-w-350 { min-width: 350px; }
+.min-w-400 { min-width: 400px; }
+.min-w-450 { min-width: 450px; }
+.min-w-500 { min-width: 500px; }
+.min-w-550 { min-width: 550px; }
+.min-w-600 { min-width: 600px; }
+
+
+/* ------------------------- */
+/* Overflow */
+/* ------------------------- */
+
+.overflow-auto { overflow: auto; }
+.overflow-auto::-webkit-scrollbar { background: transparent; }
+.overflow-auto::-webkit-scrollbar-thumb:vertical { margin: 0; }
+.overflow-auto::-webkit-scrollbar-button:start:decrement,
+.overflow-auto::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
+.overflow-hidden { overflow: hidden; }
 
 /* ------------------------- */
 /* Disabled elements */

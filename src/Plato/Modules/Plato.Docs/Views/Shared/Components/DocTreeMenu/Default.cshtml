@@ -35,7 +35,7 @@
             <i class="fa fa-ellipsis-h"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="@dropdownId">
-            <div style="max-height: 200px; overflow:auto">
+            <div class="min-w-200 max-h-250 overflow-auto">
                 <authorize asp-permission="@editPermission.Name">
                     <authorize-success>
                         <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Edit" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" class="dropdown-item">
