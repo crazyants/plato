@@ -357,7 +357,10 @@ namespace Plato.Categories.Services
 
             // Our result
             var result = new CommandResult<TCategory>();
-            
+
+            // Add sort order to local variable as the model may change
+            var sortOrder = model.SortOrder;
+
             // All categories for supplied category feature
             var categories = await _categoryStore.GetByFeatureIdAsync(model.FeatureId);
             if (categories == null)
@@ -375,7 +378,7 @@ namespace Plato.Categories.Services
                     TCategory above = null;
                     foreach (var category in categories.Where(c => c.ParentId == model.ParentId))
                     {
-                        if (category.SortOrder < model.SortOrder)
+                        if (category.SortOrder < sortOrder)
                         {
                             above = (TCategory)category;
                         }
@@ -384,8 +387,20 @@ namespace Plato.Categories.Services
                     // Swap sort orders
                     if (above != null)
                     {
-                        await UpdateSortOrder(model, above.SortOrder);
-                        await UpdateSortOrder(above, model.SortOrder);
+                        var update1 = await UpdateSortOrder(model, above.SortOrder);
+                        if (update1.Succeeded)
+                        {
+                            var update2 = await UpdateSortOrder(above, sortOrder);
+                            if (!update2.Succeeded)
+                            {
+                                result.Failed(update2.Errors.ToArray());
+                            }
+                        }
+                        else
+                        {
+                            result.Failed(update1.Errors.ToArray());
+                        }
+                        
                     }
 
                     break;
@@ -399,7 +414,7 @@ namespace Plato.Categories.Services
                         .ToList();
                     for (var i = children.Count - 1; i >= 0; i--)
                     {
-                        if (children[i].SortOrder > model.SortOrder)
+                        if (children[i].SortOrder > sortOrder)
                         {
                             below = (TCategory)children[i];
                         }
@@ -408,8 +423,20 @@ namespace Plato.Categories.Services
                     // Swap sort orders
                     if (below != null)
                     {
-                        await UpdateSortOrder(model, below.SortOrder);
-                        await UpdateSortOrder(below, model.SortOrder);
+                        var update1 = await UpdateSortOrder(model, below.SortOrder);
+                        if (update1.Succeeded)
+                        {
+                            var update2 = await UpdateSortOrder(below, sortOrder);
+                            if (!update2.Succeeded)
+                            {
+                                result.Failed(update2.Errors.ToArray());
+                            }
+                        }
+                        else
+                        {
+                            result.Failed(update1.Errors.ToArray());
+                        }
+                        
                     }
 
                     break;
@@ -428,7 +455,11 @@ namespace Plato.Categories.Services
                     // the entity if it's already the top most entity
                     if (top != null && top.Id != model.Id)
                     {
-                        await UpdateSortOrder(model, top.SortOrder - 1);
+                        var update = await UpdateSortOrder(model, top.SortOrder - 1);
+                        if (!update.Succeeded)
+                        {
+                            result.Failed(update.Errors.ToArray());
+                        }
                     }
 
                     break;
@@ -446,7 +477,11 @@ namespace Plato.Categories.Services
                     // the entity if it's already the bottom most entity
                     if (bottom != null && bottom.Id != model.Id)
                     {
-                        await UpdateSortOrder(model, bottom.SortOrder + 1);
+                        var update = await UpdateSortOrder(model, bottom.SortOrder + 1);
+                        if (!update.Succeeded)
+                        {
+                            result.Failed(update.Errors.ToArray());
+                        }
                     }
 
                     break;
@@ -463,8 +498,24 @@ namespace Plato.Categories.Services
         
         async Task<ICommandResult<TCategory>> UpdateSortOrder(TCategory model, int sortOrder)
         {
+           
+            // Create result
+            var result = new CommandResult<TCategory>();
+
+            // Update sort order
             model.SortOrder = sortOrder;
-            return await UpdateAsync(model);
+
+            // Persist changes
+            var updatedEntity = await _categoryStore.UpdateAsync(model);
+            if (updatedEntity != null)
+            {
+                return result.Success(updatedEntity);
+            }
+
+            return result.Failed(
+                $"An error occurred updating the sort order for category '{model.Name}' with Id '{model.Id}'.");
+
+
         }
 
         async Task<string> ParseAlias(string input)

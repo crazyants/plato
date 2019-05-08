@@ -243,7 +243,10 @@ namespace Plato.Entities.Services
             {
                 return result.Failed($"No entities were found matching FeatureId '{model.FeatureId}'");
             }
-            
+
+            // Add the source sort order to a local variable as the model may change
+            var sortOrder = model.SortOrder;
+
             List<TEntity> children = null;
             switch (direction)
             {
@@ -254,7 +257,7 @@ namespace Plato.Entities.Services
                     TEntity above = null;
                     foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
                     {
-                        if (entity.SortOrder < model.SortOrder)
+                        if (entity.SortOrder < sortOrder)
                         {
                             above = (TEntity)entity;
                         }
@@ -264,15 +267,34 @@ namespace Plato.Entities.Services
                     if (above != null)
                     {
 
-                        // Update source
-                        await UpdateSortOrder(model, above.SortOrder);
+                        // Ensure the source sort order is below or target sort order
+                        if (sortOrder < above.SortOrder)
+                        {
+                            return result.Failed($"Cannot move '{model.Title}' with sort order '{model.SortOrder}' above '{above.Title}' with sort order '{above.SortOrder}'");
+                        }
 
-                        // Update entity we are swapping with modified detailed
-                        above.ModifiedUserId = model.ModifiedUserId;
-                        above.ModifiedDate = model.ModifiedDate;
-                        
-                        // Update target
-                        await UpdateSortOrder(above, model.SortOrder);
+                        // Update source
+                        var update1 = await UpdateSortOrder(model, above.SortOrder);
+                        if (update1.Succeeded)
+                        {
+                            // If source succeeded update target
+
+                            // Update entity we are swapping with modified detailed
+                            above.ModifiedUserId = model.ModifiedUserId;
+                            above.ModifiedDate = model.ModifiedDate;
+
+                            // Update target
+                            var update2 = await UpdateSortOrder(above, sortOrder);
+                            if (!update2.Succeeded)
+                            {
+                                result.Failed(update2.Errors.ToArray());
+                            }
+
+                        }
+                        else
+                        {
+                            result.Failed(update1.Errors.ToArray());
+                        }
 
                     }
 
@@ -285,7 +307,7 @@ namespace Plato.Entities.Services
                     children = entities.Where(c => c.ParentId == model.ParentId).ToList();
                     for (var i = children.Count - 1; i >= 0; i--)
                     {
-                        if (children[i].SortOrder > model.SortOrder)
+                        if (children[i].SortOrder > sortOrder)
                         {
                             below = (TEntity)children[i];
                         }
@@ -295,15 +317,36 @@ namespace Plato.Entities.Services
                     if (below != null)
                     {
 
+                        // Ensure the source sort order is above or target sort order
+                        if (sortOrder > below.SortOrder)
+                        {
+                            return result.Failed($"Cannot move '{model.Title}' with sort order '{model.SortOrder}' below '{below.Title}' with sort order '{below.SortOrder}'");
+                        }
+                        
                         // Update source
-                        await UpdateSortOrder(model, below.SortOrder);
-                        
-                        // Update entity we are swapping with modified detailed
-                        below.ModifiedUserId = model.ModifiedUserId;
-                        below.ModifiedDate = model.ModifiedDate;
-                        
-                        // Update target
-                        await UpdateSortOrder(below, model.SortOrder);
+                        var update1 = await UpdateSortOrder(model, below.SortOrder);
+                        if (update1.Succeeded)
+                        {
+
+                            // If source succeeded update target
+
+                            // Update entity we are swapping with modified detailed
+                            below.ModifiedUserId = model.ModifiedUserId;
+                            below.ModifiedDate = model.ModifiedDate;
+
+                            // Update target
+                            var update2 = await UpdateSortOrder(below, sortOrder);
+                            if (!update2.Succeeded)
+                            {
+                                result.Failed(update1.Errors.ToArray());
+                            }
+
+                        }
+                        else
+                        {
+                            result.Failed(update1.Errors.ToArray());
+                        }
+
 
                     }
 
@@ -323,7 +366,11 @@ namespace Plato.Entities.Services
                     // the entity if it's already the top most entity
                     if (top != null && top.Id != model.Id)
                     {
-                        await UpdateSortOrder(model, top.SortOrder - 1);
+                        var update = await UpdateSortOrder(model, top.SortOrder - 1);
+                        if (!update.Succeeded)
+                        {
+                            result.Failed(update.Errors.ToArray());
+                        }
                     }
 
                     break;
@@ -341,7 +388,11 @@ namespace Plato.Entities.Services
                     // the entity if it's already the bottom most entity
                     if (bottom != null && bottom.Id != model.Id)
                     {
-                        await UpdateSortOrder(model, bottom.SortOrder + 1);
+                        var update = await UpdateSortOrder(model, bottom.SortOrder + 1);
+                          if (!update.Succeeded)
+                        {
+                            result.Failed(update.Errors.ToArray());
+                        }
                     }
 
                     break;
@@ -357,8 +408,23 @@ namespace Plato.Entities.Services
 
         async Task<ICommandResult<TEntity>> UpdateSortOrder(TEntity model, int sortOrder)
         {
+            
+            // Create result
+            var result = new CommandResult<TEntity>();
+
+            // Update sort order
             model.SortOrder = sortOrder;
-            return await UpdateAsync(model);
+
+            // Persist changes
+            var updatedEntity = await _entityStore.UpdateAsync(model);
+            if (updatedEntity != null)
+            {
+                return result.Success(updatedEntity);
+            }
+
+            return result.Failed(
+                $"An error occurred updating the sort order for entity '{model.Title}' with Id '{model.Id}'.");
+
         }
 
         async Task<string> ParseEntityHtml(string message)

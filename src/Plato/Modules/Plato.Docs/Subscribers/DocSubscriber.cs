@@ -165,9 +165,10 @@ namespace Plato.Docs.Subscribers
 
             if (entities != null)
             {
-                foreach (var entity in entities
+                var orderedEntities = entities
                     .Where(c => c.ParentId == model.ParentId)
-                    .OrderBy(o => o.SortOrder))
+                    .OrderBy(o => o.SortOrder);
+                foreach (var entity in orderedEntities)
                 {
                     sortOrder = entity.SortOrder;
                 }

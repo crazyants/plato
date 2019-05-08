@@ -140,8 +140,7 @@ namespace Plato.Internal.Messaging
 
         public void Unsub<T>(MessageOptions options, Action<Message<T>> subscription) where T : class
         {
-            var describedDelegate = new DescribedDelegate(options, subscription);
-
+          
             if (!_subscribers.ContainsKey(typeof(T))) return;
 
             // Get delegates for our type
@@ -174,8 +173,6 @@ namespace Plato.Internal.Messaging
 
         public void Unsub<T>(MessageOptions options, Func<Message<T>, Task<T>> subscription) where T : class
         {
-
-            var describedDelegate = new DescribedDelegate(options, subscription);
 
             if (!_subscribers.ContainsKey(typeof(T))) return;
 
@@ -212,8 +209,7 @@ namespace Plato.Internal.Messaging
         {
             _subscribers?.Clear();
         }
-
-
+        
     }
 
 }

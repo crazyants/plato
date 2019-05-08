@@ -313,9 +313,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
             }
 
             // Add custom error handling for specific status codes
-            // UseStatusCodePages should be called before request
-            // handling middle wares in the pipeline (for example,
-            // Static File Middleware and MVC Middleware).
+            // UseStatusCodePages should be called before any request
+            // handling middleware in the pipeline (for example,
+            // Static File middleware and MVC middleware).
             app.UseStatusCodePages(context =>
             {
                 switch (context.HttpContext.Response.StatusCode)
@@ -385,7 +385,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             }
             
         }
-        
+
         private static void ListAllRegisteredServices(IApplicationBuilder app)
         {
             app.Map("/allservices", builder => builder.Run(async context =>
