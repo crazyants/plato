@@ -134,6 +134,17 @@
                 @Model.Channel.Name
             </a>
         }
+        @if (Model.Entity.IsPrivate)
+        {
+            if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+            {
+                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This idea is private and only visible as you are the idea author"]">@T["Private"]</span>
+            }
+            else
+            {
+                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This idea is private and only visible as you have permission to view private ideas"]">@T["Private"]</span>
+            }
+        }
         @if (Model.Entity.IsHidden)
         {
             <span class="badge badge-primary" data-toggle="tooltip" title="@T["This idea is hidden and only visible as you have permission to view hidden ideas"]">@T["Hidden"]</span>

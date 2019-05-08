@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
+using Plato.Ideas.Models;
 
 namespace Plato.Ideas.Navigation
 {
@@ -21,6 +22,19 @@ namespace Plato.Ideas.Navigation
         {
 
             if (!String.Equals(name, "post", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // Get action name
+            var actionName = string.Empty;
+            if (builder.ActionContext.RouteData.Values.ContainsKey("action"))
+            {
+                actionName = builder.ActionContext.RouteData.Values["action"].ToString();
+            }
+
+            // No need to display the menu when editing entities
+            if (actionName.IndexOf("Edit", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return;
             }

@@ -24,8 +24,6 @@
 }
 
 .nav-site .nav .search-input-group > .btn { color: #aaa !important; }
-.nav-site > .navbar-dark .search-input-group > .btn:hover,
-.nav-site > .navbar-dark .search-input-group > .btn:focus { color: white !important; }
 
 .nav-site > .navbar-dark .search-input-group .form-control::placeholder { 
     color: #aaa;

@@ -26,7 +26,7 @@ namespace Plato.Discuss.Private.Navigation
             }
 
             // Get area name
-            var areaName = "";
+            var areaName = string.Empty;
             if (builder.ActionContext.RouteData.Values.ContainsKey("area"))
             {
                 areaName = builder.ActionContext.RouteData.Values["area"].ToString();

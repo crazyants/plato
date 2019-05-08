@@ -8,4 +8,5 @@
         public bool IsPrivate { get; set; }
 
     }
+
 }

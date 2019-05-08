@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
+using Plato.Questions.Models;
 
 namespace Plato.Questions.Navigation
 {
@@ -25,7 +26,20 @@ namespace Plato.Questions.Navigation
             {
                 return;
             }
+            
+            // Get action name
+            var actionName = string.Empty;
+            if (builder.ActionContext.RouteData.Values.ContainsKey("action"))
+            {
+                actionName = builder.ActionContext.RouteData.Values["action"].ToString();
+            }
 
+            // No need to display the menu when editing entities
+            if (actionName.IndexOf("Edit", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return;
+            }
+            
             builder
                 .Add(T["New"], 1, create => create
                     .IconCss("fal fa-plus")
@@ -39,6 +53,7 @@ namespace Plato.Questions.Navigation
                         .LocalNav()
                     ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
         }
+
     }
 
 }

@@ -1079,6 +1079,9 @@ canvas {
     padding: 0.75rem 1.23rem;
 }
 
+.resizable-header .nav { float: right; margin: 0; padding: 0; }
+.resizable-header .nav .nav-link { padding: 0 1rem; }
+
 .resizable-close {
     display: inline-block;
 }
