@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Features;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Search.Handlers
@@ -16,13 +17,16 @@ namespace Plato.Search.Handlers
 
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly IShellFeatureStore<ShellFeature> _shellFeatureStore;
-   
+        private readonly IDefaultRolesManager _defaultRolesManager;
+
         public FeatureEventHandler(
             ISchemaBuilder schemaBuilder,
-            IShellFeatureStore<ShellFeature> shellFeatureStore)
+            IShellFeatureStore<ShellFeature> shellFeatureStore,
+            IDefaultRolesManager defaultRolesManager)
         {
             _schemaBuilder = schemaBuilder;
             _shellFeatureStore = shellFeatureStore;
+            _defaultRolesManager = defaultRolesManager;
         }
         
         #region "Implementation"
@@ -69,9 +73,13 @@ namespace Plato.Search.Handlers
                 await _shellFeatureStore.UpdateAsync(feature);
 
             }
+            
+            // Apply default permissions to default roles for new feature
+            await _defaultRolesManager.UpdateDefaultRolesAsync(new Permissions());
+
         }
 
         #endregion
-        
+
     }
 }

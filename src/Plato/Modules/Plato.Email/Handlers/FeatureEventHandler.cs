@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Email.Handlers
 {
@@ -85,7 +86,7 @@ namespace Plato.Email.Handlers
         
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly ISchemaManager _schemaManager;
-
+      
         public FeatureEventHandler(
             ISchemaBuilder schemaBuilder, 
             ISchemaManager schemaManager)
