@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
+using Plato.Core.ViewModels;
 using Plato.Entities.ViewModels;
 using Plato.Ideas.Models;
+using Plato.Ideas.Private.ViewProviders;
 
 namespace Plato.Ideas.Private.Navigation
 {
@@ -43,18 +45,64 @@ namespace Plato.Ideas.Private.Navigation
          
             // Set isPrivate flag
             var isPrivate = entity?.IsPrivate ?? false;
-            
+
+            // Ensures we persist selection between post backs
+            if (builder.ActionContext.HttpContext.Request.Method == "POST")
+            {
+                foreach (string key in builder.ActionContext.HttpContext.Request.Form.Keys)
+                {
+                    if (key.StartsWith(IdeaViewProvider.HtmlName))
+                    {
+                        var values = builder.ActionContext.HttpContext.Request.Form[key];
+                        foreach (var value in values)
+                        {
+                            if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isPrivate = true;
+                            }
+                            if (value.IndexOf("public", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isPrivate = false;
+                            }
+                        }
+                    }
+                }
+            }
+
             // Build navigation
             builder
-                .Add(isPrivate ? T["Private"] : T["Public"], int.MinValue + 10, create => create                                             
-                        .View("EntityIsPrivateDropDown", new
+                .Add(isPrivate ? T["Private"] : T["Public"], int.MinValue + 10, create => create
+                        .View("SelectDropDown", new
                         {
-                            model = new EntityIsPrivateDropDownViewModel()
+                            model = new SelectDropDownViewModel()
                             {
-                                IsPrivate = isPrivate
+                                HtmlName = IdeaViewProvider.HtmlName,
+                                SelectedValue = isPrivate ? "private" : "public",
+                                SelectDropDown = new SelectDropDown()
+                                {
+
+                                    Title = "Visibility",
+                                    InnerCssClass = "d-block",
+                                    Items = new List<SelectDropDownItem>()
+                                    {
+                                        new SelectDropDownItem()
+                                        {
+                                            Text = "Public",
+                                            Description = "This idea will be visible to everyone. Chose this option if your sharing public information and don't mind public comments",
+                                            Value = "public"
+                                        },
+                                        new SelectDropDownItem()
+                                        {
+                                            Text = "Private",
+                                            Description = "This idea will only be visible to you and our team. Choose this option if your sharing private information.",
+                                            Value = "private"
+                                        }
+
+                                    }
+                                }
                             }
                         })
-                    , new List<string>() {"nav-item", "text-muted"});
+                    , new List<string>() { "nav-item", "text-muted" });
 
         }
 

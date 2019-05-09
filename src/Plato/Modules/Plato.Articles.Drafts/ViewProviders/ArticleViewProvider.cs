@@ -3,15 +3,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Articles.Models;
-using Plato.Articles.Drafts.ViewModels;
+using Plato.Core.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
+using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Articles.Drafts.ViewProviders
 {
     public class ArticleViewProvider : BaseViewProvider<Article>
     {
 
-        public const string HtmlName = "published";
+        public static string HtmlName = "published";
         
         private readonly HttpRequest _request;
         private readonly IEntityStore<Article> _entityStore;
@@ -34,60 +36,96 @@ namespace Plato.Articles.Drafts.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Article article, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Article article, IViewProviderContext updater)
+        {
+            return Task.FromResult(default(IViewProviderResult));
+        }
+
+        public override async Task ComposeTypeAsync(Article question, IUpdateModel updater)
         {
 
-            // Ensure entity exists before attempting to update
-            Article entity = null;
-            if (article.Id > 0)
+            var model = new SelectDropDownViewModel()
             {
-                entity = await _entityStore.GetByIdAsync(article.Id);
+                SelectedValue = GetIsPrivate().ToString()
+            };
+
+            await updater.TryUpdateModelAsync(model);
+
+            if (updater.ModelState.IsValid)
+            {
+                question.IsPrivate = GetIsPrivate();
+                question.IsHidden = GetIsHidden();
             }
-            
-            return Views(
-                View<DraftViewModel>("Article.Draft.Edit.Sidebar", model =>
-                {
-                    model.HtmlName = HtmlName;
-                    model.Published = !entity?.IsHidden ?? false;
-                    return model;
-                }).Zone("sidebar").Order(10)
-            );
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Article article, IViewProviderContext updater)
+
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Article model, IViewProviderContext context)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(article.Id);
+            var entity = await _entityStore.GetByIdAsync(model.Id);
             if (entity == null)
             {
-                return await BuildEditAsync(article, updater);
+                return await BuildEditAsync(model, context);
             }
-            
-            // Get the checkbox value
-            var published = false;
+
+            // Validate model
+            if (await ValidateModelAsync(model, context.Updater))
+            {
+                if (!model.IsNew)
+                {
+                    model.IsPrivate = GetIsPrivate();
+                    model.IsHidden = GetIsHidden();
+                    await _entityStore.UpdateAsync(model);
+                }
+
+            }
+
+            return await BuildEditAsync(model, context);
+
+
+        }
+
+        bool GetIsPrivate()
+        {
             foreach (var key in _request.Form.Keys)
             {
-                if (key == HtmlName)
+                if (key.StartsWith(HtmlName))
                 {
                     var values = _request.Form[key];
-                    if (!String.IsNullOrEmpty(values))
+                    foreach (var value in values)
                     {
-                        published = true;
-                        break;
+                        if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
-            
-            // Change private flag
-            entity.IsHidden = !published;
 
-            // Update entity
-            await _entityStore.UpdateAsync(entity);
+            return false;
 
-            // Return
-            return await BuildEditAsync(article, updater);
+        }
+
+        bool GetIsHidden()
+        {
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.StartsWith(HtmlName))
+                {
+                    var values = _request.Form[key];
+                    foreach (var value in values)
+                    {
+                        if (value.IndexOf("hidden", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
 
         }
 

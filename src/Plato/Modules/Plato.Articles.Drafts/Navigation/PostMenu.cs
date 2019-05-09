@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
+using Plato.Articles.Drafts.ViewProviders;
 using Plato.Articles.Models;
 using Plato.Core.ViewModels;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Articles.Drafts.Navigation
 {
@@ -42,7 +44,36 @@ namespace Plato.Articles.Drafts.Navigation
             var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
          
             // Set isHidden flag
-            var isHidden = entity?.IsHidden ?? true;
+            var isHidden = entity?.IsHidden ?? false;
+            var isPrivate = entity?.IsPrivate ?? true;
+            
+            // Ensures we persist selection between post backs
+            if (builder.ActionContext.HttpContext.Request.Method == "POST")
+            {
+                foreach (string key in builder.ActionContext.HttpContext.Request.Form.Keys)
+                {
+                    if (key.StartsWith(ArticleViewProvider.HtmlName))
+                    {
+                        var values = builder.ActionContext.HttpContext.Request.Form[key];
+                        foreach (var value in values)
+                        {
+                            if (value.IndexOf("hidden", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isHidden = true;
+                            }
+                            if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isPrivate = true;
+                            }
+                            if (value.IndexOf("public", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isHidden = false;
+                                isPrivate = false;
+                            }
+                        }
+                    }
+                }
+            }
             
             // Build navigation
             builder
@@ -51,16 +82,17 @@ namespace Plato.Articles.Drafts.Navigation
                         {
                             model = new SelectDropDownViewModel()
                             {
-                                SelectedValue = isHidden ? "private" : "public",
+                                HtmlName = ArticleViewProvider.HtmlName,
+                                SelectedValue = isHidden ? "hidden" : (isPrivate ? "private" : "public"),
                                 SelectDropDown = new SelectDropDown()
                                 {
-                                    Title = "Published?",
+                                    Title = "Visibility",
                                     InnerCssClass = "d-block",
                                     Items = new List<SelectDropDownItem>()
                                     {
                                         new SelectDropDownItem()
                                         {
-                                            Text = "In Draft",
+                                            Text = "Private",
                                             Description = "The article will only be visible to you and those with permission to view private articles. Choose this option whilst your authoring your article.",
                                             Value = "private",
                                         },
@@ -72,7 +104,7 @@ namespace Plato.Articles.Drafts.Navigation
                                         },
                                         new SelectDropDownItem()
                                         {
-                                            Text = "Published",
+                                            Text = "Public",
                                             Description = "The article will be visible to everyone. Chose this option once your ready to publish to the world",
                                             Value = "public",
                                         }

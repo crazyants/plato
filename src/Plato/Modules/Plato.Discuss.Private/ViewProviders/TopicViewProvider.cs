@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Plato.Core.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
@@ -49,9 +50,9 @@ namespace Plato.Discuss.Private.ViewProviders
         public override async Task ComposeTypeAsync(Topic question, IUpdateModel updater)
         {
 
-            var model = new EntityIsPrivateDropDownViewModel
+            var model = new SelectDropDownViewModel()
             {
-                IsPrivate = GetIsPrivate()
+                SelectedValue = GetIsPrivate().ToString()
             };
 
             await updater.TryUpdateModelAsync(model);

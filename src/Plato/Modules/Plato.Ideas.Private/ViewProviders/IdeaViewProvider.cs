@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Plato.Core.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Entities.ViewModels;
 using Plato.Ideas.Models;
 
 namespace Plato.Ideas.Private.ViewProviders
 {
     public class IdeaViewProvider : BaseViewProvider<Idea>
     {
+
+        public static string HtmlName = "visibility";
 
         private readonly IContextFacade _contextFacade;     
         private readonly IEntityStore<Idea> _entityStore;
@@ -47,11 +49,11 @@ namespace Plato.Ideas.Private.ViewProviders
         public override async Task ComposeTypeAsync(Idea issue, IUpdateModel updater)
         {
 
-            var model = new EntityIsPrivateDropDownViewModel()
+            var model = new SelectDropDownViewModel()
             {
-                IsPrivate = GetIsPrivate()
+                SelectedValue = GetIsPrivate().ToString()
             };
-
+            
             await updater.TryUpdateModelAsync(model);
 
             if (updater.ModelState.IsValid)
@@ -90,10 +92,8 @@ namespace Plato.Ideas.Private.ViewProviders
         {
 
             // Get the follow checkbox value
-            var htmlName = new EntityIsPrivateDropDownViewModel().HtmlName;
-            foreach (var key in _request.Form.Keys)
-            {
-                if (key.StartsWith(htmlName))
+            foreach (var key in _request.Form.Keys){
+                if (key.StartsWith(HtmlName))
                 {
                     var values = _request.Form[key];
                     foreach (var value in values)

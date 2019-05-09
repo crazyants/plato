@@ -7,7 +7,7 @@ namespace Plato.Core.ViewModels
     public class SelectDropDownViewModel
     {
 
-        public string HtmlName { get; set; } = "hidden";
+        public string HtmlName { get; set; }
         
         public string SelectedValue { get; set; }
 

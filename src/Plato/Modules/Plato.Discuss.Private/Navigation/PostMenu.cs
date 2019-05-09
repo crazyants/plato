@@ -45,6 +45,29 @@ namespace Plato.Discuss.Private.Navigation
          
             // Set isPrivate flag
             var isPrivate = entity?.IsPrivate ?? false;
+
+            // Ensures we persist selection between post backs
+            if (builder.ActionContext.HttpContext.Request.Method == "POST")
+            {
+                foreach (string key in builder.ActionContext.HttpContext.Request.Form.Keys)
+                {
+                    if (key.StartsWith(TopicViewProvider.HtmlName))
+                    {
+                        var values = builder.ActionContext.HttpContext.Request.Form[key];
+                        foreach (var value in values)
+                        {
+                            if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isPrivate = true;
+                            }
+                            if (value.IndexOf("public", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isPrivate = false;
+                            }
+                        }
+                    }
+                }
+            }
             
             // Build navigation
             builder
