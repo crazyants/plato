@@ -413,8 +413,7 @@ namespace Plato.Discuss.Categories.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-
+        
         // ---------
 
         async Task<IShellFeature> GetCurrentFeature()

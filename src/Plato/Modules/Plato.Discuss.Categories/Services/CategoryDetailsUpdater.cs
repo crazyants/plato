@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Categories.Models;
@@ -65,9 +64,11 @@ namespace Plato.Discuss.Categories.Services
                             q.CategoryId.Equals(parent.Id);
                         }
 
-                        q.HideSpam.True();
+                        q.HidePrivate.True();
                         q.HideHidden.True();
+                        q.HideSpam.True();
                         q.HideDeleted.True();
+
                     })
                     .OrderBy("LastReplyDate", OrderBy.Desc)
                     .ToList();
@@ -93,9 +94,10 @@ namespace Plato.Discuss.Categories.Services
                             q.CategoryId.Equals(parent.Id);
                         }
 
-                        q.HideSpam.True();
                         q.HideHidden.True();
+                        q.HideSpam.True();
                         q.HideDeleted.True();
+
                     })
                     .OrderBy("CreatedDate", OrderBy.Desc)
                     .ToList();

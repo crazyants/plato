@@ -64,9 +64,11 @@ namespace Plato.Questions.Categories.Services
                             q.CategoryId.Equals(parent.Id);
                         }
 
-                        q.HideSpam.True();
+                        q.HidePrivate.True();
                         q.HideHidden.True();
+                        q.HideSpam.True();
                         q.HideDeleted.True();
+
                     })
                     .OrderBy("LastReplyDate", OrderBy.Desc)
                     .ToList();
@@ -92,9 +94,10 @@ namespace Plato.Questions.Categories.Services
                             q.CategoryId.Equals(parent.Id);
                         }
 
-                        q.HideSpam.True();
                         q.HideHidden.True();
+                        q.HideSpam.True();
                         q.HideDeleted.True();
+
                     })
                     .OrderBy("CreatedDate", OrderBy.Desc)
                     .ToList();

@@ -8,27 +8,38 @@
         @T["Edit"]
     </a>
     <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="@dropdownId">
-        <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Edit Category"]
-        </a>
-        <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Add Child"]
-        </a>
-        <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="MoveUp" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Move Up"]
-        </a>
-        <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Move Down"]
-        </a>
-        <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Close Category"]
-        </a>
-        <div class="dropdown-divider"></div>
-        <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
-            @T["Delete Category"]
-        </a>
+        <div class="min-w-200 max-h-250 overflow-auto">
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Edit"]
+            </a>
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Add Child"]
+            </a>
+            <div class="dropdown-divider"></div>
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="MoveUp" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move Up"]
+            </a>
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move Down"]
+            </a>
+            <div class="dropdown-divider"></div>
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="MoveToTop" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move To Top"]
+            </a>
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="MoveToBottom" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move To Bottom"]
+            </a>
+            <div class="dropdown-divider"></div>
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Close Category"]
+            </a>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-divider"></div>
+            <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
+                @T["Delete Category"]
+            </a>
+        </div>
     </div>
 </div>
-
 
                     

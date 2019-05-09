@@ -356,6 +356,62 @@ namespace Plato.Articles.Categories.Controllers
 
         }
 
+        // --------------
+        // Move To Top / Move To Bottom
+        // --------------
+
+        public async Task<IActionResult> MoveToTop(int id)
+        {
+
+            var category = await _categoryStore.GetByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _categoryManager.Move(category, MoveDirection.ToTop);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Category Updated Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        public async Task<IActionResult> MoveToBottom(int id)
+        {
+
+            var category = await _categoryStore.GetByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _categoryManager.Move(category, MoveDirection.ToBottom);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Category Updated Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
         // ---------
 
         async Task<IShellFeature> GetCurrentFeature()
