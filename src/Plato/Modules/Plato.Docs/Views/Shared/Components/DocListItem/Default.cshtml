@@ -22,9 +22,12 @@
             </li>
         }
     </ol>
-    <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
-        <date utc="@Model.Entity.LastReplyDate"></date>
-    </a>
+    @if (Model.Entity.LastReplyId > 0)
+    {
+        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
+            <date utc="@Model.Entity.LastReplyDate"></date>
+        </a>
+    }
 </div>
 <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
 @if (Model.Entity.IsPinned)
@@ -68,14 +71,7 @@
             }
         </div>
     }
-    @if (Model.Entity.CreatedUserId > 0)
-    {
-        <span>
-            @T["By"]
-            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
-        </span>
-    }
-    <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+    
     @if (@Model.Channel != null)
     {
         <span>@T["in"]</span>

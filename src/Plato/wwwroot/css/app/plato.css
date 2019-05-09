@@ -562,9 +562,9 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .nav .dropdown.account > .dropdown-menu { width: 350px; }
 .nav .navbar-brand img { width: 200px; }
 
-.navbar-nav li a .nav-text,
-.nav li a .nav-text { margin-left: 0.50rem; }
-.nav li a.text-hidden .nav-text { display: none;  }
+.navbar-nav a .nav-text,
+.nav a .nav-text { margin-left: 0.50rem; }
+.nav a.text-hidden .nav-text { display: none;  }
 
 .nav-site { border: 0; border-bottom-width: 1px; border-style: solid; }
 .nav-site .navbar { border: 0 !important; }

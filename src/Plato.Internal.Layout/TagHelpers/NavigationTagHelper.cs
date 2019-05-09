@@ -47,6 +47,9 @@ namespace Plato.Internal.Layout.TagHelpers
         [HtmlAttributeName("child-ul-css-class")]
         public string ChildUlCssClass { get; set; } = "nav flex-column";
 
+        [HtmlAttributeName("child-ul-inner-css-class")]
+        public string ChildUlInnerCssClass { get; set; }
+
         [HtmlAttributeName("selected-css-class")]
         public string SelectedCssClass { get; set; } = "active";
 
@@ -182,13 +185,24 @@ namespace Plato.Internal.Layout.TagHelpers
                 {
                     ulClass = this.ChildUlCssClass;
                 }
-                
-                sb.Append("<ul class=\"")
+               
+                // ul
+                sb.Append("<div class=\"")
                     .Append(ulClass)
                     .Append("\">")
                     .Append(NewLine);
+
+                if (!string.IsNullOrEmpty(ChildUlInnerCssClass) && _level > 0)
+                {
+                    sb.Append("<div class=\"")
+                        .Append(ChildUlInnerCssClass)
+                        .Append("\">")
+                        .Append(NewLine);
+                }
+
+
             }
-         
+
             var index = 0;
             foreach (var item in items)
             {
@@ -197,7 +211,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
                 if (this.EnableList)
                 {
-                    sb.Append("<li class=\"")
+                    sb.Append("<div class=\"")
                         .Append(GetListItemClass(items, item, index))
                         .Append("\">");
                 }
@@ -218,7 +232,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
                 if (this.EnableList)
                 {
-                    sb.Append("</li>").Append(NewLine);
+                    sb.Append("</div>").Append(NewLine);
                 }
 
                 index += 1;
@@ -227,8 +241,16 @@ namespace Plato.Internal.Layout.TagHelpers
             AddTabs(_level, sb);
             if (this.EnableList)
             {
-                sb.Append("</ul>")
+
+                if (!string.IsNullOrEmpty(ChildUlInnerCssClass) && _level > 0)
+                {
+                    sb.Append("</div>")
+                        .Append(NewLine);
+                }
+
+                sb.Append("</div>")
                     .Append(NewLine);
+                
             }
 
             if (_level > 0 && this.Collaspsable)
