@@ -3,7 +3,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
 using Plato.Discuss.Models;
-using Plato.Entities.Private.ViewModels;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Discuss.Private.Navigation
 {
@@ -47,9 +47,9 @@ namespace Plato.Discuss.Private.Navigation
             // Build navigation
             builder
                 .Add(isPrivate ? T["Private"] : T["Public"], int.MinValue + 10, create => create                                             
-                        .View("EntityPrivateMenu", new
+                        .View("EntityIsPrivateDropDown", new
                         {
-                            model = new PrivateMenuViewModel()
+                            model = new EntityIsPrivateDropDownViewModel()
                             {
                                 IsPrivate = isPrivate
                             }

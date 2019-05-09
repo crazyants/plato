@@ -1,6 +1,6 @@
-﻿namespace Plato.Entities.Private.ViewModels
+﻿namespace Plato.Entities.ViewModels
 {
-    public class PrivateMenuViewModel
+    public class EntityIsPrivateDropDownViewModel
     {
 
         public string HtmlName { get; set; } = "visibility";

@@ -6,7 +6,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Questions.Models;
-using Plato.Entities.Private.ViewModels;
+using Plato.Entities.ViewModels;
 
 namespace Plato.Questions.Private.ViewProviders
 {
@@ -47,7 +47,7 @@ namespace Plato.Questions.Private.ViewProviders
         public override async Task ComposeTypeAsync(Question question, IUpdateModel updater)
         {
 
-            var model = new PrivateMenuViewModel
+            var model = new EntityIsPrivateDropDownViewModel()
             {
                 IsPrivate = GetIsPrivate()
             };
@@ -90,7 +90,7 @@ namespace Plato.Questions.Private.ViewProviders
         {
 
             // Get the follow checkbox value
-            var htmlName = new PrivateMenuViewModel().HtmlName;
+            var htmlName = new EntityIsPrivateDropDownViewModel().HtmlName;
             foreach (var key in _request.Form.Keys)
             {
                 if (key.StartsWith(htmlName))
