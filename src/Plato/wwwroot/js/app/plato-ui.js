@@ -3196,8 +3196,11 @@ $(function (win, doc, $) {
                 $caller.find('[data-toggle="collapse"]').each(function () {
                     $(this).bind("click",
                         function (e) {
-                            var $target = $($(this).attr("data-target"));
-                            $target.collapse("toggle");
+                            // If not disabled toggle collapse
+                            if (!$(this).attr("disabled")) {
+                                var $target = $($(this).attr("data-target"));
+                                $target.collapse("toggle");
+                            }
                         });
                 });
                 
@@ -3220,6 +3223,14 @@ $(function (win, doc, $) {
                 e.preventDefault();
                 e.stopPropagation();
 
+                // Label
+                var $label = $input.parent(".dropdown-item");
+
+                // Accomodate for disabled labels
+                if ($input.attr("disabled")) {
+                    return;
+                }
+           
                 // Clear active
                 $caller.find(".dropdown-item").removeClass("active");
                 

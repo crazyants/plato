@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Core.ViewModels;
 using Plato.Questions.Models;
 using Plato.Entities.ViewModels;
 using Plato.Questions.Private.ViewProviders;

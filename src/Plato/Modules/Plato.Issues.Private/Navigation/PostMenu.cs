@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Core.ViewModels;
-using Plato.Entities.ViewModels;
 using Plato.Issues.Models;
 using Plato.Issues.Private.ViewProviders;
 

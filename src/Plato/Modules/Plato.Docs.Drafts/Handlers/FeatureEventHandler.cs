@@ -2,7 +2,7 @@
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Articles.Drafts.Handlers
+namespace Plato.Docs.Drafts.Handlers
 {
 
     public class FeatureEventHandler : BaseFeatureEventHandler

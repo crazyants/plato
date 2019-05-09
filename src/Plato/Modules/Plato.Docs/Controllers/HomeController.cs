@@ -297,7 +297,7 @@ namespace Plato.Docs.Controllers
 
                     // Indicate new topic to prevent topic update
                     // on first creation within our topic view provider
-                    newEntity.Response.IsNewTopic = true;
+                    newEntity.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
                     await _docViewProvider.ProvideUpdateAsync(newEntity.Response, this);

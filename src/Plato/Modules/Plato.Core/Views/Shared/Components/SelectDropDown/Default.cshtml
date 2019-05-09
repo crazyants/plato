@@ -24,23 +24,61 @@
             <div class="btn-group d-block">
                 @foreach (var item in Model.SelectDropDown.Items)
                 {
-                    var isSelected = Model.SelectedValue == item.Value
+                    var selected = Model.SelectedValue == item.Value;
+                    var isSelected = selected
                         ? "checked=\"checked\"" : "";
                     var collapseId = item.Value + "collapse";
                     var collapseCss = item == selectedItem ? "w-100 collapse show" : "w-100 collapse";
+                    var labelCss = selected ? "dropdown-item m-0 p-3 cursor-pointer active" : "dropdown-item m-0 p-3 cursor-pointer";
                     var inputId = Model.HtmlName + "-" + item.Value;
-                    <label for="@inputId" data-toggle="collapse" data-target="#@collapseId"  class="dropdown-item m-0 p-3 cursor-pointer" data-stop-propagation="true">
-                        @if (Model.SelectDropDown.Multiple)
-                        {
-                            <input data-nav-text="@T[item.Text]" type="checkbox" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
-                        }
-                        else
-                        {
-                            <input data-nav-text="@T[item.Text]" type="radio" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
-                        }
-                        <i class="fal float-right check-icon"></i>
-                        <h6 class="d-inline m-0 p-0">@T[item.Text]</h6>
-                    </label>
+                    if (item.Permission != null)
+                    {
+                        <authorize asp-permission="@item.Permission.Name">
+                            <authorize-success>
+                                <label for="@inputId" data-toggle="collapse" data-target="#@collapseId"  class="@labelCss" data-stop-propagation="true">
+                                    @if (Model.SelectDropDown.Multiple)
+                                    {
+                                        <input data-nav-text="@T[item.Text]" type="checkbox" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
+                                    }
+                                    else
+                                    {
+                                        <input data-nav-text="@T[item.Text]" type="radio" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
+                                    }
+                                    <i class="fal float-right check-icon"></i>
+                                    <span class="d-inline m-0 p-0"><strong>@T[item.Text]</strong></span>
+                                </label>
+                            </authorize-success>
+                            <authorize-fail>
+                                <label for="@inputId" data-toggle="collapse" title="@T["You don't have permission to choose this option!"]" data-provide="tooltip" data-target="#@collapseId" class="@labelCss cursor-disabled" disabled="disabled" data-stop-propagation="true">
+                                    @if (Model.SelectDropDown.Multiple)
+                                    {
+                                        <input data-nav-text="@T[item.Text]" type="checkbox" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" disabled="disabled" id="@inputId" autocomplete="off">
+                                    }
+                                    else
+                                    {
+                                        <input data-nav-text="@T[item.Text]" type="radio" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" disabled="disabled" id="@inputId" autocomplete="off">
+                                    }
+                                    <i class="fal float-right check-icon"></i>
+                                    <span class="d-inline m-0 p-0"><strong>@T[item.Text]</strong></span>
+                                </label>
+                            </authorize-fail>
+                        </authorize>
+                    }
+                    else
+                    {
+                        <label for="@inputId" data-toggle="collapse" data-target="#@collapseId"  class="@labelCss" data-stop-propagation="true">
+                            @if (Model.SelectDropDown.Multiple)
+                            {
+                                <input data-nav-text="@T[item.Text]" type="checkbox" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
+                            }
+                            else
+                            {
+                                <input data-nav-text="@T[item.Text]" type="radio" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
+                            }
+                            <i class="fal float-right check-icon"></i>
+                            <span class="d-inline m-0 p-0"><strong>@T[item.Text]</strong></span>
+                        </label>
+                    }
                     @if (!string.IsNullOrEmpty(item.Description))
                      {
                          <div class="@collapseCss" id="@collapseId">

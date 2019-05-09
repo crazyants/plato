@@ -4,7 +4,7 @@ namespace Plato.Discuss.Models
 {
     public class Topic : Entity
     {
-        public bool IsNewTopic { get; set; }
+        public bool IsNew { get; set; }
         
     }
 }

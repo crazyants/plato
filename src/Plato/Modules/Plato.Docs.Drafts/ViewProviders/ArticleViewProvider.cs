@@ -1,52 +1,46 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Docs.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Issues.Models;
 
-namespace Plato.Issues.Private.ViewProviders
+namespace Plato.Docs.Drafts.ViewProviders
 {
-    public class IssueViewProvider : BaseViewProvider<Issue>
+    public class ArticleViewProvider : BaseViewProvider<Doc>
     {
 
-        public static string HtmlName = "visibility";
-
-        private readonly IContextFacade _contextFacade;     
-        private readonly IEntityStore<Issue> _entityStore;
+        public static string HtmlName = "published";
+        
         private readonly HttpRequest _request;
- 
-        public IssueViewProvider(
-            IContextFacade contextFacade,
+        private readonly IEntityStore<Doc> _entityStore;
+
+        public ArticleViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Issue> entityStore)
+            IEntityStore<Doc> entityStore)
         {
-            _contextFacade = contextFacade;       
-            _entityStore = entityStore;
-        
             _request = httpContextAccessor.HttpContext.Request;
+            _entityStore = entityStore;
         }
         
-        public override Task<IViewProviderResult> BuildIndexAsync(Issue entity, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Doc article, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(Issue entity, IViewProviderContext updater)
-        {
-
-            return Task.FromResult(default(IViewProviderResult));
-        }
-
-        public override Task<IViewProviderResult> BuildEditAsync(Issue entity, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Doc article, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task ComposeTypeAsync(Issue issue, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Doc article, IViewProviderContext updater)
+        {
+            return Task.FromResult(default(IViewProviderResult));
+        }
+
+        public override async Task ComposeTypeAsync(Doc question, IUpdateModel updater)
         {
 
             var model = new SelectDropDownViewModel()
@@ -58,12 +52,14 @@ namespace Plato.Issues.Private.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                issue.IsPrivate = GetIsPrivate();
+                question.IsPrivate = GetIsPrivate();
+                question.IsHidden = GetIsHidden();
             }
 
         }
-        
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Issue model, IViewProviderContext context)
+
+
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Doc model, IViewProviderContext context)
         {
 
             // Ensure entity exists before attempting to update
@@ -72,26 +68,26 @@ namespace Plato.Issues.Private.ViewProviders
             {
                 return await BuildEditAsync(model, context);
             }
-            
+
             // Validate model
             if (await ValidateModelAsync(model, context.Updater))
             {
                 if (!model.IsNew)
                 {
                     model.IsPrivate = GetIsPrivate();
+                    model.IsHidden = GetIsHidden();
                     await _entityStore.UpdateAsync(model);
                 }
-          
+
             }
 
             return await BuildEditAsync(model, context);
+
 
         }
 
         bool GetIsPrivate()
         {
-
-            // Get the follow checkbox value
             foreach (var key in _request.Form.Keys)
             {
                 if (key.StartsWith(HtmlName))
@@ -99,7 +95,28 @@ namespace Plato.Issues.Private.ViewProviders
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
-                        if (value.Equals("private", StringComparison.OrdinalIgnoreCase))
+                        if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+
+        }
+
+        bool GetIsHidden()
+        {
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.StartsWith(HtmlName))
+                {
+                    var values = _request.Form[key];
+                    foreach (var value in values)
+                    {
+                        if (value.IndexOf("hidden", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             return true;
                         }

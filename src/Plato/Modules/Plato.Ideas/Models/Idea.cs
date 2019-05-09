@@ -4,7 +4,7 @@ namespace Plato.Ideas.Models
 {
     public class Idea : Entity
     {
-        public bool IsNewIdea { get; set; }
+        public bool IsNew { get; set; }
         
     }
 

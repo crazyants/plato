@@ -276,7 +276,7 @@ namespace Plato.Questions.Controllers
 
                     // Indicate new entity to prevent entity update
                     // on first creation within our view provider
-                    newEntity.Response.IsNewQuestion = true;
+                    newEntity.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
                     await _entityViewProvider.ProvideUpdateAsync(newEntity.Response, this);

@@ -66,7 +66,7 @@ namespace Plato.Email
             // Email manager
             services.AddSingleton<IEmailManager, EmailManager>();
        
-            // Register moderation permissions provider
+            // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }

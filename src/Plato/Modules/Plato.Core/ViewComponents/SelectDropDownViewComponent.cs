@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Core.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Core.ViewComponents
 {

@@ -149,7 +149,7 @@ namespace Plato.Questions.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(Question question, IViewProviderContext context)
         {
             
-            if (question.IsNewQuestion)
+            if (question.IsNew)
             {
                 return default(IViewProviderResult);
             }

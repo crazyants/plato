@@ -2,10 +2,8 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Core.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Discuss.Private.ViewProviders;
-using Plato.Entities.ViewModels;
 
 namespace Plato.Discuss.Private.Navigation
 {

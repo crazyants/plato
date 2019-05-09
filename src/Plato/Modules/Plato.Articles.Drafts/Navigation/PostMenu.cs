@@ -2,10 +2,9 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
+using System.Security;
 using Plato.Articles.Drafts.ViewProviders;
 using Plato.Articles.Models;
-using Plato.Core.ViewModels;
-using Plato.Entities.ViewModels;
 
 namespace Plato.Articles.Drafts.Navigation
 {
@@ -95,18 +94,21 @@ namespace Plato.Articles.Drafts.Navigation
                                             Text = "Private",
                                             Description = "The article will only be visible to you and those with permission to view private articles. Choose this option whilst your authoring your article.",
                                             Value = "private",
+                                            Permission = Drafts.Permissions.DraftArticleToPrivate
                                         },
                                         new SelectDropDownItem()
                                         {
                                             Text = "Ready for Review",
-                                            Description = "The article will be visible to you and those with permission to view hidden articles. Choose this option once your article is ready for peer review.",
+                                            Description = "The article will be visible to those with permission to view hidden articles. Choose this option once your article is ready for review.",
                                             Value = "hidden",
+                                            Permission = Drafts.Permissions.DraftArticleToHidden
                                         },
                                         new SelectDropDownItem()
                                         {
                                             Text = "Public",
                                             Description = "The article will be visible to everyone. Chose this option once your ready to publish to the world",
                                             Value = "public",
+                                            Permission = Drafts.Permissions.DraftArticleToPublic
                                         }
                                       
                                     }

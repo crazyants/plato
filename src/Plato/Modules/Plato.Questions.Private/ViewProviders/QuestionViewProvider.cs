@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Plato.Core.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Questions.Models;
-using Plato.Entities.ViewModels;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Questions.Private.ViewProviders
 {
@@ -77,7 +76,7 @@ namespace Plato.Questions.Private.ViewProviders
             // Validate model
             if (await ValidateModelAsync(question, context.Updater))
             {
-                if (!question.IsNewQuestion)
+                if (!question.IsNew)
                 {
                     question.IsPrivate = GetIsPrivate();
                     await _entityStore.UpdateAsync(question);

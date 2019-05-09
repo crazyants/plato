@@ -275,7 +275,7 @@ namespace Plato.Ideas.Controllers
 
                     // Indicate new topic to prevent topic update
                     // on first creation within our topic view provider
-                    newEntity.Response.IsNewIdea = true;
+                    newEntity.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
                     await _entityViewProvider.ProvideUpdateAsync(newEntity.Response, this);

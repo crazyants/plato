@@ -1,14 +1,14 @@
-Name: Plato Articles Drafts
-Description: Adds basic approval support for articles.
+Name: Plato Docs Drafts
+Description: Adds basic approval support for docs.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Articles
+Category: Docs
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Articles",
+		Id: "Plato.Docs",
 		Version: "1.0.0"
 	}
 ]

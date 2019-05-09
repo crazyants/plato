@@ -4,7 +4,7 @@ namespace Plato.Docs.Models
 {
     public class Doc : Entity
     {
-        public bool IsNewTopic { get; set; }
+        public bool IsNew { get; set; }
         
     }
 }

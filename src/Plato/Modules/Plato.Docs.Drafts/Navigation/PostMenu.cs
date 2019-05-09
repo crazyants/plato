@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
-using Plato.Ideas.Models;
-using Plato.Ideas.Private.ViewProviders;
+using Plato.Docs.Drafts.ViewProviders;
+using Plato.Docs.Models;
 
-namespace Plato.Ideas.Private.Navigation
+namespace Plato.Docs.Drafts.Navigation
 {
     public class PostMenu : INavigationProvider
     {
@@ -33,74 +33,88 @@ namespace Plato.Ideas.Private.Navigation
             }
 
             // Ensure we are in the correct area
-            if (!String.Equals(areaName, "Plato.Ideas", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(areaName, "Plato.Docs", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get entity from builder context
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Idea)] as Idea;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Doc)] as Doc;
          
-            // Set isPrivate flag
-            var isPrivate = entity?.IsPrivate ?? false;
-
+            // Set isHidden flag
+            var isHidden = entity?.IsHidden ?? false;
+            var isPrivate = entity?.IsPrivate ?? true;
+            
             // Ensures we persist selection between post backs
             if (builder.ActionContext.HttpContext.Request.Method == "POST")
             {
                 foreach (string key in builder.ActionContext.HttpContext.Request.Form.Keys)
                 {
-                    if (key.StartsWith(IdeaViewProvider.HtmlName))
+                    if (key.StartsWith(ArticleViewProvider.HtmlName))
                     {
                         var values = builder.ActionContext.HttpContext.Request.Form[key];
                         foreach (var value in values)
                         {
+                            if (value.IndexOf("hidden", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isHidden = true;
+                            }
                             if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
                                 isPrivate = true;
                             }
                             if (value.IndexOf("public", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
+                                isHidden = false;
                                 isPrivate = false;
                             }
                         }
                     }
                 }
             }
-
+            
             // Build navigation
             builder
-                .Add(isPrivate ? T["Private"] : T["Public"], int.MinValue + 10, create => create
+                .Add(isHidden ? T["Hidden"] : T["Public"], int.MinValue + 10, create => create                                             
                         .View("SelectDropDown", new
                         {
                             model = new SelectDropDownViewModel()
                             {
-                                HtmlName = IdeaViewProvider.HtmlName,
-                                SelectedValue = isPrivate ? "private" : "public",
+                                HtmlName = ArticleViewProvider.HtmlName,
+                                SelectedValue = isHidden ? "hidden" : (isPrivate ? "private" : "public"),
                                 SelectDropDown = new SelectDropDown()
                                 {
-
                                     Title = "Visibility",
                                     InnerCssClass = "d-block",
                                     Items = new List<SelectDropDownItem>()
                                     {
                                         new SelectDropDownItem()
                                         {
-                                            Text = "Public",
-                                            Description = "This idea will be visible to everyone. Chose this option if your sharing public information and don't mind public comments",
-                                            Value = "public"
+                                            Text = "Private",
+                                            Description = "The doc will only be visible to you and those with permission to view private docs. Choose this option whilst your authoring your doc.",
+                                            Value = "private",
+                                            Permission = Drafts.Permissions.DraftArticleToPrivate
                                         },
                                         new SelectDropDownItem()
                                         {
-                                            Text = "Private",
-                                            Description = "This idea will only be visible to you and our team. Choose this option if your sharing private information.",
-                                            Value = "private"
+                                            Text = "Ready for Review",
+                                            Description = "The doc will be visible to those with permission to view hidden docs. Choose this option once your doc is ready for review.",
+                                            Value = "hidden",
+                                            Permission = Drafts.Permissions.DraftArticleToHidden
+                                        },
+                                        new SelectDropDownItem()
+                                        {
+                                            Text = "Public",
+                                            Description = "The doc will be visible to everyone. Chose this option once your ready to publish to the world",
+                                            Value = "public",
+                                            Permission = Drafts.Permissions.DraftArticleToPublic
                                         }
-
+                                      
                                     }
                                 }
                             }
                         })
-                    , new List<string>() { "nav-item", "text-muted" });
+                    , new List<string>() {"nav-item", "text-muted"});
 
         }
 

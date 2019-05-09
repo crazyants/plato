@@ -17,7 +17,6 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\Plato.Articles\Plato.Articles.csproj" />
-    <ProjectReference Include="..\Plato.Core\Plato.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

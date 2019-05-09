@@ -273,7 +273,7 @@ namespace Plato.Discuss.Controllers
 
                     // Indicate new entity to prevent entity update
                     // on first creation within our view provider
-                    newEntity.Response.IsNewTopic = true;
+                    newEntity.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
                     await _topicViewProvider.ProvideUpdateAsync(newEntity.Response, this);

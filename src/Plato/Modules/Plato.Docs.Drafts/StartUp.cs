@@ -2,18 +2,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Articles.Drafts.Handlers;
-using Plato.Articles.Drafts.Navigation;
+using Plato.Docs.Drafts.Handlers;
+using Plato.Docs.Drafts.Navigation;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Articles.Drafts.ViewProviders;
-using Plato.Articles.Models;
+using Plato.Docs.Drafts.ViewProviders;
+using Plato.Docs.Models;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Articles.Drafts
+namespace Plato.Docs.Drafts
 {
 
     public class Startup : StartupBase
@@ -36,8 +36,8 @@ namespace Plato.Articles.Drafts
             services.AddScoped<INavigationProvider, PostMenu>();
                  
             // Register view providers
-            services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
-            services.AddScoped<IViewProvider<Article>, ArticleViewProvider>();
+            services.AddScoped<IViewProviderManager<Doc>, ViewProviderManager<Doc>>();
+            services.AddScoped<IViewProvider<Doc>, ArticleViewProvider>();
           
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Articles.Models;
-using Plato.Core.ViewModels;
 using Plato.Entities.Stores;
-using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Drafts.ViewProviders
 {
