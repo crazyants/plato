@@ -599,14 +599,14 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     padding: 1rem 0 0 0;
 }
 
-.nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .nav li.nav-item {
+.nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav .nav .nav-item {
     display: block;
     width: 100%;
     flex-flow:column;
     flex-wrap: wrap;
 }
 
-.nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav li a.text-hidden .nav-text {
+.nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav a.text-hidden .nav-text {
     display: inline-block;
 }
 
@@ -652,7 +652,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         flex-wrap: nowrap;
     }
     
-    .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav li a.text-hidden .nav-text {
+    .nav-site > .navbar-expand-lg .navbar-collapse .navbar-nav a.text-hidden .nav-text {
         display: none;
     }
 
