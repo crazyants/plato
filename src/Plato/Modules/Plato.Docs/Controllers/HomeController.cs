@@ -386,7 +386,7 @@ namespace Plato.Docs.Controllers
             if (entity.IsHidden)
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
-                    Permissions.ViewPrivateDocs))
+                    Permissions.ViewHiddenDocs))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()

@@ -50,7 +50,7 @@ namespace Plato.Docs.Drafts.Navigation
             {
                 foreach (string key in builder.ActionContext.HttpContext.Request.Form.Keys)
                 {
-                    if (key.StartsWith(ArticleViewProvider.HtmlName))
+                    if (key.StartsWith(DocViewProvider.HtmlName))
                     {
                         var values = builder.ActionContext.HttpContext.Request.Form[key];
                         foreach (var value in values)
@@ -80,7 +80,7 @@ namespace Plato.Docs.Drafts.Navigation
                         {
                             model = new SelectDropDownViewModel()
                             {
-                                HtmlName = ArticleViewProvider.HtmlName,
+                                HtmlName = DocViewProvider.HtmlName,
                                 SelectedValue = isHidden ? "hidden" : (isPrivate ? "private" : "public"),
                                 SelectDropDown = new SelectDropDown()
                                 {
@@ -93,21 +93,21 @@ namespace Plato.Docs.Drafts.Navigation
                                             Text = "Private",
                                             Description = "The doc will only be visible to you and those with permission to view private docs. Choose this option whilst your authoring your doc.",
                                             Value = "private",
-                                            Permission = Drafts.Permissions.DraftArticleToPrivate
+                                            Permission = Drafts.Permissions.DraftDocToPrivate
                                         },
                                         new SelectDropDownItem()
                                         {
                                             Text = "Ready for Review",
                                             Description = "The doc will be visible to those with permission to view hidden docs. Choose this option once your doc is ready for review.",
                                             Value = "hidden",
-                                            Permission = Drafts.Permissions.DraftArticleToHidden
+                                            Permission = Drafts.Permissions.DraftDocToHidden
                                         },
                                         new SelectDropDownItem()
                                         {
                                             Text = "Public",
                                             Description = "The doc will be visible to everyone. Chose this option once your ready to publish to the world",
                                             Value = "public",
-                                            Permission = Drafts.Permissions.DraftArticleToPublic
+                                            Permission = Drafts.Permissions.DraftDocToPublic
                                         }
                                       
                                     }

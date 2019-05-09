@@ -362,7 +362,7 @@ namespace Plato.Issues.Controllers
             // Ensure we have permission to view private entities
             if (entity.IsHidden)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewPrivateIssues))
+                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewHiddenIssues))
                 {
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()

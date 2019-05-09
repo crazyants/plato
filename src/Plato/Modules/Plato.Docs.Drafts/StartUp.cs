@@ -37,7 +37,7 @@ namespace Plato.Docs.Drafts
                  
             // Register view providers
             services.AddScoped<IViewProviderManager<Doc>, ViewProviderManager<Doc>>();
-            services.AddScoped<IViewProvider<Doc>, ArticleViewProvider>();
+            services.AddScoped<IViewProvider<Doc>, DocViewProvider>();
           
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

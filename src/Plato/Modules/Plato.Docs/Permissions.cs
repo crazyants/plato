@@ -16,13 +16,13 @@ namespace Plato.Docs
             new Permission("EditOwnDocs", "Edit own docs");
 
         public static readonly Permission EditAnyDoc =
-            new Permission("EditAnyDoc", "Edit any docs");
+            new Permission("EditAnyDoc", "Edit any doc");
 
         public static readonly Permission SortOwnDocs =
             new Permission("SortOwnDocs", "Sort own docs");
 
         public static readonly Permission SortAnyDoc =
-            new Permission("SortAnyDoc", "Sort any docs");
+            new Permission("SortAnyDoc", "Sort any doc");
         
         public static readonly Permission EditOwnDocComments =
             new Permission("EditOwnDocComments", "Edit own comments");
@@ -43,7 +43,7 @@ namespace Plato.Docs
             new Permission("RestoreAnyDoc", "Restore any doc");
 
         public static readonly Permission ViewDeletedDocs =
-            new Permission("ViewDeletedDocs", "View deleted doc");
+            new Permission("ViewDeletedDocs", "View deleted docs");
         
         public static readonly Permission DeleteOwnDocComments =
             new Permission("DeleteOwnDocComments", "Delete own comments");
@@ -84,8 +84,11 @@ namespace Plato.Docs
         public static readonly Permission ShowDocs =
             new Permission("ShowDocs", "Unhide docs");
         
+        public static readonly Permission ViewHiddenDocs =
+            new Permission("ViewHiddenDocs", "View hidden docs");
+
         public static readonly Permission ViewPrivateDocs =
-            new Permission("ViewPrivateDocs", "View hidden docs");
+            new Permission("ViewPrivateDocs", "View private docs");
 
         public static readonly Permission HideDocComments =
             new Permission("HideDocComments", "Hide comments");
@@ -144,6 +147,7 @@ namespace Plato.Docs
                 UnlockDocs,
                 HideDocs,
                 ShowDocs,
+                ViewHiddenDocs,
                 ViewPrivateDocs,
                 HideDocComments,
                 ShowDocComments,
@@ -192,6 +196,7 @@ namespace Plato.Docs
                         UnlockDocs,
                         HideDocs,
                         ShowDocs,
+                        ViewHiddenDocs,
                         ViewPrivateDocs,
                         HideDocComments,
                         ShowDocComments,
@@ -246,6 +251,7 @@ namespace Plato.Docs
                         UnlockDocs,
                         HideDocs,
                         ShowDocs,
+                        ViewHiddenDocs,
                         ViewPrivateDocs,
                         HideDocComments,
                         ShowDocComments,

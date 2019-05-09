@@ -9,7 +9,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Docs.Drafts.ViewProviders
 {
-    public class ArticleViewProvider : BaseViewProvider<Doc>
+    public class DocViewProvider : BaseViewProvider<Doc>
     {
 
         public static string HtmlName = "published";
@@ -17,7 +17,7 @@ namespace Plato.Docs.Drafts.ViewProviders
         private readonly HttpRequest _request;
         private readonly IEntityStore<Doc> _entityStore;
 
-        public ArticleViewProvider(
+        public DocViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IEntityStore<Doc> entityStore)
         {

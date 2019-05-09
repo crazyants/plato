@@ -165,6 +165,13 @@ namespace Plato.Ideas.ViewComponents
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateIdeas))
                     {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenIdeas))
+                    {
                         q.HideHidden.True();
                     }
 

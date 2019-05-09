@@ -78,8 +78,11 @@ namespace Plato.Ideas
         public static readonly Permission ShowIdeas =
             new Permission("ShowIdeas", "Unhide ideas");
 
+        public static readonly Permission ViewHiddenIdeas =
+            new Permission("ViewHiddenIdeas", "View hidden ideas");
+
         public static readonly Permission ViewPrivateIdeas =
-            new Permission("ViewPrivateIdeas", "View hidden ideas");
+            new Permission("ViewPrivateIdeas", "View private ideas");
 
         public static readonly Permission HideIdeaComments =
             new Permission("HideIdeaComments", "Hide comments");
@@ -136,6 +139,7 @@ namespace Plato.Ideas
                 UnlockIdeas,
                 HideIdeas,
                 ShowIdeas,
+                ViewHiddenIdeas,
                 ViewPrivateIdeas,
                 HideIdeaComments,
                 ShowIdeaComments,
@@ -182,6 +186,7 @@ namespace Plato.Ideas
                         UnlockIdeas,
                         HideIdeas,
                         ShowIdeas,
+                        ViewHiddenIdeas,
                         ViewPrivateIdeas,
                         HideIdeaComments,
                         ShowIdeaComments,
@@ -238,6 +243,7 @@ namespace Plato.Ideas
                         UnlockIdeas,
                         HideIdeas,
                         ShowIdeas,
+                        ViewHiddenIdeas,
                         ViewPrivateIdeas,
                         HideIdeaComments,
                         ShowIdeaComments,

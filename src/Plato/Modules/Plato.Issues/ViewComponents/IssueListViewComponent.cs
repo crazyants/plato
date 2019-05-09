@@ -165,6 +165,13 @@ namespace Plato.Issues.ViewComponents
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateIssues))
                     {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenIssues))
+                    {
                         q.HideHidden.True();
                     }
 

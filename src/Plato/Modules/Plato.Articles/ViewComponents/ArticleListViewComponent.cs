@@ -165,6 +165,13 @@ namespace Plato.Articles.ViewComponents
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateArticles))
                     {
+                        q.HidePrivate.True();
+                    }
+                    
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenArticles))
+                    {
                         q.HideHidden.True();
                     }
 

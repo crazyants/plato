@@ -84,8 +84,11 @@ namespace Plato.Issues
         public static readonly Permission ShowIssues =
             new Permission("ShowIssues", "Unhide issues");
 
+        public static readonly Permission ViewHiddenIssues =
+            new Permission("ViewHiddenIssues", "View hidden issues");
+
         public static readonly Permission ViewPrivateIssues =
-            new Permission("ViewPrivateIssues", "View hidden issues");
+            new Permission("ViewPrivateIssues", "View private issues");
 
         public static readonly Permission HideIssueComments =
             new Permission("HideIssueComments", "Hide comments");
@@ -144,6 +147,7 @@ namespace Plato.Issues
                 OpenIssues,
                 HideIssues,
                 ShowIssues,
+                ViewHiddenIssues,
                 ViewPrivateIssues,
                 HideIssueComments,
                 ShowIssueComments,
@@ -192,6 +196,7 @@ namespace Plato.Issues
                         OpenIssues,
                         HideIssues,
                         ShowIssues,
+                        ViewHiddenIssues,
                         ViewPrivateIssues,
                         HideIssueComments,
                         ShowIssueComments,
@@ -244,6 +249,7 @@ namespace Plato.Issues
                         OpenIssues,
                         HideIssues,
                         ShowIssues,
+                        ViewHiddenIssues,
                         ViewPrivateIssues,
                         HideIssueComments,
                         ShowIssueComments,

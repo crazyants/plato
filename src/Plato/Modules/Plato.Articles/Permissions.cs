@@ -78,8 +78,11 @@ namespace Plato.Articles
         public static readonly Permission ShowArticles =
             new Permission("ShowArticles", "Unhide articles");
 
+        public static readonly Permission ViewHiddenArticles =
+            new Permission("ViewHiddenArticles", "View hidden articles");
+
         public static readonly Permission ViewPrivateArticles =
-            new Permission("ViewPrivateArticles", "View hidden articles");
+            new Permission("ViewPrivateArticles", "View private articles");
 
         public static readonly Permission HideArticleComments =
             new Permission("HideArticleComments", "Hide comments");
@@ -136,6 +139,7 @@ namespace Plato.Articles
                 UnlockArticles,
                 HideArticles,
                 ShowArticles,
+                ViewHiddenArticles,
                 ViewPrivateArticles,
                 HideArticleComments,
                 ShowArticleComments,
@@ -182,6 +186,7 @@ namespace Plato.Articles
                         UnlockArticles,
                         HideArticles,
                         ShowArticles,
+                        ViewHiddenArticles,
                         ViewPrivateArticles,
                         HideArticleComments,
                         ShowArticleComments,
@@ -229,6 +234,7 @@ namespace Plato.Articles
                         UnlockArticles,
                         HideArticles,
                         ShowArticles,
+                        ViewHiddenArticles,
                         ViewPrivateArticles,
                         HideArticleComments,
                         ShowArticleComments,

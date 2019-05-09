@@ -6,22 +6,22 @@ namespace Plato.Docs.Drafts
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission DraftArticleToPrivate =
-            new Permission("DraftArticleToPrivate", "Enable \"Private\"");
+        public static readonly Permission DraftDocToPrivate =
+            new Permission("DraftDocToPrivate", "Enable \"Private\"");
 
-        public static readonly Permission DraftArticleToHidden =
-            new Permission("DraftArticleToHidden", "Enable \"Ready for Review\"");
+        public static readonly Permission DraftDocToHidden =
+            new Permission("DraftDocToHidden", "Enable \"Ready for Review\"");
 
-        public static readonly Permission DraftArticleToPublic =
-            new Permission("DraftArticleToPublic", "Enable \"Public / Publish\"");
+        public static readonly Permission DraftDocToPublic =
+            new Permission("DraftDocToPublic", "Enable \"Public / Publish\"");
         
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                DraftArticleToPrivate,
-                DraftArticleToHidden,
-                DraftArticleToPublic
+                DraftDocToPrivate,
+                DraftDocToHidden,
+                DraftDocToPublic
             };
         }
 
@@ -34,9 +34,9 @@ namespace Plato.Docs.Drafts
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        DraftArticleToPrivate,
-                        DraftArticleToHidden,
-                        DraftArticleToPublic
+                        DraftDocToPrivate,
+                        DraftDocToHidden,
+                        DraftDocToPublic
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -44,9 +44,9 @@ namespace Plato.Docs.Drafts
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        DraftArticleToPrivate,
-                        DraftArticleToHidden,
-                        DraftArticleToPublic
+                        DraftDocToPrivate,
+                        DraftDocToHidden,
+                        DraftDocToPublic
                     }
                 }
             };
