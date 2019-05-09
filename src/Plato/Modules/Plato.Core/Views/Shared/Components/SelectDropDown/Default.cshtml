@@ -1,0 +1,56 @@
+﻿@model SelectDropDownViewModel
+@{
+    var toggleId = Model.HtmlName.ToLower() + "DropDown";
+    var selectedItem = Model.SelectDropDown.Items.FirstOrDefault(i => i.Value == Model.SelectedValue);
+}
+
+<div class="dropdown" data-provide="select-dropdown">
+    <a href="#" class="nav-link dropdown-toggle nav-item text-hidden text-muted" id="@toggleId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @if (selectedItem != null)
+        {
+            @T[selectedItem.Text]
+        }
+        else
+        {
+            @T[Model.SelectDropDown.Title]
+        }
+    </a>
+    <div class="@Model.SelectDropDown.CssClass" aria-labelledby="@toggleId">
+        <div class="@Model.SelectDropDown.InnerCssClass">
+            <div class="dropdown-header">
+                <h6>@T[Model.SelectDropDown.Title]</h6>
+            </div>
+            <hr class="m-0" />
+            <div class="btn-group d-block">
+                @foreach (var item in Model.SelectDropDown.Items)
+                {
+                    var isSelected = Model.SelectedValue == item.Value
+                        ? "checked=\"checked\"" : "";
+                    var collapseId = item.Value + "collapse";
+                    var collapseCss = item == selectedItem ? "w-100 collapse show" : "w-100 collapse";
+                    var inputId = Model.HtmlName + "-" + item.Value;
+                    <label for="@inputId" data-toggle="collapse" data-target="#@collapseId"  class="dropdown-item m-0 p-3 cursor-pointer" data-stop-propagation="true">
+                        @if (Model.SelectDropDown.Multiple)
+                        {
+                            <input data-nav-text="@T[item.Text]" type="checkbox" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
+                        }
+                        else
+                        {
+                            <input data-nav-text="@T[item.Text]" type="radio" @Html.Raw(isSelected) name="@Model.HtmlName" value="@item.Value" id="@inputId" autocomplete="off">
+                        }
+                        <i class="fal float-right check-icon"></i>
+                        <h6 class="d-inline m-0 p-0">@T[item.Text]</h6>
+                    </label>
+                    @if (!string.IsNullOrEmpty(item.Description))
+                     {
+                         <div class="@collapseCss" id="@collapseId">
+                             <div class="px-3 py-2">
+                                 @T[item.Description]
+                             </div>
+                         </div>
+                     }
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -3136,6 +3136,27 @@ $(function (win, doc, $) {
         var dataKey = "selectDropdown",
             dataIdKey = dataKey + "Id";
 
+        function getOffset($caller) {
+
+            function getOffsetFromParent($el, $parent) {
+
+                var x = 0,
+                    y = 0,
+                    el = $el[0],
+                    parent = $parent[0];
+                while (el && el !== parent && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+                    x += el.offsetLeft - el.scrollLeft + el.clientLeft;
+                    y += el.offsetTop - el.scrollTop + el.clientTop;
+                    el = el.offsetParent;
+                }
+                return { top: y, left: x };
+            }
+
+            return getOffsetFromParent($caller.find(".active"), $caller);
+
+        }
+
+
         var defaults = {
             event: "click",
             items: [], // our array of selected items
@@ -3156,7 +3177,7 @@ $(function (win, doc, $) {
             }, // provides a method to parse our itemTemplate with data returned from service url
             onShow: function($caller, $dropdown) {
 
-                $('input[type="radio"], input[type="checkbox"]').each(function() {
+                $caller.find('input[type="radio"], input[type="checkbox"]').each(function() {
                     if ($(this).is(":checked")) {
                         var $parent = $(this).parent(".dropdown-item");
                         if (!$parent.hasClass("active")) {
@@ -3164,6 +3185,34 @@ $(function (win, doc, $) {
                         }
                     }
                 });
+                
+                // Add initial text
+                var $a = $caller.find(".dropdown-toggle");
+                if ($a.length > 0) {
+                    $a.data("navTextOriginal", $a.text());
+                }
+
+                // Collapse
+                $caller.find('[data-toggle="collapse"]').each(function () {
+                    $(this).bind("click",
+                        function (e) {
+                            var $target = $($(this).attr("data-target"));
+                            $target.collapse("toggle");
+                        });
+                });
+                
+                // Scroll to active item
+                var $scrollable = $caller.find(".overflow-auto");
+                if ($scrollable.length > 0) {
+                    var offset = getOffset($caller),
+                        top = offset.top - $caller.height();
+                    $scrollable.scrollTo({
+                            offset: top,
+                            interval: 500
+                        },
+                        "go");
+                }
+            
 
             }, // triggers when the dropdown is shown
             onChange: function ($caller, $input, e) {
@@ -3173,21 +3222,65 @@ $(function (win, doc, $) {
 
                 // Clear active
                 $caller.find(".dropdown-item").removeClass("active");
-
+                
                 // Apply active
-                var $active = $input.parent(".dropdown-item");
-                if (!$active.hasClass("active")) {
-                    $active.addClass("active");
-                }
+                var items = [];
+                $caller.find('input[type="radio"], input[type="checkbox"]').each(function () {
 
-                // Optionally update .dropdown-toggle text upon input change
-                var text = $input.data("navText");
-                if (text) {
-                    var $a = $caller.find(".dropdown-toggle");
-                    if ($a.length > 0) {
-                        $a.html(text);
+                    // Label
+                    var $parent = $(this).parent(".dropdown-item");
+
+                    // If we have a collapse target ensure it's hidden
+                    if ($parent.attr("data-target")) {
+                        var $target = $($parent.attr("data-target"));
+                        if ($target.length > 0) {
+                            $target.collapse("hide");
+                        }
+                    }
+
+                    // Toggle active class
+                    if ($(this).is(":checked")) {
+                        if (!$parent.hasClass("active")) {
+                            $parent.addClass("active");
+                        }
+                        if ($(this).data("navText")) {
+                            items.push($(this).data("navText"));
+                        }
+                    } 
+
+                    // Scroll to first active item
+                    var $scrollable = $caller.find(".overflow-auto");
+                    if ($scrollable.length > 0) {
+                        var offset = getOffset($caller),
+                            top = offset.top - $caller.height();
+                        $scrollable.scrollTo({
+                                offset: top,
+                                interval: 500
+                            },
+                            "go");
+                    }
+
+                });
+
+                // Optionally update .dropdown-toggle text upon change
+                var s = "",
+                    text = "",
+                    $a = $caller.find(".dropdown-toggle");
+                
+                if (items.length > 0) {
+                    for (var i = 0; i < items.length; i++) {
+                        s += items[i];
+                        if (i < items.length - 1) {
+                            s += ", ";
+                        }
+                    }
+                    text = s;
+                } else {
+                    if ($a.data("navTextOriginal")) {
+                        text = $a.data("navTextOriginal");
                     }
                 }
+                $a.text(text);
 
             }, // triggers when a checkbox or radio button is changed within the dropdown
             onUpdated: null // triggers whenever our items array is rendered

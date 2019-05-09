@@ -13,6 +13,8 @@ namespace Plato.Discuss.Private.ViewProviders
     public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
+        public static string HtmlName = "visibility";
+
         private readonly IContextFacade _contextFacade;     
         private readonly IEntityStore<Topic> _entityStore;
         private readonly HttpRequest _request;
@@ -89,16 +91,16 @@ namespace Plato.Discuss.Private.ViewProviders
         bool GetIsPrivate()
         {
 
-            // Get the follow checkbox value
-            var htmlName = new EntityIsPrivateDropDownViewModel().HtmlName;
+            // Get the follow checkbox 
+       
             foreach (var key in _request.Form.Keys)
             {
-                if (key.StartsWith(htmlName))
+                if (key.StartsWith(HtmlName))
                 {
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
-                        if (value.Equals("private", StringComparison.OrdinalIgnoreCase))
+                        if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             return true;
                         }

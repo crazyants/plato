@@ -2,12 +2,10 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 using System.Collections.Generic;
+using Plato.Articles.Models;
 using Plato.Core.ViewModels;
-using Plato.Discuss.Models;
-using Plato.Discuss.Private.ViewProviders;
-using Plato.Entities.ViewModels;
 
-namespace Plato.Discuss.Private.Navigation
+namespace Plato.Articles.Drafts.Navigation
 {
     public class PostMenu : INavigationProvider
     {
@@ -35,46 +33,50 @@ namespace Plato.Discuss.Private.Navigation
             }
 
             // Ensure we are in the correct area
-            if (!String.Equals(areaName, "Plato.Discuss", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(areaName, "Plato.Articles", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get entity from builder context
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
          
-            // Set isPrivate flag
-            var isPrivate = entity?.IsPrivate ?? false;
+            // Set isHidden flag
+            var isHidden = entity?.IsHidden ?? true;
             
             // Build navigation
             builder
-                .Add(isPrivate ? T["Private"] : T["Public"], int.MinValue + 10, create => create                                             
+                .Add(isHidden ? T["Hidden"] : T["Public"], int.MinValue + 10, create => create                                             
                         .View("SelectDropDown", new
                         {
                             model = new SelectDropDownViewModel()
                             {
-                                HtmlName = TopicViewProvider.HtmlName,
-                                SelectedValue = isPrivate ? "private" : "public",
+                                SelectedValue = isHidden ? "private" : "public",
                                 SelectDropDown = new SelectDropDown()
                                 {
-                                    
-                                    Title = "Visibility",
+                                    Title = "Published?",
                                     InnerCssClass = "d-block",
                                     Items = new List<SelectDropDownItem>()
                                     {
                                         new SelectDropDownItem()
                                         {
-                                            Text = "Public",
-                                            Description = "This topic will be visible to everyone. Chose this option if your sharing public information and don't mind public replies",
-                                            Value = "public"
+                                            Text = "In Draft",
+                                            Description = "The article will only be visible to you and those with permission to view private articles. Choose this option whilst your authoring your article.",
+                                            Value = "private",
                                         },
                                         new SelectDropDownItem()
                                         {
-                                            Text = "Private",
-                                            Description = "This topic will only be visible to you and our team. Choose this option if your sharing private information.",
-                                            Value = "private"
+                                            Text = "Ready for Review",
+                                            Description = "The article will be visible to you and those with permission to view hidden articles. Choose this option once your article is ready for peer review.",
+                                            Value = "hidden",
+                                        },
+                                        new SelectDropDownItem()
+                                        {
+                                            Text = "Published",
+                                            Description = "The article will be visible to everyone. Chose this option once your ready to publish to the world",
+                                            Value = "public",
                                         }
-
+                                      
                                     }
                                 }
                             }
