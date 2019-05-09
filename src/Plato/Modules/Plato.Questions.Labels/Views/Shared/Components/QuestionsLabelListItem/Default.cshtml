@@ -12,7 +12,7 @@
         }
         @if (Model.Label.TotalEntities > 0)
         {
-            <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Questions"]">
+            <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Public Questions"]">
                 @Model.Label.TotalEntities.ToPrettyInt()
             </span>
         }
@@ -51,7 +51,7 @@ else
             }
             @if (Model.Label.TotalEntities > 0)
             {
-                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Questions"]">
+                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Public Questions"]">
                     @Model.Label.TotalEntities.ToPrettyInt()
                 </span>
             }

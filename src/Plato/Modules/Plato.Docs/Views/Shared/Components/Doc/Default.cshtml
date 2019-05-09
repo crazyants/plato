@@ -10,6 +10,17 @@
                 <h6 class="card-title d-inline-block">
                     @Model.Entity.Title
                 </h6>
+                @if (Model.Entity.IsPrivate)
+                {
+                    if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                    {
+                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you are the doc author"]">@T["Private"]</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you have permission to view private docs"]">@T["Private"]</span>
+                    }
+                }
                 @if (Model.Entity.IsHidden)
                 {
                     <span data-toggle="tooltip" title="@T["This doc is hidden and only visible as you have permission to view hidden docs"]" class="badge badge-primary">@T["Hidden"]</span>
@@ -25,7 +36,8 @@
                 <navigation name="doc"
                             model="Model.Entity"
                             class="nav navbar p-0 float-right"
-                            child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+                            child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" 
+                            child-ul-inner-css-class="min-w-200 max-h-250 overflow-auto" />
             </card-title>
             <card-body class="card-body-flush">
                 <div class="markdown-body m-3" data-provide="markdownBody">

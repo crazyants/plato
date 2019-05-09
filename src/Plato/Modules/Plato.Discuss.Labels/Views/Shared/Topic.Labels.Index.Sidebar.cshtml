@@ -19,7 +19,7 @@
                         <span class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                             @label.Name
                         </span>
-                        <span data-toggle="tooltip" title="@T["Topics"]" class="badge badge-info float-right">
+                        <span data-toggle="tooltip" title="@T["Public Topics"]" class="badge badge-info float-right">
                             @label.TotalEntities.ToPrettyInt()
                         </span>
                     </a>
@@ -29,7 +29,7 @@
         else
         {
             <div class="text-center my-4 text-muted">
-                @T["Labls can be helpful to identify the type of conversation."]
+                @T["Labels can be helpful to identify the type of conversation."]
                 <br /><br />
                 <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Admin" asp-route-action="Index" class="btn btn-secondary">
                     @T["Manage Labels"]

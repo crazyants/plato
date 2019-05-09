@@ -150,16 +150,18 @@ namespace Plato.Articles.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            // Get all categories & return views
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+            return default(IViewProviderResult);
+
+            //// Get all categories & return views
+            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(
-                View<CategoryListViewModel<Category>>("Article.Categories.Display.Sidebar", model =>
-                {
-                    model.Categories = categories?.Where(c => c.Id == entity.CategoryId);
-                    return model;
-                }).Zone("sidebar").Order(2)
-            );
+            //return Views(
+            //    View<CategoryListViewModel<Category>>("Article.Categories.Display.Sidebar", model =>
+            //    {
+            //        model.Categories = categories?.Where(c => c.Id == entity.CategoryId);
+            //        return model;
+            //    }).Zone("sidebar").Order(2)
+            //);
 
         }
         

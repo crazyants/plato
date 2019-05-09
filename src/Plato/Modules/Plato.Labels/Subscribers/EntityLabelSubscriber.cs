@@ -101,6 +101,10 @@ namespace Plato.Labels.Subscribers
                 .Select<EntityLabelQueryParams>(q =>
                 {
                     q.LabelId.Equals(label.Id);
+                    q.HidePrivate.True();
+                    q.HideHidden.True();
+                    q.HideSpam.True();
+                    q.HideDeleted.True();
                 })
                 .ToList();
             
@@ -148,6 +152,10 @@ namespace Plato.Labels.Subscribers
                 .Select<EntityLabelQueryParams>(q =>
                 {
                     q.LabelId.Equals(label.Id);
+                    q.HidePrivate.True();
+                    q.HideHidden.True();
+                    q.HideSpam.True();
+                    q.HideDeleted.True();
                 })
                 .ToList();
 

@@ -763,7 +763,7 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // deleted 
+            // IsDeleted 
             // -----------------
 
             // hide = true, show = false
@@ -783,7 +783,7 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // closed 
+            // IsClosed 
             // -----------------
 
             // hide = true, show = false
