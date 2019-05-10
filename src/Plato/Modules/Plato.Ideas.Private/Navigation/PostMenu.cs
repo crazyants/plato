@@ -76,7 +76,7 @@ namespace Plato.Ideas.Private.Navigation
                             {
                                 HtmlName = IdeaViewProvider.HtmlName,
                                 SelectedValue = isPrivate ? "private" : "public",
-                                SelectDropDown = new SelectDropDown()
+                                DropDown = new SelectDropDown()
                                 {
 
                                     Title = "Visibility",

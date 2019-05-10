@@ -82,7 +82,7 @@ namespace Plato.Docs.Drafts.Navigation
                             {
                                 HtmlName = DocViewProvider.HtmlName,
                                 SelectedValue = isHidden ? "hidden" : (isPrivate ? "private" : "public"),
-                                SelectDropDown = new SelectDropDown()
+                                DropDown = new SelectDropDown()
                                 {
                                     Title = "Visibility",
                                     InnerCssClass = "d-block",

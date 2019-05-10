@@ -6,16 +6,24 @@ namespace Plato.Discuss.Private
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        public static readonly Permission DiscussPrivateCreatePublic =
+            new Permission("DiscussPrivateAllowPublic", "Post public topics");
+
+        public static readonly Permission DiscussPrivateCreatePrivate =
+            new Permission("DiscussPrivateAllowPrivate", "Post private topics");
+
         public static readonly Permission DiscussPrivateToPublic =
-            new Permission("DiscussPrivateAllowPublic", "Enable \"Public\" topics");
+            new Permission("DiscussPrivateToPublic", "Convert topics to public");
 
         public static readonly Permission DiscussPrivateToPrivate =
-            new Permission("DiscussPrivateAllowPrivate", "Enable \"Private\" topics");
+            new Permission("DiscussPrivateToPrivate", "Convert topics to private");
         
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
+                DiscussPrivateCreatePublic,
+                DiscussPrivateCreatePrivate,
                 DiscussPrivateToPublic,
                 DiscussPrivateToPrivate
             };
@@ -30,6 +38,8 @@ namespace Plato.Discuss.Private
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
+                        DiscussPrivateCreatePublic,
+                        DiscussPrivateCreatePrivate,
                         DiscussPrivateToPublic,
                         DiscussPrivateToPrivate
                     }
@@ -39,6 +49,8 @@ namespace Plato.Discuss.Private
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
+                        DiscussPrivateCreatePublic,
+                        DiscussPrivateCreatePrivate,
                         DiscussPrivateToPublic,
                         DiscussPrivateToPrivate
                     }
@@ -48,6 +60,8 @@ namespace Plato.Discuss.Private
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
+                        DiscussPrivateCreatePublic,
+                        DiscussPrivateCreatePrivate,
                         DiscussPrivateToPublic,
                         DiscussPrivateToPrivate
                     }

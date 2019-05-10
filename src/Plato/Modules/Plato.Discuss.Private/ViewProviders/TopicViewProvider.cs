@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Discuss.Models;
+using Plato.Discuss.Private.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Private.ViewProviders
 {
@@ -15,6 +21,7 @@ namespace Plato.Discuss.Private.ViewProviders
 
         public static string HtmlName = "visibility";
 
+        private readonly IAuthorizationService _authorizationService;
         private readonly IContextFacade _contextFacade;     
         private readonly IEntityStore<Topic> _entityStore;
         private readonly HttpRequest _request;
@@ -22,11 +29,12 @@ namespace Plato.Discuss.Private.ViewProviders
         public TopicViewProvider(
             IContextFacade contextFacade,
             IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Topic> entityStore)
+            IEntityStore<Topic> entityStore,
+            IAuthorizationService authorizationService)
         {
             _contextFacade = contextFacade;       
             _entityStore = entityStore;
-        
+            _authorizationService = authorizationService;
             _request = httpContextAccessor.HttpContext.Request;
         }
         
@@ -41,9 +49,90 @@ namespace Plato.Discuss.Private.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext context)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            // We always need an entity
+            if (entity == null)
+            {
+                return default(IViewProviderResult);
+            }
+
+            // Set isPrivate flag
+            var isPrivate = entity.Id > 0 && entity.IsPrivate;
+            
+            // Ensures we persist selection between post backs
+            if (context.Controller.HttpContext.Request.Method == "POST")
+            {
+                foreach (string key in context.Controller.HttpContext.Request.Form.Keys)
+                {
+                    if (key.StartsWith(TopicViewProvider.HtmlName))
+                    {
+                        var values = context.Controller.HttpContext.Request.Form[key];
+                        foreach (var value in values)
+                        {
+                            if (value.IndexOf("private", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isPrivate = true;
+                            }
+                            if (value.IndexOf("public", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                isPrivate = false;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Build dropdown view model
+            var selectedValue = isPrivate ? "private" : "public";
+            var viewModel = new VisibilityDropDownViewModel()
+            {
+                HtmlName = HtmlName,
+                SelectedValue = selectedValue,
+                DropDown = new SelectDropDown()
+                {
+                    Title = "Visibility",
+                    InnerCssClass = "d-block",
+                    Items = new List<SelectDropDownItem>()
+                    {
+                        new SelectDropDownItem()
+                        {
+                            Text = "Public",
+                            Description = "This topic will be visible to everyone. Chose this option if your sharing public information and don't mind public replies",
+                            Value = "public",
+                            Checked = selectedValue == "public" ? true : false,
+                            Permission = entity.Id == 0
+                                ? Permissions.DiscussPrivateCreatePublic
+                                : Permissions.DiscussPrivateToPublic
+                        },
+                        new SelectDropDownItem()
+                        {
+                            Text = "Private",
+                            Description = "This topic will only be visible to you and our team. Choose this option if your sharing private information.",
+                            Value = "private",
+                            Checked = selectedValue == "private" ? true : false,
+                            Permission = entity.Id == 0
+                                ? Permissions.DiscussPrivateCreatePrivate
+                                : Permissions.DiscussPrivateToPrivate
+                        }
+
+                    }
+                }
+            };
+
+            // For new entities adjust model to select first appropriate option based on current permissions is selected
+            if (entity.Id == 0)
+            {
+                await viewModel.BuildAsync(_authorizationService, context.Controller.User);
+            }
+
+            // Add  dropdown view model to context for use within navigation provider
+            context.Controller.HttpContext.Items[typeof(VisibilityDropDownViewModel)] = viewModel;
+
+            // No view modifications 
+            return default(IViewProviderResult);
+
         }
 
         public override async Task ComposeTypeAsync(Topic question, IUpdateModel updater)
@@ -87,7 +176,7 @@ namespace Plato.Discuss.Private.ViewProviders
             return await BuildEditAsync(model, context);
 
         }
-
+        
         bool GetIsPrivate()
         {
 

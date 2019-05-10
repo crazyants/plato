@@ -3198,8 +3198,12 @@ $(function (win, doc, $) {
                         function (e) {
                             // If not disabled toggle collapse
                             if (!$(this).attr("disabled")) {
-                                var $target = $($(this).attr("data-target"));
-                                $target.collapse("toggle");
+                                if ($(this).attr("data-target")) {
+                                    var $target = $($(this).attr("data-target"));
+                                    if ($target.length > 0) {
+                                        $target.collapse("toggle");
+                                    }
+                                }
                             }
                         });
                 });
@@ -3226,8 +3230,9 @@ $(function (win, doc, $) {
                 // Label
                 var $label = $input.parent(".dropdown-item");
 
-                // Accomodate for disabled labels
-                if ($input.attr("disabled")) {
+                // Accomodate for disabled elements
+                if ($input.attr("disabled") || $label.attr("disabled")) {
+                    console.log("return");
                     return;
                 }
            
@@ -3347,6 +3352,9 @@ $(function (win, doc, $) {
                 $dropdown.find("label").click(function (e) {
                     if ($(this).data("stopPropagation")) {
                         e.stopPropagation();
+                    }
+                    if ($(this).data("preventDefault")) {
+                        e.preventDefault();
                     }
                 });
 

@@ -6,19 +6,31 @@ namespace Plato.Articles.Drafts
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        public static readonly Permission DraftArticleCreatePrivate =
+            new Permission("DraftArticleCreatePrivate", "Create private articles");
+
+        public static readonly Permission DraftArticleCreateHidden =
+            new Permission("DraftArticleCreateHidden", "Create hidden articles");
+
+        public static readonly Permission DraftArticleCreatePublic =
+            new Permission("DraftArticleCreatePublic", "Create public articles");
+
         public static readonly Permission DraftArticleToPrivate =
-            new Permission("DraftArticleToPrivate", "Enable \"Private\"");
+            new Permission("DraftArticleToPrivate", "Convert articles to private");
 
         public static readonly Permission DraftArticleToHidden =
-            new Permission("DraftArticleToHidden", "Enable \"Ready for Review\"");
+            new Permission("DraftArticleToHidden", "Convert articles to hidden");
 
         public static readonly Permission DraftArticleToPublic =
-            new Permission("DraftArticleToPublic", "Enable \"Public / Publish\"");
-        
+            new Permission("DraftArticleToPublic", "Convert articles to public");
+
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
+                DraftArticleCreatePrivate,
+                DraftArticleCreateHidden,
+                DraftArticleCreatePublic,
                 DraftArticleToPrivate,
                 DraftArticleToHidden,
                 DraftArticleToPublic
@@ -34,6 +46,9 @@ namespace Plato.Articles.Drafts
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
+                        DraftArticleCreatePrivate,
+                        DraftArticleCreateHidden,
+                        DraftArticleCreatePublic,
                         DraftArticleToPrivate,
                         DraftArticleToHidden,
                         DraftArticleToPublic
@@ -44,6 +59,9 @@ namespace Plato.Articles.Drafts
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
+                        DraftArticleCreatePrivate,
+                        DraftArticleCreateHidden,
+                        DraftArticleCreatePublic,
                         DraftArticleToPrivate,
                         DraftArticleToHidden,
                         DraftArticleToPublic

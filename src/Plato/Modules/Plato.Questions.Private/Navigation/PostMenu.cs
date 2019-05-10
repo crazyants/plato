@@ -78,7 +78,7 @@ namespace Plato.Questions.Private.Navigation
                             {
                                 HtmlName = QuestionViewProvider.HtmlName,
                                 SelectedValue = isPrivate ? "private" : "public",
-                                SelectDropDown = new SelectDropDown()
+                                DropDown = new SelectDropDown()
                                 {
 
                                     Title = "Visibility",
