@@ -6,34 +6,36 @@ namespace Plato.Articles.Drafts
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission DraftArticleCreatePrivate =
+
+        public static readonly Permission ArticlesDraftCreatePrivate =
             new Permission("DraftArticleCreatePrivate", "Create private articles");
 
-        public static readonly Permission DraftArticleCreateHidden =
+        public static readonly Permission ArticlesDraftCreateHidden =
             new Permission("DraftArticleCreateHidden", "Create hidden articles");
 
-        public static readonly Permission DraftArticleCreatePublic =
+        public static readonly Permission ArticlesDraftCreatePublic =
             new Permission("DraftArticleCreatePublic", "Create public articles");
 
-        public static readonly Permission DraftArticleToPrivate =
+        public static readonly Permission ArticlesDraftToPrivate =
             new Permission("DraftArticleToPrivate", "Convert articles to private");
 
-        public static readonly Permission DraftArticleToHidden =
+        public static readonly Permission ArticlesDraftToHidden =
             new Permission("DraftArticleToHidden", "Convert articles to hidden");
 
-        public static readonly Permission DraftArticleToPublic =
+        public static readonly Permission ArticlesDraftToPublic =
             new Permission("DraftArticleToPublic", "Convert articles to public");
+
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                DraftArticleCreatePrivate,
-                DraftArticleCreateHidden,
-                DraftArticleCreatePublic,
-                DraftArticleToPrivate,
-                DraftArticleToHidden,
-                DraftArticleToPublic
+                ArticlesDraftCreatePrivate,
+                ArticlesDraftCreateHidden,
+                ArticlesDraftCreatePublic,
+                ArticlesDraftToPrivate,
+                ArticlesDraftToHidden,
+                ArticlesDraftToPublic
             };
         }
 
@@ -46,12 +48,12 @@ namespace Plato.Articles.Drafts
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        DraftArticleCreatePrivate,
-                        DraftArticleCreateHidden,
-                        DraftArticleCreatePublic,
-                        DraftArticleToPrivate,
-                        DraftArticleToHidden,
-                        DraftArticleToPublic
+                        ArticlesDraftCreatePrivate,
+                        ArticlesDraftCreateHidden,
+                        ArticlesDraftCreatePublic,
+                        ArticlesDraftToPrivate,
+                        ArticlesDraftToHidden,
+                        ArticlesDraftToPublic
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -59,12 +61,12 @@ namespace Plato.Articles.Drafts
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        DraftArticleCreatePrivate,
-                        DraftArticleCreateHidden,
-                        DraftArticleCreatePublic,
-                        DraftArticleToPrivate,
-                        DraftArticleToHidden,
-                        DraftArticleToPublic
+                        ArticlesDraftCreatePrivate,
+                        ArticlesDraftCreateHidden,
+                        ArticlesDraftCreatePublic,
+                        ArticlesDraftToPrivate,
+                        ArticlesDraftToHidden,
+                        ArticlesDraftToPublic
                     }
                 }
             };

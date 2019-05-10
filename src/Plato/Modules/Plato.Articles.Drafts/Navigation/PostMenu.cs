@@ -23,8 +23,7 @@ namespace Plato.Articles.Drafts.Navigation
             {
                 return;
             }
-
-
+            
             // Ensure we have a dropdown view model provided via our view provider
             if (!(builder.ActionContext.HttpContext.Items[typeof(VisibilityDropDownViewModel)] is VisibilityDropDownViewModel dropdown))
             {

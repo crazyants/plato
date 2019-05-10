@@ -18,14 +18,14 @@ namespace Plato.Internal.Navigation.Abstractions
         public virtual SelectDropDown DropDown { get; set; }
 
 
-        public virtual async Task BuildAsync(
+        public virtual async Task AdjustInitiallySelected(
             IAuthorizationService authorizationService,
             ClaimsPrincipal claimsPrincipal)
         {
-            await BuildAsync(authorizationService, null, claimsPrincipal);
+            await AdjustInitiallySelected(authorizationService, null, claimsPrincipal);
         }
 
-        public virtual async Task BuildAsync(
+        public virtual async Task AdjustInitiallySelected(
             IAuthorizationService authorizationService,
             object resource,
             ClaimsPrincipal claimsPrincipal)

@@ -121,10 +121,11 @@ namespace Plato.Discuss.Private.ViewProviders
                 }
             };
 
-            // For new entities adjust model to select first appropriate option based on current permissions is selected
+            // For new entities adjust model to ensure the first appropriate
+            // option is selected based on our current permissions 
             if (entity.Id == 0)
             {
-                await viewModel.BuildAsync(_authorizationService, context.Controller.User);
+                await viewModel.AdjustInitiallySelected(_authorizationService, context.Controller.User);
             }
 
             // Add  dropdown view model to context for use within navigation provider

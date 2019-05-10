@@ -50,11 +50,15 @@ namespace Plato.Articles.Drafts.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            // Set isPrivate flag
-            //var isPrivate = entity.Id > 0 && entity.IsPrivate;
+            // Initial values
+            var isHidden = entity.IsHidden;
+            var isPrivate = entity.IsPrivate;
 
-            var isHidden = entity.Id > 0 && entity.IsHidden;
-            var isPrivate = entity.Id > 0 && entity.IsPrivate;
+            if (entity.Id == 0)
+            {
+                isHidden = false;
+                isPrivate = true;
+            }
 
             // Ensures we persist selection between post backs
             if (context.Controller.HttpContext.Request.Method == "POST")
@@ -81,10 +85,11 @@ namespace Plato.Articles.Drafts.ViewProviders
             }
 
             // Build dropdown view model
+            var selectedValue = isHidden ? "hidden" : (isPrivate ? "private" : "public");
             var viewModel = new VisibilityDropDownViewModel()
             {
                 HtmlName = ArticleViewProvider.HtmlName,
-                SelectedValue = isHidden ? "hidden" : (isPrivate ? "private" : "public"),
+                SelectedValue = selectedValue,
                 DropDown = new SelectDropDown()
                 {
                     Title = "Visibility",
@@ -97,7 +102,10 @@ namespace Plato.Articles.Drafts.ViewProviders
                             Description =
                                 "The article will only be visible to you and those with permission to view private articles. Choose this option whilst your authoring your article.",
                             Value = "private",
-                            Permission = Drafts.Permissions.DraftArticleToPrivate
+                            Checked = selectedValue == "private" ? true : false,
+                            Permission = entity.Id == 0 
+                                ? Permissions.ArticlesDraftCreatePrivate
+                                : Permissions.ArticlesDraftToPrivate
                         },
                         new SelectDropDownItem()
                         {
@@ -105,7 +113,10 @@ namespace Plato.Articles.Drafts.ViewProviders
                             Description =
                                 "The article will be visible to those with permission to view hidden articles. Choose this option once your article is ready for review.",
                             Value = "hidden",
-                            Permission = Drafts.Permissions.DraftArticleToHidden
+                            Checked = selectedValue == "hidden" ? true : false,
+                            Permission = entity.Id == 0
+                                ? Permissions.ArticlesDraftCreateHidden
+                                : Permissions.ArticlesDraftToHidden
                         },
                         new SelectDropDownItem()
                         {
@@ -113,17 +124,21 @@ namespace Plato.Articles.Drafts.ViewProviders
                             Description =
                                 "The article will be visible to everyone. Chose this option once your ready to publish to the world",
                             Value = "public",
-                            Permission = Drafts.Permissions.DraftArticleToPublic
+                            Checked = selectedValue == "public" ? true : false,
+                            Permission = entity.Id == 0
+                                ? Permissions.ArticlesDraftCreatePublic
+                                : Permissions.ArticlesDraftToPublic
                         }
 
                     }
                 }
             };
 
-            // For new entities adjust model to select first appropriate option based on current permissions is selected
+            // For new entities adjust model to ensure the first appropriate
+            // option is selected based on our current permissions 
             if (entity.Id == 0)
             {
-                await viewModel.BuildAsync(_authorizationService, context.Controller.User);
+                await viewModel.AdjustInitiallySelected(_authorizationService, context.Controller.User);
             }
 
             // Add  dropdown view model to context for use within navigation provider

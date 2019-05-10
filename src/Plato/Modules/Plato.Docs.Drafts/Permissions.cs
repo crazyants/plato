@@ -6,22 +6,35 @@ namespace Plato.Docs.Drafts
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission DraftDocToPrivate =
-            new Permission("DraftDocToPrivate", "Enable \"Private\"");
+        public static readonly Permission DocsDraftCreatePrivate =
+            new Permission("DocsDraftCreatePrivate", "Create private docs");
 
-        public static readonly Permission DraftDocToHidden =
-            new Permission("DraftDocToHidden", "Enable \"Ready for Review\"");
+        public static readonly Permission DocsDraftCreateHidden =
+            new Permission("DocsDraftCreateHidden", "Create hidden docs");
 
-        public static readonly Permission DraftDocToPublic =
-            new Permission("DraftDocToPublic", "Enable \"Public / Publish\"");
-        
+        public static readonly Permission DocsDraftCreatePublic =
+            new Permission("DocsDraftCreatePublic", "Create public docs");
+
+        public static readonly Permission DocsDraftToPrivate =
+            new Permission("DocsDraftToPrivate", "Convert docs to private");
+
+        public static readonly Permission DocsDraftToHidden =
+            new Permission("DocsDraftToHidden", "Convert docs to hidden");
+
+        public static readonly Permission DocsDraftToPublic =
+            new Permission("DocsDraftToPublic", "Convert docs to public");
+
+
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                DraftDocToPrivate,
-                DraftDocToHidden,
-                DraftDocToPublic
+                DocsDraftCreatePrivate,
+                DocsDraftCreateHidden,
+                DocsDraftCreatePublic,
+                DocsDraftToPrivate,
+                DocsDraftToHidden,
+                DocsDraftToPublic
             };
         }
 
@@ -34,9 +47,12 @@ namespace Plato.Docs.Drafts
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        DraftDocToPrivate,
-                        DraftDocToHidden,
-                        DraftDocToPublic
+                        DocsDraftCreatePrivate,
+                        DocsDraftCreateHidden,
+                        DocsDraftCreatePublic,
+                        DocsDraftToPrivate,
+                        DocsDraftToHidden,
+                        DocsDraftToPublic
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -44,9 +60,12 @@ namespace Plato.Docs.Drafts
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        DraftDocToPrivate,
-                        DraftDocToHidden,
-                        DraftDocToPublic
+                        DocsDraftCreatePrivate,
+                        DocsDraftCreateHidden,
+                        DocsDraftCreatePublic,
+                        DocsDraftToPrivate,
+                        DocsDraftToHidden,
+                        DocsDraftToPublic
                     }
                 }
             };
