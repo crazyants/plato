@@ -1,0 +1,69 @@
+﻿@model ReportOptions
+
+<div class="row">
+    <div class="col-lg-4 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("EntityViewsByDateChart", new
+        {
+            options = @Model,
+            chart = new ChartOptions()
+            {
+                Title = "Doc Views"
+            }
+        }))
+
+    </div>
+    <div class="col-lg-4 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("NewEntitiesByDateChart", new
+        {
+            options = @Model,
+            chart = new ChartOptions()
+            {
+                Title = "New Docs"
+            }
+        }))
+
+    </div>
+    <div class="col-lg-4 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("NewRepliesByDateChart", new
+        {
+            options = @Model,
+            chart = new ChartOptions()
+            {
+                Title = "New Comments"
+            }
+        }))
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("EntityViewsTopList", new
+        {
+            options = @Model,
+            chart = new ChartOptions()
+            {
+                Title = "Top Docs"
+            }
+        }))
+
+    </div>
+
+    <div class="col-lg-6 col-md-12 col-sm-12">
+
+        @await DisplayAsync(new View("EntityRepliesTopList", new
+        {
+            options = @Model,
+            chart = new ChartOptions()
+            {
+                Title = "Popular Docs"
+            }
+        }))
+
+    </div>
+
+</div>
