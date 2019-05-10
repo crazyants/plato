@@ -87,13 +87,15 @@ namespace Plato.Discuss.Private.Navigation
                                         {
                                             Text = "Public",
                                             Description = "This topic will be visible to everyone. Chose this option if your sharing public information and don't mind public replies",
-                                            Value = "public"
+                                            Value = "public",
+                                            Permission = Permissions.DiscussPrivateToPublic
                                         },
                                         new SelectDropDownItem()
                                         {
                                             Text = "Private",
                                             Description = "This topic will only be visible to you and our team. Choose this option if your sharing private information.",
-                                            Value = "private"
+                                            Value = "private",
+                                            Permission = Permissions.DiscussPrivateToPrivate
                                         }
 
                                     }
