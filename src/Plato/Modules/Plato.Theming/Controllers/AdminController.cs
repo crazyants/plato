@@ -13,6 +13,7 @@ using Plato.Theming.Models;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Theming.Abstractions;
@@ -33,6 +34,8 @@ namespace Plato.Theming.Controllers
         private readonly IThemeCreator _themeCreator;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IAlerter _alerter;
+        private readonly IPlatoHost _platoHost;
+        private readonly IShellSettings _shellSettings;
 
         public IHtmlLocalizer T { get; }
 
@@ -50,7 +53,9 @@ namespace Plato.Theming.Controllers
             IAlerter alerter,
             ISitesFolder sitesFolder, 
             IPlatoFileSystem fileSystem,
-            ISiteSettingsStore siteSettingsStore)
+            ISiteSettingsStore siteSettingsStore,
+            IPlatoHost platoHost,
+            IShellSettings shellSettings)
         {
 
             _breadCrumbManager = breadCrumbManager;
@@ -61,6 +66,8 @@ namespace Plato.Theming.Controllers
             _viewProvider = viewProvider;
             _fileSystem = fileSystem;
             _siteSettingsStore = siteSettingsStore;
+            _platoHost = platoHost;
+            _shellSettings = shellSettings;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -333,10 +340,15 @@ namespace Plato.Theming.Controllers
 
                 // Clear theme, ensures we fallback to our default theme
                 settings.Theme = "";
-
+                
                 // Save settings
-                await _siteSettingsStore.SaveAsync(settings);
-
+                var updatedSettings = await _siteSettingsStore.SaveAsync(settings);
+                if (updatedSettings != null)
+                {
+                    // Recycle shell context to ensure changes take effect
+                    _platoHost.RecycleShellContext(_shellSettings);
+                }
+                
             }
 
             // Delete the theme from the file system

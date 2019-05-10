@@ -5,7 +5,21 @@
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title">
+        
+        @if (Model.File?.Parent != null)
+        {
+            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.ThemeId" asp-route-path="@Model.File?.Parent.RelativePath" class="btn btn-sm btn-secondary mr-2" data-provide="tooltip" title="@T["Parent Directory"]">
+                <i class="fal fa-level-up fa-flip-horizontal"></i>
+            </a>
+        }
+        else
+        {
+            <a asp-route-controller="Admin" asp-route-action="Index" class="btn btn-sm btn-secondary mr-2" data-provide="tooltip" title="@T["Parent Directory"]">
+                <i class="fal fa-level-up fa-flip-horizontal"></i>
+            </a>
+        }
+
+        <h6 class="card-title d-inline-block">
             @if (Model.File != null)
             {
                 @Model.File.Name
@@ -28,23 +42,7 @@
         
         <ul class="list-group list-group-flush list-group-hover">
 
-            @if (Model.File?.Parent != null)
-            {
-                <li class="list-group-item">
-                    <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.ThemeId" asp-route-path="@Model.File?.Parent.RelativePath" class="btn btn-sm btn-secondary" data-provide="tooltip" title="@T["Parent Directory"]">
-                        <i class="fal fa-level-up fa-flip-horizontal"></i>
-                    </a>
-                </li>
-            }
-            else
-            {
-
-                <li class="list-group-item">
-                    <a asp-route-controller="Admin" asp-route-action="Index" class="btn btn-sm btn-secondary" data-provide="tooltip" title="@T["Parent Directory"]">
-                        <i class="fal fa-level-up fa-flip-horizontal"></i>
-                    </a>
-                </li>
-            }
+        
 
             @if (Model.Files.Any())
             {
