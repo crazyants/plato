@@ -19,20 +19,16 @@ namespace Plato.Questions.Private.ViewProviders
         public static string HtmlName = "visibility";
 
         private readonly IAuthorizationService _authorizationService;
-        private readonly IContextFacade _contextFacade;     
         private readonly IEntityStore<Question> _entityStore;
         private readonly HttpRequest _request;
  
         public QuestionViewProvider(
-            IContextFacade contextFacade,
             IHttpContextAccessor httpContextAccessor,
             IEntityStore<Question> entityStore,
             IAuthorizationService authorizationService)
         {
-            _contextFacade = contextFacade;       
             _entityStore = entityStore;
             _authorizationService = authorizationService;
-
             _request = httpContextAccessor.HttpContext.Request;
         }
         
@@ -132,7 +128,6 @@ namespace Plato.Questions.Private.ViewProviders
             // No view modifications 
             return default(IViewProviderResult);
             
-
         }
 
         public override async Task ComposeTypeAsync(Question question, IUpdateModel updater)
