@@ -1003,7 +1003,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 
-.tree .tree-row { display: table; padding: 0.50rem 1rem; }
+.tree .tree-row { display: table; width: 100%; padding: 0.50rem 1rem; }
 .tree .tree-left { width: 5%; display: table-cell; vertical-align: top; }
 .tree .tree-body { width: 90%; display: table-cell; vertical-align: middle; }
 .tree .tree-right { width: 5%; display: table-cell; vertical-align: top; }

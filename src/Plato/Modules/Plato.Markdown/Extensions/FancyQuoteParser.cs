@@ -91,7 +91,7 @@ namespace Plato.Markdown.Extensions
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
             };
 
-            // If we have a css class ensure it's allowed
+            // If we found a css class ensure it's allowed
             if (!string.IsNullOrEmpty(cssClass))
             {
                 var validCss = cssClass.ToLower();
