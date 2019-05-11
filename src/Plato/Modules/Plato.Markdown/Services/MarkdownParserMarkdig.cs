@@ -1,9 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Renderers;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
+using Plato.Markdown.Extensions;
 
 namespace Plato.Markdown.Services
 {
@@ -73,6 +77,7 @@ namespace Plato.Markdown.Services
                     .UseTaskLists()
                     .UseCustomContainers()
                     .UseGenericAttributes()
+                    .UseFancyQuotes()
                     .DisableHtml();
 
                 //builder = builder.UseSmartyPants();            
@@ -82,8 +87,7 @@ namespace Plato.Markdown.Services
 
                 return builder;
             }
-
-
+            
             // let the passed in action configure the builder
             builder = new MarkdownPipelineBuilder();
             config.Invoke(builder);
@@ -99,7 +103,17 @@ namespace Plato.Markdown.Services
             return new HtmlRenderer(writer);
         }
 
+
+
+
+
         #endregion
+
+
+        // --------------------------------
+
+
+
 
     }
 }

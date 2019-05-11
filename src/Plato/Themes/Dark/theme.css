@@ -71,9 +71,18 @@
 
 .markdown-body pre {
     background-color: rgba(50, 50, 50, 0.25);
-    border: 1px solid rgba(50, 50, 50, 0.50);
+    border: 1px solid rgba(50, 50, 50, 0.5);
     color: inherit;
 }
+
+/* block quotes */
+
+.markdown-body blockquote.primary{ border: 1px solid #262626; border-left: 4px solid #007bff; background: #1a1a1a; }
+.markdown-body blockquote.secondary { border: 1px solid #262626; border-left: 4px solid #ccc; background: #1a1a1a; }
+.markdown-body blockquote.success { border: 1px solid #262626; border-left: 4px solid #08B735; background: #1a1a1a; }
+.markdown-body blockquote.info { border: 1px solid #262626; border-left: 4px solid #299E97; background: #1a1a1a; }
+.markdown-body blockquote.warning { border: 1px solid #262626; border-left: 4px solid #F6A800; background: #1a1a1a; }
+.markdown-body blockquote.danger { border: 1px solid #262626; border-left: 4px solid red; background: #1a1a1a; }
 
 /* ------------------- */
 /* Icon selection */

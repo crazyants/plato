@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
@@ -54,12 +55,25 @@ namespace Plato.Internal.Hosting.Web.Middleware
                     {
                         lock (shellSettings)
                         {
-                            // activate the tanant
+                            // Activate the tanant
                             if (!shellContext.IsActivated)
                             {
+
                                 // BuildPipeline ensures we always rebuild routes for new tennets
                                 httpContext.Items["BuildPipeline"] = true;
                                 shellContext.IsActivated = true;
+                                
+                                // Activate message broker subscriptions
+                                var subscribers = scope.ServiceProvider.GetServices<IBrokerSubscriber>();
+                                foreach (var subscriber in subscribers)
+                                {
+                                    subscriber.Subscribe();
+                                }
+
+                                // Activate tasks 
+                                var backgroundTaskManager = scope.ServiceProvider.GetService<IBackgroundTaskManager>();
+                                backgroundTaskManager?.StartTasks();
+
                             }
                         }
                     }
@@ -68,6 +82,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
 
                     var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
                     hasPendingTasks = deferredTaskEngine?.HasPendingTasks ?? false;
+                
 
                 }
 

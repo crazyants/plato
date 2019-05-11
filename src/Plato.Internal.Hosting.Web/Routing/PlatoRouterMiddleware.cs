@@ -92,6 +92,7 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             var serviceProvider = httpContext.RequestServices;
             var startUps = serviceProvider.GetServices<IStartup>();
+            //var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
             var appBuilder = new ApplicationBuilder(serviceProvider);
 
@@ -115,7 +116,17 @@ namespace Plato.Internal.Hosting.Web.Routing
             {
                 startup.Configure(appBuilder, prefixedRouteBuilder, serviceProvider);
             }
-                 
+            
+            //// Activate message broker subscriptions
+            //foreach (var subscriber in subscribers)
+            //{
+            //    subscriber.Subscribe();
+            //}
+
+            //// Activate tasks 
+            //var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
+            //backgroundTaskManager?.StartTasks();
+            
             //// Add the default template route to each shell 
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,
@@ -174,17 +185,6 @@ namespace Plato.Internal.Hosting.Web.Routing
                 options.BaseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}";
             });
         
-            // Activate all registered message broker subscriptions
-            var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
-            foreach (var subscriber in subscribers)
-            {
-                subscriber?.Subscribe();
-            }
-            
-            // Activate all tasks 
-            var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
-            backgroundTaskManager?.StartTasks();
-
             // Build & return new pipeline
             var pipeline = appBuilder.Build();
             return pipeline;

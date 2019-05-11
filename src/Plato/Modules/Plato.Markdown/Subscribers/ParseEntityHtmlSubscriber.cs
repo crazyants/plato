@@ -22,6 +22,7 @@ namespace Plato.Markdown.Subscribers
         
         public void Subscribe()
         {
+
             // Add a subscription to convert markdown to html
             _broker.Sub<string>(new MessageOptions()
             {

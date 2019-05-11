@@ -197,9 +197,11 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .markdown-body blockquote {
     display: block;
     font-size: 100%;
-    padding: 0.25rem 0.75rem;
+    padding: 0.75rem;
     position: relative;
 }
+
+.markdown-body blockquote p:last-child { margin-bottom: 0; }
 
 .markdown-body blockquote footer {
     display: block;
@@ -207,13 +209,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     padding: 0 0 0.25rem 0;
     font-size: 0.875em;
 }
-
-.markdown-body blockquote.primary{ border: 1px solid #D9DDE7; border-left: 4px solid #007bff; background: #F3F7FF; }
-.markdown-body blockquote.secondary { border: 1px solid #eee; border-left: 4px solid #ccc; background: #f8f8f8; }
-.markdown-body blockquote.success { border: 1px solid #D9DDE7; border-left: 4px solid #08B735; background: #EFFFF3; }
-.markdown-body blockquote.info { border: 1px solid #E0E9E8; border-left: 4px solid #299E97; background: #F9FFFF; }
-.markdown-body blockquote.warning { border: 1px solid #E6DFD8; border-left: 4px solid #F6A800; background: #FFF8F1; }
-.markdown-body blockquote.danger { border: 1px solid #E8D8D8; border-left: 4px solid red; background: #FFF0F0; }
 
 /* lists */
 
@@ -668,7 +663,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .nav-asides > .navbar .nav-link { padding: 0.5rem 1rem; border-radius: 0.20rem; }
 .nav-asides > .navbar .nav-link i { margin-right: 0.50rem; }
 .nav-asides > .navbar hr { margin: 0.5rem 0 1rem 0; display: none; }
-.nav-asides .site-nav { display: none; }
+.nav-asides .navbar-lg { display: none; }
+.nav-asides .navbar-lg .navbar-nav a.nav-link { height: 44px; padding: 0.5rem 1rem !important }
 
 @media (min-width: 992px) {
     
@@ -730,7 +726,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     }
     
     .nav-asides > .navbar hr { width: 100%; display: block; }
-    .nav-asides .site-nav { display: flex; }
+    .nav-asides .navbar-lg { display: flex; }
 } 
 
 /* ------------------------- */
