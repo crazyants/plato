@@ -5,7 +5,7 @@ using Markdig.Syntax;
 namespace Plato.Markdown.Extensions
 {
 
-    public class FancyBlockRenderer : HtmlObjectRenderer<QuoteBlock>
+    public class FancyQuoteRenderer : HtmlObjectRenderer<QuoteBlock>
     {
 
         protected override void Write(HtmlRenderer renderer, QuoteBlock obj)

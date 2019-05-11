@@ -1,29 +1,32 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Plato.Markdown.Extensions
 {
-    public class FancyBlockParser : BlockParser
+    public class FancyQuoteParser : BlockParser
     {
 
-        private string[] AllowedCssClasses = new string[]
-        {
-            "primary",
-            "secondary",
-            "info",
-            "success",
-            "warning",
-            "danger"
-        };
+        private readonly string[] _validCssClasses;
 
-        public FancyBlockParser()
+
+        public FancyQuoteParser() : this(null)
         {
+        }
+
+        public FancyQuoteParser(string[] validCssClasses)
+        {
+            _validCssClasses = validCssClasses ?? new []
+            {
+                "primary",
+                "secondary",
+                "info",
+                "success",
+                "warning",
+                "danger"
+            };
             OpeningCharacters = new[]
             {
                 '>'
@@ -44,7 +47,12 @@ namespace Plato.Markdown.Extensions
             // A block quote marker consists of 0-3 spaces of initial indent, plus
             // (a) the character > together with a following space, or
             // (b) a single character > not followed by a space.
-            // (c) a single character > followed by a css class > !primary quote
+            // (c) a single character > followed by a space and explanation mark
+            // denoting the css class to apply to the block quote
+            // i.e....
+            // > !danger This is a dangerous quote 
+            // > !success This is a success quote
+
             var currentChar = processor.CurrentChar;
             var c = processor.NextChar();
             if (c.IsSpaceOrTab())
@@ -55,6 +63,7 @@ namespace Plato.Markdown.Extensions
             var cssClass = "";
             if (c == '!')
             {
+                // Parse until we reach white space
                 while (true)
                 {
                     if (c.IsWhitespace())
@@ -62,7 +71,10 @@ namespace Plato.Markdown.Extensions
                         break;
                     }
                     c = processor.NextChar();
-                    cssClass += c;
+                    if (!c.IsWhitespace())
+                    {
+                        cssClass += c;
+                    }
                 }
             }
           
@@ -79,32 +91,15 @@ namespace Plato.Markdown.Extensions
                 Span = new SourceSpan(sourcePosition, processor.Line.End),
             };
 
+            // If we have a css class ensure it's allowed
             if (!string.IsNullOrEmpty(cssClass))
             {
-                quoteBlock.GetAttributes().AddClass(cssClass);
+                var validCss = cssClass.ToLower();
+                if (_validCssClasses.Contains(validCss))
+                {
+                    quoteBlock.GetAttributes().AddClass(validCss);
+                }
             }
-
-            // Allows support for...
-            // > {primary} quote here
-            // > {secondary} quote here
-            // > {info} quote here
-            // etc...
-            //foreach (var cssClass in AllowedCssClasses)
-            //{
-            //    var pattern = new StringBuilder();
-            //    pattern.Append("> {").Append(cssClass).Append("}");
-
-            //    for (var i = 0; i < quoteBlock.Count; i++)
-            //    {
-            //        var subBlock = quoteBlock[i];
-
-            //    }
-
-            //    if (processor.Line.Text.IndexOf(pattern.ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
-            //    {
-                  
-            //    }
-            //}
 
             processor.NewBlocks.Push(quoteBlock);
 

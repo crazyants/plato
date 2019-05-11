@@ -52,8 +52,9 @@
 /* blockquotes */
 
 .markdown-body blockquote {
-    border-left: .25em solid rgba(75, 75, 75, 0.75);
+    border-left-color: rgba(75, 75, 75, 0.75);
     color: #6a737d;
+    background: rgba(50, 50, 50, 0.2);
 }
 
 .markdown-body blockquote footer {
@@ -77,12 +78,12 @@
 
 /* block quotes */
 
-.markdown-body blockquote.primary{ border: 1px solid #262626; border-left: 4px solid #007bff; background: #1a1a1a; }
-.markdown-body blockquote.secondary { border: 1px solid #262626; border-left: 4px solid #ccc; background: #1a1a1a; }
-.markdown-body blockquote.success { border: 1px solid #262626; border-left: 4px solid #08B735; background: #1a1a1a; }
-.markdown-body blockquote.info { border: 1px solid #262626; border-left: 4px solid #299E97; background: #1a1a1a; }
-.markdown-body blockquote.warning { border: 1px solid #262626; border-left: 4px solid #F6A800; background: #1a1a1a; }
-.markdown-body blockquote.danger { border: 1px solid #262626; border-left: 4px solid red; background: #1a1a1a; }
+.markdown-body blockquote.primary{ border-color: #007bff; }
+.markdown-body blockquote.secondary { border-color: #ccc; }
+.markdown-body blockquote.success { border-color: #08B735; }
+.markdown-body blockquote.info {  border-color: #299E97; }
+.markdown-body blockquote.warning { border-color: #F6A800; }
+.markdown-body blockquote.danger { border-color: red; }
 
 /* ------------------- */
 /* Icon selection */

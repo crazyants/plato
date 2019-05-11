@@ -3,20 +3,16 @@ using Markdig.Renderers;
 
 namespace Plato.Markdown.Extensions
 {
-
-    // ----------------
-    // A custom mark dig extension to add support for styled block quotes. 
-    // ----------------
-
+    
     public class FancyQuoteExtension : IMarkdownExtension
     {
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
-            if (!pipeline.BlockParsers.Contains<FancyBlockParser>())
+            if (!pipeline.BlockParsers.Contains<FancyQuoteParser>())
             {
                 // Insert the parser before any other parsers
-                pipeline.BlockParsers.Insert(0, new FancyBlockParser());
+                pipeline.BlockParsers.Insert(0, new FancyQuoteParser());
             }
         }
 
@@ -24,13 +20,14 @@ namespace Plato.Markdown.Extensions
         {
             if (renderer is HtmlRenderer htmlRenderer)
             {
-                if (!htmlRenderer.ObjectRenderers.Contains<FancyBlockRenderer>())
+                if (!htmlRenderer.ObjectRenderers.Contains<FancyQuoteRenderer>())
                 {
                     // Must be inserted before CodeBlockRenderer
-                    htmlRenderer.ObjectRenderers.Insert(0, new FancyBlockRenderer());
+                    htmlRenderer.ObjectRenderers.Insert(0, new FancyQuoteRenderer());
                 }
             }
         }
+
     }
     
 }

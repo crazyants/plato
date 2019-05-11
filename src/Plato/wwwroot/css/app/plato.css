@@ -197,9 +197,19 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .markdown-body blockquote {
     display: block;
     font-size: 100%;
-    padding: 0.75rem;
+    padding: 1rem;
     position: relative;
+    border: 0;
+    border-left-width: 0.25rem;
+    border-left-style: solid;
 }
+
+.markdown-body blockquote h1:first-child, 
+.markdown-body blockquote h2:first-child, 
+.markdown-body blockquote h3:first-child, 
+.markdown-body blockquote h4:first-child, 
+.markdown-body blockquote h5:first-child, 
+.markdown-body blockquote h6:first-child { margin-top: 0; }
 
 .markdown-body blockquote p:last-child { margin-bottom: 0; }
 
