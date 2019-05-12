@@ -140,17 +140,17 @@ namespace Plato.Discuss.Categories.ViewProviders
                 builder.Add(S[topic.Title]);
 
             });
-            
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Categories");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
 
 
             return default(IViewProviderResult);
 
+            // Get current feature
+            //var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Categories");
+            //if (feature == null)
+            //{
+            //    return default(IViewProviderResult);
+            //}
+            
             //// Get all categories & return views
             //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             

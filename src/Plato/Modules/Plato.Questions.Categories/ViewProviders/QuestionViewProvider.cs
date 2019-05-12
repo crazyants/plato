@@ -140,24 +140,26 @@ namespace Plato.Questions.Categories.ViewProviders
                 builder.Add(S[question.Title]);
 
             });
-            
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Questions.Categories");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
 
-            // Get all categories & return views
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+            return default(IViewProviderResult);
+
+            //// Get current feature
+            //var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Questions.Categories");
+            //if (feature == null)
+            //{
+            //    return default(IViewProviderResult);
+            //}
+
+            //// Get all categories & return views
+            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(
-                View<CategoryListViewModel<Category>>("Question.Categories.Display.Sidebar", model =>
-                {
-                    model.Categories = categories?.Where(c => c.Id == question.CategoryId);
-                    return model;
-                }).Zone("sidebar").Order(2)
-            );
+            //return Views(
+            //    View<CategoryListViewModel<Category>>("Question.Categories.Display.Sidebar", model =>
+            //    {
+            //        model.Categories = categories?.Where(c => c.Id == question.CategoryId);
+            //        return model;
+            //    }).Zone("sidebar").Order(2)
+            //);
 
         }
         

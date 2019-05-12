@@ -68,17 +68,19 @@
                         .Append("\">");
 
                     sb.Append("<div class=\"tree-row\"");
-                    if (entity.Value.Depth > 0)
-                    {
-                        sb.Append(" style=\"margin-left: ")
-                            .Append(entity.Value.Depth)
-                            .Append("rem;\"");
-                    }
+                  
                     sb.Append("\">");
 
                     if (entity.Value.Children.Any())
                     {
-                        sb.Append("<div class=\"tree-left\">");
+                        sb.Append("<div class=\"tree-left\"");
+                        if (entity.Value.Depth > 0)
+                        {
+                            sb.Append(" style=\"padding-left: ")
+                                .Append(entity.Value.Depth)
+                                .Append("rem;\"");
+                        }
+                        sb.Append(">");
                         sb.Append("<a class=\"btn toggler mr-2\" data-node-id=\"")
                             .Append(nodeId)
                             .Append("\" data-toggle=\"tree\" href=\"#\">");
@@ -88,7 +90,14 @@
                     }
                     else
                     {
-                        //sb.Append("<div class=\"tree-left\"></div>");
+                        sb.Append("<div class=\"tree-left\"");
+                        if (entity.Value.Depth > 0)
+                        {
+                            sb.Append(" style=\"padding-left: ")
+                                .Append(entity.Value.Depth)
+                                .Append("rem;\"");
+                        }
+                        sb.Append("></div>");
                     }
 
                     sb.Append("<div class=\"tree-body\">");
