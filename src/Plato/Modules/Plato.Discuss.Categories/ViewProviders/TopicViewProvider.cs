@@ -96,7 +96,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryIndexViewModel>(".Sidebar", model => categoryIndexViewModel).Zone("sidebar")
+                View<CategoryIndexViewModel>("Discuss.Categories.Sidebar", model => categoryIndexViewModel).Zone("sidebar")
                     .Order(1)
             );
             
@@ -152,25 +152,7 @@ namespace Plato.Discuss.Categories.ViewProviders
 
 
             return default(IViewProviderResult);
-
-            // Get current feature
-            //var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Categories");
-            //if (feature == null)
-            //{
-            //    return default(IViewProviderResult);
-            //}
             
-            //// Get all categories & return views
-            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            
-            //return Views(
-            //    View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Display.Sidebar", model =>
-            //    {
-            //        model.Categories = categories?.Where(c => c.Id == topic.CategoryId);
-            //        return model;
-            //    }).Zone("sidebar").Order(2)
-            //);
-
         }
         
         public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext updater)
@@ -253,7 +235,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryDropDownViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<CategoryDropDownViewModel>("Discuss.Categories.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }

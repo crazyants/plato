@@ -23,6 +23,8 @@ using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Search.Abstractions;
 using Plato.Internal.Stores;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.FederatedQueries;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Entities
 {
@@ -80,6 +82,9 @@ namespace Plato.Entities
             // Federated search
             services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
             services.AddScoped<IFederatedQueryProvider<Entity>, EntitySearchQueries<Entity>>();
+          
+            // Query adapters
+            services.AddScoped<IQueryAdapterManager<Entity>, QueryAdapterManager<Entity>>();
 
             // Query adapter
             services.AddScoped<IQueryAdapterManager<EntityQueryParams>, QueryAdapterManager<EntityQueryParams>>();

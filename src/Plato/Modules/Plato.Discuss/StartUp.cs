@@ -36,6 +36,8 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.FederatedQueries;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Discuss
 {
@@ -145,6 +147,9 @@ namespace Plato.Discuss
             services.AddScoped<IFederatedQueryManager<Topic>, FederatedQueryManager<Topic>>();
             services.AddScoped<IFederatedQueryProvider<Topic>, EntitySearchQueries<Topic>>();
 
+            // Query adapters
+            services.AddScoped<IQueryAdapterManager<Topic>, QueryAdapterManager<Topic>>();
+            
         }
 
         public override void Configure(

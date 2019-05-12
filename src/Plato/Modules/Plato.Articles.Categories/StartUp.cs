@@ -20,6 +20,8 @@ using Plato.Articles.Categories.ViewProviders;
 using Plato.Articles.Models;
 using Plato.Articles.Categories.Services;
 using Plato.Categories.Subscribers;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Articles.Categories
 {
@@ -50,6 +52,7 @@ namespace Plato.Articles.Categories
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
             services.AddScoped<ICategoryStore<Category>, CategoryStore<Category>>();
             services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();
+            services.AddScoped<ICategoryService<Category>, CategoryService<Category>>();
 
             // Articles view providers
             services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
@@ -65,10 +68,6 @@ namespace Plato.Articles.Categories
             services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
             services.AddScoped<IViewProvider<CategoryAdmin>, AdminViewProvider>();
 
-            // Category role view providers
-            services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
-            services.AddScoped<IViewProvider<CategoryAdmin>, CategoryRolesViewProvider>();
-            
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, ArticleListItemViewAdapter>();
 
@@ -79,6 +78,9 @@ namespace Plato.Articles.Categories
 
             // Channel details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
+         
+            // Query adapters
+            services.AddScoped<IQueryAdapterManager<Category>, QueryAdapterManager<Category>>();
 
         }
 

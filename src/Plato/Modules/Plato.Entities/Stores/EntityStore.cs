@@ -13,6 +13,8 @@ using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.FederatedQueries;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Entities.Stores
 {
@@ -24,7 +26,7 @@ namespace Plato.Entities.Stores
         public const string ByFeatureId = "ByFeatureId";
 
         private readonly IFederatedQueryManager<TEntity> _federatedQueryManager;
-        private readonly IQueryAdapterManager<EntityQueryParams> _queryAdapterManager;
+        private readonly IQueryAdapterManager<TEntity> _queryAdapterManager;
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -33,7 +35,7 @@ namespace Plato.Entities.Stores
         private readonly ICacheManager _cacheManager;
         
         public EntityStore(
-            IQueryAdapterManager<EntityQueryParams> queryAdapterManager,
+            IQueryAdapterManager<TEntity> queryAdapterManager,
             IFederatedQueryManager<TEntity> federatedQueryManager,
             IEntityDataStore<IEntityData> entityDataStore,
             IEntityRepository<TEntity> entityRepository,

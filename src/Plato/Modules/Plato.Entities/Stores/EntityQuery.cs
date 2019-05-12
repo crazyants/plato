@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.FederatedQueries;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Entities.Stores
 {
@@ -15,7 +17,7 @@ namespace Plato.Entities.Stores
 
         public IFederatedQueryManager<TModel> FederatedQueryManager { get; set; }
 
-        public IQueryAdapterManager<EntityQueryParams> QueryAdapterManager { get; set; }
+        public IQueryAdapterManager<TModel> QueryAdapterManager { get; set; }
 
         public EntityQueryParams Params { get; set; }
 
@@ -532,14 +534,17 @@ namespace Plato.Entities.Stores
             // Apply any query adapters
             // -----------------
 
-            var adapters = _query.QueryAdapterManager?.GetAdaptations(_query.Params);
+            var adapters = _query.QueryAdapterManager?.GetAdaptations(_query);
             if (adapters != null)
             {
                 foreach (var adapter in adapters)
                 {
-                    if (!string.IsNullOrEmpty(sb.ToString()))
-                        sb.Append(" AND ");
-                    sb.Append(ReplaceTablePrefix(adapter));
+                    if (!string.IsNullOrEmpty(adapter))
+                    {
+                        if (!string.IsNullOrEmpty(sb.ToString()))
+                            sb.Append(" AND ");
+                        sb.Append(adapter);
+                    }
                 }
             }
 
@@ -904,12 +909,7 @@ namespace Plato.Entities.Stores
                 ? _query.Options.TablePrefix + tableName
                 : tableName;
         }
-        
-        string ReplaceTablePrefix(string input)
-        {
-            return input.Replace("{prefix}_", _query.Options.TablePrefix);
-        }
-
+       
         private string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;

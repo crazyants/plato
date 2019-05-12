@@ -10,13 +10,13 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Roles.ViewModels;
 
-namespace Plato.Articles.Categories.ViewProviders
+namespace Plato.Articles.Categories.Roles.ViewProviders
 {
 
     public class CategoryRolesViewProvider : BaseViewProvider<CategoryAdmin>
     {
 
-        private const string HtmlName = "ChannelRoles";
+        private const string HtmlName = "CategoryRoles";
 
         private readonly ICategoryManager<CategoryBase> _categoryManager;
         private readonly IPlatoRoleStore _platoRoleStore;

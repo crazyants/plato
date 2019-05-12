@@ -115,6 +115,16 @@ namespace Plato.Discuss.Categories.Controllers
                     return View("GetTopics", viewModel);
             }
 
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss.Categories",
+                ["controller"] = "Home",
+                ["action"] = "Index",
+                ["opts.id"] = category != null ? category.Id.ToString() : "",
+                ["opts.alias"] = category != null ? category.Alias.ToString() : ""
+            });
+
             // Build page title
             if (category != null)
             {

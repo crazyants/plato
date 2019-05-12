@@ -19,10 +19,9 @@ using Plato.Discuss.Categories.Subscribers;
 using Plato.Discuss.Categories.ViewAdapters;
 using Plato.Discuss.Categories.ViewProviders;
 using Plato.Discuss.Models;
-using Plato.Entities.Stores;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores;
-using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Discuss.Categories
 {
@@ -78,11 +77,12 @@ namespace Plato.Discuss.Categories
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
             services.AddScoped<IBrokerSubscriber, CategorySubscriber<Category>>();
 
-            // Channel details updater
+            // Category details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
 
-           
-
+            // Query adapters
+            services.AddScoped<IQueryAdapterManager<Category>, QueryAdapterManager<Category>>();
+            
         }
 
         public override void Configure(

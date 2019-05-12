@@ -13,10 +13,10 @@ using Plato.Roles.ViewModels;
 namespace Plato.Discuss.Categories.Roles.ViewProviders
 {
 
-    public class ChannelRolesViewProvider : BaseViewProvider<CategoryAdmin>
+    public class CategoryRolesViewProvider : BaseViewProvider<CategoryAdmin>
     {
 
-        private const string HtmlName = "ChannelRoles";
+        private const string HtmlName = "CategoryRoles";
 
         private readonly ICategoryManager<CategoryBase> _categoryManager;
         private readonly IPlatoRoleStore _platoRoleStore;
@@ -25,7 +25,7 @@ namespace Plato.Discuss.Categories.Roles.ViewProviders
 
         private readonly HttpRequest _request;
 
-        public ChannelRolesViewProvider(
+        public CategoryRolesViewProvider(
             IPlatoRoleStore platoRoleStore,
             IHttpContextAccessor httpContextAccessor,
             ICategoryManager<CategoryBase> categoryManager,

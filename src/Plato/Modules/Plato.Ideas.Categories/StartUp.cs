@@ -20,6 +20,8 @@ using Plato.Ideas.Categories.ViewProviders;
 using Plato.Ideas.Models;
 using Plato.Ideas.Categories.Services;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Ideas.Categories
 {
@@ -78,6 +80,9 @@ namespace Plato.Ideas.Categories
 
             // Channel details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
+        
+            // Query adapters
+            services.AddScoped<IQueryAdapterManager<Category>, QueryAdapterManager<Category>>();
 
         }
 

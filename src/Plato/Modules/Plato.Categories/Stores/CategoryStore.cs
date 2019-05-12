@@ -12,6 +12,7 @@ using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Categories.Stores
 {
@@ -22,7 +23,7 @@ namespace Plato.Categories.Stores
         public const string ById = "ById";
         public const string ByFeatureId = "ByFeatureId";
 
-        private readonly IQueryAdapterManager<CategoryQueryParams> _queryAdapterManager;
+        private readonly IQueryAdapterManager<TCategory> _queryAdapterManager;
         private readonly ICategoryRepository<TCategory> _categoryRepository;
         private readonly ICategoryDataStore<CategoryData> _categoryDataStore;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -31,7 +32,7 @@ namespace Plato.Categories.Stores
         private readonly ICacheManager _cacheManager;
 
         public CategoryStore(
-            IQueryAdapterManager<CategoryQueryParams> queryAdapterManager,
+            IQueryAdapterManager<TCategory> queryAdapterManager,
             ICategoryDataStore<CategoryData> categoryDataStore,
             ICategoryRepository<TCategory> categoryRepository,
             ITypedModuleProvider typedModuleProvider,

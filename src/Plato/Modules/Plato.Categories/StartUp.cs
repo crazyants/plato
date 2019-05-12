@@ -56,9 +56,7 @@ namespace Plato.Categories
             // Subscribers
             services.AddScoped<IBrokerSubscriber, CategorySubscriber<CategoryBase>>();
 
-            // Query adapter
-            services.AddScoped<IQueryAdapterManager<CategoryQueryParams>, QueryAdapterManager<CategoryQueryParams>>();
-
+        
         }
 
         public override void Configure(

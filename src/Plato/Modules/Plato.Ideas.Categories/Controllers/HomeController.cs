@@ -110,6 +110,16 @@ namespace Plato.Ideas.Categories.Controllers
                     return View("GetIdeas", viewModel);
             }
             
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Ideas.Categories",
+                ["controller"] = "Home",
+                ["action"] = "Index",
+                ["opts.id"] = category != null ? category.Id.ToString() : "",
+                ["opts.alias"] = category != null ? category.Alias.ToString() : ""
+            });
+            
             // Build page title
             if (category != null)
             {

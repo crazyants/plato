@@ -4,7 +4,7 @@ using System.Text;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Search.Abstractions;
-using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.FederatedQueries;
 
 namespace Plato.Entities.Labels
 {

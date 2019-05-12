@@ -38,7 +38,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             _actionContextAccessor = actionContextAccessor;
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Category categoryAdmin, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Category category, IViewProviderContext context)
         {
 
             // Ensure we explicitly set the featureId
@@ -47,13 +47,11 @@ namespace Plato.Discuss.Categories.ViewProviders
             {
                 return default(IViewProviderResult);
             }
-
-            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-
-            CategoryBase categoryBase = null;
-            if (categoryAdmin?.Id > 0)
+            
+            Category existingCategory = null;
+            if (category?.Id > 0)
             {
-                categoryBase = await _categoryStore.GetByIdAsync(categoryAdmin.Id);
+                existingCategory = await _categoryStore.GetByIdAsync(category.Id);
             }
 
             // Get topic index view model from context
@@ -66,7 +64,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             // channel filter options
             var channelViewOpts = new CategoryIndexOptions
             {
-                CategoryId = categoryBase?.Id ?? 0,
+                CategoryId = existingCategory?.Id ?? 0,
                 FeatureId = feature.Id
             };
             
@@ -78,10 +76,10 @@ namespace Plato.Discuss.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
-                View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
+                View<CategoryBase>("Home.Index.Header", model => existingCategory).Zone("header").Order(1),
+                View<CategoryBase>("Home.Index.Tools", model => existingCategory).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<CategoryIndexViewModel>("Discuss.Catgories.Sidebar", model => indexViewModel).Zone("sidebar").Order(1)
+                View<CategoryIndexViewModel>("Discuss.Categories.Sidebar", model => indexViewModel).Zone("sidebar").Order(1)
             );
 
         }

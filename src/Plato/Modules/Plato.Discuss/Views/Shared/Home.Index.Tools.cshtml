@@ -1,6 +1,10 @@
-﻿@model EntityIndexViewModel<Topic>
+﻿@using Plato.Features
+@model EntityIndexViewModel<Topic>
+@{
+    var postPermission = Plato.Discuss.Permissions.PostTopics;
+}
 
-<div asp-permission="PostTopics">
+<div asp-permission="@postPermission.Name">
     <authorize-success>
         <a asp-route-action="Create" class="btn btn-primary" title="@T["New Topic"]">
             <i class="fal fa-fw fa-plus"></i>

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Internal.Stores
 {
@@ -24,7 +23,7 @@ namespace Plato.Internal.Stores
             _logger = logger;
         }
 
-        public IEnumerable<string> GetAdaptations(TModel queryParams)
+        public IEnumerable<string> GetAdaptations(IQuery<TModel> query)
         {
             if (_queries == null)
             {
@@ -33,12 +32,20 @@ namespace Plato.Internal.Stores
                 {
                     try
                     {
-                        queries.Add(provider.AdaptQuery(queryParams));
-                       
+                        var adaptation = provider.AdaptQuery(query);
+                        if (!string.IsNullOrEmpty(adaptation))
+                        {
+                            adaptation = ReplaceTablePrefix(adaptation, query.Options.TablePrefix);
+                            if (!queries.Contains(adaptation))
+                            {
+                                queries.Add(adaptation);
+                            }
+                            
+                        }
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError(e, $"An exception occurred within the search query provider {provider.GetType().Name}. Please review your query provider and try again. {e.Message}");
+                        _logger.LogError(e, $"An exception occurred within the query adapter provider {provider.GetType().Name}. Please review your query adapter and try again. {e.Message}");
                         throw;
                     }
                 }
@@ -48,6 +55,11 @@ namespace Plato.Internal.Stores
 
             return _queries;
 
+        }
+
+        string ReplaceTablePrefix(string input, string tablePrefix)
+        {
+            return input.Replace("{prefix}_", tablePrefix);
         }
 
 

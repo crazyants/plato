@@ -109,7 +109,17 @@ namespace Plato.Questions.Categories.Controllers
                 if (page > 0 && !pager.Enabled)
                     return View("GetQuestions", viewModel);
             }
-            
+
+            // Return Url for authentication purposes
+            ViewData["ReturnUrl"] = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Questions.Categories",
+                ["controller"] = "Home",
+                ["action"] = "Index",
+                ["opts.id"] = category != null ? category.Id.ToString() : "",
+                ["opts.alias"] = category != null ? category.Alias.ToString() : ""
+            });
+
             // Build page title
             if (category != null)
             {
