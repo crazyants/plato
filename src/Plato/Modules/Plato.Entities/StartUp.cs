@@ -89,6 +89,9 @@ namespace Plato.Entities
             services.AddScoped<IViewProviderManager<EntityUserIndex>, ViewProviderManager<EntityUserIndex>>();
             services.AddScoped<IViewProvider<EntityUserIndex>, UserViewProvider>();
 
+            // Query adapter
+            services.AddScoped<IQueryAdapterManager<EntityQueryParams>, QueryAdapterManager<EntityQueryParams>>();
+
         }
 
         public override void Configure(

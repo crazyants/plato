@@ -24,7 +24,6 @@ namespace Plato.Entities.Categories
         {
 
             // Query adapters
-            services.AddScoped<IQueryAdapterManager<EntityQueryParams>, QueryAdapterManager<EntityQueryParams>>();
             services.AddScoped<IQueryAdapterProvider<EntityQueryParams>, EntityQueryParamAdapter>();
 
 

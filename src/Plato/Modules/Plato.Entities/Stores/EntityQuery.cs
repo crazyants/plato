@@ -97,6 +97,8 @@ namespace Plato.Entities.Stores
         private WhereInt _totalStars;
 
 
+
+
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -535,7 +537,9 @@ namespace Plato.Entities.Stores
             {
                 foreach (var adapter in adapters)
                 {
-                    sb.Append(adapter);
+                    if (!string.IsNullOrEmpty(sb.ToString()))
+                        sb.Append(" AND ");
+                    sb.Append(ReplaceTablePrefix(adapter));
                 }
             }
 
@@ -901,6 +905,11 @@ namespace Plato.Entities.Stores
                 : tableName;
         }
         
+        string ReplaceTablePrefix(string input)
+        {
+            return input.Replace("{prefix}_", _query.Options.TablePrefix);
+        }
+
         private string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;
