@@ -4,6 +4,7 @@ using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -17,15 +18,18 @@ namespace Plato.Entities.Services
         private Action<EntityQueryParams> _configureParams = null;
 
         private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
         private readonly IEntityStore<TModel> _entityStore;
   
         public EntityService(
             IContextFacade contextFacade,
-            IEntityStore<TModel> entityStore)
+            IEntityStore<TModel> entityStore,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
-      
+            _featureFacade = featureFacade;
+
             // Default options delegate
             _configureDb = options => options.SearchType = SearchTypes.Tsql;
 
@@ -64,7 +68,10 @@ namespace Plato.Entities.Services
 
             // Get authenticated user 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            
+
+            // Get features 
+            var followFeature = await _featureFacade.GetFeatureByIdAsync("Plato.Follows");
+
             // Return tailored results
             return await _entityStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
@@ -104,7 +111,7 @@ namespace Plato.Entities.Services
 
                     if (options.CreatedByUserId > 0)
                         q.CreatedUserId.Equals(options.CreatedByUserId);
-
+                    
                     // ----------------
                     // Filters
                     // ----------------
@@ -126,7 +133,7 @@ namespace Plato.Entities.Services
 
                             break;
                         case FilterBy.Following:
-                            if (user != null)
+                            if (user != null && followFeature != null)
                             {
                                 q.FollowUserId.Equals(user.Id, b =>
                                 {
@@ -141,7 +148,7 @@ namespace Plato.Entities.Services
                             {
                                 q.StarUserId.Equals(user.Id, b =>
                                 {
-                                    // Restrict follows by topic
+                                    // Restrict stars by topic
                                     b.Append(" AND s.[Name] = 'Topic'");
                                 });
                             }

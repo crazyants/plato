@@ -19,7 +19,10 @@ using Plato.Discuss.Categories.Subscribers;
 using Plato.Discuss.Categories.ViewAdapters;
 using Plato.Discuss.Categories.ViewProviders;
 using Plato.Discuss.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Discuss.Categories
 {
@@ -80,6 +83,8 @@ namespace Plato.Discuss.Categories
 
             // Channel details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();
+
+           
 
         }
 

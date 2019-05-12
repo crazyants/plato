@@ -5,8 +5,8 @@
     AddTitleSegment(T["Search"]);
 }
 
-<div class="layout">
-    <form asp-action="Index" method="post" enctype="multipart/form-data">
+<form asp-action="Index" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
+    <div class="layout">
         <div class="layout-header">
             @if (Model.Alerts != null)
             {
@@ -73,5 +73,5 @@
                 </div>
             }
         </div>
-    </form>
-</div>
+    </div>
+</form>

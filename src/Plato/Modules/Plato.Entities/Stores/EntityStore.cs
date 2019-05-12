@@ -24,6 +24,7 @@ namespace Plato.Entities.Stores
         public const string ByFeatureId = "ByFeatureId";
 
         private readonly IFederatedQueryManager<TEntity> _federatedQueryManager;
+        private readonly IQueryAdapterManager<EntityQueryParams> _queryAdapterManager;
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -32,15 +33,17 @@ namespace Plato.Entities.Stores
         private readonly ICacheManager _cacheManager;
         
         public EntityStore(
+            IQueryAdapterManager<EntityQueryParams> queryAdapterManager,
+            IFederatedQueryManager<TEntity> federatedQueryManager,
             IEntityDataStore<IEntityData> entityDataStore,
             IEntityRepository<TEntity> entityRepository,
             ITypedModuleProvider typedModuleProvider,
             ILogger<EntityStore<TEntity>> logger,
             IDbQueryConfiguration dbQuery,
-            ICacheManager cacheManager, 
-            IFederatedQueryManager<TEntity> federatedQueryManager)
+            ICacheManager cacheManager)
         {
             _federatedQueryManager = federatedQueryManager;
+            _queryAdapterManager = queryAdapterManager;
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
             _entityDataStore = entityDataStore;
@@ -150,7 +153,8 @@ namespace Plato.Entities.Stores
         {
             return _dbQuery.ConfigureQuery<TEntity>(new EntityQuery<TEntity>(this)
             {
-                FederatedQueryManager = _federatedQueryManager
+                FederatedQueryManager = _federatedQueryManager,
+                QueryAdapterManager = _queryAdapterManager
             }); ;
         }
 

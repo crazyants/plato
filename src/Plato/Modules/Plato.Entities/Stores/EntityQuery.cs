@@ -15,6 +15,8 @@ namespace Plato.Entities.Stores
 
         public IFederatedQueryManager<TModel> FederatedQueryManager { get; set; }
 
+        public IQueryAdapterManager<EntityQueryParams> QueryAdapterManager { get; set; }
+
         public EntityQueryParams Params { get; set; }
 
         private readonly IStore<TModel> _store;
@@ -523,7 +525,24 @@ namespace Plato.Entities.Stores
 
             var sb = new StringBuilder();
 
+
+            // -----------------
+            // Apply any query adapters
+            // -----------------
+
+            var adapters = _query.QueryAdapterManager?.GetAdaptations(_query.Params);
+            if (adapters != null)
+            {
+                foreach (var adapter in adapters)
+                {
+                    sb.Append(adapter);
+                }
+            }
+
+            // -----------------
             // Id
+            // -----------------
+
             if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -531,7 +550,10 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.Id.ToSqlString("e.Id"));
             }
 
+            // -----------------
             // RoleId
+            // -----------------
+
             if (_query.Params.RoleId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -544,7 +566,10 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
+            // -----------------
             // FeatureId
+            // -----------------
+
             if (_query.Params.FeatureId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -552,7 +577,10 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.FeatureId.ToSqlString("e.FeatureId"));
             }
 
+            // -----------------
             // CategoryId
+            // -----------------
+
             if (_query.Params.CategoryId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -560,8 +588,11 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.CategoryId.ToSqlString("e.CategoryId"));
             }
 
+            // -----------------
             // LabelId
             // --> Only available if the Labels feature is enabled
+            // -----------------
+
             if (_query.Params.LabelId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -574,8 +605,11 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
+            // -----------------
             // TagId
             // --> Only available if the Tags feature is enabled
+            // -----------------
+
             if (_query.Params.TagId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -588,8 +622,11 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
+            // -----------------
             // FollowUserId
             // --> Only available if the follow feature is enabled
+            // -----------------
+
             if (_query.Params.FollowUserId.Value > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -602,8 +639,11 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
+            // -----------------
             // StarUserId
             // --> Only available if the follow feature is enabled
+            // -----------------
+
             if (_query.Params.StarUserId.Value > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -616,7 +656,10 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
+            // -----------------
             // TotalViews
+            // -----------------
+
             if (_query.Params.TotalViews.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -624,7 +667,10 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.TotalViews.ToSqlString("e.TotalViews"));
             }
 
+            // -----------------
             // TotalReplies
+            // -----------------
+
             if (_query.Params.TotalReplies.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -632,7 +678,10 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.TotalReplies.ToSqlString("e.TotalReplies"));
             }
 
+            // -----------------
             // TotalParticipants
+            // -----------------
+
             if (_query.Params.TotalParticipants.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -640,7 +689,10 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.TotalParticipants.ToSqlString("e.TotalParticipants"));
             }
 
+            // -----------------
             // TotalReactions
+            // -----------------
+
             if (_query.Params.TotalReactions.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -648,7 +700,10 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.TotalReactions.ToSqlString("e.TotalReactions"));
             }
 
+            // -----------------
             // TotalFollows
+            // -----------------
+
             if (_query.Params.TotalFollows.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -656,7 +711,10 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.TotalFollows.ToSqlString("e.TotalFollows"));
             }
 
+            // -----------------
             // TotalStars
+            // -----------------
+
             if (_query.Params.TotalStars.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -665,7 +723,10 @@ namespace Plato.Entities.Stores
             }
 
 
+            // -----------------
             // CreatedUserId
+            // -----------------
+
             if (_query.Params.CreatedUserId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -673,9 +734,12 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.CreatedUserId.ToSqlString("e.CreatedUserId"));
             }
 
+            // -----------------
             // ParticipatedUserId
             // --> Returns all entities with replies by the supplied
             // --> user and excludes entities created by the supplied user
+            // -----------------
+
             if (_query.Params.ParticipatedUserId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -712,14 +776,17 @@ namespace Plato.Entities.Stores
 
             // -----------------
             // IsPrivate 
+            // --> If true and we have a user id hide all private entities
+            // --> except those created by the supplied user id
+            // --> If true and we don't have a user id just hide all private entities
             // -----------------
-            
+
             // hide = true, show = false
             if (_query.Params.HidePrivate.Value && !_query.Params.ShowPrivate.Value)
             {
-                // Hide all private entities except those created by the current user
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.HidePrivate.Operator);
+
                 if (_query.Params.UserId.Value > 0)
                 {
                     sb.Append("(")
@@ -729,8 +796,9 @@ namespace Plato.Entities.Stores
                 }
                 else
                 {
+                    // Else just hide all private
                     sb.Append("e.IsPrivate = 0");
-            }
+                }
             }
 
             // show = true, hide = false
@@ -740,7 +808,6 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.ShowPrivate.Operator);
                 sb.Append("e.IsPrivate = 1");
             }
-            
             
             // -----------------
             // IsSpam 
@@ -821,49 +888,7 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.IsPinned.Operator);
                 sb.Append("e.IsPinned = 1");
             }
-
-            // -----------------
-            // Keywords 
-            // -----------------
-
-            //if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
-            //{
-            //    if (!string.IsNullOrEmpty(sb.ToString()))
-            //        sb.Append(" AND ");
-
-            //    sb.Append("(");
-
-            //    if (_query.Options.SearchType == SearchTypes.Tsql)
-            //    {
-
-            //        // Entities
-
-            //        sb.Append("(")
-            //            .Append(_query.Params.Keywords.ToSqlString("Title", "Keywords"))
-            //            .Append(" OR ")
-            //            .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
-            //            .Append(")");
-
-            //        sb.Append(" OR ");
-
-            //        // Entity Replies
-
-            //        sb.Append("(e.Id IN (SELECT EntityId FROM ")
-            //            .Append(_entityRepliesTableName)
-            //            .Append(" WHERE (")
-            //            .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
-            //            .Append(")))");
-
-            //    }
-            //    else
-            //    {
-            //        sb.Append("e.Id IN (SELECT Id FROM @results)");
-            //    }
-
-            //    sb.Append(")");
-
-            //}
-
+            
             return sb.ToString();
 
         }
@@ -1039,118 +1064,6 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-
-        //List<string> BuildSqlQueries()
-        //{
-
-        //    var whereClause = BuildWhere();
-
-        //    // Entities
-        //    // ----------------------
-
-        //    var q1 = new StringBuilder();
-        //    q1.Append("SELECT e.Id, 0 AS [Rank] FROM ")
-        //        .Append(_entitiesTableName)
-        //        .Append(" e WHERE (");
-        //    if (!string.IsNullOrEmpty(whereClause))
-        //    {
-        //        q1.Append("(").Append(whereClause).Append(") AND ");
-        //    }
-        //    q1.Append("(")
-        //        .Append(_query.Params.Keywords.ToSqlString("e.Title", "Keywords"))
-        //        .Append(" OR ")
-        //        .Append(_query.Params.Keywords.ToSqlString("e.Message", "Keywords"))
-        //        .Append("));");
-
-        //    // Entity Replies
-        //    // ----------------------
-
-        //    var q2 = new StringBuilder();
-        //    q2.Append("SELECT er.EntityId, 0 AS [Rank] FROM ")
-        //        .Append(_entityRepliesTableName)
-        //        .Append(" er INNER JOIN ")
-        //        .Append(_entitiesTableName)
-        //        .Append(" e ON e.Id = er.EntityId ")
-        //        .Append(" WHERE (");
-        //    if (!string.IsNullOrEmpty(whereClause))
-        //    {
-        //        q2.Append("(").Append(whereClause).Append(") AND ");
-        //    }
-        //    q2.Append("(")
-        //        .Append(_query.Params.Keywords.ToSqlString("er.Message", "Keywords"))
-        //        .Append(")) GROUP BY er.EntityId");
-
-        //    // Return queries
-        //    return new List<string>()
-        //    {
-        //        q1.ToString(),
-        //        q2.ToString()
-        //    };
-
-        //}
-
-        //List<string> BuildFullTextQueries()
-        //{
-
-        //    var whereClause = BuildWhere();
-
-        //    // Entities
-        //    // ----------------------
-
-        //    var q1 = new StringBuilder();
-        //    q1
-        //        .Append("SELECT i.[Key], i.[Rank] ")
-        //        .Append("FROM ")
-        //        .Append(_entitiesTableName)
-        //        .Append(" e ")
-        //        .Append("INNER JOIN ")
-        //        .Append(_query.Options.SearchType.ToString().ToUpper())
-        //        .Append("(")
-        //        .Append(_entitiesTableName)
-        //        .Append(", *, '").Append(GetKeywords()).Append("'");
-        //    if (_query.Options.MaxResults > 0)
-        //        q1.Append(", ").Append(_query.Options.MaxResults.ToString());
-        //    q1.Append(") AS i ON i.[Key] = e.Id WHERE ");
-        //    if (!string.IsNullOrEmpty(whereClause))
-        //        q1.Append("(").Append(whereClause).Append(") AND ");
-        //    q1.Append("(e.Id IN (IsNull(i.[Key], 0)));");
-
-        //    // Entity replies
-        //    // ----------------------
-
-        //    var q2 = new StringBuilder();
-        //    q2
-        //        .Append("SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] ")
-        //        .Append("FROM ")
-        //        .Append(_entityRepliesTableName)
-        //        .Append(" er ")
-
-        //        .Append("INNER JOIN ")
-        //        .Append(_query.Options.SearchType.ToString().ToUpper())
-        //        .Append("(")
-        //        .Append(_entityRepliesTableName)
-        //        .Append(", *, '").Append(GetKeywords()).Append("'");
-        //    if (_query.Options.MaxResults > 0)
-        //        q2.Append(", ").Append(_query.Options.MaxResults.ToString());
-        //    q2.Append(") i ON i.[Key] = er.Id ")
-        //        .Append("INNER JOIN ")
-        //        .Append(_entitiesTableName)
-        //        .Append(" e ON e.Id = er.EntityId ")
-
-        //        .Append("WHERE ");
-        //    if (!string.IsNullOrEmpty(whereClause))
-        //        q1.Append("(").Append(whereClause).Append(") AND ");
-        //    q2.Append("(er.Id IN (IsNull(i.[Key], 0)))")
-        //        .Append("GROUP BY er.EntityId, i.[Rank];");
-
-        //    // Return queries
-        //    return new List<string>()
-        //    {
-        //        q1.ToString(),
-        //        q2.ToString()
-        //    };
-
-        //}
 
         bool HasKeywords()
         {
