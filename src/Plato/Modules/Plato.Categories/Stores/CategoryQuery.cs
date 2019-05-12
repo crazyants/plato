@@ -115,7 +115,7 @@ namespace Plato.Categories.Stores
 
         public string BuildSqlPopulate()
         {
-            var whereClause = BuildWhereClause();
+            var whereClause = BuildWhere();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append("SELECT ")
@@ -134,7 +134,7 @@ namespace Plato.Categories.Stores
 
         public string BuildSqlCount()
         {
-            var whereClause = BuildWhereClause();
+            var whereClause = BuildWhere();
             var sb = new StringBuilder();
             sb.Append("SELECT COUNT(c.Id) FROM ")
                 .Append(BuildTables());
@@ -145,8 +145,16 @@ namespace Plato.Categories.Stores
 
         string BuildPopulateSelect()
         {
+
             var sb = new StringBuilder();
             sb.Append("c.*");
+
+            // -----------------
+            // Apply any select query adapters
+            // -----------------
+
+            _query.QueryAdapterManager?.BuildSelect(_query, sb);
+           
             return sb.ToString();
         }
 
@@ -155,43 +163,27 @@ namespace Plato.Categories.Stores
             var sb = new StringBuilder();
             sb.Append(_categorysTableName)
                 .Append(" c ");
+
+            // -----------------
+            // Apply any table query adapters
+            // -----------------
+
+            _query.QueryAdapterManager?.BuildTables(_query, sb);
+         
             return sb.ToString();
         }
 
-        #endregion
-
-        #region "Private Methods"
-
-        private string GetTableNameWithPrefix(string tableName)
-        {
-            return !string.IsNullOrEmpty(_query.Options.TablePrefix)
-                ? _query.Options.TablePrefix + tableName
-                : tableName;
-        }
-        
-        private string BuildWhereClause()
+        string BuildWhere()
         {
 
             var sb = new StringBuilder();
-            
+
             // -----------------
             // Apply any query adapters
             // -----------------
 
-            var adapters = _query.QueryAdapterManager?.GetAdaptations(_query);
-            if (adapters != null)
-            {
-                foreach (var adapter in adapters)
-                {
-                    if (!string.IsNullOrEmpty(adapter))
-                    {
-                        if (!string.IsNullOrEmpty(sb.ToString()))
-                            sb.Append(" AND ");
-                        sb.Append(adapter);
-                    }
-                }
-            }
-
+             _query.QueryAdapterManager?.BuildWhere(_query, sb);
+          
             // -----------------
             // Id
             // -----------------
@@ -219,7 +211,20 @@ namespace Plato.Categories.Stores
             return sb.ToString();
 
         }
+
+
+        #endregion
+
+        #region "Private Methods"
+
+        private string GetTableNameWithPrefix(string tableName)
+        {
+            return !string.IsNullOrEmpty(_query.Options.TablePrefix)
+                ? _query.Options.TablePrefix + tableName
+                : tableName;
+        }
         
+   
         string GetQualifiedColumnName(string columnName)
         {
 

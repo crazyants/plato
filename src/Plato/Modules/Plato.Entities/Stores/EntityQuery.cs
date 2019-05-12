@@ -483,7 +483,13 @@ namespace Plato.Entities.Stores
                 .Append("l.SignatureHtml AS LastReplySignatureHtml, ")
                 .Append(HasKeywords() ? "r.[Rank] AS [Rank], " : "0 AS [Rank],")
                 .Append("@MaxRank AS MaxRank");
-            
+
+            // -----------------
+            // Apply any select query adapters
+            // -----------------
+
+             _query.QueryAdapterManager?.BuildSelect(_query, sb);
+           
             return sb.ToString();
 
         }
@@ -520,6 +526,12 @@ namespace Plato.Entities.Stores
                 .Append(_usersTableName)
                 .Append(" l ON e.LastReplyUserId = l.Id ");
 
+            // -----------------
+            // Apply any table query adapters
+            // -----------------
+
+            _query.QueryAdapterManager?.BuildTables(_query, sb);
+         
             return sb.ToString();
 
         }
@@ -528,25 +540,12 @@ namespace Plato.Entities.Stores
         {
 
             var sb = new StringBuilder();
-
-
+            
             // -----------------
-            // Apply any query adapters
+            // Apply any where query adapters
             // -----------------
 
-            var adapters = _query.QueryAdapterManager?.GetAdaptations(_query);
-            if (adapters != null)
-            {
-                foreach (var adapter in adapters)
-                {
-                    if (!string.IsNullOrEmpty(adapter))
-                    {
-                        if (!string.IsNullOrEmpty(sb.ToString()))
-                            sb.Append(" AND ");
-                        sb.Append(adapter);
-                    }
-                }
-            }
+             _query.QueryAdapterManager?.BuildWhere(_query, sb);
 
             // -----------------
             // Id

@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Stores.Abstractions.QueryAdapters
 {
 
-
-
     public interface IQueryAdapterProvider<TModel> where TModel : class
     {
+        void BuildSelect(IQuery<TModel> query, StringBuilder builder);
 
-        string AdaptQuery(IQuery<TModel> query);
+        void BuildTables(IQuery<TModel> query, StringBuilder builder);
+
+        void BuildWhere(IQuery<TModel> query, StringBuilder builder);
 
     }
 }
