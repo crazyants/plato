@@ -8,7 +8,7 @@ namespace Plato.Entities.ViewModels
 
         public TModel Entity { get; set; }
 
-        public ILabelBase Channel { get; set; }
+        public ILabelBase Category { get; set; }
 
         public IEnumerable<ILabelBase> Labels { get; set; }
 

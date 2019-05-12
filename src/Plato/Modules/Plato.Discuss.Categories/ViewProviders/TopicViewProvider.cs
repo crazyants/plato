@@ -82,10 +82,20 @@ namespace Plato.Discuss.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+
+            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+
+            var categories = await _categoryStore.QueryAsync()
+                .Select<CategoryQueryParams>(q =>
+                {
+                    q.FeatureId.Equals(feature.Id);
+                    q.UserId.Equals(1);
+                })
+                .ToList();
+            
             return Views(View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Index.Sidebar", model =>
                 {
-                    model.Categories = categories?.Where(c => c.ParentId == 0);
+                    model.Categories = categories?.Data?.Where(c => c.ParentId == 0);
                     return model;
                 }).Zone("sidebar").Order(1)
             );

@@ -61,7 +61,7 @@ namespace Plato.Entities
             services.AddScoped<IEntityDataItemStore<EntityData>, EntityDataItemStore<EntityData>>();
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore<EntityReply>>();
             services.AddScoped<IEntityUsersStore, EntityUsersStore>();
-            
+
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();
@@ -81,6 +81,9 @@ namespace Plato.Entities
             services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
             services.AddScoped<IFederatedQueryProvider<Entity>, EntitySearchQueries<Entity>>();
 
+            // Query adapter
+            services.AddScoped<IQueryAdapterManager<EntityQueryParams>, QueryAdapterManager<EntityQueryParams>>();
+
             // Add profile views
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
             services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
@@ -89,9 +92,7 @@ namespace Plato.Entities
             services.AddScoped<IViewProviderManager<EntityUserIndex>, ViewProviderManager<EntityUserIndex>>();
             services.AddScoped<IViewProvider<EntityUserIndex>, UserViewProvider>();
 
-            // Query adapter
-            services.AddScoped<IQueryAdapterManager<EntityQueryParams>, QueryAdapterManager<EntityQueryParams>>();
-
+       
         }
 
         public override void Configure(

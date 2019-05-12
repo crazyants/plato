@@ -3,14 +3,14 @@
     var details = Model.Entity.GetOrCreate<ArticleDetails>();
 }
 
-@if (Model.Channel != null)
+@if (Model.Category != null)
 {
     <div class="list-left">
-        <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias" data-toggle="tooltip" title="@Model.Channel.Name">
-            @if (!String.IsNullOrWhiteSpace(Model.Channel.IconCss))
+        <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" data-toggle="tooltip" title="@Model.Category.Name">
+            @if (!String.IsNullOrWhiteSpace(Model.Category.IconCss))
             {
-                <span class="category-icon category-icon-md" style="background-color: @Model.Channel.BackColor; color: @Model.Channel.ForeColor">
-                    <i class="@Model.Channel.IconCss"></i>
+                <span class="category-icon category-icon-md" style="background-color: @Model.Category.BackColor; color: @Model.Category.ForeColor">
+                    <i class="@Model.Category.IconCss"></i>
                 </span>
             }
             else
@@ -129,11 +129,11 @@
             </span>
         }
         <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-        @if (Model.Channel != null)
+        @if (Model.Category != null)
         {
             <span>@T["in"]</span>
-            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
-                @Model.Channel.Name
+            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias">
+                @Model.Category.Name
             </a>
         }
         @if (Model.Entity.IsPrivate)

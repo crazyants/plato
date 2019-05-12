@@ -14,6 +14,8 @@ namespace Plato.Categories.Stores
 
         private readonly IStore<TModel> _store;
 
+        public IQueryAdapterManager<CategoryQueryParams> QueryAdapterManager { get; set; }
+        
         public CategoryQuery(IStore<TModel> store)
         {
             _store = store;
@@ -57,12 +59,26 @@ namespace Plato.Categories.Stores
     {
         
         private WhereInt _id;
+        private WhereInt _featureId;
+        private WhereInt _userId;
         private WhereString _keywords;
         
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
             set => _id = value;
+        }
+
+        public WhereInt FeatureId
+        {
+            get => _featureId ?? (_featureId = new WhereInt());
+            set => _featureId = value;
+        }
+        
+        public WhereInt UserId
+        {
+            get => _userId ?? (_userId = new WhereInt());
+            set => _userId = value;
         }
 
         public WhereString Keywords
@@ -154,14 +170,45 @@ namespace Plato.Categories.Stores
         
         private string BuildWhereClause()
         {
-            var sb = new StringBuilder();
 
+            var sb = new StringBuilder();
+            
+            // -----------------
+            // Apply any query adapters
+            // -----------------
+
+            var adapters = _query.QueryAdapterManager?.GetAdaptations(_query.Params);
+            if (adapters != null)
+            {
+                foreach (var adapter in adapters)
+                {
+                    if (!string.IsNullOrEmpty(sb.ToString()))
+                        sb.Append(" AND ");
+                    sb.Append(ReplaceTablePrefix(adapter));
+                }
+            }
+
+            // -----------------
             // Id
+            // -----------------
+
             if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
                 sb.Append(_query.Params.Id.ToSqlString("c.Id"));
+            }
+
+
+            // -----------------
+            // FeatureId
+            // -----------------
+
+            if (_query.Params.FeatureId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.FeatureId.Operator);
+                sb.Append(_query.Params.FeatureId.ToSqlString("c.FeatureId"));
             }
 
 
@@ -171,6 +218,7 @@ namespace Plato.Categories.Stores
         
         string GetQualifiedColumnName(string columnName)
         {
+
             if (columnName == null)
             {
                 throw new ArgumentNullException(nameof(columnName));
@@ -179,6 +227,7 @@ namespace Plato.Categories.Stores
             return columnName.IndexOf('.') >= 0
                 ? columnName
                 : "c." + columnName;
+
         }
 
         private string BuildOrderBy()
@@ -198,6 +247,11 @@ namespace Plato.Categories.Stores
             return sb.ToString();
         }
 
+        string ReplaceTablePrefix(string input)
+        {
+            return input.Replace("{prefix}_", _query.Options.TablePrefix);
+        }
+        
         #endregion
 
     }

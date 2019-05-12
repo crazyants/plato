@@ -75,7 +75,7 @@ namespace Plato.Questions.Categories.ViewAdapters
                     var channel = channels.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
                     if (channel != null)
                     {
-                        model.Channel = channel;
+                        model.Category = channel;
                     }
                     
                     // Return an anonymous type, we are adapting a view component

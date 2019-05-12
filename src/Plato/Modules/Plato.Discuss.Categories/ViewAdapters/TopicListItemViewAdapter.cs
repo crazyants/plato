@@ -36,8 +36,8 @@ namespace Plato.Discuss.Categories.ViewAdapters
             }
 
             // Get all categories for feature
-            var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            if (channels == null)
+            var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
+            if (categories == null)
             {
                 // No categories available to adapt the view 
                 return default(IViewAdapterResult);
@@ -71,11 +71,11 @@ namespace Plato.Discuss.Categories.ViewAdapters
                         };
                     }
 
-                    // Get our channel
-                    var channel = channels.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
-                    if (channel != null)
+                    // Get our category
+                    var category = categories.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
+                    if (category != null)
                     {
-                        model.Channel = channel;
+                        model.Category = category;
                     }
                     
                     // Return an anonymous type, we are adapting a view component

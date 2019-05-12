@@ -1,23 +1,24 @@
 ﻿using System.Text;
-using Plato.Entities.Stores;
+using Plato.Categories.Stores;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Categories.QueryAdapters
 {
-    public class EntityQueryAdapter : IQueryAdapterProvider<EntityQueryParams> 
+
+    public class CategoryQueryAdapter : IQueryAdapterProvider<CategoryQueryParams>
     {
 
-        public string AdaptQuery(EntityQueryParams queryParams)
+        public string AdaptQuery(CategoryQueryParams queryParams)
         {
-         
+
             if (queryParams == null)
             {
                 return string.Empty;
             }
 
-            // only return entities from categories if the user 
-            // belongs to one or more roles associated with the category
+            // only return categories if the user belongs to one
+            // or more roles associated with the category
 
             var sb = new StringBuilder();
 
@@ -25,7 +26,7 @@ namespace Plato.Entities.Categories.QueryAdapters
             // checks if user id is 0 or above
             if (queryParams.UserId.Value > -1)
             {
-                sb.Append("(e.CategoryId IN (");
+                sb.Append("(c.Id IN (");
                 if (queryParams.UserId.Value > 0)
                 {
                     sb.Append("SELECT cr.CategoryId FROM {prefix}_CategoryRoles AS cr WITH (nolock) WHERE cr.RoleId IN (");
@@ -44,11 +45,12 @@ namespace Plato.Entities.Categories.QueryAdapters
                 }
                 sb.Append("))");
             }
-            
+
             return sb.ToString();
 
         }
 
     }
+
 
 }

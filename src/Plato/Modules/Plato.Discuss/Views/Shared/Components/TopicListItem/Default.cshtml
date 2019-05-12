@@ -106,11 +106,11 @@
             </span>
         }
         <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
-        @if (@Model.Channel != null)
+        @if (@Model.Category != null)
         {
             <span>@T["in"]</span>
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Channel.Id" asp-route-opts.alias="@Model.Channel.Alias">
-                @Model.Channel.Name
+            <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias">
+                @Model.Category.Name
             </a>
         }
         @if (Model.Entity.IsPrivate)

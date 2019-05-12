@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Categories.Stores;
 using Plato.Entities.Categories.QueryAdapters;
 using Plato.Entities.Stores;
 using Plato.Internal.Models.Shell;
@@ -24,8 +25,8 @@ namespace Plato.Entities.Categories
         {
 
             // Query adapters
-            services.AddScoped<IQueryAdapterProvider<EntityQueryParams>, EntityQueryParamAdapter>();
-
+            services.AddScoped<IQueryAdapterProvider<EntityQueryParams>, EntityQueryAdapter>();
+            services.AddScoped<IQueryAdapterProvider<CategoryQueryParams>, CategoryQueryAdapter>();
 
         }
 

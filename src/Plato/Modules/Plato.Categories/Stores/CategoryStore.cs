@@ -11,6 +11,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Categories.Stores
 {
@@ -21,6 +22,7 @@ namespace Plato.Categories.Stores
         public const string ById = "ById";
         public const string ByFeatureId = "ByFeatureId";
 
+        private readonly IQueryAdapterManager<CategoryQueryParams> _queryAdapterManager;
         private readonly ICategoryRepository<TCategory> _categoryRepository;
         private readonly ICategoryDataStore<CategoryData> _categoryDataStore;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -29,11 +31,13 @@ namespace Plato.Categories.Stores
         private readonly ICacheManager _cacheManager;
 
         public CategoryStore(
+            IQueryAdapterManager<CategoryQueryParams> queryAdapterManager,
+            ICategoryDataStore<CategoryData> categoryDataStore,
             ICategoryRepository<TCategory> categoryRepository,
-            ICacheManager cacheManager,
+            ITypedModuleProvider typedModuleProvider,
             ILogger<CategoryStore<TCategory>> logger,
             IDbQueryConfiguration dbQuery,
-            ICategoryDataStore<CategoryData> categoryDataStore, ITypedModuleProvider typedModuleProvider)
+            ICacheManager cacheManager)
         {
             _categoryRepository = categoryRepository;
             _cacheManager = cacheManager;
@@ -41,6 +45,7 @@ namespace Plato.Categories.Stores
             _dbQuery = dbQuery;
             _categoryDataStore = categoryDataStore;
             _typedModuleProvider = typedModuleProvider;
+            _queryAdapterManager = queryAdapterManager;
         }
 
         #region "Implementation"
@@ -139,7 +144,10 @@ namespace Plato.Categories.Stores
 
         public virtual IQuery<TCategory> QueryAsync()
         {
-            var query = new CategoryQuery<TCategory>(this);
+            var query = new CategoryQuery<TCategory>(this)
+            {
+                QueryAdapterManager = _queryAdapterManager
+            };
             return _dbQuery.ConfigureQuery<TCategory>(query);
             ;
         }
