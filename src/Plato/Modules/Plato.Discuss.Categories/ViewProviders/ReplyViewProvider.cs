@@ -17,7 +17,7 @@ namespace Plato.Discuss.Categories.ViewProviders
     {
 
         private readonly IEntityStore<Topic> _entityStore;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<Category> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IStringLocalizer T;
@@ -28,7 +28,7 @@ namespace Plato.Discuss.Categories.ViewProviders
         public ReplyViewProvider(
             IStringLocalizer<ReplyViewProvider> stringLocalizer,
             IEntityStore<Topic> entityStore,
-            ICategoryStore<Channel> channelStore, 
+            ICategoryStore<Category> channelStore, 
             IBreadCrumbManager breadCrumbManager)
         {
             _entityStore = entityStore;
@@ -61,7 +61,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             }
 
             // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<ChannelAdmin> parents = null;
+            IEnumerable<CategoryAdmin> parents = null;
             if (topic.CategoryId > 0)
             {
                 parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);

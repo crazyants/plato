@@ -15,7 +15,7 @@ namespace Plato.Discuss.Categories.ViewComponents
         {
         }
 
-        public Task<IViewComponentResult> InvokeAsync(Channel category, CategoryIndexOptions options)
+        public Task<IViewComponentResult> InvokeAsync(Category category, CategoryIndexOptions options)
         {
 
             if (options == null)
@@ -23,7 +23,7 @@ namespace Plato.Discuss.Categories.ViewComponents
                 options = new CategoryIndexOptions();
             }
 
-            var model = new CategoryListItemViewModel<Channel>()
+            var model = new CategoryListItemViewModel<Category>()
             {
                 Category = category,
                 Options = options

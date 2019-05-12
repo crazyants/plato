@@ -52,7 +52,7 @@ namespace Plato.Articles.Categories.ViewProviders
             var channelViewOpts = new CategoryIndexOptions
             {
                 FeatureId = feature.Id,
-                ChannelId = categoryBase?.Id ?? 0
+                CategoryId = categoryBase?.Id ?? 0
             };
             
             // Get topic index view model from context

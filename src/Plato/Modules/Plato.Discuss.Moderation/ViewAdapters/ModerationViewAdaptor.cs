@@ -14,12 +14,12 @@ namespace Plato.Discuss.Moderation.ViewAdapters
     public class ModerationViewAdapterProvider : BaseAdapterProvider
     {
 
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<Category> _channelStore;
 
         private IHtmlLocalizer T { get; }
         
         public ModerationViewAdapterProvider(
-            ICategoryStore<Channel> channelStore,
+            ICategoryStore<Category> channelStore,
             IHtmlLocalizer htmlLocalizer)
         {
             _channelStore = channelStore;
@@ -37,7 +37,7 @@ namespace Plato.Discuss.Moderation.ViewAdapters
                 v.AdaptModel<Moderator>(model =>
                 {
 
-                    IEnumerable<ChannelAdmin> parents = null;
+                    IEnumerable<CategoryAdmin> parents = null;
                     if (model.CategoryId > 0)
                     {
                         parents = _channelStore.GetParentsByIdAsync(model.CategoryId)

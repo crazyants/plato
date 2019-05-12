@@ -13,14 +13,14 @@ namespace Plato.Discuss.Categories.Services
     public class CategoryDetailsUpdater : ICategoryDetailsUpdater
     {
 
-        private readonly ICategoryManager<Channel> _channelManager;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryManager<Category> _channelManager;
+        private readonly ICategoryStore<Category> _channelStore;
         private readonly IEntityReplyStore<Reply> _replyStore;
         private readonly IEntityStore<Topic> _topicStore;
 
         public CategoryDetailsUpdater(
-            ICategoryStore<Channel> channelStore, 
-            ICategoryManager<Channel> channelManager,
+            ICategoryStore<Category> channelStore, 
+            ICategoryManager<Category> channelManager,
             IEntityStore<Topic> topicStore, 
             IEntityReplyStore<Reply> replyStore)
         {

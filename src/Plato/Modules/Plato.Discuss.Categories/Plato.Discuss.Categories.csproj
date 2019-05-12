@@ -10,7 +10,6 @@
 
     <ProjectReference Include="..\Plato.Categories\Plato.Categories.csproj" />
     <ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
-    <ProjectReference Include="..\Plato.Roles\Plato.Roles.csproj" />
   </ItemGroup>
 
   <ItemGroup>

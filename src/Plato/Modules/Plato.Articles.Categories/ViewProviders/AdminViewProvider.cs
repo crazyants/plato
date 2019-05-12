@@ -54,7 +54,7 @@ namespace Plato.Articles.Categories.ViewProviders
                 Options = new CategoryIndexOptions()
                 {
                     FeatureId = feature.Id,
-                    ChannelId = categoryAdminBase?.Id ?? 0,
+                    CategoryId = categoryAdminBase?.Id ?? 0,
                     EnableEdit = true
                 }
             };

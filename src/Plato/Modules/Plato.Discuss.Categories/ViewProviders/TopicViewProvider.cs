@@ -11,6 +11,7 @@ using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Discuss.Categories.Models;
 using Plato.Discuss.Categories.Services;
+using Plato.Discuss.Categories.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities.Stores;
@@ -26,11 +27,13 @@ namespace Plato.Discuss.Categories.ViewProviders
     {
 
         private const string CategoryHtmlName = "category";
-        
+
+        private readonly ICategoryService<Category> _categoryService;
+
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityCategoryManager _entityCategoryManager;
         private readonly ICategoryDetailsUpdater _categoryDetailsUpdater;
-        private readonly ICategoryStore<Channel> _categoryStore;
+        private readonly ICategoryStore<Category> _categoryStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IPostManager<Topic> _entityManager;
@@ -48,12 +51,13 @@ namespace Plato.Discuss.Categories.ViewProviders
             IEntityCategoryManager entityCategoryManager,
             ICategoryDetailsUpdater categoryDetailsUpdater,
             IHttpContextAccessor httpContextAccessor,
-            ICategoryStore<Channel> categoryStore, 
+            ICategoryStore<Category> categoryStore, 
             IBreadCrumbManager breadCrumbManager,
             IPostManager<Topic> entityManager,
             IEntityStore<Topic> entityStore,
             IFeatureFacade featureFacade,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            ICategoryService<Category> categoryService)
         {
             _request = httpContextAccessor.HttpContext.Request;
             _entityCategoryManager = entityCategoryManager;
@@ -63,6 +67,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             _featureFacade = featureFacade;
             _entityManager = entityManager;
             _contextFacade = contextFacade;
+            _categoryService = categoryService;
             _categoryStore = categoryStore;
             _entityStore = entityStore;
 
@@ -82,32 +87,26 @@ namespace Plato.Discuss.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
 
-
-            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-
-            var categories = await _categoryStore.QueryAsync()
-                .Select<CategoryQueryParams>(q =>
+            var categoryIndexViewModel = new CategoryIndexViewModel()
+            {
+                Options = new CategoryIndexOptions()
                 {
-                    q.FeatureId.Equals(feature.Id);
-                    q.UserId.Equals(1);
-                })
-                .ToList();
-            
-            return Views(View<CategoryListViewModel<ChannelAdmin>>("Topic.Channels.Index.Sidebar", model =>
-                {
-                    model.Categories = categories?.Data?.Where(c => c.ParentId == 0);
-                    return model;
-                }).Zone("sidebar").Order(1)
+                    FeatureId = feature.Id
+                }
+            };
+
+            return Views(
+                View<CategoryIndexViewModel>(".Sidebar", model => categoryIndexViewModel).Zone("sidebar")
+                    .Order(1)
             );
             
-
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic topic, IViewProviderContext updater)
         {
 
             // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<ChannelAdmin> parents = null;
+            IEnumerable<CategoryAdmin> parents = null;
             if (topic.CategoryId > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(topic.CategoryId);
@@ -187,7 +186,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             }
             
             // Override breadcrumb configuration within base discuss controller 
-            IEnumerable<ChannelAdmin> parents = null;
+            IEnumerable<CategoryAdmin> parents = null;
             if (entity.CategoryId > 0)
             {
                 parents = await _categoryStore.GetParentsByIdAsync(entity.CategoryId);

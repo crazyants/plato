@@ -18,13 +18,13 @@ namespace Plato.Discuss.Categories.Subscribers
     {
 
         private readonly IBroker _broker;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryStore<Category> _channelStore;
         private readonly IEntityStore<Topic> _topicStore;
         private readonly ICategoryDetailsUpdater _categoryDetailsUpdater;
 
         public EntityReplySubscriber(
             IBroker broker,
-            ICategoryStore<Channel> channelStore,
+            ICategoryStore<Category> channelStore,
             IEntityStore<Topic> topicStore,
             ICategoryDetailsUpdater categoryDetailsUpdater)
         {

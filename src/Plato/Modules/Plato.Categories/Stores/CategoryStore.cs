@@ -168,6 +168,8 @@ namespace Plato.Categories.Stores
                 if (results != null)
                 {
                     results.Data = await MergeCategoryData(results.Data);
+                    results.Data = results.Data?.BuildHierarchy<TCategory>().ToList();
+                    //results.Data = results.Data?.OrderBy(r => r.SortOrder).ToList();
                 }
 
                 return results;

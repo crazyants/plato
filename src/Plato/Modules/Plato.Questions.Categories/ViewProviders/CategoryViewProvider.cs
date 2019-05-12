@@ -47,7 +47,7 @@ namespace Plato.Questions.Categories.ViewProviders
             // channel filter options
             var channelViewOpts = new CategoryIndexOptions
             {
-                ChannelId = categoryBase?.Id ?? 0
+                CategoryId = categoryBase?.Id ?? 0
             };
             
             // Get topic index view model from context

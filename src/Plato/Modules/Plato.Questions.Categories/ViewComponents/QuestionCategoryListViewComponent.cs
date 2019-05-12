@@ -43,7 +43,7 @@ namespace Plato.Questions.Categories.ViewComponents
             return new CategoryListViewModel<Category>()
             {
                 Options = options,
-                Categories = categories?.Where(c => c.ParentId == options.ChannelId)
+                Categories = categories?.Where(c => c.ParentId == options.CategoryId)
             };
         }
 

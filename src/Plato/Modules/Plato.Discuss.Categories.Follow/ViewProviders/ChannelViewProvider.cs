@@ -10,47 +10,47 @@ using Plato.Internal.Layout.ViewProviders;
 namespace Plato.Discuss.Categories.Follow.ViewProviders
 {
 
-    public class ChannelViewProvider : BaseViewProvider<Channel>
+    public class ChannelViewProvider : BaseViewProvider<Category>
     {
 
-        private readonly ICategoryStore<Channel> _categoryStore;
+        private readonly ICategoryStore<Category> _categoryStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
 
         public ChannelViewProvider(
             IContextFacade contextFacade,
             IFollowStore<Follows.Models.Follow> followStore,
-            ICategoryStore<Channel> categoryStore)
+            ICategoryStore<Category> categoryStore)
         {
             _contextFacade = contextFacade;
             _followStore = followStore;
             _categoryStore = categoryStore;
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Channel channelAdmin, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Category categoryAdmin, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Channel channelAdmin, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Category categoryAdmin, IViewProviderContext context)
         {
 
-            if (channelAdmin == null)
+            if (categoryAdmin == null)
             {
                 return default(IViewProviderResult);
             }
             
             // Get follow type
             FollowType followType = null;
-            followType = channelAdmin.Id == 0
+            followType = categoryAdmin.Id == 0
                 ? FollowTypes.AllChannels
                 : FollowTypes.Channel;
             
             // Get thingId if available
             var thingId = 0;
-            if (channelAdmin.Id > 0)
+            if (categoryAdmin.Id > 0)
             {
-                var existingChannel = await _categoryStore.GetByIdAsync(channelAdmin.Id);
+                var existingChannel = await _categoryStore.GetByIdAsync(categoryAdmin.Id);
                 if (existingChannel != null)
                 {
                     thingId = existingChannel.Id;
@@ -85,12 +85,12 @@ namespace Plato.Discuss.Categories.Follow.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Channel channelAdmin, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Category categoryAdmin, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Channel channelAdmin, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Category categoryAdmin, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

@@ -47,14 +47,15 @@ namespace Plato.Discuss.Categories
             // Repositories
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
-            services.AddScoped<ICategoryRepository<Channel>, CategoryRepository<Channel>>();
+            services.AddScoped<ICategoryRepository<Category>, CategoryRepository<Category>>();
 
             // Stores
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
-            services.AddScoped<ICategoryStore<Channel>, CategoryStore<Channel>>();
-            services.AddScoped<ICategoryManager<Channel>, CategoryManager<Channel>>();
-
+            services.AddScoped<ICategoryStore<Category>, CategoryStore<Category>>();
+            services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();
+            services.AddScoped<ICategoryService<Category>, CategoryService<Category>>();
+            
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
@@ -62,24 +63,20 @@ namespace Plato.Discuss.Categories
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
 
             // Home view provider
-            services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
-            services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
+            services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
+            services.AddScoped<IViewProvider<Category>, CategoryViewProvider>();
 
             // Admin view providers
-            services.AddScoped<IViewProviderManager<ChannelAdmin>, ViewProviderManager<ChannelAdmin>>();
-            services.AddScoped<IViewProvider<ChannelAdmin>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
+            services.AddScoped<IViewProvider<CategoryAdmin>, AdminViewProvider>();
          
-            // Category role view providers
-            services.AddScoped<IViewProviderManager<ChannelAdmin>, ViewProviderManager<ChannelAdmin>>();
-            services.AddScoped<IViewProvider<ChannelAdmin>, ChannelRolesViewProvider>();
-
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, TopicListItemViewAdapter>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
-            services.AddScoped<IBrokerSubscriber, CategorySubscriber<Channel>>();
+            services.AddScoped<IBrokerSubscriber, CategorySubscriber<Category>>();
 
             // Channel details updater
             services.AddScoped<ICategoryDetailsUpdater, CategoryDetailsUpdater>();

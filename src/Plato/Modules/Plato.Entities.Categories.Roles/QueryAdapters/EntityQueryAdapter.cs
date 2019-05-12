@@ -3,7 +3,7 @@ using Plato.Entities.Stores;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Entities.Categories.QueryAdapters
+namespace Plato.Entities.Categories.Roles.QueryAdapters
 {
     public class EntityQueryAdapter : IQueryAdapterProvider<EntityQueryParams> 
     {
@@ -37,7 +37,7 @@ namespace Plato.Entities.Categories.QueryAdapters
                 {
                     // anonymous user
                     sb.Append("SELECT cr.CategoryId FROM {prefix}_CategoryRoles AS cr WITH (nolock) WHERE (cr.RoleId = ");
-                    sb.Append("(SELECT TOP 1 RoleId FROM {prefix}_Roles WHERE Name = '")
+                    sb.Append("(SELECT TOP 1 r.Id FROM {prefix}_Roles r WHERE r.[Name] = '")
                         .Append(DefaultRoles.Anonymous)
                         .Append("')");
                     sb.Append(")");

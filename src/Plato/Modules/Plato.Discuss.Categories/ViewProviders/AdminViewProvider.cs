@@ -17,12 +17,12 @@ using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Discuss.Categories.ViewProviders
 {
-    public class AdminViewProvider : BaseViewProvider<ChannelAdmin>
+    public class AdminViewProvider : BaseViewProvider<CategoryAdmin>
     {
         
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Channel> _categoryStore;
-        private readonly ICategoryManager<Channel> _categoryManager;
+        private readonly ICategoryStore<Category> _categoryStore;
+        private readonly ICategoryManager<Category> _categoryManager;
         private readonly IFeatureFacade _featureFacade;
 
         public IStringLocalizer S { get; }
@@ -31,8 +31,8 @@ namespace Plato.Discuss.Categories.ViewProviders
         public AdminViewProvider(
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
-            ICategoryStore<Channel> categoryStore,
-            ICategoryManager<Channel> categoryManager,
+            ICategoryStore<Category> categoryStore,
+            ICategoryManager<Category> categoryManager,
             IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
@@ -45,7 +45,7 @@ namespace Plato.Discuss.Categories.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(ChannelAdmin categoryBase, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(CategoryAdmin categoryBase, IViewProviderContext updater)
         {
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Categories");
@@ -59,7 +59,7 @@ namespace Plato.Discuss.Categories.ViewProviders
                 Options = new CategoryIndexOptions()
                 {
                     FeatureId = feature.Id,
-                    ChannelId = categoryBase?.Id ?? 0,
+                    CategoryId = categoryBase?.Id ?? 0,
                     EnableEdit = true
                 }
             };
@@ -72,12 +72,12 @@ namespace Plato.Discuss.Categories.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(ChannelAdmin viewModel, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryAdmin viewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(ChannelAdmin categoryBase, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(CategoryAdmin categoryBase, IViewProviderContext updater)
         {
 
             var defaultIcons = new DefaultIcons();
@@ -119,7 +119,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             );
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(ChannelAdmin categoryBase, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryAdmin categoryBase, IViewProviderContext context)
         {
 
             var model = new EditChannelViewModel();
@@ -141,7 +141,7 @@ namespace Plato.Discuss.Categories.ViewProviders
                     iconCss = model.IconPrefix + iconCss;
                 }
 
-                var result = await _categoryManager.UpdateAsync(new Channel()
+                var result = await _categoryManager.UpdateAsync(new Category()
                 {
                     Id = categoryBase.Id,
                     FeatureId = categoryBase.FeatureId,

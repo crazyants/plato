@@ -1,6 +1,6 @@
-﻿@model CategoryListViewModel<Channel>
+﻿@model CategoryListViewModel<Category>
 
-@if (Model.Options.ChannelId == 0)
+@if (Model.Options.CategoryId == 0)
 {
     if (Model.Categories != null)
     {
@@ -54,7 +54,6 @@
                              </li>
                          </ol>
                      }
-
                      <h6 class="card-title">
                          @if (Model.Options.EnableEdit)
                          {
@@ -95,11 +94,9 @@
                          }
                          else
                          {
-
                              <li class="list-group-item">
-                                 <h6>@T["No child channels"]</h6>
+                                 @T["No child categories"]
                              </li>
-
                          }
                      </ul>
                  </card-body>
@@ -113,13 +110,11 @@
                 <h6 class="card-title">@T["Channels"]</h6>
             </card-title>
             <card-body>
-                
                 <ul class="list-group list-group-flush list-group-hover">
                     <li class="list-group-item">
-                        @T["No channels found"]
+                        @T["No categories found"]
                     </li>
                 </ul>
-             
             </card-body>
         </card>
     }
@@ -157,13 +152,11 @@ else
                     <h6 class="card-title">@T["Child Channels"]</h6>
                 </card-title>
                 <card-body>
-                
                     <ul class="list-group list-group-flush list-group-hover">
                         <li class="list-group-item">
                             @T["No child channels"]
                         </li>
                     </ul>
-             
                 </card-body>
             </card>
         }

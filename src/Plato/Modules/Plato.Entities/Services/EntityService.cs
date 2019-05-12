@@ -18,18 +18,15 @@ namespace Plato.Entities.Services
         private Action<EntityQueryParams> _configureParams = null;
 
         private readonly IContextFacade _contextFacade;
-        private readonly IFeatureFacade _featureFacade;
         private readonly IEntityStore<TModel> _entityStore;
   
         public EntityService(
             IContextFacade contextFacade,
-            IEntityStore<TModel> entityStore,
-            IFeatureFacade featureFacade)
+            IEntityStore<TModel> entityStore)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
-            _featureFacade = featureFacade;
-
+       
             // Default options delegate
             _configureDb = options => options.SearchType = SearchTypes.Tsql;
 
@@ -68,10 +65,7 @@ namespace Plato.Entities.Services
 
             // Get authenticated user 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Get features 
-            var followFeature = await _featureFacade.GetFeatureByIdAsync("Plato.Follows");
-
+            
             // Return tailored results
             return await _entityStore.QueryAsync()
                 .Take(pager.Page, pager.Size)
@@ -133,7 +127,7 @@ namespace Plato.Entities.Services
 
                             break;
                         case FilterBy.Following:
-                            if (user != null && followFeature != null)
+                            if (user != null)
                             {
                                 q.FollowUserId.Equals(user.Id, b =>
                                 {

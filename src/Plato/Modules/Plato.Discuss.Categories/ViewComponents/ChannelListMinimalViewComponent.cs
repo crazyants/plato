@@ -14,13 +14,13 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Discuss.Categories.ViewComponents
 {
 
-    public class ChannelListViewComponent : ViewComponent
+    public class ChannelListMinimalViewComponent : ViewComponent
     {
 
         private readonly ICategoryService<Category> _categoryService;
         private readonly IFeatureFacade _featureFacade;
 
-        public ChannelListViewComponent(
+        public ChannelListMinimalViewComponent(
             IFeatureFacade featureFacade, 
             ICategoryService<Category> categoryService)
         {
@@ -42,8 +42,6 @@ namespace Plato.Discuss.Categories.ViewComponents
         
         async Task<CategoryListViewModel<Category>> GetIndexModel(CategoryIndexOptions options)
         {
-            //var feature = await GetCurrentFeature();
-            //var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
 
             // Get categories
             var categories = await _categoryService
@@ -60,16 +58,6 @@ namespace Plato.Discuss.Categories.ViewComponents
             };
         }
 
-        async Task<IShellFeature> GetCurrentFeature()
-        {
-            var featureId = "Plato.Discuss.Categories";
-            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
-            if (feature == null)
-            {
-                throw new Exception($"No feature could be found for the Id '{featureId}'");
-            }
-            return feature;
-        }
 
     }
 

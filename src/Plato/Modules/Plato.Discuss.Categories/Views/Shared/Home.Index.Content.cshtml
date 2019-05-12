@@ -5,7 +5,7 @@
     options = @Model.Options
 }))
 
-@if (Model.Options.ChannelId != 0)
+@if (Model.Options.CategoryId != 0)
 {
     @await DisplayAsync(new View("TopicList", new
     {

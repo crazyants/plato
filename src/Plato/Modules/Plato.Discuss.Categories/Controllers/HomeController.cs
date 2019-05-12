@@ -24,8 +24,8 @@ namespace Plato.Discuss.Categories.Controllers
     public class HomeController : Controller, IUpdateModel
     {
      
-        private readonly IViewProviderManager<Channel> _channelViewProvider;
-        private readonly ICategoryStore<Channel> _channelStore;
+        private readonly IViewProviderManager<Category> _channelViewProvider;
+        private readonly ICategoryStore<Category> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IContextFacade _contextFacade;
@@ -39,9 +39,9 @@ namespace Plato.Discuss.Categories.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IViewProviderManager<Channel> channelViewProvider,
+            IViewProviderManager<Category> channelViewProvider,
             IBreadCrumbManager breadCrumbManager,
-            ICategoryStore<Channel> channelStore,
+            ICategoryStore<Category> channelStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade1, 
             IFeatureFacade featureFacade,
@@ -182,7 +182,7 @@ namespace Plato.Discuss.Categories.Controllers
 
         }
 
-        async Task<EntityIndexViewModel<Topic>> GetIndexViewModelAsync(Channel category, EntityIndexOptions options, PagerOptions pager)
+        async Task<EntityIndexViewModel<Topic>> GetIndexViewModelAsync(Category category, EntityIndexOptions options, PagerOptions pager)
         {
             
             // Get current feature

@@ -10,10 +10,10 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Roles.ViewModels;
 
-namespace Plato.Discuss.Categories.ViewProviders
+namespace Plato.Discuss.Categories.Roles.ViewProviders
 {
 
-    public class ChannelRolesViewProvider : BaseViewProvider<ChannelAdmin>
+    public class ChannelRolesViewProvider : BaseViewProvider<CategoryAdmin>
     {
 
         private const string HtmlName = "ChannelRoles";
@@ -39,17 +39,17 @@ namespace Plato.Discuss.Categories.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(ChannelAdmin category, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryAdmin category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(ChannelAdmin category, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(CategoryAdmin category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(ChannelAdmin category, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(CategoryAdmin category, IViewProviderContext updater)
         {
 
             var selectedRoles = await _categoryManager.GetRolesAsync(category);
@@ -65,7 +65,7 @@ namespace Plato.Discuss.Categories.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(ChannelAdmin category,
+        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryAdmin category,
             IViewProviderContext context)
         {
             

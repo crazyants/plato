@@ -14,7 +14,7 @@
                 @foreach (var channel in Model.Categories.Where(c => c.ParentId == 0))
                 {
                     var channelDetails = channel.GetOrCreate<CategoryDetails>();
-                    var css = channel.Id == Model.Options.ChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                    var css = channel.Id == Model.Options.CategoryId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
                     <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias" title="@channel.Description" class="@css">
                         <span data-toggle="tooltip" title="@T["Public Ideas"]" class="badge badge-info float-right">
                             @channelDetails.TotalEntities.ToPrettyInt()
