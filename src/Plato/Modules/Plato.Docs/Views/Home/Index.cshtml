@@ -33,13 +33,13 @@
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
-            <div class="col-lg-3">
+            <div class="col-lg-3 docs-table-contents overflow-auto">
                 @if (Model.SideBar != null)
                 {
                     <view model="@Model.SideBar"></view>
                 }
             </div>
-            <div class="col-lg-9">
+            <div class="col-lg-9 docs-table-body">
                 @if (Model.Content != null)
                 {
                     <view model="@Model.Content"></view>

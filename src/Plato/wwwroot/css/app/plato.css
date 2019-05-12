@@ -84,9 +84,9 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .overflow-auto { overflow: auto; }
 .overflow-auto::-webkit-scrollbar { background: transparent; }
-.overflow-auto::-webkit-scrollbar-thumb:vertical { margin: 0; }
+.overflow-auto::-webkit-scrollbar-thumb:vertical { margin: 0; padding: 0; }
 .overflow-auto::-webkit-scrollbar-button:start:decrement,
-.overflow-auto::-webkit-scrollbar-button:end:increment { height: 0; display: block; }
+.overflow-auto::-webkit-scrollbar-button:end:increment { height: 0; display: none; }
 .overflow-hidden { overflow: hidden; }
 
 /* ------------------------- */
