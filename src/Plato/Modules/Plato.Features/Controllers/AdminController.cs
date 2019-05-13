@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Features.ViewModels;
@@ -20,6 +23,7 @@ namespace Plato.Features.Controllers
     {
         
         private readonly IViewProviderManager<FeaturesIndexViewModel> _viewProvider;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -36,13 +40,15 @@ namespace Plato.Features.Controllers
             IViewProviderManager<FeaturesIndexViewModel> viewProvider, 
             IBreadCrumbManager breadCrumbManager,
             IAuthorizationService authorizationService,
-            IAlerter alerter)
+            IAlerter alerter,
+            IShellDescriptorManager shellDescriptorManager)
         {
             _shellFeatureManager = shellFeatureManager;
             _viewProvider = viewProvider;
             _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
             _alerter = alerter;
+            _shellDescriptorManager = shellDescriptorManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -62,8 +68,18 @@ namespace Plato.Features.Controllers
                 opts = new FeatureIndexOptions();
             }
 
+
             if (!string.IsNullOrEmpty(opts.Category))
             {
+
+                var category = await GetCategoriesNameAsync(opts.Category);
+
+                // Ensure the supplied category is valid
+                if (string.IsNullOrEmpty(category))
+                {
+                    return NotFound();
+                }
+
                 _breadCrumbManager.Configure(builder =>
                 {
                     builder
@@ -71,9 +87,12 @@ namespace Plato.Features.Controllers
                             .Action("Index", "Admin", "Plato.Admin")
                             .LocalNav())
                         .Add(S["Features"], features => features
-                            .Action("Index", "Admin", "Plato.Features")
+                            .Action("Index", "Admin", "Plato.Features", new RouteValueDictionary()
+                            {
+                                ["opts.category"] = ""
+                            })
                             .LocalNav())
-                        .Add(S[opts.Category]);
+                        .Add(S[category]);
                 });
             }
             else
@@ -197,6 +216,24 @@ namespace Plato.Features.Controllers
             {
                 return Redirect("~/");
             }
+        }
+
+        async Task<string> GetCategoriesNameAsync(string id)
+        {
+        
+            var features = await _shellDescriptorManager.GetFeaturesAsync();
+            foreach (var feature in features
+                .GroupBy(f => f.Descriptor.Category)
+                .OrderBy(o => o.Key))
+            {
+                if (feature.Key.Equals(id, StringComparison.OrdinalIgnoreCase))
+                {
+                    return feature.Key;
+                }
+            }
+
+            return string.Empty;
+
         }
         
     }

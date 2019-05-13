@@ -41,7 +41,18 @@ namespace Plato.Docs.ViewComponents
 
             // Add entities to view model
             options.Entities = entities?.Data?.BuildHierarchy<Doc>()?.OrderBy(r => r.SortOrder);
-            options.EditMenuViewName = await DisplayMenu() ? "DocTreeMenu" : string.Empty;
+
+            // Do we have a menu to display?
+            if (!string.IsNullOrEmpty(options.EditMenuViewName))
+            {
+                // Ensure we have permission to at least 1 of the menu options
+                var displayMenu = await DisplayMenu();
+                if (!displayMenu)
+                {
+                    // If we don't have permission disable menu
+                    options.EditMenuViewName = string.Empty;
+                }
+            }
 
             // Return view
             return View(options);

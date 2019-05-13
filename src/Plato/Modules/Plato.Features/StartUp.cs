@@ -44,7 +44,7 @@ namespace Plato.Features
             routes.MapAreaRoute(
                 name: "FeaturesIndex",
                 areaName: "Plato.Features",
-                template: "admin/features/{opts.category}",
+                template: "admin/features/{opts.category?}",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 
