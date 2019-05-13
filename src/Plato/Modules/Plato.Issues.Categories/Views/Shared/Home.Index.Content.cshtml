@@ -1,0 +1,16 @@
+﻿@model CategoryIndexViewModel
+
+@await DisplayAsync(new View("IssueCategoryList", new
+{
+    options = @Model.Options
+}))
+
+@if (Model.Options.CategoryId != 0)
+{
+    @await DisplayAsync(new View("IssueList", new
+    {
+        options = @Model.EntityIndexOptions,
+        pager = @Model.Pager
+    }))
+}
+

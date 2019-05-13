@@ -170,7 +170,7 @@ namespace Plato.Articles.Categories.ViewProviders
             {
                 new SelectListItem
                 {
-                    Text = S["root channel"],
+                    Text = S["root category"],
                     Value = "0"
                 }
             };

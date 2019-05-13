@@ -3,18 +3,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Services;
 using Plato.Categories.ViewModels;
-using Plato.Ideas.Categories.Models;
+using Plato.Issues.Categories.Models;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Ideas.Categories.ViewComponents
+namespace Plato.Issues.Categories.ViewComponents
 {
 
-    public class IdeaCategoryListSidebarViewComponent : ViewComponent
+    public class IssueCategoryListSidebarViewComponent : ViewComponent
     {
 
         private readonly ICategoryService<Category> _categoryService;
         
-        public IdeaCategoryListSidebarViewComponent(ICategoryService<Category> categoryService)
+        public IssueCategoryListSidebarViewComponent(ICategoryService<Category> categoryService)
         {
             _categoryService = categoryService;
         }

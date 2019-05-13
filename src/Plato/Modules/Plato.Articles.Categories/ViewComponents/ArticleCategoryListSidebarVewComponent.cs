@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Services;
 using Plato.Categories.ViewModels;
 using Plato.Articles.Categories.Models;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Categories.ViewComponents

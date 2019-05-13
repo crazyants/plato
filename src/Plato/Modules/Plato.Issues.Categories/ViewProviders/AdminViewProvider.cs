@@ -8,14 +8,14 @@ using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
-using Plato.Ideas.Categories.Models;
-using Plato.Ideas.Categories.ViewModels;
+using Plato.Issues.Categories.Models;
+using Plato.Issues.Categories.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 
-namespace Plato.Ideas.Categories.ViewProviders
+namespace Plato.Issues.Categories.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<CategoryAdmin>
     {
@@ -26,7 +26,8 @@ namespace Plato.Ideas.Categories.ViewProviders
         private readonly IFeatureFacade _featureFacade;
 
         public IStringLocalizer S { get; }
-        
+
+
         public AdminViewProvider(
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
@@ -47,10 +48,10 @@ namespace Plato.Ideas.Categories.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(CategoryAdmin categoryBase, IViewProviderContext updater)
         {
 
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas.Categories");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues.Categories");
             if (feature == null)
             {
-                throw new Exception($"No feature could be found for the Id 'Plato.Ideas.Categories'");
+                throw new Exception($"No feature could be found for the Id 'Plato.Issues.Categories'");
             }
 
             var viewModel = new CategoryIndexViewModel()
@@ -179,10 +180,10 @@ namespace Plato.Ideas.Categories.ViewProviders
                 }
             };
 
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas.Categories");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues.Categories");
             if (feature == null)
             {
-                throw new Exception($"No feature could be found for the Id 'Plato.Ideas.Categories'");
+                throw new Exception($"No feature could be found for the Id 'Plato.Issues.Categories'");
             }
 
             var channels = await _categoryStore.GetByFeatureIdAsync(feature.Id);
