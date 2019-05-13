@@ -29,6 +29,7 @@ namespace Plato.Discuss.Categories.Roles
             services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
             services.AddScoped<IViewProvider<CategoryAdmin>, CategoryRolesViewProvider>();
 
+            // Query adapters to limit access by role
             services.AddScoped<IQueryAdapterProvider<Topic>, TopicQueryAdapter>();
             services.AddScoped<IQueryAdapterProvider<Category>, CategoryQueryAdapter>();
 

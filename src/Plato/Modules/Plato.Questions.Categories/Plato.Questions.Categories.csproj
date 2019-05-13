@@ -9,7 +9,6 @@
     <ProjectReference Include="..\Plato.Categories\Plato.Categories.csproj" />
 
     <ProjectReference Include="..\Plato.Questions\Plato.Questions.csproj" />
-    <ProjectReference Include="..\Plato.Roles\Plato.Roles.csproj" />
   </ItemGroup>
 
   <ItemGroup>

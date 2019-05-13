@@ -1,5 +1,5 @@
 Name: Plato Discuss Categories Roles
-Description: Adds role based access for categories within Plato.Discuss.
+Description: Adds the ability to restrict access to categories by role within Plato.Discuss.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Discuss
@@ -9,10 +9,6 @@ Dependencies:
 [
 	{
 		Id: "Plato.Discuss.Categories",
-		Version: "1.0.0"
-	},
-	{
-		Id: "Plato.Entities.Categories.Roles",
 		Version: "1.0.0"
 	}
 ]

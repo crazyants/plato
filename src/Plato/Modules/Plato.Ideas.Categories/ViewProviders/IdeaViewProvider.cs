@@ -14,6 +14,7 @@ using Plato.Ideas.Categories.Services;
 using Plato.Ideas.Models;
 using Plato.Ideas.Services;
 using Plato.Entities.Stores;
+using Plato.Ideas.Categories.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -82,14 +83,19 @@ namespace Plato.Ideas.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return Views(View<CategoryListViewModel<Category>>("Idea.Categories.Index.Sidebar", model =>
+            var categoryIndexViewModel = new CategoryIndexViewModel()
+            {
+                Options = new CategoryIndexOptions()
                 {
-                    model.Categories = categories?.Where(c => c.ParentId == 0);
-                    return model;
-                }).Zone("sidebar").Order(1)
+                    FeatureId = feature.Id
+                }
+            };
+
+            return Views(
+                View<CategoryIndexViewModel>("Ideas.Categories.Sidebar", model => categoryIndexViewModel).Zone("sidebar")
+                    .Order(1)
             );
-            
+
 
         }
 
@@ -143,24 +149,6 @@ namespace Plato.Ideas.Categories.ViewProviders
 
 
             return default(IViewProviderResult);
-
-            //// Get current feature
-            //var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas.Categories");
-            //if (feature == null)
-            //{
-            //    return default(IViewProviderResult);
-            //}
-
-            //// Get all categories & return views
-            //var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            
-            //return Views(
-            //    View<CategoryListViewModel<Category>>("Idea.Categories.Display.Sidebar", model =>
-            //    {
-            //        model.Categories = categories?.Where(c => c.Id == idea.CategoryId);
-            //        return model;
-            //    }).Zone("sidebar").Order(2)
-            //);
 
         }
         
@@ -244,7 +232,7 @@ namespace Plato.Ideas.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryDropDownViewModel>("Idea.Categories.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<CategoryDropDownViewModel>("Ideas.Categories.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }

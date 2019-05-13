@@ -3,11 +3,7 @@ using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Stores.Abstractions.QueryAdapters
 {
-
-    /// <summary>
-    /// Provides extensibility for IQuery implementations.
-    /// </summary>
-    /// <typeparam name="TModel"></typeparam>
+    
     public class BaseQueryAdapterProvider<TModel> : IQueryAdapterProvider<TModel> where TModel : class
     {
 

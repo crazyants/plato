@@ -8,11 +8,11 @@ namespace Plato.Internal.Stores.Abstractions.QueryAdapters
     public interface IQueryAdapterManager<TModel> where TModel : class
     {
 
-        IEnumerable<string> BuildSelect(IQuery<TModel> query, StringBuilder builder);
+        void BuildSelect(IQuery<TModel> query, StringBuilder builder);
 
-        IEnumerable<string> BuildTables(IQuery<TModel> query, StringBuilder builder);
+        void BuildTables(IQuery<TModel> query, StringBuilder builder);
 
-        IEnumerable<string> BuildWhere(IQuery<TModel> query, StringBuilder builder);
+        void BuildWhere(IQuery<TModel> query, StringBuilder builder);
 
     }
     

@@ -36,27 +36,26 @@ namespace Plato.Questions.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-
-            CategoryBase categoryBase = null;
+            Category existingCategory = null;
             if (categoryAdmin?.Id > 0)
             {
-                categoryBase = await _categoryStore.GetByIdAsync(categoryAdmin.Id);
+                existingCategory = await _categoryStore.GetByIdAsync(categoryAdmin.Id);
             }
 
-            // channel filter options
-            var channelViewOpts = new CategoryIndexOptions
-            {
-                CategoryId = categoryBase?.Id ?? 0
-            };
-            
             // Get topic index view model from context
             var viewModel = context.Controller.HttpContext.Items[typeof(EntityIndexViewModel<Question>)] as EntityIndexViewModel<Question>;
             if (viewModel == null)
             {
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Question>).ToString()} has not been registered on the HttpContext!");
             }
-            
+
+            // channel filter options
+            var channelViewOpts = new CategoryIndexOptions
+            {
+                CategoryId = existingCategory?.Id ?? 0,
+                FeatureId = feature.Id
+            };
+
             var indexViewModel = new CategoryIndexViewModel()
             {
                 Options = channelViewOpts,
@@ -65,16 +64,10 @@ namespace Plato.Questions.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
-                View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
+                View<CategoryBase>("Home.Index.Header", model => existingCategory).Zone("header").Order(1),
+                View<CategoryBase>("Home.Index.Tools", model => existingCategory).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<CategoryListViewModel<Category>>("Question.Categories.Index.Sidebar", model =>
-                {
-                    //model.SelectedChannelId = channel?.Id ?? 0;
-                    model.Options = channelViewOpts;
-                    model.Categories = categories;
-                    return model;
-                }).Zone("sidebar").Order(1)
+                View<CategoryIndexViewModel>("Questions.Categories.Sidebar", model => indexViewModel).Zone("sidebar").Order(1)
             );
 
         }

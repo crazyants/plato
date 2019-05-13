@@ -55,7 +55,7 @@ namespace Plato.Discuss.Categories.Roles.ViewProviders
             var selectedRoles = await _categoryManager.GetRolesAsync(category);
 
             return Views(
-                View<EditUserRolesViewModel>("Admin.Edit.ChannelRoles", model =>
+                View<EditUserRolesViewModel>("Discuss.Edit.CategoryRoles", model =>
                 {
                     model.SelectedRoles = selectedRoles;
                     model.HtmlName = HtmlName;

@@ -1,0 +1,14 @@
+Name: Plato Ideas Categories Roles
+Description: Adds the ability to restrict access to categories by role within Plato.Ideas.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Ideas
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Ideas.Categories",
+		Version: "1.0.0"
+	}
+]

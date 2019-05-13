@@ -8,6 +8,7 @@ using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Discuss.Categories.Roles.QueryAdapters
 {
+
     public class TopicQueryAdapter : BaseQueryAdapterProvider<Topic> 
     {
 
@@ -25,8 +26,7 @@ namespace Plato.Discuss.Categories.Roles.QueryAdapters
             
             // only return entities from categories if the user 
             // belongs to one or more roles associated with the category
-            // Only apply role based security
-            // checks if user id is 0 or above
+            // Only apply role based security if user id is 0 or above
 
             if (q.Params.UserId.Value > -1)
             {
@@ -48,7 +48,7 @@ namespace Plato.Discuss.Categories.Roles.QueryAdapters
                 {
                     // anonymous user
                     builder.Append("SELECT cr.CategoryId FROM {prefix}_CategoryRoles AS cr WITH (nolock) WHERE (cr.RoleId = ");
-                    builder.Append("(SELECT TOP 1 r.Id FROM {prefix}_Roles r WHERE r.[Name] = '")
+                    builder.Append("(SELECT r.Id FROM {prefix}_Roles r WHERE r.[Name] = '")
                         .Append(DefaultRoles.Anonymous)
                         .Append("')");
                     builder.Append(")");

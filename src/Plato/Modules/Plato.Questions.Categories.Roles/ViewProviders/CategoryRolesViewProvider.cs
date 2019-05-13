@@ -1,27 +1,27 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Plato.Questions.Categories.Models;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
-using Plato.Questions.Categories.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Roles.ViewModels;
 
-namespace Plato.Questions.Categories.ViewProviders
+namespace Plato.Questions.Categories.Roles.ViewProviders
 {
 
     public class CategoryRolesViewProvider : BaseViewProvider<CategoryAdmin>
     {
 
-        private const string HtmlName = "ChannelRoles";
+        private const string HtmlName = "CategoryRoles";
 
         private readonly ICategoryManager<CategoryBase> _categoryManager;
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IContextFacade _contextFacade;
-        
+
+
         private readonly HttpRequest _request;
 
         public CategoryRolesViewProvider(
@@ -30,12 +30,14 @@ namespace Plato.Questions.Categories.ViewProviders
             ICategoryManager<CategoryBase> categoryManager,
             IContextFacade contextFacade)
         {
+          
             _platoRoleStore = platoRoleStore;
             _categoryManager = categoryManager;
             _contextFacade = contextFacade;
             _request = httpContextAccessor.HttpContext.Request;
         }
-        
+
+
         public override Task<IViewProviderResult> BuildDisplayAsync(CategoryAdmin category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
@@ -50,8 +52,9 @@ namespace Plato.Questions.Categories.ViewProviders
         {
 
             var selectedRoles = await _categoryManager.GetRolesAsync(category);
+
             return Views(
-                View<EditUserRolesViewModel>("Admin.Edit.ChannelRoles", model =>
+                View<EditUserRolesViewModel>("Ideas.Edit.CategoryRoles", model =>
                 {
                     model.SelectedRoles = selectedRoles;
                     model.HtmlName = HtmlName;

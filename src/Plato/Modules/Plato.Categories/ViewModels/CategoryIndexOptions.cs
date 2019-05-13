@@ -12,9 +12,6 @@ namespace Plato.Categories.ViewModels
         [DataMember(Name = "categoryId")]
         public int CategoryId { get; set; }
 
-        [DataMember(Name = "enableEdit")]
-        public bool EnableEdit { get; set; }
-
         [DataMember(Name = "sort")]
         public SortBy Sort { get; set; } = SortBy.Auto;
 

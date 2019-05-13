@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Entities.Categories.Roles</AssemblyName>
-    <PackageId>Plato.Entities.Categories.Roles</PackageId>
+    <AssemblyName>Plato.Ideas.Categories.Roles</AssemblyName>
+    <PackageId>Plato.Ideas.Categories.Roles</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -21,8 +21,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
-    <ProjectReference Include="..\Plato.Categories\Plato.Categories.csproj" />
-    <ProjectReference Include="..\Plato.Entities\Plato.Entities.csproj" />
+    <ProjectReference Include="..\Plato.Ideas.Categories\Plato.Ideas.Categories.csproj" />
     <ProjectReference Include="..\Plato.Roles\Plato.Roles.csproj" />
   </ItemGroup>
 

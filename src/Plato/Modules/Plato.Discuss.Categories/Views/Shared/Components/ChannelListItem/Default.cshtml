@@ -25,20 +25,11 @@
     }
 
     <div class="col-7 pl-0">
-
-        @if (Model.Options.EnableEdit)
-        {
-            <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
-                @Model.Category.Name
-            </a>
-        }
-        else
-        {
-            <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
-                @Model.Category.Name
-            </a>
-        }
-
+        
+        <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
+            @Model.Category.Name
+        </a>
+  
         @if (!String.IsNullOrEmpty(Model.Category.Description))
         {
             <div class="text-muted">
@@ -55,21 +46,12 @@
         @if (Model.Category.Children.Any())
         {
             <ul class="list-inline">
-                @foreach (var subchannel in Model.Category.Children)
+                @foreach (var child in Model.Category.Children)
                 {
                     <li class="float-left mr-2">
-                        @if (Model.Options.EnableEdit)
-                        {
-                            <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
+                        <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@child.Id">
+                            @child.Name
+                        </a>
                     </li>
                 }
             </ul>

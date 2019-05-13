@@ -15,7 +15,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores;
-using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Categories
 {
@@ -56,7 +56,9 @@ namespace Plato.Categories
             // Subscribers
             services.AddScoped<IBrokerSubscriber, CategorySubscriber<CategoryBase>>();
 
-        
+            // Query adapters
+            services.AddScoped<IQueryAdapterManager<CategoryBase>, QueryAdapterManager<CategoryBase>>();
+            
         }
 
         public override void Configure(

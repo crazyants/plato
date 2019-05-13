@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Plato.Articles.Categories.Models;
@@ -55,7 +54,7 @@ namespace Plato.Articles.Categories.Roles.ViewProviders
             var selectedRoles = await _categoryManager.GetRolesAsync(category);
 
             return Views(
-                View<EditUserRolesViewModel>("Admin.Edit.CategoryRoles", model =>
+                View<EditUserRolesViewModel>("Articles.Edit.CategoryRoles", model =>
                 {
                     model.SelectedRoles = selectedRoles;
                     model.HtmlName = HtmlName;

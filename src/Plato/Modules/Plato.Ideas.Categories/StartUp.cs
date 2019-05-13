@@ -51,8 +51,9 @@ namespace Plato.Ideas.Categories
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
             services.AddScoped<ICategoryStore<Category>, CategoryStore<Category>>();
             services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();
+            services.AddScoped<ICategoryService<Category>, CategoryService<Category>>();
 
-            // Discuss view providers
+            // View providers
             services.AddScoped<IViewProviderManager<Idea>, ViewProviderManager<Idea>>();
             services.AddScoped<IViewProvider<Idea>, IdeaViewProvider>();
             services.AddScoped<IViewProviderManager<IdeaComment>, ViewProviderManager<IdeaComment>>();
@@ -66,10 +67,6 @@ namespace Plato.Ideas.Categories
             services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
             services.AddScoped<IViewProvider<CategoryAdmin>, AdminViewProvider>();
          
-            // Category role view providers
-            services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
-            services.AddScoped<IViewProvider<CategoryAdmin>, CategoryRolesViewProvider>();
-
             // Register view adapters
             services.AddScoped<IViewAdapterProvider, IdeaListItemViewAdapter>();
 

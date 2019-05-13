@@ -8,73 +8,30 @@
         : "articles";
 }
 
-
-@if (Model.Options.EnableEdit)
-{
-    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
-        <div class="p-3">
-            @if (!String.IsNullOrEmpty(Model.Category.IconCss))
-            {
-                <span class="category-icon category-icon-lg" style="background-color: @childBgColor; color: @childForeColor">
-                    <i class="@Model.Category.IconCss"></i>
-                </span>
-            }
-            else
-            {
-
-                <span class="category-icon category-icon-lg">
-                    <i class="fal fa-folder"></i>
-                </span>
-
-            }
-            <h6 class="d-block mt-2">
-                @Model.Category.Name
-            </h6>
-            @if (!String.IsNullOrEmpty(Model.Category.Description))
-            {
-                <div class="text-muted">
-                    @Model.Category.Description
-                </div>
-            }
-            else
-            {
-                <div class="text-muted">
-                    @T["No description provided"]
-                </div>
-            }
-
-        </div>
-    </a>
-}
-else
-{
-    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
-        <div class="p-3">
-            @if (!String.IsNullOrEmpty(Model.Category.IconCss))
-            {
-                <div class="category-icon category-icon-lg" style="background-color: @childBgColor; color: @childForeColor">
-                    <i class="@Model.Category.IconCss"></i>
-                </div>
-            }
-            else
-            {
-                <div class="category-icon category-icon-lg">
-                    <i class="fal fa-folder"></i>
-                </div>
-            }
-            <h6 class="d-block mt-2">
-                @Model.Category.Name
-            </h6>
-         
-            <div class="btn btn-secondary">
-                @details.TotalEntities.ToPrettyInt() @T[buttonText]
+<a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="list-group-item-action d-block p-3 text-center">
+    <div class="p-3">
+        @if (!String.IsNullOrEmpty(Model.Category.IconCss))
+        {
+            <div class="category-icon category-icon-lg" style="background-color: @childBgColor; color: @childForeColor">
+                <i class="@Model.Category.IconCss"></i>
             </div>
-         
+        }
+        else
+        {
+            <div class="category-icon category-icon-lg">
+                <i class="fal fa-folder"></i>
+            </div>
+        }
+        <h6 class="d-block mt-2">
+            @Model.Category.Name
+        </h6>
+     
+        <div class="btn btn-secondary">
+            @details.TotalEntities.ToPrettyInt() @T[buttonText]
         </div>
-    </a>
-}
-
-
+     
+    </div>
+</a>
 
 <div class="row" style="display: none;">
 
@@ -96,20 +53,11 @@ else
     }
 
     <div class="col-7 pl-0">
-
-        @if (Model.Options.EnableEdit)
-        {
-            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
-                @Model.Category.Name
-            </a>
-        }
-        else
-        {
-            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
-                @Model.Category.Name
-            </a>
-        }
-
+        
+        <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
+            @Model.Category.Name
+        </a>
+ 
         @if (!String.IsNullOrEmpty(Model.Category.Description))
         {
             <div class="text-muted">
@@ -126,21 +74,14 @@ else
         @if (Model.Category.Children.Any())
         {
             <ul class="list-inline">
-                @foreach (var subchannel in Model.Category.Children)
+                @foreach (var child in Model.Category.Children)
                 {
                     <li class="float-left mr-2">
-                        @if (Model.Options.EnableEdit)
-                        {
-                            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
+                 
+                        <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@child.Id">
+                            @child.Name
+                        </a>
+                 
                     </li>
                 }
             </ul>

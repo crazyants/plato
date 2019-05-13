@@ -26,19 +26,10 @@
 
     <div class="col-7 pl-0">
 
-        @if (Model.Options.EnableEdit)
-        {
-            <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
-                @Model.Category.Name
-            </a>
-        }
-        else
-        {
-            <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
-                @Model.Category.Name
-            </a>
-        }
-
+        <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" class="font-weight-bold">
+            @Model.Category.Name
+        </a>
+    
         @if (!String.IsNullOrEmpty(Model.Category.Description))
         {
             <div class="text-muted">
@@ -55,21 +46,14 @@
         @if (Model.Category.Children.Any())
         {
             <ul class="list-inline">
-                @foreach (var subchannel in Model.Category.Children)
+                @foreach (var child in Model.Category.Children)
                 {
                     <li class="float-left mr-2">
-                        @if (Model.Options.EnableEdit)
-                        {
-                            <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
+                    
+                        <a asp-route-area="Plato.Ideas.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@child.Id">
+                            @child.Name
+                        </a>
+                      
                     </li>
                 }
             </ul>
@@ -89,7 +73,7 @@
             <div class="float-right">
                 <ol class="list-inline text-muted">
                     <li class="list-inline-item">
-                        <span title="@T["Public Topics"]" data-toggle="tooltip">
+                        <span title="@T["Public Ideas"]" data-toggle="tooltip">
                             @details.TotalEntities.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
                         </span>
                     </li>

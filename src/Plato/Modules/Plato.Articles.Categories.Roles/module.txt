@@ -1,5 +1,5 @@
 Name: Plato Articles Categories Roles
-Description: Adds role based access for categories within Plato.Articles.
+Description: Adds the ability to restrict access to categories by role within Plato.Articles.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Articles
@@ -9,10 +9,6 @@ Dependencies:
 [
 	{
 		Id: "Plato.Articles.Categories",
-		Version: "1.0.0"
-	},
-	{
-		Id: "Plato.Entities.Categories.Roles",
 		Version: "1.0.0"
 	}
 ]
