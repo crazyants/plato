@@ -1,6 +1,29 @@
 ﻿/* ReSharper disable once UnknownCssVendorExtension */
 /* ReSharper disable once UnknownCssVendorExtension */
 
+/* ------------------------- */
+/* Plato Icon */
+/* ------------------------- */
+
+.plato-brand {
+    display: inline-block;
+    line-height: normal;
+    vertical-align: middle;
+    padding: 6px;
+    background: transparent;
+    border-width: 6px;
+    border-style: solid;
+    border-top-color: #007BFF;
+    border-left-color: #12BF67;
+    border-right-color: #DEB032;
+    border-bottom-color: #DE3254;
+    transform: rotate(-45deg);
+}
+
+.plato-brand-sm { padding: 3px; border-width: 3px; }
+.plato-brand-lg { padding: 12px; border-width: 12px; }
+.plato-brand-xl { padding: 20px; border-width: 20px; }
+
 canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
 
 /* ------------------------- */
@@ -1447,7 +1470,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* slide out XS */
 
 .anim-slide-out-down-xs {
-    animation-name: transitionOutDown;
+    animation-name: transitionOutDownXs;
 }
 
 @keyframes transitionOutDownXs {

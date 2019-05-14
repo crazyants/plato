@@ -1,42 +1,12 @@
 ﻿@using Plato.Internal.Models.Extensions
 @model ReportOptions
 
-<div class="row">
-    <div class="col-lg-8 col-md-12 col-sm-12">
-        
-        @await DisplayAsync(new View("ViewsByDateChart", new
-        {
-            options = @Model
-        }))
-        
-    </div>
+@await DisplayAsync(new View("ViewsByDateChart", new
+{
+    options = @Model
+}))
 
-    <div class="col-lg-4 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("ViewsByFeatureChart", new
-        {
-            options = @Model
-        }))
-
-    </div>
-</div>
-
-
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        
-        @await DisplayAsync(new View("NewUsersByDateChart", new
-        {
-            options = @Model
-        }))
-
-    </div>
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        
-        @await DisplayAsync(new View("UserRepByDateChart", new
-        {
-            options = @Model
-        }))
-
-    </div>
-</div>
+@await DisplayAsync(new View("ViewsByFeatureList", new
+{
+    options = @Model
+}))

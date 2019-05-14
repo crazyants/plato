@@ -2272,6 +2272,9 @@ a.badge-dark:focus, a.badge-dark.focus {
     color: #414141
 }
 
+.progress {
+    background: #222;
+}
 .progress-bar {
     color: #fff;
     background-color: #2A9FD6;

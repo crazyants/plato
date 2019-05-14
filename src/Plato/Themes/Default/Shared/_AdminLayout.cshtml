@@ -22,7 +22,7 @@
 
         <div class="nav navbar navbar-expand-lg bg-dark navbar-dark">
             <a class="navbar-brand" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
-                @T["Plato"]
+                <span class="plato-brand mr-2"></span> @T["Plato"]
             </a>
             <hr />
             <div class="d-lg-none">
@@ -73,9 +73,9 @@
 
         <div class="main-container">
             <div class="nav navbar navbar-expand-lg navbar-lg navbar-light bg-light" role="navigation">                
-                    <a class="navbar-brand" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">
-                        @T["Plato"]
-                    </a>
+                <a class="navbar-brand" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">
+                
+                </a>
                     @if (this.CurrentUser != null)
                     {
                         <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" class="form-inline ml-auto" method="post">

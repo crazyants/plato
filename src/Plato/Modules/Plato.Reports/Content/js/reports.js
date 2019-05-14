@@ -43,12 +43,12 @@ $(function(win, doc, $) {
 
             while (i <= length) {
 
-                var randomR = Math.floor(Math.random() * 100 + 100);
-                var randomG = Math.floor(Math.random() * 100 + 100);
-                var randomB = Math.floor(Math.random() * 255 + 100);
+                var randomR = Math.floor(Math.random() * 100 + Math.random() * 100);
+                var randomG = Math.floor(Math.random() * 100 + Math.random() * 100);
+                var randomB = Math.floor(Math.random() * 255 + Math.random() * 255);
 
                 var graphBackground = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
-                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.5).rgbString());
+                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.7).rgbString());
 
                 var graphOutline = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
                 graphOutlines.push(graphOutline);
@@ -186,7 +186,6 @@ $(function(win, doc, $) {
                         responsive: true,
                         maintainAspectRatio: false,
                         cutoutPercentage: 70,
-                    
                         legend:
                         {
                             display: false,

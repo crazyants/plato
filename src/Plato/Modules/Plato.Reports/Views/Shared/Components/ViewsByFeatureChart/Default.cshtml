@@ -4,6 +4,38 @@
     var data = Model?.SerializeCounts() ?? "[]";
     var chartId = "pageViewsByFeatureChart";
 }
+
+
+
+@*@foreach (var aggregate in Model.Data)
+{
+    var width = aggregate.Count.ToPercentageOf(@Model.Total()) + "%";
+    <card>
+        <card-body>
+
+            <div class="d-block">
+                <h5 class="float-right">
+                    @aggregate.Count.ToPrettyInt()
+                </h5>
+                <strong>
+                    @aggregate.Aggregate
+                </strong>
+                <br/>
+                <span class="text-muted">
+                    @T["Page Views"]
+                </span>
+
+
+            </div>
+            <div class="d-block mt-3">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @width" aria-valuenow="@aggregate.Count" aria-valuemin="0" aria-valuemax="@Model.Total()"></div>
+                </div>
+            </div>
+        </card-body>
+    </card>
+}*@
+
 <card>
     <card-body>
 
@@ -18,8 +50,8 @@
         }
         <br />
         @T["Views By Feature"]
-        <div class="position-relative mt-3" style="height: 150px;">
-            <canvas id="@chartId" class="w-100"></canvas>
+        <div class="position-relative w-100 mt-3" style="height: 150px;">
+            <canvas id="@chartId"></canvas>
         </div>
 
     </card-body>
@@ -27,7 +59,7 @@
 
 
 <script section="Footer">
-    
+
     if (typeof window.$.Plato.Reports === "undefined") {
         throw new Error("$.Plato.Reports Required");
     }
@@ -45,7 +77,7 @@
 
         app.ready(function() {
 
-        
+
             var data = @Html.Raw(data),
                 randomColors = charts.randomColors(data.length);
 
