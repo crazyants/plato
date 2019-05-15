@@ -2,7 +2,7 @@
 @{
     var labels = Model?.SerializeLabels() ?? "[]";
     var data = Model?.SerializeCounts() ?? "[]";
-    var chartId = "pageViewsByFeatureChart";
+    var chartId = "pageViewsByRoleChart";
 }
 
 <card>
@@ -12,12 +12,12 @@
             <div class="text">
                 <h5>@Model?.Total()</h5>
                 <span class="text-muted">
-                    @T["Views By Feature"]
+                    @T["Views By Role"]
                 </span>
             </div>
             <canvas id="@chartId"></canvas>
         </div>
-        
+
     </card-body>
 </card>
 

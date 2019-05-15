@@ -48,7 +48,7 @@ $(function(win, doc, $) {
                 var randomB = Math.floor(Math.random() * 255 + Math.random() * 255);
 
                 var graphBackground = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
-                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.7).rgbString());
+                graphColors.push(win.Chart.helpers.color(graphBackground).alpha(0.4).rgbString());
 
                 var graphOutline = "rgb(" + randomR + ", " + randomG + ", " + randomB + ")";
                 graphOutlines.push(graphOutline);
@@ -69,11 +69,11 @@ $(function(win, doc, $) {
             var ctx = doc.getElementById(id).getContext('2d');
             return new win.Chart(ctx, config);
         },
-        initLine: function(id, data) {
+        initLine: function(id, data, opts) {
             this.init(id, {
                 type: 'line',
                 data: data,
-                options: {
+                options: $.extend({
                     responsive: true,
                     maintainAspectRatio: false,
                     legend:
@@ -126,14 +126,14 @@ $(function(win, doc, $) {
                             }
                         ]
                     }
-                }
+                }, opts)
             });
         },
-        initBar: function (id, data) {
+        initBar: function (id, data, opts) {
             this.init(id, {
                 type: 'bar',
                 data: data,
-                options: {
+                options: $.extend({
                     responsive: true,
                     maintainAspectRatio: false,
                     legend:
@@ -153,19 +153,7 @@ $(function(win, doc, $) {
                     scales: {
                         xAxes: [
                             {
-                                display: false,
-                                gridLines: {
-                                    drawBorder: false,
-                                    drawOnChartArea: false,
-                                    drawTicks: false,
-                                    color: win.Chart.helpers.color(app.ui.chartColors.white).alpha(0.5).rgbString()
-                                },
-                                ticks: {
-                                    stepSize: 10,
-                                    callback: function (dataLabel, index) {
-                                        return index % 3 === 0 ? dataLabel : '';
-                                    }
-                                }
+                                display: false
                             }
                         ],
                         yAxes: [
@@ -174,18 +162,18 @@ $(function(win, doc, $) {
                             }
                         ]
                     }
-                }
+                }, opts)
             });
         },
-        initDoughnut: function(id, data) {
+        initDoughnut: function(id, data, opts) {
             this.init(id,
                 {
                     type: 'doughnut',
                     data: data,
-                    options: {
+                    options: $.extend({
                         responsive: true,
                         maintainAspectRatio: false,
-                        cutoutPercentage: 70,
+                        cutoutPercentage: 90,
                         legend:
                         {
                             display: false,
@@ -213,7 +201,7 @@ $(function(win, doc, $) {
                                 }
                             ]
                         }
-                    }
+                    }, opts)
                 });
         }
     };

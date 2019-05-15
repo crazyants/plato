@@ -7,22 +7,17 @@
 
 <card>
     <card-body>
-
-        <i class="fal fa-thumbs-up float-right"></i>
-        @if (Model != null)
-        {
-            <h5 class="d-inline">@Model.Total().ToPrettyInt()</h5>
-        }
-        else
-        {
-            <h5>0</h5>
-        }
-        <br />
-        @T["Engagements"]
-        <div class="position-relative w-100 mt-3" style="height: 150px;">
+        
+        <div class="chart chart-with-stats" style="height: 215px;">
+            <div class="text">
+                <h5>@Model?.Total()</h5>
+                <span class="text-muted">
+                    @T["Engagements"]
+                </span>
+            </div>
             <canvas id="@chartId"></canvas>
         </div>
-
+        
     </card-body>
 </card>
 

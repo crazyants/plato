@@ -1,17 +1,12 @@
 ﻿@model IDictionary<string, ChartViewModel<AggregatedResult<DateTimeOffset>>>
 @{
-
     var entities = Model.FirstOrDefault(m => m.Key == "entities");
     var replies = Model.FirstOrDefault(m => m.Key == "replies");
-
     var entityLabels = entities.Value.Data?.SerializeLabels() ?? "[]";
     var entityData = entities.Value.Data?.SerializeCounts() ?? "[]";
-
     var replyLabels = replies.Value.Data?.SerializeLabels() ?? "[]";
     var replyData = replies.Value.Data?.SerializeCounts() ?? "[]";
-
     var chartId = "newByDateChart";
-
     var total = entities.Value?.Data?.Total() ?? 0;
     if (replies.Value?.Data != null)
     {
@@ -21,22 +16,29 @@
 
 <card>
     <card-body>
-        <i class="fal fa-plus float-right"></i>
      
-        <h5 class="d-inline">@total.ToPrettyInt()</h5>
-      
-        <br />
-        @if (string.IsNullOrEmpty(entities.Value.Options.Title))
-        {
-            @T["New Contributions"]
-        }
-        else
-        {
-            @T[entities.Value.Options.Title]
-        }
-        <div class="position-relative mt-3" style="height: 150px;">
-            <canvas id="@chartId" class="w-100"></canvas>
+        <div class="row">
+            <div class="col-5">
+                <h5 class="d-inline">@total.ToPrettyInt()</h5>
+                <div class="text-muted">
+  
+                    @if (string.IsNullOrEmpty(entities.Value.Options.Title))
+                    {
+                        @T["Contributions"]
+                    }
+                    else
+                    {
+                        @T[entities.Value.Options.Title]
+                    }
+                </div>
+            </div>
+            <div class="col-7">
+                <div class="chart" style="height: 150px;">
+                    <canvas id="@chartId" class="w-100"></canvas>
+                </div>
+            </div>
         </div>
+        
     </card-body>
 </card>
 
@@ -59,15 +61,15 @@
 
         app.ready(function() {
 
-            charts.initLine("@chartId", {
+            charts.initBar("@chartId", {
                 labels: @Html.Raw(entityLabels),
                 datasets: [
                     {
                         label: 'New Entities',
                         fill: true,
-                        backgroundColor: Chart.helpers.color(charts.colors.blue).alpha(0.1).rgbString(),
+                        backgroundColor: Chart.helpers.color(charts.colors.blue).alpha(0.7).rgbString(),
                         borderColor: charts.colors.blue,
-                        borderWidth: 1,
+                        borderWidth: 0,
                         lineWidth: 1,
                         pointRadius: 0,
                         pointHoverRadius: 0,
@@ -76,16 +78,33 @@
                     {
                         label: 'New Replies',
                         fill: true,
-                        backgroundColor: Chart.helpers.color(charts.colors.green).alpha(0.1).rgbString(),
+                        backgroundColor: Chart.helpers.color(charts.colors.green).alpha(0.7).rgbString(),
                         borderColor: charts.colors.blue,
-                        borderWidth: 1,
+                        borderWidth: 0,
                         lineWidth: 1,
                         pointRadius: 0,
                         pointHoverRadius: 0,
                         data: @Html.Raw(replyData)
                     }
                 ]
-            });
+            },
+                {
+                    scales: {
+                        xAxes: [
+                            {
+                                display: !1,
+                                stacked: true,
+                                barPercentage: .2
+                            }
+                        ],
+                        yAxes: [
+                            {
+                                display: !1,
+                                stacked: true
+                            }
+                        ]
+                    }
+                });
 
         });
 

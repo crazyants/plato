@@ -75,7 +75,7 @@ namespace Plato.Internal.Abstractions.Extensions
             
         }
 
-        public static double ToSafeDevision(this int input, int total)
+        public static double ToSafeDivision(this int input, int total)
         {
 
             if (input == 0) return default(int);
@@ -90,7 +90,7 @@ namespace Plato.Internal.Abstractions.Extensions
 
         }
 
-        public static int ToPercentageOf(this int input, int total, int devision = 100)
+        public static int ToPercentageOf(this int input, int total, int division = 100)
         {
             if (input > total)
                 return 100;
@@ -98,9 +98,39 @@ namespace Plato.Internal.Abstractions.Extensions
             if (total == 0)
                 return 0;
 
-            return (int)System.Math.Ceiling(decimal.Divide(input, total) * devision);
+            return (int)System.Math.Ceiling(decimal.Divide(input, total) * division);
 
         }
 
+
+        public static string ToPositionInt(this int input)
+        {
+
+            var output = "th";
+            var remainder = input % 100;
+
+            if (remainder < 11 | remainder > 13)
+            {
+                switch (input % 10)
+                {
+                    case 1:
+                        output = "st";
+                        break;
+                    case 2:
+                        output = "nd";
+                        break;
+                    case 3:
+                        output = "rd";
+                        break;
+                }
+
+            }
+
+            output = input + output;
+            return output;
+
+        }
+        
     }
+
 }

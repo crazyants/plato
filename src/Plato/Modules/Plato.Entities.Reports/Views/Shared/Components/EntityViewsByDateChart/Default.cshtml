@@ -7,27 +7,38 @@
 
 <card>
     <card-body>
-        <i class="fal fa-eye float-right"></i>
-        @if (Model.Data != null)
-        {
-            <h5 class="d-inline">@Model.Data.Total().ToPrettyInt()</h5>
-        }
-        else
-        {
-            <h5>0</h5>
-        }
-        <br />
-        @if (string.IsNullOrEmpty(Model.Options.Title))
-        {
-            @T["Entity Views"]
-        }
-        else
-        {
-            @T[Model.Options.Title]
-        }
-        <div class="position-relative mt-3" style="height: 150px;">
-            <canvas id="@chartId" class="w-100"></canvas>
+      
+        <div class="row">
+            <div class="col-5">
+                @if (Model.Data != null)
+                {
+                    <h5 class="d-inline">@Model.Data.Total().ToPrettyInt()</h5>
+                }
+                else
+                {
+                    <h5>0</h5>
+                }
+                <br />
+                <div class="text-muted">
+                    @if (string.IsNullOrEmpty(Model.Options.Title))
+                    {
+                        @T["Entity Views"]
+                    }
+                    else
+                    {
+                        @T[Model.Options.Title]
+                    }
+                </div>
+
+            </div>
+            <div class="col-7">
+                <div class="chart" style="height: 150px;">
+                    <canvas id="@chartId" class="w-100"></canvas>
+                </div>
+            </div>
         </div>
+
+      
     </card-body>
 </card>
 
@@ -50,22 +61,38 @@
 
         app.ready(function() {
 
-            charts.initLine("@chartId", {
-                labels: @Html.Raw(labels),
-                datasets: [
-                    {
-                        label: 'Entity Views',
-                        fill: true,
-                        backgroundColor: Chart.helpers.color(charts.colors.blue).alpha(0.1).rgbString(),
-                        borderColor: charts.colors.blue,
-                        borderWidth: 1,
-                        lineWidth: 1,
-                        pointRadius: 0,
-                        pointHoverRadius: 0,
-                        data: @Html.Raw(data)
+            charts.initBar("@chartId",
+                {
+                    labels: @Html.Raw(labels),
+                    datasets: [
+                        {
+                            label: 'Entity Views',
+                            fill: true,
+                            backgroundColor: Chart.helpers.color(charts.colors.blue).alpha(0.7).rgbString(),
+                            borderColor: charts.colors.blue,
+                            borderWidth: 0,
+                            lineWidth: 1,
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            data: @Html.Raw(data)
+                        }
+                    ]
+                },
+                {
+                    scales: {
+                        xAxes: [
+                            {
+                                display: !1,
+                                barPercentage: .2
+                            }
+                        ],
+                        yAxes: [
+                            {
+                                display: !1
+                            }
+                        ]
                     }
-                ]
-            });
+                });
 
         });
 

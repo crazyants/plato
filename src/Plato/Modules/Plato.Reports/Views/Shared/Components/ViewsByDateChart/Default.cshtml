@@ -7,7 +7,7 @@
 
 <card>
     <card-body>
-        <i class="fal fa-eye float-right"></i>
+
         @if (Model != null)
         {
             <h5 class="d-inline">@Model.Total().ToPrettyInt()</h5>
@@ -17,8 +17,10 @@
             <h5>0</h5>
         }
         <br />
-        @T["Page Views"]
-        <div class="position-relative w-100 mt-3" style="height: 150px;">
+        <div class="text-muted">
+            @T["Page Views"]
+        </div>
+        <div class="chart mt-3" style="height: 150px;">
             <canvas id="@chartId"></canvas>
         </div>
     </card-body>

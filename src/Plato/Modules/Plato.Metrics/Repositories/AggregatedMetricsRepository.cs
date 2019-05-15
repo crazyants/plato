@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Metrics;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Metrics.Repositories
 {
@@ -99,11 +100,80 @@ namespace Plato.Metrics.Repositories
                 }
                 return output;
             });
-
-
-
+            
         }
 
+        // ----------------
+        // Grouped by role
+        // ----------------
+        
+        public async Task<AggregatedResult<string>> SelectGroupedByRole(DateTimeOffset start, DateTimeOffset end)
+        {
+
+            // Sql query
+            const string sql = @"                                
+                DECLARE @temp TABLE
+                (
+	                [Aggregate] nvarchar(255) NOT NULL,
+	                [Count] int NOT NULL
+                );
+
+                INSERT INTO @temp
+	                SELECT 
+		                r.[Name] AS [Aggregate],
+		                COUNT(m.Id) AS Count
+	                FROM 
+		                plato_Metrics m 
+		                RIGHT OUTER JOIN {prefix}_UserRoles ur ON ur.UserId = m.CreatedUserId
+		                RIGHT OUTER JOIN {prefix}_Roles r ON r.Id = ur.RoleId
+                    WHERE 
+                        m.CreatedDate >= '{start}' AND m.CreatedDate <= '{end}'
+	                GROUP BY 
+		                r.[Name]
+		                
+                -- Get anonymous count
+                DECLARE @anonymousCount int;
+                SET @anonymousCount = (
+	                SELECT 
+		                COUNT(m.Id) AS Count
+	                FROM 
+		                {prefix}_Metrics m 
+	                WHERE                     
+                        m.CreatedDate >= '{start}' AND m.CreatedDate <= '{end}' AND
+                        m.CreatedUserId = 0
+                );
+
+                UPDATE @temp 
+                SET [Count] = (@anonymousCount) 
+                WHERE [Aggregate] = '{anonymousName}'
+
+                SELECT [Aggregate] AS Aggregate, [Count] AS Count FROM @temp
+
+            ";
+            
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern(),
+                ["{anonymousName"] = DefaultRoles.Anonymous
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<string>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<string>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+            
+
+        }
 
     }
 

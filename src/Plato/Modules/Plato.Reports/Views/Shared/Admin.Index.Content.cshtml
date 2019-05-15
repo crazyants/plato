@@ -4,44 +4,45 @@
     var manageFeaturesPermission = Plato.Features.Permissions.ManageFeatures;
 }
 
+
+@await DisplayAsync(new View("ViewsByDateChart", new
+{
+    options = @Model.Options
+}))
+
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("ViewsByDateChart", new
-        {
-            options = @Model.Options
-        }))
-
-    </div>
-    <div class="col-lg-6 col-md-12 col-sm-12">
-
-
+    <div class="col-md-4">
+        
         @await DisplayAsync(new View("ViewsByFeatureChart", new
         {
             options = @Model.Options
         }))
-
+        
     </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("UserRepByDateChart", new
+    <div class="col-md-4">
+        
+        @await DisplayAsync(new View("ViewsByRoleChart", new
         {
             options = @Model.Options
         }))
 
+
     </div>
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-md-4">
 
         @await DisplayAsync(new View("UserRepByFeatureChart", new
         {
             options = @Model.Options
         }))
-
     </div>
 </div>
+
+
+@await DisplayAsync(new View("UserRepByDateChart", new
+{
+    options = @Model.Options
+}))
+
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">

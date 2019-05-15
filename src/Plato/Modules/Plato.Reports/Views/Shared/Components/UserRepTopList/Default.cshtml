@@ -16,25 +16,33 @@
     <card-body>
         @if (Model.Data != null)
         {
+            var position = 1;
             <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var result in Model.Data)
                 {               
                     <li class="list-group-item list-group-item-action">
+                        
+                        @position.ToPositionInt()
+
                         <div class="badge badge-info float-right" data-toggle="tooltip" title="@T["Earned Reputation"]">
                             @result.Aggregate.Count.ToPrettyInt()
                         </div>
 
                         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias">
-                            <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-sm mr-2" url="@result.Model.Avatar.Url" />
+                            <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-sm mr-2" url="@result.Model.Avatar.Url"/>
                         </a>
-
+                        
+                        
                         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias">
                             @result.Model.DisplayName
                         </a>
-                        
+
                     </li>
                 }
             </ul>
+            {
+                position++;
+            }
         }
         else
         {

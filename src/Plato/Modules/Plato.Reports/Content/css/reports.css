@@ -1,0 +1,15 @@
+﻿
+.chart {
+    position: relative;
+    width: 100%;
+}
+
+.chart-with-stats .text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    text-align: center;
+}

@@ -24,13 +24,19 @@ namespace Plato.Reports.Assets
                     },
                     new Asset()
                     {
-                        Url = "/plato.reports/content/js/reports.js",
+                        Url = "/plato.reports/content/css/reports.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.reports/content/js/vendors/chart.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     },
                     new Asset()
                     {
-                        Url = "/plato.reports/content/js/vendors/chart.js",
+                        Url = "/plato.reports/content/js/reports.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -47,13 +53,19 @@ namespace Plato.Reports.Assets
                     },
                     new Asset()
                     {
-                        Url = "/plato.reports/content/js/reports.js",
+                        Url = "/plato.reports/content/css/reports.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.reports/content/js/vendors/chart.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     },
                     new Asset()
                     {
-                        Url = "/plato.reports/content/js/vendors/chart.js",
+                        Url = "/plato.reports/content/js/reports.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -70,17 +82,22 @@ namespace Plato.Reports.Assets
                     },
                     new Asset()
                     {
-                        Url = "/plato.reports/content/js/reports.js",
-                        Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
+                        Url = "/plato.reports/content/css/reports.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/js/vendors/chart.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.reports/content/js/reports.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     }
-                    
                 })
 
             };
