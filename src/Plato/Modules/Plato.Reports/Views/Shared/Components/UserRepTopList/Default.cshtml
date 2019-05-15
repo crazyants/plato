@@ -16,33 +16,115 @@
     <card-body>
         @if (Model.Data != null)
         {
+
             var position = 1;
-            <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var result in Model.Data)
-                {               
-                    <li class="list-group-item list-group-item-action">
-                        
-                        @position.ToPositionInt()
+            var top3 = Model.Data.Take(3);
+            var theRest = Model.Data.Skip(3);
+            
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row no-gutters">
+                    @foreach (var result in top3)
+                    {
+                        <div class="list-group-item list-group-item-action col-lg-4 col-md-12 col-sm-12 p-0 border-0">
+                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias" class="list-group-item-action d-block p-3 text-center">
+                                <div class=" w-100 p-3 text-center">
 
-                        <div class="badge badge-info float-right" data-toggle="tooltip" title="@T["Earned Reputation"]">
-                            @result.Aggregate.Count.ToPrettyInt()
+                                    <span class="text-muted float-left">
+                                        @position.ToPositionInt()
+                                    </span>
+
+                                    <span class="badge badge-primary float-right" data-toggle="tooltip" title="@T["Earned Reputation"]">
+                                        @result.Aggregate.Count.ToPrettyInt()
+                                    </span>
+
+                                    <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-md" url="@result.Model.Avatar.Url"/>
+
+                                    <h6 class="d-block mt-2">@result.Model.DisplayName</h6>
+
+                                    <span class="d-block text-muted">
+                                        <span class="mx-1" title="@T["Rank"]" data-toggle="tooltip">
+                                            <i class="fal fa-hashtag"></i>
+                                            @result.Model.Rank
+                                        </span>
+                                        <span class="mx-1" title="@T["Reputation"]" data-toggle="tooltip">
+                                            <i class="fal fa-gem"></i>
+                                            @result.Model.Reputation.ToPrettyInt()
+                                        </span>
+                                        <span class="mx-1" title="@T["visits"]" data-toggle="tooltip">
+                                            <i class="fal fa-heart"></i>
+                                            @result.Model.Visits.ToPrettyInt()
+                                        </span>
+                                        <br/>
+                                        @T["Last active "] <date utc="@result.Model.LastLoginDate"></date>
+                                    </span>
+                                </div>
+                            </a>
                         </div>
+                        position++;
+                    }
+                </div>
+            </div>
+            
+            <div class="list-group list-group-flush list-group-hover">
+                @foreach (var result in theRest)
+                {
+                    <a  asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias" class="list-group-item list-group-item-action">
+                        <span class="list-left">
+                            <span class="d-inline-block text-muted ml-2 mt-2">
+                                @position.ToPositionInt()
+                            </span>
+                        </span>
+                        <span class="list-body">
+                            <span class="list-left">
+                                <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar" url="@result.Model.Avatar.Url" />
+                            </span>
+                            <span class="list-body">
+                               
+                                <span class="row no-gutters">
+                                    <span class="col-8">
+                                        <strong>@result.Model.DisplayName</strong>
+                                        <br/>
+                                        <span class="text-muted">
+                                            @@@result.Model.UserName
+                                        </span>
+                                    </span>
+                                    <span class="col-1">
+                                        <span class="badge badge-primary" data-toggle="tooltip" title="@T["Earned Reputation"]">
+                                            @result.Aggregate.Count.ToPrettyInt()
+                                        </span>
+                                    </span>
+                                    <span class="col-3">
+                                            
+                                        <span class="float-right text-right text-muted">
+                                            <span class="ml-2" title="@T["Rank"]" data-toggle="tooltip">
+                                                <i class="fal fa-hashtag"></i>
+                                                @result.Model.Rank
+                                            </span>
+                                            <span class="ml-2" title="@T["Reputation"]" data-toggle="tooltip">
+                                                <i class="fal fa-gem"></i>
+                                                @result.Model.Reputation.ToPrettyInt()
+                                            </span>
+                                            <span class="ml-2" title="@T["visits"]" data-toggle="tooltip">
+                                                <i class="fal fa-heart"></i>
+                                                @result.Model.Visits.ToPrettyInt()
+                                            </span>
+                                            <br/>
+                                            @T["Last active "] <date utc="@result.Model.LastLoginDate"></date>
+                                        </span>
+                                           
 
-                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias">
-                            <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-sm mr-2" url="@result.Model.Avatar.Url"/>
-                        </a>
-                        
-                        
-                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias">
-                            @result.Model.DisplayName
-                        </a>
-
-                    </li>
+                                    </span>
+                                </span>
+                               
+                                   
+                            </span>
+                        </span>
+                    </a>
+                    position++;
                 }
-            </ul>
-            {
-                position++;
-            }
+            </div>
+       
+
         }
         else
         {

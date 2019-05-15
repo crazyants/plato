@@ -1,0 +1,75 @@
+﻿@model AggregatedResult<string>
+@{
+    var totalUsers = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalUsers", StringComparison.OrdinalIgnoreCase));
+    var newUsers = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("NewUsers", StringComparison.OrdinalIgnoreCase));
+    var newVisits = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalVisits", StringComparison.OrdinalIgnoreCase));
+    var newBadges = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalBadges", StringComparison.OrdinalIgnoreCase));
+    var newReputations = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalReputations", StringComparison.OrdinalIgnoreCase));
+    var newSpam = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalSpam", StringComparison.OrdinalIgnoreCase));
+}
+
+<div class="row">
+    <div class="col-3">
+        <card>
+            <card-body>
+                <div class="d-block">
+                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
+                        @totalUsers?.Count
+                    </h5>
+                    <span class="text-truncate">
+                        @T["Total Users"]
+                    </span>
+                </div>
+
+            </card-body>
+        </card>
+    </div>
+    <div class="col-3">
+        <card>
+            <card-body>
+                <div class="d-block">
+                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
+                        @newUsers?.Count
+                    </h5>
+                    <span class="text-truncate">
+                        @T["New Users"]
+                    </span>
+                </div>
+
+            </card-body>
+        </card>
+    </div>
+    <div class="col-3">
+        <card>
+            <card-body>
+                <div class="d-block">
+                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
+                        @newVisits?.Count
+                    </h5>
+                    <span class="text-truncate">
+                        @T["User Visits"]
+                    </span>
+                </div>
+
+            </card-body>
+        </card>
+    </div>
+
+
+    <div class="col-3">
+        <card>
+            <card-body>
+                <div class="d-block">
+                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
+                        @newBadges?.Count
+                    </h5>
+                    <span class="text-truncate">
+                        @T["New Badges"]
+                    </span>
+                </div>
+
+            </card-body>
+        </card>
+    </div>
+
+</div>

@@ -32,8 +32,8 @@ namespace Plato.Reports.ViewProviders
             };
             
             return Task.FromResult(Views(
-                View<ReportOptions>("Reports.Admin.Index.Tools", model => reportIndexOptions).Zone("tools")
-                    .Order(int.MinValue),
+                //View<ReportOptions>("Reports.Admin.Index.Tools", model => reportIndexOptions).Zone("tools")
+                //    .Order(int.MinValue),
                 View<ReportOptions>("Reports.AdminIndex", model => reportIndexOptions).Zone("content")
                     .Order(int.MinValue)
             ));

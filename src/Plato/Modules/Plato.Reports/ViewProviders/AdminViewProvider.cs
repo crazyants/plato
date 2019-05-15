@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Metrics.Models;
 using Plato.Reports.Models;
+using Plato.Reports.Services;
 using Plato.Reports.ViewModels;
 
 namespace Plato.Reports.ViewProviders
@@ -10,24 +11,33 @@ namespace Plato.Reports.ViewProviders
     public class AdminViewProvider : BaseViewProvider<ReportIndex>
     {
 
+        private readonly IDateRangeStorage _dateRangeStorage;
+
+        public AdminViewProvider(IDateRangeStorage dateRangeStorage)
+        {
+            _dateRangeStorage = dateRangeStorage;
+        }
+
+
         public override Task<IViewProviderResult> BuildIndexAsync(ReportIndex viewModel, IViewProviderContext context)
         {
 
-            // Get view model from context
-            var indexViewModel =
-                context.Controller.HttpContext.Items[typeof(ReportIndexViewModel<Metric>)] as ReportIndexViewModel<Metric>;
-            
-            // Ensure we have the view model
-            if (indexViewModel == null)
+            // Get range to display
+            var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
+         
+            // Build index view model
+            var reportIndexOptions = new ReportOptions()
             {
-                throw new Exception("No type of ReportIndexViewModel has been registered with HttpContext.Items");
-            }
-
+                Start = range.Start,
+                End = range.End
+            };
+            
             return Task.FromResult(Views(
-                View<ReportIndexViewModel<Metric>>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
-                View<ReportIndexViewModel<Metric>>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
-                View<ReportIndexViewModel<Metric>>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
+                View<ReportOptions>("Admin.Index.Header", model => reportIndexOptions).Zone("header").Order(1),
+                View<ReportOptions>("Admin.Index.Tools", model => reportIndexOptions).Zone("tools").Order(1),
+                View<ReportOptions>("Admin.Index.Content", model => reportIndexOptions).Zone("content").Order(1)
             ));
+
         }
         
         public override Task<IViewProviderResult> BuildDisplayAsync(ReportIndex viewModel, IViewProviderContext context)
@@ -40,9 +50,22 @@ namespace Plato.Reports.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(ReportIndex viewModel, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(ReportIndex viewModel, IViewProviderContext context)
         {
-            return Task.FromResult(default(IViewProviderResult));
+            var model = new ReportOptions();
+
+            if (!await context.Updater.TryUpdateModelAsync(model))
+            {
+                return await BuildIndexAsync(viewModel, context);
+            }
+
+            if (context.Updater.ModelState.IsValid)
+            {
+                var storage = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
+                storage.Set(model.Start, model.End);
+            }
+
+            return await BuildIndexAsync(viewModel, context);
         }
 
     }

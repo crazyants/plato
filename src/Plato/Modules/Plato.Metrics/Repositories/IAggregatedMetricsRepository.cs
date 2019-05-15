@@ -12,5 +12,8 @@ namespace Plato.Metrics.Repositories
 
         Task<AggregatedResult<string>> SelectGroupedByRole(DateTimeOffset start, DateTimeOffset end);
 
+        Task<AggregatedResult<string>> SelectMetricsAsync(DateTimeOffset start, DateTimeOffset end);
+
     }
+
 }

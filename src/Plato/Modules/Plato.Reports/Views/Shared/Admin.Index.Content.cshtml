@@ -1,29 +1,33 @@
 ﻿@using Plato.Features.ViewModels
-@model ReportIndexViewModel<Metric>
+@model ReportOptions
 @{
     var manageFeaturesPermission = Plato.Features.Permissions.ManageFeatures;
 }
 
+@await DisplayAsync(new View("UserStatsByDateChart", new
+{
+    options = @Model
+}))
 
 @await DisplayAsync(new View("ViewsByDateChart", new
 {
-    options = @Model.Options
+    options = @Model
 }))
 
 <div class="row">
     <div class="col-md-4">
-        
+
         @await DisplayAsync(new View("ViewsByFeatureChart", new
         {
-            options = @Model.Options
+            options = @Model
         }))
-        
+
     </div>
     <div class="col-md-4">
-        
+
         @await DisplayAsync(new View("ViewsByRoleChart", new
         {
-            options = @Model.Options
+            options = @Model
         }))
 
 
@@ -32,16 +36,11 @@
 
         @await DisplayAsync(new View("UserRepByFeatureChart", new
         {
-            options = @Model.Options
+            options = @Model
         }))
     </div>
 </div>
 
-
-@await DisplayAsync(new View("UserRepByDateChart", new
-{
-    options = @Model.Options
-}))
 
 
 <div class="row">
@@ -49,25 +48,36 @@
 
         @await DisplayAsync(new View("NewUsersByDateChart", new
         {
-            options = @Model.Options
+            options = @Model
         }))
 
 
     </div>
     <div class="col-lg-6 col-md-12 col-sm-12">
-        
+
         @await DisplayAsync(new View("LoginsByDateChart", new
         {
-            options = @Model.Options
+            options = @Model
         }))
 
     </div>
 </div>
 
+
+@await DisplayAsync(new View("UserRepByDateChart", new
+{
+    options = @Model
+}))
+
+
 @await DisplayAsync(new View("UserRepTopList", new
 {
-    options = @Model.Options
+    options = @Model
 }))
+
+
+
+
 
 <authorize asp-permission="@manageFeaturesPermission.Name">
     <authorize-success>
