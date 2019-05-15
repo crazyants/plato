@@ -1,12 +1,6 @@
-﻿@using Plato.Internal.Models.Extensions
-@model ReportOptions
+﻿@model ReportOptions
 
 @await DisplayAsync(new View("ViewsByDateChart", new
-{
-    options = @Model
-}))
-
-@await DisplayAsync(new View("ViewsByFeatureList", new
 {
     options = @Model
 }))

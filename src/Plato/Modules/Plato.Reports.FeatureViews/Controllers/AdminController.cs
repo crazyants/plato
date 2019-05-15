@@ -13,14 +13,14 @@ using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Metrics.Models;
 using Plato.Reports.Models;
 using Plato.Reports.ViewModels;
-using Plato.Reports.PageViews.Models;
+using Plato.Reports.FeatureViews.Models;
 
-namespace Plato.Reports.PageViews.Controllers
+namespace Plato.Reports.FeatureViews.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
         
-        private readonly IViewProviderManager<PageViewIndex> _pageViewsViewProvider;
+        private readonly IViewProviderManager<FeatureViewIndex> _pageViewsViewProvider;
      
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
@@ -34,7 +34,7 @@ namespace Plato.Reports.PageViews.Controllers
         public AdminController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IViewProviderManager<PageViewIndex> pageViewsViewProvider,
+            IViewProviderManager<FeatureViewIndex> pageViewsViewProvider,
             IViewProviderManager<ReportIndex> reportViewProvider,
             IBreadCrumbManager breadCrumbManager,
             ISiteSettingsStore settingsStore,
@@ -97,13 +97,6 @@ namespace Plato.Reports.PageViews.Controllers
             // Add view model to context
             HttpContext.Items[typeof(ReportIndexViewModel<Metric>)] = viewModel;
 
-            // If we have a pager.page querystring value return paged view
-            if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
-            {
-                if (page > 0)
-                    return View("GetMetrics", viewModel);
-            }
-
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -114,12 +107,12 @@ namespace Plato.Reports.PageViews.Controllers
                     .Add(S["Reports"], home => home
                         .Action("Index", "Admin", "Plato.Reports")
                         .LocalNav())
-                    .Add(S["Page Views"], reports => reports
+                    .Add(S["Feature Views"], reports => reports
                         .LocalNav());
             });
 
             // Return view
-            return View((LayoutViewModel)await _pageViewsViewProvider.ProvideIndexAsync(new PageViewIndex(), this));
+            return View((LayoutViewModel)await _pageViewsViewProvider.ProvideIndexAsync(new FeatureViewIndex(), this));
 
         }
         
@@ -128,7 +121,7 @@ namespace Plato.Reports.PageViews.Controllers
         {
 
             // Execute view providers
-            await _pageViewsViewProvider.ProvideUpdateAsync(new PageViewIndex(), this);
+            await _pageViewsViewProvider.ProvideUpdateAsync(new FeatureViewIndex(), this);
 
             if (!ModelState.IsValid)
             {

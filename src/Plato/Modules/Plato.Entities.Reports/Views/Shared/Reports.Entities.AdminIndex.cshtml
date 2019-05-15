@@ -1,8 +1,9 @@
 ﻿@using Plato.Internal.Models.Extensions
 @model ReportOptions
 
+
 <div class="row">
-    <div class="col-lg-4 col-md-12 col-sm-12">
+    <div class="col-lg-6 col-md-12 col-sm-12">
 
         @await DisplayAsync(new View("EntityViewsByDateChart", new
         {
@@ -10,17 +11,9 @@
         }))
 
     </div>
-    <div class="col-lg-4 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("NewEntitiesByDateChart", new
-        {
-            options = @Model
-        }))
-
-    </div>
-    <div class="col-lg-4 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("NewRepliesByDateChart", new
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        
+        @await DisplayAsync(new View("NewByDateChart", new
         {
             options = @Model
         }))
@@ -48,9 +41,3 @@
     </div>
 
 </div>
-
-
-@await DisplayAsync(new View("UserRepTopList", new
-{
-    options = @Model
-}))

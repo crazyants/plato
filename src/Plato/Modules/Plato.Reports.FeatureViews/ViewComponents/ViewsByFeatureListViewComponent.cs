@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Metrics.Repositories;
 using Plato.Reports.ViewModels;
 
-namespace Plato.Reports.ViewComponents
+namespace Plato.Reports.FeatureViews.ViewComponents
 {
     public class ViewsByFeatureListViewComponent : ViewComponent
     {

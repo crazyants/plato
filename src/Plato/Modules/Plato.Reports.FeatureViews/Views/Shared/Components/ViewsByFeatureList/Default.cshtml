@@ -4,8 +4,7 @@
 {
     <div class="row">
         @foreach (var aggregate in Model.Data
-            .OrderByDescending(d => d.Count)
-            .Take(6))
+            .OrderByDescending(d => d.Count))
         {
             var width = aggregate.Count.ToPercentageOf(@Model.Total()) + "%";
 

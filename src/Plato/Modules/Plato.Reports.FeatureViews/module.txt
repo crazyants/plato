@@ -1,0 +1,14 @@
+Name: Plato Reports FeatureViews
+Description: Adds reporting to show feature usage.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Reports
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Reports",
+		Version: "1.0.0"
+	}
+]
