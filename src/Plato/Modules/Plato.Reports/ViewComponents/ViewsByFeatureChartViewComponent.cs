@@ -23,7 +23,7 @@ namespace Plato.Reports.ViewComponents
                 options = new ReportOptions();
             }
             
-            var viewByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeature(options.Start, options.End);
+            var viewByFeature = await _aggregatedMetricsRepository.SelectGroupedByFeatureAsync(options.Start, options.End);
             return View(viewByFeature);
 
         }

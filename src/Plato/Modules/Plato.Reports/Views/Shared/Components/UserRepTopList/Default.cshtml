@@ -26,18 +26,19 @@
                     @foreach (var result in top3)
                     {
                         <div class="list-group-item list-group-item-action col-lg-4 col-md-12 col-sm-12 p-0 border-0">
-                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias" class="list-group-item-action d-block p-3 text-center">
-                                <div class=" w-100 p-3 text-center">
+                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Model.Id" asp-route-opts.alias="@result.Model.Alias" class="list-group-item-action d-block position-relative text-center p-3 text-center">
+                
+                                <span class="d-block p-3">
 
-                                    <span class="text-muted float-left">
+                                    <span class="text-muted position-absolute" style="left: 2rem;">
                                         @position.ToPositionInt()
                                     </span>
 
-                                    <span class="badge badge-primary float-right" data-toggle="tooltip" title="@T["Earned Reputation"]">
+                                    <span class="btn btn-sm label position-absolute" style="right: 2rem;" data-toggle="tooltip" title="@T["Earned Reputation"]">
                                         @result.Aggregate.Count.ToPrettyInt()
                                     </span>
 
-                                    <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-md" url="@result.Model.Avatar.Url"/>
+                                    <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-md" url="@result.Model.Avatar.Url" />
 
                                     <h6 class="d-block mt-2">@result.Model.DisplayName</h6>
 
@@ -54,10 +55,10 @@
                                             <i class="fal fa-heart"></i>
                                             @result.Model.Visits.ToPrettyInt()
                                         </span>
-                                        <br/>
+                                        <br />
                                         @T["Last active "] <date utc="@result.Model.LastLoginDate"></date>
                                     </span>
-                                </div>
+                                </span>
                             </a>
                         </div>
                         position++;
@@ -89,7 +90,7 @@
                                         </span>
                                     </span>
                                     <span class="col-1">
-                                        <span class="badge badge-primary" data-toggle="tooltip" title="@T["Earned Reputation"]">
+                                        <span class="btn btn-sm label" data-toggle="tooltip" title="@T["Earned Reputation"]">
                                             @result.Aggregate.Count.ToPrettyInt()
                                         </span>
                                     </span>

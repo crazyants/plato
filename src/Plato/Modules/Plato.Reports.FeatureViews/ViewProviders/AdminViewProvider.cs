@@ -5,29 +5,37 @@ using Plato.Metrics.Models;
 using Plato.Reports.Models;
 using Plato.Reports.ViewModels;
 using Plato.Reports.FeatureViews.Models;
+using Plato.Reports.Services;
 
 namespace Plato.Reports.FeatureViews.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<FeatureViewIndex>
     {
 
+        private readonly IDateRangeStorage _dateRangeStorage;
+
+        public AdminViewProvider(IDateRangeStorage dateRangeStorage)
+        {
+            _dateRangeStorage = dateRangeStorage;
+        }
+
         public override Task<IViewProviderResult> BuildIndexAsync(FeatureViewIndex viewReportModel, IViewProviderContext context)
         {
 
-            // Get view model from context
-            var indexViewModel =
-                context.Controller.HttpContext.Items[typeof(ReportIndexViewModel<Metric>)] as ReportIndexViewModel<Metric>;
-            
-            // Ensure we have the view model
-            if (indexViewModel == null)
+            // Get range to display
+            var range = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
+
+            // Build index view model
+            var reportIndexOptions = new ReportOptions()
             {
-                throw new Exception("No type of ReportIndexViewModel has been registered with HttpContext.Items");
-            }
+                Start = range.Start,
+                End = range.End
+            };
 
             return Task.FromResult(Views(
-                View<ReportIndexViewModel<Metric>>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
-                View<ReportOptions>("Reports.Admin.Index.Tools", model => indexViewModel.Options).Zone("tools").Order(1),
-                View<ReportIndexViewModel<Metric>>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
+                View<ReportOptions>("Admin.Index.Header", model => reportIndexOptions).Zone("header").Order(1),
+                View<ReportOptions>("Admin.Index.Tools", model => reportIndexOptions).Zone("tools").Order(1),
+                View<ReportOptions>("Admin.Index.Content", model => reportIndexOptions).Zone("content").Order(1)
             ));
         }
         
@@ -53,12 +61,12 @@ namespace Plato.Reports.FeatureViews.ViewProviders
 
             if (context.Updater.ModelState.IsValid)
             {
-
-
+                var storage = _dateRangeStorage.Contextualize(context.Controller.ControllerContext);
+                storage.Set(model.Start, model.End);
             }
 
             return await BuildIndexAsync(viewModel, context);
-            
+
         }
 
     }

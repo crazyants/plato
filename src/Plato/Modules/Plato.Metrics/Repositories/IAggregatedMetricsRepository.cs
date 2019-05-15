@@ -8,11 +8,14 @@ namespace Plato.Metrics.Repositories
     public interface IAggregatedMetricsRepository : IAggregatedRepository
     {
 
-        Task<AggregatedResult<string>> SelectGroupedByFeature(DateTimeOffset start, DateTimeOffset end);
+        Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(DateTimeOffset start, DateTimeOffset end);
 
-        Task<AggregatedResult<string>> SelectGroupedByRole(DateTimeOffset start, DateTimeOffset end);
+        Task<AggregatedResult<string>> SelectGroupedByRoleAsync(DateTimeOffset start, DateTimeOffset end);
 
-        Task<AggregatedResult<string>> SelectMetricsAsync(DateTimeOffset start, DateTimeOffset end);
+        Task<AggregatedResult<string>> SelectGroupedByTitleAsync(
+            DateTimeOffset start,
+            DateTimeOffset end,
+            int limit = 20);
 
     }
 

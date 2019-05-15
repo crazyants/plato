@@ -24,7 +24,7 @@ namespace Plato.Reports.ViewComponents
                 options = new ReportOptions();
             }
 
-            var views = await _aggregatedMetricsRepository.SelectGroupedByRole(options.Start, options.End);
+            var views = await _aggregatedMetricsRepository.SelectGroupedByRoleAsync(options.Start, options.End);
             return View(views);
 
         }

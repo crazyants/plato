@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Models.Extensions;
-using Plato.Internal.Repositories.Metrics;
+using Plato.Internal.Repositories.Reputations;
 using Plato.Reports.ViewModels;
 
 namespace Plato.Reports.ViewComponents
@@ -9,11 +9,12 @@ namespace Plato.Reports.ViewComponents
     public class LoginsByDateChartViewComponent : ViewComponent
     {
 
-        private readonly IAggregatedUserRepository _aggregatedUserRepository;
+        private readonly IAggregatedUserReputationRepository _aggregatedUserReputationRepository;
 
-        public LoginsByDateChartViewComponent(IAggregatedUserRepository aggregatedUserRepository)
+        public LoginsByDateChartViewComponent(
+            IAggregatedUserReputationRepository aggregatedUserReputationRepository)
         {
-            _aggregatedUserRepository = aggregatedUserRepository;
+            _aggregatedUserReputationRepository = aggregatedUserReputationRepository;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(ReportOptions options)
@@ -24,7 +25,13 @@ namespace Plato.Reports.ViewComponents
                 options = new ReportOptions();
             }
 
-            var data = await _aggregatedUserRepository.SelectGroupedByDateAsync("LastLoginDate", options.Start, options.End);
+            // Get reputation awarded for visits by grouped by CreatedDate
+            var data = await _aggregatedUserReputationRepository.SelectGroupedByNameAsync(
+                "Visit",
+                "CreatedDate",
+                options.Start,
+                options.End);
+
             return View(data.MergeIntoRange(options.Start, options.End));
 
         }

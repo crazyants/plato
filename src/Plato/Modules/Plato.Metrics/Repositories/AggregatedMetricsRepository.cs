@@ -64,7 +64,7 @@ namespace Plato.Metrics.Repositories
         // Grouped by feature
         // ----------------
 
-        public async Task<AggregatedResult<string>> SelectGroupedByFeature(DateTimeOffset start, DateTimeOffset end)
+        public async Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(DateTimeOffset start, DateTimeOffset end)
         {
 
             // Sql query
@@ -103,10 +103,58 @@ namespace Plato.Metrics.Repositories
         }
 
         // ----------------
+        // Grouped by feature
+        // ----------------
+
+        public async Task<AggregatedResult<string>> SelectGroupedByTitleAsync(
+            DateTimeOffset start, 
+            DateTimeOffset end,
+            int limit = 10)
+        {
+
+            // Sql query
+            const string sql = @"
+                SELECT TOP {limit}
+                    m.Title AS [Aggregate] ,
+                    COUNT(m.Id) AS [Count]
+                FROM 
+                    {prefix}_Metrics m 
+                WHERE 
+                    m.CreatedDate >= '{start}' AND m.CreatedDate <= '{end}'
+                GROUP BY 
+                    m.Title
+                ORDER BY [Count]
+            ";
+
+            // Sql replacements
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{limit}"] = limit.ToString(),
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<string>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<string>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
+        }
+
+
+        // ----------------
         // Grouped by role
         // ----------------
-        
-        public async Task<AggregatedResult<string>> SelectGroupedByRole(DateTimeOffset start, DateTimeOffset end)
+
+        public async Task<AggregatedResult<string>> SelectGroupedByRoleAsync(DateTimeOffset start, DateTimeOffset end)
         {
 
             // Sql query
@@ -173,101 +221,7 @@ namespace Plato.Metrics.Repositories
             
 
         }
-
-
-        // ----------------
-        // Counts
-        // ----------------
-
-        public async Task<AggregatedResult<string>> SelectMetricsAsync(DateTimeOffset start, DateTimeOffset end)
-        {
-
-            // Sql query
-            const string sql = @"                                
-              
-                DECLARE @totalUsers int;
-                DECLARE @newUsers int;
-                DECLARE @totalBadges int;
-                DECLARE @totalReputations int;
-                DECLARE @totalVisits int;
-                DECLARE @totalConfirmed int;
-                DECLARE @totalSpam int;
-
-                SET @totalUsers = (SELECT COUNT(Id) FROM {prefix}_Users);
-                
-                SET @newUsers = (
-	                SELECT COUNT(Id) FROM {prefix}_Users
-	                WHERE CreatedDate >= '{start}' AND CreatedDate <= '{end}'
-                );
-
-                SET @totalBadges = (
-	                SELECT COUNT(Id) FROM {prefix}_UserBadges 
-	                WHERE CreatedDate >= '{start}' AND CreatedDate <= '{end}'
-                );
-
-                SET @totalReputations = (
-	                SELECT COUNT(Id) FROM {prefix}_UserReputations 	
-	                WHERE CreatedDate >= '{start}' AND CreatedDate <= '{end}'
-                );
-
-                SET @totalVisits = (
-	                SELECT COUNT(Id) FROM {prefix}_UserReputations 
-	                WHERE [Name] = 'Visit' 
-	                AND CreatedDate >= '{start}' AND CreatedDate <= '{end}'
-                );
-
-                SET @totalConfirmed = (
-	                SELECT COUNT(Id) FROM {prefix}_Users 
-	                WHERE EmailConfirmed = 1 AND
-                    CreatedDate >= '{start}' AND CreatedDate <= '{end}'
-                );
-
-                SET @totalSpam = (
-	                SELECT COUNT(Id) FROM {prefix}_Users 
-	                WHERE 
-                        IsSpamUpdatedDate >= '{start}' AND IsSpamUpdatedDate <= '{end}'                   
-                );
-
-                DECLARE @temp TABLE
-                (
-	                [Aggregate] nvarchar(100) NOT NULL,
-	                [Count] int NOT NULL
-                );
-
-                INSERT INTO @temp SELECT 'TotalUsers', @totalUsers;
-                INSERT INTO @temp SELECT 'NewUsers', @newUsers;
-                INSERT INTO @temp SELECT 'TotalBadges', @totalBadges;
-                INSERT INTO @temp SELECT 'TotalReputations', @totalReputations;
-                INSERT INTO @temp SELECT 'TotalVisits', @totalVisits;
-                INSERT INTO @temp SELECT 'TotalConfirmed', @totalConfirmed;
-                INSERT INTO @temp SELECT 'TotalSpam', @totalSpam;
-
-                SELECT * FROM @temp;
-            ";
-
-            // Sql replacements
-            var replacements = new Dictionary<string, string>()
-            {
-                ["{start}"] = start.ToSortableDateTimePattern(),
-                ["{end}"] = end.ToSortableDateTimePattern()
-            };
-
-            // Execute and return results
-            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
-            {
-                var output = new AggregatedResult<string>();
-                while (await reader.ReadAsync())
-                {
-                    var aggregatedCount = new AggregatedCount<string>();
-                    aggregatedCount.PopulateModel(reader);
-                    output.Data.Add(aggregatedCount);
-                }
-                return output;
-            });
-
-
-        }
-
+        
     }
 
 }

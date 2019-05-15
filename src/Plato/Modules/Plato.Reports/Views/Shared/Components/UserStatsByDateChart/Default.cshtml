@@ -1,75 +1,125 @@
 ﻿@model AggregatedResult<string>
 @{
+
     var totalUsers = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalUsers", StringComparison.OrdinalIgnoreCase));
-    var newUsers = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("NewUsers", StringComparison.OrdinalIgnoreCase));
-    var newVisits = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalVisits", StringComparison.OrdinalIgnoreCase));
-    var newBadges = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalBadges", StringComparison.OrdinalIgnoreCase));
-    var newReputations = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalReputations", StringComparison.OrdinalIgnoreCase));
-    var newSpam = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalSpam", StringComparison.OrdinalIgnoreCase));
+    var returningUsers = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("ReturningUsers", StringComparison.OrdinalIgnoreCase));
+    var newUsers = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("NewUsers", StringComparison.OrdinalIgnoreCase));    
+    var totalBadges = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalBadges", StringComparison.OrdinalIgnoreCase));
+    var newBadges = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("NewBadges", StringComparison.OrdinalIgnoreCase));
+    var totalReputations = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("TotalReputations", StringComparison.OrdinalIgnoreCase));
+    var newReputations = Model.Data.FirstOrDefault(d => d.Aggregate.Equals("NewReputations", StringComparison.OrdinalIgnoreCase));
+    
+    var newUserWidth = "0%";
+    var returningUserWidth = "0%";
+    var newBadgesWidth = "0%";
+    var newReputationsWidth = "0%";
+
+    if (totalUsers != null)
+    {
+        newUserWidth = newUsers?.Count.ToPercentageOf(totalUsers.Count) + "%";
+    }
+
+    if (totalUsers != null)
+    {
+        returningUserWidth = returningUsers?.Count.ToPercentageOf(totalUsers.Count) + "%";
+    }
+
+    if (totalBadges != null)
+    {
+        newBadgesWidth = newBadges?.Count.ToPercentageOf(totalBadges.Count) + "%";
+    }
+
+    if (totalReputations != null)
+    {
+        newReputationsWidth = newReputations?.Count.ToPercentageOf(totalReputations.Count) + "%";
+    }
 }
 
 <div class="row">
     <div class="col-3">
         <card>
             <card-body>
-                <div class="d-block">
-                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
-                        @totalUsers?.Count
-                    </h5>
-                    <span class="text-truncate">
-                        @T["Total Users"]
-                    </span>
-                </div>
-
-            </card-body>
-        </card>
-    </div>
-    <div class="col-3">
-        <card>
-            <card-body>
-                <div class="d-block">
-                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
-                        @newUsers?.Count
-                    </h5>
-                    <span class="text-truncate">
+                <div class="row">
+                    <span class="col-8 text-muted text-uppercase">
+                        <i class="fal fa-user"></i>
+                        <br/>
                         @T["New Users"]
                     </span>
-                </div>
-
-            </card-body>
-        </card>
-    </div>
-    <div class="col-3">
-        <card>
-            <card-body>
-                <div class="d-block">
-                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
-                        @newVisits?.Count
+                    <h5 class="col-4 text-right text-primary">
+                        @newUsers?.Count
                     </h5>
-                    <span class="text-truncate">
-                        @T["User Visits"]
-                    </span>
                 </div>
-
+                <div class="d-block mt-3">
+                    <div class="progress" data-toggle="tooltip" title="@newUserWidth - @newUsers?.Count.ToPrettyInt(true) / @totalUsers?.Count.ToPrettyInt(true)" style="height: 6px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: @newUserWidth" aria-valuenow="@newUsers?.Count" aria-valuemin="0" aria-valuemax="@totalUsers?.Count"></div>
+                    </div>
+                </div>
             </card-body>
         </card>
     </div>
-
-
     <div class="col-3">
         <card>
             <card-body>
-                <div class="d-block">
-                    <h5 class="float-right" data-toggle="tooltip" title="@T["Page Views"]">
+                <div class="row">
+                    <span class="col-8 text-muted text-uppercase">
+                        <i class="fal fa-history"></i>
+                        <br />
+                        @T["Returning Users"]
+                    </span>
+                    <h5 class="col-4 text-right text-success">
+                        @returningUsers?.Count
+                    </h5>
+                </div>
+                <div class="d-block mt-3">
+                    <div class="progress" data-toggle="tooltip" title="@returningUserWidth - @returningUsers?.Count.ToPrettyInt(true) / @totalUsers?.Count.ToPrettyInt(true)" style="height: 6px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @returningUserWidth" aria-valuenow="@returningUsers?.Count" aria-valuemin="0" aria-valuemax="@totalUsers?.Count"></div>
+                    </div>
+                </div>
+            </card-body>
+        </card>
+    </div>
+    <div class="col-3">
+        <card>
+            <card-body>
+                <div class="row">
+                    <span class="col-8 text-muted text-uppercase">
+                        <i class="fal fa-trophy"></i>
+                        <br />
+                        @T["Badges"]
+                    </span>
+                    <h5 class="col-4 text-right text-info">
                         @newBadges?.Count
                     </h5>
-                    <span class="text-truncate">
-                        @T["New Badges"]
-                    </span>
                 </div>
-
+                <div class="d-block mt-3">
+                    <div class="progress" data-toggle="tooltip" title="@newBadgesWidth - @newBadges?.Count.ToPrettyInt(true) / @totalBadges?.Count.ToPrettyInt(true)" style="height: 6px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: @newBadgesWidth" aria-valuenow="@newBadges?.Count" aria-valuemin="0" aria-valuemax="@totalBadges?.Count"></div>
+                    </div>
+                </div>
             </card-body>
         </card>
     </div>
+    <div class="col-3">
 
+        <card>
+            <card-body>
+                <div class="row">
+                    <span class="col-8 text-muted text-uppercase">
+                        <i class="fal fa-plus"></i>
+                        <br />
+
+                        @T["Engagements"]
+                    </span>
+                    <h5 class="col-4 text-right text-warning">
+                        @newReputations?.Count
+                    </h5>
+                </div>
+                <div class="d-block mt-3">
+                    <div class="progress" data-toggle="tooltip" title="@newReputationsWidth - @newReputations?.Count.ToPrettyInt(true) / @totalReputations?.Count.ToPrettyInt(true)" style="height: 6px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: @newReputationsWidth"></div>
+                    </div>
+                </div>
+            </card-body>
+        </card>
+    </div>
 </div>

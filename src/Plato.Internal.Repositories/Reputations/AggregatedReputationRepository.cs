@@ -196,7 +196,57 @@ namespace Plato.Internal.Repositories.Reputations
 
         }
 
+        // ----------------
+        // Grouped by reputation name
+        // ----------------
 
+        public async Task<AggregatedResult<DateTimeOffset>> SelectGroupedByNameAsync(
+            string reputationName,
+            string groupBy,
+            DateTimeOffset start,
+            DateTimeOffset end)
+        {
+            
+            // Sql query
+            const string sql = @"
+                SELECT 
+                    COUNT(Id) AS [Count], 
+                    MAX({groupBy}) AS [Aggregate] 
+                FROM 
+                    {prefix}_UserReputations 
+                WHERE 
+                    [Name] = '{reputationName}' AND
+                    {groupBy} >= '{start}' AND {groupBy} <= '{end}'
+                GROUP BY 
+                    YEAR({groupBy}),
+                    MONTH({groupBy}), 
+                    DAY({groupBy})
+            ";
+
+            // Sql replacements
+            // Note user supplied input should never be passed into this method
+            var replacements = new Dictionary<string, string>()
+            {
+                ["{reputationName}"] = reputationName.Replace("'", "''"),
+                ["{groupBy}"] = groupBy.Replace("'", "''"),
+                ["{start}"] = start.ToSortableDateTimePattern(),
+                ["{end}"] = end.ToSortableDateTimePattern()
+            };
+
+            // Execute and return results
+            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+            {
+                var output = new AggregatedResult<DateTimeOffset>();
+                while (await reader.ReadAsync())
+                {
+                    var aggregatedCount = new AggregatedCount<DateTimeOffset>();
+                    aggregatedCount.PopulateModel(reader);
+                    output.Data.Add(aggregatedCount);
+                }
+                return output;
+            });
+
+        }
 
     }
 

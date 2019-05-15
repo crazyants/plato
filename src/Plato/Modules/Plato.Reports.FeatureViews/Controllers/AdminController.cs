@@ -55,47 +55,8 @@ namespace Plato.Reports.FeatureViews.Controllers
         }
 
 
-        public async Task<IActionResult> Index(ReportOptions opts, PagerOptions pager)
+        public async Task<IActionResult> Index()
         {
-
-            // Default options
-            if (opts == null)
-            {
-                opts = new ReportOptions();
-            }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-
-            // Get default options
-            var defaultViewOptions = new ReportOptions();
-            var defaultPagerOptions = new PagerOptions();
-
-            // Add non default route data for pagination purposes
-            if (opts.Start != defaultViewOptions.Start)
-                this.RouteData.Values.Add("opts.start", opts.Start);
-            if (opts.End != defaultViewOptions.End)
-                this.RouteData.Values.Add("opts.end", opts.End);
-            if (opts.Search != defaultViewOptions.Search)
-                this.RouteData.Values.Add("opts.search", opts.Search);
-            if (opts.Sort != defaultViewOptions.Sort)
-                this.RouteData.Values.Add("opts.sort", opts.Sort);
-            if (opts.Order != defaultViewOptions.Order)
-                this.RouteData.Values.Add("opts.order", opts.Order);
-            if (pager.Page != defaultPagerOptions.Page)
-                this.RouteData.Values.Add("pager.page", pager.Page);
-            if (pager.Size != defaultPagerOptions.Size)
-                this.RouteData.Values.Add("pager.size", pager.Size);
-
-            // Build view model
-            var viewModel = await GetIndexViewModelAsync(opts, pager);
-
-            // Add view model to context
-            HttpContext.Items[typeof(ReportIndexViewModel<Metric>)] = viewModel;
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -112,7 +73,7 @@ namespace Plato.Reports.FeatureViews.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel)await _pageViewsViewProvider.ProvideIndexAsync(new FeatureViewIndex(), this));
+            return View((LayoutViewModel) await _pageViewsViewProvider.ProvideIndexAsync(new FeatureViewIndex(), this));
 
         }
         
@@ -138,36 +99,7 @@ namespace Plato.Reports.FeatureViews.Controllers
 
             }
 
-            return await Index(opts, new PagerOptions()
-            {
-                Page = 1
-            });
-
-        }
-
-        // ----------------------
-
-        async Task<ReportIndexViewModel<Metric>> GetIndexViewModelAsync(ReportOptions options, PagerOptions pager)
-        {
-
-            // Get current feature
-            var feature = await _featureFacade.GetFeatureByIdAsync(RouteData.Values["area"].ToString());
-
-            // Restrict results to current feature
-            if (feature != null)
-            {
-                options.FeatureId = feature.Id;
-            }
-
-            // Set pager call back Url
-            pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-            
-            // Return updated model
-            return new ReportIndexViewModel<Metric>()
-            {
-                Options = options,
-                Pager = pager
-            };
+            return await Index();
 
         }
         

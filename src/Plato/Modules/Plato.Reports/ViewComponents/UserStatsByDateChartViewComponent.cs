@@ -4,17 +4,18 @@ using Plato.Internal.Models.Extensions;
 using Plato.Internal.Repositories.Reputations;
 using Plato.Reports.ViewModels;
 using Plato.Metrics.Repositories;
+using Plato.Internal.Repositories.Metrics;
 
 namespace Plato.Reports.ViewComponents
 {
     public class UserStatsByDateChartViewComponent : ViewComponent
     {
 
-        private readonly IAggregatedMetricsRepository _aggregatedUserReputationRepository;
+        private readonly IAggregatedUserRepository _aggregatedUserRepository;
 
-        public UserStatsByDateChartViewComponent(IAggregatedMetricsRepository aggregatedUserReputationRepository)
+        public UserStatsByDateChartViewComponent(IAggregatedUserRepository aggregatedUserRepository)
         {
-            _aggregatedUserReputationRepository = aggregatedUserReputationRepository;
+            _aggregatedUserRepository = aggregatedUserRepository;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(ReportOptions options)
@@ -24,9 +25,8 @@ namespace Plato.Reports.ViewComponents
             {
                 options = new ReportOptions();
             }
-
-
-            var data = await _aggregatedUserReputationRepository.SelectMetricsAsync(options.Start, options.End);
+            
+            var data = await _aggregatedUserRepository.SelectUserMetricsAsync(options.Start, options.End);
             return View(data);
 
         }

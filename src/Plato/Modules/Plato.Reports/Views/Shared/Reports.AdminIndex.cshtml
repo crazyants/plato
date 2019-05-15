@@ -1,9 +1,8 @@
 ﻿@model ReportOptions
 
-
 <div class="row">
     <div class="col-md-8">
-        
+
         @await DisplayAsync(new View("ViewsByDateChart", new
         {
             options = @Model
@@ -12,7 +11,7 @@
 
     </div>
     <div class="col-md-4">
-        
+
         @await DisplayAsync(new View("ViewsByRoleChart", new
         {
             options = @Model

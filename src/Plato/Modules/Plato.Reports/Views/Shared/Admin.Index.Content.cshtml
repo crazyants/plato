@@ -9,6 +9,7 @@
     options = @Model
 }))
 
+
 @await DisplayAsync(new View("ViewsByDateChart", new
 {
     options = @Model
@@ -41,8 +42,6 @@
     </div>
 </div>
 
-
-
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
 
@@ -70,11 +69,16 @@
 }))
 
 
-@await DisplayAsync(new View("UserRepTopList", new
+@await DisplayAsync(new View("PageViewsTopList", new
 {
     options = @Model
 }))
 
+
+@await DisplayAsync(new View("UserRepTopList", new
+{
+    options = @Model
+}))
 
 
 

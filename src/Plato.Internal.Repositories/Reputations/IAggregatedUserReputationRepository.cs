@@ -20,6 +20,11 @@ namespace Plato.Internal.Repositories.Reputations
             int featureId);
 
         Task<AggregatedResult<string>> SelectGroupedByFeature(DateTimeOffset start, DateTimeOffset end);
+        Task<AggregatedResult<DateTimeOffset>> SelectGroupedByNameAsync(
+            string reputationName,
+            string groupBy,
+            DateTimeOffset start,
+            DateTimeOffset end);
 
     }
 
