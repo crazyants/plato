@@ -24,7 +24,7 @@ namespace Plato.Reports.PageViews.Navigation
             builder
                 .Add(T["Reports"], int.MaxValue - 4, questions => questions
                     .IconCss("fal fa-chart-bar")
-                    .Add(T["Page Views"], int.MinValue, home => home
+                    .Add(T["Page Views"], 1, home => home
                         .Action("Index", "Admin", "Plato.Reports.PageViews")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav())

@@ -1,4 +1,4 @@
-Name: Plato Reports FeatureViews
+Name: Plato Reports Feature Views
 Description: Adds reporting to show feature usage.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/

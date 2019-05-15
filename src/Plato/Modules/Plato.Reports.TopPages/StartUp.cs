@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Reports.FeatureViews.Navigation;
-using Plato.Reports.FeatureViews.ViewProviders;
+using Plato.Reports.TopPages.Navigation;
+using Plato.Reports.TopPages.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Reports.FeatureViews.Models;
+using Plato.Reports.TopPages.Models;
 
-namespace Plato.Reports.FeatureViews
+namespace Plato.Reports.TopPages
 {
     public class Startup : StartupBase
     {
@@ -39,11 +39,10 @@ namespace Plato.Reports.FeatureViews
             IServiceProvider serviceProvider)
         {
             
-            // Page Views
             routes.MapAreaRoute(
-                name: "ReportsFeatureViews",
-                areaName: "Plato.Reports.FeatureViews",
-                template: "admin/reports/feature-views/{pager.offset:int?}",
+                name: "ReportsTopPages",
+                areaName: "Plato.Reports.TopPages",
+                template: "admin/reports/top-pages",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 

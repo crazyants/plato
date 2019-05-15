@@ -1,7 +1,6 @@
 ﻿@model ReportOptions
-
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-lg-4 col-md-12 col-sm-12">
 
         @await DisplayAsync(new View("EntityViewsByDateChart", new
         {
@@ -13,9 +12,9 @@
         }))
 
     </div>
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-lg-4 col-md-12 col-sm-12">
 
-        @await DisplayAsync(new View("NewByDateChart", new
+        @await DisplayAsync(new View("NewEntitiesByDateChart", new
         {
             options = @Model,
             chart = new ChartOptions()
@@ -25,37 +24,40 @@
         }))
 
     </div>
- 
-</div>
+    <div class="col-lg-4 col-md-12 col-sm-12">
 
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("EntityViewsTopList", new
+        @await DisplayAsync(new View("NewRepliesByDateChart", new
         {
             options = @Model,
             chart = new ChartOptions()
             {
-                Title = "Top Topics"
+                Title = "New Replies"
             }
         }))
 
     </div>
-
-    <div class="col-lg-6 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("EntityRepliesTopList", new
-        {
-            options = @Model,
-            chart = new ChartOptions()
-            {
-                Title = "Popular Topics"
-            }
-        }))
-
-    </div>
-
 </div>
+
+
+@await DisplayAsync(new View("EntityViewsTopList", new
+{
+    options = @Model,
+    chart = new ChartOptions()
+    {
+        Title = "Top Topics"
+    }
+}))
+
+
+@await DisplayAsync(new View("EntityRepliesTopList", new
+{
+    options = @Model,
+    chart = new ChartOptions()
+    {
+        Title = "Popular Topics"
+    }
+}))
+
 
 @await DisplayAsync(new View("UserRepTopList", new
 {

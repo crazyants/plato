@@ -1,0 +1,41 @@
+﻿@model ReportOptions
+
+<div class="form-inline">
+    <div class="input-group mr-sm-2" style="width: 175px;">
+        <label class="sr-only" asp-for="Start">
+            @T["Start Date"]
+        </label>
+        <input type="text"
+               asp-for="Start"
+               asp-date-picker="StartDate"
+               value="@Model.Start.ToString("yyyy/MM/dd")"
+               data-date-autoclose="true"
+               data-date-format="yyyy/mm/dd"
+               class="form-control" />
+        <div class="input-group-append">
+            <div class="input-group-text">
+                <i class="fal fa-calendar"></i>
+            </div>
+        </div>
+    </div>
+    <div class="input-group mr-sm-2" style="width: 175px;">
+        <label class="sr-only" asp-for="End">
+            @T["End Date"]
+        </label>
+        <input type="text"
+               asp-for="End"
+               asp-date-picker="EndDate"
+               value="@Model.End.ToString("yyyy/MM/dd")"
+               data-date-autoclose="true"
+               data-date-format="yyyy/mm/dd"
+               class="form-control" />
+        <div class="input-group-append">
+            <div class="input-group-text">
+                <i class="fal fa-calendar"></i>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">
+        @T["GO"]
+    </button>
+</div>

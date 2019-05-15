@@ -1,0 +1,67 @@
+﻿@model AggregatedResult<string>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">
+            @T["Most Viewed Pages"]
+        </h6>
+    </card-title>
+    <card-body>
+
+        @if (Model != null)
+        {
+            var position = 1;
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row no-gutters">
+                    @foreach (var result in Model.Data)
+                    {
+                        var text = "";
+                        if (@result.Aggregate.StartsWith("/"))
+                        {
+                            text = result.Aggregate.Substring(1);
+                        }
+                        else
+                        {
+                            text = result.Aggregate;
+                        }
+                        if (string.IsNullOrEmpty(text))
+                        {
+                            text = T["home"].Value;
+                        }
+                        <div class="col-lg-6 col-md-12 col-sm-12 list-group-item p-0">
+                            <a href="@result.Aggregate" class="list-group-item list-group-item-action p-3 w-100">
+                                <span class="list-left">
+                                    <span class="ml-2 mt-2 text-muted">
+                                        @position.ToPositionInt()
+                                        </span>
+                                      
+                                    </span>
+                                <span class="list-body">
+                                    
+                                    <span class="list-left">
+                                        <span class="btn btn-sm label" data-toggle="tooltip" title="@T["Views"]">
+                                            @result.Count.ToPrettyInt(true)
+                                        </span>
+                                    </span>
+                                    <span class="list-body">
+                                        @text
+                                    </span>
+                               
+                                </span>
+                            </a>
+                        </div>
+                        position++;
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No results found"]
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>

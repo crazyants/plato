@@ -1,5 +1,5 @@
-Name: Plato Reports Page Views
-Description: Adds detailed page view reports to the Plato dashboard.
+Name: Plato Reports Top Pages
+Description: Adds reporting to show top pages within Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Reports

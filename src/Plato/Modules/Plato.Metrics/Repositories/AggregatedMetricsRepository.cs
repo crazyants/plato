@@ -103,10 +103,11 @@ namespace Plato.Metrics.Repositories
         }
 
         // ----------------
-        // Grouped by feature
+        // Grouped by string Title, Url etc
         // ----------------
 
-        public async Task<AggregatedResult<string>> SelectGroupedByTitleAsync(
+        public async Task<AggregatedResult<string>> SelectGroupedByStringAsync(
+            string groupBy,
             DateTimeOffset start, 
             DateTimeOffset end,
             int limit = 10)
@@ -115,20 +116,21 @@ namespace Plato.Metrics.Repositories
             // Sql query
             const string sql = @"
                 SELECT TOP {limit}
-                    m.Title AS [Aggregate] ,
+                    m.{groupBy} AS [Aggregate] ,
                     COUNT(m.Id) AS [Count]
                 FROM 
                     {prefix}_Metrics m 
                 WHERE 
                     m.CreatedDate >= '{start}' AND m.CreatedDate <= '{end}'
                 GROUP BY 
-                    m.Title
-                ORDER BY [Count]
+                    m.{groupBy}
+                ORDER BY [Count] DESC
             ";
 
             // Sql replacements
             var replacements = new Dictionary<string, string>()
             {
+                ["{groupBy}"] = groupBy,
                 ["{limit}"] = limit.ToString(),
                 ["{start}"] = start.ToSortableDateTimePattern(),
                 ["{end}"] = end.ToSortableDateTimePattern()
@@ -190,8 +192,8 @@ namespace Plato.Metrics.Repositories
                         m.CreatedUserId = 0
                 );
 
-                UPDATE @temp 
-                SET [Count] = (@anonymousCount) 
+                UPDATE @temp SET 
+                    [Count] = (@anonymousCount) 
                 WHERE [Aggregate] = '{anonymousName}'
 
                 SELECT [Aggregate] AS Aggregate, [Count] AS Count FROM @temp
@@ -203,7 +205,7 @@ namespace Plato.Metrics.Repositories
             {
                 ["{start}"] = start.ToSortableDateTimePattern(),
                 ["{end}"] = end.ToSortableDateTimePattern(),
-                ["{anonymousName"] = DefaultRoles.Anonymous
+                ["{anonymousName}"] = DefaultRoles.Anonymous
             };
 
             // Execute and return results

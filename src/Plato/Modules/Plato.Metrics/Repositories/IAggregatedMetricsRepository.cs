@@ -12,7 +12,8 @@ namespace Plato.Metrics.Repositories
 
         Task<AggregatedResult<string>> SelectGroupedByRoleAsync(DateTimeOffset start, DateTimeOffset end);
 
-        Task<AggregatedResult<string>> SelectGroupedByTitleAsync(
+        Task<AggregatedResult<string>> SelectGroupedByStringAsync(
+            string groupBy,
             DateTimeOffset start,
             DateTimeOffset end,
             int limit = 20);
