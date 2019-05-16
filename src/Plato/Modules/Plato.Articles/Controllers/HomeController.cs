@@ -123,7 +123,7 @@ namespace Plato.Articles.Controllers
                 pager = new PagerOptions();
             }
             
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();

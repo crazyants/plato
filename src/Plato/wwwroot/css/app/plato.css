@@ -920,16 +920,17 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* Plato Layout */
 /* ------------------------- */
 
+.layout-header.fixed {  }
+
 .layout-header.fixed {
     position: sticky;
     top: 0;
     left: 0;
     z-index: 5;
-    background-color: white;
-    border-bottom: 1px solid #ddd;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
 }
 
+.layout-header.fixed h4 { font-size: 130%; margin: 0.05rem 0; }
 .layout-header.fixed hr { display: none; }
 
 .layout-content .card,

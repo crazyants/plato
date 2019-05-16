@@ -36,7 +36,7 @@ namespace Plato.Questions.Categories.Roles.QueryAdapters
                     builder.Append(" AND ");
                 }
 
-                builder.Append("(e.CategoryId IN (");
+                builder.Append("(e.CategoryId = 0 OR e.CategoryId IN (");
                 if (q.Params.UserId.Value > 0)
                 {
                     builder.Append("SELECT cr.CategoryId FROM {prefix}_CategoryRoles AS cr WITH (nolock) WHERE cr.RoleId IN (");

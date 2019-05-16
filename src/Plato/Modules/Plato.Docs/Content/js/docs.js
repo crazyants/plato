@@ -40,8 +40,6 @@ $(function (win, doc, $) {
 
                     },
                     onScroll: function (spy, e) {
-                        console.log(spy.scrollTop);
-                        console.log(top);
                         if (spy.scrollTop > top - padding) {
                             if (!$toc.hasClass(className + "-sticky")) {
                                 $toc.addClass(className + "-sticky");

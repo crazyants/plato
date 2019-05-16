@@ -1,6 +1,15 @@
 
 /* ------------------- */
-/* Search within navigation  */
+/* Fixed Header  */
+/* ------------------- */
+
+.layout-header.fixed {
+    background-color: #0a0a0a;
+    border-bottom: 1px solid #222;
+}
+
+/* ------------------- */
+/* Navigation  */
 /* ------------------- */
 
 .nav-site { border-color: rgba(255, 255, 255, 0.10); }

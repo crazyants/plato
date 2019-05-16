@@ -1,5 +1,14 @@
 ﻿
 /* ------------------- */
+/* Fixed Header  */
+/* ------------------- */
+
+.layout-header.fixed {
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+
+/* ------------------- */
 /* Navigation  */
 /* ------------------- */
 
