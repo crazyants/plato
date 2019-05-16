@@ -39,31 +39,20 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
+@await DisplayAsync(new View("EntityViewsTopList", new
+{
+    options = @Model,
+    chart = new ChartOptions()
+    {
+        Title = "Top Questions"
+    }
+}))
 
-        @await DisplayAsync(new View("EntityViewsTopList", new
-        {
-            options = @Model,
-            chart = new ChartOptions()
-            {
-                Title = "Top Questions"
-            }
-        }))
-
-    </div>
-
-    <div class="col-lg-6 col-md-12 col-sm-12">
-
-        @await DisplayAsync(new View("EntityRepliesTopList", new
-        {
-            options = @Model,
-            chart = new ChartOptions()
-            {
-                Title = "Popular Questions"
-            }
-        }))
-
-    </div>
-
-</div>
+@await DisplayAsync(new View("EntityRepliesTopList", new
+{
+    options = @Model,
+    chart = new ChartOptions()
+    {
+        Title = "Popular Questions"
+    }
+}))

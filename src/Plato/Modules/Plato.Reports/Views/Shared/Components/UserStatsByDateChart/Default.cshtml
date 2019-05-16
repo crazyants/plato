@@ -36,11 +36,11 @@
 }
 
 <div class="row">
-    <div class="col-3">
+    <div class="col-lg-4 col-md-12 col-sm-12">
         <card>
             <card-body>
                 <div class="row">
-                    <span class="col-8 text-muted text-uppercase">
+                    <span class="col-8 text-muted text-truncate text-uppercase">
                         <i class="fal fa-user"></i>
                         <br/>
                         @T["New Users"]
@@ -57,11 +57,11 @@
             </card-body>
         </card>
     </div>
-    <div class="col-3">
+    <div class="col-lg-4 col-md-12 col-sm-12">
         <card>
             <card-body>
                 <div class="row">
-                    <span class="col-8 text-muted text-uppercase">
+                    <span class="col-8 text-muted text-truncate text-uppercase">
                         <i class="fal fa-history"></i>
                         <br />
                         @T["Returning Users"]
@@ -78,36 +78,13 @@
             </card-body>
         </card>
     </div>
-    <div class="col-3">
+    <div class="col-lg-4 col-md-12 col-sm-12">
         <card>
             <card-body>
                 <div class="row">
-                    <span class="col-8 text-muted text-uppercase">
-                        <i class="fal fa-trophy"></i>
-                        <br />
-                        @T["Badges"]
-                    </span>
-                    <h5 class="col-4 text-right text-info">
-                        @newBadges?.Count
-                    </h5>
-                </div>
-                <div class="d-block mt-3">
-                    <div class="progress" data-toggle="tooltip" title="@newBadgesWidth - @newBadges?.Count.ToPrettyInt(true) / @totalBadges?.Count.ToPrettyInt(true)" style="height: 6px;">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: @newBadgesWidth" aria-valuenow="@newBadges?.Count" aria-valuemin="0" aria-valuemax="@totalBadges?.Count"></div>
-                    </div>
-                </div>
-            </card-body>
-        </card>
-    </div>
-    <div class="col-3">
-
-        <card>
-            <card-body>
-                <div class="row">
-                    <span class="col-8 text-muted text-uppercase">
+                    <span class="col-8 text-muted text-truncate text-uppercase">
                         <i class="fal fa-plus"></i>
                         <br />
-
                         @T["Engagements"]
                     </span>
                     <h5 class="col-4 text-right text-warning">

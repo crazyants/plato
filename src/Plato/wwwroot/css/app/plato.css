@@ -1,8 +1,35 @@
 ﻿/* ReSharper disable once UnknownCssVendorExtension */
 /* ReSharper disable once UnknownCssVendorExtension */
 
+canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
+
 /* ------------------------- */
-/* Plato Icon */
+/* Container sizes */
+/* ------------------------- */
+
+/* above 1024px limit to 1024px */
+@media (min-width: 1024px) {  
+    .container-fluid-1024 {
+        max-width: 1024px;
+    }
+}
+
+/* above 1280px limit to 1280px */
+@media (min-width: 1280px) {  
+    .container-fluid-1280 {
+        max-width: 1280px;
+    }
+}
+
+/* above 1280px limit to 1600px */
+@media (min-width: 1600px) {  
+    .container-fluid-1600 {
+        max-width: 1600px;
+    }
+}
+
+/* ------------------------- */
+/* Plato Brand Icon */
 /* ------------------------- */
 
 .plato-brand {
@@ -24,7 +51,6 @@
 .plato-brand-lg { padding: 12px; border-width: 12px; }
 .plato-brand-xl { padding: 20px; border-width: 20px; }
 
-canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
 
 /* ------------------------- */
 /* Cursors */
@@ -597,11 +623,9 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .nav-site { border: 0; border-bottom-width: 1px; border-style: solid; }
 .nav-site .navbar { border: 0 !important; }
-
 .nav-site .collapsing { overflow: hidden; }
 
 .nav-site > .navbar .navbar-nav a.nav-link { height: 44px; padding: 0.5rem 1rem !important }
-
 .nav-site > .navbar { width: 100%; }
 
 .nav-site > .navbar .dropdown .dropdown-menu { min-width: 200px; }
@@ -641,6 +665,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* full screen */
 @media (min-width: 992px) {    
     
+    .nav-site > .navbar { padding-left: 0; padding-right: 0; }
+
     .nav-site > .navbar,
     .nav-site > .navbar .navbar-user { display: flex; flex-flow:nowrap; }
     .nav-site > .navbar .navbar-mobile { display: none; }

@@ -1,0 +1,50 @@
+﻿@model ChartViewModel<Plato.Internal.Data.Abstractions.IPagedResults<Entity>>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">
+            @if (string.IsNullOrEmpty(Model.Options.Title))
+            {
+                @T["New Contributions"]
+            }
+            else
+            {
+                @T[Model.Options.Title]
+            }
+        </h6>
+    </card-title>
+    <card-body>
+
+        @if (Model.Data != null)
+        {
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row no-gutters">
+        
+                    @foreach (var result in Model.Data.Data)
+                    {
+                        <div class="col-lg-6 col-md-12 col-sm-12 list-group-item p-0">
+                            <a asp-route-area="@result.ModuleId" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Id" asp-route-opts.alias="@result.Alias" class="list-group-item list-group-item-action">
+                                <span class="float-right">
+                                    <date utc="@result.CreatedDate"></date>
+                                </span>
+                                @if (result.CreatedBy != null)
+                                {
+                                    <avatar data-toggle="tooltip" title="@result.CreatedBy.DisplayName" class="avatar avatar-sm mr-2" url="@result.CreatedBy.Avatar.Url"/>
+                                }
+                                @result.Title
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    <h6>@T["No results found"]</h6>
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>
