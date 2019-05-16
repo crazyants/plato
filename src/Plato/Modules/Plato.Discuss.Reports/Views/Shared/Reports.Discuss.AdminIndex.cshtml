@@ -1,4 +1,5 @@
 ﻿@model ReportOptions
+
 <div class="row">
     <div class="col-lg-4 col-md-12 col-sm-12">
 
@@ -55,15 +56,5 @@
     chart = new ChartOptions()
     {
         Title = "Popular Topics"
-    }
-}))
-
-
-@await DisplayAsync(new View("UserRepTopList", new
-{
-    options = @Model,
-    chart = new ChartOptions()
-    {
-        Title = "Most Participation"
     }
 }))

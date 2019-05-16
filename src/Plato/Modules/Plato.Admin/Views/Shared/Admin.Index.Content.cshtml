@@ -3,46 +3,25 @@
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title">@T["Extend Plato"]</h6>
-    </card-title>
-    <card-body>
-        
-        @if (Model.FeatureCategories != null)
-        {
-            <div class="row no-gutters m-2" style="min-width: 700px; max-height: 400px; overflow: auto;">
-                @foreach (var option in Model.FeatureCategories)
-                {
-         
-                    var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
-                    {
-                        ["area"] = "Plato.Features",
-                        ["controller"] = "Admin",
-                        ["action"] = "Index",
-                        ["opts.category"] = option.Value.ToLower(),
-                    };
-                    <div class="col-3">
-                        <a class="dropdown-item" href="@GetRouteUrl(routeValues)">
-                            @T[option.Text]
-                        </a>
-                    </div>
-                }
-            </div>
-
-        }
-
-    </card-body>
-</card>
-
-<card class="card card-body-flush">
-    <card-title>
         <h6 class="card-title">@T["Quick Links"]</h6>
     </card-title>
     <card-body>
 
         <div class="list-group list-group-flush list-group-hover">
             <div class="row no-gutters">
-                
-                <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0">
+                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
+                    <a asp-route-area="Plato.Features" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
+                        <h6>Features</h6>
+                        <p>
+                            Features allow you to extend and customize your Plato installation.
+                        </p>
+                        <span class="btn btn-secondary">
+                            Goto Features
+                        </span>
+
+                    </a>
+                </div>
+                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
                     <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
                         <h6>Users</h6>
                         <p>
@@ -54,7 +33,7 @@
 
                     </a>
                 </div>
-                <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0">
+                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
                     <a asp-route-area="Plato.Roles" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
                         <h6>Roles</h6>
                         <p>
@@ -65,7 +44,7 @@
                         </span>
                     </a>
                 </div>
-                <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0">
+                <div class="float-left list-group-item list-group-item-action col-lg-3 col-md-6 col-sm-12 border-0 m-0 p-0">
                     <a asp-route-area="Plato.Settings" asp-route-controller="Admin" asp-route-action="Index" class="list-group-item-action d-block p-3">
                         <h6>Settings</h6>
                         <p>

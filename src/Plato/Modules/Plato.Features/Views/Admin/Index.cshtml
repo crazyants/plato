@@ -3,78 +3,81 @@
     AddTitleSegment(T["Admin"]);
     AddTitleSegment(T["Features"]);
 }
+<form asp-action="Index">
+    <div class="layout">
 
-<div class="layout">
-
-    <div class="layout-header">
-        @if (Model.Alerts != null)
-        {
-            <div class="layout-alerts">
-                <view model="@Model.Alerts"></view>
-            </div>
-        }
-        @if (Model.Tools != null)
-        {
-            <div class="float-right layout-tools">
-                <view model="@Model.Tools" />
-            </div>
-        }
-        @if (Model.Header != null)
-        {
-            <div class="layout-header-item">
-                <view model="@Model.Header" />
-            </div>
-        }
-        @if (Model.Meta != null)
-        {
-            <div class="layout-meta">
-                <view model="@Model.Meta"></view>
-            </div>
-        }
-    </div>
-
-    @if (Model.SideBar != null)
-    {
-        <div class="row layout-content">
-            <div class="col-lg-9">
-                @if (Model.Content != null)
-                {
-                    <form asp-action="Index">
-                        <view model="@Model.Content"></view>
-                    </form>
-                }
-            </div>
-            <div class="col-lg-3">
-                @if (Model.SideBar != null)
-                {
-                    <view model="@Model.SideBar"></view>
-                }
-            </div>
+        <div class="layout-header">
+            @if (Model.Alerts != null)
+            {
+                <div class="layout-alerts">
+                    <view model="@Model.Alerts"></view>
+                </div>
+            }
+            @if (Model.Tools != null)
+            {
+                <div class="float-right layout-tools">
+                    <view model="@Model.Tools" />
+                </div>
+            }
+            @if (Model.Header != null)
+            {
+                <div class="layout-header-item">
+                    <view model="@Model.Header" />
+                </div>
+            }
+            @if (Model.Meta != null)
+            {
+                <div class="layout-meta">
+                    <view model="@Model.Meta"></view>
+                </div>
+            }
         </div>
-    }
-    else
-    {
-        @if (Model.Content != null)
-         {
-             <form asp-action="Index">
-                 <view model="@Model.Content"></view>
-             </form>
-         }
-    }
 
-    <div class="layout-footer">
-        @if (Model.Actions != null)
+        @if (Model.SideBar != null)
         {
-            <div class="float-right layout-actions">
-                <view model="@Model.Actions" />
+            <div class="row layout-content">
+                <div class="col-lg-9">
+                    @if (Model.Content != null)
+                    {
+                
+                        <view model="@Model.Content"></view>
+            
+                    }
+                </div>
+                <div class="col-lg-3">
+                    @if (Model.SideBar != null)
+                    {
+                        <view model="@Model.SideBar"></view>
+                    }
+                </div>
             </div>
         }
-        @if (Model.Footer != null)
+        else
         {
-            <div class="layout-footer-item">
-                <view model="@Model.Footer"></view>
-            </div>
+            @if (Model.Content != null)
+             {
+                 <div class="layout-content">
+             
+                     <view model="@Model.Content"></view>
+          
+                 </div>
+             }
         }
+
+        <div class="layout-footer">
+            @if (Model.Actions != null)
+            {
+                <div class="float-right layout-actions">
+                    <view model="@Model.Actions" />
+                </div>
+            }
+            @if (Model.Footer != null)
+            {
+                <div class="layout-footer-item">
+                    <view model="@Model.Footer"></view>
+                </div>
+            }
+        </div>
+
     </div>
-
-</div>
+</form>

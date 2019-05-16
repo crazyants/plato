@@ -10,41 +10,40 @@
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title d-inline-block">@T["Features"]</h6>
-        <ul class="nav navbar p-0 float-right">
-            <li class="nav-item dropdown">
-                <a class="nav-link text-muted dropdown-toggle" href="#" id="filterDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @T["Filter By Category"]
-                </a>
-                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="filterDropDown">
-                    <div class="dropdown-header">
-                        <h6>@T["Categories"]</h6>
+        <h6 class="card-title d-inline-block">@T["Categories"]</h6>
+    </card-title>
+    <card-body>
+        <div class="row no-gutters">
 
-                    </div>
-                    <hr class="m-0" />
-                    <div class="row no-gutters m-2" style="min-width: 700px; max-height: 400px; overflow: auto;">
-
-                        @foreach (var option in Model.AvailableCategories)
-                        {
-                            var isEqualWithValue = option.Value?.Equals(Model.Options.Category, StringComparison.OrdinalIgnoreCase);
-                            var iconCss = isEqualWithValue ?? Model.Options.Category == option.Value 
-                                ? "fal fa-fw fa-check" 
-                                : "fal fa-fw";
-                            var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
-                            {
-                                ["opts.category"] = option.Value?.ToLower(),
-                            };
-                            <div class="col-3">
-                                <a class="dropdown-item" href="@GetRouteUrl(routeValues)">
-                                    <i class="@iconCss"></i>
-                                    @T[option.Text]
-                                </a>
-                            </div>
-                        }
-                    </div>
+            @foreach (var option in Model.AvailableCategories)
+            {
+                var isEqualWithValue = option.Value?.Equals(Model.Options.Category, StringComparison.OrdinalIgnoreCase);
+                var isCurrent = isEqualWithValue ?? Model.Options.Category == option.Value;
+                var iconCss = isCurrent
+                    ? "fal fa-fw fa-check"
+                    : "fal fa-fw";
+                var css = isCurrent
+                    ? "dropdown-item active"
+                    : "dropdown-item";
+                var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                {
+                    ["opts.category"] = option.Value?.ToLower(),
+                };
+                <div class="col-3">
+                    <a class="@css" href="@GetRouteUrl(routeValues)">
+                        <i class="@iconCss"></i>
+                        @T[option.Text]
+                    </a>
                 </div>
-            </li>
-        </ul>
+            }
+        </div>
+    </card-body>
+</card>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title d-inline-block">@T["Features"]</h6>
+     
     </card-title>
     <card-body>
 

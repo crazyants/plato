@@ -10,7 +10,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Reports.ViewModels;
 
-namespace Plato.Reports.ViewComponents
+namespace Plato.Reports.TopUsers.ViewComponents
 {
     public class UserRepTopListViewComponent : ViewComponent
     {
@@ -69,7 +69,7 @@ namespace Plato.Reports.ViewComponents
             if (viewsById != null)
             {
                 mostViewedEntities = await _platoUserStore.QueryAsync()
-                    .Take(1, 10)
+                    .Take(1, 100)
                     .Select<UserQueryParams>(q =>
                     {
                         q.Id.IsIn(viewsById.Data.Select(d => d.Aggregate).ToArray());

@@ -62,19 +62,10 @@
     </div>
 </div>
 
-
 @await DisplayAsync(new View("UserRepByDateChart", new
 {
     options = @Model
 }))
-
-@await DisplayAsync(new View("UserRepTopList", new
-{
-    options = @Model
-}))
-
-
-
 
 <authorize asp-permission="@manageFeaturesPermission.Name">
     <authorize-success>
