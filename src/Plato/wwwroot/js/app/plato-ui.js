@@ -480,6 +480,113 @@ $(function (win, doc, $) {
         };
 
     }();
+    
+    /* sticky */
+    var sticky = function () {
+
+        var dataKey = "sticky",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "click", // unique namespace
+            message: "Are you sure you wish to delete this item?\n\nClick OK to confirm..."
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                var top = $caller.offset().top,
+                    padding = 16;
+
+                // Bind scroll events
+                $(win).on("scroll",
+                    function(e) {
+
+                        var scrollTop = $(this).scrollTop(),
+                            docHeight = $(doc).height(),
+                            winHeight = $caller.height();
+                        
+                        if (scrollTop > top - padding) {
+                            if (!$caller.hasClass("fixed")) {
+                                console.log("add fixed css");
+                                $caller.addClass("fixed");
+                            }
+                        } else {
+                            if ($caller.hasClass("fixed")) {
+                                console.log("remove fixed css");
+                                $caller.removeClass("fixed");
+                            }
+                        }
+
+
+                    });
+
+            },
+            unbind: function ($caller) {
+                var event = $caller.data(dataKey).event;
+                $caller.unbind(event);
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).sticky()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().sticky()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
 
     /* treeView */
     var treeView = function () {
@@ -1800,8 +1907,7 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-
-                $caller.bind("scroll",
+                $caller.on("scroll",
                     function(e) {
 
                         // Start timer to detect end of scroll
@@ -1816,7 +1922,7 @@ $(function (win, doc, $) {
                             }
                         }
 
-                        // Raise onScroll passing in a normalized scroll threadhold
+                        // Raise onScroll passing in a normalized scroll threshold
                         if ($caller.data(dataKey).onScroll) {
                             var scrollTop = $caller.scrollTop(),
                                 docHeight = $(doc).height(),
@@ -1829,12 +1935,11 @@ $(function (win, doc, $) {
                                 },
                                 e);
                         }
-
-
+                        
                     });
             },
             unbind: function($caller) {
-                $caller.unbind("scroll");
+                $caller.off("scroll");
             },
             start: function($caller, e) {
                 methods.stop($caller);
@@ -1908,6 +2013,7 @@ $(function (win, doc, $) {
         };
 
     }();
+
 
     /* InfiniteScroll */
     var infiniteScroll = function() {
@@ -4759,6 +4865,7 @@ $(function (win, doc, $) {
         dialog: dialog.init,
         dialogSpy: dialogSpy.init,
         scrollTo: scrollTo.init,
+        sticky: sticky.init,
         treeView: treeView.init,
         pagedList: pagedList.init,
         autoComplete: autoComplete.init,
@@ -4803,6 +4910,9 @@ $(function (win, doc, $) {
         /* Scroll to a specific element. */
         this.find('[data-provide="scroll"]').scrollTo();
 
+        /* sticky */
+        this.find('[data-provide="sticky"]').sticky();
+
         /* pagedList */
         this.find('[data-provide="paged-list"]').pagedList();
 
@@ -4845,6 +4955,7 @@ $(function (win, doc, $) {
         /* resizeable */
         this.find('[data-provide="resizeable"]').resizeable();
 
+       
         /* resizeable */
         this.find(".nav-site").navSite();
         

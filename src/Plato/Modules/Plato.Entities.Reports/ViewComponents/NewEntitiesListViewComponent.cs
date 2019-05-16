@@ -1,21 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Reports.ViewModels;
-using Plato.Entities.Metrics.Repositories;
-using Plato.Internal.Models.Metrics;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Antiforgery.Internal;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Entities.Reports.ViewComponents
 {
     public class NewEntitiesListViewComponent : ViewComponent
     {
-
 
         private readonly IEntityStore<Entity> _entityStore;
 
@@ -44,8 +37,15 @@ namespace Plato.Entities.Reports.ViewComponents
                 .Take(1, 10)
                 .Select<EntityQueryParams>(q =>
                 {
+
+                    if (options.FeatureId > 0)
+                    {
+                        q.FeatureId.Equals(options.FeatureId);
+                    }
+
                     q.CreatedDate.GreaterThan(options.Start);
                     q.CreatedDate.LessThanOrEqual(options.End);
+
                 })
                 .OrderBy("CreatedDate", OrderBy.Desc)
                 .ToList();

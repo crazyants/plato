@@ -1,0 +1,22 @@
+Name: Plato Issues Votes
+Description: Adds the ability to up vote & down vote issues & issue comments.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Issues
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Issues",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Entities.Ratings",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.WebAPI",
+		Version: "1.0.0"
+	}
+]

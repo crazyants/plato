@@ -39,6 +39,15 @@
     </div>
 </div>
 
+@await DisplayAsync(new View("NewEntitiesList", new
+{
+    options = @Model,
+    chart = new ChartOptions()
+    {
+        Title = "New Ideas"
+    }
+}))
+
 @await DisplayAsync(new View("EntityViewsTopList", new
 {
     options = @Model,

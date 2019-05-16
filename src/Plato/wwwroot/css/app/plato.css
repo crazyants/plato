@@ -3,6 +3,15 @@
 
 canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
 
+.position-absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: inline-block;
+}
+
 /* ------------------------- */
 /* Container sizes */
 /* ------------------------- */
@@ -873,11 +882,23 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
 
-/* list sizes */
+/* list sizes - multiples of base size */
 .list-left-2x { width: 112px; }
 .list-left-2x + .list-body { margin-left: 112px; }
 .list-left-3x { width: 168px; }
 .list-left-3x + .list-body { margin-left: 168px; }
+
+/* general list sizes */
+.list-left-24 { width: 24px; }
+.list-left-24 + .list-body { margin-left: 24px; }
+.list-left-28 { width: 28px; }
+.list-left-28 + .list-body { margin-left: 28px; }
+.list-left-32 { width: 32px; }
+.list-left-32 + .list-body { margin-left: 32px; }
+.list-left-36 { width: 36px; }
+.list-left-36 + .list-body { margin-left: 36px; }
+.list-left-40 { width: 40px; }
+.list-left-40 + .list-body { margin-left: 40px; }
 
 /* remove list-body margin if it's the next element after list-row' */
 .list-row { float: left; width: 100%; }
@@ -898,6 +919,18 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* ------------------------- */
 /* Plato Layout */
 /* ------------------------- */
+
+.layout-header.fixed {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+}
+
+.layout-header.fixed hr { display: none; }
 
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }

@@ -256,6 +256,12 @@ a.label:hover, .label.active {
 .table-hover tbody tr:hover,
 .list-group-hover .list-group-item-action:not(.active):hover,
 .list-group-hover .list-group-item-action:not(.active):hover .text-muted,
+.list-group-hover .list-group-item-action:not(.active):hover .text-primary,
+.list-group-hover .list-group-item-action:not(.active):hover .text-secondary,
+.list-group-hover .list-group-item-action:not(.active):hover .text-success,
+.list-group-hover .list-group-item-action:not(.active):hover .text-info,
+.list-group-hover .list-group-item-action:not(.active):hover .text-warning,
+.list-group-hover .list-group-item-action:not(.active):hover .text-danger,
 .list-group-hover .list-group-item-action:not(.active):hover a:not(.btn):not(.dropdown-item),
 .list-group-hover .list-group-item-action:not(.active):hover a.btn-expand {
     color: #fff !important;

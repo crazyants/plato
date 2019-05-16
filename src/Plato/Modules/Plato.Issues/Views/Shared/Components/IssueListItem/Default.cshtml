@@ -5,140 +5,143 @@
     var repliesText = Model.Entity.TotalReplies == 1 ? T["reply"] : T["replies"];
     string voteCss = "votes", replyCss = "comments";
 
-
     if (Model.Entity.TotalReplies > 0)
     {
-        replyCss = "counter-outline-secondary";
+        replyCss = "counter-outline-primary";
     }
-    if (Model.Entity.IsClosed)
+    if (Model.Entity.SummedRating > 0)
     {
-        replyCss = "counter-success";
+        voteCss = "counter-outline-success";
+    }
+    else if (Model.Entity.SummedRating < 0)
+    {
+        voteCss = "counter-outline-danger";
     }
 }
 
-<div class="list-left list-left-2x counter-group">
-    <div class="counter @voteCss">
-        <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @voteText.Value
-    </div>
-    <div class="counter @replyCss">
-        <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @repliesText.Value
-    </div>
+<div class="list-left list-left-28">
+    @if (Model.Entity.IsClosed)
+    {
+        <span title="@T["This issue has been closed"]" data-toggle="tooltip" class="d-inline-block text-success my-2">
+            <i class="fal fa-check py-2"></i>
+        </span>
+    }
+    else
+    {
+        <span title="@T["This issue is open and awaiting a resolution"]" data-toggle="tooltip" class="d-inline-block text-danger my-2">
+            <i class="fal fa-exclamation-circle py-2"></i>
+        </span>
+    }
 </div>
 <div class="list-body">
-    
-    <div>
-
-
-        <div class="float-right">
-            @if (details?.LatestUsers != null)
-            {
-                <div class="col-12">
-                    <div class="avatar-group  float-right">
-                        @foreach (var user in details.LatestUsers)
-                        {
-                            var replies = user.TotalReplies == 1
-                                ? "reply"
-                                : "replies";
-                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias">
-                                <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" />
-                            </a>
-                        }
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="float-right">
-                        <span class="text-muted">@T["last post"]</span>
-                        <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
-                            <date utc="@Model.Entity.LastReplyDate"></date>
-                        </a>
-                    </div>
-                </div>
-            }
+    <div class="list-left list-left-2x counter-group">
+        <div class="counter @voteCss">
+            <h6>@Model.Entity.TotalRatings.ToPrettyInt()</h6> @voteText.Value
         </div>
-    
-        <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
-        @if (Model.Entity.IsPinned)
-        {
-            <span title="@T["This issue is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-thumbtack"></i>
-            </span>
-        }
-        @if (Model.Entity.IsLocked)
-        {
-            <span title="@T["This issue is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-lock"></i>
-            </span>
-        }
-        
-        @if (Model.Entity.IsClosed)
-        {
-            <span title="@T["This issue has been closed"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-check"></i> 
-            </span>
-        }
-        else
-        {
-            <span title="@T["This issue is open and awaiting a resolution"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                <i class="fal fa-exclamation-circle"></i> 
-           
-            </span>
-        }
-
-
-        @if (Model.Labels != null)
-        {
-            <span class="pl-2">
-                @foreach (var label in Model.Labels)
-                {
-                    <a asp-route-area="Plato.Issues.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
-                        @label.Name
-                    </a>
-                }
-            </span>
-        }
-    
-
+        <div class="counter @replyCss">
+            <h6>@Model.Entity.TotalReplies.ToPrettyInt()</h6> @repliesText.Value
+        </div>
     </div>
-    <div>
+    <div class="list-body">
+        
+        <div>
+        
+            <div class="float-right">
+                @if (details?.LatestUsers != null)
+                {
+                    <div class="col-12">
+                        <div class="avatar-group  float-right">
+                            @foreach (var user in details.LatestUsers)
+                            {
+                                var replies = user.TotalReplies == 1
+                                    ? "reply"
+                                    : "replies";
+                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias">
+                                    <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" />
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="float-right">
+                            <span class="text-muted">@T["last post"]</span>
+                            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
+                                <date utc="@Model.Entity.LastReplyDate"></date>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+    
+            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
+            @if (Model.Entity.IsPinned)
+            {
+                <span title="@T["This issue is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                    <i class="fal fa-thumbtack"></i>
+                </span>
+            }
+            @if (Model.Entity.IsLocked)
+            {
+                <span title="@T["This issue is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                    <i class="fal fa-lock"></i>
+                </span>
+            }
+        
+            @if (Model.Labels != null)
+            {
+                <span class="pl-2">
+                    @foreach (var label in Model.Labels)
+                    {
+                        <a asp-route-area="Plato.Issues.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                            @label.Name
+                        </a>
+                    }
+                </span>
+            }
+    
+        </div>
+        <div>
        
-        @if (Model.Entity.CreatedUserId > 0)
-        {
-            <span>
-                @T["By"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
-            </span>
-        }
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
-        @if (@Model.Category != null)
-        {
-            <span>@T["in"]</span>
-            <a asp-route-area="Plato.Issues.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias">
-                @Model.Category.Name
-            </a>
-        }
-        @if (Model.Entity.IsPrivate)
-        {
-            if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+            @if (Model.Entity.CreatedUserId > 0)
             {
-                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This issue is private and only visible as you are the issue author"]">@T["Private"]</span>
+                <span>
+                    @T["By"]
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
+                </span>
             }
-            else
+            <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+            @if (@Model.Category != null)
             {
-                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This issue is private and only visible as you have permission to view private issues"]">@T["Private"]</span>
+                <span>@T["in"]</span>
+                <a asp-route-area="Plato.Issues.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias">
+                    @Model.Category.Name
+                </a>
             }
-        }
-        @if (Model.Entity.IsHidden)
-        {
-            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This issue is hidden and only visible as you have permission to view hidden issues"]">@T["Hidden"]</span>
-        }
-        @if (Model.Entity.IsSpam)
-        {
-            <span class="badge badge-info" data-toggle="tooltip" title="@T["This issue has been flagged as SPAM and is only visible as you have permission to view issues flagged as SPAM"]">@T["SPAM"]</span>
-        }
-        @if (Model.Entity.IsDeleted)
-        {
-            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This issue has been deleted and is only visible as you have permission to view deleted issues"]">@T["Deleted"]</span>
-        }
+            @if (Model.Entity.IsPrivate)
+            {
+                if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                {
+                    <span class="badge badge-warning" data-toggle="tooltip" title="@T["This issue is private and only visible as you are the issue author"]">@T["Private"]</span>
+                }
+                else
+                {
+                    <span class="badge badge-warning" data-toggle="tooltip" title="@T["This issue is private and only visible as you have permission to view private issues"]">@T["Private"]</span>
+                }
+            }
+            @if (Model.Entity.IsHidden)
+            {
+                <span class="badge badge-primary" data-toggle="tooltip" title="@T["This issue is hidden and only visible as you have permission to view hidden issues"]">@T["Hidden"]</span>
+            }
+            @if (Model.Entity.IsSpam)
+            {
+                <span class="badge badge-info" data-toggle="tooltip" title="@T["This issue has been flagged as SPAM and is only visible as you have permission to view issues flagged as SPAM"]">@T["SPAM"]</span>
+            }
+            @if (Model.Entity.IsDeleted)
+            {
+                <span class="badge badge-danger" data-toggle="tooltip" title="@T["This issue has been deleted and is only visible as you have permission to view deleted issues"]">@T["Deleted"]</span>
+            }
+
+        </div>
 
     </div>
 </div>
