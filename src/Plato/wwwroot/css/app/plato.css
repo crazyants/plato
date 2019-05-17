@@ -951,9 +951,9 @@ layout-footer-item,
     
     .layout-sidebar.fixed {
         position: sticky;
-        top: 86px;
+        top: 87px;
         left: 0;
-        max-height: calc(100vh - 86px);
+        max-height: calc(100vh - 87px);
         padding: 1rem 0;
     }
 

@@ -492,7 +492,10 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            offset: 0 // optional offset from scrollTop to trigger fixed positioning
+            offset: 0, // optional offset from scrollTop to trigger sticky positioning
+            onUpdate: function() {
+                // raised when element is made sticky / not sticky
+            }
         };
 
         var methods = {
@@ -527,10 +530,16 @@ $(function (win, doc, $) {
                 if (scrollTop > top - offset) {
                     if (!$caller.hasClass("fixed")) {
                         $caller.addClass("fixed");
+                        if ($caller.data(dataKey).onUpdate) {
+                            $caller.data(dataKey).onUpdate($caller);
+                        }
                     }
                 } else {
                     if ($caller.hasClass("fixed")) {
                         $caller.removeClass("fixed");
+                        if ($caller.data(dataKey).onUpdate) {
+                            $caller.data(dataKey).onUpdate($caller);
+                        }
                     }
                 }
             },
@@ -5018,14 +5027,23 @@ $(function (win, doc, $) {
         /* replySpy */
         this.replySpy();
         
-        var stickyHeaderHeight = 96;
+        var stickyHeaderHeight = 98;
 
         // Apply sticky headers?
         if (opts.layout.stickyHeaders) {
-
             // Apply sticky to headers
             this.find(".layout-header-sticky").sticky({
-                offset: 12 // the padding applied to layout-header-sticky.fixed
+                offset: 12, // padding applied to layout-header-sticky.fixed
+                onUpdate: function($header) {
+                    // When header is made sticky also make sidebar sticky
+                    if (opts.layout.stickySidebars) {
+                        if ($header.hasClass("fixed")) {
+                            $(".layout-sidebar-sticky").addClass("fixed");
+                        } else {
+                            $(".layout-sidebar-sticky").removeClass("fixed");
+                        }
+                    }
+                }
             });
 
             // Update infinite default scroll spacing 
@@ -5034,16 +5052,13 @@ $(function (win, doc, $) {
                 scrollSpacing: stickyHeaderHeight + 24
             });
 
+        } else {
+            // Apply sticky sidebar?
+            if (opts.layout.stickySidebars) {
+                this.find(".layout-sidebar-sticky").sticky();
+            }
         }
 
-        // Apply sticky sidebar?
-        if (opts.layout.stickySidebars) {
-            this.find(".layout-sidebar-sticky").sticky({
-                offset: opts.layout.stickyHeaders
-                    ? stickyHeaderHeight
-                    : 0 // accomodate for fixed headers
-            });
-        }
 
         // Scroll to validation errors?
         if (opts.validation.scrollToErrors) {
