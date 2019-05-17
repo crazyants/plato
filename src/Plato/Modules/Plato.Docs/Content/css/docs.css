@@ -10,15 +10,7 @@
 
 /* make table of contents sticky on larger screens */
 @media (min-width: 992px) {
-
-    .docs-table-contents-sticky {
-        position: sticky;
-        top: 12px;
-        left: 0;
-        max-height: 100vh;
-        padding: 12px 0 0 0;
-    }
-
+    
     /* ensure collapse is visible by default for desktops */
     .docs-table-contents .collapse { display: block !important; }
 

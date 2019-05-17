@@ -13,6 +13,10 @@ if (typeof window.$.Plato === "undefined") {
     throw new Error("$.Plato Required");
 }
 
+// --------------
+// Core
+// --------------
+
 $(function (win, doc, $) {
 
     'use strict';
@@ -487,48 +491,58 @@ $(function (win, doc, $) {
         var dataKey = "sticky",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {
-            event: "click", // unique namespace
-            message: "Are you sure you wish to delete this item?\n\nClick OK to confirm..."
-        };
+        var defaults = {};
 
         var methods = {
-            timer: null,
             init: function ($caller) {
+
+                // Initialize initial state
+                methods._setOriginalTop($caller);
+                methods.update($caller);
+
+                // Bind events
                 this.bind($caller);
             },
             bind: function ($caller) {
-
-                var top = $caller.offset().top,
-                    padding = 16;
-
+                
                 // Bind scroll events
                 $(win).on("scroll",
                     function(e) {
-
-                        var scrollTop = $(this).scrollTop(),
-                            docHeight = $(doc).height(),
-                            winHeight = $caller.height();
-                        
-                        if (scrollTop > top - padding) {
-                            if (!$caller.hasClass("fixed")) {
-                                console.log("add fixed css");
-                                $caller.addClass("fixed");
-                            }
-                        } else {
-                            if ($caller.hasClass("fixed")) {
-                                console.log("remove fixed css");
-                                $caller.removeClass("fixed");
-                            }
-                        }
-
-
+                        methods.update($caller);
                     });
 
             },
             unbind: function ($caller) {
                 var event = $caller.data(dataKey).event;
                 $caller.unbind(event);
+            },
+            update: function ($caller) {
+
+                var scrollTop = $(win).scrollTop(),
+                    top = methods._getOriginalTop($caller),
+                    offset = methods._getOffset($caller);
+
+                if (scrollTop > top - offset) {
+                    if (!$caller.hasClass("fixed")) {
+                        $caller.addClass("fixed");
+                    }
+                } else {
+                    if ($caller.hasClass("fixed")) {
+                        $caller.removeClass("fixed");
+                    }
+                }
+            },
+            _setOriginalTop: function ($caller, top) {
+                var key = dataKey + "_top";
+                if (!$caller.data(key)) {
+                    $caller.data(key, $caller.offset().top);
+                }
+            },
+            _getOriginalTop: function($caller) {
+                return $caller.data(dataKey + "_top");
+            },
+            _getOffset: function($caller) {
+                return $caller.data("stickyOffset") || 24;
             }
         };
 
@@ -2013,8 +2027,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* InfiniteScroll */
     var infiniteScroll = function() {
 
@@ -2023,6 +2036,7 @@ $(function (win, doc, $) {
             state = win.history.state || {};
 
         var defaults = {
+            scrollSpacing: 0, // optional spacing to apply when scrolling to selected offset
             offsetSuffix: "/",
             pagerKey: "pager.page",
             loaderSelector: ".infinite-scroll-loader",
@@ -2149,8 +2163,11 @@ $(function (win, doc, $) {
                     var $marker = methods.getOffsetMarker($caller, methods._offset),
                         $highlight = methods.getHighlightMarker($caller, methods._offset);
 
+                    console.log("scroll spacing: " + $caller.data(dataKey).scrollSpacing);
+
                     if ($marker && $highlight) {
                         $().scrollTo({
+                                offset: $caller.data(dataKey).scrollSpacing,
                                 target: $marker,
                                 onComplete: function() {
                                     // Apply css to deactivate selected offset css (set server side)
@@ -4582,6 +4599,131 @@ $(function (win, doc, $) {
         };
 
     }();
+    
+    /* Register Plugins */
+    $.fn.extend({
+        dialog: dialog.init,
+        dialogSpy: dialogSpy.init,
+        scrollTo: scrollTo.init,
+        sticky: sticky.init,
+        treeView: treeView.init,
+        pagedList: pagedList.init,
+        autoComplete: autoComplete.init,
+        typeSpy: typeSpy.init,
+        blurSpy: blurSpy.init,
+        scrollSpy: scrollSpy.init,
+        infiniteScroll: infiniteScroll.init,
+        filterList: filterList.init,
+        tagIt: tagIt.init,
+        userAutoComplete: userAutoComplete.init,
+        userTagIt: userTagIt.init,
+        selectDropdown: selectDropdown.init,
+        autoTargetBlank: autoTargetBlank.init,
+        autoLinkImages: autoLinkImages.init,
+        markdownBody: markdownBody.init,
+        confirm: confirm.init,
+        resizeable: resizeable.init
+    });
+
+    // ---------------------------
+    // Initialize core plug-ins
+    // ----------------------------
+   
+    $.fn.platoUI = function(opts) {
+        
+        /* dialogSpy */
+        this.find('[data-provide="dialog"]').dialogSpy();
+
+        /* Scroll to a specific element. */
+        this.find('[data-provide="scroll"]').scrollTo();
+
+        /* sticky */
+        this.find('[data-provide="sticky"]').sticky();
+
+        /* pagedList */
+        this.find('[data-provide="paged-list"]').pagedList();
+
+        /* select dropdown */
+        this.find('[data-provide="select-dropdown"]').selectDropdown();
+        
+        /* treeView */
+        this.find('[data-provide="tree"]').treeView();
+
+        /* filterList */
+        this.find('[data-provide="filter-list"]').filterList();
+
+        /* autoComplete */
+        this.find('[data-provide="autoComplete"]').autoComplete();
+
+        /* userAutoComplete */
+        this.find('[data-provide="userAutoComplete"]').userAutoComplete();
+        
+        /* tagIt */
+        this.find('[data-provide="tagIt"]').tagIt();
+
+        /* userTagIt */
+        this.find('[data-provide="userTagIt"]').userTagIt();
+
+        /* confirm */
+        this.find('[data-provide="confirm"]').confirm();
+
+        /* autoTargetBlank */
+        this.find('[data-provide="autoTargetBlank"]').autoTargetBlank();
+
+        /* autoLinkImages */
+        this.find('[data-provide="autoLinkImages"]').autoLinkImages();
+
+        /* markdownBody */
+        this.find('[data-provide="markdownBody"]').markdownBody();
+
+        /* infiniteScroll */
+        this.find('[data-provide="infiniteScroll"]').infiniteScroll();
+
+        /* resizeable */
+        this.find('[data-provide="resizeable"]').resizeable();
+        
+    };
+
+    // --------------
+    // ready
+    // --------------
+
+    app.ready(function () {
+
+        // Init plato UI
+        $("body").platoUI();
+
+        // Activate plug-ins used within infiniteScroll load
+        $().infiniteScroll(function ($ele) {
+
+            /* Initialize bootstrap tooltips upon infiniteScroll load */
+            app.ui.initToolTips($ele);
+            
+            /* Initialize dialogSpy upon infiniteScroll load */
+            $ele.find('[data-provide="dialog"]').dialogSpy();
+
+            /* Initialize replySpy upon infiniteScroll load */
+            $ele.replySpy("bind");
+
+        }, "ready");
+        
+    });
+
+}(window, document, jQuery));
+
+// --------------
+// App
+// --------------
+
+$(function (win, doc, $) {
+
+    'use strict';
+
+    // --------
+
+    var app = win.$.Plato;
+
+    // --------
 
     /* replySpy */
     var replySpy = function () {
@@ -4604,14 +4746,14 @@ $(function (win, doc, $) {
 
                 var postQuoteSelector = $caller.data(dataKey).postQuoteSelector,
                     postReplySelector = $caller.data(dataKey).postReplySelector;
-                
+
                 // Bind Quote
                 if (postQuoteSelector) {
                     $caller.find(postQuoteSelector).unbind("click").bind("click",
                         function (e) {
-                            
+
                             e.preventDefault();
-                            
+
                             // Get element containing quote
                             var value = "",
                                 selector = $(this).attr("data-quote-selector"),
@@ -4648,10 +4790,10 @@ $(function (win, doc, $) {
                             if ($caller.data(dataKey).onQuote) {
                                 $caller.data(dataKey).onQuote($caller);
                             }
-                            
+
                         });
                 }
-            
+
                 // Bind Reply
                 if (postReplySelector) {
                     $caller.find(postReplySelector).unbind("click").bind("click", function (e) {
@@ -4667,7 +4809,7 @@ $(function (win, doc, $) {
                                 }
                             }
                         });
-                        
+
                         // onReply event
                         if ($caller.data(dataKey).onReply) {
                             $caller.data(dataKey).onReply($caller);
@@ -4675,7 +4817,7 @@ $(function (win, doc, $) {
 
                     });
                 }
-              
+
             },
             unbind: function ($caller) {
 
@@ -4688,7 +4830,7 @@ $(function (win, doc, $) {
                 if (postReplySelector) {
                     $caller.find(postReplySelector).unbind("click");
                 }
-                
+
 
             }
         };
@@ -4774,12 +4916,12 @@ $(function (win, doc, $) {
                 }
 
                 $nav.bind("mouseleave",
-                    function() {
+                    function () {
                         entered = false;
                     });
 
                 $nav.bind("mouseenter",
-                    function() {
+                    function () {
                         if (entered) {
                             return;
                         }
@@ -4859,155 +5001,74 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
     /* Register Plugins */
     $.fn.extend({
-        dialog: dialog.init,
-        dialogSpy: dialogSpy.init,
-        scrollTo: scrollTo.init,
-        sticky: sticky.init,
-        treeView: treeView.init,
-        pagedList: pagedList.init,
-        autoComplete: autoComplete.init,
-        typeSpy: typeSpy.init,
-        blurSpy: blurSpy.init,
-        scrollSpy: scrollSpy.init,
-        infiniteScroll: infiniteScroll.init,
-        filterList: filterList.init,
-        tagIt: tagIt.init,
-        userAutoComplete: userAutoComplete.init,
-        userTagIt: userTagIt.init,
-        selectDropdown: selectDropdown.init,
-        autoTargetBlank: autoTargetBlank.init,
-        autoLinkImages: autoLinkImages.init,
-        markdownBody: markdownBody.init,
-        confirm: confirm.init,
-        resizeable: resizeable.init,
         replySpy: replySpy.init,
         navSite: navSite.init
     });
 
     // ---------------------------
-    // Initialize core plug-ins
+    // Initialize app plug-ins
     // ----------------------------
-   
-    $.fn.valAttr = function (name, val) {
-        if (val === undefined) {
-            return this.attr('data-validation-' + name);
-        } else if (val === false || val === null) {
-            return this.removeAttr('data-validation-' + name);
-        } else {
-            name = ((name.length > 0) ? '-' + name : '');
-            return this.attr('data-validation' + name, val);
-        }
-    };
 
-    $.fn.platoUI = function(opts) {
-        
-        /* dialogSpy */
-        this.find('[data-provide="dialog"]').dialogSpy();
+    $.fn.appUI = function (opts) {
 
-        /* Scroll to a specific element. */
-        this.find('[data-provide="scroll"]').scrollTo();
-
-        /* sticky */
-        this.find('[data-provide="sticky"]').sticky();
-
-        /* pagedList */
-        this.find('[data-provide="paged-list"]').pagedList();
-
-        /* select dropdown */
-        this.find('[data-provide="select-dropdown"]').selectDropdown();
-        
-        /* treeView */
-        this.find('[data-provide="tree"]').treeView();
-
-        /* filterList */
-        this.find('[data-provide="filter-list"]').filterList();
-
-        /* autoComplete */
-        this.find('[data-provide="autoComplete"]').autoComplete();
-
-        /* userAutoComplete */
-        this.find('[data-provide="userAutoComplete"]').userAutoComplete();
-        
-        /* tagIt */
-        this.find('[data-provide="tagIt"]').tagIt();
-
-        /* userTagIt */
-        this.find('[data-provide="userTagIt"]').userTagIt();
-
-        /* confirm */
-        this.find('[data-provide="confirm"]').confirm();
-
-        /* autoTargetBlank */
-        this.find('[data-provide="autoTargetBlank"]').autoTargetBlank();
-
-        /* autoLinkImages */
-        this.find('[data-provide="autoLinkImages"]').autoLinkImages();
-
-        /* markdownBody */
-        this.find('[data-provide="markdownBody"]').markdownBody();
-
-        /* infiniteScroll */
-        this.find('[data-provide="infiniteScroll"]').infiniteScroll();
-
-        /* resizeable */
-        this.find('[data-provide="resizeable"]').resizeable();
-
-       
-        /* resizeable */
+        /* navigation */
         this.find(".nav-site").navSite();
-        
+
         /* replySpy */
         this.replySpy();
+        
+        // Apply sticky headers?
+        if (opts.layout.stickyHeaders) {
+
+            // Apply sticky to headers
+            this.find(".layout-header-sticky").sticky();
+
+            // Update infinite default scroll spacing 
+            // to accomodate for sticky headers
+            $().infiniteScroll({
+                scrollSpacing: -100
+            });
+
+        }
+
+        // Scroll to validation errors?
+        if (opts.validation.scrollToErrors) {
+            // Raised when the form is submitted but invalid
+            this.find("form").bind("invalid-form.validate",
+                function () {
+                    // Scroll to errors if any
+                    var $errors = $(this).find(".validation-summary-errors");
+                    if ($errors.length > 0) {
+                        $().scrollTo({
+                                target: $errors,
+                                offset: -20,
+                                interval: 250
+                            },
+                            "go");
+                    }
+                });
+        }
 
     };
-
+    
     // --------------
     // ready
     // --------------
 
     app.ready(function () {
 
-        // Init plato UI
-        $("body").platoUI();
+        // Init app UI
+        $("body").appUI(win.$.Plato.defaults);
 
-        // Activate plug-ins used within infiniteScroll load
-        $().infiniteScroll(function ($ele) {
-
-            /* Initialize bootstrap tooltips upon infiniteScroll load */
-            app.ui.initToolTips($ele);
-            
-            /* Initialize dialogSpy upon infiniteScroll load */
-            $ele.find('[data-provide="dialog"]').dialogSpy();
-
-            /* Initialize replySpy upon infiniteScroll load */
-            $ele.replySpy("bind");
-
-        }, "ready");
-        
-        // Raised when the form is submitted but invalid
-        $("form").bind("invalid-form.validate",
-            function () {
-                // Scroll to errors if any
-                var $errors = $(this).find(".validation-summary-errors");
-                if ($errors.length > 0) {
-                    $().scrollTo({
-                            target: $errors,
-                            offset: -20,
-                            interval: 250
-                        },
-                        "go");
-                }
-            });
-        
     });
 
 }(window, document, jQuery));
 
 // --------------
-// Customize validation
+// Validation
 // --------------
 
 $(function (win, doc, $) {
@@ -5024,7 +5085,7 @@ $(function (win, doc, $) {
     // Produces the following HTML...
     // <button type="submit" formaction="/action">
     //      <i class="fal fa-trash"></i>
-    // Delete
+    //      Delete
     // </button>
 
     var app = win.$.Plato,

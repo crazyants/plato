@@ -26,33 +26,6 @@ $(function (win, doc, $) {
             app.logger.logInfo(featureId + " initialized");
         },
         bind: function () {
-
-            var className = "docs-table-contents",
-                $toc = $("." + className);
-
-            if ($toc.length > 0) {
-
-                var top = $toc.offset().top,
-                    padding = 16;
-
-                $(win).scrollSpy({
-                    onScrollEnd: function () {
-
-                    },
-                    onScroll: function (spy, e) {
-                        if (spy.scrollTop > top - padding) {
-                            if (!$toc.hasClass(className + "-sticky")) {
-                                $toc.addClass(className + "-sticky");
-                            }
-                        } else {
-                            if ($toc.hasClass(className + "-sticky")) {
-                                $toc.removeClass(className + "-sticky");
-                            }
-                        }
-                    }
-                });
-            }
-
         }
     };
 

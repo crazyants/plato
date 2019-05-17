@@ -4,7 +4,7 @@
 }
 
 <div class="layout">
-    <div class="layout-header">
+    <div class="layout-header layout-header-sticky">
         @if (Model.Alerts != null)
         {
             <div class="layout-alerts">
@@ -33,7 +33,7 @@
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
-            <div class="col-lg-3 docs-table-contents overflow-auto">
+            <div class="col-lg-3 docs-table-contents overflow-auto" data-provide="sticky" data-sticky-offset="96">
                 @if (Model.SideBar != null)
                 {
                     <view model="@Model.SideBar"></view>

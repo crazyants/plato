@@ -920,7 +920,9 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* Plato Layout */
 /* ------------------------- */
 
-.layout-header.fixed {  }
+.layout { display: block; }
+.layout-header { display: block; }
+.layout-header-sticky { display: block; }
 
 .layout-header.fixed {
     position: sticky;
@@ -933,6 +935,11 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .layout-header.fixed h4 { font-size: 130%; margin: 0.05rem 0; }
 .layout-header.fixed hr { display: none; }
 
+.layout-alerts { display: block; }
+.layout-tools { display: block; }
+.layout-header-item { display: block; }
+.layout-meta { display: block; }
+
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }
 
@@ -941,6 +948,13 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .layout-content .accordion .card,
 .layout-sidebar .accordion .card { margin-bottom: 0; }
+
+.layout-footer { display: block; }
+.layout-actions { display: block; }
+
+/* ------------------------- */
+/* Accordion */
+/* ------------------------- */
 
 .accordion .card-header {
     padding: 0; 
