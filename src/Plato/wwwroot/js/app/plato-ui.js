@@ -491,7 +491,9 @@ $(function (win, doc, $) {
         var dataKey = "sticky",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+            offset: 0 // optional offset from scrollTop to trigger fixed positioning
+        };
 
         var methods = {
             init: function ($caller) {
@@ -541,8 +543,8 @@ $(function (win, doc, $) {
             _getOriginalTop: function($caller) {
                 return $caller.data(dataKey + "_top");
             },
-            _getOffset: function($caller) {
-                return $caller.data("stickyOffset") || 24;
+            _getOffset: function ($caller) {
+                return $caller.data("stickyOffset") || $caller.data(dataKey).offset;
             }
         };
 
@@ -2162,12 +2164,9 @@ $(function (win, doc, $) {
                 if (methods._offset > 0) {
                     var $marker = methods.getOffsetMarker($caller, methods._offset),
                         $highlight = methods.getHighlightMarker($caller, methods._offset);
-
-                    console.log("scroll spacing: " + $caller.data(dataKey).scrollSpacing);
-
                     if ($marker && $highlight) {
                         $().scrollTo({
-                                offset: $caller.data(dataKey).scrollSpacing,
+                                offset: -$caller.data(dataKey).scrollSpacing,
                                 target: $marker,
                                 onComplete: function() {
                                     // Apply css to deactivate selected offset css (set server side)
@@ -3355,7 +3354,6 @@ $(function (win, doc, $) {
 
                 // Accomodate for disabled elements
                 if ($input.attr("disabled") || $label.attr("disabled")) {
-                    console.log("return");
                     return;
                 }
            
@@ -5012,7 +5010,7 @@ $(function (win, doc, $) {
     // Initialize app plug-ins
     // ----------------------------
 
-    $.fn.appUI = function (opts) {
+    $.fn.appUI = function(opts) {
 
         /* navigation */
         this.find(".nav-site").navSite();
@@ -5020,25 +5018,38 @@ $(function (win, doc, $) {
         /* replySpy */
         this.replySpy();
         
+        var stickyHeaderHeight = 96;
+
         // Apply sticky headers?
         if (opts.layout.stickyHeaders) {
 
             // Apply sticky to headers
-            this.find(".layout-header-sticky").sticky();
+            this.find(".layout-header-sticky").sticky({
+                offset: 12 // the padding applied to layout-header-sticky.fixed
+            });
 
             // Update infinite default scroll spacing 
             // to accomodate for sticky headers
             $().infiniteScroll({
-                scrollSpacing: -100
+                scrollSpacing: stickyHeaderHeight + 24
             });
 
+        }
+
+        // Apply sticky sidebar?
+        if (opts.layout.stickySidebars) {
+            this.find(".layout-sidebar-sticky").sticky({
+                offset: opts.layout.stickyHeaders
+                    ? stickyHeaderHeight
+                    : 0 // accomodate for fixed headers
+            });
         }
 
         // Scroll to validation errors?
         if (opts.validation.scrollToErrors) {
             // Raised when the form is submitted but invalid
             this.find("form").bind("invalid-form.validate",
-                function () {
+                function() {
                     // Scroll to errors if any
                     var $errors = $(this).find(".validation-summary-errors");
                     if ($errors.length > 0) {
@@ -5052,6 +5063,14 @@ $(function (win, doc, $) {
                 });
         }
 
+        // Auto close alerts?
+        if (opts.alerts.autoClose) {
+            win.setTimeout(function() {
+                    $(".alert").alert('close');
+                },
+                opts.alerts.autoCloseDelay * 1000);
+        }
+        
     };
     
     // --------------

@@ -436,8 +436,13 @@ $(function (win, doc, $) {
             bsToolTipAlternativeSelector: "[data-provide='tooltip']",
             bsToolTipSelector: "[data-toggle='tooltip']",
             avatarUploadSelector: "[data-upload='avatar']",
+            alerts: {
+                autoClose: true,
+                autoCloseDelay: 8 // duration in seconds before auto close
+            },
             layout: {
-                stickyHeaders: true
+                stickyHeaders: true,
+                stickySidebars: true
             },
             validation: {
                 scrollToErrors: true

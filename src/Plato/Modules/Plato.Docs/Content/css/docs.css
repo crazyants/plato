@@ -7,11 +7,3 @@
 .docs-table-contents {
     display: block;
 }
-
-/* make table of contents sticky on larger screens */
-@media (min-width: 992px) {
-    
-    /* ensure collapse is visible by default for desktops */
-    .docs-table-contents .collapse { display: block !important; }
-
-}

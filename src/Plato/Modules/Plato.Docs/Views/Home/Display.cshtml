@@ -32,14 +32,14 @@
     </div>
     @if (Model.SideBar != null)
     {
-        <div class="row gutter-sm layout-content">
-            <div class="col-lg-3 docs-table-contents overflow-auto" data-provide="sticky" data-sticky-offset="96">
+        <div class="row gutter-sm">
+            <div class="col-lg-3 layout-sidebar layout-sidebar-sticky overflow-auto">
                 @if (Model.SideBar != null)
                 {
                     <view model="@Model.SideBar"></view>
                 }
             </div>
-            <div class="col-lg-9 docs-table-body">
+            <div class="col-lg-9 layout-content">
                 @if (Model.Content != null)
                 {
                     <view model="@Model.Content"></view>

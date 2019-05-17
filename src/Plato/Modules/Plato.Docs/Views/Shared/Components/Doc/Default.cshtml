@@ -10,7 +10,7 @@
                 <h6 class="card-title d-inline-block">
                     @Model.Entity.Title
                 </h6>
-                @if (Model.Entity.IsPrivate)
+                @if (Model.Entity.IsPrivate && base.CurrentUser != null)
                 {
                     if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
                     {

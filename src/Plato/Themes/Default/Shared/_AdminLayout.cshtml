@@ -116,15 +116,13 @@
             <div aria-label="breadcrumb">
                 <breadcrumb class="breadcrumb mb-0 w-100 rounded-0" />
             </div>
-            <div>
-                <div class="col-12 py-4">
-                    @RenderBody()
-                    <footer class="mt-2">
-                        <p class="text-muted">
-                            &copy; @System.DateTime.Now.Year - Plato
-                        </p>
-                    </footer>
-                </div>
+            <div class="w-100 p-4">
+                @RenderBody()
+                <footer class="mt-2">
+                    <p class="text-muted">
+                        &copy; @System.DateTime.Now.Year - Plato
+                    </p>
+                </footer>
             </div>
           
         </div>

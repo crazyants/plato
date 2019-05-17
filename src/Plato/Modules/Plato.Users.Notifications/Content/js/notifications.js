@@ -345,13 +345,10 @@ $(function (win, doc, $) {
                     url: "api/notifications/user/unread",
                     method: "GET"
                 }).done(function (data) {
-                    console.log(JSON.stringify(data))
                     if (data.statusCode === 200) {
-
                         if (app.logger) {
                             app.logger.logInfo("Successfully polled user notifications");
                         }
-
                         // Raise poll complete event
                         if ($caller.data(dataKey).onPollComplete) {
                             $caller.data(dataKey).onPollComplete($caller, data.result);
@@ -596,9 +593,7 @@ $(function (win, doc, $) {
                 // Ensure we only update if we have unread notifications 
                 // Ensure the unread count has changed since the previous poll
                 if ($caller.data("notificationsBadge").prevCount !== count && count > 0) {
-
-                    console.log("count: " + count);
-
+                    
                     // Update count & ensure badge is visible
                     $caller.notificationsBadge({ count: count }, "show");
                     

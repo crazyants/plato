@@ -60,7 +60,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .plato-brand-lg { padding: 12px; border-width: 12px; }
 .plato-brand-xl { padding: 20px; border-width: 20px; }
 
-
 /* ------------------------- */
 /* Cursors */
 /* ------------------------- */
@@ -920,25 +919,50 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* Plato Layout */
 /* ------------------------- */
 
-.layout { display: block; }
-.layout-header { display: block; }
-.layout-header-sticky { display: block; }
+.layout,
+.layout-header,
+.layout-header-sticky,
+.layout-alerts,
+.layout-tools,
+.layout-header-item,
+.layout-meta,
+.layout-sidebar-sticky ,
+.layout-footer,
+layout-footer-item,
+.layout-actions { display: block; }
 
 .layout-header.fixed {
     position: sticky;
     top: 0;
     left: 0;
     z-index: 5;
-    padding: 0.75rem 0;
+    padding: 12px 0;
 }
 
-.layout-header.fixed h4 { font-size: 130%; margin: 0.05rem 0; }
-.layout-header.fixed hr { display: none; }
+.layout-header .alert {
+    position: fixed;
+    left: 50%;
+    top: 6px;
+    transform: translate(-50%, 0);
+}
 
-.layout-alerts { display: block; }
-.layout-tools { display: block; }
-.layout-header-item { display: block; }
-.layout-meta { display: block; }
+/* make table of contents sticky on larger screens */
+@media (min-width: 992px) {
+    
+    .layout-sidebar.fixed {
+        position: sticky;
+        top: 86px;
+        left: 0;
+        max-height: calc(100vh - 86px);
+        padding: 1rem 0;
+    }
+
+    /* ensure collapse is visible by default for desktops */
+    .layout-sidebar .collapse { display: block !important; }
+
+}
+
+.layout-header.fixed hr { display: none; }
 
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }
@@ -948,9 +972,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .layout-content .accordion .card,
 .layout-sidebar .accordion .card { margin-bottom: 0; }
-
-.layout-footer { display: block; }
-.layout-actions { display: block; }
 
 /* ------------------------- */
 /* Accordion */
