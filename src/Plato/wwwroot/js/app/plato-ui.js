@@ -511,10 +511,42 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                 
                 // Bind scroll events
-                $(win).on("scroll",
-                    function(e) {
-                        methods.update($caller);
-                    });
+                $().scrollSpy({
+                    onScrollEnd: function() {
+
+                    },
+                    onScroll: function (spy, e) {
+                        
+                        var scrollTop = spy.scrollTop,
+                            top = methods._getOriginalTop($caller),
+                            offset = methods._getOffset($caller);
+
+                        if (scrollTop > top - offset) {
+                            if (!$caller.hasClass("fixed")) {
+                                $caller.addClass("fixed");
+                                if ($caller.data(dataKey).onUpdate) {
+                                    $caller.data(dataKey).onUpdate($caller);
+                                }
+                            }
+                        } else {
+                            if ($caller.hasClass("fixed")) {
+                                $caller.removeClass("fixed");
+                                if ($caller.data(dataKey).onUpdate) {
+                                    $caller.data(dataKey).onUpdate($caller);
+                                }
+                            }
+                        }
+
+
+                    }
+                });
+                
+
+                //// Bind scroll events
+                //$(win).on("scroll",
+                //    function(e) {
+                //        methods.update($caller);
+                //    });
 
             },
             unbind: function ($caller) {
@@ -1905,7 +1937,8 @@ $(function (win, doc, $) {
     var scrollSpy = function () {
 
         var dataKey = "scrollSpy",
-            dataIdKey = dataKey + "Id";
+            dataIdKey = dataKey + "Id",
+            eventsKey = dataKey + "Events";
 
         var defaults = {
             interval: 350, // the duration to wait in milliseconds before invoking the onScrollEnd event
@@ -1928,12 +1961,19 @@ $(function (win, doc, $) {
                     return;
                 }
 
+                this.initEvents($caller);
                 this.bind($caller);
 
             },
             bind: function($caller) {
+                
+                // Bind scroll
                 $caller.on("scroll",
                     function(e) {
+
+                        // Our methods to execute
+                        var i = 0,
+                            events = $caller.data(eventsKey);
 
                         // Start timer to detect end of scroll
                         methods.start($caller, e);
@@ -1942,37 +1982,94 @@ $(function (win, doc, $) {
                         // _scrolling is set to false when the scroll ends
                         if (methods._scrolling === false) {
                             methods._scrolling = true;
-                            if ($caller.data(dataKey).onScrollStart) {
-                                $caller.data(dataKey).onScrollStart(e);
+                            if (events.onScrollStart.length > 0) {
+                                for (i = 0; i < events.onScrollStart.length; i++) {
+                                    events.onScrollStart[i](e);
+                                }
                             }
                         }
 
                         // Raise onScroll passing in a normalized scroll threshold
-                        if ($caller.data(dataKey).onScroll) {
+                        if (events.onScroll.length > 0) {
+
                             var scrollTop = $caller.scrollTop(),
                                 docHeight = $(doc).height(),
                                 winHeight = $caller.height();
-                            $caller.data(dataKey).onScroll({
-                                    scrollTop: Math.ceil(scrollTop),
-                                    scrollBottom: Math.ceil(scrollTop + winHeight),
-                                    documentHeight: docHeight,
-                                    windowHeight: winHeight
-                                },
-                                e);
+
+                            for (i = 0; i < events.onScroll.length; i++) {
+                                events.onScroll[i]({
+                                        scrollTop: Math.ceil(scrollTop),
+                                        scrollBottom: Math.ceil(scrollTop + winHeight),
+                                        documentHeight: docHeight,
+                                        windowHeight: winHeight
+                                    },
+                                    e);
+                            }
+
+                            //$caller.data(dataKey).onScroll({
+                            //        scrollTop: Math.ceil(scrollTop),
+                            //        scrollBottom: Math.ceil(scrollTop + winHeight),
+                            //        documentHeight: docHeight,
+                            //        windowHeight: winHeight
+                            //    },
+                            //    e);
                         }
-                        
+
                     });
             },
             unbind: function($caller) {
                 $caller.off("scroll");
             },
+            initEvents: function($caller) {
+
+                // scrollSpy can be used on the same object multiple times
+                // A common scenario is use on the window object
+           
+                var events = {
+                    onScrollStart: [],
+                    onScrollEnd: [],
+                    onScroll: []
+                };
+
+                // Get any existing events tied to the caller
+
+                if ($caller.data(eventsKey)) {
+                    events = $caller.data(eventsKey);
+                }
+
+                // Add new events
+
+                if ($caller.data(dataKey).onScrollStart) {
+                    events.onScrollStart.push($caller.data(dataKey).onScrollStart);
+                }
+
+                if ($caller.data(dataKey).onScrollEnd) {
+                    events.onScrollEnd.push($caller.data(dataKey).onScrollEnd);
+                }
+
+                if ($caller.data(dataKey).onScroll) {
+                    events.onScroll.push($caller.data(dataKey).onScroll);
+                }
+
+                // Populate events
+                $caller.data(eventsKey, events);
+
+            },
             start: function($caller, e) {
                 methods.stop($caller);
                 methods._timer = win.setTimeout(function() {
                         methods._scrolling = false;
-                        if ($caller.data(dataKey).onScrollEnd) {
-                            $caller.data(dataKey).onScrollEnd(e);
+
+                        var events = $caller.data(eventsKey);
+                        if (events.onScrollEnd.length > 0) {
+                            for (var i = 0; i < events.onScrollStart.length; i++) {
+                                events.onScrollEnd[i](e);
+                            }
                         }
+
+                        //if ($caller.data(dataKey).onScrollEnd) {
+                        //    $caller.data(dataKey).onScrollEnd(e);
+                        //}
                     },
                     $caller.data(dataKey).interval);
             },
@@ -2381,10 +2478,11 @@ $(function (win, doc, $) {
                 });
 
             },
-            isElementInViewPort: function(el) {
-                var rect = el.getBoundingClientRect();
+            isElementInViewPort: function($caller, el) {
+                var rect = el.getBoundingClientRect(),
+                    scrollSpacing = $caller.data(dataKey).scrollSpacing || 0;
                 return (
-                    rect.top >= 0 &&
+                    rect.top >= scrollSpacing &&
                         rect.left >= 0 &&
                         rect.bottom <= (window.innerHeight || $(window).height()) &&
                         rect.right <= (window.innerWidth || $(window).width())
@@ -2399,7 +2497,7 @@ $(function (win, doc, $) {
                     $markers = methods.getOffsetMarkers($caller);
                 if ($markers) {
                     $markers.each(function() {
-                        if (methods.isElementInViewPort(this)) {
+                        if (methods.isElementInViewPort($caller, this)) {
                             $marker = $(this);
                             return false;
                         }
@@ -5049,7 +5147,7 @@ $(function (win, doc, $) {
             // Update infinite default scroll spacing 
             // to accomodate for sticky headers
             $().infiniteScroll({
-                scrollSpacing: stickyHeaderHeight + 24
+                scrollSpacing: stickyHeaderHeight + 12
             });
 
         } else {

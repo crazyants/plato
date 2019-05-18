@@ -932,11 +932,24 @@ layout-footer-item,
 .layout-actions { display: block; }
 
 .layout-header.fixed {
-    position: sticky;
-    top: 0;
-    left: 0;
+    position: fixed;
     z-index: 5;
-    padding: 12px 0;
+    width: 100%;
+    top: 0;
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    padding: 12px 15px;
+}
+
+.container-fluid-1024 .layout-header.fixed { max-width:1024px ; }
+.container-fluid-1280 .layout-header.fixed { max-width:1280px ; }
+.container-fluid-1600 .layout-header.fixed { max-width:1600px ; }
+
+/* Add some top padding to the page content as the header gets a new 
+    position at the top of the page (position:fixed and top:0) */
+.layout-header-sticky.fixed + .layout-content {
+    padding-top: 87px;
 }
 
 .layout-header .alert {
