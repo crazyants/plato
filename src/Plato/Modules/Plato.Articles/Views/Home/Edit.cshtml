@@ -6,7 +6,6 @@
 
 <form asp-controller="Home" asp-action="Edit" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
     <div class="layout">
-
         <div class="layout-header">
             @if (Model.Alerts != null)
             {
@@ -33,22 +32,63 @@
                 </div>
             }
         </div>
-        @if (Model.SideBar != null)
-        {
-            <div class="row gutter-sm layout-content">
-                <div class="col-lg-9">
+        <div class="layout-body">
+            @if (Model.SideBar != null)
+            {
+                <div class="row gutter-sm">
+                    <div class="col-lg-9 layout-content">
+                        @if (Model.Content != null)
+                        {
+                            <view model="@Model.Content"></view>
+                        }
+                        @if (Model.Actions != null || Model.Footer != null)
+                        {
+                            <div class="layout-footer">
+
+                                <div class="list-left"></div>
+                                <div class="list-body">
+                                    <card>
+                                        <card-body>
+                                            @if (Model.Actions != null)
+                                            {
+                                                <div class="float-right layout-actions">
+                                                    <view model="@Model.Actions" />
+                                                </div>
+                                            }
+                                            @if (Model.Footer != null)
+                                            {
+                                                <div class="layout-footer-item">
+                                                    <view model="@Model.Footer"></view>
+                                                </div>
+                                            }
+                                        </card-body>
+                                    </card>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-lg-3 layout-sidebar">
+                        @if (Model.SideBar != null)
+                        {
+                            <view model="@Model.SideBar"></view>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="layout-content">
                     @if (Model.Content != null)
                     {
                         <view model="@Model.Content"></view>
                     }
                     @if (Model.Actions != null || Model.Footer != null)
                     {
-                        <div class="layout-footer">
-                            
-                            <div class="list-left"></div>
-                            <div class="list-body">
-                                <card>
-                                    <card-body>
+                        <div class="list-left"></div>
+                        <div class="list-body">
+                            <card>
+                                <card-body>
+                                    <div class="layout-footer">
                                         @if (Model.Actions != null)
                                         {
                                             <div class="float-right layout-actions">
@@ -61,54 +101,13 @@
                                                 <view model="@Model.Footer"></view>
                                             </div>
                                         }
-                                    </card-body>
-                                </card>
-                            </div>
-
+                                    </div>
+                                </card-body>
+                            </card>
                         </div>
                     }
                 </div>
-                <div class="col-lg-3">
-                    @if (Model.SideBar != null)
-                    {
-                        <view model="@Model.SideBar"></view>
-                    }
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="layout-content">
-                @if (Model.Content != null)
-                {
-                    <view model="@Model.Content"></view>
-                }
-                @if (Model.Actions != null || Model.Footer != null)
-                {
-                    <div class="list-left"></div>
-                    <div class="list-body">
-                        <card>
-                            <card-body>
-                                <div class="layout-footer">
-                                    @if (Model.Actions != null)
-                                    {
-                                        <div class="float-right layout-actions">
-                                            <view model="@Model.Actions" />
-                                        </div>
-                                    }
-                                    @if (Model.Footer != null)
-                                    {
-                                        <div class="layout-footer-item">
-                                            <view model="@Model.Footer"></view>
-                                        </div>
-                                    }
-                                </div>
-                            </card-body>
-                        </card>
-                    </div>
-                }
-            </div>
-        }
-
+            }
+        </div>
     </div>
 </form>

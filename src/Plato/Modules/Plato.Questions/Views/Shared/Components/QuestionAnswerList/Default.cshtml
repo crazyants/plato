@@ -25,7 +25,8 @@
          data-infinite-scroll-offset="@offset"
          data-infinite-scroll-row-offset="@rowOffset"
          data-infinite-scroll-page="@Model.Pager.Page"
-         data-infinite-scroll-total-pages="@Model.Pager.TotalPages">
+         data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
+         class="infinite-scroll">
         <div class="infinite-scroll-loader" data-type="previous"></div>
         @foreach (var answer in Model.Replies.Data)
         {

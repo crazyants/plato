@@ -4,7 +4,7 @@
 {
     var offset = Model.Pager.Offset;
     var rowOffset = Model.Pager.RowOffset;
-    @foreach (var reply in Model.Replies.Data)
+    foreach (var reply in Model.Replies.Data)
      {
          reply.Offset = rowOffset;
          reply.SelectedOffset = offset;

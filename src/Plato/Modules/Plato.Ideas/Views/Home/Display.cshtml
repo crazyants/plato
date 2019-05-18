@@ -30,103 +30,105 @@
             </div>
         }
     </div>
-    @if (Model.SideBar != null)
-    {
-        <div class="row gutter-sm layout-content">
-            <div class="col-lg-9 col-md-12">
-                @if (Model.Content != null)
-                {
-                    <view model="@Model.Content"></view>
-                }
-                <div class="resizable resizable-bottom resizable-hidden" data-provide="resizeable">
-                    <div class="resizable-bar">
-                        <i class="fal fa-bars"></i>
-                    </div>
-                    <div class="resizable-container overflow-auto">
-                        <div class="resizable-header">
-                            <h6 class="d-inline-block text-uppercase">@T["Your Suggestion"]</h6>
-                            <ul class="nav navbar">
-                                <li class="nav-item">
-                                    <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="nav-link text-muted resizable-close"><i class="fal fa-fw fa-times"></i></a>
-                                </li>
-                            </ul>
-                            <navigation name="post-reply"
-                                        class="nav navbar"
-                                        child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
-
-                        </div>
-                        <div class="resizable-body">
-
-                            <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
-                                <div id="postReply">
-                                    @if (Model.Footer != null)
-                                    {
-                                        <div>
-                                            <view model="@Model.Footer"></view>
-                                        </div>
-                                    }
-                                    @if (Model.Actions != null)
-                                    {
-                                        <div>
-                                            <view model="@Model.Actions" />
-                                        </div>
-                                    }
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-12">
-                @if (Model.SideBar != null)
-                {
-                    <view model="@Model.SideBar"></view>
-                }
-            </div>
-        </div>
-    }
-    else
-    {
-        @if (Model.Content != null)
+    <div class="layout-body">
+        @if (Model.SideBar != null)
         {
-            <view model="@Model.Content"></view>
+            <div class="row gutter-sm">
+                <div class="col-lg-9 layout-content">
+                    @if (Model.Content != null)
+                    {
+                        <view model="@Model.Content"></view>
+                    }
+                    <div class="resizable resizable-bottom resizable-hidden" data-provide="resizeable">
+                        <div class="resizable-bar">
+                            <i class="fal fa-bars"></i>
+                        </div>
+                        <div class="resizable-container overflow-auto">
+                            <div class="resizable-header">
+                                <h6 class="d-inline-block text-uppercase">@T["Your Suggestion"]</h6>
+                                <ul class="nav navbar">
+                                    <li class="nav-item">
+                                        <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="nav-link text-muted resizable-close"><i class="fal fa-fw fa-times"></i></a>
+                                    </li>
+                                </ul>
+                                <navigation name="post-reply"
+                                            class="nav navbar"
+                                            child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+
+                            </div>
+                            <div class="resizable-body">
+
+                                <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
+                                    <div id="postReply">
+                                        @if (Model.Footer != null)
+                                        {
+                                            <div>
+                                                <view model="@Model.Footer"></view>
+                                            </div>
+                                        }
+                                        @if (Model.Actions != null)
+                                        {
+                                            <div>
+                                                <view model="@Model.Actions" />
+                                            </div>
+                                        }
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 layout-sidebar">
+                    @if (Model.SideBar != null)
+                    {
+                        <view model="@Model.SideBar"></view>
+                    }
+                </div>
+            </div>
         }
-        <div class="resizable resizable-bottom resizable-hidden" data-provide="resizeable">
-            <div class="resizable-bar">
-                <i class="fal fa-bars"></i>
-            </div>
-            <div class="resizable-container overflow-auto">
-                <div class="resizable-header">
-                    <h6 class="d-inline-block text-uppercase">@T["Your Suggestion"]</h6>
-                    <ul class="nav navbar">
-                        <li class="nav-item">
-                            <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="nav-link text-muted resizable-close"><i class="fal fa-fw fa-times"></i></a>
-                        </li>
-                    </ul>
-                    <navigation name="post-reply"
-                                class="nav navbar"
-                                child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+        else
+        {
+            @if (Model.Content != null)
+             {
+                 <div class="layout-content">
+                     <view model="@Model.Content"></view>
+                 </div>
+             }
+            <div class="resizable resizable-bottom resizable-hidden" data-provide="resizeable">
+                <div class="resizable-bar">
+                    <i class="fal fa-bars"></i>
                 </div>
-                <div class="resizable-body">
+                <div class="resizable-container overflow-auto">
+                    <div class="resizable-header">
+                        <h6 class="d-inline-block text-uppercase">@T["Your Suggestion"]</h6>
+                        <ul class="nav navbar">
+                            <li class="nav-item">
+                                <a href="#" data-toggle="tooltip" title="@T["Close / Minimize"]" class="nav-link text-muted resizable-close"><i class="fal fa-fw fa-times"></i></a>
+                            </li>
+                        </ul>
+                        <navigation name="post-reply"
+                                    class="nav navbar"
+                                    child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
+                    </div>
+                    <div class="resizable-body">
 
-                    <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
-                        @if (Model.Footer != null)
-                        {
-                            <div>
-                                <view model="@Model.Footer"></view>
-                            </div>
-                        }
-                        @if (Model.Actions != null)
-                        {
-                            <div>
-                                <view model="@Model.Actions" />
-                            </div>
-                        }
-                    </form>
+                        <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
+                            @if (Model.Footer != null)
+                            {
+                                <div>
+                                    <view model="@Model.Footer"></view>
+                                </div>
+                            }
+                            @if (Model.Actions != null)
+                            {
+                                <div>
+                                    <view model="@Model.Actions" />
+                                </div>
+                            }
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-
-    }
-
+        }
+    </div>
 </div>

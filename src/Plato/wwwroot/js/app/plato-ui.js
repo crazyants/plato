@@ -511,13 +511,10 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                 
                 // Bind scroll events
-                $().scrollSpy({
-                    onScrollEnd: function() {
-
-                    },
-                    onScroll: function (spy, e) {
+                $(win).scrollSpy({
+                    onScroll: function (spy, e, $win) {
                         
-                        var scrollTop = spy.scrollTop,
+                        var scrollTop = $win.scrollTop(),
                             top = methods._getOriginalTop($caller),
                             offset = methods._getOffset($caller);
 
@@ -541,13 +538,6 @@ $(function (win, doc, $) {
                     }
                 });
                 
-
-                //// Bind scroll events
-                //$(win).on("scroll",
-                //    function(e) {
-                //        methods.update($caller);
-                //    });
-
             },
             unbind: function ($caller) {
                 var event = $caller.data(dataKey).event;
@@ -1961,7 +1951,12 @@ $(function (win, doc, $) {
                     return;
                 }
 
-                this.initEvents($caller);
+                // Store scrollSpy events on the caller as multiple 
+                // scrollSpy events could be tied to the same caller 
+                // i.e.$(win).scrollSpy(opts)
+                this._storeEvents($caller);
+
+                // Bind events
                 this.bind($caller);
 
             },
@@ -1970,13 +1965,12 @@ $(function (win, doc, $) {
                 // Bind scroll
                 $caller.on("scroll",
                     function(e) {
-
-                        // Our methods to execute
-                        var i = 0,
-                            events = $caller.data(eventsKey);
-
+                        
                         // Start timer to detect end of scroll
                         methods.start($caller, e);
+
+                        // Events to execute
+                        var i = 0, events = $caller.data(eventsKey);
 
                         // Raise onScrollstart event
                         // _scrolling is set to false when the scroll ends
@@ -1991,11 +1985,9 @@ $(function (win, doc, $) {
 
                         // Raise onScroll passing in a normalized scroll threshold
                         if (events.onScroll.length > 0) {
-
                             var scrollTop = $caller.scrollTop(),
                                 docHeight = $(doc).height(),
                                 winHeight = $caller.height();
-
                             for (i = 0; i < events.onScroll.length; i++) {
                                 events.onScroll[i]({
                                         scrollTop: Math.ceil(scrollTop),
@@ -2003,16 +1995,8 @@ $(function (win, doc, $) {
                                         documentHeight: docHeight,
                                         windowHeight: winHeight
                                     },
-                                    e);
+                                    e, $caller);
                             }
-
-                            //$caller.data(dataKey).onScroll({
-                            //        scrollTop: Math.ceil(scrollTop),
-                            //        scrollBottom: Math.ceil(scrollTop + winHeight),
-                            //        documentHeight: docHeight,
-                            //        windowHeight: winHeight
-                            //    },
-                            //    e);
                         }
 
                     });
@@ -2020,24 +2004,34 @@ $(function (win, doc, $) {
             unbind: function($caller) {
                 $caller.off("scroll");
             },
-            initEvents: function($caller) {
+            start: function($caller, e) {
+                methods.stop($caller);
+                methods._timer = win.setTimeout(function() {
+                        methods._scrolling = false;
+                        var events = $caller.data(eventsKey);
+                        if (events.onScrollEnd.length > 0) {
+                            for (var i = 0; i < events.onScrollEnd.length; i++) {
+                                events.onScrollEnd[i](e);
+                            }
+                        }
+                    },
+                    $caller.data(dataKey).interval);
+            },
+            stop: function($caller) {
+                win.clearTimeout(methods._timer);
+                methods._timer = null;
+            },
+            _storeEvents: function ($caller) {
 
-                // scrollSpy can be used on the same object multiple times
-                // A common scenario is use on the window object
-           
                 var events = {
                     onScrollStart: [],
                     onScrollEnd: [],
                     onScroll: []
                 };
 
-                // Get any existing events tied to the caller
-
                 if ($caller.data(eventsKey)) {
                     events = $caller.data(eventsKey);
                 }
-
-                // Add new events
 
                 if ($caller.data(dataKey).onScrollStart) {
                     events.onScrollStart.push($caller.data(dataKey).onScrollStart);
@@ -2051,31 +2045,9 @@ $(function (win, doc, $) {
                     events.onScroll.push($caller.data(dataKey).onScroll);
                 }
 
-                // Populate events
+                // Store events on caller
                 $caller.data(eventsKey, events);
 
-            },
-            start: function($caller, e) {
-                methods.stop($caller);
-                methods._timer = win.setTimeout(function() {
-                        methods._scrolling = false;
-
-                        var events = $caller.data(eventsKey);
-                        if (events.onScrollEnd.length > 0) {
-                            for (var i = 0; i < events.onScrollStart.length; i++) {
-                                events.onScrollEnd[i](e);
-                            }
-                        }
-
-                        //if ($caller.data(dataKey).onScrollEnd) {
-                        //    $caller.data(dataKey).onScrollEnd(e);
-                        //}
-                    },
-                    $caller.data(dataKey).interval);
-            },
-            stop: function($caller) {
-                win.clearTimeout(methods._timer);
-                methods._timer = null;
             }
         };
 
@@ -2223,7 +2195,7 @@ $(function (win, doc, $) {
                 var bindScrollEvents = function() {
 
                     // Bind scroll events
-                    $().scrollSpy({
+                    $(win).scrollSpy({
                         onScrollEnd: function() {
                             methods.updateState($caller);
                         },
@@ -2231,7 +2203,7 @@ $(function (win, doc, $) {
 
                             // Ensure we are not already loading 
                             if (methods._loading) {
-                                $().scrollSpy("stop");
+                                $(win).scrollSpy("stop");
                                 e.preventDefault();
                                 e.stopPropagation();
                                 return;
@@ -2302,7 +2274,7 @@ $(function (win, doc, $) {
 
             },
             unbind: function($caller) {
-                $().scrollSpy("unbind");
+                $(win).scrollSpy("unbind");
                 methods._readyList = [];
                 methods._page = 1;
                 methods._loading = false;
@@ -2342,12 +2314,12 @@ $(function (win, doc, $) {
                                 var previousPosition = page.spy.documentHeight - page.spy.scrollTop;
 
                                 // Persist scroll position after content load
-                                $().scrollSpy("unbind");
+                                $(win).scrollSpy("unbind");
                                 $().scrollTo({
                                         offset: $(doc).height() - previousPosition,
                                         interval: 0,
                                         onComplete: function() {
-                                            $().scrollSpy("bind");
+                                            $(win).scrollSpy("bind");
                                         }
                                     },
                                     "go");
@@ -2572,7 +2544,7 @@ $(function (win, doc, $) {
             },
             resetState: function($caller) {
                 // Stop scrollspy to prevent the OnScrollEnd event from executing
-                $().scrollSpy("stop");
+                $(win).scrollSpy("stop");
                 // Clear offset
                 if (state) {
                     history.replaceState(state, doc.title, methods.getStateUrl($caller));
@@ -2583,14 +2555,14 @@ $(function (win, doc, $) {
                 if (page) {
                     var $marker = methods.getOffsetMarker($caller, page.offset);
                     if ($marker) {
-                        $().scrollSpy("unbind");
+                        $(win).scrollSpy("unbind");
                         // Scroll to offset marker for page
                         $().scrollTo({
                                 offset: -75,
                                 interval: 0,
                                 target: $marker,
                                 onComplete: function() {
-                                    $().scrollSpy("bind");
+                                    $(win).scrollSpy("bind");
                                 }
                             },
                             "go");
