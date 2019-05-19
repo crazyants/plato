@@ -133,7 +133,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                     .Select<FollowQueryParams>(q =>
                     {
                         q.ThingId.Equals(entity.CategoryId);
-                        q.Name.Equals(FollowTypes.Channel.Name);
+                        q.Name.Equals(FollowTypes.Category.Name);
                     })
                     .ToList();
 
@@ -228,7 +228,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
-                        q.Name.Equals(FollowTypes.AllChannels.Name);
+                        q.Name.Equals(FollowTypes.AllCategories.Name);
                     })
                     .ToList();
 

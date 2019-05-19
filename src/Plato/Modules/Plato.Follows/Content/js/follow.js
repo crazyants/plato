@@ -23,7 +23,9 @@ $(function (win, doc, $) {
 
         var defaults = {
             onCss: null,
-            offCss: null
+            offCss: null,
+            onIcon: "fa fa-bell",
+            offIcon: "fal fa-bell"
         };
 
         var methods = {
@@ -41,17 +43,21 @@ $(function (win, doc, $) {
             enable: function($caller) {
 
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
-                    offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
+                    offCss = $caller.data("offCss") || $caller.data(dataKey).offCss,
+                    offIcon = $caller.data("offIcon") || $caller.data(dataKey).offIcon,
+                    onIcon = $caller.data("onIcon") || $caller.data(dataKey).onIcon;
 
+                // Update action
                 $caller
                     .removeClass(offCss)
                     .addClass(onCss)
                     .attr("data-action", "unsubscribe");
 
+                // Update icon
                 $caller.find("i")
-                    .removeClass("fa-bell")
-                    .addClass("fa-bell-slash");
-
+                    .removeClass(offIcon)
+                    .addClass(onIcon);
+                
                 // Hide tooltip
                 if ($caller.tooltip) {
                     $caller.tooltip("hide");
@@ -65,15 +71,18 @@ $(function (win, doc, $) {
                         $caller.attr("title", $caller.attr("data-unsubscribe-tooltip"));
                     }
                 }
-                
+
+                // Update text
                 $caller.find("span").text($caller.attr("data-unsubscribe-text"));
+
 
             },
             disable: function($caller) {
-
-                // Update css
+                
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
-                    offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
+                    offCss = $caller.data("offCss") || $caller.data(dataKey).offCss,
+                    offIcon = $caller.data("offIcon") || $caller.data(dataKey).offIcon,
+                    onIcon = $caller.data("onIcon") || $caller.data(dataKey).onIcon;
 
                 if (onCss) {
                     $caller.removeClass(onCss);
@@ -87,7 +96,9 @@ $(function (win, doc, $) {
                 $caller.attr("data-action", "subscribe");
 
                 // Update icon
-                $caller.find("i").removeClass("fa-bell-slash").addClass("fa-bell");
+                $caller.find("i")
+                    .removeClass(onIcon)
+                    .addClass(offIcon);
                 
                 // Hide tooltip
                 if ($caller.tooltip) {

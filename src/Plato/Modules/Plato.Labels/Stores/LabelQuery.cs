@@ -118,13 +118,11 @@ namespace Plato.Labels.Stores
 
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
-
             var sb = new StringBuilder();
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
                 .Append(BuildTables());
-
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             sb.Append(" ORDER BY ")
@@ -211,9 +209,11 @@ namespace Plato.Labels.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Name", "Keywords"))
+                sb.Append("(")
+                    .Append(_query.Params.Keywords.ToSqlString("Name", "Keywords"))
                     .Append(" OR ")
-                    .Append(_query.Params.Keywords.ToSqlString("Description", "Keywords"));
+                    .Append(_query.Params.Keywords.ToSqlString("Description", "Keywords"))
+                    .Append(")");
             }
             
             return sb.ToString();

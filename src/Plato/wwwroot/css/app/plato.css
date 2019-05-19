@@ -935,6 +935,10 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 }
 
+.layout-tools .form-inline {
+    display: inline-block;
+}
+
 .layout-header.fixed {
     position: fixed;
     z-index: 5;
@@ -942,12 +946,21 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     top: 0;
     left: 50%;
     height:86px;
+    overflow: hidden;
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
     padding: 12px 15px;
+    white-space: nowrap;
+    transition: all 1.20ms ease-out;
 }
 
 .layout-header.fixed hr { display: none;  }
+.layout-header.fixed div.text-muted { 
+    display: inline-block; 
+    text-overflow: ellipsis;
+    max-width: 75%;
+    overflow: hidden;
+}
 
 .container-fluid-1024 .layout-header.fixed { max-width:1024px ; }
 .container-fluid-1280 .layout-header.fixed { max-width:1280px ; }

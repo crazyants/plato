@@ -73,7 +73,7 @@ namespace Plato.Discuss.Star.ViewProviders
                     model.IsFollowing = isFollowing;
                     model.TotalStars = entity.TotalStars;
                     return model;
-                }).Zone("tools").Order(int.MinValue)
+                }).Zone("tools").Order(-5)
             );
 
         }

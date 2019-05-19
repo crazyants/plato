@@ -21,6 +21,12 @@ namespace Plato.Follows.Assets
                         Url = "/plato.follows/content/js/follow.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.follows/content/css/follow.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     }
                 }),
 
@@ -32,6 +38,12 @@ namespace Plato.Follows.Assets
                         Url = "/plato.follows/content/js/follow.min.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.follows/content/css/follow.min.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     }
                 }),
 
@@ -43,6 +55,12 @@ namespace Plato.Follows.Assets
                         Url = "/plato.follows/content/js/follow.min.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.follows/content/css/follow.min.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     }
                 })
 

@@ -2,21 +2,14 @@
 
 @if (!Model.IsFollowing)
 {
-
-    <button data-toggle="tooltip" title="@T[Model.FollowType.SubscribeDescription]" class="btn btn-primary" data-on-css="btn-danger" data-off-css="btn-primary" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
+    <button data-toggle="tooltip" title="@T[Model.FollowType.SubscribeDescription]" class="btn bg-transparent text-muted follow-off" data-off-icon="fal fa-bell" data-on-icon="fa fa-bell" data-on-css="text-danger follow-on" data-off-css="text-muted follow-off" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
         <i class="fal fa-bell"></i> 
-        <span>
-            @T[Model.FollowType.SubscribeText]
-        </span>
     </button>
 }
 else
 {
-    <button data-toggle="tooltip" title="@T[Model.FollowType.UnsubscribeDescription]" class="btn btn-danger" data-on-css="btn-danger" data-off-css="btn-primary" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
-        <i class="fal fa-bell-slash"></i> 
-        <span>
-            @T[Model.FollowType.UnsubscribeText]
-        </span>
+    <button data-toggle="tooltip" title="@T[Model.FollowType.UnsubscribeDescription]" class="btn bg-transparent text-danger follow-on" data-off-icon="fal fa-bell" data-on-icon="fa fa-bell" data-on-css="text-danger follow-on" data-off-css="text-muted follow-off" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
+        <i class="fa fa-bell"></i> 
     </button>
 }
 

@@ -8,30 +8,31 @@ namespace Plato.Discuss.Categories.Follow
     public class FollowTypes : IFollowTypeProvider
     {
         
-        public static readonly FollowType Channel =
+        public static readonly FollowType Category =
             new FollowType(
                 "DiscussChannel",
-                "Follow Channel",
-                "Follow this channel to get notified when new topics are posted.",
+                "Follow Category",
+                "Follow this category to get notified when new topics are posted within this category",
                 "Unsubscribe",
-                "You are already following this channel. Unsubscribe below...");
+                "You are already following this category, click to unsubscribe");
         
-        public static readonly FollowType AllChannels =
+        public static readonly FollowType AllCategories =
             new FollowType(
                 "DiscussAllChannels",
                 "Follow All Channels",
-                "Follow all channels to get notified when new topics are posted to any channel..",
+                "Follow all categories to get notified when new topics are posted within any category",
                 "Unsubscribe",
-                "You are already following all channels. Unsubscribe below...");
+                "You are already following all categories, click to unsubscribe");
         
         public IEnumerable<IFollowType> GetFollowTypes()
         {
             return new[]
             {
-                Channel,
-                AllChannels
+                Category,
+                AllCategories
             };
         }
 
     }
+
 }

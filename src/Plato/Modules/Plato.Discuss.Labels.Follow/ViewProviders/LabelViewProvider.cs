@@ -58,7 +58,7 @@ namespace Plato.Discuss.Labels.Follow.ViewProviders
                     model.ThingId = existingTag.Id;
                     model.IsFollowing = isFollowing;
                     return model;
-                }).Zone("tools").Order(1)
+                }).Zone("tools").Order(-4)
             );
 
         }

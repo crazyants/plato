@@ -69,7 +69,9 @@ namespace Plato.Discuss.Labels.ViewComponents
             _labelService = labelService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(LabelIndexOptions options, PagerOptions pager)
+        public async Task<IViewComponentResult> InvokeAsync(
+            LabelIndexOptions options, 
+            PagerOptions pager)
         {
 
             if (options == null)

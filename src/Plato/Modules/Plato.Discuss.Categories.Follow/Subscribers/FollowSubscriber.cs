@@ -59,7 +59,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             }
 
             // Is this a channel follow?
-            if (!follow.Name.Equals(FollowTypes.Channel.Name, StringComparison.OrdinalIgnoreCase))
+            if (!follow.Name.Equals(FollowTypes.Category.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return follow;
             }
@@ -80,7 +80,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             }
 
             // Is this a discuss label follow?
-            if (!follow.Name.Equals(FollowTypes.Channel.Name, StringComparison.OrdinalIgnoreCase))
+            if (!follow.Name.Equals(FollowTypes.Category.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return follow;
             }

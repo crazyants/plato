@@ -43,8 +43,8 @@ namespace Plato.Discuss.Categories.Follow.ViewProviders
             // Get follow type
             FollowType followType = null;
             followType = categoryAdmin.Id == 0
-                ? FollowTypes.AllChannels
-                : FollowTypes.Channel;
+                ? FollowTypes.AllCategories
+                : FollowTypes.Category;
             
             // Get thingId if available
             var thingId = 0;
@@ -73,13 +73,13 @@ namespace Plato.Discuss.Categories.Follow.ViewProviders
             }
 
             return Views(
-                View<FollowViewModel>("Follow.Display.Sidebar", model =>
+                View<FollowViewModel>("Follow.Display.Tools", model =>
                 {
                     model.FollowType = followType;
                     model.ThingId = thingId;
                     model.IsFollowing = isFollowing;
                     return model;
-                }).Zone("sidebar").Order(2)
+                }).Zone("tools").Order(-4)
             );
 
 
