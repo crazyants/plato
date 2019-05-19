@@ -5,7 +5,7 @@
 }
 
 <div class="layout">
-    <div class="layout-header">
+    <div class="layout-header layout-header-sticky">
         @if (Model.Alerts != null)
         {
             <div class="layout-alerts">
@@ -31,30 +31,34 @@
             </div>
         }
     </div>
-    @if (Model.SideBar != null)
-    {
-        <div class="row gutter-sm layout-content">
-            <div class="col-lg-9">
-                @if (Model.Content != null)
-                {
-                    <view model="@Model.Content"></view>
-                }
-            </div>
-            <div class="col-lg-3">
-                @if (Model.SideBar != null)
-                {
-                    <view model="@Model.SideBar"></view>
-                }
-            </div>
-        </div>
-    }
-    else
-    {
-        @if (Model.Content != null)
+    <div class="layout-body">
+        @if (Model.SideBar != null)
         {
-            <view model="@Model.Content"></view>
+            <div class="row gutter-sm">
+                <div class="col-lg-9 layout-content">
+                    @if (Model.Content != null)
+                    {
+                        <view model="@Model.Content"></view>
+                    }
+                </div>
+                <div class="col-lg-3 layout-sidebar">
+                    @if (Model.SideBar != null)
+                    {
+                        <view model="@Model.SideBar"></view>
+                    }
+                </div>
+            </div>
         }
-    }
+        else
+        {
+            if (Model.Content != null)
+             {
+                 <div class="layout-content">
+                     <view model="@Model.Content"></view>
+                 </div>
+             }
+        }
+    </div>
     <div class="layout-footer">
         @if (Model.Actions != null)
         {

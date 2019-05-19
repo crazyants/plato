@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Notifications.Extensions;
 using Plato.Notifications.Models;
 using Plato.Users.Notifications.ViewModels;
 
@@ -23,33 +23,29 @@ namespace Plato.Users.Notifications.Controllers
     {
 
         private readonly IViewProviderManager<EditNotificationsViewModel> _editProfileViewProvider;
-        private readonly IContextFacade _contextFacade;
-        private readonly UserManager<User> _userManager;
-        private readonly IAlerter _alerter;
         private readonly INotificationTypeManager _notificationTypeManager;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly UserManager<User> _userManager;
+        private readonly IContextFacade _contextFacade;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-
-
+        
         public HomeController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IContextFacade contextFacade,
             IViewProviderManager<EditNotificationsViewModel> editProfileViewProvider,
-            UserManager<User> userManager,
-            IAlerter alerter,
             INotificationTypeManager notificationTypeManager,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults)
+            UserManager<User> userManager, 
+            IContextFacade contextFacade,
+            IAlerter alerter)
         {
             _contextFacade = contextFacade;
             _editProfileViewProvider = editProfileViewProvider;
             _userManager = userManager;
             _alerter = alerter;
             _notificationTypeManager = notificationTypeManager;
-            _userNotificationTypeDefaults = userNotificationTypeDefaults;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -59,14 +55,12 @@ namespace Plato.Users.Notifications.Controllers
         public async Task<IActionResult> EditProfile()
         {
             
+            // We need to be authenticated to access notification settings
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return NotFound();
             }
-
-            // -------------------
-            
 
             // Get saved notification types
             var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();
@@ -106,36 +100,18 @@ namespace Plato.Users.Notifications.Controllers
                 // If we don't have any notification types ensure we enable all by default
                 enabledNotificationTypes.AddRange(defaultUserNotificationTypes);
             }
-
-
-            var types = "";
-            foreach (var type in _notificationTypeManager.GetNotificationTypes(user.RoleNames))
-            {
-                types += type.Name + " - " + user.NotificationEnabled(_userNotificationTypeDefaults, new WebNotification(type.Name)) + " - " + "<br>";
-            }
-
-            ViewData["types"] = types;
-
-
-
-            // -------------------
-
-
+     
             var editProfileViewModel = new EditNotificationsViewModel()
             {
                 Id = user.Id
             };
-
-            // Build view
-            var result = await _editProfileViewProvider.ProvideEditAsync(editProfileViewModel, this);
-
+            
             // Return view
-            return View(result);
+            return View((LayoutViewModel) await _editProfileViewProvider.ProvideEditAsync(editProfileViewModel, this));
 
         }
 
-        [HttpPost]
-        [ActionName(nameof(EditProfile))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditProfile))]
         public async Task<IActionResult> EditProfilePost(EditNotificationsViewModel model)
         {
 
@@ -175,4 +151,5 @@ namespace Plato.Users.Notifications.Controllers
         }
 
     }
+
 }
