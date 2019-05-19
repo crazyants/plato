@@ -2,17 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Tags.ViewModels;
-using Plato.Articles.Tags.Models;
+using Plato.Discuss.Tags.Models;
 using Plato.Tags.Services;
 
-namespace Plato.Articles.Tags.ViewComponents
+namespace Plato.Discuss.Tags.ViewComponents
 {
-    public class GetArticlesTagListViewComponent : ViewComponent
+    public class DiscussGetTagListViewComponent : ViewComponent
     {
         
         private readonly ITagService<Tag> _tagService;
 
-        public GetArticlesTagListViewComponent(
+        public DiscussGetTagListViewComponent(
             ITagService<Tag> tagService)
         {
             _tagService = tagService;

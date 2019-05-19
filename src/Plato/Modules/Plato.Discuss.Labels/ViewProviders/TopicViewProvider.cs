@@ -67,7 +67,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             
             // Get top 10 labels
             var labels = await _labelStore.QueryAsync()
-                .Take(1, 10)
+                .Take(1, 5)
                 .Select<LabelQueryParams>(async q =>
                 {
                     q.FeatureId.Equals(await GetFeatureIdAsync());

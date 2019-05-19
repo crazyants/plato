@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -231,9 +232,12 @@ namespace Plato.Tags.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"))
+                sb
+                    .Append("(")
+                    .Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"))
                     .Append(" OR ")
-                    .Append(_query.Params.Keywords.ToSqlString("NameNormalized", "Keywords"));
+                    .Append(_query.Params.Keywords.ToSqlString("NameNormalized", "Keywords"))
+                    .Append(")");
             }
             
             return sb.ToString();

@@ -951,7 +951,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     transform: translate(-50%, 0);
     padding: 12px 15px;
     white-space: nowrap;
-    transition: all 1.20ms ease-out;
 }
 
 .layout-header.fixed hr { display: none;  }
@@ -966,12 +965,10 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .container-fluid-1280 .layout-header.fixed { max-width:1280px ; }
 .container-fluid-1600 .layout-header.fixed { max-width:1600px ; }
 
-.layout-body { background: blue; }
 /* Add some top padding to the page content as the header gets a new 
     position at the top of the page (position:fixed and top:0) */
 .layout-header-sticky.fixed + .layout-body {
     padding-top: 86px;
-    background: red !important;
 }
 
 .layout-header .alert {

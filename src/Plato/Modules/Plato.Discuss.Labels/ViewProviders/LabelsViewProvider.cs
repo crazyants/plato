@@ -67,20 +67,16 @@ namespace Plato.Discuss.Labels.ViewProviders
                 Options = viewModel?.Options,
                 Pager = viewModel?.Pager
             };
-
-            // Ensure we explicitly set the featureId
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
             
             // Get labels for feature
             var labels = await _labelStore.QueryAsync()
                 .Take(1, 10)
                 .Select<LabelQueryParams>(q =>
                 {
-                    q.FeatureId.Equals(feature.Id);
+                    if (viewModel.Options.FeatureId != null)
+                    {
+                        q.FeatureId.Equals(viewModel.Options.FeatureId.Value);
+                    }
                 })
                 .OrderBy("Entities", OrderBy.Desc)
                 .ToList();
