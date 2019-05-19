@@ -1190,7 +1190,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .infinite-scroll {
     /* Important to ensure infinite-scroll area height can be calculated correctly */
-    display: inline-block;
+    display:  flex;
+    flex-direction: column;
 }
 
 .infinite-scroll .list-group-item {
