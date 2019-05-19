@@ -955,9 +955,9 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .layout-header.fixed hr { display: none;  }
 .layout-header.fixed div.text-muted { 
-    display: inline-block; 
+    display: block; 
     text-overflow: ellipsis;
-    max-width: 75%;
+    max-width: 100%;
     overflow: hidden;
 }
 

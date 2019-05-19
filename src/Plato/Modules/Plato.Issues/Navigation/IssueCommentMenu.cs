@@ -24,7 +24,7 @@ namespace Plato.Issues.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "article-comment", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "issue-comment", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

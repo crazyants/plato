@@ -11,6 +11,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Issues.Categories.ViewProviders
 {
+
     public class CommentViewProvider : BaseViewProvider<Comment>
     {
 
@@ -72,7 +73,7 @@ namespace Plato.Issues.Categories.ViewProviders
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
+                ).Add(S["Issues"], home => home
                     .Action("Index", "Home", "Plato.Issues")
                     .LocalNav()
                 );
@@ -109,7 +110,7 @@ namespace Plato.Issues.Categories.ViewProviders
                     .LocalNav()
                 );
 
-                builder.Add(S["Edit Reply"]);
+                builder.Add(S["Edit Comment"]);
 
             });
 

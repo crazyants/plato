@@ -63,9 +63,9 @@ namespace Plato.Questions.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(Question question, IViewProviderContext updater)
         {
             
-            // Get top 10 labels
+            // Get top labels
             var labels = await _labelStore.QueryAsync()
-                .Take(1, 10)
+                .Take(1, 5)
                 .Select<LabelQueryParams>(async q =>
                 {
                     q.FeatureId.Equals(await GetFeatureIdAsync());

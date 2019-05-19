@@ -23,7 +23,7 @@ namespace Plato.Issues.Navigation
             }
             
             builder
-                .Add(T["Issues"], 7, discuss => discuss
+                .Add(T["Issues"], 7, issues => issues
                         .IconCss("fal fa-bug")
                         .Action("Index", "Home", "Plato.Issues")
                         .Attributes(new Dictionary<string, object>()
