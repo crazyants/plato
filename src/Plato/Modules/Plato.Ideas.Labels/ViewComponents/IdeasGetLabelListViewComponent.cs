@@ -8,12 +8,12 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Ideas.Labels.ViewComponents
 {
 
-    public class GetIdeasLabelListViewComponent : ViewComponent
+    public class IdeasGetLabelListViewComponent : ViewComponent
     {
         
         private readonly ILabelService<Label> _labelService;
 
-        public GetIdeasLabelListViewComponent(
+        public IdeasGetLabelListViewComponent(
             ILabelService<Label> labelService)
         {
             _labelService = labelService;
