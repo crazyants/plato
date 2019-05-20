@@ -13,6 +13,7 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
@@ -91,7 +92,8 @@ namespace Plato.Discuss.Tags.ViewProviders
             return Task.FromResult(Views(
                 View<EditEntityTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = Permissions.PostReplyTags
                     }).Zone("footer")
                     .Order(int.MaxValue)
             ));
@@ -161,7 +163,10 @@ namespace Plato.Discuss.Tags.ViewProviders
                 View<EditEntityTagsViewModel>("Topic.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         Tags = tagsJson,
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = topic.Id == 0
+                            ? Permissions.PostTopicTags
+                            : Permissions.EditTopicTags
                     }).Zone("content")
                     .Order(int.MaxValue)
             );

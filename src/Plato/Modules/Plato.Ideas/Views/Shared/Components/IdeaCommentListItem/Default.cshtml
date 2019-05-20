@@ -2,8 +2,8 @@
 @model EntityReplyListItemViewModel<Idea, IdeaComment>
 @{
     var css = Model.Reply.RowOffset == Model.Reply.Offset
-        ? "markdown-body p-3 infinite-scroll-item infinite-scroll-item-active"
-        : "markdown-body p-3 infinite-scroll-item";
+        ? "infinite-scroll-item infinite-scroll-item-active"
+        : "infinite-scroll-item";
     var quoteId = "quote" + Model.Reply.Id;
     var replyUrl = Url.Action("Reply", "Home", new RouteValueDictionary()
     {
@@ -65,21 +65,23 @@
             </card-title>
             <card-body>
                 <div class="@css" data-infinite-scroll-highlight="@Model.Reply.RowOffset" data-provide="markdownBody">
-                    @Html.Raw(@Model.Reply.Html)
-                    @if (!String.IsNullOrEmpty(Model.Reply.CreatedBy.SignatureHtml))
-                    {
-                        <div>
-                            @Html.Raw(@Model.Reply.CreatedBy.SignatureHtml)
-                        </div>
-                    }
+                    <div class="markdown-body p-3">
+                        @Html.Raw(@Model.Reply.Html)
+                        @if (!String.IsNullOrEmpty(Model.Reply.CreatedBy.SignatureHtml))
+                        {
+                            <div>
+                                @Html.Raw(@Model.Reply.CreatedBy.SignatureHtml)
+                            </div>
+                        }
+                    </div>
+                    <navigation name="idea-comment-footer"
+                                model="Model.Reply"
+                                enable-list="false" />
                 </div>
                 <div class="hidden"
                      id="@quoteId"
                      data-reply-url="@replyUrl"
                      data-display-name="@Model.Reply.CreatedBy.DisplayName">@Model.Reply.Message</div>
-                <navigation name="idea-comment-footer"
-                            model="Model.Reply"
-                            enable-list="false" />
             </card-body>
         </card>
     </div>

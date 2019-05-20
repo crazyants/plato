@@ -42,6 +42,7 @@ namespace Plato.Discuss.Tags.Navigation
                         entity,
                         reply
                     })
+                    .Order(0)
                 );
 
         }

@@ -3,23 +3,22 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Tags.Navigation
+namespace Plato.Discuss.Labels.Navigation
 {
-
-    public class TopicReplyFooterMenu : INavigationProvider
+    public class TopicFooterMenu : INavigationProvider
     {
         
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyFooterMenu(IStringLocalizer localizer)
+        public TopicFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
-        
+
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-reply-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -27,24 +26,22 @@ namespace Plato.Discuss.Tags.Navigation
             // Get model from navigation builder
             var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
 
-            // We need an entity
+            // We always need a topic
             if (entity == null)
             {
                 return;
             }
 
-            // Replies are optional
+            // Replies are options
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
-
-            // Add reaction list to topic reply footer navigation
+            
             builder
-                .Add(T["Tags"], react => react
-                    .View("TopicTags", new
+                .Add(T["Labels"], react => react
+                    .View("TopicLabels", new
                     {
-                        entity,
-                        reply
+                        entity
                     })
-                    .Order(1)
+                    .Order(0)
                 );
 
         }

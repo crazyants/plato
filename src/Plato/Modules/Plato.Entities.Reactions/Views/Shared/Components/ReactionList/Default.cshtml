@@ -10,18 +10,19 @@
     }
 }
 
-<ul class="list-group list-group-horizontal list-group-flush list-group-hover float-left col-12 card-footer @css" id="@id" data-entity-id="@Model.Entity?.Id" data-entity-reply-id="@Model.Reply?.Id" data-reactions-target="#@id" data-provide="reactions">
+
+<ul class="list-group list-group-flush list-group-hover card-footer p-0 @css" id="@id" data-entity-id="@Model.Entity?.Id" data-entity-reply-id="@Model.Reply?.Id" data-reactions-target="#@id" data-provide="reactions">
     @foreach (var reaction in Model.Reactions)
     {
-        <li class="list-group-item  border-0">
+        <li class="list-group-item">
             <authorize asp-permission="@Model.Permission.Name">
                 <authorize-success>
-                    <a href="#" class="list-group-item list-group-item-action py-2 px-3  border-0" data-reaction-name="@reaction.Name" data-toggle="tooltip" title="@reaction.ToolTip">
+                    <a href="#" class="list-group-item list-group-item-action border-0 py-2 px-3" data-reaction-name="@reaction.Name" data-toggle="tooltip" title="@reaction.ToolTip">
                         <span class="d-inline-block mx-1">@reaction.Emoji</span><span class="d-inline-block mx-1">@reaction.Total</span>
                     </a>
                 </authorize-success>
                 <authorize-fail>
-                    <span class="list-group-item py-2 px-3 border-0" data-toggle="tooltip" title="@reaction.ToolTip">
+                    <span class="list-group-item border-0 py-2 px-3" data-toggle="tooltip" title="@reaction.ToolTip">
                         <span class="d-inline-block mx-1">@reaction.Emoji</span><span class="d-inline-block mx-1">@reaction.Total</span>
                     </span>
                 </authorize-fail>
@@ -29,3 +30,4 @@
         </li>
     }
 </ul>
+

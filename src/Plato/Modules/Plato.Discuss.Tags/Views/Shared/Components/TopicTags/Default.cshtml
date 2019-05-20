@@ -1,17 +1,27 @@
 ﻿@model TagListViewModel
+@{
+    var total = Model.Tags?.Count() ?? 0; 
+    var text = total == 1
+        ? "tag"
+        : "tags";
 
-@if (Model.Tags != null && Model.Tags.Any())
+}
+@if (total > 0)
 {
-    <div class="p-3">
-        @foreach (var tag in Model.Tags)
-        {
-        var tooltip = $"{T["Show all topics tagged"].Value} '{tag.Name}...'";
-        <div title="@tooltip" class="btn-group">
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.TagId" asp-route-opts.alias="@tag.Alias" class="btn btn-sm label">
-                <span class=" font-weight-bold">@tag.Name</span>
-                <span>x</span>@tag.TotalEntities.ToPrettyInt()
-            </a>
+    <div class="pl-3 pb-3">
+        <div class="text-muted">@total @text</div>
+        <div class=" mt-3">
+            @if (Model.Tags != null)
+            {
+                foreach (var tag in Model.Tags)
+                {
+                    var tooltip = $"{T["Show all topics tagged"].Value} '{tag.Name}...'";
+                    <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.TagId" asp-route-opts.alias="@tag.Alias" class="btn btn-sm label" title="@tooltip">
+                        <span class=" font-weight-bold">@tag.Name</span>
+                        <span>x</span>@tag.TotalEntities.ToPrettyInt()
+                    </a>
+                }
+            }
         </div>
-        }
     </div>
 }

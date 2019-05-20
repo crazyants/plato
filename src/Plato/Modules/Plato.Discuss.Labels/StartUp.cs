@@ -33,6 +33,7 @@ namespace Plato.Discuss.Labels
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
+            services.AddScoped<INavigationProvider, TopicFooterMenu>();
 
             // Data stores
             services.AddScoped<ILabelRepository<Label>, LabelRepository<Label>>();

@@ -113,7 +113,10 @@ namespace Plato.Discuss.Tags.ViewProviders
             var viewModel = new EditEntityTagsViewModel()
             {
                 Tags = tagsJson,
-                HtmlName = TagsHtmlName
+                HtmlName = TagsHtmlName,
+                Permission = reply.Id == 0
+                    ? Permissions.PostReplyTags
+                    : Permissions.EditReplyTags
             };
 
             return Views(

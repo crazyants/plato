@@ -1204,7 +1204,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     flex-direction: column;
 }
 
-.infinite-scroll .list-group-item {
+.infinite-scroll > .list-group-item {
     margin-top: -1px;
 }
 
