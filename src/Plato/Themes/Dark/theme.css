@@ -13,7 +13,8 @@
 /* ------------------- */
 
 .nav-site { border-color: rgba(255, 255, 255, 0.10); }
-.nav .search-input-group > .btn { color: rgba(255,255,255,0.5) !important; }
+
+.search-input-group > .btn { color: rgba(255,255,255,0.2) !important; }
 
 /* ------------------- */
 /* Validation */
@@ -323,7 +324,7 @@ a.label.active {
 }
 
 .tree li.list-group-item:not(.active) {
-    background-color: #111;
+    background-color: #0a0a0a;
 }
 
 .tree li.list-group-item.active {
@@ -1992,12 +1993,12 @@ select.form-control:focus::-ms-value {
 }
 
 .card {
-    background-color: #111111;
+    background-color: #0a0a0a;
     border: 1px solid #282828;
 }
 
 .card-header {
-    background-color: rgba(0,0,0,0.03);
+    background-color: rgba(50,50,50,0.03);
     border-bottom: 1px solid #282828;
 }
 
@@ -2321,7 +2322,7 @@ a.badge-dark:focus, a.badge-dark.focus {
 }
 
 .list-group-item {
-    background-color: #161616;
+    background-color: #0a0a0a;
     border: 1px solid #282828;
 }
 

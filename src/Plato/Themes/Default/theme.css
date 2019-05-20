@@ -32,7 +32,10 @@
     color: black;
 }
 
-.nav-site .nav .search-input-group > .btn { color: #aaa !important; }
+.nav-site .nav .search-input-group > .btn {
+     color: #aaa !important;
+    background: transparent;
+}
 
 .nav-site > .navbar-dark .search-input-group .form-control::placeholder { 
     color: #aaa;

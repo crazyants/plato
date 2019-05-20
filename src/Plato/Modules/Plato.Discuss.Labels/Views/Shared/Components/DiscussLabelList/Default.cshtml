@@ -63,7 +63,7 @@
                  data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
                  class="list-group list-group-flush list-group-hover infinite-scroll">
                 <div class="row no-gutters">
-                    <div class="list-group-item infinite-scroll-loader col-12" data-type="previous"></div>
+                    <div class="list-group-item infinite-scroll-loader" data-type="previous"></div>
                     @foreach (var label in Model.Results.Data)
                     {
                         var css = rowOffset == offset
@@ -85,7 +85,7 @@
                             rowOffset++;
                         }
                     }
-                    <div class="list-group-item infinite-scroll-loader col-12" data-type="next"></div>
+                    <div class="list-group-item infinite-scroll-loader" data-type="next"></div>
                 </div>
             </div>
         }

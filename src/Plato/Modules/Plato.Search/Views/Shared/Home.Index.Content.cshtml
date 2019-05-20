@@ -1,17 +1,5 @@
 ﻿@model EntityIndexViewModel<Entity>
 
-<card>
-    <card-title>
-        <h6 class="card-title">@T["Search"]</h6>
-    </card-title>
-    <card-body>
-        @await DisplayAsync(new View("Search", new
-        {
-            options = @Model.Options,
-        }))
-    </card-body>
-</card>
-
 @if (!String.IsNullOrEmpty(Model.Options.Search))
 {
     @await DisplayAsync(new View("SearchList", new
@@ -19,5 +7,17 @@
         options = @Model.Options,
         pager = @Model.Pager
     }))
+}
+else
+{
+    <card>
+        <card-body>
+            <div class="text-center">
+                <span class="text-muted">
+                    @T["Enter some keywords above to perform a search"]
+                </span>
+            </div>
+        </card-body>
+    </card>
 }
 

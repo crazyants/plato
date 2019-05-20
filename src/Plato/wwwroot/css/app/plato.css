@@ -223,7 +223,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     height: 38px;
 }
 
-.search-input-group .form-control {
+.search-input-group > .form-control {
     position: absolute;
     width: 100%;
     left: 0;
@@ -231,13 +231,19 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     z-index: 0;
 }
 
+.search-input-group > .form-control,
+.search-input-group > .btn {
+    min-height: 42px;
+}
+
 .search-input-group > .btn {
     position: absolute;
     top: 0;
     right: 0;
     z-index: 5;
-    background-color: transparent;
-    border-color: transparent;
+    outline: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .search-input-group > .btn:focus { box-shadow: none; }
@@ -935,8 +941,11 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 }
 
-.layout-tools .form-inline {
-    display: inline-block;
+.layout-tools  {
+    white-space: nowrap;
+    display: flex;
+    flex-flow: nowrap;
+    flex-direction: row;
 }
 
 .layout-header.fixed {
@@ -1204,6 +1213,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     flex-direction: column;
 }
 
+.infinite-scroll > .row,
 .infinite-scroll > .list-group-item {
     margin-top: -1px;
 }
