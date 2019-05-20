@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Articles.Models;
 using Plato.Articles.Tags.Badges;
+using Plato.Articles.Tags.Handlers;
 using Plato.Articles.Tags.Models;
 using Plato.Articles.Tags.Navigation;
 using Plato.Articles.Tags.Tasks;
 using Plato.Articles.Tags.ViewAdapters;
 using Plato.Articles.Tags.ViewProviders;
 using Plato.Internal.Badges.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
@@ -18,6 +20,7 @@ using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Tags.Repositories;
 using Plato.Tags.Services;
@@ -37,7 +40,10 @@ namespace Plato.Articles.Tags
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
@@ -75,7 +81,10 @@ namespace Plato.Articles.Tags
             services.AddScoped<ITagStore<Tag>, TagStore<Tag>>();
             services.AddScoped<ITagService<Tag>, TagService<Tag>>();
             services.AddScoped<ITagManager<Tag>, TagManager<Tag>>();
-            
+
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
         }
 
         public override void Configure(

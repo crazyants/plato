@@ -60,7 +60,7 @@ namespace Plato.Questions.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            // Override breadcrumb configuration within base discuss controller 
+            // Override breadcrumb configuration within base controller 
             IEnumerable<CategoryAdmin> parents = null;
             if (topic.CategoryId > 0)
             {
@@ -74,7 +74,7 @@ namespace Plato.Questions.Categories.ViewProviders
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
                     .LocalNav()
-                ).Add(S["Discuss"], home => home
+                ).Add(S["Questions"], home => home
                     .Action("Index", "Home", "Plato.Questions")
                     .LocalNav()
                 );
@@ -111,7 +111,7 @@ namespace Plato.Questions.Categories.ViewProviders
                     .LocalNav()
                 );
 
-                builder.Add(S["Edit Reply"]);
+                builder.Add(S["Edit Answer"]);
 
             });
 

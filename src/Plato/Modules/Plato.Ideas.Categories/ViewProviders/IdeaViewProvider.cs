@@ -102,7 +102,7 @@ namespace Plato.Ideas.Categories.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Idea idea, IViewProviderContext updater)
         {
 
-            // Override breadcrumb configuration within base discuss controller 
+            // Override breadcrumb configuration within base controller 
             IEnumerable<CategoryAdmin> parents = null;
             if (idea.CategoryId > 0)
             {
@@ -164,7 +164,7 @@ namespace Plato.Ideas.Categories.ViewProviders
                 return default(IViewProviderResult);
             }
             
-            // Override breadcrumb configuration within base discuss controller 
+            // Override breadcrumb configuration within base controller 
             IEnumerable<CategoryAdmin> parents = null;
             if (idea.CategoryId > 0)
             {

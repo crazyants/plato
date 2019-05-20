@@ -90,7 +90,8 @@ namespace Plato.Questions.Tags.ViewProviders
             return Task.FromResult(Views(
                 View<EditEntityTagsViewModel>("Question.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = Permissions.PostQuestionAnswerTags
                     }).Zone("footer")
                     .Order(int.MaxValue)
             ));
@@ -159,7 +160,10 @@ namespace Plato.Questions.Tags.ViewProviders
                 View<EditEntityTagsViewModel>("Question.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         Tags = tagsJson,
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = topic.Id == 0
+                            ? Permissions.PostQuestionTags
+                            : Permissions.EditQuestionTags
                     }).Zone("content")
                     .Order(int.MaxValue)
             );

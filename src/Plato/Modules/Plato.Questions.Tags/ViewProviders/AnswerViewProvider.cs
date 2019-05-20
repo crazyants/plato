@@ -113,15 +113,17 @@ namespace Plato.Questions.Tags.ViewProviders
             var viewModel = new EditEntityTagsViewModel()
             {
                 Tags = tagsJson,
-                HtmlName = TagsHtmlName
+                HtmlName = TagsHtmlName,
+                Permission = comment.Id == 0
+                    ? Permissions.PostQuestionAnswerTags
+                    : Permissions.EditQuestionAnswerTags
             };
 
             return Views(
                 View<EditEntityTagsViewModel>("Article.Tags.Edit.Footer", model => viewModel).Zone("content")
                     .Order(int.MaxValue)
             );
-
-
+            
         }
 
         public override Task<bool> ValidateModelAsync(Answer comment, IUpdateModel updater)

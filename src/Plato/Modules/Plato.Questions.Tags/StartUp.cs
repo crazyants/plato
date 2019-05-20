@@ -10,6 +10,7 @@ using Plato.Questions.Tags.Tasks;
 using Plato.Questions.Tags.ViewAdapters;
 using Plato.Questions.Tags.ViewProviders;
 using Plato.Internal.Badges.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
@@ -18,7 +19,9 @@ using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Questions.Tags.Handlers;
 using Plato.Tags.Repositories;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
@@ -37,7 +40,10 @@ namespace Plato.Questions.Tags
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
@@ -75,7 +81,10 @@ namespace Plato.Questions.Tags
             services.AddScoped<ITagStore<Tag>, TagStore<Tag>>();
             services.AddScoped<ITagService<Tag>, TagService<Tag>>();
             services.AddScoped<ITagManager<Tag>, TagManager<Tag>>();
-            
+
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
         }
 
         public override void Configure(

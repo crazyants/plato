@@ -23,26 +23,29 @@ namespace Plato.Discuss.Labels.Navigation
                 return;
             }
 
-            // Get model from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
 
-            // We always need a topic
-            if (entity == null)
-            {
-                return;
-            }
+            return;
 
-            // Replies are options
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            //// Get model from navigation builder
+            //var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+
+            //// We always need a topic
+            //if (entity == null)
+            //{
+            //    return;
+            //}
+
+            //// Replies are options
+            //var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             
-            builder
-                .Add(T["Labels"], react => react
-                    .View("TopicLabels", new
-                    {
-                        entity
-                    })
-                    .Order(0)
-                );
+            //builder
+            //    .Add(T["Labels"], react => react
+            //        .View("TopicLabels", new
+            //        {
+            //            entity
+            //        })
+            //        .Order(0)
+            //    );
 
         }
 

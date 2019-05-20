@@ -12,6 +12,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Security.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
@@ -113,7 +114,10 @@ namespace Plato.Articles.Tags.ViewProviders
             var viewModel = new EditEntityTagsViewModel()
             {
                 Tags = tagsJson,
-                HtmlName = TagsHtmlName
+                HtmlName = TagsHtmlName,
+                Permission = comment.Id == 0
+                    ? Permissions.PostArticleCommentTags
+                    : Permissions.EditArticleCommentTags
             };
 
             return Views(

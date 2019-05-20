@@ -22,6 +22,7 @@ namespace Plato.Ideas.Tags.ViewProviders
 {
     public class IdeaViewProvider : BaseViewProvider<Idea>
     {
+
         private const string TagsHtmlName = "tags";
 
         private readonly ITagStore<Tag> _tagStore;
@@ -85,18 +86,19 @@ namespace Plato.Ideas.Tags.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(Idea topic, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Idea idea, IViewProviderContext context)
         {
             return Task.FromResult(Views(
                 View<EditEntityTagsViewModel>("Idea.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = Permissions.PostIdeaCommentTags
                     }).Zone("footer")
                     .Order(int.MaxValue)
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Idea topic, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildEditAsync(Idea idea, IViewProviderContext context)
         {
             
             var tagsJson = "";
@@ -115,7 +117,7 @@ namespace Plato.Ideas.Tags.ViewProviders
             else
             {
 
-                var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
+                var entityTags = await GetEntityTagsByEntityIdAsync(idea.Id);
 
                 // Exclude replies
                 var entityTagList = entityTags?.Where(t => t.EntityReplyId == 0).ToList();
@@ -159,30 +161,33 @@ namespace Plato.Ideas.Tags.ViewProviders
                 View<EditEntityTagsViewModel>("Idea.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         Tags = tagsJson,
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = idea.Id == 0
+                            ? Permissions.PostIdeaTags
+                            : Permissions.EditIdeaTags
                     }).Zone("content")
                     .Order(int.MaxValue)
             );
 
         }
         
-        public override Task<bool> ValidateModelAsync(Idea topic, IUpdateModel updater)
+        public override Task<bool> ValidateModelAsync(Idea idea, IUpdateModel updater)
         {
             // ensure tags are optional
             return Task.FromResult(true);
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Idea topic, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Idea idea, IViewProviderContext context)
         {
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(idea.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(topic, context);
+                return await BuildIndexAsync(idea, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(topic, context.Updater))
+            if (await ValidateModelAsync(idea, context.Updater))
             {
 
                 // Get selected tags
@@ -192,7 +197,7 @@ namespace Plato.Ideas.Tags.ViewProviders
                 var tagsToRemove = new List<EntityTag>();
 
                 // Get all existing tags for entity
-                var existingTags = await GetEntityTagsByEntityIdAsync(topic.Id);
+                var existingTags = await GetEntityTagsByEntityIdAsync(idea.Id);
 
                 // Exclude replies
                 var existingTagsList = existingTags?.Where(t => t.EntityReplyId == 0).ToList();
@@ -237,7 +242,7 @@ namespace Plato.Ideas.Tags.ViewProviders
                 {
                     var result = await _entityTagManager.CreateAsync(new EntityTag()
                     {
-                        EntityId = topic.Id,
+                        EntityId = idea.Id,
                         TagId = tag.Id,
                         CreatedUserId = user?.Id ?? 0,
                         CreatedDate = DateTime.UtcNow
@@ -253,7 +258,7 @@ namespace Plato.Ideas.Tags.ViewProviders
 
             }
 
-            return await BuildEditAsync(topic, context);
+            return await BuildEditAsync(idea, context);
 
         }
 

@@ -56,7 +56,7 @@ namespace Plato.Articles.Tags.ViewProviders
 
         #region "Implementation"
         
-        public override async Task<IViewProviderResult> BuildIndexAsync(Article viewModel, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Article article, IViewProviderContext context)
         {
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
@@ -86,18 +86,19 @@ namespace Plato.Articles.Tags.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Article topic, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Article article, IViewProviderContext context)
         {
             return Task.FromResult(Views(
                 View<EditEntityTagsViewModel>("Article.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = Permissions.PostArticleCommentTags
                     }).Zone("footer")
                     .Order(int.MaxValue)
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Article topic, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildEditAsync(Article article, IViewProviderContext context)
         {
             
             var tagsJson = "";
@@ -116,7 +117,7 @@ namespace Plato.Articles.Tags.ViewProviders
             else
             {
 
-                var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
+                var entityTags = await GetEntityTagsByEntityIdAsync(article.Id);
 
                 // Exclude replies
                 var entityTagList = entityTags?.Where(t => t.EntityReplyId == 0).ToList();
@@ -160,40 +161,43 @@ namespace Plato.Articles.Tags.ViewProviders
                 View<EditEntityTagsViewModel>("Article.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
                     {
                         Tags = tagsJson,
-                        HtmlName = TagsHtmlName
+                        HtmlName = TagsHtmlName,
+                        Permission = article.Id == 0
+                            ? Permissions.PostArticleTags
+                            : Permissions.EditArticleTags
                     }).Zone("content")
                     .Order(int.MaxValue)
             );
 
         }
         
-        public override Task<bool> ValidateModelAsync(Article topic, IUpdateModel updater)
+        public override Task<bool> ValidateModelAsync(Article article, IUpdateModel updater)
         {
             // ensure tags are optional
             return Task.FromResult(true);
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Article topic, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Article article, IViewProviderContext context)
         {
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(article.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(topic, context);
+                return await BuildIndexAsync(article, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(topic, context.Updater))
+            if (await ValidateModelAsync(article, context.Updater))
             {
 
                 // Get selected tags
-                var tagsToAdd = await GetTagsToAddAsync(topic);
+                var tagsToAdd = await GetTagsToAddAsync(article);
 
                 // Build tags to remove
                 var tagsToRemove = new List<EntityTag>();
 
                 // Get all existing tags for entity
-                var existingTags = await GetEntityTagsByEntityIdAsync(topic.Id);
+                var existingTags = await GetEntityTagsByEntityIdAsync(article.Id);
 
                 // Exclude replies
                 var existingTagsList = existingTags?.Where(t => t.EntityReplyId == 0).ToList();
@@ -238,7 +242,7 @@ namespace Plato.Articles.Tags.ViewProviders
                 {
                     var result = await _entityTagManager.CreateAsync(new EntityTag()
                     {
-                        EntityId = topic.Id,
+                        EntityId = article.Id,
                         TagId = tag.Id,
                         CreatedUserId = user?.Id ?? 0,
                         CreatedDate = DateTime.UtcNow
@@ -254,7 +258,7 @@ namespace Plato.Articles.Tags.ViewProviders
 
             }
 
-            return await BuildEditAsync(topic, context);
+            return await BuildEditAsync(article, context);
 
         }
 
@@ -262,7 +266,7 @@ namespace Plato.Articles.Tags.ViewProviders
 
         #region "Private Methods"
 
-        async Task<List<TagBase>> GetTagsToAddAsync(Article topic)
+        async Task<List<TagBase>> GetTagsToAddAsync(Article article)
         {
          
             var tagsToAdd = new List<TagBase>();
