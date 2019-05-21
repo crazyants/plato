@@ -2175,7 +2175,7 @@
                                         name: 'cmdBlockquotePrimary',
                                         hotkey: "",
                                         text:
-                                            '<blockquote class="primary"><p>Primary</p></blockquote>',
+                                            '<blockquote class="dropdown-item primary"><p>Primary</p></blockquote>',
                                         value: '> !primary ',
                                         callback: function(e, $target) {
                                             $.fn.markdown.handlers.insertQuote(e, $target);
@@ -2184,7 +2184,7 @@
                                     {
                                         name: 'cmdBlockquoteDefault',
                                         text:
-                                            '<blockquote class="secondary"><p>Secondary</p></blockquote>',
+                                            '<blockquote class="dropdown-item secondary"><p>Secondary</p></blockquote>',
                                         value: '> !secondary ',
                                         callback: function(e, $target) {
                                             $.fn.markdown.handlers.insertQuote(e, $target);
@@ -2192,7 +2192,7 @@
                                     },
                                     {
                                         name: 'cmdBlockquoteInfo',
-                                        text: '<blockquote class="info"><p>Info</p></blockquote>',
+                                        text: '<blockquote class="dropdown-item info"><p>Info</p></blockquote>',
                                         value: '> !info ',
                                         callback: function (e, $target) {
                                             $.fn.markdown.handlers.insertQuote(e, $target);
@@ -2201,7 +2201,7 @@
                                     {
                                         name: 'cmdBlockquoteSuccess',
                                         text:
-                                            '<blockquote class="success"><p>Success</p></blockquote>',
+                                            '<blockquote class="dropdown-item success"><p>Success</p></blockquote>',
                                         value: '> !success ',
                                         callback: function(e, $target) {
                                             $.fn.markdown.handlers.insertQuote(e, $target);
@@ -2210,7 +2210,7 @@
                                     {
                                         name: 'cmdBlockquoteWarning',
                                         text:
-                                            '<blockquote class="warning"><p>Warning</p></blockquote>',
+                                            '<blockquote class="dropdown-item warning"><p>Warning</p></blockquote>',
                                         value: '> !warning ',
                                         callback: function(e, $target) {
                                             $.fn.markdown.handlers.insertQuote(e, $target);
@@ -2219,7 +2219,7 @@
                                     {
                                         name: 'cmdBlockquoteDanger',
                                         text:
-                                            '<blockquote class="danger"><p>Danger</p></blockquote>',
+                                            '<blockquote class="dropdown-item danger"><p>Danger</p></blockquote>',
                                         value: '> !danger ',
                                         callback: function(e, $target) {
                                             $.fn.markdown.handlers.insertQuote(e, $target);

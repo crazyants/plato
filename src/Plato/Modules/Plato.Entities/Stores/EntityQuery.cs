@@ -647,22 +647,22 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
-            // -----------------
-            // StarUserId
-            // --> Only available if the follow feature is enabled
-            // -----------------
+            //// -----------------
+            //// StarUserId
+            //// --> Only available if the star feature is enabled
+            //// -----------------
 
-            if (_query.Params.StarUserId.Value > 0)
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.StarUserId.Operator);
-                sb.Append(" e.Id IN (")
-                    .Append("SELECT ThingId FROM ")
-                    .Append(_starsTableName)
-                    .Append(" s WHERE (")
-                    .Append(_query.Params.StarUserId.ToSqlString("s.CreatedUserId"))
-                    .Append("))");
-            }
+            //if (_query.Params.StarUserId.Value > 0)
+            //{
+            //    if (!string.IsNullOrEmpty(sb.ToString()))
+            //        sb.Append(_query.Params.StarUserId.Operator);
+            //    sb.Append(" e.Id IN (")
+            //        .Append("SELECT ThingId FROM ")
+            //        .Append(_starsTableName)
+            //        .Append(" s WHERE (")
+            //        .Append(_query.Params.StarUserId.ToSqlString("s.CreatedUserId"))
+            //        .Append("))");
+            //}
 
             // -----------------
             // TotalViews

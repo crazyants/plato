@@ -96,7 +96,6 @@
 
 .markdown-body blockquote {
     border-left: .25em solid rgba(50, 50, 50, 0.25);
-  
     background: rgba(200, 200, 200, 0.1);
 }
 
@@ -405,6 +404,14 @@ a.label:hover, .label.active {
 .md-textarea::-webkit-scrollbar-thumb:vertical:hover {
     background-color: #007bff;
 }
+
+.md-editor .btn-toolbar > .btn-group > .btn:hover,
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn:hover,
+.md-editor .btn-toolbar > .btn-group > .dropdown.show > .btn {
+    background: #007bff;
+    color: white;
+}
+
 
 /* ------------------- */
 /* Resizable Area */

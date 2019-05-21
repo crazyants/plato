@@ -11,7 +11,9 @@ using Plato.Discuss.Star.Subscribers;
 using Plato.Discuss.Star.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Star.Handlers;
+using Plato.Discuss.Star.QueryAdapters;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Discuss.Star
 {
@@ -40,6 +42,9 @@ namespace Plato.Discuss.Star
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
+            // Query adapters 
+            services.AddScoped<IQueryAdapterProvider<Topic>, TopicQueryAdapter>();
+            
         }
 
         public override void Configure(

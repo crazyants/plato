@@ -14,7 +14,10 @@
 
 .nav-site { border-color: rgba(255, 255, 255, 0.10); }
 
-.search-input-group > .btn { color: rgba(255,255,255,0.2) !important; }
+.nav-site .nav .search-input-group > .btn {
+    color: #666 !important;
+    background: transparent;
+}
 
 /* ------------------- */
 /* Validation */
@@ -374,6 +377,14 @@ a.label.active {
 .md-textarea::-webkit-scrollbar-thumb:vertical:hover {
     background-color: #2A9FD6;
 }
+
+.md-editor .btn-toolbar > .btn-group > .btn:hover,
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn:hover,
+.md-editor .btn-toolbar > .btn-group > .dropdown.show > .btn {
+    background: #2A9FD6 !important;
+    color: white !important;
+}
+
 
 /* ------------------- */
 /* Resizable Area */

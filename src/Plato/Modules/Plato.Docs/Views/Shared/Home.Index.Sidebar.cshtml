@@ -6,6 +6,15 @@
 }
 
 <div id="tocCollapse" class="collapse">
+    
+    <div class="my-2">
+        <input type="search" class="form-control" 
+               data-provide="filter-list"
+               data-filter-list-empty=".no-channel-results"
+               data-filter-list-target=".tree"
+               placeholder="@T["Search docs..."]" />
+    </div>
+
     @await DisplayAsync(new View("DocTree", new
     {
         options = new EntityTreeOptions()

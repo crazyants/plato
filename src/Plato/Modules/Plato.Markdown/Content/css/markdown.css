@@ -31,7 +31,26 @@
 
 /* Buttons */
 .md-editor .btn-toolbar .btn-group .btn.disabled { display: none; }
-.md-editor .btn-toolbar > .btn-group > .dropdown { margin-left: -1px; }
+.md-editor .btn-toolbar > .btn-group > .dropdown {margin-left: -1px; }
+
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn {
+    border-radius: 0;
+}
+
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn:active,
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn:focus {
+    box-shadow: none;
+}
+
+.md-editor .btn-toolbar > .btn-group > .dropdown:first-child > .btn {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.md-editor .btn-toolbar > .btn-group > .dropdown:last-child > .btn {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
 
 /* Disable some borders */
 
@@ -139,13 +158,10 @@
 
 .md-quote-dropdown button.dropdown-item { cursor: pointer; clear: none; padding: 0; }
 .md-quote-dropdown blockquote { padding: 0; margin: 0; }
-.md-quote-dropdown blockquote p {
+.md-quote-dropdown blockquote {
     padding: 0.50rem 0.75em; 
     margin: 0;
-    border-top-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    background-color: transparent !important; 
+    background-color: transparent !important;
 }
 
 /* ------------------------ */
