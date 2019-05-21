@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Follow.Notifications;
 using Plato.Discuss.Follow.NotificationTypes;
+using Plato.Discuss.Follow.QueryAdapters;
 using Plato.Discuss.Follow.Subscribers;
 using Plato.Discuss.Follow.ViewProviders;
 using Plato.Discuss.Models;
@@ -13,6 +14,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Discuss.Follow
 {
@@ -46,6 +48,9 @@ namespace Plato.Discuss.Follow
             // Notification Providers
             services.AddScoped<INotificationProvider<Reply>, NewReplyEmail>();
             services.AddScoped<INotificationProvider<Reply>, NewReplyWeb>();
+        
+            // Query adapters 
+            services.AddScoped<IQueryAdapterProvider<Topic>, TopicQueryAdapter>();
 
         }
 

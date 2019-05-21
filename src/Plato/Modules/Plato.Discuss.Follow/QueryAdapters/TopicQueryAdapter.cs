@@ -5,7 +5,7 @@ using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
-namespace Plato.Discuss.Star.QueryAdapters
+namespace Plato.Discuss.Follow.QueryAdapters
 {
 
     public class TopicQueryAdapter : BaseQueryAdapterProvider<Topic> 
@@ -22,29 +22,26 @@ namespace Plato.Discuss.Star.QueryAdapters
 
             // Convert to correct query type
             var q = (EntityQuery<Topic>)Convert.ChangeType(query, typeof(EntityQuery<Topic>));
-            
+
             // -----------------
-            // StarUserId
-            // Only return entities if the user has starred the entity within the stars table
+            // FollowUserId
+            // Only return entities if an entry exists within the Follows table
             // -----------------
 
-            if (q.Params.StarUserId.Value > 0)
+            if (q.Params.FollowUserId.Value > 0)
             {
-
                 if (!string.IsNullOrEmpty(builder.ToString()))
                 {
                     builder.Append(" AND ");
                 }
 
-                builder.Append("e.Id IN (")
-                    .Append("SELECT ThingId FROM ")
-                    .Append("{prefix}_Stars s")
-                    .Append(" WHERE (")
-                    .Append(q.Params.StarUserId.ToSqlString("s.CreatedUserId"))
+                builder.Append(" e.Id IN (")
+                    .Append("SELECT ThingId FROM {prefix}_Follows f WHERE (")
+                    .Append(q.Params.FollowUserId.ToSqlString("f.CreatedUserId"))
                     .Append("))");
+
             }
-            
-            
+
         }
 
     }
