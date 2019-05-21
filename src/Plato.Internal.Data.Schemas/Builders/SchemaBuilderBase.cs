@@ -58,6 +58,13 @@ namespace Plato.Internal.Data.Schemas.Builders
                 ? _tablePrefix + procedureName
                 : procedureName;
         }
+        public string GetIndexName(string indexName)
+        {
+            return !string.IsNullOrEmpty(_tablePrefix)
+                ? _tablePrefix + indexName
+                : indexName;
+        }
+
 
         public ISchemaBuilderBase AddStatement(string statement)
         {

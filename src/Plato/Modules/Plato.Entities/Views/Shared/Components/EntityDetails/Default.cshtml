@@ -3,6 +3,13 @@
     var viewText = Model.Entity.TotalViews == 1
         ? "view"
         : "views";
+    var urls = await Model.Entity.GetEntityUrlsAsync();
+    var linkText = urls.AnchorUrls.Count == 1
+        ? "link"
+        : "links";
+    var imageText = urls.ImageUrls.Count == 1
+        ? "image"
+        : "images";
 }
 
 <card class="card card-body-flush">
@@ -24,8 +31,28 @@
                 @T["Latest Reply"]: <date utc="@Model.Entity.LastReplyDate"></date>
             </li>
             <li class="list-group-item">
-                @Model.Entity.TotalViews @T[viewText], @Model.Entity.DailyViews @T["daily"]
+                @Model.Entity.TotalViews @T[viewText]
             </li>
+            @if (urls.AnchorUrls.Count > 0 || urls.ImageUrls.Count > 0)
+            {
+                <li class="list-group-item">
+                    
+                    @if (urls.AnchorUrls.Count > 0)
+                    {
+                        <span>@urls.AnchorUrls.Count.ToPrettyInt()</span>
+                        @linkText;
+                    }
+                  
+                    @if (urls.ImageUrls.Count > 0)
+                    {
+                
+                        <span>@urls.ImageUrls.Count.ToPrettyInt()</span>
+                        @imageText
+         
+                    }
+                    
+                </li>
+            }
         </ul>
     </card-body>
 </card>

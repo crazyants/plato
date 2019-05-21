@@ -13,7 +13,126 @@ namespace Plato.Internal.Abstractions.Extensions
     public static class StringExtensions
     {
      
-        private static readonly char[] InValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
+        public static readonly char[] InValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
+
+        public static readonly string[] CommonWords = new string[]
+        {
+            "able",
+            "all",
+            "am",
+            "an",
+            "and",
+            "about",
+            "after",
+            "also",
+            "any",
+            "are",
+            "but",
+            "be",
+            "etc",
+            "being",
+            "your",
+            "with",
+            "within",
+            "will",
+            "can",
+            "did",
+            "does",
+            "for",
+            "from",
+            "go",
+            "good",
+            "had",
+            "has",
+            "have",
+            "here",
+            "how",
+            "i",
+            "kind",
+            "know",
+            "more",
+            "most",
+            "make",
+            "many",
+            "must",
+            "must",
+            "not",
+            "never",
+            "now",
+            "or",
+            "other",
+            "our",
+            "out",
+            "over",
+            "like",
+            "re",
+            "said",
+            "same",
+            "seem",
+            "see",
+            "should",
+            "since",
+            "so",
+            "some",
+            "been",
+            "still",
+            "such",
+            "take",
+            "than",
+            "that",
+            "the",
+            "their",
+            "them",
+            "then",
+            "there",
+            "they",
+            "this",
+            "through",
+            "too",
+            "to",
+            "use",
+            "under",
+            "unable",
+            "using",
+            "used",
+            "up",
+            "very",
+            "what",
+            "went",
+            "was",
+            "way",
+            "well",
+            "were",
+            "which",
+            "while",
+            "when",
+            "where",
+            "who",
+            "why",
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "www",
+            "com",
+            "info",
+            "net",
+            "index",
+            "http",
+            "https",
+            "html",
+            "you",
+            "get",
+            "just",
+            "last",
+            "must",
+            "me",
+            "my",
+            "may"
+        };
+          
+        // ---------
 
         public static bool IsValidUrlSegment(this string segment)
         {       
@@ -336,7 +455,80 @@ namespace Plato.Internal.Abstractions.Extensions
 
             return Enum.TryParse<T>(value, true, out var result) ? result : defaultValue;
         }
-        
-    }
 
+        public static IEnumerable<string> ToDistinctList(this string input)
+        {
+
+            if (string.IsNullOrEmpty(input))
+            {
+                return new List<string>();
+            }
+
+            // Split input at spaces
+            var words = input.Split(' ');
+
+            // Build output
+            var output = new List<string>();
+            foreach (var word in words)
+            {
+                // Ensure unique
+                if (!output.Contains(word))
+                {
+                    output.Add(word);
+                }
+            }
+
+            return output;
+
+        }
+
+        public static string StripCommonWords(this string input)
+        {
+
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+            
+            if (input.Length <= 2)
+            {
+                return input;
+            }
+                
+            var inputLower = input.ToLower();
+
+            var i = 0;
+            while (i < CommonWords.Length - 1)
+            {
+
+                var commonTerm = System.Convert.ToString(CommonWords[i]);
+
+                // is term present within our input?
+                if (inputLower.IndexOf(commonTerm, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+
+                    // match terms at start of input
+                    input = Regex.Replace(input,
+                        "^([" + commonTerm + "\\-]+)\\s", " ", RegexOptions.IgnoreCase);
+
+                    // match terms in middle of input
+                    input = Regex.Replace(input,
+                        "[\\b\\n\\r\\s^]" + commonTerm + "[\\b\\n\\r\\s]", " ", RegexOptions.IgnoreCase);
+
+                    // match terms at end of input
+                    input = Regex.Replace(input,
+                        "\\s([" + commonTerm + "\\-]+)$", " ", RegexOptions.IgnoreCase);
+
+                }
+
+                i += 1;
+
+            }
+
+            return input;
+            
+        }
+
+    }
+    
 }

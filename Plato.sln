@@ -329,6 +329,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Issues.Votes", "src\P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.TopParticipants", "src\Plato\Modules\Plato.Discuss.TopParticipants\Plato.Discuss.TopParticipants.csproj", "{4996722C-31C9-4234-8DCC-4763153DF057}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.SimilarTopics", "src\Plato\Modules\Plato.Discuss.SimilarTopics\Plato.Discuss.SimilarTopics.csproj", "{73CB8823-400B-4D9F-BE87-92CA5BA578CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -971,6 +973,10 @@ Global
 		{4996722C-31C9-4234-8DCC-4763153DF057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4996722C-31C9-4234-8DCC-4763153DF057}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4996722C-31C9-4234-8DCC-4763153DF057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73CB8823-400B-4D9F-BE87-92CA5BA578CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73CB8823-400B-4D9F-BE87-92CA5BA578CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73CB8823-400B-4D9F-BE87-92CA5BA578CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73CB8823-400B-4D9F-BE87-92CA5BA578CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1136,6 +1142,7 @@ Global
 		{BC27C6A4-BBF4-4DCF-9190-155053DF24C6} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{21320E79-FD61-4DD6-BB08-BEFA76F97DC3} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{4996722C-31C9-4234-8DCC-4763153DF057} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{73CB8823-400B-4D9F-BE87-92CA5BA578CB} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

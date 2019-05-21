@@ -164,8 +164,7 @@ namespace Plato.Discuss.ViewComponents
             var results = await _entityService
                 .ConfigureQuery(async q =>
                 {
-
-
+                    
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateTopics))
@@ -193,9 +192,7 @@ namespace Plato.Discuss.ViewComponents
                     {
                         q.HideDeleted.True();
                     }
-
-
-
+                    
                 })
                 .GetResultsAsync(options, pager);
 

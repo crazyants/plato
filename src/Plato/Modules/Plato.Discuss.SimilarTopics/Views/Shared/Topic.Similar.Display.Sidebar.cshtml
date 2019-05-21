@@ -1,0 +1,37 @@
+﻿@model SimilarEntitiesViewModel
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">
+            @T["Similar Topics"]
+        </h6>
+    </card-title>
+    <card-body>
+        @if (Model.Results.Data != null)
+        {
+            <div class="py-1 px-3">
+                <ul class="list-inline">
+                    @foreach (var result in Model.Results.Data)
+                    {
+                        <li class="d-block py-2">
+                            @if (result.Rank > 0)
+                            {
+                                <span data-toggle="tooltip" title="@T["Relevance"]" class="btn btn-sm label float-right">
+                                    @result.Relevance%
+                                </span>
+                            }
+                            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@result.Id" asp-route-opts.alias="@result.Alias">@result.Title</a>
+                        </li>}
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="p-3">
+                @T["No similar topics found"]
+            </div>
+        }
+    </card-body>
+</card>
+
+

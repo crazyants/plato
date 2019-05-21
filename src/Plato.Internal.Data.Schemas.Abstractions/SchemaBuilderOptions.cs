@@ -10,7 +10,7 @@
         public bool DropTablesBeforeCreate { get; set; } = false;
 
         public bool DropProceduresBeforeCreate { get; set; } = false;
-
+        
         public bool DropCatalogBeforeCreate { get; set; } = false;
 
         public bool DropIndexesBeforeCreate { get; set; } = false;
