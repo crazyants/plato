@@ -68,7 +68,7 @@ namespace Plato.Discuss.ViewProviders
             return Views(
                 View<Topic>("Home.Display.Header", model => topic).Zone("header"),
                 View<Topic>("Home.Display.Tools", model => topic).Zone("tools"),
-                View<Topic>("Home.Display.Sidebar", model => topic).Zone("sidebar"),
+                View<Topic>("Home.Display.Sidebar", model => topic).Zone("sidebar").Order(int.MinValue + 10),
                 View<EntityViewModel<Topic, Reply>>("Home.Display.Content", model => viewModel).Zone("content"),
                 View<EditEntityReplyViewModel>("Home.Display.Footer", model => new EditEntityReplyViewModel()
                 {
