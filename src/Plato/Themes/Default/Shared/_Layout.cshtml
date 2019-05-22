@@ -136,8 +136,8 @@
     <div class="container-fluid container-fluid-1280 py-4">
         @if (platoOpts.DemoMode)
         {
-            <div class="alert alert-danger">
-                @T["This is a demo. Data may be deleted and some features may be disabled."]
+            <div class="p-3 border border-danger text-danger mb-3 text-center">
+                @T["This is a demo. Please kick the tires but note data may be periodically deleted and some features may be disabled. Enjoy"]
             </div>
         }
         <nav aria-label="breadcrumb">
@@ -146,7 +146,16 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @System.DateTime.Now.Year - Plato, @platoOpts.Version</p>
+            <p>
+                <div class="float-left">
+                    <a href="https://www.instantasp.co.uk/">
+                        @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType
+                    </a>
+                </div>
+                <div class="float-right">
+                    &copy; @siteOpts.SiteName @System.DateTime.Now.Year
+                </div>
+            </p>
         </footer>
     </div>
 

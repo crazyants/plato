@@ -1,13 +1,14 @@
 ﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
 @{
-    var settings = GetOptions<SiteOptions>();
+    var siteOpts = GetOptions<SiteOptions>();
+    var platoOpts = GetOptions<PlatoOptions>();
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title asp-separator=" - ">@settings.SiteName</title>
+    <title asp-separator=" - ">@siteOpts.SiteName</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />
@@ -67,13 +68,15 @@
                             collaspsable="true"
                             class="navbar-nav d-lg-block"
                             child-ul-css-class="nav flex-column"
-                            link-css-class="nav-link" />
+                            link-css-class="nav-link"/>
             </div>
         </div>
 
         <div class="main-container">
             <div class="nav navbar navbar-expand-lg navbar-lg navbar-dark bg-dark" role="navigation">
-              
+                
+                <div class="navbar-brand">@siteOpts.SiteName</div>
+
                 @if (this.CurrentUser != null)
                 {
                     <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" class="form-inline ml-auto" method="post">
@@ -114,11 +117,19 @@
             <div aria-label="breadcrumb">
                 <breadcrumb class="breadcrumb mb-0 w-100 rounded-0" />
             </div>
-            <div class="w-100 p-4">
+            <div class="w-100 p-4 mb-5">
                 @RenderBody()
-                <footer class="mt-2">
-                    <p class="text-muted">
-                        &copy; @System.DateTime.Now.Year - Plato
+                <hr/>
+                <footer>
+                    <p>
+                        <div class="float-left">
+                            <a href="https://www.instantasp.co.uk/">
+                                @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType
+                            </a>
+                        </div>
+                        <div class="float-right">
+                            &copy; @siteOpts.SiteName @System.DateTime.Now.Year
+                        </div>
                     </p>
                 </footer>
             </div>

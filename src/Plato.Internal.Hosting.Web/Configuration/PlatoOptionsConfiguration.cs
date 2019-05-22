@@ -30,11 +30,20 @@ namespace Plato.Internal.Hosting.Web.Configuration
                     var children = section.GetChildren();
                     foreach (var child in children)
                     {
+
+                        // Version
                         if (child.Key.Contains("Version"))
                         {
                             options.Version = child.Value;
                         }
-                            
+
+                        // ReleaseType
+                        if (child.Key.Contains("ReleaseType"))
+                        {
+                            options.ReleaseType = child.Value;
+                        }
+
+                        // DemoMode
                         if (child.Key.Contains("DemoMode"))
                         {
                             var ok = bool.TryParse(child.Value, out var result);

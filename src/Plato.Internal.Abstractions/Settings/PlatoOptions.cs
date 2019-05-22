@@ -8,6 +8,8 @@
     {
         public string Version { get; set; }
 
+        public string ReleaseType { get; set; }
+
         public bool DemoMode { get; set; }
 
     }

@@ -1,13 +1,14 @@
 ﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
 @{
-    var settings = GetOptions<SiteOptions>();
+    var siteOpts = GetOptions<SiteOptions>();
+    var platoOpts = GetOptions<PlatoOptions>();
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title asp-separator=" - ">@settings.SiteName</title>
+    <title asp-separator=" - ">@siteOpts.SiteName</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />
@@ -22,7 +23,7 @@
         <div class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class=" container-fluid">
                 <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">
-                    @settings.SiteName
+                    @siteOpts.SiteName
                 </a>
                 <div class="navbar-mobile">
                     <div class="navbar-nav">
@@ -133,13 +134,28 @@
     </nav>
 
     <div class="container-fluid container-fluid-1280 py-4">
+        @if (platoOpts.DemoMode)
+        {
+            <div class="p-3 border border-danger text-danger mb-3 text-center">
+                @T["This is a demo. Please kick the tires but note data may be periodically deleted and some features may be disabled. Enjoy"]
+            </div>
+        }
         <nav aria-label="breadcrumb">
             <breadcrumb class="breadcrumb p-0 bg-transparent col-12" />
         </nav>
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @System.DateTime.Now.Year - Plato</p>
+            <p>
+                <div class="float-left">
+                    <a href="https://www.instantasp.co.uk/">
+                        @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType
+                    </a>
+                </div>
+                <div class="float-right">
+                    &copy; @siteOpts.SiteName @System.DateTime.Now.Year
+                </div>
+            </p>
         </footer>
     </div>
 

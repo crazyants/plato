@@ -1,13 +1,14 @@
 ﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
 @{
-    var settings = GetOptions<SiteOptions>();
+    var siteOpts = GetOptions<SiteOptions>();
+    var platoOpts = GetOptions<PlatoOptions>();
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title asp-separator=" - ">@settings.SiteName</title>
+    <title asp-separator=" - ">@siteOpts.SiteName</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />
@@ -72,59 +73,67 @@
         </div>
 
         <div class="main-container">
-            <div class="nav navbar navbar-expand-lg navbar-lg navbar-light bg-light" role="navigation">                
-                <a class="navbar-brand" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">
-                
-                </a>
-                    @if (this.CurrentUser != null)
-                    {
-                        <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" class="form-inline ml-auto" method="post">
-                            <div class="navbar-nav">
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tooltip" data-container="#adminNav" title="@T[" Return Home"]" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-placement="bottom">
-                                            <i class="fal fa-home"></i>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item dropdown account">
-                                        <a href="#" class="nav-link dropdown-toggle dropdown-toggle-no-caret" data-toggle="dropdown">
-                                            <avatar class="avatar avatar-sm" url="@this.CurrentUser.Avatar.Url"/>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
-                                            <div class="p-3">
-                                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
-                                                <a class="align-middle mr-2" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">
-                                                    <avatar data-toggle="tooltip" title="@T[" Edit Photo"]" class="avatar" url="@this.CurrentUser.Avatar.Url"/>
-                                                </a>
-                                                <h6 class="d-inline-block align-middle">@this.CurrentUser.DisplayName</h6>
-                                            </div>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
-                                            <div class="dropdown-divider"></div>
-                                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+            <div class="nav navbar navbar-expand-lg navbar-lg navbar-light bg-light" role="navigation">
+
+                <div class="navbar-brand">@siteOpts.SiteName</div>
+
+                @if (this.CurrentUser != null)
+                {
+                    <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" class="form-inline ml-auto" method="post">
+                        <div class="navbar-nav">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tooltip" data-container="#adminNav" title="@T[" Return Home"]" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-placement="bottom">
+                                        <i class="fal fa-home"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown account">
+                                    <a href="#" class="nav-link dropdown-toggle dropdown-toggle-no-caret" data-toggle="dropdown">
+                                        <avatar class="avatar avatar-sm" url="@this.CurrentUser.Avatar.Url" />
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
+                                        <div class="p-3">
+                                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
+                                            <a class="align-middle mr-2" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">
+                                                <avatar data-toggle="tooltip" title="@T[" Edit Photo"]" class="avatar" url="@this.CurrentUser.Avatar.Url" />
+                                            </a>
+                                            <h6 class="d-inline-block align-middle">@this.CurrentUser.DisplayName</h6>
                                         </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </form>
-                    }
-               
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
+                                        <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
+                                        <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
+                                        <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
+                                        <div class="dropdown-divider"></div>
+                                        <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
+                }
+
             </div>
             <div aria-label="breadcrumb">
                 <breadcrumb class="breadcrumb mb-0 w-100 rounded-0" />
             </div>
-            <div class="w-100 p-4">
+            <div class="w-100 p-4 mb-5">
                 @RenderBody()
-                <footer class="mt-2">
-                    <p class="text-muted">
-                        &copy; @System.DateTime.Now.Year - Plato
+                <hr />
+                <footer>
+                    <p>
+                        <div class="float-left">
+                            <a href="https://www.instantasp.co.uk/">
+                                @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType
+                            </a>
+                        </div>
+                        <div class="float-right">
+                            &copy; @siteOpts.SiteName @System.DateTime.Now.Year
+                        </div>
                     </p>
                 </footer>
             </div>
-          
+
         </div>
     </div>
 
