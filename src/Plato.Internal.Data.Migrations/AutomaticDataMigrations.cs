@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Plato.Internal.Data.Migrations
 {
@@ -25,17 +24,13 @@ namespace Plato.Internal.Data.Migrations
 
         #region "Private Methods"
 
-        public DataMigrationResult InitialMigration()
+        public async Task<DataMigrationResult> InitialMigration()
         {
-
-
-            return null;
-            //return _migrationBuilder.BuildMigrations(
-            //    new List<string>()
-            //    {
-            //        "1.0.0"
-            //    }).ApplyMigrations();
-
+            return await _migrationBuilder.BuildMigrations(
+                new List<string>()
+                {
+                    "1.0.0"
+                }).ApplyMigrationsAsync();
         }
         
         #endregion

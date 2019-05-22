@@ -64,7 +64,13 @@ namespace Plato.Internal.Models.Users
         public string IpV4Address { get; set; }
 
         public string IpV6Address { get; set; }
+        
+        public string Biography { get; set; }
 
+        public string Location { get; set; }
+
+        public string Url { get; set; }
+        
         public int Visits { get; set; }
 
         public DateTimeOffset? VisitsUpdatedDate { get; set; }
@@ -279,6 +285,15 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("IpV6Address"))
                 IpV6Address = Convert.ToString(dr["IpV6Address"]);
 
+            if (dr.ColumnIsNotNull("Biography"))
+                Biography = Convert.ToString(dr["Biography"]);
+
+            if (dr.ColumnIsNotNull("Location"))
+                Location = Convert.ToString(dr["Location"]);
+
+            if (dr.ColumnIsNotNull("Url"))
+                Url = Convert.ToString(dr["Url"]);
+            
             if (dr.ColumnIsNotNull("Visits"))
                 Visits = Convert.ToInt32(dr["Visits"]);
 

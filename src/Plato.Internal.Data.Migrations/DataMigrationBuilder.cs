@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Plato.Internal.Data.Migrations
 {
@@ -34,12 +35,12 @@ namespace Plato.Internal.Data.Migrations
             return this;
         }
 
-        public DataMigrationResult ApplyMigrations()
+        public async Task<DataMigrationResult> ApplyMigrationsAsync()
         {
             if (_schemas?.Count > 0)
             {
                 var dataMigrationRecord = BuildDataMigrationRecord();
-                return _dataMigrationManager.ApplyMigrations(dataMigrationRecord);
+                return await _dataMigrationManager.ApplyMigrationsAsync(dataMigrationRecord);
 
             }
             return default(DataMigrationResult);

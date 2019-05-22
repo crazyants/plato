@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace Plato.Internal.Data.Migrations
@@ -19,7 +20,7 @@ namespace Plato.Internal.Data.Migrations
 
         IDataMigrationBuilder BuildMigrations(List<string> versions);
 
-        DataMigrationResult ApplyMigrations();
+        Task<DataMigrationResult> ApplyMigrationsAsync();
 
     }
 }

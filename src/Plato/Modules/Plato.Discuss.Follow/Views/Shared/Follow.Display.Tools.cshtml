@@ -1,17 +1,35 @@
 ﻿@model FollowViewModel
-
-@if (!Model.IsFollowing)
-{
-    <button data-toggle="tooltip" title="@T[Model.FollowType.SubscribeDescription]" class="btn bg-transparent text-muted follow-off" data-off-icon="fal fa-bell" data-on-icon="fa fa-bell" data-on-css="text-danger follow-on" data-off-css="text-muted follow-off" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
-        <i class="fal fa-bell"></i> 
-    </button>
-}
-else
-{
-    <button data-toggle="tooltip" title="@T[Model.FollowType.UnsubscribeDescription]" class="btn bg-transparent text-danger follow-on" data-off-icon="fal fa-bell" data-on-icon="fa fa-bell" data-on-css="text-danger follow-on" data-off-css="text-muted follow-off" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
-        <i class="fa fa-bell"></i> 
-    </button>
+@{
+    var permission = Plato.Discuss.Follow.Permissions.FollowTopics;
 }
 
-
-
+<authorize asp-permission="@permission.Name">
+    <authorize-success>
+        @if (!Model.IsFollowing)
+        {
+            <button data-toggle="tooltip" title="@T[Model.FollowType.SubscribeDescription]" class="btn bg-transparent text-muted follow-off" data-off-icon="fal fa-bell" data-on-icon="fa fa-bell" data-on-css="text-danger follow-on" data-off-css="text-muted follow-off" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
+                <i class="fal fa-bell"></i> 
+            </button>
+        }
+        else
+        {
+            <button data-toggle="tooltip" title="@T[Model.FollowType.UnsubscribeDescription]" class="btn bg-transparent text-danger follow-on" data-off-icon="fal fa-bell" data-on-icon="fa fa-bell" data-on-css="text-danger follow-on" data-off-css="text-muted follow-off" data-provide="follow-button" data-follow-type="@Model.FollowType.Name" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
+                <i class="fa fa-bell"></i> 
+            </button>
+        }
+    </authorize-success>
+    <authorize-fail>
+        @if (base.CurrentUser == null)
+        {
+            <a title="@T["Login to follow this topic"]" data-toggle="tooltip" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn bg-transparent text-muted">
+                <i class="fal fa-bell"></i>
+            </a>
+        }
+        else
+        {
+            <span title="@T["You don't have permission to follow topics"]" data-toggle="tooltip" class="btn bg-transparent text-muted cursor-default">
+                <i class="fal fa-bell"></i>
+            </span>
+        }
+    </authorize-fail>
+</authorize>

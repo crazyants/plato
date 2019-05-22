@@ -145,17 +145,17 @@
         </nav>
         @RenderBody()
         <hr />
-        <footer>
-            <p>
-                <div class="float-left">
-                    <a href="https://www.instantasp.co.uk/">
+        <footer class="row">
+            <div class="col-lg-6">
+                <p>&copy; @siteOpts.SiteName @System.DateTime.Now.Year</p>
+            </div>
+            <div class="col-lg-6 text-md-right">
+                <p>
+                    <a href="https://www.instantasp.co.uk/" target="_blank">
                         @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType
                     </a>
-                </div>
-                <div class="float-right">
-                    &copy; @siteOpts.SiteName @System.DateTime.Now.Year
-                </div>
-            </p>
+                </p>
+            </div>
         </footer>
     </div>
 

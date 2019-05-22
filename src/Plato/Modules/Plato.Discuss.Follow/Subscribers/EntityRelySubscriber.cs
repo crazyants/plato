@@ -98,7 +98,7 @@ namespace Plato.Discuss.Follow.Subscribers
                 throw new ArgumentNullException(nameof(reply));
             }
 
-            // No need to send notifications for private replies
+            // No need to send notifications for hidden replies
             if (reply.IsHidden)
             {
                 return Task.FromResult(reply);

@@ -2,18 +2,21 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Discuss.Follow.Handlers;
 using Plato.Discuss.Follow.Notifications;
 using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Discuss.Follow.QueryAdapters;
 using Plato.Discuss.Follow.Subscribers;
 using Plato.Discuss.Follow.ViewProviders;
 using Plato.Discuss.Models;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Discuss.Follow
@@ -29,7 +32,10 @@ namespace Plato.Discuss.Follow
 
         public override void ConfigureServices(IServiceCollection services)
         {
-                   
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // View providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
@@ -51,6 +57,9 @@ namespace Plato.Discuss.Follow
         
             // Query adapters 
             services.AddScoped<IQueryAdapterProvider<Topic>, TopicQueryAdapter>();
+
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

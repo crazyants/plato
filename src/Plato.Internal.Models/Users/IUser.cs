@@ -31,6 +31,12 @@ namespace Plato.Internal.Models.Users
 
         string IpV6Address { get; set; }
 
+        string Biography { get; set; }
+
+        string Location { get; set; }
+
+        string Url { get; set; }
+        
         int Visits { get; set; }
 
         DateTimeOffset? VisitsUpdatedDate { get; set; }
