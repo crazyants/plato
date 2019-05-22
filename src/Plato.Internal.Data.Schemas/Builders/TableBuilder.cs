@@ -115,7 +115,6 @@ namespace Plato.Internal.Data.Schemas.Builders
                         .Append(NewLine);
                 }
 
-                sb.Append("SELECT 1 AS MigrationId;");
 
                 AddStatement(sb.ToString());
 

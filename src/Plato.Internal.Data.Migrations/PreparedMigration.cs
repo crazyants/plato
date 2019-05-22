@@ -8,8 +8,8 @@ namespace Plato.Internal.Data.Migrations
         public string Version { get; set; }
 
         public Version TypedVersion { get; set; }
-
-        public List<string> Statements { get; set; }
+        
+        public ICollection<string> Statements { get; set; }
         
     }
 }

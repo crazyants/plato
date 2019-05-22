@@ -680,8 +680,7 @@ namespace Plato.Users.Handlers
                     .ForTable(_users)
                     .WithParameter(
                         new SchemaColumn() {Name = "NormalizedEmail", DbType = DbType.String, Length = "255"}))
-
-
+                        
                 .CreateProcedure(new SchemaProcedure("SelectUserByUserName", @"
                             DECLARE @Id int;
                             SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
@@ -707,8 +706,7 @@ namespace Plato.Users.Handlers
                             DbType = DbType.String,
                             Length = "255"
                         }))
-
-
+                        
                 .CreateProcedure(new SchemaProcedure("SelectUserByApiKey", @"
                             DECLARE @Id int;
                             SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
