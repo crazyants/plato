@@ -5,6 +5,7 @@ using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Core.Configuration
 {
+
     public class SiteOptionsConfiguration : IConfigureOptions<SiteOptions>
     {
 
@@ -35,6 +36,7 @@ namespace Plato.Core.Configuration
                 {
                     options.SiteName = settings.SiteName;
                     options.Culture = settings.Culture;
+                    options.DateTimeFormat = settings.DateTimeFormat;
                     options.Theme = settings.Theme;
                 }
             

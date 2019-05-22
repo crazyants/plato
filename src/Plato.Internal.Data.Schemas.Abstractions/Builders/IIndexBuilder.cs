@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Plato.Internal.Data.Schemas.Abstractions.Builders
 {
-    public interface IIndexBuilder
+    public interface IIndexBuilder : ISchemaBuilderBase
     {
 
         IIndexBuilder CreateIndex(SchemaIndex index);

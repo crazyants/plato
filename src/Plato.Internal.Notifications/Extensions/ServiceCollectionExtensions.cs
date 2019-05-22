@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Notifications.Abstractions;
 
-
 namespace Plato.Internal.Notifications.Extensions
 {
     public static class ServiceCollectionExtensions
@@ -16,9 +15,8 @@ namespace Plato.Internal.Notifications.Extensions
             services.TryAddScoped<INotificationTypeManager, NotificationTypeManager>();
 
             // The below implementations are replaced with real
-            // implementations within Plato.Notifications module
-            // ----------
-
+            // implementations within the Plato.Notifications module
+      
             // Dummy user notification implementation
             services.TryAddScoped<IUserNotificationsManager<UserNotification>, DummyUserNotificationsManager>();
 

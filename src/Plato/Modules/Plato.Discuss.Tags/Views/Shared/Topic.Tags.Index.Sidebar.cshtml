@@ -14,13 +14,13 @@
             foreach (var tag in Model.Tags)
             {
                 var css = Model.SelectedTagId == tag.Id
-                    ? "btn btn-sm label font-weight-bold active"
-                    : "btn btn-sm label font-weight-bold";
-        <div class="btn-group my-1">
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.Id" asp-route-opts.alias="@tag.Alias" class="@css">
-                @tag.Name
-            </a>
-        </div>
+                    ? "btn btn-sm label active"
+                    : "btn btn-sm label";
+                <div class="btn-group my-1">
+                    <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.Id" asp-route-opts.alias="@tag.Alias" class="@css">
+                        @tag.Name
+                    </a>
+                </div>
             }
         }
         else

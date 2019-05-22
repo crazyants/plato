@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Newtonsoft.Json;
 
 namespace Plato.Internal.Abstractions.Settings
 {

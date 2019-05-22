@@ -17,8 +17,7 @@
             {
                 var tooltip = $"{T["Show all ideas tagged"].Value} '{tag.Name}...'";
                 <a title="@tooltip" asp-route-area="Plato.Ideas.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.TagId" asp-route-opts.alias="@tag.Alias" class="btn btn-sm label">
-                    <span class=" font-weight-bold">@tag.Name</span>
-                    <span>x</span>@tag.TotalEntities.ToPrettyInt()
+                    @tag.Name
                 </a>
             }
         }

@@ -3,9 +3,9 @@
     AddTitleSegment(T["Admin"]);
     AddTitleSegment(T["Features"]);
 }
+
 <form asp-action="Index">
     <div class="layout">
-
         <div class="layout-header">
             @if (Model.Alerts != null)
             {
@@ -32,19 +32,17 @@
                 </div>
             }
         </div>
-
+        <div class="layout-body">
         @if (Model.SideBar != null)
         {
-            <div class="row layout-content">
-                <div class="col-lg-9">
+            <div class="row">
+                <div class="col-lg-9 layout-content">
                     @if (Model.Content != null)
                     {
-                
                         <view model="@Model.Content"></view>
-            
                     }
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-3 layout-sidebar">
                     @if (Model.SideBar != null)
                     {
                         <view model="@Model.SideBar"></view>
@@ -57,13 +55,11 @@
             @if (Model.Content != null)
              {
                  <div class="layout-content">
-             
                      <view model="@Model.Content"></view>
-          
                  </div>
              }
         }
-
+        </div>
         <div class="layout-footer">
             @if (Model.Actions != null)
             {
@@ -78,6 +74,5 @@
                 </div>
             }
         </div>
-
     </div>
 </form>

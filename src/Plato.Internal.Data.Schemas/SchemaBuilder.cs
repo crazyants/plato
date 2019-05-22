@@ -44,11 +44,14 @@ namespace Plato.Internal.Data.Schemas
 
         public IFullTextBuilder FullTextBuilder { get; }
 
+        public IIndexBuilder IndexBuilder { get; }
+
         public SchemaBuilder(IDbContext dbContext, IPluralize pluralize) 
         {
             ProcedureBuilder = new ProcedureBuilder(dbContext, pluralize);
             TableBuilder = new TableBuilder(dbContext, pluralize);
             FullTextBuilder = new FullTextBuilder(dbContext, pluralize);
+            IndexBuilder = new IndexBuilder(dbContext, pluralize);
         }
         
         public ISchemaBuilderBase Configure(Action<SchemaBuilderOptions> configure)
@@ -56,6 +59,7 @@ namespace Plato.Internal.Data.Schemas
             TableBuilder.Configure(configure);
             ProcedureBuilder.Configure(configure);
             FullTextBuilder.Configure(configure);
+            IndexBuilder.Configure(configure);
             return this;
         }
         
@@ -64,6 +68,7 @@ namespace Plato.Internal.Data.Schemas
             TableBuilder.Dispose();
             ProcedureBuilder.Dispose();
             FullTextBuilder.Dispose();
+            IndexBuilder.Dispose();
         }
 
     }

@@ -9,6 +9,7 @@ using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
@@ -73,16 +74,24 @@ namespace Plato.Discuss.SimilarTopics.ViewProviders
                 .ToDistinctList()
                 .StripCommonWords()
                 .ToList();
-            
+
+            // Configured search method
+            var searchType = SearchTypes.Tsql;
+            if (searchSettings != null)
+            {
+                searchType = searchSettings.SearchType;
+            }
+
+            // Default sort by
+            var sort = SortBy.LastReply;
+            if (searchType != SearchTypes.Tsql)
+            {
+                sort = SortBy.Rank;
+            }
+
             // Get similar entities
             var entities = await _entityService
-                .ConfigureDb(o =>
-                {
-                    if (searchSettings != null)
-                    {
-                        o.SearchType = searchSettings.SearchType;
-                    }
-                })
+                .ConfigureDb(o => { o.SearchType = searchType; })
                 .ConfigureQuery(async q =>
                 {
 
@@ -128,7 +137,8 @@ namespace Plato.Discuss.SimilarTopics.ViewProviders
                 .GetResultsAsync(
                     new EntityIndexOptions()
                     {
-                        FeatureId = entity.FeatureId
+                        FeatureId = entity.FeatureId,
+                        Sort = sort
                     }, new PagerOptions()
                     {
                         Page = 1,

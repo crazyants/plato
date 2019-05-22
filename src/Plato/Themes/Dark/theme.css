@@ -127,8 +127,8 @@
 /* ------------------- */
 
 .label {
-    background-color: #333;
-    color: #fff;
+    background: rgba(40,40,40, 0.70);
+    color: #2387b7;
 }
 
 .label-outline {
@@ -136,8 +136,8 @@
 }
 
 a.btn.label {
-    color: #2A9FD6;
-    background: rgba(40,40,40, 0.80);
+    color: #2387b7;
+    background: rgba(40,40,40, 0.50);
 }
 
 a.label:hover,

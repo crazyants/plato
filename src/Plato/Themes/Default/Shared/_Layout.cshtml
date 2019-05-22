@@ -1,13 +1,14 @@
 ﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
 @{
-    var settings = GetOptions<SiteOptions>();
+    var siteOpts = GetOptions<SiteOptions>();
+    var platoOpts = GetOptions<PlatoOptions>();
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title asp-separator=" - ">@settings.SiteName</title>
+    <title asp-separator=" - ">@siteOpts.SiteName</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <assets section="Header" />
@@ -22,7 +23,7 @@
         <div class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class=" container-fluid">
                 <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">
-                    @settings.SiteName
+                    @siteOpts.SiteName
                 </a>
                 <div class="navbar-mobile">
                     <div class="navbar-nav">
@@ -133,13 +134,19 @@
     </nav>
 
     <div class="container-fluid container-fluid-1280 py-4">
+        @if (platoOpts.DemoMode)
+        {
+            <div class="alert alert-danger">
+                @T["This is a demo. Data may be deleted and some features may be disabled."]
+            </div>
+        }
         <nav aria-label="breadcrumb">
             <breadcrumb class="breadcrumb p-0 bg-transparent col-12" />
         </nav>
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @System.DateTime.Now.Year - Plato</p>
+            <p>&copy; @System.DateTime.Now.Year - Plato, @platoOpts.Version</p>
         </footer>
     </div>
 

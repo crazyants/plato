@@ -122,6 +122,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .min-h-550 { min-height: 550px; }
 .min-h-600 { min-height: 600px; }
 
+.min-w-50 { min-width: 50px; }
 .min-w-100 { min-width: 100px; }
 .min-w-150 { min-width: 150px; }
 .min-w-200 { min-width: 200px; }

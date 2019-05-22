@@ -157,12 +157,8 @@
 /* ------------------- */
 
 .label {
-    background-color: #E4ECF5;
+    background-color: #f1f8ff;
     color: #007bff;
-}
-
-.label-outline {
-    border: 1px solid #CBDCFF;
 }
 
 a.label:hover, .label.active {

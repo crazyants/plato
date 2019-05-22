@@ -98,11 +98,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
                 internalServices.AddSingleton<ICapturedRouterUrlHelper, CapturedRouterUrlHelper>();
                 internalServices.AddTransient<IContextFacade, ContextFacade>();
-              
+                
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
 
+                internalServices.AddPlatoOptions();
                 internalServices.AddPlatoLocalization();
                 internalServices.AddPlatoCaching();
                 internalServices.AddPlatoText();
@@ -288,7 +289,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return services;
 
         }
-        
+
+        public static IServiceCollection AddPlatoOptions(this IServiceCollection services)
+        {
+            services.AddSingleton<IConfigureOptions<PlatoOptions>, PlatoOptionsConfiguration>();
+            return services;
+        }
+
         // ----------------------
         // app
         // ----------------------

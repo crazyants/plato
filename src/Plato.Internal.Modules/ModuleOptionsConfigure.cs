@@ -10,9 +10,9 @@ namespace Plato.Internal.Modules
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public ModuleOptionsConfigure(
-            IServiceScopeFactory serivceScopeFactory)
+            IServiceScopeFactory serviceScopeFactory)
         {
-            _serviceScopeFactory = serivceScopeFactory;
+            _serviceScopeFactory = serviceScopeFactory;
         }
         
         public void Configure(ModuleOptions options)
@@ -21,10 +21,10 @@ namespace Plato.Internal.Modules
             {
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfigurationRoot>();
                 
-                var modulesSection = configuration.GetSection("Plato");
-                if (modulesSection != null)
+                var section = configuration.GetSection("Plato");
+                if (section != null)
                 {
-                    var children = modulesSection.GetChildren();
+                    var children = section.GetChildren();
                     foreach (var child in children)
                     {
                         if (child.Key.Contains("VirtualPathToModulesFolder"))

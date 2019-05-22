@@ -30,6 +30,7 @@ namespace Plato.Internal.Modules.Extensions
         public static void UseModuleStaticFiles(
             this IApplicationBuilder app, IHostingEnvironment env)
         {
+
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
             var modules = moduleManager.LoadModulesAsync().Result;
             foreach (var moduleEntry in modules)

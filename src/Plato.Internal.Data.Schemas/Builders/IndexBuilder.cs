@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
@@ -9,7 +8,20 @@ using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Internal.Data.Schemas.Builders
 {
-    
+
+    // This implementation is simple and only intended to provides a
+    // very thin wrapper around create, alter and delete for non-unique clustered indexes.
+    // PRIMARY KEY or unique constraints should be handled separately
+
+    // CREATE INDEX
+    //https://docs.microsoft.com/en-us/sql/t-sql/statements/create-index-transact-sql?view=sql-server-2017
+
+    // ALTER INDEX
+    // https://docs.microsoft.com/en-us/sql/t-sql/statements/alter-index-transact-sql?view=sql-server-2017
+
+    // DROP INDEX
+    // https://docs.microsoft.com/en-us/sql/t-sql/statements/drop-index-transact-sql?view=sql-server-2017
+
     public class IndexBuilder : SchemaBuilderBase, IIndexBuilder
     {
         public IndexBuilder(
@@ -33,32 +45,33 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         public IIndexBuilder AlterIndex(SchemaIndex index)
         {
-            throw new NotImplementedException();
+            AddStatement(AlterIndexInternal(index));
+            return this;
         }
 
         public IIndexBuilder DropIndex(SchemaIndex index)
         {
-            throw new NotImplementedException();
+            AddStatement(DropIndexInternal(index));
+            return this;
         }
 
         // -------------------------------
-
-
+        
         private string CreateIndexInternal(SchemaIndex index)
         {
 
             // CREATE INDEX IX_tableName_columnName ON tableName
             //    ( columnName(s) )
             // WITH(FILLFACTOR = 30)
-            
+            // GO
+
             var sb = new StringBuilder();
 
             var indexName = index.GenerateName();
 
             sb.Append("CREATE INDEX ")
                 .Append(GetIndexName(indexName))
-                .Append(NewLine)
-                .Append("( ")
+                .Append(" ( ")
                 .Append(index.Columns.ToDelimitedString(','))
                 .Append(" )");
 
@@ -73,7 +86,52 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         }
 
+        private string AlterIndexInternal(SchemaIndex index)
+        {
+
+            // Defragment by physically removing rows that have been logically deleted from the table, and merging rowgroups.  
+            // ALTER INDEX cci_FactInternetSales2 ON FactInternetSales2 REORGANIZE;
+            
+            var indexName = index.GenerateName();
+
+            var sb = new StringBuilder();
+            sb.Append("ALTER INDEX ")
+                .Append(GetIndexName(indexName))
+                .Append(" ON ")
+                .Append(index.TableName)
+                .Append(" REORGANIZE");
+
+            return sb.ToString();
+
+        }
+        
+        private string DropIndexInternal(SchemaIndex index)
+        {
+
+            // DROP INDEX
+            //  IX_tableName_firstColumn ON tableName.columnName,  
+            //  IX_tableName_firstColumn ON tableName.columnName;
+            // GO
+
+            var sb = new StringBuilder();
+
+            var indexName = index.GenerateName();
+            
+            foreach (var column in index.Columns)
+            {
+                sb.Append("DROP INDEX ")
+                    .Append(GetIndexName(indexName))
+                    .Append(" ON ")
+                    .Append(index.TableName)
+                    .Append(".")
+                    .Append(column)
+                    .Append(NewLine);
+            }
+    
+            return sb.ToString();
+
+        }
+
     }
-
-
+    
 }

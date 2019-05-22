@@ -130,7 +130,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             // TODO: Refactor to avoid switch statement 
             // Create common command classes to represent each procedure type
-            // Avoids enum and makes it more extensible for future addition
+            // Avoids enum and makes it more extensible for future additions
             // InsertUpdateProcedure : IProcedureCommand,
             // SelectByKeyProcedure : IProcedureCommand
             // DeleteByKey : IProcedureCommand etc
