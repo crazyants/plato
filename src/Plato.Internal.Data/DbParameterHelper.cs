@@ -24,31 +24,47 @@ namespace Plato.Internal.Data
             var sb = new StringBuilder("; EXEC ");
             sb.Append(procedureName);
 
-            for (var i = 0; i < args.Length; i++)
+            if (args != null)
             {
-                var valueType = args[i].GetType();
-                if (valueType.IsAnonymousType())
+                for (var i = 0; i < args.Length; i++)
                 {
-                    var properties = valueType.GetProperties();
-                    for (var x = 0; x < properties.Length; x++)
+
+                    // Values can be null
+                    if (args[i] != null)
                     {
-                        var property = properties[x];
-                        sb.Append($" @{property.Name}");
-                        if (x < properties.Length - 1)
+                        var valueType = args[i].GetType();
+                        if (valueType.IsAnonymousType())
+                        {
+                            var properties = valueType.GetProperties();
+                            for (var x = 0; x < properties.Length; x++)
+                            {
+                                var property = properties[x];
+                                sb.Append($" @{property.Name}");
+                                if (x < properties.Length - 1)
+                                    sb.Append(",");
+                            }
+
+                        }
+                        else
+                        {
+
+                            sb.Append($" @{i}");
+                            if (i < args.Length - 1)
+                                sb.Append(",");
+                        }
+
+                    }
+                    else
+                    {
+                        sb.Append($" @{i}");
+                        if (i < args.Length - 1)
                             sb.Append(",");
                     }
 
                 }
-                else
-                {
-
-                    sb.Append($" @{i}");
-                    if (i < args.Length - 1)
-                        sb.Append(",");
-                }
 
             }
-            
+
             return sb.ToString();
         }
 
@@ -150,44 +166,54 @@ namespace Plato.Internal.Data
 
             foreach (var value in args)
             {
-
-                var valueType = value.GetType();
-                
-                // If we have an anonymous type use the
-                // property names from the anonymous type
-                // as the parameter names for our query
-                if (valueType.IsAnonymousType())
+                if (value != null)
                 {
-                    var properties = valueType.GetProperties();
-                    foreach (var property in properties)
+                    var valueType = value.GetType();
+                    // If we have an anonymous type use the
+                    // property names from the anonymous type
+                    // as the parameter names for our query
+                    if (valueType.IsAnonymousType())
                     {
-                        var propValue = property.GetValue(value, null);
+                        var properties = valueType.GetProperties();
+                        foreach (var property in properties)
+                        {
+                            var propValue = property.GetValue(value, null);
+                            cmd.Parameters.Add(CreateParameter(
+                                cmd,
+                                $"@{property.Name}",
+                                propValue,
+                                propValue.GetType()));
+                        }
+
+                    }
+                    else
+                    {
+
+                        // use params object array
                         cmd.Parameters.Add(CreateParameter(
                             cmd,
-                            $"@{property.Name}",
-                            propValue,
-                            propValue.GetType()));
+                            $"@{cmd.Parameters.Count}",
+                            value,
+                            valueType));
                     }
 
                 }
                 else
                 {
-
-                    // use params object array
+                    // null values
                     cmd.Parameters.Add(CreateParameter(
                         cmd,
                         $"@{cmd.Parameters.Count}",
-                        value,
-                        valueType));
+                        null));
                 }
-                
+
             }
 
             return cmd;
 
         }
 
-        public static IDbDataParameter CreateParameter(IDbCommand cmd, string name, object value, Type valueType)
+        public static IDbDataParameter CreateParameter(IDbCommand cmd, string name, object value, Type valueType = null)
         {
 
             var p = cmd.CreateParameter();
@@ -199,6 +225,11 @@ namespace Plato.Internal.Data
             }
             else
             {
+
+                if (valueType == null)
+                {
+                    throw new ArgumentNullException(nameof(valueType));
+                }
 
                 if (valueType == typeof(Guid))
                 {

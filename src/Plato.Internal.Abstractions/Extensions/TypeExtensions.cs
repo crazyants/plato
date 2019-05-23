@@ -14,7 +14,7 @@ namespace Plato.Internal.Abstractions.Extensions
 
         public static bool IsAnonymousType(this Type t)
         {
-            return t.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
+            return t != null && t.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
         }
     }
 }
