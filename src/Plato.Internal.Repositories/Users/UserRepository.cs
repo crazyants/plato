@@ -214,11 +214,22 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
+
+                //user = await context.ExecuteReaderAsync<User>(
+                //    CommandType.StoredProcedure,
+                //    "SelectUserByUserName",
+                //    async reader => await BuildUserFromResultSets(reader),
+                //    new
+                //    {
+                //        UserName = userName.TrimToSize(255)
+                //    });
+
+
                 user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByUserName",
                     async reader => await BuildUserFromResultSets(reader),
-                    userName.TrimToSize(255));
+                    userName = userName.TrimToSize(255));
             }
 
             return user;

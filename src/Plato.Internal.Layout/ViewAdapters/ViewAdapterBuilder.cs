@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Html;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Layout.ViewAdapters
 {
@@ -95,9 +96,7 @@ namespace Plato.Internal.Layout.ViewAdapters
                 return false;
             }
 
-            return model
-                .GetType()
-                .GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
+            return model.GetType().IsAnonymousType();
 
         }
 

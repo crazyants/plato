@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Plato.Internal.Abstractions.Extensions
 {
@@ -10,5 +12,9 @@ namespace Plato.Internal.Abstractions.Extensions
             return t.IsValueType || t.GetConstructor(Type.EmptyTypes) != null;
         }
 
+        public static bool IsAnonymousType(this Type t)
+        {
+            return t.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
+        }
     }
 }

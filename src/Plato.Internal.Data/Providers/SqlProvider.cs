@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data.Providers
@@ -42,7 +43,7 @@ namespace Plato.Internal.Data.Providers
                 try
                 {
                     await conn.OpenAsync();
-                    using (var command = CreateCommand(conn, sql, args))
+                    using (var command = DbParameterHelper.CreateSqlCommand(conn, sql, args))
                     {
                         using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                         {
@@ -81,7 +82,7 @@ namespace Plato.Internal.Data.Providers
                 try
                 {
                     await conn.OpenAsync();
-                    using (var cmd = CreateCommand(conn, sql, args))
+                    using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
                     {
                         output = await cmd.ExecuteScalarAsync();
                         OnExecutedCommand(cmd);
@@ -120,7 +121,7 @@ namespace Plato.Internal.Data.Providers
                 try
                 {
                     await conn.OpenAsync();
-                    using (var cmd = CreateCommand(conn, sql, args))
+                    using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
                     {
                         var returnValue = await cmd.ExecuteNonQueryAsync();
                         OnExecutedCommand(cmd);
@@ -141,96 +142,131 @@ namespace Plato.Internal.Data.Providers
 
         }
         
-        SqlCommand CreateCommand(
-            SqlConnection connection,
-            string sql, 
-            params object[] args)
-        {
+        //SqlCommand CreateCommand(
+        //    SqlConnection connection,
+        //    string sql, 
+        //    params object[] args)
+        //{
 
-            // Create the command and add parameters
-            var cmd = connection.CreateCommand();
-            cmd.Connection = connection;
-            cmd.CommandText = sql;
-          
-            foreach (var item in args)
-            {
-                AddParam(cmd, item);                
-            }
+        //    // Create the command and add parameters
+        //    var cmd = connection.CreateCommand();
+        //    cmd.Connection = connection;
+        //    cmd.CommandText = sql;
+            
+        //    foreach (var value in args)
+        //    {
 
-            if (!string.IsNullOrEmpty(sql))
-                DoPreExecute(cmd);
+        //        var valueType = value.GetType();
+                
+        //        // If we don't have any parameters yet
+        //        // search for anonymous type first, we only
+        //        // check for an anonymous type once for perf
+        //        if (cmd.Parameters.Count == 0)
+        //        {
 
-            return cmd;
-        }
+        //            // If we have an anonymous type use the
+        //            // property names from the anonymous type
+        //            // as the parameter names for our query
+        //            if (valueType.IsAnonymousType())
+        //            {
+        //                var properties = valueType.GetProperties();
+        //                foreach (var property in properties)
+        //                {
+        //                    var propValue = property.GetValue(value, null);
+        //                    CreateAndAddParam(
+        //                        cmd,
+        //                        $"@{property.Name}",
+        //                        propValue,
+        //                        propValue.GetType());
+        //                }
+
+        //                break;
+        //            }
+        //        }
+                
+        //        // use params object array
+        //        CreateAndAddParam(
+        //            cmd, 
+        //            $"@{cmd.Parameters.Count}",
+        //            value, 
+        //            valueType);
+                
+        //    }
+
+        //    if (!string.IsNullOrEmpty(sql))
+        //        DoPreExecute(cmd);
+
+        //    return cmd;
+        //}
         
 
-        void DoPreExecute(IDbCommand cmd)
-        {
-            if (CommandTimeout != 0)
-            {
-                cmd.CommandTimeout = CommandTimeout;
-            }
-        }
+        //void DoPreExecute(IDbCommand cmd)
+        //{
+        //    if (CommandTimeout != 0)
+        //    {
+        //        cmd.CommandTimeout = CommandTimeout;
+        //    }
+        //}
 
-        void AddParam(IDbCommand cmd, object item)
-        {
+        //void CreateAndAddParam(IDbCommand cmd, string name, object value, Type valueType)
+        //{
             
-            var p = cmd.CreateParameter();
-            p.ParameterName = $"@{cmd.Parameters.Count}";
+        //    var p = cmd.CreateParameter();
+        //    p.ParameterName = name;
             
-            if (item == null)
-            {
-                p.Value = DBNull.Value;
-            }
-            else
-            {
-                var t = item.GetType();
-                if (t == typeof(Guid))
-                {
-                    p.Value = item.ToString();
-                    p.DbType = DbType.String;
-                    p.Size = 40;
-                }
-                else if (t == typeof(byte[]))
-                {
-                    p.Value = item;
-                    p.DbType = DbType.Binary;            
-                }
-                else if (t == typeof(string))
-                {
-                    p.Size = Math.Max(((string) item).Length + 1, 4000); // Help query plan caching by using common size
-                    p.Value = item;
-                }
-                else if (t == typeof(bool))
-                {
-                    p.Value = ((bool)item) ? 1 : 0;
-                    p.DbType = DbType.Boolean;
-                }
-                else if (t == typeof(int))
-                {
-                    p.Value = ((int)item);
-                }
-                else if (t == typeof(DateTime?))
-                {
-                    p.Value = ((DateTime) item);
-                }
-                else if (t == typeof(DbDataParameter))
-                {
-                    var dbParam = (IDbDataParameter) item;
-                    p.ParameterName = dbParam.ParameterName;
-                    p.Value = dbParam.Value ?? DBNull.Value;
-                    p.DbType = dbParam.DbType;
-                    p.Direction = dbParam.Direction;
-                }
-                else
-                {
-                    p.Value = item;
-                }
-            }
+        //    if (value == null)
+        //    {
+        //        p.Value = DBNull.Value;
+        //    }
+        //    else
+        //    {
 
-            cmd.Parameters.Add(p);
+        //        if (valueType == typeof(Guid))
+        //        {
+        //            p.Value = value.ToString();
+        //            p.DbType = DbType.String;
+        //            p.Size = 40;
+        //        }
+        //        else if (valueType == typeof(byte[]))
+        //        {
+        //            p.Value = value;
+        //            p.DbType = DbType.Binary;            
+        //        }
+        //        else if (valueType == typeof(string))
+        //        {
+        //            p.Size = Math.Max(((string) value).Length + 1, 4000); // Help query plan caching by using common size
+        //            p.Value = value;
+        //        }
+        //        else if (valueType == typeof(bool))
+        //        {
+        //            p.Value = ((bool)value) ? 1 : 0;
+        //            p.DbType = DbType.Boolean;
+        //        }
+        //        else if (valueType == typeof(int))
+        //        {
+        //            p.Value = ((int)value);
+        //        }
+        //        else if (valueType == typeof(DateTime?))
+        //        {
+        //            p.Value = ((DateTime) value);
+        //        }
+        //        else if (valueType == typeof(DbDataParameter))
+        //        {
+        //            var dbParam = (IDbDataParameter) value;
+        //            p.ParameterName = dbParam.ParameterName;
+        //            p.Value = dbParam.Value ?? DBNull.Value;
+        //            p.DbType = dbParam.DbType;
+        //            p.Direction = dbParam.Direction;
+        //        }
+        //        else
+        //        {
+        //            p.Value = value;
+        //        }
+        //    }
+
+        //    cmd.Parameters.Add(p);
             
-        }
+        //}
         
         // mainly used to hook in and override behaviour
 
