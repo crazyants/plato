@@ -7,8 +7,7 @@ namespace Plato.Internal.Data.Migrations
 {
     public class DataMigrationManager : IDataMigrationManager
     {
-
-  
+        
         private readonly IDbContext _dbContext;
         private List<Exception> _errors;
     

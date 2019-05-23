@@ -10,16 +10,16 @@ namespace Plato.Internal.Data.Migrations
         private List<PreparedMigration> _schemas;
         private MigrationType _migrationType;
 
-        private readonly IMigrationProvider _migrationProvider;
+        private readonly IEnumerable<IMigrationProvider> _migrationProviders;
         private readonly IDataMigrationManager _dataMigrationManager;
 
         public MigrationType DataMigrationType => _migrationType;
 
         public DataMigrationBuilder(
-            IMigrationProvider migrationProvider,
+            IEnumerable<IMigrationProvider> migrationProviders,
             IDataMigrationManager dataMigrationManager)
         {
-            _migrationProvider = migrationProvider;
+            _migrationProviders = migrationProviders;
             _dataMigrationManager = dataMigrationManager;
         }
 
@@ -27,7 +27,12 @@ namespace Plato.Internal.Data.Migrations
 
         public IDataMigrationBuilder BuildMigrations(List<string> versions)
         {
-            _schemas = _migrationProvider.LoadSchemas(versions).Schemas;
+
+            foreach (var provider in _migrationProviders)
+            {
+                _schemas = provider.LoadSchemas(versions).Schemas;
+            }
+         
             if (_schemas?.Count > 0)
             {
                 DetectMigrationType();

@@ -17,24 +17,19 @@ namespace Plato.Users
         public Migrations(ISchemaBuilder schemaBuilder)
         {
             _schemaBuilder = schemaBuilder;
-            BuildMigrations();
-        }
-
-        void BuildMigrations()
-        {
 
             _migrations = new List<PreparedMigration>
             {
                 new PreparedMigration()
                 {
-                    Version = "1.0.0",
-                    Statements = v_1_0_0()
+                    Version = "1.0.1",
+                    Statements = v_1_0_1()
                 }
             };
-            
+
         }
 
-        public ICollection<string> v_1_0_0()
+        public ICollection<string> v_1_0_1()
         {
 
             var users = new SchemaTable()
@@ -395,6 +390,15 @@ namespace Plato.Users
             using (var builder = _schemaBuilder)
             {
 
+                builder
+                    .Configure(options =>
+                    {
+                        options.ModuleName = "Plato.Users";
+                        options.Version = "1.0.01";
+                        options.DropTablesBeforeCreate = true;
+                        options.DropProceduresBeforeCreate = true;
+                    });
+
                 // ---------------
                 // 1.0.1
                 // ---------------
@@ -430,8 +434,7 @@ namespace Plato.Users
                     new SchemaProcedure($"InsertUpdateUser",
                             StoredProcedureType.InsertUpdate)
                         .ForTable(users));
-
-
+                
                 output.AddRange(builder.Statements);
 
             }

@@ -1,10 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Plato.Core.Assets;
 using Plato.Core.Configuration;
@@ -12,28 +9,32 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Handlers;
 using Plato.Core.Middleware;
 using Plato.Core.Models;
-using Plato.Core.ViewFeatures;
 using Plato.Core.ViewProviders;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Data.Migrations;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewFeatures;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions.Models;
-using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Core
 {
     public class Startup : StartupBase
     {
+
         private readonly IShellSettings _shellSettings;
+        private readonly AutomaticDataMigrations _automaticDataMigrations;
+
         private readonly string _tenantPrefix;
         private readonly string _cookieSuffix;
 
-        public Startup(IShellSettings shellSettings)
+        public Startup(
+            IShellSettings shellSettings, 
+            AutomaticDataMigrations automaticDataMigrations)
         {
             _shellSettings = shellSettings;
+            _automaticDataMigrations = automaticDataMigrations;
             _tenantPrefix = shellSettings.RequestedUrlPrefix;
             _cookieSuffix = shellSettings.AuthCookieName;
         }
@@ -72,8 +73,13 @@ namespace Plato.Core
 
             // Register client options middleware 
             app.UseMiddleware<SettingsClientOptionsMiddleware>();
-        
-            
+
+
+            var result = _automaticDataMigrations
+                .InitialMigrationAsync()
+                .GetAwaiter()
+                .GetResult();
+
             //// Add IModularViewsFeatureProvider application part
             //// Required to allow modules to extend features
             //var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>(); ;
@@ -85,7 +91,7 @@ namespace Plato.Core
             //        applicationPartManager.FeatureProviders.Add(provider);
             //    }
             //}
-            
+
 
 
 

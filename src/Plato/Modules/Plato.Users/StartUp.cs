@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Data.Migrations;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Models.Roles;
@@ -161,6 +162,9 @@ namespace Plato.Users
             // Register action filters
             services.AddScoped<IModularActionFilter, SignOutIfUserNotFoundFilter>();
             services.AddScoped<IModularActionFilter, UpdateUserLastLoginDateFilter>();
+
+            // Migrations
+            services.AddScoped<IMigrationProvider, Migrations>();
 
         }
 

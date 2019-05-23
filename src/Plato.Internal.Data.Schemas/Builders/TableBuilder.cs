@@ -122,7 +122,7 @@ namespace Plato.Internal.Data.Schemas.Builders
             return this;
 
         }
-
+        
         public virtual ITableBuilder DropTableColumns(SchemaTable table)
         {
             var tableName = GetTableName(table.Name);

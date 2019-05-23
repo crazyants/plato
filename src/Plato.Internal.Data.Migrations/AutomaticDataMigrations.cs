@@ -8,29 +8,32 @@ namespace Plato.Internal.Data.Migrations
     {
 
         private readonly IDataMigrationBuilder _migrationBuilder;
-        private readonly IDataMigrationManager _migrationManager;
+    
 
         #region "Constructor"
 
         public AutomaticDataMigrations(
-            IDataMigrationBuilder migrationBuilder,
-            IDataMigrationManager migrationManager)
+            IDataMigrationBuilder migrationBuilder)
         {
             _migrationBuilder = migrationBuilder;
-            _migrationManager = migrationManager;
         }
 
         #endregion
 
         #region "Private Methods"
 
-        public async Task<DataMigrationResult> InitialMigration()
+        public async Task<DataMigrationResult> InitialMigrationAsync()
         {
-            return await _migrationBuilder.BuildMigrations(
+
+            var migrations = _migrationBuilder.BuildMigrations(
                 new List<string>()
                 {
-                    "1.0.0"
-                }).ApplyMigrationsAsync();
+                    "1.0.0",
+                    "1.0.1"
+                });
+
+            return await migrations.ApplyMigrationsAsync();
+
         }
         
         #endregion
