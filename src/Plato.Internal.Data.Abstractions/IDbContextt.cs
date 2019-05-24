@@ -17,7 +17,18 @@ namespace Plato.Internal.Data.Abstractions
         Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] commandParams);
    
         Task<T> ExecuteNonQueryAsync<T>(CommandType commandType, string sql, params object[] commandParams);
-    
+        
+        // Testing
+        
+        Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams) where T : class;
+
+        Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string sql, DbParam[] dbParams);
+
+        Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string sql, DbParam[] dbParams);
+
+
+
+
     }
-    
+
 }

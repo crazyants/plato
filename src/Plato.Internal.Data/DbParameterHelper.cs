@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
 using System.Text;
-using Microsoft.Extensions.FileProviders;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Abstractions.Extensions;
@@ -68,24 +65,29 @@ namespace Plato.Internal.Data
             return sb.ToString();
         }
 
-        public static string CreateScalarStoredProcedureSql(string procedureName, params object[] args)
+        public static string CreateScalarStoredProcedureSql(
+            string procedureName,
+            params object[] args)
         {
 
             // Build a collection of output parameters and there index
-            IDictionary<int, IDbDataParameter> outputParams = null; ;
+            IDictionary<int, IDbDataParameter> outputParams = null;
+            ;
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] != null)
                 {
                     if (args[i].GetType() == typeof(DbDataParameter))
                     {
-                        if (((DbDataParameter)args[i]).Direction == ParameterDirection.Output)
+                        if (((DbDataParameter) args[i]).Direction == ParameterDirection.Output)
                         {
                             if (outputParams == null)
                             {
-                                outputParams = new Dictionary<int, IDbDataParameter>(); ;
+                                outputParams = new Dictionary<int, IDbDataParameter>();
+                                ;
                             }
-                            outputParams.Add(i, ((IDbDataParameter)args[i]));
+
+                            outputParams.Add(i, ((IDbDataParameter) args[i]));
                         }
                     }
                 }
@@ -143,6 +145,7 @@ namespace Plato.Internal.Data
                     {
                         sb.Append(",");
                     }
+
                     i++;
                 }
 
@@ -151,6 +154,98 @@ namespace Plato.Internal.Data
 
             return sb.ToString();
         }
+        
+
+        public static string CreateDbParamsExecuteStoredProcedureSql(
+            string procedureName,
+            DbParam[] dbParams)
+        {
+
+            // Build a collection of output parameters and there name
+            IDictionary<string, DbParam> outputParams = null;
+            ;
+            foreach (var parameter in dbParams)
+            {
+                if (parameter.Value != null)
+                {
+                    if (parameter.Direction == ParameterDirection.Output)
+                    {
+                        if (outputParams == null)
+                        {
+                            outputParams = new Dictionary<string, DbParam>();
+                            ;
+                        }
+
+                        outputParams.Add(parameter.ParameterName, parameter);
+                    }
+                }
+            }
+
+            var sb = new StringBuilder();
+            if (outputParams != null)
+            {
+                foreach (var outputParam in outputParams)
+                {
+                    var name = !string.IsNullOrEmpty(outputParam.Value.ParameterName)
+                        ? outputParam.Value.ParameterName
+                        : outputParam.Key.ToString();
+                    sb.Append($"DECLARE @{name}_out {outputParam.Value.DbTypeNormalized()};");
+                }
+            }
+
+            sb.Append("EXEC ");
+            sb.Append(procedureName);
+            var i = 0;
+            foreach (var parameter in dbParams)
+            {
+
+                if (outputParams?.ContainsKey(parameter.ParameterName) ?? false)
+                {
+                    sb.Append($" @{parameter.ParameterName}_out output");
+                }
+                else
+                {
+                    sb.Append($" @{parameter.ParameterName}");
+                }
+
+                if (i < dbParams.Length - 1)
+                    sb.Append(",");
+
+                i++;
+
+            }
+
+            sb.Append(";");
+
+            // Return output parameters
+            if (outputParams != null)
+            {
+                sb.Append("SELECT ");
+                i = 0;
+                foreach (var outputParam in outputParams)
+                {
+                    var name = !string.IsNullOrEmpty(outputParam.Value.ParameterName)
+                        ? outputParam.Value.ParameterName
+                        : outputParam.Key.ToString();
+                    sb.Append("@")
+                        .Append(name)
+                        .Append("_out");
+                    if (i < outputParams.Count - 1)
+                    {
+                        sb.Append(",");
+                    }
+
+                    i++;
+                }
+
+                sb.Append(";");
+            }
+
+            return sb.ToString();
+
+        }
+
+    
 
 
         public static SqlCommand CreateSqlCommand(
@@ -178,17 +273,27 @@ namespace Plato.Internal.Data
                         foreach (var property in properties)
                         {
                             var propValue = property.GetValue(value, null);
-                            cmd.Parameters.Add(CreateParameter(
-                                cmd,
-                                $"@{property.Name}",
-                                propValue,
-                                propValue.GetType()));
+                            if (propValue != null)
+                            {
+                                cmd.Parameters.Add(CreateParameter(
+                                    cmd,
+                                    $"@{property.Name}",
+                                    propValue,
+                                    propValue.GetType()));
+                            }
+                            else
+                            {
+                                cmd.Parameters.Add(CreateParameter(
+                                    cmd,
+                                    $"@{property.Name}",
+                                    null));
+                            }
+
                         }
 
                     }
                     else
                     {
-
                         // use params object array
                         cmd.Parameters.Add(CreateParameter(
                             cmd,
@@ -200,7 +305,7 @@ namespace Plato.Internal.Data
                 }
                 else
                 {
-                    // null values
+                    // accomodate for null values
                     cmd.Parameters.Add(CreateParameter(
                         cmd,
                         $"@{cmd.Parameters.Count}",
@@ -213,7 +318,31 @@ namespace Plato.Internal.Data
 
         }
 
-        public static IDbDataParameter CreateParameter(IDbCommand cmd, string name, object value, Type valueType = null)
+        public static SqlCommand CreateDbParamsSqlCommand(
+            SqlConnection connection,
+            string sql,
+            DbParam[] dbParams)
+        {
+          
+            var cmd = connection.CreateCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = sql;
+
+            foreach (var parameter in dbParams)
+            {
+                var p = parameter.CreateParameter(cmd);
+                cmd.Parameters.Add(p);
+            }
+
+            return cmd;
+
+        }
+
+        public static IDbDataParameter CreateParameter(
+            IDbCommand cmd,
+            string name,
+            object value,
+            Type valueType = null)
         {
 
             var p = cmd.CreateParameter();
@@ -244,25 +373,26 @@ namespace Plato.Internal.Data
                 }
                 else if (valueType == typeof(string))
                 {
-                    p.Size = Math.Max(((string)value).Length + 1, 4000); // Help query plan caching by using common size
+                    p.Size = Math.Max(((string) value).Length + 1,
+                        4000); // Help query plan caching by using common size
                     p.Value = value;
                 }
                 else if (valueType == typeof(bool))
                 {
-                    p.Value = ((bool)value) ? 1 : 0;
+                    p.Value = ((bool) value) ? 1 : 0;
                     p.DbType = DbType.Boolean;
                 }
                 else if (valueType == typeof(int))
                 {
-                    p.Value = ((int)value);
+                    p.Value = ((int) value);
                 }
                 else if (valueType == typeof(DateTime?))
                 {
-                    p.Value = ((DateTime)value);
+                    p.Value = ((DateTime) value);
                 }
                 else if (valueType == typeof(DbDataParameter))
                 {
-                    var dbParam = (IDbDataParameter)value;
+                    var dbParam = (IDbDataParameter) value;
                     p.ParameterName = dbParam.ParameterName;
                     p.Value = dbParam.Value ?? DBNull.Value;
                     p.DbType = dbParam.DbType;
@@ -277,7 +407,7 @@ namespace Plato.Internal.Data
             return p;
 
         }
-        
+
     }
 
 }

@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data.Providers
@@ -27,7 +26,9 @@ namespace Plato.Internal.Data.Providers
         
         public int CommandTimeout { get; set; }
         
-        public async Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate,
+        public async Task<T> ExecuteReaderAsync<T>(
+            string sql,
+            Func<DbDataReader, Task<T>> populate,
             params object[] args) where T : class
         {
 
@@ -141,133 +142,121 @@ namespace Plato.Internal.Data.Providers
             return output;
 
         }
-        
-        //SqlCommand CreateCommand(
-        //    SqlConnection connection,
-        //    string sql, 
-        //    params object[] args)
-        //{
 
-        //    // Create the command and add parameters
-        //    var cmd = connection.CreateCommand();
-        //    cmd.Connection = connection;
-        //    cmd.CommandText = sql;
-            
-        //    foreach (var value in args)
-        //    {
+        // -------- Testing
 
-        //        var valueType = value.GetType();
-                
-        //        // If we don't have any parameters yet
-        //        // search for anonymous type first, we only
-        //        // check for an anonymous type once for perf
-        //        if (cmd.Parameters.Count == 0)
-        //        {
+        public async Task<T> ExecuteReaderAsync2<T>(string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams) where T : class
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("SQL to execute: " + sql);
+            }
 
-        //            // If we have an anonymous type use the
-        //            // property names from the anonymous type
-        //            // as the parameter names for our query
-        //            if (valueType.IsAnonymousType())
-        //            {
-        //                var properties = valueType.GetProperties();
-        //                foreach (var property in properties)
-        //                {
-        //                    var propValue = property.GetValue(value, null);
-        //                    CreateAndAddParam(
-        //                        cmd,
-        //                        $"@{property.Name}",
-        //                        propValue,
-        //                        propValue.GetType());
-        //                }
+            T output = null;
 
-        //                break;
-        //            }
-        //        }
-                
-        //        // use params object array
-        //        CreateAndAddParam(
-        //            cmd, 
-        //            $"@{cmd.Parameters.Count}",
-        //            value, 
-        //            valueType);
-                
-        //    }
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conn.OpenAsync();
+                    using (var command = DbParameterHelper.CreateDbParamsSqlCommand(conn, sql, dbParams))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            OnExecutedCommand(command);
+                            output = await populate(reader);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
 
-        //    if (!string.IsNullOrEmpty(sql))
-        //        DoPreExecute(cmd);
+            return output;
+        }
 
-        //    return cmd;
-        //}
-        
+        public async Task<T> ExecuteScalarAsync2<T>(string sql, DbParam[] dbParams)
+        {
 
-        //void DoPreExecute(IDbCommand cmd)
-        //{
-        //    if (CommandTimeout != 0)
-        //    {
-        //        cmd.CommandTimeout = CommandTimeout;
-        //    }
-        //}
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("SQL to execute: " + sql);
+            }
 
-        //void CreateAndAddParam(IDbCommand cmd, string name, object value, Type valueType)
-        //{
-            
-        //    var p = cmd.CreateParameter();
-        //    p.ParameterName = name;
-            
-        //    if (value == null)
-        //    {
-        //        p.Value = DBNull.Value;
-        //    }
-        //    else
-        //    {
 
-        //        if (valueType == typeof(Guid))
-        //        {
-        //            p.Value = value.ToString();
-        //            p.DbType = DbType.String;
-        //            p.Size = 40;
-        //        }
-        //        else if (valueType == typeof(byte[]))
-        //        {
-        //            p.Value = value;
-        //            p.DbType = DbType.Binary;            
-        //        }
-        //        else if (valueType == typeof(string))
-        //        {
-        //            p.Size = Math.Max(((string) value).Length + 1, 4000); // Help query plan caching by using common size
-        //            p.Value = value;
-        //        }
-        //        else if (valueType == typeof(bool))
-        //        {
-        //            p.Value = ((bool)value) ? 1 : 0;
-        //            p.DbType = DbType.Boolean;
-        //        }
-        //        else if (valueType == typeof(int))
-        //        {
-        //            p.Value = ((int)value);
-        //        }
-        //        else if (valueType == typeof(DateTime?))
-        //        {
-        //            p.Value = ((DateTime) value);
-        //        }
-        //        else if (valueType == typeof(DbDataParameter))
-        //        {
-        //            var dbParam = (IDbDataParameter) value;
-        //            p.ParameterName = dbParam.ParameterName;
-        //            p.Value = dbParam.Value ?? DBNull.Value;
-        //            p.DbType = dbParam.DbType;
-        //            p.Direction = dbParam.Direction;
-        //        }
-        //        else
-        //        {
-        //            p.Value = value;
-        //        }
-        //    }
+            object output = null;
+            using (var conn = new SqlConnection(_connectionString))
+            {
 
-        //    cmd.Parameters.Add(p);
-            
-        //}
-        
+                try
+                {
+                    await conn.OpenAsync();
+                    using (var cmd = DbParameterHelper.CreateDbParamsSqlCommand(conn, sql, dbParams))
+                    {
+                        output = await cmd.ExecuteScalarAsync();
+                        OnExecutedCommand(cmd);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            if (output != null)
+            {
+                return (T)Convert.ChangeType(output, typeof(T));
+            }
+
+            return default(T);
+
+
+        }
+
+        public async Task<T> ExecuteNonQueryAsync2<T>(string sql, DbParam[] dbParams)
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("SQL to execute: " + sql);
+            }
+
+            var output = default(T);
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conn.OpenAsync();
+                    using (var cmd = DbParameterHelper.CreateDbParamsSqlCommand(conn, sql, dbParams))
+                    {
+                        var returnValue = await cmd.ExecuteNonQueryAsync();
+                        OnExecutedCommand(cmd);
+                        output = (T)Convert.ChangeType(returnValue, typeof(T));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            return output;
+
+        }
+
         // mainly used to hook in and override behaviour
 
         public virtual void OnExecutedCommand(IDbCommand cmd) { }

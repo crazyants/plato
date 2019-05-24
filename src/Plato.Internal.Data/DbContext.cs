@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Data.Abstractions.Extensions;
-using Plato.Internal.Data.Providers;
 
 namespace Plato.Internal.Data
 {
@@ -45,7 +41,7 @@ namespace Plato.Internal.Data
                 sql = DbParameterHelper.CreateExecuteStoredProcedureSql(GetProcedureName(sql), args);
             return await _provider.ExecuteReaderAsync<T>(sql, populate, args);
         }
-
+        
         public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] args)
         {
             if (_provider == null)
@@ -64,30 +60,40 @@ namespace Plato.Internal.Data
             return await _provider.ExecuteNonQueryAsync<T>(sql, args);
         }
 
+        // --- Testing
+
+        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams) where T : class
+        {
+            if (_provider == null)
+                return null;
+            if (commandType == CommandType.StoredProcedure)
+                sql = DbParameterHelper.CreateDbParamsExecuteStoredProcedureSql(GetProcedureName(sql), dbParams);
+            return await _provider.ExecuteReaderAsync2<T>(sql, populate, dbParams);
+        }
+
+        public async Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string sql, DbParam[] dbParams)
+        {
+            if (_provider == null)
+                return default(T);
+            if (commandType == CommandType.StoredProcedure)
+                sql = DbParameterHelper.CreateDbParamsExecuteStoredProcedureSql(GetProcedureName(sql), dbParams);
+            return await _provider.ExecuteScalarAsync2<T>(sql, dbParams);
+        }
+
+        public async Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string sql, DbParam[] dbParams)
+        {
+            if (_provider == null)
+                return default(T);
+            if (commandType == CommandType.StoredProcedure)
+                sql = DbParameterHelper.CreateDbParamsExecuteStoredProcedureSql(GetProcedureName(sql), dbParams);
+            return await _provider.ExecuteNonQueryAsync2<T>(sql, dbParams);
+        }
+
         public void Dispose()
         {
             
         }
         
-        //private string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)
-        //{
-        //    // Execute procedure 
-        //    var sb = new StringBuilder("; EXEC ");
-        //    sb.Append(GetProcedureName(procedureName));
-
-        //    for (var i = 0; i < args.Length; i++)
-        //    {
-        //        sb.Append($" @{i}");
-        //        if (i < args.Length - 1)
-        //            sb.Append(",");
-        //    }
-
-
-
-        //    return sb.ToString();
-        //}
-
-     
         private string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(Configuration.TablePrefix)

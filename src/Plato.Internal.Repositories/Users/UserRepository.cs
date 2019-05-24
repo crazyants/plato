@@ -210,7 +210,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 throw new ArgumentNullException(nameof(userName));
             }
-                
+
             User user = null;
             using (var context = _dbContext)
             {
@@ -224,12 +224,14 @@ namespace Plato.Internal.Repositories.Users
                 //        UserName = userName.TrimToSize(255)
                 //    });
 
-
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByUserName",
                     async reader => await BuildUserFromResultSets(reader),
-                    userName = userName.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("UserName", 255, userName.TrimToSize(255))
+                    });
             }
 
             return user;
