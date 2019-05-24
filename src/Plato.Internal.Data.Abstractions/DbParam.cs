@@ -53,72 +53,73 @@ namespace Plato.Internal.Data.Abstractions
             bool isNullable,
             object value)
         {
-
             ParameterName = name;
             Direction = direction;
             DbType = dbType;
+            Size = size;
             IsNullable = isNullable;
+            PrepareValue(value);
+        }
+
+        public void PrepareValue(object value)
+        {
 
             if (value == null)
             {
                 Value = DBNull.Value;
+                return;
+            }
+            
+            if (DbType == DbType.Guid)
+            {
+                Value = value.ToString();
+                Size = 40;
+            }
+            else if (DbType == DbType.Binary)
+            {
+                Value = (byte[]) value;
+            }
+            else if (DbType == DbType.String)
+            {
+                Value = this.Size > 0
+                    ? value.ToString().ToEmptyIfNull().TrimToSize(this.Size)
+                    : value.ToString().ToEmptyIfNull();
+            }
+            else if (DbType == DbType.Boolean)
+            {
+                Value = ((bool) value) ? 1 : 0;
+            }
+            else if (DbType == DbType.Double)
+            {
+                Value = (double) value;
+            }
+            else if (DbType == DbType.Int32)
+            {
+                Value = ((int) value);
+            }
+            else if (DbType == DbType.Int64)
+            {
+                Value = ((Int64) value);
+            }
+            else if (DbType == DbType.DateTime)
+            {
+                Value = ((DateTime) value);
+            }
+            else if (DbType == DbType.DateTime2)
+            {
+                Value = ((DateTime?) value);
+            }
+            else if (DbType == DbType.DateTimeOffset)
+            {
+                Value = ((DateTimeOffset?) value);
             }
             else
             {
-                
-                if (DbType == DbType.Guid)
-                {
-                    Value = value.ToString();
-                    Size = 40;
-                }
-                else if (DbType == DbType.Binary)
-                {
-                    Value = (byte[])value;
-                }
-                else if (DbType ==  DbType.String)
-                {
-                    if (size > 0)
-                        Size = size;
-                    Value = size > 0
-                        ? value.ToString().ToEmptyIfNull().TrimToSize(size)
-                        : value.ToString().ToEmptyIfNull();
-                }
-                else if (DbType == DbType.Boolean)
-                {
-                    Value = ((bool) value) ? 1 : 0;
-                }
-                else if (DbType == DbType.Double)
-                {
-                    Value = (double) value;
-                }
-                else if (DbType == DbType.Int32)
-                {
-                    Value = ((int) value);
-                }
-                else if (DbType == DbType.Int64)
-                {
-                    Value = ((Int64) value);
-                }
-                else if (DbType == DbType.DateTime)
-                {
-                    Value = ((DateTime) value);
-                }
-                else if (DbType == DbType.DateTime2)
-                {
-                    Value = ((DateTime?)value);
-                }
-                else if (DbType == DbType.DateTimeOffset)
-                {
-                    Value = ((DateTimeOffset?)value);
-                }
-                else
-                {
-                    Value = value;
-                }
+                Value = value;
             }
-
+            
         }
-        
+
         public string DbTypeNormalized()
         {
             var dbTypeNormalized = DbType.ToDbTypeNormalized(Size == 0 ? "max" : Size.ToString());
@@ -133,30 +134,27 @@ namespace Plato.Internal.Data.Abstractions
         {
 
             var p = cmd.CreateParameter();
-            p.ParameterName = $"@{this.ParameterName}";
-            p.Value = this.Value;
-            p.Direction = this.Direction;
-            p.DbType = this.DbType;
+            p.ParameterName = $"@{ParameterName}";
+            p.Value = Value;
+            p.Direction = Direction;
+            p.DbType = DbType;
          
-            if (this.DbType == DbType.String)
+            if (DbType == DbType.String || DbType == DbType.AnsiString)
             {
-                if (this.Size > 0)
+                if (Size > 0)
                 {
-                    p.Size = this.Size;
+                    p.Size = Size;
                 }
                 else
                 {
-                    p.Size = Math.Max(((string) this.Value).Length + 1,
+                    p.Size = Math.Max(((string) Value).Length + 1,
                         4000); // Help query plan caching by using common size;
                 }
             }
             else
             {
-                if (this.Size > 0)
-                {
-                    p.Size = this.Size;
-                }
-
+                if (Size > 0)
+                    p.Size = Size;
             }
 
             return p;

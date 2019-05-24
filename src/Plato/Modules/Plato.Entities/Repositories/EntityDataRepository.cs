@@ -45,25 +45,27 @@ namespace Plato.Entities.Repositories
             EntityData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<EntityData>(
-                  CommandType.StoredProcedure,
+                data = await context.ExecuteReaderAsync2<EntityData>(
+                    CommandType.StoredProcedure,
                     "SelectEntityDatumById",
-                  async reader =>
-                  {
-                      if (reader != null)
-                      {
-                          if (reader.HasRows)
-                          {
-                              data = new EntityData();
-                              await reader.ReadAsync();
-                              data.PopulateModel(reader);
-                          }
-                      }
+                    async reader =>
+                    {
+                        if (reader != null)
+                        {
+                            if (reader.HasRows)
+                            {
+                                data = new EntityData();
+                                await reader.ReadAsync();
+                                data.PopulateModel(reader);
+                            }
+                        }
 
-                      return data;
-                  },
-                  id);
-              
+                        return data;
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
 
             }
 
@@ -77,7 +79,7 @@ namespace Plato.Entities.Repositories
             IList<EntityData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<IList<EntityData>>(
+                data = await context.ExecuteReaderAsync2<IList<EntityData>>(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumByEntityId",
                     async reader =>
@@ -98,9 +100,11 @@ namespace Plato.Entities.Repositories
 
                         return data;
 
-                    },
-                    entityId);
-              
+                    }, new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
+
             }
             return data;
 
@@ -111,11 +115,11 @@ namespace Plato.Entities.Repositories
             var id = await InsertUpdateInternal(
                 data.Id,
                 data.EntityId,
-                data.Key.ToEmptyIfNull().TrimToSize(255),
-                data.Value.ToEmptyIfNull(),
-                data.CreatedDate.ToDateIfNull(),
+                data.Key,
+                data.Value,
+                data.CreatedDate,
                 data.CreatedUserId,
-                data.ModifiedDate.ToDateIfNull(),
+                data.ModifiedDate,
                 data.ModifiedUserId);
             if (id > 0)
             {
@@ -136,9 +140,12 @@ namespace Plato.Entities.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityDatumById", id);
+                    "DeleteEntityDatumById", new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -211,17 +218,20 @@ namespace Plato.Entities.Repositories
             {
                 if (context == null)
                     return 0;
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityDatum",
-                    id,
-                    entityId,
-                    key.ToEmptyIfNull().TrimToSize(255),
-                    value.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate.ToDateIfNull(),
-                    modifiedUserId);
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("Key", DbType.String, 255, key),
+                        new DbParam("Value", DbType.String, value),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId)
+                    });
             }
 
             return output;
