@@ -145,7 +145,7 @@ namespace Plato.Internal.Data.Providers
 
         // -------- Testing
 
-        public async Task<T> ExecuteReaderAsync2<T>(string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams) where T : class
+        public async Task<T> ExecuteReaderAsync2<T>(string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams = null) where T : class
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
@@ -181,7 +181,7 @@ namespace Plato.Internal.Data.Providers
             return output;
         }
 
-        public async Task<T> ExecuteScalarAsync2<T>(string sql, DbParam[] dbParams)
+        public async Task<T> ExecuteScalarAsync2<T>(string sql, DbParam[] dbParams = null)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -223,7 +223,7 @@ namespace Plato.Internal.Data.Providers
 
         }
 
-        public async Task<T> ExecuteNonQueryAsync2<T>(string sql, DbParam[] dbParams)
+        public async Task<T> ExecuteNonQueryAsync2<T>(string sql, DbParam[] dbParams = null)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {

@@ -163,18 +163,22 @@ namespace Plato.Internal.Data
 
             // Build a collection of output parameters and there names
             IDictionary<string, DbParam> outputParams = null;
-            foreach (var parameter in dbParams)
+            if (dbParams != null)
             {
-                if (parameter.Direction == ParameterDirection.Output)
+                foreach (var parameter in dbParams)
                 {
-                    if (outputParams == null)
+                    if (parameter.Direction == ParameterDirection.Output)
                     {
-                        outputParams = new Dictionary<string, DbParam>();
+                        if (outputParams == null)
+                        {
+                            outputParams = new Dictionary<string, DbParam>();
+                        }
+                        outputParams.Add(parameter.ParameterName, parameter);
                     }
-                    outputParams.Add(parameter.ParameterName, parameter);
                 }
+
             }
-            
+
             var sb = new StringBuilder();
             if (outputParams != null)
             {
@@ -186,22 +190,26 @@ namespace Plato.Internal.Data
 
             sb.Append("EXEC ");
             sb.Append(procedureName);
+
             var i = 0;
-            foreach (var parameter in dbParams)
+            if (dbParams != null)
             {
-
-                if (outputParams?.ContainsKey(parameter.ParameterName) ?? false)
+                foreach (var parameter in dbParams)
                 {
-                    sb.Append($" @{parameter.ParameterName}_out output");
-                }
-                else
-                {
-                    sb.Append($" @{parameter.ParameterName}");
-                }
 
-                if (i < dbParams.Length - 1)
-                    sb.Append(",");
-                i++;
+                    if (outputParams?.ContainsKey(parameter.ParameterName) ?? false)
+                    {
+                        sb.Append($" @{parameter.ParameterName}_out output");
+                    }
+                    else
+                    {
+                        sb.Append($" @{parameter.ParameterName}");
+                    }
+
+                    if (i < dbParams.Length - 1)
+                        sb.Append(",");
+                    i++;
+                }
             }
 
             sb.Append(";");
@@ -394,12 +402,15 @@ namespace Plato.Internal.Data
             cmd.Connection = connection;
             cmd.CommandText = sql;
 
-            foreach (var parameter in dbParams)
+            if (dbParams != null)
             {
-                var p = parameter.CreateParameter(cmd);
-                cmd.Parameters.Add(p);
+                foreach (var parameter in dbParams)
+                {
+                    var p = parameter.CreateParameter(cmd);
+                    cmd.Parameters.Add(p);
+                }
             }
-
+        
             return cmd;
 
         }

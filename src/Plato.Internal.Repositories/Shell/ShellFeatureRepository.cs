@@ -38,9 +38,13 @@ namespace Plato.Internal.Repositories.Shell
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteShellFeatureById", id);
+                    "DeleteShellFeatureById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -74,56 +78,18 @@ namespace Plato.Internal.Repositories.Shell
             ShellFeature feature = null;
             using (var context = _dbContext)
             {
-                feature = await context.ExecuteReaderAsync<ShellFeature>(
+                feature = await context.ExecuteReaderAsync2<ShellFeature>(
                     CommandType.StoredProcedure,
                     "SelectShellFeatureById",
                     async reader => await BuildObjectFromResultSets(reader),
-                    id);
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return feature;
 
-        }
-
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParameters) where T : class
-        {
-            PagedResults<T> results = null;
-            using (var context = _dbContext)
-            {
-                
-                results = await context.ExecuteReaderAsync<PagedResults<T>>(
-                    CommandType.StoredProcedure,
-                    "SelectShellFeaturesPaged",
-                    async reader =>
-                    {
-
-                        if ((reader != null) && (reader.HasRows))
-                        {
-                            var output = new PagedResults<T>();
-                            while (await reader.ReadAsync())
-                            {
-                                var entity = new ShellFeature();
-                                entity.PopulateModel(reader);
-                                output.Data.Add((T)Convert.ChangeType(entity, typeof(T)));
-                            }
-
-                            if (await reader.NextResultAsync())
-                            {
-                                await reader.ReadAsync();
-                                output.PopulateTotal(reader);
-                            }
-
-                            return output;
-                        }
-
-                        return null;
-                    },
-                    inputParameters);
-
-               
-            }
-
-            return results;
         }
         
         public async Task<IPagedResults<ShellFeature>> SelectAsync(params object[] inputParams)
@@ -172,7 +138,7 @@ namespace Plato.Internal.Repositories.Shell
             IList<ShellFeature> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<IList<ShellFeature>>(
+                data = await context.ExecuteReaderAsync2<IList<ShellFeature>>(
                     CommandType.StoredProcedure,
                     "SelectShellFeatures",
                     async reader =>
@@ -235,14 +201,17 @@ namespace Plato.Internal.Repositories.Shell
             
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateShellFeature",
-                    id,
-                    moduleId.ToEmptyIfNull(),
-                    version.ToEmptyIfNull(),
-                    settings.ToEmptyIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("ModuleId", DbType.String, 255, moduleId),
+                        new DbParam("Version", DbType.String, 10, version),
+                        new DbParam("Settings", DbType.String, settings),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
         }
 

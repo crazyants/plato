@@ -74,7 +74,7 @@ namespace Plato.Internal.Repositories.Abstract
             DictionaryEntry output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectDictionaryEntryById",
                     async reader =>
@@ -87,8 +87,10 @@ namespace Plato.Internal.Repositories.Abstract
                         }
 
                         return output;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return output;
@@ -102,7 +104,7 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 using (var context = _dbContext)
                 {
-                    output = await context.ExecuteReaderAsync<IList<DictionaryEntry>>(
+                    output = await context.ExecuteReaderAsync2<IList<DictionaryEntry>>(
                         CommandType.StoredProcedure,
                         "SelectDictionaryEntries",
                         async reader =>
@@ -135,7 +137,7 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 using (var context = _dbContext)
                 {
-                    entry = await context.ExecuteReaderAsync(
+                    entry = await context.ExecuteReaderAsync2(
                         CommandType.StoredProcedure,
                         "SelectDictionaryEntryByKey",
                         async reader =>
@@ -146,9 +148,12 @@ namespace Plato.Internal.Repositories.Abstract
                                 await reader.ReadAsync();
                                 entry.PopulateModel(reader);
                             }
+
                             return entry;
-                        },
-                        key);
+                        }, new[]
+                        {
+                            new DbParam("Key", DbType.Int32, key)
+                        });
 
                 }
             }
@@ -202,17 +207,20 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 if (context == null)
                     return 0;
-                return await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateDictionaryEntry",
-                    id,
-                    key.ToEmptyIfNull().TrimToSize(255),
-                    value.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate.ToDateIfNull(),
-                    modifiedUserId,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("Key", DbType.String, 255, key),
+                        new DbParam("Value", DbType.String, value),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
             
         }

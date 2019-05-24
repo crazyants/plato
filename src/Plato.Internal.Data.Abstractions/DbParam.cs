@@ -85,6 +85,12 @@ namespace Plato.Internal.Data.Abstractions
                     ? value.ToString().ToEmptyIfNull().TrimToSize(this.Size)
                     : value.ToString().ToEmptyIfNull();
             }
+            else if (DbType == DbType.AnsiString)
+            {
+                Value = this.Size > 0
+                    ? value.ToString().ToEmptyIfNull().TrimToSize(this.Size)
+                    : value.ToString().ToEmptyIfNull();
+            }
             else if (DbType == DbType.Boolean)
             {
                 Value = ((bool) value) ? 1 : 0;
@@ -99,7 +105,7 @@ namespace Plato.Internal.Data.Abstractions
             }
             else if (DbType == DbType.Int64)
             {
-                Value = ((Int64) value);
+                Value = ((float) value);
             }
             else if (DbType == DbType.DateTime)
             {
@@ -147,8 +153,11 @@ namespace Plato.Internal.Data.Abstractions
                 }
                 else
                 {
-                    p.Size = Math.Max(((string) Value).Length + 1,
-                        4000); // Help query plan caching by using common size;
+                    if (Value != null)
+                    {
+                        p.Size = Math.Max(((string)Value).Length + 1,
+                            4000); // Help query plan caching by using common size;
+                    }
                 }
             }
             else

@@ -10,8 +10,10 @@ namespace Plato.Internal.Repositories.Users
 {
     public class UserBannerRepository : IUserBannerRepository<UserBanner>
     {
-        #region "Constructor"
-
+     
+        private readonly IDbContext _dbContext;
+        private readonly ILogger<UserBannerRepository> _logger;
+        
         public UserBannerRepository(
             IDbContext dbContext,
             ILogger<UserBannerRepository> logger)
@@ -19,56 +21,7 @@ namespace Plato.Internal.Repositories.Users
             _dbContext = dbContext;
             _logger = logger;
         }
-
-        #endregion
-
-        #region "Private Methods"
-
-        private async Task<int> InsertUpdateInternal(
-            int id,
-            int userId,
-            string name,
-            byte[] contentBlob,
-            string contentType,
-            float contentLength,
-            DateTimeOffset? createdDate,
-            int createdUserId,
-            DateTimeOffset? modifiedDate,
-            int modifiedUserId)
-        {
-            var bannerId = 0;
-            using (var context = _dbContext)
-            {
-                bannerId = await context.ExecuteScalarAsync<int>(
-                    CommandType.StoredProcedure,
-                    "InsertUpdateUserBanner",
-                    id,
-                    userId,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
-                    contentType.ToEmptyIfNull().TrimToSize(75),
-                    contentLength,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
-            }
-
-            return bannerId;
-        }
-
-        #endregion
-
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly ILogger<UserBannerRepository> _logger;
-
-        #endregion
-
-        #region "Implementation"
-
+     
         public Task<bool> DeleteAsync(int id)
         {
             // TODO
@@ -105,14 +58,13 @@ namespace Plato.Internal.Repositories.Users
         {
             throw new NotImplementedException();
         }
-
-
+        
         public async Task<UserBanner> SelectByIdAsync(int id)
         {
             UserBanner banner = null;
             using (var context = _dbContext)
             {
-                banner = await context.ExecuteReaderAsync(
+                banner = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserBanner",
                     async reader =>
@@ -124,8 +76,10 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return banner;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
               
             }
@@ -138,7 +92,7 @@ namespace Plato.Internal.Repositories.Users
             UserBanner banner = null;
             using (var context = _dbContext)
             {
-                banner = await context.ExecuteReaderAsync(
+                banner = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserBannerByUserId",
                     async reader =>
@@ -150,14 +104,54 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return banner;
-                    },
-                    userId);
-                
+                    }, new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId)
+                    });
+
             }
 
             return banner;
         }
 
-        #endregion
+        // ----------------
+
+        async Task<int> InsertUpdateInternal(
+            int id,
+            int userId,
+            string name,
+            byte[] contentBlob,
+            string contentType,
+            float contentLength,
+            DateTimeOffset? createdDate,
+            int createdUserId,
+            DateTimeOffset? modifiedDate,
+            int modifiedUserId)
+        {
+            var bannerId = 0;
+            using (var context = _dbContext)
+            {
+                bannerId = await context.ExecuteScalarAsync2<int>(
+                    CommandType.StoredProcedure,
+                    "InsertUpdateUserBanner",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("ContentBlob", DbType.Binary, contentBlob ?? new byte[0]),
+                        new DbParam("ContentType", DbType.String, 75, contentType),
+                        new DbParam("ContentLength", DbType.Int64, contentLength),
+                        new DbParam("CreatedUserId", DbType.Int64, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int64, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
+            }
+
+            return bannerId;
+        }
+
     }
 }

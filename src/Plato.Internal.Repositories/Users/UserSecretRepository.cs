@@ -57,7 +57,7 @@ namespace Plato.Internal.Repositories.Users
             UserSecret secret = null;
             using (var context = _dbContext)
             {
-                secret = await context.ExecuteReaderAsync(
+                secret = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserSecret",
                     async reader =>
@@ -70,8 +70,10 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return secret;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
               
             }
@@ -107,14 +109,17 @@ namespace Plato.Internal.Repositories.Users
             var dbId = 0;
             using (var context = _dbContext)
             {
-                dbId = await context.ExecuteScalarAsync<int>(
+                dbId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "plato_sp_InsertUpdateUserSecret",
-                    id,
-                    userId,
-                    secret.ToEmptyIfNull().TrimToSize(255),
-                    delimitedSalts.ToEmptyIfNull().TrimToSize(255),
-                    securityStamp.ToEmptyIfNull().TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("Secret", DbType.String, 255, secret),
+                        new DbParam("DelimitedSalts", DbType.String, 255, delimitedSalts),
+                        new DbParam("SecurityStamp", DbType.String, 255, securityStamp),
+                    });
             }
 
             return dbId;

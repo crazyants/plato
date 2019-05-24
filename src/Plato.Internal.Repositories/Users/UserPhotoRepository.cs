@@ -47,9 +47,13 @@ namespace Plato.Internal.Repositories.Users
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteUserPhotoById", id);
+                    "DeleteUserPhotoById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -80,7 +84,7 @@ namespace Plato.Internal.Repositories.Users
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                photo = await context.ExecuteReaderAsync<UserPhoto>(
+                photo = await context.ExecuteReaderAsync2<UserPhoto>(
                     CommandType.StoredProcedure,
                     "SelectUserPhotoById",
                     async reader =>
@@ -92,8 +96,10 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return photo;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
 
             }
@@ -106,7 +112,7 @@ namespace Plato.Internal.Repositories.Users
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                photo = await context.ExecuteReaderAsync<UserPhoto>(
+                photo = await context.ExecuteReaderAsync2<UserPhoto>(
                     CommandType.StoredProcedure,
                     "SelectUserPhotoByUserId",
                     async reader =>
@@ -118,8 +124,10 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return photo;
-                    },
-                    userId);
+                    }, new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId)
+                    });
 
 
             }
@@ -145,20 +153,23 @@ namespace Plato.Internal.Repositories.Users
         {
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserPhoto",
-                    id,
-                    userId,
-                    name.ToEmptyIfNull().ToSafeFileName().TrimToSize(255),
-                    contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
-                    contentType.ToEmptyIfNull().TrimToSize(75),
-                    contentLength,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("Name", DbType.String, 255, name.ToSafeFileName()),
+                        new DbParam("ContentBlob", DbType.Binary, contentBlob ?? new byte[0]),
+                        new DbParam("ContentType", DbType.String, 75, contentType),
+                        new DbParam("ContentLength", DbType.Int64, contentLength),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset,  createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset,  modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32,  ParameterDirection.Output),
+                    });
             }
         }
 

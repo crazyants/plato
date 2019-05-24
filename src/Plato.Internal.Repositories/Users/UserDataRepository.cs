@@ -40,7 +40,7 @@ namespace Plato.Internal.Repositories.Users
             UserData userData = null;
             using (var context = _dbContext)
             {
-                userData = await context.ExecuteReaderAsync(
+                userData = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserDatumById",
                     async reader =>
@@ -53,8 +53,10 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return userData;
-                    },
-                    id);
+                    }, new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                    });
             
 
             }
@@ -69,7 +71,7 @@ namespace Plato.Internal.Repositories.Users
             UserData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserDatumByKeyAndUserId",
                     async reader =>
@@ -82,9 +84,11 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return data;
-                    },
-                    key.ToEmptyIfNull(),
-                    userId);
+                    }, new []
+                    {
+                        new DbParam("Key", DbType.String, 255, key),
+                        new DbParam("UserId", DbType.Int32, userId),
+                    });
 
             }
 
@@ -98,7 +102,7 @@ namespace Plato.Internal.Repositories.Users
             IList<UserData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<IList<UserData>>(
+                data = await context.ExecuteReaderAsync2<IList<UserData>>(
                     CommandType.StoredProcedure,
                     "SelectUserDatumByUserId",
                     async reader =>
@@ -115,8 +119,10 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return data;
-                    },
-                    userId);
+                    }, new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId)
+                    });
              
             }
             return data;
@@ -230,18 +236,21 @@ namespace Plato.Internal.Repositories.Users
             {
                 if (context == null)
                     return 0;
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserDatum",
-                    id,
-                    userId,
-                    key.ToEmptyIfNull().TrimToSize(255),
-                    value.ToEmptyIfNull(),
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("Key", DbType.String, 255, key),
+                        new DbParam("Value", DbType.String, value),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
 
             return output;

@@ -62,7 +62,7 @@ namespace Plato.Internal.Data
 
         // --- Testing
 
-        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams) where T : class
+        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams = null) where T : class
         {
             if (_provider == null)
                 return null;

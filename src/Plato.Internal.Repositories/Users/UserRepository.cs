@@ -244,12 +244,15 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameAndPassword",
                     async reader => await BuildUserFromResultSets(reader),
-                    userName.TrimToSize(255),
-                    password.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("UserName", DbType.String, 255, userName),
+                        new DbParam("Password", DbType.String, 255, password),
+                    });
             }
 
             return user;
@@ -271,12 +274,15 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserByEmailAndPassword",
                     async reader => await BuildUserFromResultSets(reader),
-                    email.TrimToSize(255),
-                    password.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("Email", DbType.String, 255, email),
+                        new DbParam("Password", DbType.String, 255, password),
+                    });
             }
 
             return user;
@@ -293,11 +299,14 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByResetToken",
                     async reader => await BuildUserFromResultSets(reader),
-                    resetToken.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("ResetToken", DbType.String, 255, resetToken)
+                    });
             }
 
             return user;
@@ -313,11 +322,14 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByConfirmationToken",
                     async reader => await BuildUserFromResultSets(reader),
-                    confirmationToken.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("ConfirmationToken", DbType.String, 255, confirmationToken),
+                    });
             }
 
             return user;
@@ -334,11 +346,14 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByApiKey",
                     async reader => await BuildUserFromResultSets(reader),
-                    apiKey.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("ApiKey", DbType.String, 255, apiKey)
+                    });
             }
 
             return user;
@@ -520,7 +535,7 @@ namespace Plato.Internal.Repositories.Users
             using (var context = _dbContext)
             {
 
-                userId = await context.ExecuteScalarAsync<int>(
+                userId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUser",
                     new[]
@@ -564,9 +579,11 @@ namespace Plato.Internal.Repositories.Users
                         new DbParam("Visits", DbType.Int32, visits),
                         new DbParam("VisitsUpdatedDate", DbType.DateTimeOffset, visitsUpdatedDate.ToDateIfNull()),
                         new DbParam("minutesActive", DbType.Int32, minutesActive),
-                        new DbParam("MinutesActiveUpdatedDate", DbType.DateTimeOffset, minutesActiveUpdatedDate.ToDateIfNull()),
+                        new DbParam("MinutesActiveUpdatedDate", DbType.DateTimeOffset,
+                            minutesActiveUpdatedDate.ToDateIfNull()),
                         new DbParam("Reputation", DbType.Int32, reputation),
-                        new DbParam("ReputationUpdatedDate", DbType.DateTimeOffset, reputationUpdatedDate.ToDateIfNull()),
+                        new DbParam("ReputationUpdatedDate", DbType.DateTimeOffset,
+                            reputationUpdatedDate.ToDateIfNull()),
                         new DbParam("Rank", DbType.Int32, rank),
                         new DbParam("RankUpdatedDate", DbType.DateTimeOffset, rankUpdatedDate.ToDateIfNull()),
                         new DbParam("Signature", DbType.String, signature),
@@ -588,9 +605,7 @@ namespace Plato.Internal.Repositories.Users
                         new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate.ToDateIfNull()),
                         new DbParam("LastLoginDate", DbType.DateTimeOffset, lastLoginDate.ToDateIfNull()),
                         new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
-                    }
-                      
-                );
+                    });
             }
 
             // Add user data

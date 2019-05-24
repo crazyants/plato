@@ -37,9 +37,13 @@ namespace Plato.Internal.Repositories.Users
             bool success;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<bool>(
+                success = await context.ExecuteScalarAsync2<bool>(
                     CommandType.StoredProcedure,
-                    "DeleteUserRoleById", id);
+                    "DeleteUserRoleById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
             return success;
         }
@@ -63,7 +67,7 @@ namespace Plato.Internal.Repositories.Users
             UserRole userRole = null;
             using (var context = _dbContext)
             {
-                userRole = await context.ExecuteReaderAsync<UserRole>(
+                userRole = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserRoleById",
                     async reader =>
@@ -76,10 +80,11 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return userRole;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
-              
             }
 
             return userRole;
@@ -90,7 +95,7 @@ namespace Plato.Internal.Repositories.Users
             IList<UserRole> userRoles = null;
             using (var context = _dbContext)
             {
-                userRoles = await context.ExecuteReaderAsync<IList<UserRole>>(
+                userRoles = await context.ExecuteReaderAsync2<IList<UserRole>>(
                     CommandType.StoredProcedure,
                     "SelectUserRolesByUserId",
                     async reader =>
@@ -104,13 +109,15 @@ namespace Plato.Internal.Repositories.Users
                                 userRole.PopulateModel(reader);
                                 userRoles.Add(userRole);
                             }
-                     
+
                         }
 
                         return userRoles;
-                    },
-                    userId);
-                
+                    }, new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId)
+                    });
+
             }
 
             return userRoles;
@@ -181,11 +188,14 @@ namespace Plato.Internal.Repositories.Users
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserRoleByUserIdAndRoleId",
-                    userId,
-                    roleId);
+                    new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("RoleId", DbType.Int32, roleId)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -244,13 +254,16 @@ namespace Plato.Internal.Repositories.Users
         {
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserRole",
-                    id,
-                    userId,
-                    roleId,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("RoleId", DbType.Int32, roleId),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
         }
         
