@@ -17,6 +17,8 @@ namespace Plato.Internal.Data.Abstractions.Extensions
                     return "int";
                 case DbType.Boolean:
                     return "bit";
+                case DbType.AnsiString:
+                    return "varchar(" + stringLength + ")";
                 case DbType.String:
                     return "nvarchar(" + stringLength + ")";
                 case DbType.Date:
@@ -37,6 +39,8 @@ namespace Plato.Internal.Data.Abstractions.Extensions
                     return "uniqueidentifier";
                 case DbType.Xml:
                     return "xml";
+                default:
+                    return "sql_variant";
 
             }
 

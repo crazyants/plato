@@ -108,11 +108,15 @@ namespace Plato.Entities.Repositories
             TModel entity = null;
             using (var context = _dbContext)
             {
-                entity = await context.ExecuteReaderAsync<TModel>(
+                entity = await context.ExecuteReaderAsync2<TModel>(
                     CommandType.StoredProcedure,
                     "SelectEntityById",
                     async reader => await BuildEntityFromResultSets(reader),
-                    id);
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+
+                    });
             }
 
             return entity;
@@ -173,9 +177,13 @@ namespace Plato.Entities.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityById", id);
+                    "DeleteEntityById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                    });
             }
 
             return success > 0 ? true : false;
@@ -275,59 +283,118 @@ namespace Plato.Entities.Repositories
             var entityId = 0;
             using (var context = _dbContext)
             {
-                entityId = await context.ExecuteScalarAsync<int>(
+                entityId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
-                    id,
-                    parentId,
-                    featureId,
-                    categoryId,
-                    title.ToEmptyIfNull().TrimToSize(255),
-                    alias.ToEmptyIfNull().TrimToSize(255),
-                    message.ToEmptyIfNull(),
-                    html.ToEmptyIfNull(),
-                    messageAbstract.ToEmptyIfNull().TrimToSize(500),
-                    urls.ToEmptyIfNull(),
-                    isHidden,
-                    isPrivate,
-                    isSpam,
-                    isPinned,
-                    isDeleted,
-                    isLocked,
-                    isClosed,
-                    totalViews,
-                    totalReplies,
-                    totalAnswers,
-                    totalParticipants,
-                    totalReactions,
-                    totalFollows,
-                    totalReports,
-                    totalStars,
-                    totalRatings,
-                    summedRating,
-                    meanRating,
-                    totalLinks,
-                    totalImages,
-                    dailyViews,
-                    dailyReplies,
-                    dailyAnswers,
-                    dailyReactions,
-                    dailyFollows,
-                    dailyReports,
-                    dailyStars,
-                    dailyRatings,
-                    sortOrder,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    editedUserId,
-                    editedDate,
-                    modifiedUserId,
-                    modifiedDate,
-                    lastReplyId,
-                    lastReplyUserId,
-                    lastReplyDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("ParentId", DbType.Int32, parentId),
+                        new DbParam("FeatureId", DbType.Int32, featureId),
+                        new DbParam("CategoryId", DbType.Int32, categoryId),
+                        new DbParam("Title",DbType.String, 255, title),
+                        new DbParam("Alias",DbType.String, 255, alias),
+                        new DbParam("Message",DbType.String, message),
+                        new DbParam("Html",DbType.String, html),
+                        new DbParam("Abstract",DbType.String, 500, messageAbstract),
+                        new DbParam("Urls", DbType.String, urls),
+                        new DbParam("IsHidden", DbType.Boolean, isHidden),
+                        new DbParam("IsPrivate", DbType.Boolean, isPrivate),
+                        new DbParam("IsSpam", DbType.Boolean, isSpam),
+                        new DbParam("IsPinned", DbType.Boolean, isPinned),
+                        new DbParam("IsDeleted", DbType.Boolean, isDeleted),
+                        new DbParam("IsLocked", DbType.Boolean, isLocked),
+                        new DbParam("IsClosed", DbType.Boolean, isClosed),
+                        new DbParam("TotalViews", DbType.Int32, totalViews),
+                        new DbParam("TotalReplies", DbType.Int32, totalReplies),
+                        new DbParam("TotalAnswers", DbType.Int32, totalAnswers),
+                        new DbParam("TotalParticipants", DbType.Int32, totalParticipants),
+                        new DbParam("TotalReactions", DbType.Int32, totalReactions),
+                        new DbParam("TotalFollows", DbType.Int32, totalFollows),
+                        new DbParam("TotalReports", DbType.Int32, totalReports),
+                        new DbParam("TotalStars", DbType.Int32, totalStars),
+                        new DbParam("TotalRatings", DbType.Int32, totalRatings),
+                        new DbParam("SummedRating", DbType.Int32, summedRating),
+                        new DbParam("MeanRating", DbType.Int32, meanRating),
+                        new DbParam("TotalLinks", DbType.Int32, totalLinks),
+                        new DbParam("TotalImages", DbType.Int32, totalImages),
+                        new DbParam("DailyViews", DbType.Double, dailyViews),
+                        new DbParam("DailyReplies", DbType.Double, dailyReplies),
+                        new DbParam("DailyAnswers", DbType.Double, dailyAnswers),
+                        new DbParam("DailyReactions", DbType.Double, dailyReactions),
+                        new DbParam("DailyFollows", DbType.Double, dailyFollows),
+                        new DbParam("DailyReports", DbType.Double, dailyReports),
+                        new DbParam("DailyStars", DbType.Double, dailyStars),
+                        new DbParam("DailyRatings", DbType.Double, dailyRatings),
+                        new DbParam("SortOrder", DbType.Int32, sortOrder),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("EditedUserId", DbType.Int32, editedUserId),
+                        new DbParam("EditedDate", DbType.DateTimeOffset, editedDate),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("LastReplyId", DbType.Int32, lastReplyId),
+                        new DbParam("LastReplyUserId", DbType.Int32, lastReplyUserId),
+                        new DbParam("LastReplyDate", DbType.DateTimeOffset, lastReplyDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
+
+            //using (var context = _dbContext)
+            //{
+            //    entityId = await context.ExecuteScalarAsync<int>(
+            //        CommandType.StoredProcedure,
+            //        "InsertUpdateEntity",
+            //        id,
+            //        parentId,
+            //        featureId,
+            //        categoryId,
+            //        title.ToEmptyIfNull().TrimToSize(255),
+            //        alias.ToEmptyIfNull().TrimToSize(255),
+            //        message.ToEmptyIfNull(),
+            //        html.ToEmptyIfNull(),
+            //        messageAbstract.ToEmptyIfNull().TrimToSize(500),
+            //        urls.ToEmptyIfNull(),
+            //        isHidden,
+            //        isPrivate,
+            //        isSpam,
+            //        isPinned,
+            //        isDeleted,
+            //        isLocked,
+            //        isClosed,
+            //        totalViews,
+            //        totalReplies,
+            //        totalAnswers,
+            //        totalParticipants,
+            //        totalReactions,
+            //        totalFollows,
+            //        totalReports,
+            //        totalStars,
+            //        totalRatings,
+            //        summedRating,
+            //        meanRating,
+            //        totalLinks,
+            //        totalImages,
+            //        dailyViews,
+            //        dailyReplies,
+            //        dailyAnswers,
+            //        dailyReactions,
+            //        dailyFollows,
+            //        dailyReports,
+            //        dailyStars,
+            //        dailyRatings,
+            //        sortOrder,
+            //        createdUserId,
+            //        createdDate.ToDateIfNull(),
+            //        editedUserId,
+            //        editedDate,
+            //        modifiedUserId,
+            //        modifiedDate,
+            //        lastReplyId,
+            //        lastReplyUserId,
+            //        lastReplyDate.ToDateIfNull(),
+            //        new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+            //}
             
             // Add entity data
             if (entityId > 0)

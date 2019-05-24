@@ -67,7 +67,7 @@ namespace Plato.Internal.Data
             if (_provider == null)
                 return null;
             if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateDbParamsExecuteStoredProcedureSql(GetProcedureName(sql), dbParams);
+                sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
             return await _provider.ExecuteReaderAsync2<T>(sql, populate, dbParams);
         }
 
@@ -76,7 +76,7 @@ namespace Plato.Internal.Data
             if (_provider == null)
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateDbParamsExecuteStoredProcedureSql(GetProcedureName(sql), dbParams);
+                sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
             return await _provider.ExecuteScalarAsync2<T>(sql, dbParams);
         }
 
@@ -85,7 +85,7 @@ namespace Plato.Internal.Data
             if (_provider == null)
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateDbParamsExecuteStoredProcedureSql(GetProcedureName(sql), dbParams);
+                sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
             return await _provider.ExecuteNonQueryAsync2<T>(sql, dbParams);
         }
 

@@ -121,7 +121,7 @@ namespace Plato.Discuss.Controllers
                 pager = new PagerOptions();
             }
 
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -2046,7 +2046,7 @@ Ryan :heartpulse: :heartpulse: :heartpulse:";
             var data = await _topicManager.CreateAsync(entity);
             if (data.Succeeded)
             {
-                for (var i = 0; i < 25; i++)
+                for (var i = 0; i < 1; i++)
                 {
                     rnd = new Random();
                     randomUser = users?.Data[rnd.Next(0, totalUsers)];
