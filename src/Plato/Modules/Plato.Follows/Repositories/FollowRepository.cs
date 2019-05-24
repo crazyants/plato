@@ -55,7 +55,7 @@ namespace Plato.Follows.Repositories
             Follow follow = null;
             using (var context = _dbContext)
             {
-                follow = await context.ExecuteReaderAsync(
+                follow = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectFollowById",
                     async reader =>
@@ -68,8 +68,10 @@ namespace Plato.Follows.Repositories
                         }
 
                         return follow;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -82,7 +84,7 @@ namespace Plato.Follows.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync<IPagedResults<Follow>>(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectFollowsPaged",
                     async reader =>
@@ -129,9 +131,13 @@ namespace Plato.Follows.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteFollowById", id);
+                    "DeleteFollowById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -142,7 +148,7 @@ namespace Plato.Follows.Repositories
             IList<Follow> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<Follow>>(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectFollowsByNameAndThingId",
                     async reader =>
@@ -160,9 +166,11 @@ namespace Plato.Follows.Repositories
                         }
 
                         return output;
-                    },
-                    name,
-                    thingId);
+                    }, new[]
+                    {
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("ThingId", DbType.Int32, thingId)
+                    });
 
             }
 
@@ -174,7 +182,7 @@ namespace Plato.Follows.Repositories
             Follow follow = null;
             using (var context = _dbContext)
             {
-                follow = await context.ExecuteReaderAsync(
+                follow = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectFollowByNameThingIdAndCreatedUserId",
                     async reader =>
@@ -188,12 +196,13 @@ namespace Plato.Follows.Repositories
 
                         return follow;
 
-                    },
-                    name,
-                    thingId,
-                    createdUserId);
-             
-
+                    }, new[]
+                    {
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("ThingId", DbType.Int32, thingId),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                    });
+                
             }
 
             return follow;
@@ -215,16 +224,19 @@ namespace Plato.Follows.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateFollow",
-                    id,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    thingId,
-                    cancellationToken.ToEmptyIfNull().TrimToSize(100),
-                    createdUserId,
-                    createdDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("ThingId", DbType.Int32, thingId),
+                        new DbParam("CancellationToken", DbType.String, 100, cancellationToken),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
 
             return output;

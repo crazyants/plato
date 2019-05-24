@@ -235,7 +235,7 @@ namespace Plato.Entities.Repositories
                         new DbParam("EditedDate", DbType.DateTimeOffset, editedDate),
                         new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
                         new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
-                        new DbParam("UniqueId",DbType.Int32, ParameterDirection.InputOutput),
+                        new DbParam("UniqueId",DbType.Int32, ParameterDirection.Output),
                     });
             }
 

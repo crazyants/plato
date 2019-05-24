@@ -261,7 +261,7 @@ namespace Plato.Users.Handlers
                     {
                         Name = "Theme",
                         DbType = DbType.String,
-                        Length = "50"
+                        Length = "255"
                     },
                     new SchemaColumn()
                     {

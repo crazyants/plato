@@ -230,7 +230,8 @@ namespace Plato.Entities.Repositories
                         new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
                         new DbParam("CreatedUserId", DbType.Int32, createdUserId),
                         new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate.ToDateIfNull()),
-                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId)
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("UniqueId",DbType.Int32, ParameterDirection.Output),
                     });
             }
 

@@ -336,7 +336,7 @@ namespace Plato.Entities.Repositories
                         new DbParam("LastReplyId", DbType.Int32, lastReplyId),
                         new DbParam("LastReplyUserId", DbType.Int32, lastReplyUserId),
                         new DbParam("LastReplyDate", DbType.DateTimeOffset, lastReplyDate.ToDateIfNull()),
-                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
                     });
             }
 
@@ -422,7 +422,7 @@ namespace Plato.Entities.Repositories
             IList<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<TModel>>(
+                output = await context.ExecuteReaderAsync2<IList<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectEntitiesByFeatureId",
                     async reader =>
@@ -440,8 +440,10 @@ namespace Plato.Entities.Repositories
 
                         return output;
 
-                    },
-                    featureId);
+                    }, new[]
+                    {
+                        new DbParam("FeatureId", DbType.Int32, featureId)
+                    });
 
             }
 
