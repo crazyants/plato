@@ -62,22 +62,26 @@ namespace Plato.Internal.Data
 
         // --- Testing
 
-        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams = null) where T : class
+        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams = null) where T : class
         {
             if (_provider == null)
                 return null;
             if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
-            return await _provider.ExecuteReaderAsync2<T>(sql, populate, dbParams);
+                commandText = GetProcedureName(commandText);
+                //if (commandType == CommandType.StoredProcedure)
+                //    sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
+            return await _provider.ExecuteReaderAsync2<T>(commandType, commandText, populate, dbParams);
         }
 
-        public async Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string sql, DbParam[] dbParams)
+        public async Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string commandText, DbParam[] dbParams)
         {
             if (_provider == null)
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
-            return await _provider.ExecuteScalarAsync2<T>(sql, dbParams);
+                commandText = GetProcedureName(commandText);
+            ////if (commandType == CommandType.StoredProcedure)
+            ////    sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
+            return await _provider.ExecuteScalarAsync2<T>(commandType, commandText, dbParams);
         }
 
         public async Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string sql, DbParam[] dbParams)
@@ -85,8 +89,10 @@ namespace Plato.Internal.Data
             if (_provider == null)
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
-            return await _provider.ExecuteNonQueryAsync2<T>(sql, dbParams);
+                sql = GetProcedureName(sql);
+            //if (commandType == CommandType.StoredProcedure)
+            //    sql = DbParameterHelper.CreateDbParamsScalarStoredProcedureSql(GetProcedureName(sql), dbParams);
+            return await _provider.ExecuteNonQueryAsync2<T>(commandType, sql, dbParams);
         }
 
         public void Dispose()

@@ -152,11 +152,14 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync(
+                user = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameNormalized",
                     async reader => await BuildUserFromResultSets(reader),
-                    userNameNormalized.TrimToSize(255));
+                    new []
+                    {
+                        new DbParam("NormalizedUserName", DbType.String, 255, userNameNormalized), 
+                    });
             }
 
             return user;
@@ -220,7 +223,7 @@ namespace Plato.Internal.Repositories.Users
                     async reader => await BuildUserFromResultSets(reader),
                     new[]
                     {
-                        new DbParam("UserName", DbType.String, 255, userName.TrimToSize(255))
+                        new DbParam("UserName", DbType.String, 255, userName)
                     });
             }
 
@@ -573,7 +576,7 @@ namespace Plato.Internal.Repositories.Users
                         new DbParam("Theme", DbType.String, 255, theme),
                         new DbParam("Ipv4Address", DbType.String, 20, ipv4Address),
                         new DbParam("Ipv6Address", DbType.String, 50, ipv6Address),
-                        new DbParam("Bio", DbType.String, 255, bio),
+                        new DbParam("Biography", DbType.String, 255, bio),
                         new DbParam("Location", DbType.String, 255, location),
                         new DbParam("Url", DbType.String, 255, url),
                         new DbParam("Visits", DbType.Int32, visits),

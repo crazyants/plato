@@ -145,11 +145,12 @@ namespace Plato.Internal.Data.Providers
 
         // -------- Testing
 
-        public async Task<T> ExecuteReaderAsync2<T>(string sql, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams = null) where T : class
+        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams = null) where T : class
         {
+
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("SQL to execute: " + sql);
+                _logger.LogInformation("SQL to execute: " + commandText);
             }
 
             T output = null;
@@ -159,7 +160,7 @@ namespace Plato.Internal.Data.Providers
                 try
                 {
                     await conn.OpenAsync();
-                    using (var command = DbParameterHelper.CreateDbParamsSqlCommand(conn, sql, dbParams))
+                    using (var command = CreateCommand(conn, commandType, commandText, dbParams))
                     {
                         using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                         {
@@ -181,12 +182,12 @@ namespace Plato.Internal.Data.Providers
             return output;
         }
 
-        public async Task<T> ExecuteScalarAsync2<T>(string sql, DbParam[] dbParams = null)
+        public async Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string commandText, DbParam[] dbParams = null)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("SQL to execute: " + sql);
+                _logger.LogInformation("SQL to execute: " + commandText);
             }
 
 
@@ -197,10 +198,22 @@ namespace Plato.Internal.Data.Providers
                 try
                 {
                     await conn.OpenAsync();
-                    using (var cmd = DbParameterHelper.CreateDbParamsSqlCommand(conn, sql, dbParams))
+                    using (var cmd = CreateCommand(conn, commandType, commandText, dbParams))
                     {
-                        output = await cmd.ExecuteScalarAsync();
+
+                        await cmd.ExecuteScalarAsync();
+
+                        foreach (IDbDataParameter parameter in cmd.Parameters)
+                        {
+                            if (parameter.Direction == ParameterDirection.Output)
+                            {
+                                output = parameter.Value;
+                                break;
+                            }
+                        }
+
                         OnExecutedCommand(cmd);
+
                     }
                 }
                 catch (Exception ex)
@@ -223,11 +236,11 @@ namespace Plato.Internal.Data.Providers
 
         }
 
-        public async Task<T> ExecuteNonQueryAsync2<T>(string sql, DbParam[] dbParams = null)
+        public async Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string commandText, DbParam[] dbParams = null)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("SQL to execute: " + sql);
+                _logger.LogInformation("SQL to execute: " + commandText);
             }
 
             var output = default(T);
@@ -236,7 +249,7 @@ namespace Plato.Internal.Data.Providers
                 try
                 {
                     await conn.OpenAsync();
-                    using (var cmd = DbParameterHelper.CreateDbParamsSqlCommand(conn, sql, dbParams))
+                    using (var cmd = CreateCommand(conn, commandType, commandText, dbParams))
                     {
                         var returnValue = await cmd.ExecuteNonQueryAsync();
                         OnExecutedCommand(cmd);
@@ -256,7 +269,69 @@ namespace Plato.Internal.Data.Providers
             return output;
 
         }
+        
+        SqlCommand CreateCommand(
+            SqlConnection connection,
+            CommandType commandType,
+            string commandText,
+            DbParam[] dbParams)
+        {
 
+            var cmd = connection.CreateCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = commandText;
+            cmd.CommandType = commandType;
+
+            if (dbParams != null)
+            {
+                foreach (var parameter in dbParams)
+                {
+                    var p = CreateSqlParameter(parameter);
+                    cmd.Parameters.Add(p);
+                }
+            }
+
+            return cmd;
+
+        }
+
+
+        public IDbDataParameter CreateSqlParameter(DbParam dbParam)
+        {
+
+            //var p = cmd.CreateParameter();
+
+            var p = new SqlParameter(); ;
+            p.ParameterName = $"@{dbParam.ParameterName}";
+            p.Value = dbParam.Value;
+            p.Direction = dbParam.Direction;
+            p.DbType = dbParam.DbType;
+
+            if (dbParam.DbType == DbType.String || dbParam.DbType == DbType.AnsiString)
+            {
+                if (dbParam.Size > 0)
+                {
+                    p.Size = dbParam.Size;
+                }
+                else
+                {
+                    if (dbParam.Value != null)
+                    {
+                        p.Size = Math.Max(((string)dbParam.Value).Length + 1,
+                            4000); // Help query plan caching by using common size;
+                    }
+                }
+            }
+            else
+            {
+                if (dbParam.Size > 0)
+                    p.Size = dbParam.Size;
+            }
+
+            return p;
+
+        }
+        
         // mainly used to hook in and override behaviour
 
         public virtual void OnExecutedCommand(IDbCommand cmd) { }

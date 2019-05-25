@@ -136,39 +136,41 @@ namespace Plato.Internal.Data.Abstractions
             return dbTypeNormalized;
         }
 
-        public IDbDataParameter CreateParameter(IDbCommand cmd)
-        {
+        //public IDbDataParameter CreateParameter(IDbCommand cmd)
+        //{
 
-            var p = cmd.CreateParameter();
-            p.ParameterName = $"@{ParameterName}";
-            p.Value = Value;
-            p.Direction = Direction;
-            p.DbType = DbType;
+        //    //var p = cmd.CreateParameter();
+
+        //    var p = new SqlParameter();;
+        //    p.ParameterName = $"@{ParameterName}";
+        //    p.Value = Value;
+        //    p.Direction = Direction;
+        //    p.DbType = DbType;
          
-            if (DbType == DbType.String || DbType == DbType.AnsiString)
-            {
-                if (Size > 0)
-                {
-                    p.Size = Size;
-                }
-                else
-                {
-                    if (Value != null)
-                    {
-                        p.Size = Math.Max(((string)Value).Length + 1,
-                            4000); // Help query plan caching by using common size;
-                    }
-                }
-            }
-            else
-            {
-                if (Size > 0)
-                    p.Size = Size;
-            }
+        //    if (DbType == DbType.String || DbType == DbType.AnsiString)
+        //    {
+        //        if (Size > 0)
+        //        {
+        //            p.Size = Size;
+        //        }
+        //        else
+        //        {
+        //            if (Value != null)
+        //            {
+        //                p.Size = Math.Max(((string)Value).Length + 1,
+        //                    4000); // Help query plan caching by using common size;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (Size > 0)
+        //            p.Size = Size;
+        //    }
 
-            return p;
+        //    return p;
 
-        }
+        //}
 
     }
     

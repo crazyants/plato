@@ -392,28 +392,28 @@ namespace Plato.Internal.Data
 
         }
 
-        public static SqlCommand CreateDbParamsSqlCommand(
-            SqlConnection connection,
-            string sql,
-            DbParam[] dbParams)
-        {
+        //public static SqlCommand CreateDbParamsSqlCommand(
+        //    SqlConnection connection,
+        //    string sql,
+        //    DbParam[] dbParams)
+        //{
           
-            var cmd = connection.CreateCommand();
-            cmd.Connection = connection;
-            cmd.CommandText = sql;
+        //    var cmd = connection.CreateCommand();
+        //    cmd.Connection = connection;
+        //    cmd.CommandText = sql;
 
-            if (dbParams != null)
-            {
-                foreach (var parameter in dbParams)
-                {
-                    var p = parameter.CreateParameter(cmd);
-                    cmd.Parameters.Add(p);
-                }
-            }
+        //    if (dbParams != null)
+        //    {
+        //        foreach (var parameter in dbParams)
+        //        {
+        //            var p = parameter.CreateParameter(cmd);
+        //            cmd.Parameters.Add(p);
+        //        }
+        //    }
         
-            return cmd;
+        //    return cmd;
 
-        }
+        //}
 
         public static IDbDataParameter CreateParameter(
             IDbCommand cmd,
