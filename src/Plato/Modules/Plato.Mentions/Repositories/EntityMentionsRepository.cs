@@ -74,12 +74,12 @@ namespace Plato.Mentions.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityMention>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityMention>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EntityMention> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<EntityMention>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<EntityMention>>(
                     CommandType.StoredProcedure,
                     "SelectEntityMentionsPaged",
                     async reader =>
@@ -107,7 +107,7 @@ namespace Plato.Mentions.Repositories
                         return output;
 
                     },
-                    inputParams);
+                    dbParams);
                 
             }
 

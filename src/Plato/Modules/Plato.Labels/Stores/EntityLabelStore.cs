@@ -128,19 +128,19 @@ namespace Plato.Labels.Stores
             return _dbQuery.ConfigureQuery<EntityLabel>(query); ;
         }
 
-        public async Task<IPagedResults<EntityLabel>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<EntityLabel>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Selecting entity labels for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
+                        token.ToString(), dbParams.Select(p => p.Value));
                 }
 
-                return await _entityLabelRepository.SelectAsync(args);
+                return await _entityLabelRepository.SelectAsync(dbParams);
 
             });
         }

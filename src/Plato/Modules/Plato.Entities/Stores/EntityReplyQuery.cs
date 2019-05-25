@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -12,9 +13,9 @@ namespace Plato.Entities.Stores
     public class EntityReplyQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore<TModel> _store;
+        private readonly IStore2<TModel> _store;
 
-        public EntityReplyQuery(IStore<TModel> store)
+        public EntityReplyQuery(IStore2<TModel> store)
         {
             _store = store;
         }
@@ -34,17 +35,19 @@ namespace Plato.Entities.Stores
             var builder = new EntityReplyQueryBuilder<TModel>(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var keywords = Params.Keywords.Value ?? string.Empty;
+            
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
-
-            return data;
         }
+
     }
 
     #endregion

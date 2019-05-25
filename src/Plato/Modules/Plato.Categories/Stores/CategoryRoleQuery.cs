@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Categories.Models;
@@ -12,9 +13,9 @@ namespace Plato.Categories.Stores
     public class CategoryRoleQuery : DefaultQuery<CategoryRole>
     {
 
-        private readonly IStore<CategoryRole> _store;
+        private readonly IStore2<CategoryRole> _store;
 
-        public CategoryRoleQuery(IStore<CategoryRole> store)
+        public CategoryRoleQuery(IStore2<CategoryRole> store)
         {
             _store = store;
         }
@@ -36,17 +37,16 @@ namespace Plato.Categories.Stores
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                startSql,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
-
-            return data;
+            var keywords = Params.Keywords.Value ?? string.Empty;
+            
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
         }
 
 

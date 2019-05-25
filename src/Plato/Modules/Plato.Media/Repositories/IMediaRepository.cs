@@ -3,7 +3,7 @@
 namespace Plato.Media.Repositories
 {
 
-    public interface IMediaRepository<T> : IRepository<T> where T : class
+    public interface IMediaRepository<T> : IRepository2<T> where T : class
     {
 
     }

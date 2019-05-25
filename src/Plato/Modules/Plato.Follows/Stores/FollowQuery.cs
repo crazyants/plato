@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Follows.Models;
@@ -13,9 +14,9 @@ namespace Plato.Follows.Stores
     public class FollowQuery : DefaultQuery<Follow>
     {
 
-        private readonly IStore<Follow> _store;
+        private readonly IStore2<Follow> _store;
 
-        public FollowQuery(IStore<Follow> store)
+        public FollowQuery(IStore2<Follow> store)
         {
             _store = store;
         }
@@ -36,16 +37,17 @@ namespace Plato.Follows.Stores
             var builder = new FollowQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var name = Params.Name.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Name.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Name", DbType.String, name)
+            });
 
-            return data;
         }
         
     }

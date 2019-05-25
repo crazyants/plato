@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
@@ -131,10 +132,10 @@ namespace Plato.Categories.Stores
             return _dbQuery.ConfigureQuery<EntityCategory>(query); ;
         }
 
-        public async Task<IPagedResults<EntityCategory>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<EntityCategory>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityCategoryRepository.SelectAsync(args));
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityCategoryRepository.SelectAsync(dbParams));
         }
 
         public async Task<IEnumerable<EntityCategory>> GetByEntityIdAsync(int entityId)

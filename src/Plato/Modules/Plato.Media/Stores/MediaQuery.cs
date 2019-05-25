@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -12,9 +13,9 @@ namespace Plato.Media.Stores
     public class MediaQuery : DefaultQuery<Models.Media>
     {
 
-        private readonly IStore<Models.Media> _store;
+        private readonly IStore2<Models.Media> _store;
 
-        public MediaQuery(IStore<Models.Media> store)
+        public MediaQuery(IStore2<Models.Media> store)
         {
             _store = store;
         }
@@ -35,16 +36,17 @@ namespace Plato.Media.Stores
             var builder = new MediaQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var keywords = Params.Keywords.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
 
-            return data;
         }
         
     }

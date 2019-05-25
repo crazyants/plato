@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -14,9 +15,9 @@ namespace Plato.Metrics.Stores
     public class MetricQuery : DefaultQuery<Metric>
     {
 
-        private readonly IStore<Metric> _store;
+        private readonly IStore2<Metric> _store;
 
-        public MetricQuery(IStore<Metric> store)
+        public MetricQuery(IStore2<Metric> store)
         {
             _store = store;
         }
@@ -37,20 +38,25 @@ namespace Plato.Metrics.Stores
             var builder = new MetricQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var title = Params.Title.Value ?? string.Empty;
+            var url = Params.Url.Value ?? string.Empty;
+            var ipV4Address = Params.IpV4Address.Value ?? string.Empty;
+            var ipV6Address = Params.IpV6Address.Value ?? string.Empty;
+            var userAgent = Params.UserAgent.Value ?? string.Empty;
+            
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Title", DbType.String, title),
+                new DbParam("Url", DbType.String, url),
+                new DbParam("IpV4Address", DbType.String, ipV4Address),
+                new DbParam("IpV6Address", DbType.String, ipV6Address),
+                new DbParam("UserAgent", DbType.String, userAgent),
+            });
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Title.Value,
-                Params.Url.Value,
-                Params.IpV4Address.Value,
-                Params.IpV6Address.Value,
-                Params.UserAgent.Value
-            );
-
-            return data;
         }
 
 

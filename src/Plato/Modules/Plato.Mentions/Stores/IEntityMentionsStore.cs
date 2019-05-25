@@ -4,7 +4,7 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Mentions.Stores
 {
 
-    public interface IEntityMentionsStore<TModel> : IStore<TModel> where TModel : class
+    public interface IEntityMentionsStore<TModel> : IStore2<TModel> where TModel : class
     {
         Task<bool> DeleteByEntityIdAsync(int entityId);
 

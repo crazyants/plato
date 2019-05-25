@@ -86,19 +86,19 @@ namespace Plato.Media.Stores
             return _dbQuery.ConfigureQuery<Models.Media>(query); ;
         }
 
-        public async Task<IPagedResults<Models.Media>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<Models.Media>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Selecting media for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
+                        token.ToString(), dbParams.Select(p => p.Value));
                 }
 
-                return await _mediaRepository.SelectAsync(args);
+                return await _mediaRepository.SelectAsync(dbParams);
               
             });
         }

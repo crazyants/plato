@@ -2,7 +2,7 @@
 
 namespace Plato.Media.Stores
 {
-    public interface IMediaStore<TModel> : IStore<TModel> where TModel : class
+    public interface IMediaStore<TModel> : IStore2<TModel> where TModel : class
     {
 
     }

@@ -78,12 +78,12 @@ namespace Plato.Stars.Repositories
             return star;
         }
 
-        public async Task<IPagedResults<Star>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Star>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<Star> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync<IPagedResults<Star>>(
+                results = await context.ExecuteReaderAsync2<IPagedResults<Star>>(
                     CommandType.StoredProcedure,
                     "SelectStarsPaged",
                     async reader =>
@@ -109,7 +109,7 @@ namespace Plato.Stars.Repositories
 
                         return null;
                     },
-                    inputParams);
+                    dbParams);
                 
             }
 

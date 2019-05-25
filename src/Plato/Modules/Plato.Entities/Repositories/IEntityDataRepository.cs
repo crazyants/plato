@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Repositories
 {
-    public interface IEntityDataRepository<T> : IRepository<T> where T : class
+    public interface IEntityDataRepository<T> : IRepository2<T> where T : class
     {
 
         Task<IEnumerable<T>> SelectByEntityIdAsync(int userId);

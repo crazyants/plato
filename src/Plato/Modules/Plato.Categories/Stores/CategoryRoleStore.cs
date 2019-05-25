@@ -87,10 +87,10 @@ namespace Plato.Categories.Stores
             return _dbQuery.ConfigureQuery<CategoryRole>(query); ;
         }
 
-        public async Task<IPagedResults<CategoryRole>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<CategoryRole>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryRoleRepository.SelectAsync(args));
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryRoleRepository.SelectAsync(dbParams));
         }
       
         public async Task<IEnumerable<CategoryRole>> GetByCategoryIdAsync(int categoryId)

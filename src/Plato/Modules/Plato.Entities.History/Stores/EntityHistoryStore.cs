@@ -128,19 +128,19 @@ namespace Plato.Entities.History.Stores
             return _dbQuery.ConfigureQuery<EntityHistory>(query); ;
         }
 
-        public async Task<IPagedResults<EntityHistory>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<EntityHistory>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Selecting entity history for key '{0}' with parameters: {1}",
-                        token.ToString(), args.Select(a => a));
+                        token.ToString(), dbParams.Select(p => p.Value));
                 }
 
-                return await _entityHistoryRepository.SelectAsync(args);
+                return await _entityHistoryRepository.SelectAsync(dbParams);
 
             });
         }

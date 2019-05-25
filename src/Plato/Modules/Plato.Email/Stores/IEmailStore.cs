@@ -3,7 +3,7 @@
 namespace Plato.Email.Stores
 {
 
-    public interface IEmailStore<TModel> : IStore<TModel> where TModel : class
+    public interface IEmailStore<TModel> : IStore2<TModel> where TModel : class
     {
 
     }

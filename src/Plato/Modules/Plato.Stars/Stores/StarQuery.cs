@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Stars.Models;
@@ -13,9 +14,9 @@ namespace Plato.Stars.Stores
     public class StarQuery : DefaultQuery<Star>
     {
 
-        private readonly IStore<Star> _store;
+        private readonly IStore2<Star> _store;
 
-        public StarQuery(IStore<Star> store)
+        public StarQuery(IStore2<Star> store)
         {
             _store = store;
         }
@@ -36,16 +37,17 @@ namespace Plato.Stars.Stores
             var builder = new StarQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var name = Params.Name.Value ?? string.Empty;
+            
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Name", DbType.String, name)
+            });
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Name.Value
-            );
-
-            return data;
         }
 
     }

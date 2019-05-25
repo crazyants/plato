@@ -84,12 +84,12 @@ namespace Plato.Email.Repositories
 
         }
 
-        public async Task<IPagedResults<EmailMessage>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EmailMessage>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EmailMessage> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<EmailMessage>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<EmailMessage>>(
                     CommandType.StoredProcedure,
                     "SelectEmailsPaged",
                     async reader =>
@@ -114,7 +114,7 @@ namespace Plato.Email.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
                
             }
 

@@ -2,7 +2,7 @@
 
 namespace Plato.Entities.Repositories
 {
-    public interface IEntityReplyRepository<T> : IRepository<T> where T : class
+    public interface IEntityReplyRepository<T> : IRepository2<T> where T : class
     {
 
     }

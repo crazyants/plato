@@ -99,10 +99,10 @@ namespace Plato.Entities.Stores
             return _dbQuery.ConfigureQuery<TModel>(query); ;
         }
 
-        public async Task<IPagedResults<TModel>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityReplyRepository.SelectAsync(args));
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityReplyRepository.SelectAsync(dbParams));
         }
         
     }

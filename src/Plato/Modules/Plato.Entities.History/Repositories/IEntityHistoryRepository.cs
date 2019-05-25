@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Entities.History.Repositories
 {
-    public interface IEntityHistoryRepository<TModel> : IRepository<TModel> where TModel : class
+    public interface IEntityHistoryRepository<TModel> : IRepository2<TModel> where TModel : class
     {
         
     }

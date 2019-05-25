@@ -27,12 +27,12 @@ namespace Plato.Media.Repositories
         
         #region "Implementation"
 
-        public async Task<IPagedResults<Models.Media>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Models.Media>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<Models.Media> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<Models.Media>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<Models.Media>>(
                     CommandType.StoredProcedure,
                     "SelectMediaPaged",
                     async reader =>
@@ -58,7 +58,7 @@ namespace Plato.Media.Repositories
                         return output;
 
                     },
-                    inputParams);
+                    dbParams);
              
             }
 

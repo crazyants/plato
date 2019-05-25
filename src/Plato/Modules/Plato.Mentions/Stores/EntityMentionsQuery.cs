@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -13,9 +14,9 @@ namespace Plato.Mentions.Stores
     public class EntityMentionsQuery : DefaultQuery<EntityMention>
     {
 
-        private readonly IStore<EntityMention> _store;
+        private readonly IStore2<EntityMention> _store;
 
-        public EntityMentionsQuery(IStore<EntityMention> store)
+        public EntityMentionsQuery(IStore2<EntityMention> store)
         {
             _store = store;
         }
@@ -36,16 +37,17 @@ namespace Plato.Mentions.Stores
             var builder = new EntityMentionsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var keywords = Params.Keywords.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
 
-            return data;
         }
 
     }

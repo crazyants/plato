@@ -79,12 +79,12 @@ namespace Plato.Metrics.Repositories
 
         }
 
-        public async Task<IPagedResults<Metric>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Metric>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<Metric> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<Metric>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<Metric>>(
                     CommandType.StoredProcedure,
                     "SelectMetricsPaged",
                     async reader =>
@@ -112,7 +112,7 @@ namespace Plato.Metrics.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
 
             }
 

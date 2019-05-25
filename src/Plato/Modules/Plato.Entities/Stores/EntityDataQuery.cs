@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
@@ -13,9 +14,9 @@ namespace Plato.Entities.Stores
     public class EntityDataQuery : DefaultQuery<IEntityData>
     {
 
-        private readonly IStore<IEntityData> _store;
+        private readonly IStore2<IEntityData> _store;
 
-        public EntityDataQuery(IStore<IEntityData> store)
+        public EntityDataQuery(IStore2<IEntityData> store)
         {
             _store = store;
         }
@@ -36,16 +37,17 @@ namespace Plato.Entities.Stores
             var builder = new EntityDataQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var key = Params.Key.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Key.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Key", DbType.String, key)
+            });
 
-            return data;
         }
         
     }

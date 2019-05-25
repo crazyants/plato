@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -13,9 +14,9 @@ namespace Plato.Email.Stores
     public class EmailQuery : DefaultQuery<EmailMessage>
     {
 
-        private readonly IStore<EmailMessage> _store;
+        private readonly IStore2<EmailMessage> _store;
 
-        public EmailQuery(IStore<EmailMessage> store)
+        public EmailQuery(IStore2<EmailMessage> store)
         {
             _store = store;
         }
@@ -36,19 +37,19 @@ namespace Plato.Email.Stores
             var builder = new EmailQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var keywords = Params.Keywords.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
 
-            return data;
         }
-
-
+        
     }
 
     #endregion

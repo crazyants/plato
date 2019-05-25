@@ -79,13 +79,13 @@ namespace Plato.Entities.History.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityHistory>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityHistory>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EntityHistory> output = null;
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync<IPagedResults<EntityHistory>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<EntityHistory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityHistoryPaged",
                     async reader =>
@@ -110,7 +110,7 @@ namespace Plato.Entities.History.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
            
             }
 

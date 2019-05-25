@@ -77,12 +77,12 @@ namespace Plato.Categories.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityCategory>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityCategory>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EntityCategory> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<EntityCategory>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<EntityCategory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoriesPaged",
                     async reader =>
@@ -108,7 +108,7 @@ namespace Plato.Categories.Repositories
                         return output;
 
                     },
-                    inputParams
+                    dbParams
                 );
 
            

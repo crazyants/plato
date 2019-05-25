@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Reactions.Repositories
 {
-    public interface IEntityReactionsRepository<TModel> : IRepository<TModel> where TModel : class
+    public interface IEntityReactionsRepository<TModel> : IRepository2<TModel> where TModel : class
     {
 
         Task<IEnumerable<TModel>> SelectEntityReactionsByEntityId(int entityId);

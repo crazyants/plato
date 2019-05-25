@@ -78,13 +78,13 @@ namespace Plato.Follows.Repositories
             return follow;
         }
 
-        public async Task<IPagedResults<Follow>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Follow>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<Follow> output = null;
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectFollowsPaged",
                     async reader =>
@@ -113,7 +113,7 @@ namespace Plato.Follows.Repositories
                         return output;
 
                     },
-                    inputParams);
+                    dbParams);
 
              
             }

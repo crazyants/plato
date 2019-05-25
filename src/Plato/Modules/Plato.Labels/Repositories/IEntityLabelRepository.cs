@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Labels.Repositories
 {
-    public interface IEntityLabelRepository<T> : IRepository<T> where T : class
+    public interface IEntityLabelRepository<T> : IRepository2<T> where T : class
     {
         Task<IEnumerable<T>> SelectByEntityIdAsync(int entityId);
 

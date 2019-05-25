@@ -137,12 +137,12 @@ namespace Plato.Labels.Repositories
 
         }
 
-        public async Task<IPagedResults<LabelData>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<LabelData>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<LabelData> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<LabelData>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<LabelData>>(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumPaged",
                     async reader =>
@@ -167,7 +167,7 @@ namespace Plato.Labels.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
 
             }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -13,9 +14,9 @@ namespace Plato.Labels.Stores
     public class EntityLabelQuery : DefaultQuery<EntityLabel>
     {
 
-        private readonly IStore<EntityLabel> _store;
+        private readonly IStore2<EntityLabel> _store;
 
-        public EntityLabelQuery(IStore<EntityLabel> store)
+        public EntityLabelQuery(IStore2<EntityLabel> store)
         {
             _store = store;
         }
@@ -36,17 +37,19 @@ namespace Plato.Labels.Stores
             var builder = new EntityLabelQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var labelId = Params.LabelId.Value;
+            var entityId = Params.EntityId.Value;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.LabelId.Value,
-                Params.EntityId.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("LabelId", DbType.Int32, labelId),
+                new DbParam("EntityId", DbType.Int32, entityId)
+            });
 
-            return data;
         }
         
     }

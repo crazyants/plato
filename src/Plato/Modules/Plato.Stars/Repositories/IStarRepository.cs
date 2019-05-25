@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Stars.Repositories
 {
-    public interface IStarRepository<TModel> : IRepository<TModel> where TModel : class
+    public interface IStarRepository<TModel> : IRepository2<TModel> where TModel : class
     {
 
         Task<IEnumerable<TModel>> SelectByNameAndThingId(string name, int thingId);

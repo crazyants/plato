@@ -83,12 +83,12 @@ namespace Plato.Entities.Reactions.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityReaction>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityReaction>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<EntityReaction>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsPaged",
                     async reader =>
@@ -116,7 +116,7 @@ namespace Plato.Entities.Reactions.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
             
             }
 
