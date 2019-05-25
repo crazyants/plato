@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Categories.Models;
@@ -15,9 +16,9 @@ namespace Plato.Categories.Stores
     public class CategoryDataQuery : DefaultQuery<CategoryData>
     {
 
-        private readonly IStore<CategoryData> _store;
+        private readonly IStore2<CategoryData> _store;
 
-        public CategoryDataQuery(IStore<CategoryData> store)
+        public CategoryDataQuery(IStore2<CategoryData> store)
         {
             _store = store;
         }
@@ -38,16 +39,17 @@ namespace Plato.Categories.Stores
             var builder = new CategoryDataQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var key = Params.Key.Value ?? string.Empty;
+            
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Key", DbType.String, 255, key)
+            });
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Key.Value
-            );
-
-            return data;
         }
 
 

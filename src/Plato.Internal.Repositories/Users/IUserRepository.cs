@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Repositories.Users
 {
-    public interface IUserRepository<T> : IRepository<T> where T : class
+    public interface IUserRepository<T> : IRepository2<T> where T : class
     {
         Task<T> SelectByUserNameNormalizedAsync(string userNameNormalized);
 

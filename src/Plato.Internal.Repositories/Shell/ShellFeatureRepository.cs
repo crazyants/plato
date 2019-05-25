@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Features;
 
@@ -92,12 +91,12 @@ namespace Plato.Internal.Repositories.Shell
 
         }
         
-        public async Task<IPagedResults<ShellFeature>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<ShellFeature>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<ShellFeature> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync<IPagedResults<ShellFeature>>(
+                results = await context.ExecuteReaderAsync2<IPagedResults<ShellFeature>>(
                     CommandType.StoredProcedure,
                     "SelectShellFeaturesPaged",
                     async reader =>
@@ -123,7 +122,7 @@ namespace Plato.Internal.Repositories.Shell
 
                         return null;
                     },
-                    inputParams
+                    dbParams
                 );
                 
             }

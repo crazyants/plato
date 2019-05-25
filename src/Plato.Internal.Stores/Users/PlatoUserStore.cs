@@ -246,19 +246,19 @@ namespace Plato.Internal.Stores.Users
             return _dbQuery.ConfigureQuery(query); ;
         }
         
-        public async Task<IPagedResults<User>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<User>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Selecting users for key '{0}' with the following parameters: {1}",
-                        token.ToString(), args.Select(a => a));
+                        token.ToString(), dbParams.Select(p => p.Value).ToArray());
                 }
                 
-                var results = await _userRepository.SelectAsync(args);
+                var results = await _userRepository.SelectAsync(dbParams);
                 if (results != null)
                 {
                     // Decorate users with strongly typed meta data objects

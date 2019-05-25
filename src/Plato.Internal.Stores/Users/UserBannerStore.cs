@@ -110,12 +110,7 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
-        public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IPagedResults<UserBanner>> SelectAsync(params object[] args)
+        public Task<IPagedResults<UserBanner>> SelectAsync(DbParam[] dbParams)
         {
             throw new NotImplementedException();
         }
@@ -138,8 +133,7 @@ namespace Plato.Internal.Stores.Users
         }
 
         #endregion
-
-
+        
         #region "Private Methods"
         
         private string GetCacheKey(LocalCacheKeys cacheKey, object vaule)

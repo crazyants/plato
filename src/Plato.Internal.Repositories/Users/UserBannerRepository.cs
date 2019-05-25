@@ -47,14 +47,8 @@ namespace Plato.Internal.Repositories.Users
 
             return null;
         }
-
-
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IPagedResults<UserBanner>> SelectAsync(params object[] inputParams)
+        
+        public Task<IPagedResults<UserBanner>> SelectAsync(DbParam[] dbParams)
         {
             throw new NotImplementedException();
         }

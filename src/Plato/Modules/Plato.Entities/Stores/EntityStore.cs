@@ -12,7 +12,6 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
 

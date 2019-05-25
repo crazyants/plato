@@ -81,11 +81,7 @@ namespace Plato.Internal.Repositories.Users
             return secret;
         }
         
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
-        public Task<IPagedResults<UserSecret>> SelectAsync(params object[] inputParams)
+        public Task<IPagedResults<UserSecret>> SelectAsync(DbParam[] dbParams)
         {
             // TODO
             throw new NotImplementedException();

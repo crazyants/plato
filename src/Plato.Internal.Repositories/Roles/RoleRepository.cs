@@ -197,53 +197,12 @@ namespace Plato.Internal.Repositories.Roles
 
         }
 
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParams) where T : class
-        {
-            IPagedResults<T> output = null;
-            using (var context = _dbContext)
-            {
-                output = await context.ExecuteReaderAsync<IPagedResults<T>>(
-                    CommandType.StoredProcedure,
-                    "SelectRolesPaged",
-                    async reader =>
-                    {
-                        if ((reader != null) && (reader.HasRows))
-                        {
-                            output = new PagedResults<T>();
-                            while (await reader.ReadAsync())
-                            {
-                                var role = new Role();
-                                role.PopulateModel(reader);
-                                output.Data.Add((T)Convert.ChangeType(role, typeof(T)));
-                            }
-
-                            if (await reader.NextResultAsync())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    await reader.ReadAsync();
-                                    output.PopulateTotal(reader);
-                                }
-                            }
-                        }
-
-                        return output;
-                    },
-                    inputParams);
-
-             
-            }
-
-            return output;
-        }
-
-
-        public async Task<IPagedResults<Role>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Role>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<Role> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<Role>>(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectRolesPaged",
                     async reader =>
@@ -271,7 +230,7 @@ namespace Plato.Internal.Repositories.Roles
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
 
               
             }

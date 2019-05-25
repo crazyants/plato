@@ -89,7 +89,7 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
-        public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] args)
+        public Task<IPagedResults<UserPhoto>> SelectAsync(DbParam[] dbParams)
         {
             throw new NotImplementedException();
         }

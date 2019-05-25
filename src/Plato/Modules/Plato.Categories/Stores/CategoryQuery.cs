@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -13,11 +14,11 @@ namespace Plato.Categories.Stores
     public class CategoryQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore<TModel> _store;
+        private readonly IStore2<TModel> _store;
 
         public IQueryAdapterManager<TModel> QueryAdapterManager { get; set; }
         
-        public CategoryQuery(IStore<TModel> store)
+        public CategoryQuery(IStore2<TModel> store)
         {
             _store = store;
         }
@@ -38,16 +39,16 @@ namespace Plato.Categories.Stores
             var builder = new CategoryQueryBuilder<TModel>(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var keywords = Params.Keywords.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
-
-            return data;
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
         }
         
     }

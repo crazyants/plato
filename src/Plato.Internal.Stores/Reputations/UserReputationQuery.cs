@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -13,9 +14,9 @@ namespace Plato.Internal.Stores.Reputations
     public class UserReputationQuery : DefaultQuery<UserReputation>
     {
 
-        private readonly IStore<UserReputation> _store;
+        private readonly IStore2<UserReputation> _store;
 
-        public UserReputationQuery(IStore<UserReputation> store)
+        public UserReputationQuery(IStore2<UserReputation> store)
         {
             _store = store;
         }
@@ -36,16 +37,16 @@ namespace Plato.Internal.Stores.Reputations
             var builder = new UserReputationsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-       
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params?.Keywords?.Value ?? string.Empty
-            );
-
-            return data;
+            var keywords = Params?.Keywords?.Value ?? string.Empty;
+            
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
         }
 
     }

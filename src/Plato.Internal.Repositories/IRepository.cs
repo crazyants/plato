@@ -29,7 +29,6 @@ namespace Plato.Internal.Repositories
         Task<bool> DeleteAsync(int id);
 
     }
-
-
+    
 
 }

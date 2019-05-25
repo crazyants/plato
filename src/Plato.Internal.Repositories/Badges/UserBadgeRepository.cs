@@ -76,12 +76,12 @@ namespace Plato.Internal.Repositories.Badges
             return userBadge;
         }
 
-        public async Task<IPagedResults<UserBadge>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<UserBadge>> SelectAsync(DbParam[] dbParams)
         {
             PagedResults<UserBadge> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserBadgesPaged",
                     async reader =>
@@ -110,7 +110,7 @@ namespace Plato.Internal.Repositories.Badges
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
 
 
             }

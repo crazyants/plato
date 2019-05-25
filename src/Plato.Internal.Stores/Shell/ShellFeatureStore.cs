@@ -109,19 +109,19 @@ namespace Plato.Internal.Stores.Shell
             return _dbQuery.ConfigureQuery<ShellFeature>(query); ;
         }
         
-        public async Task<IPagedResults<ShellFeature>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<ShellFeature>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Selecting features with args: '{0}'}",
-                         args.Select(a => a));
+                        dbParams.Select(p => p.Value));
                 }
 
-                return await _featureRepository.SelectAsync(args);
+                return await _featureRepository.SelectAsync(dbParams);
 
             });
         }

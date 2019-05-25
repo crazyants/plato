@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -13,9 +14,9 @@ namespace Plato.Internal.Stores.Badges
     public class UserBadgeQuery : DefaultQuery<UserBadge>
     {
 
-        private readonly IStore<UserBadge> _store;
+        private readonly IStore2<UserBadge> _store;
 
-        public UserBadgeQuery(IStore<UserBadge> store)
+        public UserBadgeQuery(IStore2<UserBadge> store)
         {
             _store = store;
         }
@@ -38,13 +39,14 @@ namespace Plato.Internal.Stores.Badges
             var countSql = builder.BuildSqlCount();
             var badgeName = Params?.BadgeName?.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                badgeName
-            );
+            var data = await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("badgeName", DbType.String, badgeName)
+            });
 
             return data;
         }

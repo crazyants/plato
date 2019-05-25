@@ -124,10 +124,10 @@ namespace Plato.Internal.Stores.Roles
             return _dbQuery.ConfigureQuery< Role>(query); ;
         }
         
-        public async Task<IPagedResults<Role>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<Role>> SelectAsync(DbParam[] dbParams)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _roleRepository.SelectAsync(args));
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _roleRepository.SelectAsync(dbParams));
         }
 
         public async Task<IList<Role>> GetRolesByUserIdAsync(int userId)

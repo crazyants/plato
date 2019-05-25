@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores.Shell
 {
+
     #region "ShellFeatureQuery"
 
     public class ShellFeatureQuery : DefaultQuery<ShellFeature>
     {
 
-        private readonly IStore<ShellFeature> _store;
+        private readonly IStore2<ShellFeature> _store;
 
-        public ShellFeatureQuery(IStore<ShellFeature> store)
+        public ShellFeatureQuery(IStore2<ShellFeature> store)
         {
             _store = store;
         }
@@ -38,16 +41,14 @@ namespace Plato.Internal.Stores.Shell
             var countSql = builder.BuildSqlCount();
             var keywords = Params?.Keywords?.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                startSql,
-                populateSql,
-                countSql,
-                keywords
-            );
-
-            return data;
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
         }
 
 

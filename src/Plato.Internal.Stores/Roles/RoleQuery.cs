@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Abstractions;
@@ -14,9 +16,9 @@ namespace Plato.Internal.Stores.Roles
     public class RoleQuery : DefaultQuery<Role>
     {
 
-        private readonly IStore<Role> _store;
+        private readonly IStore2<Role> _store;
 
-        public RoleQuery(IStore<Role> store)
+        public RoleQuery(IStore2<Role> store)
         {
             _store = store;
         }
@@ -33,20 +35,22 @@ namespace Plato.Internal.Stores.Roles
         
         public override async Task<IPagedResults<Role>> ToList()
         {
+
             var builder = new RoleQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var id = Params.Id.Value;
+            var keywords = Params.Keywords.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Id.Value,
-                Params.Keywords.Value
-            );
-
-            return data;
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Id", DbType.Int32, id),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
 
         }
 

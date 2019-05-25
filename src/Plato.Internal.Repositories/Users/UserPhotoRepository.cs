@@ -31,7 +31,7 @@ namespace Plato.Internal.Repositories.Users
 
         #region "Implementation"
      
-        public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] inputParams)
+        public Task<IPagedResults<UserPhoto>> SelectAsync(DbParam[] dbParams)
         {
             // TODO
             throw new NotImplementedException();

@@ -4,7 +4,7 @@ using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Stores.Abstractions.Roles
 {
-    public interface IPlatoRoleStore : IStore<Role>
+    public interface IPlatoRoleStore : IStore2<Role>
     {
         Task<Role> GetByNameAsync(string name);
 

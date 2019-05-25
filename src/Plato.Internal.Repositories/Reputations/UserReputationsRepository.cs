@@ -78,12 +78,12 @@ namespace Plato.Internal.Repositories.Reputations
             return userReputation;
         }
 
-        public async Task<IPagedResults<UserReputation>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<UserReputation>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<UserReputation> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<UserReputation>>(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserReputationsPaged",
                     async reader =>
@@ -111,7 +111,7 @@ namespace Plato.Internal.Repositories.Reputations
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
 
 
             }

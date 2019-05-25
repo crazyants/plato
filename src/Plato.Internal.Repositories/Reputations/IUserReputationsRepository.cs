@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Repositories.Reputations
 {
-    public interface IUserReputationsRepository<T> : IRepository<T> where T : class
+    public interface IUserReputationsRepository<T> : IRepository2<T> where T : class
     {
     }
 }

@@ -363,12 +363,12 @@ namespace Plato.Internal.Repositories.Users
 
         }
         
-        public async Task<IPagedResults<User>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<User>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<User> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync<IPagedResults<User>>(
+                results = await context.ExecuteReaderAsync2<IPagedResults<User>>(
                     CommandType.StoredProcedure,
                     "SelectUsersPaged",
                     async reader =>
@@ -399,7 +399,7 @@ namespace Plato.Internal.Repositories.Users
 
                         return null;
                     },
-                    inputParams);
+                    dbParams);
               
             }
 

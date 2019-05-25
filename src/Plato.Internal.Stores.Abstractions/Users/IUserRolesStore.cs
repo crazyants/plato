@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Stores.Abstractions.Users
 {
-    public interface IPlatoUserRoleStore<T> : IStore<T> where T : class
+    public interface IPlatoUserRoleStore<T> : IStore2<T> where T : class
     {
 
         Task<IEnumerable<T>> AddUserRolesAsync(int userId, IEnumerable<string> roleNames);
