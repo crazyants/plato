@@ -8,7 +8,6 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Tags.Models;
 
-
 namespace Plato.Tags.Repositories
 {
     public class TagRepository<TModel> : ITagRepository<TModel> where TModel : class, ITag
@@ -64,7 +63,7 @@ namespace Plato.Tags.Repositories
             TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync<TModel>(
+                tag = await context.ExecuteReaderAsync2<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagById",
                     async reader =>
@@ -77,8 +76,10 @@ namespace Plato.Tags.Repositories
                         }
 
                         return tag;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -135,9 +136,13 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteTagById", id);
+                    "DeleteTagById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -149,7 +154,7 @@ namespace Plato.Tags.Repositories
             IList<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<TModel>>(
+                output = await context.ExecuteReaderAsync2<IList<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectTagsByFeatureId",
                     async reader =>
@@ -168,9 +173,11 @@ namespace Plato.Tags.Repositories
 
                         return output;
 
-                    },
-                    featureId);
-                
+                    }, new[]
+                    {
+                        new DbParam("FeatureId", DbType.Int32, featureId)
+                    });
+
             }
 
             return output;
@@ -181,7 +188,7 @@ namespace Plato.Tags.Repositories
             TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync<TModel>(
+                tag = await context.ExecuteReaderAsync2<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagByName",
                     async reader =>
@@ -194,11 +201,12 @@ namespace Plato.Tags.Repositories
                         }
 
                         return tag;
-                    },
-                    name
-                );
+                    }, new[]
+                    {
+                        new DbParam("Name", DbType.String, 255, name)
+                    });
 
-               
+
             }
 
             return tag;
@@ -209,7 +217,7 @@ namespace Plato.Tags.Repositories
             TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync<TModel>(
+                tag = await context.ExecuteReaderAsync2<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagByNameNormalized",
                     async reader =>
@@ -222,8 +230,10 @@ namespace Plato.Tags.Repositories
                         }
 
                         return tag;
-                    },
-                    nameNormalized);
+                    }, new []
+                    {
+                        new DbParam("NameNormalized", DbType.String, 255, nameNormalized), 
+                    });
             }
 
             return tag;
@@ -253,23 +263,26 @@ namespace Plato.Tags.Repositories
             var tagId = 0;
             using (var context = _dbContext)
             {
-                tagId = await context.ExecuteScalarAsync<int>(
+                tagId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateTag",
-                    id,
-                    featureId,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    nameNormalized.ToEmptyIfNull().TrimToSize(255),
-                    description.ToEmptyIfNull().TrimToSize(500),
-                    alias.ToEmptyIfNull().TrimToSize(255),
-                    totalEntities,
-                    totalFollows,
-                    lastSeenDate.ToDateIfNull(),
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("FeatureId", DbType.Int32, featureId),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("NameNormalized", DbType.String, 255, nameNormalized),
+                        new DbParam("Description", DbType.String, 500, description.ToEmptyIfNull()),
+                        new DbParam("Alias", DbType.String, 255, alias),
+                        new DbParam("TotalEntities", DbType.Int32, totalEntities),
+                        new DbParam("TotalFollows", DbType.Int32, totalFollows),
+                        new DbParam("LastSeenDate", DbType.DateTimeOffset, lastSeenDate.ToDateIfNull()),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
 
             return tagId;

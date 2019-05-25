@@ -99,11 +99,11 @@ namespace Plato.Categories.Repositories
             var id = await InsertUpdateInternal(
                 data.Id,
                 data.CategoryId,
-                data.Key.ToEmptyIfNull().TrimToSize(255),
-                data.Value.ToEmptyIfNull(),
-                data.CreatedDate.ToDateIfNull(),
+                data.Key,
+                data.Value,
+                data.CreatedDate,
                 data.CreatedUserId,
-                data.ModifiedDate.ToDateIfNull(),
+                data.ModifiedDate,
                 data.ModifiedUserId);
             if (id > 0)
             {
@@ -124,9 +124,13 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteCategoryDatumById", id);
+                    "DeleteCategoryDatumById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -204,18 +208,21 @@ namespace Plato.Categories.Repositories
                     return output;
                 }
                     
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategoryDatum",
-                    id,
-                    categoryId,
-                    key.ToEmptyIfNull().TrimToSize(255),
-                    value.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate.ToDateIfNull(),
-                    modifiedUserId,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("CategoryId", DbType.Int32, categoryId),
+                        new DbParam("Key", DbType.String, 255, key.ToEmptyIfNull()),
+                        new DbParam("Value", DbType.String, value.ToEmptyIfNull()),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.Int32, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.Int32, modifiedDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return output;

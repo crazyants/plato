@@ -140,9 +140,13 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteCategoryById", id);
+                    "DeleteCategoryById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -193,9 +197,13 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteCategoryRolesByCategoryId", categoryId);
+                    "DeleteCategoryRolesByCategoryId",
+                    new[]
+                    {
+                        new DbParam("CategoryId", DbType.Int32, categoryId)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -213,11 +221,14 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryRolesByRoleIdAndCategoryId",
-                    roleId,
-                    categoryId);
+                    new[]
+                    {
+                        new DbParam("RoleId", DbType.Int32, roleId),
+                        new DbParam("CategoryId", DbType.Int32, categoryId),
+                    });
             }
 
             return success > 0 ? true : false;
@@ -241,17 +252,20 @@ namespace Plato.Categories.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategoryRole",
-                    id,
-                    categoryId,
-                    roleId,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("CategoryId", DbType.Int32, categoryId),
+                        new DbParam("RoleId", DbType.Int32, roleId),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return output;

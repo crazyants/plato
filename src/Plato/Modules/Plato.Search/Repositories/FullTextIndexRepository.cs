@@ -56,7 +56,7 @@ namespace Plato.Search.Repositories
             IList<FullTextIndex> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<FullTextIndex>>(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.Text,
                     BySql,
                     async reader =>

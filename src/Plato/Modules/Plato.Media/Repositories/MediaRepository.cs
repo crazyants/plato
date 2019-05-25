@@ -76,9 +76,13 @@ namespace Plato.Media.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteMediaById", id);
+                    "DeleteMediaById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -147,19 +151,22 @@ namespace Plato.Media.Repositories
             var mediaId = 0;
             using (var context = _dbContext)
             {
-                mediaId = await context.ExecuteScalarAsync<int>(
+                mediaId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateMedia",
-                    id,
-                    name.ToEmptyIfNull().ToSafeFileName().TrimToSize(255),
-                    contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
-                    contentType.ToEmptyIfNull().TrimToSize(75),
-                    contentLength,
-                    createdUserId, 
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("Name", DbType.String, 255, name.ToSafeFileName()),
+                        new DbParam("ContentBlob", DbType.Binary, contentBlob ?? new byte[0]),
+                        new DbParam("ContentType", DbType.String, 75, contentType),
+                        new DbParam("ContentLength", DbType.Int64, contentLength),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.DateTimeOffset, ParameterDirection.Output),
+                    });
             }
 
             return mediaId;

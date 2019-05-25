@@ -129,9 +129,13 @@ namespace Plato.Entities.Metrics.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityMetricById", id);
+                    "DeleteEntityMetricById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -154,18 +158,20 @@ namespace Plato.Entities.Metrics.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync<int>(
+                emailId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityMetric",
-                    id,
-                    entityId,
-                    ipV4Address.TrimToSize(20).ToEmptyIfNull(),
-                    ipV6Address.TrimToSize(50).ToEmptyIfNull(),
-                    userAgent.TrimToSize(255).ToEmptyIfNull(),
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
-                );
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("IpV4Address", DbType.String, 20, ipV4Address.ToEmptyIfNull()),
+                        new DbParam("IpV6Address", DbType.String, 50, ipV6Address.ToEmptyIfNull()),
+                        new DbParam("UserAgent", DbType.String, 255, userAgent.ToEmptyIfNull()),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return emailId;

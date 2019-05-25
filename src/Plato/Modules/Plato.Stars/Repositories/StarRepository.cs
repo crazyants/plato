@@ -55,7 +55,7 @@ namespace Plato.Stars.Repositories
             Star star = null;
             using (var context = _dbContext)
             {
-                star = await context.ExecuteReaderAsync<Star>(
+                star = await context.ExecuteReaderAsync2<Star>(
                     CommandType.StoredProcedure,
                     "SelectStarById",
                     async reader =>
@@ -68,9 +68,11 @@ namespace Plato.Stars.Repositories
                         }
 
                         return star;
-                    },
-                    id);
-                
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
             }
 
             return star;
@@ -125,9 +127,12 @@ namespace Plato.Stars.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteStarById", id);
+                    "DeleteStarById", new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -138,7 +143,7 @@ namespace Plato.Stars.Repositories
             IList<Star> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync<List<Star>>(
+                results = await context.ExecuteReaderAsync2<List<Star>>(
                     CommandType.StoredProcedure,
                     "SelectStarsByNameAndThingId",
                     async reader =>
@@ -158,9 +163,11 @@ namespace Plato.Stars.Repositories
 
                         return null;
 
-                    },
-                    name,
-                    thingId);
+                    }, new[]
+                    {
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("ThingId", DbType.Int32, thingId),
+                    });
 
             }
 
@@ -172,7 +179,7 @@ namespace Plato.Stars.Repositories
             Star star = null;
             using (var context = _dbContext)
             {
-                star = await context.ExecuteReaderAsync(
+                star = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectStarByNameThingIdAndCreatedUserId",
                     async reader =>
@@ -186,9 +193,12 @@ namespace Plato.Stars.Repositories
 
                         return star;
                     },
-                    name,
-                    thingId,
-                    createdUserId);
+                    new[]
+                    {
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("ThingId", DbType.Int32, thingId),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                    });
 
             }
 
@@ -205,22 +215,25 @@ namespace Plato.Stars.Repositories
             int thingId,
             string cancellationToken,
             int createdUserId,
-            DateTimeOffset createdDate)
+            DateTimeOffset? createdDate)
         {
 
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateStar",
-                    id,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    thingId,
-                    cancellationToken.ToEmptyIfNull().TrimToSize(100),
-                    createdUserId,
-                    createdDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("ThingId", DbType.Int32, thingId),
+                        new DbParam("CancellationToken", DbType.String, 255, cancellationToken),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
 
             return output;

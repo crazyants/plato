@@ -50,7 +50,7 @@ namespace Plato.Mentions.Repositories
             EntityMention output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<EntityMention>(
+                output = await context.ExecuteReaderAsync2<EntityMention>(
                     CommandType.StoredProcedure,
                     "SelectEntityMentionById",
                     async reader =>
@@ -63,8 +63,10 @@ namespace Plato.Mentions.Repositories
                         }
 
                         return output;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -123,9 +125,13 @@ namespace Plato.Mentions.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityMentionById", id);
+                    "DeleteEntityMentionById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -143,9 +149,13 @@ namespace Plato.Mentions.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityMentionsByEntityId", entityId);
+                    "DeleteEntityMentionsByEntityId",
+                    new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -162,9 +172,13 @@ namespace Plato.Mentions.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityMentionsByEntityReplyId", entityReplyId);
+                    "DeleteEntityMentionsByEntityReplyId",
+                    new[]
+                    {
+                        new DbParam("EntityReplyId", DbType.Int32, entityReplyId)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -187,16 +201,19 @@ namespace Plato.Mentions.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityMention",
-                    id,
-                    entityId,
-                    entityReplyId,
-                    userId,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("EntityReplyId", DbType.Int32, entityReplyId),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return output;

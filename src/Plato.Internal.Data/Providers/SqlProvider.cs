@@ -67,81 +67,81 @@ namespace Plato.Internal.Data.Providers
 
         }
 
-        public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
-        {
+        //public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
+        //{
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("SQL to execute: " + sql);
-            }
+        //    if (_logger.IsEnabled(LogLevel.Information))
+        //    {
+        //        _logger.LogInformation("SQL to execute: " + sql);
+        //    }
 
 
-            object output = null;
-            using (var conn = new SqlConnection(_connectionString))
-            {
+        //    object output = null;
+        //    using (var conn = new SqlConnection(_connectionString))
+        //    {
 
-                try
-                {
-                    await conn.OpenAsync();
-                    using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
-                    {
-                        output = await cmd.ExecuteScalarAsync();
-                        OnExecutedCommand(cmd);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    HandleException(ex);
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
+        //        try
+        //        {
+        //            await conn.OpenAsync();
+        //            using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
+        //            {
+        //                output = await cmd.ExecuteScalarAsync();
+        //                OnExecutedCommand(cmd);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            HandleException(ex);
+        //        }
+        //        finally
+        //        {
+        //            conn.Close();
+        //        }
+        //    }
 
-            if (output != null)
-            {
-                return (T)Convert.ChangeType(output, typeof(T));
-            }
+        //    if (output != null)
+        //    {
+        //        return (T)Convert.ChangeType(output, typeof(T));
+        //    }
 
-            return default(T);
+        //    return default(T);
 
-        }
+        //}
 
-        public async Task<T> ExecuteNonQueryAsync<T>(string sql, params object[] args)
-        {
+        //public async Task<T> ExecuteNonQueryAsync<T>(string sql, params object[] args)
+        //{
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("SQL to execute: " + sql);
-            }
+        //    if (_logger.IsEnabled(LogLevel.Information))
+        //    {
+        //        _logger.LogInformation("SQL to execute: " + sql);
+        //    }
             
-            var output = default(T);
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                try
-                {
-                    await conn.OpenAsync();
-                    using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
-                    {
-                        var returnValue = await cmd.ExecuteNonQueryAsync();
-                        OnExecutedCommand(cmd);
-                        output = (T) Convert.ChangeType(returnValue, typeof(T));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    HandleException(ex);
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
+        //    var output = default(T);
+        //    using (var conn = new SqlConnection(_connectionString))
+        //    {
+        //        try
+        //        {
+        //            await conn.OpenAsync();
+        //            using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
+        //            {
+        //                var returnValue = await cmd.ExecuteNonQueryAsync();
+        //                OnExecutedCommand(cmd);
+        //                output = (T) Convert.ChangeType(returnValue, typeof(T));
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            HandleException(ex);
+        //        }
+        //        finally
+        //        {
+        //            conn.Close();
+        //        }
+        //    }
 
-            return output;
+        //    return output;
 
-        }
+        //}
 
         // -------- Testing
 

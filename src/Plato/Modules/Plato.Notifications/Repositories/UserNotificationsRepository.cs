@@ -53,7 +53,7 @@ namespace Plato.Notifications.Repositories
             UserNotification output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<UserNotification>(
+                output = await context.ExecuteReaderAsync2<UserNotification>(
                     CommandType.StoredProcedure,
                     "SelectUserNotificationById",
                     async reader =>
@@ -66,9 +66,11 @@ namespace Plato.Notifications.Repositories
                         }
 
                         return output;
-                    },
-                    id);
-             
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
 
             }
 
@@ -128,9 +130,13 @@ namespace Plato.Notifications.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteUserNotificationById", id);
+                    "DeleteUserNotificationById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -147,11 +153,14 @@ namespace Plato.Notifications.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "UpdateUserNotificationsReadDate", 
-                    userId,
-                    readDate);
+                    "UpdateUserNotificationsReadDate",
+                    new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("ReadDate", DbType.DateTimeOffset, readDate),
+                    });
             }
 
             return success > 0 ? true : false;
@@ -176,19 +185,22 @@ namespace Plato.Notifications.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserNotification",
-                    id,
-                    userId,
-                    notificationName.ToEmptyIfNull().TrimToSize(255),
-                    title.ToEmptyIfNull().TrimToSize(255),
-                    message.ToEmptyIfNull(),
-                    url.ToEmptyIfNull().TrimToSize(500),
-                    readDate,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("NotificationName", DbType.String, 255, notificationName),
+                        new DbParam("Title", DbType.String, 255, title),
+                        new DbParam("Message", DbType.String, message),
+                        new DbParam("Url", DbType.String, 500, url),
+                        new DbParam("ReadDate", DbType.DateTimeOffset, readDate),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return output;

@@ -123,12 +123,12 @@ namespace Plato.Entities.Repositories
 
         }
         
-        public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<TModel> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync<IPagedResults<TModel>>(
+                results = await context.ExecuteReaderAsync2<IPagedResults<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectEntitiesPaged",
                     async reader =>
@@ -158,7 +158,7 @@ namespace Plato.Entities.Repositories
                         return null;
 
                     },
-                    inputParams);
+                    dbParams);
                
             }
 

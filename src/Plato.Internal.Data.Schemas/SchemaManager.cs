@@ -46,7 +46,7 @@ namespace Plato.Internal.Data.Schemas
 
                     using (var context = _dbContext)
                     {
-                        await context.ExecuteNonQueryAsync<int>(CommandType.Text, statement);
+                        await context.ExecuteNonQueryAsync2<int>(CommandType.Text, statement);
                     }
                 }
                 catch (Exception e)

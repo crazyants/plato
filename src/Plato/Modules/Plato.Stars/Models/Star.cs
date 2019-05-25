@@ -19,7 +19,7 @@ namespace Plato.Stars.Models
 
         public int CreatedUserId { get; set; }
 
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public IUser CreatedBy { get; set; } = new User();
 

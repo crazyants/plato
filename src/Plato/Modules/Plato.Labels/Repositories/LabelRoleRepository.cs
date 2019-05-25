@@ -64,7 +64,7 @@ namespace Plato.Labels.Repositories
             LabelRole labelRole = null;
             using (var context = _dbContext)
             {
-                labelRole = await context.ExecuteReaderAsync<LabelRole>(
+                labelRole = await context.ExecuteReaderAsync2<LabelRole>(
                     CommandType.StoredProcedure,
                     "SelectLabelRoleById",
                     async reader =>
@@ -77,9 +77,11 @@ namespace Plato.Labels.Repositories
                         }
 
                         return labelRole;
-                    },
-                    id);
-             
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
 
             }
 
@@ -139,9 +141,12 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteLabelById", id);
+                    "DeleteLabelById", new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -154,7 +159,7 @@ namespace Plato.Labels.Repositories
             List<LabelRole> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectLabelRolesByLabelId",
                     async reader =>
@@ -172,8 +177,10 @@ namespace Plato.Labels.Repositories
                         }
 
                         return output;
-                    },
-                    labelId);
+                    }, new[]
+                    {
+                        new DbParam("LabelId", DbType.Int32, labelId)
+                    });
 
             }
 
@@ -191,9 +198,13 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteLabelRolesByLabelId", labelId);
+                    "DeleteLabelRolesByLabelId",
+                    new []
+                    {
+                        new DbParam("LabelId", DbType.Int32, labelId)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -211,11 +222,14 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "DeleteLabelRolesByRoleIdAndLabelId",
-                    roleId,
-                    labelId);
+                    new[]
+                    {
+                        new DbParam("RoleId", DbType.Int32, roleId),
+                        new DbParam("LabelId", DbType.Int32, labelId),
+                    });
             }
 
             return success > 0 ? true : false;
@@ -239,17 +253,20 @@ namespace Plato.Labels.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabelRole",
-                    id,
-                    labelId,
-                    roleId,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("LabelId", DbType.Int32, labelId),
+                        new DbParam("RoleId", DbType.Int32, roleId),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return output;

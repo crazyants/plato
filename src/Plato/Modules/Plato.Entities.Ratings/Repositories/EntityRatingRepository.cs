@@ -59,7 +59,7 @@ namespace Plato.Entities.Ratings.Repositories
             EntityRating entityRating = null;
             using (var context = _dbContext)
             {
-                entityRating = await context.ExecuteReaderAsync<EntityRating>(
+                entityRating = await context.ExecuteReaderAsync2<EntityRating>(
                     CommandType.StoredProcedure,
                     "SelectEntityRatingById",
                     async reader =>
@@ -72,8 +72,10 @@ namespace Plato.Entities.Ratings.Repositories
                         }
 
                         return entityRating;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -132,9 +134,13 @@ namespace Plato.Entities.Ratings.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityRatingById", id);
+                    "DeleteEntityRatingById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -226,21 +232,23 @@ namespace Plato.Entities.Ratings.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync<int>(
+                emailId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityRating",
-                    id,
-                    rating,
-                    featureId,
-                    entityId,
-                    entityReplyId,
-                    ipV4Address.TrimToSize(20).ToEmptyIfNull(),
-                    ipV6Address.TrimToSize(50).ToEmptyIfNull(),
-                    userAgent.TrimToSize(255).ToEmptyIfNull(),
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
-                );
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("Rating", DbType.Int32, rating),
+                        new DbParam("FeatureId", DbType.Int32, featureId),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("EntityReplyId", DbType.Int32, entityReplyId),
+                        new DbParam("IpV4Address", DbType.String, 20, ipV4Address),
+                        new DbParam("IpV6Address", DbType.String, 50, ipV6Address),
+                        new DbParam("UserAgent", DbType.String, 255, userAgent),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return emailId;

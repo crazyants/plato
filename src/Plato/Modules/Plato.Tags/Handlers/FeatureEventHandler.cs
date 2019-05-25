@@ -67,7 +67,8 @@ namespace Plato.Tags.Handlers
                     new SchemaColumn()
                     {
                         Name = "LastSeenDate",
-                        DbType = DbType.DateTimeOffset
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     },
                     new SchemaColumn()
                     {

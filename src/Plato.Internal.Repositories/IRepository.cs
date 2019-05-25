@@ -11,11 +11,25 @@ namespace Plato.Internal.Repositories
         Task<TModel> SelectByIdAsync(int id);
 
         Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams);
-
-        //Task<IPagedResults<TModel>> SelectAsync2(DbParam[] dbParams);
-
+        
         Task<bool> DeleteAsync(int id);
         
     }
+
+
+
+    public interface IRepository2<TModel> where TModel : class
+    {
+        Task<TModel> InsertUpdateAsync(TModel model);
+
+        Task<TModel> SelectByIdAsync(int id);
+
+        Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams);
+
+        Task<bool> DeleteAsync(int id);
+
+    }
+
+
 
 }

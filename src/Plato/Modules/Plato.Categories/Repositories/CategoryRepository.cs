@@ -134,9 +134,13 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteCategoryById", id);
+                    "DeleteCategoryById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -235,24 +239,27 @@ namespace Plato.Categories.Repositories
             var categoryId = 0;
             using (var context = _dbContext)
             {
-                categoryId = await context.ExecuteScalarAsync<int>(
+                categoryId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategory",
-                    id,
-                    parentId,
-                    featureId,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    description.ToEmptyIfNull().TrimToSize(500),
-                    alias.ToEmptyIfNull().TrimToSize(255),
-                    iconCss.ToEmptyIfNull().TrimToSize(50),
-                    foreColor.ToEmptyIfNull().TrimToSize(50),
-                    backColor.ToEmptyIfNull().TrimToSize(50),
-                    sortOrder,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("ParentId", DbType.Int32, parentId),
+                        new DbParam("FeatureId", DbType.Int32, featureId),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("Description", DbType.String, 500, description.ToEmptyIfNull()),
+                        new DbParam("Alias", DbType.String, 255, alias),
+                        new DbParam("IconCss", DbType.String, 50, iconCss),
+                        new DbParam("ForeColor", DbType.String, 50, foreColor),
+                        new DbParam("BackColor", DbType.String, 50, backColor),
+                        new DbParam("SortOrder", DbType.Int32, sortOrder),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             // Add category data

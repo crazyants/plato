@@ -127,9 +127,13 @@ namespace Plato.Entities.History.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityHistoryById", id);
+                    "DeleteEntityHistoryById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -155,19 +159,22 @@ namespace Plato.Entities.History.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityHistory",
-                    id,
-                    entityId,
-                    entityReplyId,
-                    message.ToEmptyIfNull(),
-                    html.ToEmptyIfNull(),
-                    majorVersion,
-                    minorVersion,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("EntityReplyId", DbType.Int32, entityReplyId),
+                        new DbParam("Message", DbType.String, message),
+                        new DbParam("Html", DbType.String, html),
+                        new DbParam("MajorVersion", DbType.Int16, majorVersion),
+                        new DbParam("MinorVersion", DbType.Int16, minorVersion),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return output;

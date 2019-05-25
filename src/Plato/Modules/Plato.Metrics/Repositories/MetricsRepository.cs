@@ -8,7 +8,7 @@ using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Metrics.Repositories
 {
-    
+
     public class MetricsRepository : IMetricsRepository<Metric>
     {
 
@@ -113,7 +113,7 @@ namespace Plato.Metrics.Repositories
                         return output;
                     },
                     inputParams);
-            
+
             }
 
             return output;
@@ -130,14 +130,18 @@ namespace Plato.Metrics.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteMetricById", id);
+                    "DeleteMetricById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
         }
-        
+
         #endregion
 
         #region "Private Methods"
@@ -157,20 +161,22 @@ namespace Plato.Metrics.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync<int>(
+                emailId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateMetric",
-                    id,
-                    featureId,
-                    title.TrimToSize(255).ToEmptyIfNull(),
-                    url.TrimToSize(255).ToEmptyIfNull(),
-                    ipV4Address.TrimToSize(20).ToEmptyIfNull(),
-                    ipV6Address.TrimToSize(50).ToEmptyIfNull(),
-                    userAgent.TrimToSize(255).ToEmptyIfNull(),
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
-                );
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("FeatureId", DbType.Int32, featureId),
+                        new DbParam("Title", DbType.String, 255, title),
+                        new DbParam("Url", DbType.String, 255, url),
+                        new DbParam("IpV4Address", DbType.String, 20, ipV4Address),
+                        new DbParam("IpV6Address", DbType.String, 50, ipV6Address),
+                        new DbParam("UserAgent", DbType.String, 255, userAgent),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return emailId;

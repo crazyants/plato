@@ -42,23 +42,23 @@ namespace Plato.Internal.Data
             return await _provider.ExecuteReaderAsync<T>(sql, populate, args);
         }
         
-        public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] args)
-        {
-            if (_provider == null)
-                return default(T);
-            if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateScalarStoredProcedureSql(GetProcedureName(sql), args);
-            return await _provider.ExecuteScalarAsync<T>(sql, args);
-        }
+        //public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] args)
+        //{
+        //    if (_provider == null)
+        //        return default(T);
+        //    if (commandType == CommandType.StoredProcedure)
+        //        sql = DbParameterHelper.CreateScalarStoredProcedureSql(GetProcedureName(sql), args);
+        //    return await _provider.ExecuteScalarAsync<T>(sql, args);
+        //}
 
-        public async Task<T> ExecuteNonQueryAsync<T>(CommandType commandType, string sql, params object[] args)
-        {
-            if (_provider == null)
-                return default(T);
-            if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateExecuteStoredProcedureSql(GetProcedureName(sql), args);
-            return await _provider.ExecuteNonQueryAsync<T>(sql, args);
-        }
+        //public async Task<T> ExecuteNonQueryAsync<T>(CommandType commandType, string sql, params object[] args)
+        //{
+        //    if (_provider == null)
+        //        return default(T);
+        //    if (commandType == CommandType.StoredProcedure)
+        //        sql = DbParameterHelper.CreateExecuteStoredProcedureSql(GetProcedureName(sql), args);
+        //    return await _provider.ExecuteNonQueryAsync<T>(sql, args);
+        //}
 
         // --- Testing
 

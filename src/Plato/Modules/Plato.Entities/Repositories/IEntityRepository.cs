@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Repositories
 {
-    public interface IEntityRepository<T> : IRepository<T> where T : class
+    public interface IEntityRepository<T> : IRepository2<T> where T : class
     {
 
         Task<IEnumerable<T>> SelectByFeatureIdAsync(int featureId);

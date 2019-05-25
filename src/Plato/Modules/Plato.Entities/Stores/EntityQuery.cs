@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
@@ -21,11 +23,11 @@ namespace Plato.Entities.Stores
 
         public EntityQueryParams Params { get; set; }
 
-        private readonly IStore<TModel> _store;
+        private readonly IStore2<TModel> _store;
         
         public EntityQueryBuilder<TModel> Builder { get; private set; }
         
-        public EntityQuery(IStore<TModel> store)
+        public EntityQuery(IStore2<TModel> store)
         {
             _store = store;
         }
@@ -45,15 +47,16 @@ namespace Plato.Entities.Stores
             var populateSql = Builder.BuildSqlPopulate();
             var countSql = Builder.BuildSqlCount();
 
-            return await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Keywords.Value);
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, Params.Keywords.Value.ToEmptyIfNull())
+            });
         }
         
-     
     }
 
     #endregion

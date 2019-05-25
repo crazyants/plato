@@ -55,7 +55,7 @@ namespace Plato.Tags.Repositories
             EntityTag output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectEntityTagById",
                     async reader =>
@@ -68,8 +68,10 @@ namespace Plato.Tags.Repositories
                         }
 
                         return output;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -124,9 +126,13 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityTagById", id);
+                    "DeleteEntityTagById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -137,7 +143,7 @@ namespace Plato.Tags.Repositories
             IList<EntityTag> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<EntityTag>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsByEntityId",
                     async reader =>
@@ -156,9 +162,11 @@ namespace Plato.Tags.Repositories
 
                         return output;
 
-                    },
-                    entityId);
-              
+                    }, new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
+
             }
 
             return output;
@@ -169,7 +177,7 @@ namespace Plato.Tags.Repositories
             IList<EntityTag> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<EntityTag>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsByEntityReplyId",
                     async reader =>
@@ -188,8 +196,11 @@ namespace Plato.Tags.Repositories
 
                         return output;
                     },
-                    entityReplyId);
-              
+                    new[]
+                    {
+                        new DbParam("EntityReplyId", DbType.Int32, entityReplyId)
+                    });
+
             }
 
             return output;
@@ -206,9 +217,13 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityTagsByEntityId", entityId);
+                    "DeleteEntityTagsByEntityId",
+                    new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -224,12 +239,15 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-              
-                   success = await context.ExecuteScalarAsync<int>(
+
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityTagByEntityIdAndTagId",
-                    entityId,
-                    tagId);
+                    new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("TagId", DbType.Int32, tagId),
+                    });
             }
 
             return success > 0 ? true : false;
@@ -251,16 +269,19 @@ namespace Plato.Tags.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityTag",
-                    id,
-                    entityId,
-                    entityReplyId,
-                    tagId,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("EntityReplyId", DbType.Int32, entityReplyId),
+                        new DbParam("TagId", DbType.Int32, tagId),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return output;
