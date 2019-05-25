@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
@@ -39,9 +39,13 @@ namespace Plato.Internal.Repositories.Roles
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteRoleById", id);
+                    "DeleteRoleById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -64,13 +68,13 @@ namespace Plato.Internal.Repositories.Roles
 
             var id = await InsertUpdateInternal(
                 role.Id,
-                role.Name.ToEmptyIfNull().TrimToSize(255),
-                role.NormalizedName.ToEmptyIfNull().TrimToSize(255),
-                role.Description.ToEmptyIfNull().TrimToSize(500),
+                role.Name,
+                role.NormalizedName,
+                role.Description,
                 claims,
-                role.CreatedDate.ToDateIfNull(),
+                role.CreatedDate,
                 role.CreatedUserId,
-                role.ModifiedDate.ToDateIfNull(),
+                role.ModifiedDate,
                 role.ModifiedUserId,
                 role.ConcurrencyStamp);
 
@@ -281,7 +285,7 @@ namespace Plato.Internal.Repositories.Roles
             IList<Role> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<Role>>(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectRoles",
                     async reader =>
@@ -327,21 +331,23 @@ namespace Plato.Internal.Repositories.Roles
 
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateRole",
-                    id,
-                    name.TrimToSize(255),
-                    nameNormalized.ToEmptyIfNull().TrimToSize(255),
-                    description.ToEmptyIfNull().TrimToSize(255),
-                    claims.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate.ToDateIfNull(),
-                    modifiedUserId,
-                    concurrencyStamp.ToEmptyIfNull().TrimToSize(255),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
-                );
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("NameNormalized", DbType.String, 255, nameNormalized),
+                        new DbParam("Description", DbType.String, 255, description),
+                        new DbParam("Claims", DbType.String, claims),
+                        new DbParam("ConcurrencyStamp", DbType.String, 255, concurrencyStamp),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
         }
 

@@ -71,7 +71,8 @@ namespace Plato.Core.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     }
                 }
             };
@@ -117,7 +118,8 @@ namespace Plato.Core.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedUserId",
-                        DbType = DbType.Int32
+                        DbType = DbType.Int32,
+                        Nullable = true
                     }
                 }
             };

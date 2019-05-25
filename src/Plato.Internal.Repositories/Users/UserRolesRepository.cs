@@ -95,7 +95,7 @@ namespace Plato.Internal.Repositories.Users
             IList<UserRole> userRoles = null;
             using (var context = _dbContext)
             {
-                userRoles = await context.ExecuteReaderAsync2<IList<UserRole>>(
+                userRoles = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserRolesByUserId",
                     async reader =>
@@ -175,9 +175,13 @@ namespace Plato.Internal.Repositories.Users
             bool success;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<bool>(
+                success = await context.ExecuteScalarAsync2<bool>(
                     CommandType.StoredProcedure,
-                    "DeleteUserRolesByUserId", userId);
+                    "DeleteUserRolesByUserId",
+                    new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId)
+                    });
             }
             return success;
         }

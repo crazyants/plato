@@ -10,12 +10,12 @@ namespace Plato.Internal.Repositories.Badges
 {
     public class UserBadgeRepository : IUserBadgeRepository<UserBadge>
     {
-        
+
         private readonly IDbContext _dbContext;
         private readonly ILogger<UserBadgeRepository> _logger;
-        
+
         public UserBadgeRepository(
-            IDbContext dbContext, 
+            IDbContext dbContext,
             ILogger<UserBadgeRepository> logger)
         {
             _dbContext = dbContext;
@@ -36,7 +36,7 @@ namespace Plato.Internal.Repositories.Badges
                 model.BadgeName,
                 model.UserId,
                 model.CreatedDate
-             );
+            );
 
             if (id > 0)
             {
@@ -52,7 +52,7 @@ namespace Plato.Internal.Repositories.Badges
             UserBadge userBadge = null;
             using (var context = _dbContext)
             {
-                userBadge = await context.ExecuteReaderAsync<UserBadge>(
+                userBadge = await context.ExecuteReaderAsync2<UserBadge>(
                     CommandType.StoredProcedure,
                     "SelectUserBadgeById",
                     async reader =>
@@ -65,8 +65,10 @@ namespace Plato.Internal.Repositories.Badges
                         }
 
                         return userBadge;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
 
             }
@@ -126,9 +128,13 @@ namespace Plato.Internal.Repositories.Badges
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteUserBadgeById", id);
+                    "DeleteUserBadgeById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -148,15 +154,19 @@ namespace Plato.Internal.Repositories.Badges
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserBadge",
-                    id,
-                    badgeName.ToEmptyIfNull(),
-                    userId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("BadgeName", DbType.String, 255, badgeName),
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
+
             return output;
 
         }

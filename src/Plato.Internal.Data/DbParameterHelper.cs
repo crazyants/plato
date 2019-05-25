@@ -156,86 +156,86 @@ namespace Plato.Internal.Data
         }
 
 
-        public static string CreateDbParamsScalarStoredProcedureSql(
-          string procedureName,
-          DbParam[] dbParams)
-        {
+        //public static string CreateDbParamsScalarStoredProcedureSql(
+        //  string procedureName,
+        //  DbParam[] dbParams)
+        //{
 
-            // Build a collection of output parameters and there names
-            IDictionary<string, DbParam> outputParams = null;
-            if (dbParams != null)
-            {
-                foreach (var parameter in dbParams)
-                {
-                    if (parameter.Direction == ParameterDirection.Output)
-                    {
-                        if (outputParams == null)
-                        {
-                            outputParams = new Dictionary<string, DbParam>();
-                        }
-                        outputParams.Add(parameter.ParameterName, parameter);
-                    }
-                }
+        //    // Build a collection of output parameters and there names
+        //    IDictionary<string, DbParam> outputParams = null;
+        //    if (dbParams != null)
+        //    {
+        //        foreach (var parameter in dbParams)
+        //        {
+        //            if (parameter.Direction == ParameterDirection.Output)
+        //            {
+        //                if (outputParams == null)
+        //                {
+        //                    outputParams = new Dictionary<string, DbParam>();
+        //                }
+        //                outputParams.Add(parameter.ParameterName, parameter);
+        //            }
+        //        }
 
-            }
+        //    }
 
-            var sb = new StringBuilder();
-            if (outputParams != null)
-            {
-                foreach (var outputParam in outputParams)
-                {
-                    sb.Append($"DECLARE @{outputParam.Value.ParameterName}_out {outputParam.Value.DbTypeNormalized()};");
-                }
-            }
+        //    var sb = new StringBuilder();
+        //    if (outputParams != null)
+        //    {
+        //        foreach (var outputParam in outputParams)
+        //        {
+        //            sb.Append($"DECLARE @{outputParam.Value.ParameterName}_out {outputParam.Value.DbTypeNormalized()};");
+        //        }
+        //    }
 
-            sb.Append("EXEC ");
-            sb.Append(procedureName);
+        //    sb.Append("EXEC ");
+        //    sb.Append(procedureName);
 
-            var i = 0;
-            if (dbParams != null)
-            {
-                foreach (var parameter in dbParams)
-                {
+        //    var i = 0;
+        //    if (dbParams != null)
+        //    {
+        //        foreach (var parameter in dbParams)
+        //        {
 
-                    if (outputParams?.ContainsKey(parameter.ParameterName) ?? false)
-                    {
-                        sb.Append($" @{parameter.ParameterName}_out output");
-                    }
-                    else
-                    {
-                        sb.Append($" @{parameter.ParameterName}");
-                    }
+        //            if (outputParams?.ContainsKey(parameter.ParameterName) ?? false)
+        //            {
+        //                sb.Append($" @{parameter.ParameterName}_out output");
+        //            }
+        //            else
+        //            {
+        //                sb.Append($" @{parameter.ParameterName}");
+        //            }
 
-                    if (i < dbParams.Length - 1)
-                        sb.Append(",");
-                    i++;
-                }
-            }
+        //            if (i < dbParams.Length - 1)
+        //                sb.Append(",");
+        //            i++;
+        //        }
+        //    }
 
-            sb.Append(";");
+        //    sb.Append(";");
 
-            // Return output parameters
-            if (outputParams != null)
-            {
-                sb.Append("SELECT ");
-                i = 0;
-                foreach (var outputParam in outputParams)
-                {
-                    sb.Append("@")
-                        .Append(outputParam.Key)
-                        .Append("_out");
-                    if (i < outputParams.Count - 1)
-                    {
-                        sb.Append(",");
-                    }
-                    i++;
-                }
+        //    // Return output parameters
+        //    if (outputParams != null)
+        //    {
+        //        sb.Append("SELECT ");
+        //        i = 0;
+        //        foreach (var outputParam in outputParams)
+        //        {
+        //            sb.Append("@")
+        //                .Append(outputParam.Key)
+        //                .Append("_out");
+        //            if (i < outputParams.Count - 1)
+        //            {
+        //                sb.Append(",");
+        //            }
+        //            i++;
+        //        }
 
-                sb.Append(";");
-            }
+        //        sb.Append(";");
+        //    }
 
-            return sb.ToString();
-        }
+        //    return sb.ToString();
+        //}
 
 
         //public static string CreateDbParamsExecuteStoredProcedureSql(

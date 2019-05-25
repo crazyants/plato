@@ -35,7 +35,7 @@ namespace Plato.Internal.Repositories.Schema
             ICollection<DbConstraint> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.Text,
                     BySql,
                     async reader =>

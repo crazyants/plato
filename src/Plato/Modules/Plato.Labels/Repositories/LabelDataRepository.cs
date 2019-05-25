@@ -39,7 +39,7 @@ namespace Plato.Labels.Repositories
             LabelData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumById",
                     async reader =>
@@ -50,9 +50,12 @@ namespace Plato.Labels.Repositories
                             await reader.ReadAsync();
                             data.PopulateModel(reader);
                         }
+
                         return data;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return data;
@@ -64,7 +67,7 @@ namespace Plato.Labels.Repositories
             IList<LabelData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<IList<LabelData>>(
+                data = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumByLabelId",
                     async reader =>
@@ -81,9 +84,11 @@ namespace Plato.Labels.Repositories
                         }
 
                         return data;
-                    },
-                    labelId);
-              
+                    }, new[]
+                    {
+                        new DbParam("LabelId", DbType.Int32, labelId)
+                    });
+
             }
             return data;
 
@@ -94,9 +99,9 @@ namespace Plato.Labels.Repositories
             var id = await InsertUpdateInternal(
                 data.Id,
                 data.LabelId,
-                data.Key.ToEmptyIfNull().TrimToSize(255),
-                data.Value.ToEmptyIfNull(),
-                data.CreatedDate.ToDateIfNull(),
+                data.Key,
+                data.Value,
+                data.CreatedDate,
                 data.CreatedUserId,
                 data.ModifiedDate,
                 data.ModifiedUserId);
@@ -171,7 +176,7 @@ namespace Plato.Labels.Repositories
 
         private async Task<int> InsertUpdateInternal(
             int id,
-            int LabelId,
+            int labelId,
             string key,
             string value,
             DateTimeOffset? createdDate,
@@ -191,18 +196,21 @@ namespace Plato.Labels.Repositories
             {
                 if (context == null)
                     return 0;
-                return await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabelDatum",
-                    id,
-                    LabelId,
-                    key.ToEmptyIfNull().TrimToSize(255),
-                    value.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate,
-                    modifiedUserId,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("LabelId", DbType.Int32, labelId),
+                        new DbParam("Key", DbType.String, 255, key),
+                        new DbParam("Value", DbType.String, value),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
 
         }

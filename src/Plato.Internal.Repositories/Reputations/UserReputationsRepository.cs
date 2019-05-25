@@ -10,12 +10,12 @@ namespace Plato.Internal.Repositories.Reputations
 {
     public class UserReputationsRepository : IUserReputationsRepository<UserReputation>
     {
-        
+
         private readonly IDbContext _dbContext;
         private readonly ILogger<UserReputationsRepository> _logger;
-        
+
         public UserReputationsRepository(
-            IDbContext dbContext, 
+            IDbContext dbContext,
             ILogger<UserReputationsRepository> logger)
         {
             _dbContext = dbContext;
@@ -39,7 +39,7 @@ namespace Plato.Internal.Repositories.Reputations
                 model.Points,
                 model.CreatedUserId,
                 model.CreatedDate
-             );
+            );
 
             if (id > 0)
             {
@@ -54,7 +54,7 @@ namespace Plato.Internal.Repositories.Reputations
             UserReputation userReputation = null;
             using (var context = _dbContext)
             {
-                userReputation = await context.ExecuteReaderAsync(
+                userReputation = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectUserReputationById",
                     async reader =>
@@ -67,9 +67,11 @@ namespace Plato.Internal.Repositories.Reputations
                         }
 
                         return userReputation;
-                    },
-                    id);
-             
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
 
             }
 
@@ -111,7 +113,7 @@ namespace Plato.Internal.Repositories.Reputations
                     },
                     inputParams);
 
-              
+
             }
 
             return output;
@@ -127,9 +129,13 @@ namespace Plato.Internal.Repositories.Reputations
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteUserReputationById", id);
+                    "DeleteUserReputationById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -152,18 +158,22 @@ namespace Plato.Internal.Repositories.Reputations
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserReputation",
-                    id,
-                    featureId,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    description.ToEmptyIfNull().TrimToSize(255),
-                    points,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("FeatureId", DbType.Int32, featureId),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("Description", DbType.String, 255, description),
+                        new DbParam("Points", DbType.Int32, points),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
+
             return output;
 
         }

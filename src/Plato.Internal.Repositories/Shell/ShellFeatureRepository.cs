@@ -138,7 +138,7 @@ namespace Plato.Internal.Repositories.Shell
             IList<ShellFeature> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2<IList<ShellFeature>>(
+                data = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectShellFeatures",
                     async reader =>

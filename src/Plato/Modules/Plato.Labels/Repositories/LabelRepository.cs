@@ -79,7 +79,7 @@ namespace Plato.Labels.Repositories
             TLabel label = null;
             using (var context = _dbContext)
             {
-                label = await context.ExecuteReaderAsync<TLabel>(
+                label = await context.ExecuteReaderAsync2<TLabel>(
                     CommandType.StoredProcedure,
                     "SelectLabelById",
                     async reader =>
@@ -92,9 +92,11 @@ namespace Plato.Labels.Repositories
                         }
 
                         return label;
-                    },
-                    id);
-             
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
             }
 
             return label;
@@ -149,9 +151,13 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteLabelById", id);
+                    "DeleteLabelById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -164,7 +170,7 @@ namespace Plato.Labels.Repositories
             IList<TLabel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<TLabel>>(
+                output = await context.ExecuteReaderAsync2<IList<TLabel>>(
                     CommandType.StoredProcedure,
                     "SelectLabelsByFeatureId",
                     async reader =>
@@ -182,8 +188,10 @@ namespace Plato.Labels.Repositories
                         }
 
                         return output;
-                    },
-                    featureId);
+                    }, new[]
+                    {
+                        new DbParam("FeatureId", DbType.Int32, featureId)
+                    });
 
             }
 
@@ -220,29 +228,32 @@ namespace Plato.Labels.Repositories
             var labelId = 0;
             using (var context = _dbContext)
             {
-                labelId = await context.ExecuteScalarAsync<int>(
+                labelId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabel",
-                    id,
-                    parentId,
-                    featureId,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    description.ToEmptyIfNull().TrimToSize(500),
-                    alias.ToEmptyIfNull().TrimToSize(255),
-                    iconCss.ToEmptyIfNull().TrimToSize(50),
-                    foreColor.ToEmptyIfNull().TrimToSize(50),
-                    backColor.ToEmptyIfNull().TrimToSize(50),
-                    sortOrder,
-                    totalEntities,
-                    totalFollows,
-                    totalViews,
-                    lastEntityId,
-                    lastEntityDate,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new []
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("ParentId", DbType.Int32, parentId),
+                        new DbParam("FeatureId", DbType.Int32, featureId),
+                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("Description", DbType.String, 500, description),
+                        new DbParam("Alias", DbType.String, 255, alias),
+                        new DbParam("IconCss", DbType.String, 50, iconCss.ToEmptyIfNull()),
+                        new DbParam("ForeColor", DbType.String, 50, foreColor),
+                        new DbParam("BackColor", DbType.String, 50, backColor),
+                        new DbParam("SortOrder", DbType.Int32, sortOrder),
+                        new DbParam("TotalEntities", DbType.Int32, totalEntities),
+                        new DbParam("TotalFollows", DbType.Int32, totalFollows),
+                        new DbParam("TotalViews", DbType.Int32, totalViews),
+                        new DbParam("LastEntityId", DbType.Int32, lastEntityId),
+                        new DbParam("LastEntityDate", DbType.DateTimeOffset, lastEntityDate),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             // Add Label data

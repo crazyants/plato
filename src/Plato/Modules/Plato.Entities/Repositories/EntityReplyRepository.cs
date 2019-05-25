@@ -80,10 +80,14 @@ namespace Plato.Entities.Repositories
             TModel output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<TModel>(
+                output = await context.ExecuteReaderAsync2<TModel>(
                     CommandType.StoredProcedure,
                     "SelectEntityReplyById",
-                    async reader => await BuildObjectFromResultSets(reader), id);
+                    async reader => await BuildObjectFromResultSets(reader),
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return output;
@@ -145,9 +149,13 @@ namespace Plato.Entities.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityReplyById", id);
+                    "DeleteEntityReplyById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -235,45 +243,11 @@ namespace Plato.Entities.Repositories
                         new DbParam("EditedDate", DbType.DateTimeOffset, editedDate),
                         new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
                         new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
-                        new DbParam("UniqueId",DbType.Int32, ParameterDirection.Output),
+                        new DbParam("UniqueId",DbType.Int32, ParameterDirection.Output)
                     });
             }
 
 
-            //using (var context = _dbContext)
-            //{
-            //    entityReplyId = await context.ExecuteScalarAsync<int>(
-            //        CommandType.StoredProcedure,
-            //        "InsertUpdateEntityReply",
-            //        id,
-            //        parentId,
-            //        entityId,
-            //        message.ToEmptyIfNull(),
-            //        html.ToEmptyIfNull(),
-            //        messageAbstract.ToEmptyIfNull().TrimToSize(500),
-            //        urls.ToEmptyIfNull(),
-            //        isHidden,
-            //        isSpam,
-            //        isPinned,
-            //        isDeleted,
-            //        isClosed,
-            //        isAnswer,
-            //        totalReactions,
-            //        totalReports,
-            //        totalRatings,
-            //        summedRating,
-            //        meanRating,
-            //        totalLinks,
-            //        totalImages,
-            //        createdUserId,
-            //        createdDate.ToDateIfNull(),
-            //        editedUserId,
-            //        editedDate,
-            //        modifiedUserId,
-            //        modifiedDate,
-            //        new DbDataParameter(DbType.Int32, ParameterDirection.Output));
-            //}
-            
             return entityReplyId;
 
         }

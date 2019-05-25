@@ -54,8 +54,9 @@ namespace Plato.Roles.Handlers
                 },
                 new SchemaColumn()
                 {
-                    Name = "CreatedDate",
-                    DbType = DbType.DateTimeOffset
+                    Name = "ConcurrencyStamp",
+                    Length = "255",
+                    DbType = DbType.String
                 },
                 new SchemaColumn()
                 {
@@ -64,7 +65,7 @@ namespace Plato.Roles.Handlers
                 },
                 new SchemaColumn()
                 {
-                    Name = "ModifiedDate",
+                    Name = "CreatedDate",
                     DbType = DbType.DateTimeOffset
                 },
                 new SchemaColumn()
@@ -74,9 +75,9 @@ namespace Plato.Roles.Handlers
                 },
                 new SchemaColumn()
                 {
-                    Name = "ConcurrencyStamp",
-                    Length = "255",
-                    DbType = DbType.String
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTimeOffset,
+                    Nullable = true
                 }
             }
         };

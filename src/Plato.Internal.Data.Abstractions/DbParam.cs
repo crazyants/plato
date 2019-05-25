@@ -61,7 +61,7 @@ namespace Plato.Internal.Data.Abstractions
             PrepareValue(value);
         }
 
-        public void PrepareValue(object value)
+        void PrepareValue(object value)
         {
 
             if (value == null)
@@ -125,52 +125,6 @@ namespace Plato.Internal.Data.Abstractions
             }
             
         }
-
-        public string DbTypeNormalized()
-        {
-            var dbTypeNormalized = DbType.ToDbTypeNormalized(Size == 0 ? "max" : Size.ToString());
-            if (String.IsNullOrEmpty(dbTypeNormalized))
-            {
-                throw new Exception($"Type not returned for parameter '{ParameterName}' whilst building schema");
-            }
-            return dbTypeNormalized;
-        }
-
-        //public IDbDataParameter CreateParameter(IDbCommand cmd)
-        //{
-
-        //    //var p = cmd.CreateParameter();
-
-        //    var p = new SqlParameter();;
-        //    p.ParameterName = $"@{ParameterName}";
-        //    p.Value = Value;
-        //    p.Direction = Direction;
-        //    p.DbType = DbType;
-         
-        //    if (DbType == DbType.String || DbType == DbType.AnsiString)
-        //    {
-        //        if (Size > 0)
-        //        {
-        //            p.Size = Size;
-        //        }
-        //        else
-        //        {
-        //            if (Value != null)
-        //            {
-        //                p.Size = Math.Max(((string)Value).Length + 1,
-        //                    4000); // Help query plan caching by using common size;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (Size > 0)
-        //            p.Size = Size;
-        //    }
-
-        //    return p;
-
-        //}
 
     }
     

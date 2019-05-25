@@ -12,7 +12,7 @@ namespace Plato.Labels.Repositories
 
     public class EntityLabelRepository : IEntityLabelRepository<EntityLabel>
     {
-        
+
         private readonly IDbContext _dbContext;
         private readonly ILogger<EntityLabelRepository> _logger;
 
@@ -32,7 +32,7 @@ namespace Plato.Labels.Repositories
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            
+
             var id = await InsertUpdateInternal(
                 model.Id,
                 model.EntityId,
@@ -56,7 +56,7 @@ namespace Plato.Labels.Repositories
             EntityLabel output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectEntityLabelById",
                     async reader =>
@@ -69,9 +69,11 @@ namespace Plato.Labels.Repositories
                         }
 
                         return output;
-                    },
-                    id);
-            
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
 
             }
 
@@ -114,7 +116,7 @@ namespace Plato.Labels.Repositories
                     },
                     inputParams
                 );
-                
+
             }
 
             return output;
@@ -130,9 +132,13 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityLabelById", id);
+                    "DeleteEntityLabelById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -144,7 +150,7 @@ namespace Plato.Labels.Repositories
             IList<EntityLabel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<EntityLabel>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityLabel>>(
                     CommandType.StoredProcedure,
                     "SelectEntityLabelsByEntityId",
                     async reader =>
@@ -162,9 +168,11 @@ namespace Plato.Labels.Repositories
                         }
 
                         return output;
-                    },
-                    entityId);
-                
+                    }, new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
+
             }
 
             return output;
@@ -180,29 +188,37 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityLabelsByEntityId", entityId);
+                    "DeleteEntityLabelsByEntityId",
+                    new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
             }
 
             return success > 0 ? true : false;
         }
 
-        public async Task<bool> DeleteByEntityIdAndLabelIdAsync(int entityId, int LabelId)
+        public async Task<bool> DeleteByEntityIdAndLabelIdAsync(int entityId, int labelId)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting entity Label relationship with entityId '{entityId}' and labelId '{LabelId}'");
+                _logger.LogInformation(
+                    $"Deleting entity Label relationship with entityId '{entityId}' and labelId '{labelId}'");
             }
 
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityLabelByEntityIdAndLabelId",
-                    entityId,
-                    LabelId);
+                    new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("LabelId", DbType.Int32, labelId)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -211,7 +227,7 @@ namespace Plato.Labels.Repositories
         #endregion
 
         #region "Private Methods"
-        
+
         async Task<int> InsertUpdateInternal(
             int id,
             int entityId,
@@ -225,24 +241,28 @@ namespace Plato.Labels.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityLabel",
-                    id,
-                    entityId,
-                    labelId,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("LabelId", DbType.Int32, labelId),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
+                    });
             }
 
             return output;
 
         }
-        
+
         #endregion
 
     }
+
 }

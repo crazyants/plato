@@ -71,9 +71,13 @@ namespace Plato.Internal.Repositories.Abstract
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteDocumentEntryById", id);
+                    "DeleteDocumentEntryById",
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -106,63 +110,75 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 if (context == null)
                     return 0;
-                return await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateDocumentEntry",
-                    id,
-                    type.ToEmptyIfNull().TrimToSize(500),
-                    value.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate.ToDateIfNull(),
-                    modifiedUserId,
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("Type", DbType.String, 500, type),
+                        new DbParam("Value", DbType.String, value),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
+                        new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
         }
 
         async Task<DocumentEntry> SelectByIdAsync(int id)
         {
-            DocumentEntry entry = null;
-            if (_dbContext != null)
+
+            if (_dbContext == null)
             {
-                using (var context = _dbContext)
-                {
-                    entry= await context.ExecuteReaderAsync<DocumentEntry>(
-                        CommandType.StoredProcedure,
-                        "SelectDocumentEntryById",
-                        async reader =>
-                        {
-                            if (reader != null)
-                            {
-                                if (reader.HasRows)
-                                {
-                                    await reader.ReadAsync();
-                                    entry = new DocumentEntry();
-                                    entry.PopulateModel(reader);
-                                }
-                            }
-
-                            return entry;
-
-                        },
-                        id);
-                  
-                }
+                return null;
             }
 
+            DocumentEntry entry = null;
+            using (var context = _dbContext)
+            {
+                entry = await context.ExecuteReaderAsync2<DocumentEntry>(
+                    CommandType.StoredProcedure,
+                    "SelectDocumentEntryById",
+                    async reader =>
+                    {
+                        if (reader != null)
+                        {
+                            if (reader.HasRows)
+                            {
+                                await reader.ReadAsync();
+                                entry = new DocumentEntry();
+                                entry.PopulateModel(reader);
+                            }
+                        }
+
+                        return entry;
+
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
+            }
             return entry;
+
         }
 
         async Task<DocumentEntry> SelectByTypeAsync(string type)
         {
    
-            DocumentEntry entry = null;
-            if (_dbContext != null)
+        
+            if (_dbContext == null)
             {
-                using (var context = _dbContext)
+                return null;
+            }
+
+            DocumentEntry entry = null;
+            using (var context = _dbContext)
                 {
-                    entry = await context.ExecuteReaderAsync<DocumentEntry>(
+                    entry = await context.ExecuteReaderAsync2<DocumentEntry>(
                         CommandType.StoredProcedure,
                         "SelectDocumentEntryByType",
                         async reader =>
@@ -176,12 +192,12 @@ namespace Plato.Internal.Repositories.Abstract
 
                             return entry;
 
-                        },
-                        type);
+                        }, new[]
+                        {
+                            new DbParam("Type", DbType.String, 500, type)
+                        });
 
                 }
-            }
-
             return entry;
         }
         

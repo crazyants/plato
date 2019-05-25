@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using Plato.Email.Models;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
@@ -61,7 +60,7 @@ namespace Plato.Email.Repositories
             EmailMessage email = null;
             using (var context = _dbContext)
             {
-                email = await context.ExecuteReaderAsync<EmailMessage>(
+                email = await context.ExecuteReaderAsync2<EmailMessage>(
                     CommandType.StoredProcedure,
                     "SelectEmailById",
                     async reader =>
@@ -74,8 +73,10 @@ namespace Plato.Email.Repositories
                         }
 
                         return email;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -131,9 +132,12 @@ namespace Plato.Email.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+                success = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEmailById", id);
+                    "DeleteEmailById", new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return success > 0 ? true : false;
@@ -161,21 +165,24 @@ namespace Plato.Email.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync<int>(
+                emailId = await context.ExecuteScalarAsync2<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEmail",
-                    id,
-                    to.ToEmptyIfNull().TrimToSize(255),
-                    cc.ToEmptyIfNull().TrimToSize(255),
-                    bcc.ToEmptyIfNull().TrimToSize(255),
-                    from.ToEmptyIfNull().TrimToSize(255),
-                    subject.ToEmptyIfNull().TrimToSize(255),
-                    body.ToEmptyIfNull(),
-                    priority,
-                    sendAttempts,
-                    createdUserId,
-                    createdDate.ToDateIfNull(),
-                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id),
+                        new DbParam("To", DbType.String, 255, to),
+                        new DbParam("Cc", DbType.String, 255, cc),
+                        new DbParam("Bcc", DbType.String, 255, bcc),
+                        new DbParam("From", DbType.String, 255, from),
+                        new DbParam("Subject", DbType.String, 255, subject),
+                        new DbParam("Body", DbType.String, body),
+                        new DbParam("Priority", DbType.Int16, priority),
+                        new DbParam("SendAttempts", DbType.Int16, sendAttempts),
+                        new DbParam("CreatedUserId", DbType.Int32, createdUserId),
+                        new DbParam("CreatedDate", DbType.Int32, createdDate.ToDateIfNull()),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
+                    });
             }
 
             return emailId;
