@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Features.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
@@ -27,6 +29,7 @@ namespace Plato.Features.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -40,21 +43,23 @@ namespace Plato.Features.Controllers
             IViewProviderManager<FeaturesIndexViewModel> viewProvider, 
             IBreadCrumbManager breadCrumbManager,
             IAuthorizationService authorizationService,
-            IAlerter alerter,
-            IShellDescriptorManager shellDescriptorManager)
+            IShellDescriptorManager shellDescriptorManager,
+            IPageTitleBuilder pageTitleBuilder,
+            IAlerter alerter)
         {
             _shellFeatureManager = shellFeatureManager;
             _viewProvider = viewProvider;
             _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
-            _alerter = alerter;
             _shellDescriptorManager = shellDescriptorManager;
+            _pageTitleBuilder = pageTitleBuilder;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
         }
         
-        public async Task<IActionResult> Index(FeatureIndexOptions opts)
+        public async Task<IActionResult> Index()
         {
 
             // Ensure we have permission
@@ -62,13 +67,38 @@ namespace Plato.Features.Controllers
             {
                 return Unauthorized();
             }
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Features"]);
+            });
+          
+            var model = new FeaturesIndexViewModel()
+            {
+                Options =  new FeatureIndexOptions()
+            };
             
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
+            
+        }
+
+        public async Task<IActionResult> Category(FeatureIndexOptions opts)
+        {
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageFeatures))
+            {
+                return Unauthorized();
+            }
+
             if (opts == null)
             {
                 opts = new FeatureIndexOptions();
             }
-
-
+            
             if (!string.IsNullOrEmpty(opts.Category))
             {
 
@@ -80,6 +110,10 @@ namespace Plato.Features.Controllers
                     return NotFound();
                 }
 
+                // Build page title
+                _pageTitleBuilder.AddSegment(S[category], int.MaxValue);
+
+                // Build breadcrumb
                 _breadCrumbManager.Configure(builder =>
                 {
                     builder
@@ -105,17 +139,18 @@ namespace Plato.Features.Controllers
                     ).Add(S["Features"]);
                 });
             }
-       
+
 
             var model = new FeaturesIndexViewModel()
             {
                 Options = opts
             };
-            
-            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
-            
+
+            return View((LayoutViewModel)await _viewProvider.ProvideIndexAsync(model, this));
+
         }
-        
+
+
         public async Task<IActionResult> Enable(
             string id, 
             string category,

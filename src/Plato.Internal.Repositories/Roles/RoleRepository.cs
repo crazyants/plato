@@ -42,7 +42,7 @@ namespace Plato.Internal.Repositories.Roles
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteRoleById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -102,7 +102,7 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return role;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -131,7 +131,7 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return role;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Name", DbType.String, 255, name)
                     });
@@ -160,7 +160,7 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return role;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("NormalizedName", DbType.String, 255, normalizedName),
                     });
@@ -194,7 +194,7 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return output;
-                    }, new []
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("UserId", DbType.Int32, userId)
                     });
@@ -284,7 +284,7 @@ namespace Plato.Internal.Repositories.Roles
         private async Task<int> InsertUpdateInternal(
             int id,
             string name,
-            string nameNormalized,
+            string normalizedName,
             string description,
             string claims,
             DateTimeOffset? createdDate,
@@ -301,11 +301,11 @@ namespace Plato.Internal.Repositories.Roles
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateRole",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("Name", DbType.String, 255, name),
-                        new DbParam("NameNormalized", DbType.String, 255, nameNormalized),
+                        new DbParam("NormalizedName", DbType.String, 255, normalizedName),
                         new DbParam("Description", DbType.String, 255, description),
                         new DbParam("Claims", DbType.String, claims),
                         new DbParam("ConcurrencyStamp", DbType.String, 255, concurrencyStamp),

@@ -1,0 +1,7 @@
+﻿@model FeatureUpdatesIndexViewModel
+
+@await DisplayAsync(new View("FeatureUpdateList", new
+{
+    options = @Model.Options
+}))
+

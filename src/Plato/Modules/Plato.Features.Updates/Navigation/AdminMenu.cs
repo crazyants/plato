@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Features.Navigation
+namespace Plato.Features.Updates.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -24,9 +24,9 @@ namespace Plato.Features.Navigation
             builder
                 .Add(T["Features"], int.MaxValue - 5, features => features
                     .IconCss("fal fa-cube")
-                    .Add(T["Features"], 1, manage => manage
-                        .Action("Index", "Admin", "Plato.Features")
-                        .Permission(Permissions.ManageFeatures)
+                    .Add(T["Updates"], 2, manage => manage
+                        .Action("Index", "Admin", "Plato.Features.Updates")
+                        .Permission(Permissions.ManageFeatureUpdates)
                         .LocalNav())
                 );
 

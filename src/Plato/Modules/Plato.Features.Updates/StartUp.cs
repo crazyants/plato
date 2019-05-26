@@ -2,17 +2,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Features.Handlers;
-using Plato.Features.Navigation;
-using Plato.Features.ViewModels;
-using Plato.Features.ViewProviders;
-using Plato.Internal.Abstractions.SetUp;
+using Plato.Features.Updates.Handlers;
+using Plato.Features.Updates.Navigation;
+using Plato.Features.Updates.ViewModels;
+using Plato.Features.Updates.ViewProviders;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Features
+namespace Plato.Features.Updates
 {
     public class Startup : StartupBase
     {
@@ -22,12 +22,12 @@ namespace Plato.Features
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
-            // Setup event handler
-            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-            
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // View providers
-            services.AddScoped<IViewProviderManager<FeaturesIndexViewModel>, ViewProviderManager<FeaturesIndexViewModel>>();
-            services.AddScoped<IViewProvider<FeaturesIndexViewModel>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<FeatureUpdatesIndexViewModel>, ViewProviderManager<FeatureUpdatesIndexViewModel>>();
+            services.AddScoped<IViewProvider<FeatureUpdatesIndexViewModel>, AdminViewProvider>();
        
             // Register moderation permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
@@ -42,20 +42,14 @@ namespace Plato.Features
 
             // Index
             routes.MapAreaRoute(
-                name: "FeaturesIndex",
-                areaName: "Plato.Features",
-                template: "admin/features",
+                name: "FeatureUpdatesIndex",
+                areaName: "Plato.Features.Updates",
+                template: "admin/features/updates",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 
-            // Feature Category
-            routes.MapAreaRoute(
-                name: "FeatureCategoryIndex",
-                areaName: "Plato.Features",
-                template: "admin/features/category/{opts.category?}",
-                defaults: new { controller = "Admin", action = "Category" }
-            );
-
         }
+
     }
+
 }
