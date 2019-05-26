@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Features;
@@ -46,11 +46,10 @@ namespace Plato.Internal.Features
             var features = await _shellFeatureStore
                 .QueryAsync()
                 .ToList();
-
-            List<IShellFeature> output = null;
             
             // Iterate all enabled features from shell features tables
             // checking if a newer version exists on the file system
+            List<IShellFeature> output = null;
             foreach (var feature in features.Data)
             {
 
@@ -70,7 +69,7 @@ namespace Plato.Internal.Features
                     // Ensure we have versions to compare
                     if (moduleVersion != null && featureVersion != null)
                     {
-                        // The module is newer
+                        // The module is newer than the installed feature
                         if (moduleVersion > featureVersion)
                         {
                             if (output == null)

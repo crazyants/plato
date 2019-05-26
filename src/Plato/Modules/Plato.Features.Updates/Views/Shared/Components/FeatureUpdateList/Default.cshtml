@@ -57,52 +57,16 @@
                                     </div>
                                 }
 
-                                @{
-                                    var dependencyNames = feature.FeatureDependencies
-                                        .OrderBy(o => o.ModuleId)
-                                        .Select(d => d.ModuleId).ToArray();
-                                    var dependentNames = feature.DependentFeatures
-                                        .OrderBy(o => o.ModuleId)
-                                        .Select(d => d.ModuleId).ToArray();
-                                }
 
                             </div>
                             <div class="col-md-3 text-right">
-                                <span data-toggle="tooltip" title="@T["Feature dependencies:"] @String.Join(", ", dependencyNames)" class="text-muted mx-2">
-                                    @if (dependencyNames.Length > 0)
-                                    {
-                                        <i class="fal fa-code-branch fa-flip-vertical"></i>
-                                    }
-                                    else
-                                    {
-                                        @T["No dependencies"]
-                                    }
-                                </span>
-                                <span data-toggle="tooltip" title="@T["Dependent feature:"] @String.Join(", ", dependentNames)" class="text-muted mx-2">
-                                    @if (dependentNames.Length > 0)
-                                    {
-                                        <i class="fal fa-code-branch"></i>
-                                    }
-                                    else
-                                    {
-                                        @T["No dependent features"]
-                                    }
-                                </span>
-                                @if (!feature.IsRequired)
-                                {
-                                    @if (!feature.IsEnabled)
-                                    {
-                                        <authorize asp-permission="@enablePermission.Name">
-                                            <authorize-success>
-                                                <button type="submit" asp-controller="Admin" asp-action="Update" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
-                                                    @T["Enable"]
-                                                </button>
-                                            </authorize-success>
-                                        </authorize>
-
-                                    }
-                                }
-
+                                <authorize asp-permission="@enablePermission.Name">
+                                    <authorize-success>
+                                        <button type="submit" asp-controller="Admin" asp-action="Update" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                            @T["Update"]
+                                        </button>
+                                    </authorize-success>
+                                </authorize>
                             </div>
                         </div>
                     </li>

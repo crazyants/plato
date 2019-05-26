@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Features.Updates.Handlers;
 using Plato.Features.Updates.Navigation;
+using Plato.Features.Updates.Services;
 using Plato.Features.Updates.ViewModels;
 using Plato.Features.Updates.ViewProviders;
 using Plato.Internal.Features.Abstractions;
@@ -31,6 +32,9 @@ namespace Plato.Features.Updates
        
             // Register moderation permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
+            // Update service
+            services.AddScoped<IFeatureUpdater, FeatureUpdater>();
 
         }
 
