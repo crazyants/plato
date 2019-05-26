@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Features.Updates.Services;
 using Plato.Features.Updates.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
@@ -21,7 +22,9 @@ namespace Plato.Features.Updates.Controllers
 {
     public class AdminController : Controller, IUpdateModel
     {
-        
+
+        private readonly IFeatureUpdater _featureUpdater;
+
         private readonly IViewProviderManager<FeatureUpdatesIndexViewModel> _viewProvider;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IAuthorizationService _authorizationService;
@@ -41,7 +44,8 @@ namespace Plato.Features.Updates.Controllers
             IBreadCrumbManager breadCrumbManager,
             IAuthorizationService authorizationService,
             IAlerter alerter,
-            IShellDescriptorManager shellDescriptorManager)
+            IShellDescriptorManager shellDescriptorManager,
+            IFeatureUpdater featureUpdater)
         {
             _shellFeatureManager = shellFeatureManager;
             _viewProvider = viewProvider;
@@ -49,6 +53,7 @@ namespace Plato.Features.Updates.Controllers
             _authorizationService = authorizationService;
             _alerter = alerter;
             _shellDescriptorManager = shellDescriptorManager;
+            _featureUpdater = featureUpdater;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -89,11 +94,8 @@ namespace Plato.Features.Updates.Controllers
             return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
             
         }
-        
-        public async Task<IActionResult> Enable(
-            string id, 
-            string category,
-            string returnUrl)
+
+        public async Task<IActionResult> Update(string id)
         {
 
             // Ensure we have permission
@@ -102,39 +104,25 @@ namespace Plato.Features.Updates.Controllers
                 return Unauthorized();
             }
 
-            var contexts = await _shellFeatureManager.EnableFeatureAsync(id);
-            foreach (var context in contexts)
+            var result = await _featureUpdater.UpdateAsync(id);
+          
+            if (result.Errors.Any())
             {
-                if (context.Errors.Any())
+                foreach (var error in result.Errors)
                 {
-                    foreach (var error in context.Errors)
-                    {
-                        _alerter.Danger(T[$"{context.Feature.ModuleId} could not be enabled. {error.Key} - {error.Value}"]);
-                    }
+                    _alerter.Danger(
+                        T[$"{id} could not be enabled. {error.Code} - {error.Description}"]);
                 }
-                else
-                {
-                    _alerter.Success(T[$"{context.Feature.ModuleId} enabled successfully!"]);
-                }
-                
-            }
-
-            if (!string.IsNullOrEmpty(returnUrl))
-            {
-                // Redirect to returnUrl
-                return RedirectToLocal(returnUrl);
             }
             else
             {
-                return RedirectToAction(nameof(Index), new RouteValueDictionary()
-                {
-                    ["opts.category"] = category
-                });
+                _alerter.Success(T[$"{id} updated successfully!"]);
             }
-
-
+            
+            return RedirectToAction(nameof(Index));
+            
         }
-        
+
         IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))

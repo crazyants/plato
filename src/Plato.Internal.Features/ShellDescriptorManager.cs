@@ -89,7 +89,6 @@ namespace Plato.Internal.Features
 
         }
         
-  
         public async Task<IShellFeature> GetFeatureAsync(string featureId)
         {
             var features = await GetFeaturesAsync();

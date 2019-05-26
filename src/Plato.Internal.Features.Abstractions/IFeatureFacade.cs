@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
 
 namespace Plato.Internal.Features.Abstractions
@@ -7,6 +8,9 @@ namespace Plato.Internal.Features.Abstractions
     {
         
         Task<IShellFeature> GetFeatureByIdAsync(string moduleId);
+
+        Task<IEnumerable<IShellFeature>> GetFeatureUpdatesAsync();
+        
     }
 
 }

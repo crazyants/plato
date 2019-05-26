@@ -94,7 +94,7 @@
                                     {
                                         <authorize asp-permission="@enablePermission.Name">
                                             <authorize-success>
-                                                <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                                <button type="submit" asp-controller="Admin" asp-action="Update" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
                                                     @T["Enable"]
                                                 </button>
                                             </authorize-success>
@@ -110,7 +110,7 @@
             }
             else
             {
-                <li class="list-group-item list-group-item-action">
+                <li class="list-group-item">
                     @T["All features are up-to date"]
                 </li>
             }

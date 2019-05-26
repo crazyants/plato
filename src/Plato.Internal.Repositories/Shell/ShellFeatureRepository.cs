@@ -40,7 +40,7 @@ namespace Plato.Internal.Repositories.Shell
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteShellFeatureById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -81,7 +81,7 @@ namespace Plato.Internal.Repositories.Shell
                     CommandType.StoredProcedure,
                     "SelectShellFeatureById",
                     async reader => await BuildObjectFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });

@@ -529,6 +529,19 @@ namespace Plato.Internal.Abstractions.Extensions
             
         }
 
+        public static Version ToVersion(this string input)
+        {
+
+            if (string.IsNullOrEmpty(input))
+            {
+                return null;
+            }
+
+            var ok = Version.TryParse(input.Trim(), out var version);
+            return ok ? version : null;
+
+        }
+
     }
     
 }
