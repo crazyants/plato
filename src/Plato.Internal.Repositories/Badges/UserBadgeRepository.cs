@@ -76,7 +76,7 @@ namespace Plato.Internal.Repositories.Badges
             return userBadge;
         }
 
-        public async Task<IPagedResults<UserBadge>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<UserBadge>> SelectAsync(IDbDataParameter[] dbParams)
         {
             PagedResults<UserBadge> output = null;
             using (var context = _dbContext)

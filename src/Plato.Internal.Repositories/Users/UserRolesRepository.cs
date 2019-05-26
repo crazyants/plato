@@ -206,7 +206,7 @@ namespace Plato.Internal.Repositories.Users
 
         }
         
-        public async Task<IPagedResults<UserRole>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<UserRole>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<UserRole> output = null;
             using (var context = _dbContext)

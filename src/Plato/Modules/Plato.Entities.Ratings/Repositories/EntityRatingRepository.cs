@@ -83,7 +83,7 @@ namespace Plato.Entities.Ratings.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityRating>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityRating>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EntityRating> output = null;
             using (var context = _dbContext)

@@ -9,7 +9,7 @@ namespace Plato.Entities.Repositories
     
     public interface IEntityUsersRepository
     {
-        Task<IPagedResults<EntityUser>> SelectAsync(DbParam[] dbParams);
+        Task<IPagedResults<EntityUser>> SelectAsync(IDbDataParameter[] dbParams);
     }
 
     public class EntityUsersRepository : IEntityUsersRepository
@@ -27,7 +27,7 @@ namespace Plato.Entities.Repositories
         }
 
 
-        public async Task<IPagedResults<EntityUser>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityUser>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EntityUser> results = null;
             using (var context = _dbContext)

@@ -78,7 +78,7 @@ namespace Plato.Notifications.Repositories
 
         }
 
-        public async Task<IPagedResults<UserNotification>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<UserNotification>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<UserNotification> output = null;
             using (var context = _dbContext)

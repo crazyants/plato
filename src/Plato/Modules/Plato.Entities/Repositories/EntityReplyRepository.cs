@@ -95,7 +95,7 @@ namespace Plato.Entities.Repositories
         }
         
 
-        public async Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<TModel>> SelectAsync(IDbDataParameter[] dbParams)
         {
             PagedResults<TModel> results = null;
             using (var context = _dbContext)

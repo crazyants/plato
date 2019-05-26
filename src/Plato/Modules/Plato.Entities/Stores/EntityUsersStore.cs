@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data;
+using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Data.Abstractions;
@@ -29,7 +30,7 @@ namespace Plato.Entities.Stores
             return _dbQuery.ConfigureQuery<EntityUser>(query); ;
         }
 
-        public async Task<IPagedResults<EntityUser>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityUser>> SelectAsync(IDbDataParameter[] dbParams)
         {
             return await _entityUsersRepository.SelectAsync(dbParams);
         }

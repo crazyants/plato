@@ -80,7 +80,7 @@ namespace Plato.Entities.Metrics.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityMetric>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityMetric>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EntityMetric> output = null;
             using (var context = _dbContext)

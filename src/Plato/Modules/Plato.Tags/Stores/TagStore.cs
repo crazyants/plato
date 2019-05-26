@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -91,7 +92,7 @@ namespace Plato.Tags.Stores
             return _dbQuery.ConfigureQuery<TModel>(query); ;
         }
 
-        public async Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<TModel>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

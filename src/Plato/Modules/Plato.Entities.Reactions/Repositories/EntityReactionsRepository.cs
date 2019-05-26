@@ -85,7 +85,7 @@ namespace Plato.Entities.Reactions.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityReaction>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityReaction>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EntityReaction> output = null;
             using (var context = _dbContext)

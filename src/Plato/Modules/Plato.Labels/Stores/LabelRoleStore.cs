@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Labels.Models;
@@ -16,18 +16,18 @@ namespace Plato.Labels.Stores
         private const string ByIdKey = "ById";
         private const string ByLabelIdKey = "ByLabelId";
 
-        private readonly ILabelRoleRepository<LabelRole> _LabelRoleRepository;
+        private readonly ILabelRoleRepository<LabelRole> _labelRoleRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<LabelRoleStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public LabelRoleStore(
-            ILabelRoleRepository<LabelRole> LabelRoleRepository,
+            ILabelRoleRepository<LabelRole> labelRoleRepository,
             ICacheManager cacheManager,
             ILogger<LabelRoleStore> logger,
             IDbQueryConfiguration dbQuery)
         {
-            _LabelRoleRepository = LabelRoleRepository;
+            _labelRoleRepository = labelRoleRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
@@ -37,7 +37,7 @@ namespace Plato.Labels.Stores
 
         public async Task<LabelRole> CreateAsync(LabelRole model)
         {
-            var result = await _LabelRoleRepository.InsertUpdateAsync(model);
+            var result = await _labelRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -50,7 +50,7 @@ namespace Plato.Labels.Stores
 
         public async Task<LabelRole> UpdateAsync(LabelRole model)
         {
-            var result = await _LabelRoleRepository.InsertUpdateAsync(model);
+            var result = await _labelRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -65,7 +65,7 @@ namespace Plato.Labels.Stores
         public async Task<bool> DeleteAsync(LabelRole model)
         {
 
-            var success = await _LabelRoleRepository.DeleteAsync(model.Id);
+            var success = await _labelRoleRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -86,7 +86,7 @@ namespace Plato.Labels.Stores
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByIdKey, id);
             return await _cacheManager.GetOrCreateAsync(token,
-                async (cacheEntry) => await _LabelRoleRepository.SelectByIdAsync(id));
+                async (cacheEntry) => await _labelRoleRepository.SelectByIdAsync(id));
 
         }
 
@@ -96,7 +96,7 @@ namespace Plato.Labels.Stores
             return _dbQuery.ConfigureQuery<LabelRole>(query); ;
         }
 
-        public async Task<IPagedResults<LabelRole>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<LabelRole>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -108,44 +108,44 @@ namespace Plato.Labels.Stores
                         token.ToString(), dbParams.Select(p => p.Value));
                 }
 
-                return await _LabelRoleRepository.SelectAsync(dbParams);
+                return await _labelRoleRepository.SelectAsync(dbParams);
 
             });
         }
 
         #endregion
         
-        public async Task<IEnumerable<LabelRole>> GetByLabelIdAsync(int LabelId)
+        public async Task<IEnumerable<LabelRole>> GetByLabelIdAsync(int labelId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByLabelIdKey, LabelId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByLabelIdKey, labelId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Selecting roles for Label Id '{0}'",
-                        LabelId);
+                        labelId);
                 }
 
-                return await _LabelRoleRepository.SelectByLabelIdAsync(LabelId);
+                return await _labelRoleRepository.SelectByLabelIdAsync(labelId);
            
             });
 
         }
 
-        public async Task<bool> DeleteByLabelIdAsync(int LabelId)
+        public async Task<bool> DeleteByLabelIdAsync(int labelId)
         {
             
-            var success = await _LabelRoleRepository.DeleteByLabelIdAsync(LabelId);
+            var success = await _labelRoleRepository.DeleteByLabelIdAsync(labelId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Deleted all Label roles for Label '{0}'",
-                        LabelId);
+                        labelId);
                 }
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, LabelId);
+                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, labelId);
             
             }
 
@@ -153,18 +153,18 @@ namespace Plato.Labels.Stores
 
         }
 
-        public async Task<bool> DeleteByRoleIdAndLabelIdAsync(int roleId, int LabelId)
+        public async Task<bool> DeleteByRoleIdAndLabelIdAsync(int roleId, int labelId)
         {
-            var success = await _LabelRoleRepository.DeleteByRoleIdAndLabelIdAsync(roleId, LabelId);
+            var success = await _labelRoleRepository.DeleteByRoleIdAndLabelIdAsync(roleId, labelId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Deleted Label role for role '{0}' and Label '{1}'",
-                      roleId, LabelId);
+                      roleId, labelId);
                 }
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, LabelId);
+                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, labelId);
 
             }
 

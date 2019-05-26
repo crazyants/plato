@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
@@ -110,7 +111,7 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
-        public Task<IPagedResults<UserBanner>> SelectAsync(DbParam[] dbParams)
+        public Task<IPagedResults<UserBanner>> SelectAsync(IDbDataParameter[] dbParams)
         {
             throw new NotImplementedException();
         }

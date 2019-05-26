@@ -78,7 +78,7 @@ namespace Plato.Internal.Repositories.Reputations
             return userReputation;
         }
 
-        public async Task<IPagedResults<UserReputation>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<UserReputation>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<UserReputation> output = null;
             using (var context = _dbContext)

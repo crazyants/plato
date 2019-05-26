@@ -373,7 +373,7 @@ namespace Plato.Internal.Repositories.Users
 
         }
         
-        public async Task<IPagedResults<User>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<User>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<User> results = null;
             using (var context = _dbContext)

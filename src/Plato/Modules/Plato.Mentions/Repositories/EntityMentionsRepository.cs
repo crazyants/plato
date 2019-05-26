@@ -74,7 +74,7 @@ namespace Plato.Mentions.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityMention>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityMention>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EntityMention> output = null;
             using (var context = _dbContext)

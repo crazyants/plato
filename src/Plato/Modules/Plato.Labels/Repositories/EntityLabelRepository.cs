@@ -81,7 +81,7 @@ namespace Plato.Labels.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityLabel>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityLabel>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EntityLabel> output = null;
             using (var context = _dbContext)

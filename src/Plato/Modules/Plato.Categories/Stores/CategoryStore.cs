@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -153,7 +154,7 @@ namespace Plato.Categories.Stores
             ;
         }
 
-        public virtual async Task<IPagedResults<TCategory>> SelectAsync(DbParam[] dbParams)
+        public virtual async Task<IPagedResults<TCategory>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

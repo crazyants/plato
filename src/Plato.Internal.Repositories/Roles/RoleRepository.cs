@@ -205,7 +205,7 @@ namespace Plato.Internal.Repositories.Roles
 
         }
 
-        public async Task<IPagedResults<Role>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<Role>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<Role> output = null;
             using (var context = _dbContext)

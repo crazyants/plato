@@ -88,7 +88,7 @@ namespace Plato.Categories.Repositories
 
         }
 
-        public async Task<IPagedResults<CategoryRole>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<CategoryRole>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<CategoryRole> output = null;
             using (var context = _dbContext)

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Media.Repositories;
@@ -86,7 +87,7 @@ namespace Plato.Media.Stores
             return _dbQuery.ConfigureQuery<Models.Media>(query); ;
         }
 
-        public async Task<IPagedResults<Models.Media>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<Models.Media>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

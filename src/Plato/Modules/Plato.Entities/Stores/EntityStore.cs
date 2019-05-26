@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -159,7 +160,7 @@ namespace Plato.Entities.Stores
             }); ;
         }
 
-        public async Task<IPagedResults<TEntity>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<TEntity>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -367,8 +368,7 @@ namespace Plato.Entities.Stores
         }
 
         #endregion
-
-
+        
     }
 
 }

@@ -169,7 +169,7 @@ namespace Plato.Internal.Repositories.Users
 
         }
         
-        public async Task<IPagedResults<UserData>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<UserData>> SelectAsync(IDbDataParameter[] dbParams)
         {
 
             IPagedResults<UserData> output = null;

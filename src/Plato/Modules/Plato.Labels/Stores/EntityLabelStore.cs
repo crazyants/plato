@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -128,7 +129,7 @@ namespace Plato.Labels.Stores
             return _dbQuery.ConfigureQuery<EntityLabel>(query); ;
         }
 
-        public async Task<IPagedResults<EntityLabel>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityLabel>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

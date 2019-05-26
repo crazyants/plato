@@ -78,7 +78,7 @@ namespace Plato.Stars.Repositories
             return star;
         }
 
-        public async Task<IPagedResults<Star>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<Star>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<Star> results = null;
             using (var context = _dbContext)

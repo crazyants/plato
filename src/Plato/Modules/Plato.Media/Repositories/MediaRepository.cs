@@ -27,7 +27,7 @@ namespace Plato.Media.Repositories
         
         #region "Implementation"
 
-        public async Task<IPagedResults<Models.Media>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<Models.Media>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<Models.Media> output = null;
             using (var context = _dbContext)

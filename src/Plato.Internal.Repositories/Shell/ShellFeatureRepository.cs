@@ -91,7 +91,7 @@ namespace Plato.Internal.Repositories.Shell
 
         }
         
-        public async Task<IPagedResults<ShellFeature>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<ShellFeature>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<ShellFeature> results = null;
             using (var context = _dbContext)

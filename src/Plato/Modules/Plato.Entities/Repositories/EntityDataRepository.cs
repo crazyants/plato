@@ -152,7 +152,7 @@ namespace Plato.Entities.Repositories
 
         }
     
-        public async Task<IPagedResults<IEntityData>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<IEntityData>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<IEntityData> results = null;
             using (var context = _dbContext)

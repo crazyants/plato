@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data;
+using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Stores.Abstractions
@@ -22,7 +23,7 @@ namespace Plato.Internal.Stores.Abstractions
 
         IQuery<TModel> QueryAsync();
 
-        Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams);
+        Task<IPagedResults<TModel>> SelectAsync(IDbDataParameter[] dbParams);
 
     }
 

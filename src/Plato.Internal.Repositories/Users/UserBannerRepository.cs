@@ -48,7 +48,7 @@ namespace Plato.Internal.Repositories.Users
             return null;
         }
         
-        public Task<IPagedResults<UserBanner>> SelectAsync(DbParam[] dbParams)
+        public Task<IPagedResults<UserBanner>> SelectAsync(IDbDataParameter[] dbParams)
         {
             throw new NotImplementedException();
         }

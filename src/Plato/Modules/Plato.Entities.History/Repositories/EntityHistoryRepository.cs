@@ -81,7 +81,7 @@ namespace Plato.Entities.History.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityHistory>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityHistory>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EntityHistory> output = null;
             using (var context = _dbContext)

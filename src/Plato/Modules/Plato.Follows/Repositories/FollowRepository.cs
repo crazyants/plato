@@ -78,7 +78,7 @@ namespace Plato.Follows.Repositories
             return follow;
         }
 
-        public async Task<IPagedResults<Follow>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<Follow>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<Follow> output = null;
             using (var context = _dbContext)

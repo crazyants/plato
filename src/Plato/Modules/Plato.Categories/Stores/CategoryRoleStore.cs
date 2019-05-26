@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data;
 using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
@@ -87,7 +88,7 @@ namespace Plato.Categories.Stores
             return _dbQuery.ConfigureQuery<CategoryRole>(query); ;
         }
 
-        public async Task<IPagedResults<CategoryRole>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<CategoryRole>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryRoleRepository.SelectAsync(dbParams));

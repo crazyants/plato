@@ -86,7 +86,7 @@ namespace Plato.Moderation.Repositories
 
         }
 
-        public async Task<IPagedResults<Moderator>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<Moderator>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<Moderator> output = null;
             using (var context = _dbContext)

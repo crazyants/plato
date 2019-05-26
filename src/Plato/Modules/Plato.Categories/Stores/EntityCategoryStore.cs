@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -35,8 +36,6 @@ namespace Plato.Categories.Stores
             _logger = logger;
         }
         
-        #region "Implementation"
-
         public async Task<EntityCategory> CreateAsync(EntityCategory model)
         {
             if (model == null)
@@ -132,7 +131,7 @@ namespace Plato.Categories.Stores
             return _dbQuery.ConfigureQuery<EntityCategory>(query); ;
         }
 
-        public async Task<IPagedResults<EntityCategory>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityCategory>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityCategoryRepository.SelectAsync(dbParams));
@@ -182,8 +181,7 @@ namespace Plato.Categories.Stores
 
             return success;
         }
-
-        #endregion
-
+        
     }
+
 }

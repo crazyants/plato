@@ -84,7 +84,7 @@ namespace Plato.Email.Repositories
 
         }
 
-        public async Task<IPagedResults<EmailMessage>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EmailMessage>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<EmailMessage> output = null;
             using (var context = _dbContext)

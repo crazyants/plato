@@ -81,7 +81,7 @@ namespace Plato.Internal.Repositories.Users
             return secret;
         }
         
-        public Task<IPagedResults<UserSecret>> SelectAsync(DbParam[] dbParams)
+        public Task<IPagedResults<UserSecret>> SelectAsync(IDbDataParameter[] dbParams)
         {
             // TODO
             throw new NotImplementedException();

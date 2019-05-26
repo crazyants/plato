@@ -87,7 +87,7 @@ namespace Plato.Tags.Repositories
 
         }
 
-        public async Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<TModel>> SelectAsync(IDbDataParameter[] dbParams)
         {
             IPagedResults<TModel> output = null;
             using (var context = _dbContext)

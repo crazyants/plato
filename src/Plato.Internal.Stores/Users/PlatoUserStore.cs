@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -246,7 +247,7 @@ namespace Plato.Internal.Stores.Users
             return _dbQuery.ConfigureQuery(query); ;
         }
         
-        public async Task<IPagedResults<User>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<User>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -113,7 +114,7 @@ namespace Plato.Notifications.Stores
             return _dbQuery.ConfigureQuery<UserNotification>(query); ;
         }
         
-        public async Task<IPagedResults<UserNotification>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<UserNotification>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

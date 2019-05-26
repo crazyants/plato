@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -80,7 +81,7 @@ namespace Plato.Entities.Metrics.Stores
             return _dbQuery.ConfigureQuery<EntityMetric>(query); ;
         }
 
-        public async Task<IPagedResults<EntityMetric>> SelectAsync(DbParam[] dbParams)
+        public async Task<IPagedResults<EntityMetric>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityMetricRepository.SelectAsync(dbParams));
