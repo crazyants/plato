@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Plato.Internal.Data.Migrations.Abstractions;
 
 namespace Plato.Internal.Data.Migrations
 {

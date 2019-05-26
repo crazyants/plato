@@ -14,6 +14,8 @@
         public bool DropCatalogBeforeCreate { get; set; } = false;
 
         public bool DropIndexesBeforeCreate { get; set; } = false;
+        
+        public bool CheckColumnExistsBeforeCreate { get; set; } = true;
 
     }
 }

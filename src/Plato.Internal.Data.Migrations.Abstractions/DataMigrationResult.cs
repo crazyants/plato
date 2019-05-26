@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Plato.Internal.Data.Migrations
+namespace Plato.Internal.Data.Migrations.Abstractions
 {
     public class DataMigrationResult
     {

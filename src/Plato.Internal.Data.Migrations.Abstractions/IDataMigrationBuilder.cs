@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
-namespace Plato.Internal.Data.Migrations
+namespace Plato.Internal.Data.Migrations.Abstractions
 {
 
     public enum MigrationType

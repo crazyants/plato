@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Plato.Internal.Data.Migrations
+namespace Plato.Internal.Data.Migrations.Abstractions
 {
     public interface IMigrationProvider
     {

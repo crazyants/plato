@@ -107,15 +107,34 @@ namespace Plato.Internal.Data.Schemas.Builders
             {
                 foreach (var column in table.Columns)
                 {
+
+                    if (Options.CheckColumnExistsBeforeCreate)
+                    {
+                        sb.Append("IF NOT EXISTS(SELECT * FROM sys.columns")
+                            .Append("WHERE Name = N'")
+                            .Append(column.Name)
+                            .Append("' AND Object_ID = Object_ID(N'")
+                            .Append(tableName)
+                            .Append("'))")
+                            .Append(NewLine)
+                            .Append("BEGIN")
+                            .Append(NewLine);
+                    }
+
                     sb.Append("ALTER TABLE ")
                         .Append(tableName)
                         .Append(" ADD ")
                         .Append(DescribeTableColumn(column))
                         .Append(";")
                         .Append(NewLine);
+
+                    if (Options.CheckColumnExistsBeforeCreate)
+                    {
+                        sb.Append("END");
+                    }
+
                 }
-
-
+                
                 AddStatement(sb.ToString());
 
             }

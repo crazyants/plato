@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Data;
 using System.Collections.Generic;
-using Plato.Internal.Data.Migrations;
+using Plato.Internal.Data.Migrations.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Users
@@ -10,7 +10,7 @@ namespace Plato.Users
     public class Migrations : IMigrationProvider
     {
 
-        private List<PreparedMigration> _migrations;
+        private readonly List<PreparedMigration> _migrations;
         
         private readonly ISchemaBuilder _schemaBuilder;
 
@@ -394,15 +394,17 @@ namespace Plato.Users
                     .Configure(options =>
                     {
                         options.ModuleName = "Plato.Users";
-                        options.Version = "1.0.01";
+                        options.Version = "1.0.1";
                         options.DropTablesBeforeCreate = true;
                         options.DropProceduresBeforeCreate = true;
+                        options.CheckColumnExistsBeforeCreate = true;
                     });
 
                 // ---------------
                 // 1.0.1
                 // ---------------
 
+                // Add new columns
                 builder.TableBuilder.AlterTableColumns(new SchemaTable()
                 {
                     Name = "Users",
