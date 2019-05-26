@@ -70,8 +70,7 @@ namespace Plato.Internal.Data.Providers
             {
                 _logger.LogInformation("SQL to execute: " + commandText);
             }
-
-
+            
             object output = null;
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -84,15 +83,18 @@ namespace Plato.Internal.Data.Providers
 
                         await cmd.ExecuteScalarAsync();
 
-                        foreach (IDbDataParameter parameter in cmd.Parameters)
+                        if (cmd.Parameters != null)
                         {
-                            if (parameter.Direction == ParameterDirection.Output)
+                            foreach (IDbDataParameter parameter in cmd.Parameters)
                             {
-                                output = parameter.Value;
-                                break;
+                                if (parameter.Direction == ParameterDirection.Output)
+                                {
+                                    output = parameter.Value;
+                                    break;
+                                }
                             }
                         }
-
+                    
                         OnExecutedCommand(cmd);
 
                     }
@@ -113,8 +115,7 @@ namespace Plato.Internal.Data.Providers
             }
 
             return default(T);
-
-
+            
         }
 
         public async Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams = null)
@@ -132,9 +133,28 @@ namespace Plato.Internal.Data.Providers
                     await conn.OpenAsync();
                     using (var cmd = CreateCommand(conn, commandType, commandText, dbParams))
                     {
-                        var returnValue = await cmd.ExecuteNonQueryAsync();
+
+                        await cmd.ExecuteNonQueryAsync();
+
+                        object returnValue = null;
+                        if (cmd.Parameters != null)
+                        {
+                            foreach (IDbDataParameter parameter in cmd.Parameters)
+                            {
+                                if (parameter.Direction == ParameterDirection.Output)
+                                {
+                                    returnValue = parameter.Value;
+                                    break;
+                                }
+                            }
+                        }
+                        
                         OnExecutedCommand(cmd);
-                        output = (T)Convert.ChangeType(returnValue, typeof(T));
+                        if (returnValue != null)
+                        {
+                            output = (T)Convert.ChangeType(returnValue, typeof(T));
+                        }
+                        
                     }
                 }
                 catch (Exception ex)
@@ -169,8 +189,7 @@ namespace Plato.Internal.Data.Providers
             {
                 foreach (var parameter in dbParams)
                 {
-                    var p = CreateSqlParameter(cmd, parameter);
-                    cmd.Parameters.Add(p);
+                    cmd.Parameters.Add(CreateParameter(cmd, parameter));
                 }
             }
 
@@ -178,8 +197,7 @@ namespace Plato.Internal.Data.Providers
 
         }
 
-
-        public IDbDataParameter CreateSqlParameter(IDbCommand cmd, IDbDataParameter dbParam)
+        public IDbDataParameter CreateParameter(IDbCommand cmd, IDbDataParameter dbParam)
         {
 
             var p = cmd.CreateParameter();
@@ -219,10 +237,9 @@ namespace Plato.Internal.Data.Providers
                 
         public virtual void HandleException(Exception ex)
         {
+            if (ex == null) return;
             if (_logger.IsEnabled(LogLevel.Error))
-            {
                 _logger.LogError(ex, ex.Message);
-            }
             throw ex;
         }
 

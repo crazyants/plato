@@ -12,7 +12,7 @@ namespace Plato.Internal.Data
     /// <summary>
     /// User supplied input should never be passed into these methods.
     /// If you need to provide user supplied input please ensure you manually
-    ///  implement parameterized stored procedures for any user input
+    ///  implement parameterized stored procedures for any user input via IDbContext
     /// These methods are intended for internal use only where we can
     /// safely guarantee the validity of the supplied SQL to execute. 
     /// </summary>
