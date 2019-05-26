@@ -6,7 +6,7 @@ using Plato.Tags.Models;
 namespace Plato.Tags.Repositories
 {
 
-    public interface ITagRepository<TModel> : IRepository<TModel> where TModel : class, ITag
+    public interface ITagRepository<TModel> : IRepository2<TModel> where TModel : class, ITag
     {
 
         Task<IEnumerable<TModel>> SelectByFeatureIdAsync(int featureId);

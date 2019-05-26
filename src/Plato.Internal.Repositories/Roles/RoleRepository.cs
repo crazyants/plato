@@ -89,7 +89,7 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                role = await context.ExecuteReaderAsync<Role>(
+                role = await context.ExecuteReaderAsync2<Role>(
                     CommandType.StoredProcedure,
                     "SelectRoleById",
                     async reader =>
@@ -102,9 +102,11 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return role;
-                    },
-                    id);
-                
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
             }
 
             return role;
@@ -116,7 +118,7 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                role = await context.ExecuteReaderAsync(
+                role = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectRoleByName",
                     async reader =>
@@ -129,8 +131,10 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return role;
-                    },
-                    name);
+                    }, new[]
+                    {
+                        new DbParam("Name", DbType.String, 255, name)
+                    });
 
 
             }
@@ -143,7 +147,7 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                role = await context.ExecuteReaderAsync<Role>(
+                role = await context.ExecuteReaderAsync2<Role>(
                     CommandType.StoredProcedure,
                     "SelectRoleByNameNormalized",
                     async reader =>
@@ -156,10 +160,12 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return role;
-                    },
-                    normalizedName);
+                    }, new[]
+                    {
+                        new DbParam("NormalizedName", DbType.String, 255, normalizedName),
+                    });
 
-             
+
             }
 
             return role;
@@ -170,7 +176,7 @@ namespace Plato.Internal.Repositories.Roles
             List<Role> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync(
+                output = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectRolesByUserId",
                     async reader =>
@@ -188,8 +194,10 @@ namespace Plato.Internal.Repositories.Roles
                         }
 
                         return output;
-                    },
-                    userId);
+                    }, new []
+                    {
+                        new DbParam("UserId", DbType.Int32, userId)
+                    });
 
             }
 

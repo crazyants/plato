@@ -4,7 +4,7 @@ using Plato.Internal.Models.Abstract;
 
 namespace Plato.Internal.Repositories.Abstract
 {
-    public interface IDictionaryRepository<T> : IRepository<T> where T : class
+    public interface IDictionaryRepository<T> : IRepository2<T> where T : class
     {
         Task<IEnumerable<DictionaryEntry>> SelectEntries();
 

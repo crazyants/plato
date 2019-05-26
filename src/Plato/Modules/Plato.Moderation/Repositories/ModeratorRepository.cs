@@ -62,7 +62,7 @@ namespace Plato.Moderation.Repositories
             Moderator moderator = null;
             using (var context = _dbContext)
             {
-                moderator = await context.ExecuteReaderAsync(
+                moderator = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectModeratorById",
                     async reader =>
@@ -75,8 +75,10 @@ namespace Plato.Moderation.Repositories
                         }
 
                         return moderator;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -84,12 +86,12 @@ namespace Plato.Moderation.Repositories
 
         }
 
-        public async Task<IPagedResults<Moderator>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Moderator>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<Moderator> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<Moderator>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<Moderator>>(
                     CommandType.StoredProcedure,
                     "SelectModeratorsPaged",
                     async reader =>
@@ -116,7 +118,7 @@ namespace Plato.Moderation.Repositories
                         return output;
 
                     },
-                    inputParams);
+                    dbParams);
 
             }
 

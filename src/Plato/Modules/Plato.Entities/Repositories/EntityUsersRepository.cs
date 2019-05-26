@@ -9,7 +9,7 @@ namespace Plato.Entities.Repositories
     
     public interface IEntityUsersRepository
     {
-        Task<IPagedResults<EntityUser>> SelectAsync(params object[] inputParams);
+        Task<IPagedResults<EntityUser>> SelectAsync(DbParam[] dbParams);
     }
 
     public class EntityUsersRepository : IEntityUsersRepository
@@ -27,13 +27,13 @@ namespace Plato.Entities.Repositories
         }
 
 
-        public async Task<IPagedResults<EntityUser>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityUser>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EntityUser> results = null;
             using (var context = _dbContext)
             {
 
-                results = await context.ExecuteReaderAsync<IPagedResults<EntityUser>>(
+                results = await context.ExecuteReaderAsync2<IPagedResults<EntityUser>>(
                     CommandType.StoredProcedure,
                     "SelectEntityUsersPaged",
                     async reader =>
@@ -59,7 +59,7 @@ namespace Plato.Entities.Repositories
 
                         return null;
                     },
-                    inputParams);
+                    dbParams);
 
             }
 

@@ -4,7 +4,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Ratings.Stores
 {
-    public interface IEntityRatingsStore<TModel> : IStore<TModel> where TModel : class
+    public interface IEntityRatingsStore<TModel> : IStore2<TModel> where TModel : class
     {
      
         Task<IEnumerable<TModel>> SelectEntityRatingsByEntityId(int entityId);

@@ -71,12 +71,15 @@ namespace Plato.Categories.Repositories
             TCategory category = null;
             using (var context = _dbContext)
             {
-                category = await context.ExecuteReaderAsync(
+                category = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectCategoryById",
                     async reader => await BuildCategoryFromResultSets(reader),
-                    id);
-                
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
             }
 
             return category;
@@ -153,7 +156,7 @@ namespace Plato.Categories.Repositories
             IList<TCategory> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<TCategory>>(
+                output = await context.ExecuteReaderAsync2<IList<TCategory>>(
                     CommandType.StoredProcedure,
                     "SelectCategoriesByFeatureId",
                     async reader =>
@@ -171,9 +174,11 @@ namespace Plato.Categories.Repositories
 
                         return output;
 
-                    },
-                    featureId);
-               
+                    }, new[]
+                    {
+                        new DbParam("FeatureId", DbType.Int32, featureId)
+                    });
+
             }
 
             return output;

@@ -7,7 +7,7 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Entities.Stores
 {
 
-    public interface IEntityUsersStore : IQueryableStore<EntityUser>
+    public interface IEntityUsersStore : IQueryableStore2<EntityUser>
     {
     }
 
@@ -29,9 +29,9 @@ namespace Plato.Entities.Stores
             return _dbQuery.ConfigureQuery<EntityUser>(query); ;
         }
 
-        public async Task<IPagedResults<EntityUser>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<EntityUser>> SelectAsync(DbParam[] dbParams)
         {
-            return await _entityUsersRepository.SelectAsync(args);
+            return await _entityUsersRepository.SelectAsync(dbParams);
         }
 
     }

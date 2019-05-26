@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Formatters.Internal;
 using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
 using Plato.Internal.Abstractions.Extensions;
@@ -54,7 +55,7 @@ namespace Plato.Categories.Repositories
             EntityCategory output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<EntityCategory>(
+                output = await context.ExecuteReaderAsync2<EntityCategory>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoryById",
                     async reader =>
@@ -67,9 +68,11 @@ namespace Plato.Categories.Repositories
                         }
 
                         return output;
-                    },
-                    id);
-             
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+
 
             }
 
@@ -146,7 +149,7 @@ namespace Plato.Categories.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync<IList<EntityCategory>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityCategory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoriesByEntityId",
                     async reader =>
@@ -164,10 +167,12 @@ namespace Plato.Categories.Repositories
                         }
 
                         return output;
-                    },
-                    entityId);
+                    }, new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
 
-              
+
             }
 
             return output;
@@ -179,7 +184,7 @@ namespace Plato.Categories.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync<EntityCategory>(
+                output = await context.ExecuteReaderAsync2<EntityCategory>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoryByEntityIdAndCategoryId",
                     async reader =>
@@ -192,10 +197,12 @@ namespace Plato.Categories.Repositories
                         }
 
                         return output;
-                    },
-                    entityId,
-                    categoryId);
-                
+                    }, new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("CategoryId", DbType.Int32, categoryId)
+                    });
+
             }
 
             return output;

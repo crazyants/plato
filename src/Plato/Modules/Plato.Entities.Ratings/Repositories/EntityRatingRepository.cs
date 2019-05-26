@@ -83,12 +83,12 @@ namespace Plato.Entities.Ratings.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityRating>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityRating>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EntityRating> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<EntityRating>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<EntityRating>>(
                     CommandType.StoredProcedure,
                     "SelectEntityRatingsPaged",
                     async reader =>
@@ -116,7 +116,7 @@ namespace Plato.Entities.Ratings.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
             
             }
 
@@ -153,7 +153,7 @@ namespace Plato.Entities.Ratings.Repositories
             IList<EntityRating> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<EntityRating>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityRating>>(
                     CommandType.StoredProcedure,
                     "SelectEntityRatingsByEntityId",
                     async reader =>
@@ -170,9 +170,11 @@ namespace Plato.Entities.Ratings.Repositories
                         }
 
                         return output;
-                    },
-                    entityId);
-            
+                    }, new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
+
             }
 
             return output;
@@ -185,7 +187,7 @@ namespace Plato.Entities.Ratings.Repositories
             IList<EntityRating> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<EntityRating>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityRating>>(
                     CommandType.StoredProcedure,
                     "SelectEntityRatingsByUserIdAndEntityId",
                     async reader =>
@@ -202,10 +204,12 @@ namespace Plato.Entities.Ratings.Repositories
                         }
 
                         return output;
-                    },
-                    userId,
-                    entityId);
-            
+                    }, new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
+
             }
 
             return output;

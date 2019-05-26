@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -14,9 +15,9 @@ namespace Plato.Tags.Stores
     public class EntityTagQuery : DefaultQuery<EntityTag>
     {
 
-        private readonly IStore<EntityTag> _store;
+        private readonly IStore2<EntityTag> _store;
 
-        public EntityTagQuery(IStore<EntityTag> store)
+        public EntityTagQuery(IStore2<EntityTag> store)
         {
             _store = store;
         }
@@ -37,16 +38,17 @@ namespace Plato.Tags.Stores
             var builder = new EntityTagQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var keywords = Params.Keywords.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("Keywords", DbType.String, keywords)
+            });
 
-            return data;
         }
         
     }

@@ -112,7 +112,7 @@ namespace Plato.Media.Repositories
             Models.Media media = null;
             using (var context = _dbContext)
             {
-                media = await context.ExecuteReaderAsync<Models.Media>(
+                media = await context.ExecuteReaderAsync2<Models.Media>(
                     CommandType.StoredProcedure,
                     "SelectMediaById",
                     async reader =>
@@ -124,8 +124,10 @@ namespace Plato.Media.Repositories
                         }
 
                         return media;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 

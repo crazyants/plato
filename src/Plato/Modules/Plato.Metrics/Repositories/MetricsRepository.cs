@@ -57,7 +57,7 @@ namespace Plato.Metrics.Repositories
             Metric output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<Metric>(
+                output = await context.ExecuteReaderAsync2<Metric>(
                     CommandType.StoredProcedure,
                     "SelectMetricById",
                     async reader =>
@@ -70,8 +70,10 @@ namespace Plato.Metrics.Repositories
                         }
 
                         return output;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 

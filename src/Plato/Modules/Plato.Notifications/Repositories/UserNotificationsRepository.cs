@@ -78,13 +78,13 @@ namespace Plato.Notifications.Repositories
 
         }
 
-        public async Task<IPagedResults<UserNotification>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<UserNotification>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<UserNotification> output = null;
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync<IPagedResults<UserNotification>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<UserNotification>>(
                     CommandType.StoredProcedure,
                     "SelectUserNotificationsPaged",
                     async reader =>
@@ -112,7 +112,7 @@ namespace Plato.Notifications.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
               
             }
 

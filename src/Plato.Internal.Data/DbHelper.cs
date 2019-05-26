@@ -78,7 +78,7 @@ namespace Plato.Internal.Data
             T output = null;
             using (var db = _dbContext)
             {
-                output = await db.ExecuteReaderAsync<T>(CommandType.Text, ReplaceTablePrefix(sql), populate);
+                output = await db.ExecuteReaderAsync2<T>(CommandType.Text, ReplaceTablePrefix(sql), populate);
             }
 
             return output;

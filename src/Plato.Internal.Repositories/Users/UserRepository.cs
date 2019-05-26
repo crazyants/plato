@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Data.Abstractions.Extensions;
 using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Repositories.Users
@@ -130,11 +131,14 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserById",
                     async reader => await BuildUserFromResultSets(reader),
-                    id);
+                    new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return user;
@@ -176,32 +180,38 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByEmail",
                     async reader => await BuildUserFromResultSets(reader),
-                    email.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("Email", DbType.String, 255, email)
+                    });
             }
 
             return user;
 
         }
 
-        public async Task<User> SelectByEmailNormalizedAsync(string emailNormalized)
+        public async Task<User> SelectByEmailNormalizedAsync(string normalizedEmail)
         {
-            if (string.IsNullOrEmpty(emailNormalized))
+            if (string.IsNullOrEmpty(normalizedEmail))
             {
-                throw new ArgumentNullException(nameof(emailNormalized));
+                throw new ArgumentNullException(nameof(normalizedEmail));
             }
 
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync2<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByEmailNormalized",
                     async reader => await BuildUserFromResultSets(reader),
-                    emailNormalized.TrimToSize(255));
+                    new[]
+                    {
+                        new DbParam("NormalizedEmail", DbType.String, 255, normalizedEmail),
+                    });
             }
 
             return user;

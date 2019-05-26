@@ -6,7 +6,7 @@ using Plato.Tags.Models;
 namespace Plato.Tags.Stores
 {
 
-    public interface ITagStore<TModel> : IStore<TModel> where TModel : class, ITag
+    public interface ITagStore<TModel> : IStore2<TModel> where TModel : class, ITag
     {
 
         Task<IEnumerable<TModel>> GetByFeatureIdAsync(int featureId);

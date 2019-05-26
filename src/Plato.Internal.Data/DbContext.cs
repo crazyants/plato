@@ -33,14 +33,14 @@ namespace Plato.Internal.Data
             Configuration = cfg;
         }
   
-        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
-        {
-            if (_provider == null)
-                return null;
-            if (commandType == CommandType.StoredProcedure)
-                sql = DbParameterHelper.CreateExecuteStoredProcedureSql(GetProcedureName(sql), args);
-            return await _provider.ExecuteReaderAsync<T>(sql, populate, args);
-        }
+        //public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string sql, Func<DbDataReader, Task<T>> populate, params object[] args) where T : class
+        //{
+        //    if (_provider == null)
+        //        return null;
+        //    if (commandType == CommandType.StoredProcedure)
+        //        sql = DbParameterHelper.CreateExecuteStoredProcedureSql(GetProcedureName(sql), args);
+        //    return await _provider.ExecuteReaderAsync<T>(sql, populate, args);
+        //}
         
         //public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] args)
         //{

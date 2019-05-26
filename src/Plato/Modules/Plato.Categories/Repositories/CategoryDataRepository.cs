@@ -40,7 +40,7 @@ namespace Plato.Categories.Repositories
             CategoryData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<CategoryData>(
+                data = await context.ExecuteReaderAsync2<CategoryData>(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumById",
                     async reader =>
@@ -54,8 +54,10 @@ namespace Plato.Categories.Repositories
 
                         return data;
 
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -69,7 +71,7 @@ namespace Plato.Categories.Repositories
             List<CategoryData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync(
+                data = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumByCategoryId",
                     async reader =>
@@ -86,8 +88,10 @@ namespace Plato.Categories.Repositories
                         }
 
                         return data;
-                    },
-                    categoryId);
+                    }, new[]
+                    {
+                        new DbParam("CategoryId", DbType.Int32, categoryId)
+                    });
 
             }
             return data;

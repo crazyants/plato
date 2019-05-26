@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Ratings.Models;
@@ -13,9 +14,9 @@ namespace Plato.Entities.Ratings.Stores
     public class EntityRatingsQuery : DefaultQuery<EntityRating>
     {
 
-        private readonly IStore<EntityRating> _store;
+        private readonly IStore2<EntityRating> _store;
 
-        public EntityRatingsQuery(IStore<EntityRating> store)
+        public EntityRatingsQuery(IStore2<EntityRating> store)
         {
             _store = store;
         }
@@ -36,21 +37,23 @@ namespace Plato.Entities.Ratings.Stores
             var builder = new EntityRatingsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var ipV4Address = Params.IpV4Address.Value ?? string.Empty;
+            var ipV6Address = Params.IpV6Address.Value ?? string.Empty;
+            var userAgent = Params.UserAgent.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.IpV4Address.Value,
-                Params.IpV6Address.Value,
-                Params.UserAgent.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("IpV4Address", DbType.String, ipV4Address),
+                new DbParam("IpV6Address", DbType.String, ipV6Address),
+                new DbParam("UserAgent", DbType.String, userAgent)
+            });
 
-            return data;
         }
-
-
+        
     }
 
     #endregion

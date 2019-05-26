@@ -61,7 +61,7 @@ namespace Plato.Entities.Reactions.Repositories
             EntityReaction entityReaction = null;
             using (var context = _dbContext)
             {
-                entityReaction = await context.ExecuteReaderAsync<EntityReaction>(
+                entityReaction = await context.ExecuteReaderAsync2<EntityReaction>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionById",
                     async reader =>
@@ -74,8 +74,10 @@ namespace Plato.Entities.Reactions.Repositories
                         }
 
                         return entityReaction;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -153,7 +155,7 @@ namespace Plato.Entities.Reactions.Repositories
             IList<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<EntityReaction>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsByEntityId",
                     async reader =>
@@ -170,9 +172,11 @@ namespace Plato.Entities.Reactions.Repositories
                         }
 
                         return output;
-                    },
-                    entityId);
-            
+                    }, new[]
+                    {
+                        new DbParam("EntityId", DbType.Int32, entityId)
+                    });
+
             }
 
             return output;
@@ -185,7 +189,7 @@ namespace Plato.Entities.Reactions.Repositories
             IList<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IList<EntityReaction>>(
+                output = await context.ExecuteReaderAsync2<IList<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsByUserIdAndEntityId",
                     async reader =>
@@ -202,10 +206,12 @@ namespace Plato.Entities.Reactions.Repositories
                         }
 
                         return output;
-                    },
-                    userId,
-                    entityId);
-            
+                    }, new[]
+                    {
+                        new DbParam("UserId", DbType.Int32, userId),
+                        new DbParam("EntityId", DbType.Int32, entityId),
+                    });
+
             }
 
             return output;

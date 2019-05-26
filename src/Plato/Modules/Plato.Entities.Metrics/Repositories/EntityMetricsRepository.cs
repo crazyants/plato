@@ -56,7 +56,7 @@ namespace Plato.Entities.Metrics.Repositories
             EntityMetric output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<EntityMetric>(
+                output = await context.ExecuteReaderAsync2<EntityMetric>(
                     CommandType.StoredProcedure,
                     "SelectEntityMetricById",
                     async reader =>
@@ -69,8 +69,10 @@ namespace Plato.Entities.Metrics.Repositories
                         }
 
                         return output;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -78,12 +80,12 @@ namespace Plato.Entities.Metrics.Repositories
 
         }
 
-        public async Task<IPagedResults<EntityMetric>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityMetric>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<EntityMetric> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<EntityMetric>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<EntityMetric>>(
                     CommandType.StoredProcedure,
                     "SelectEntityMetricsPaged",
                     async reader =>
@@ -111,7 +113,7 @@ namespace Plato.Entities.Metrics.Repositories
 
                         return output;
                     },
-                    inputParams);
+                    dbParams);
             
             }
 

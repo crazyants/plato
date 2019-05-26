@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Ratings.Repositories
 {
-    public interface IEntityRatingsRepository<TModel> : IRepository<TModel> where TModel : class
+    public interface IEntityRatingsRepository<TModel> : IRepository2<TModel> where TModel : class
     {
 
         Task<IEnumerable<TModel>> SelectEntityRatingsByEntityId(int entityId);

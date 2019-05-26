@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Tags.Repositories
 {
-    public interface IEntityTagsRepository<T> : IRepository<T> where T : class
+    public interface IEntityTagsRepository<T> : IRepository2<T> where T : class
     {
 
         Task<IEnumerable<T>> SelectByEntityId(int entityId);

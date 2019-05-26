@@ -58,7 +58,7 @@ namespace Plato.Entities.History.Repositories
             EntityHistory history = null;
             using (var context = _dbContext)
             {
-                history = await context.ExecuteReaderAsync(
+                history = await context.ExecuteReaderAsync2(
                     CommandType.StoredProcedure,
                     "SelectEntityHistoryById",
                     async reader =>
@@ -71,8 +71,10 @@ namespace Plato.Entities.History.Repositories
                         }
 
                         return history;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
             }
 
             return history;

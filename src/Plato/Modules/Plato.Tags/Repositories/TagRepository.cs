@@ -87,12 +87,12 @@ namespace Plato.Tags.Repositories
 
         }
 
-        public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<TModel>> SelectAsync(DbParam[] dbParams)
         {
             IPagedResults<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync<IPagedResults<TModel>>(
+                output = await context.ExecuteReaderAsync2<IPagedResults<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectTagsPaged",
                     async reader =>
@@ -118,7 +118,7 @@ namespace Plato.Tags.Repositories
                         return output;
 
                     },
-                    inputParams);
+                    dbParams);
             
             }
 

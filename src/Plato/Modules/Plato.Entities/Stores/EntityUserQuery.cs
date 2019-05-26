@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
@@ -12,9 +13,9 @@ namespace Plato.Entities.Stores
     public class EntityUserQuery : DefaultQuery<EntityUser>
     {
 
-        private readonly IQueryableStore<EntityUser> _store;
+        private readonly IQueryableStore2<EntityUser> _store;
 
-        public EntityUserQuery(IQueryableStore<EntityUser> store)
+        public EntityUserQuery(IQueryableStore2<EntityUser> store)
         {
             _store = store;
         }
@@ -35,19 +36,19 @@ namespace Plato.Entities.Stores
             var builder = new EntityUserQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var username = Params.Username.Value ?? string.Empty;
+            
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("UserName", DbType.String, username)
+            });
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.Username.Value
-            );
-
-            return data;
         }
-
-
+        
     }
 
     #endregion

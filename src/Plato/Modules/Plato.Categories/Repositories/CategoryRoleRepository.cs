@@ -64,7 +64,7 @@ namespace Plato.Categories.Repositories
             CategoryRole categoryRole = null;
             using (var context = _dbContext)
             {
-                categoryRole = await context.ExecuteReaderAsync<CategoryRole>(
+                categoryRole = await context.ExecuteReaderAsync2<CategoryRole>(
                     CommandType.StoredProcedure,
                     "SelectCategoryRoleById",
                     async reader =>
@@ -77,8 +77,10 @@ namespace Plato.Categories.Repositories
                         }
 
                         return categoryRole;
-                    },
-                    id);
+                    }, new[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
 
             }
 
@@ -160,7 +162,7 @@ namespace Plato.Categories.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync<IList<CategoryRole>>(
+                output = await context.ExecuteReaderAsync2<IList<CategoryRole>>(
                     CommandType.StoredProcedure,
                     "SelectCategoryRolesByCategoryId",
                     async reader =>
@@ -178,8 +180,10 @@ namespace Plato.Categories.Repositories
                         }
 
                         return output;
-                    },
-                    categoryId);
+                    }, new[]
+                    {
+                        new DbParam("CategoryId", DbType.Int32, categoryId)
+                    });
 
             }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -13,9 +14,9 @@ namespace Plato.Entities.Metrics.Stores
     public class EntityMetricQuery : DefaultQuery<EntityMetric>
     {
 
-        private readonly IStore<EntityMetric> _store;
+        private readonly IStore2<EntityMetric> _store;
 
-        public EntityMetricQuery(IStore<EntityMetric> store)
+        public EntityMetricQuery(IStore2<EntityMetric> store)
         {
             _store = store;
         }
@@ -36,21 +37,23 @@ namespace Plato.Entities.Metrics.Stores
             var builder = new EntityMetricQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var ipV4Address = Params.IpV4Address.Value ?? string.Empty;
+            var iopV6Address = Params.IpV6Address.Value ?? string.Empty;
+            var userAgent = Params.UserAgent.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(
-                PageIndex,
-                PageSize,
-                populateSql,
-                countSql,
-                Params.IpV4Address.Value,
-                Params.IpV6Address.Value,
-                Params.UserAgent.Value
-            );
+            return await _store.SelectAsync(new[]
+            {
+                new DbParam("PageIndex", DbType.Int32, PageIndex),
+                new DbParam("PageSize", DbType.Int32, PageSize),
+                new DbParam("SqlPopulate", DbType.String, populateSql),
+                new DbParam("SqlCount", DbType.String, countSql),
+                new DbParam("IpV4Address", DbType.String, ipV4Address),
+                new DbParam("IopV6Address", DbType.String, iopV6Address),
+                new DbParam("UserAgent", DbType.String, userAgent)
+            });
 
-            return data;
         }
-
-
+        
     }
 
     #endregion

@@ -172,13 +172,7 @@ namespace Plato.Internal.Repositories.Abstract
             throw new NotImplementedException();
         }
 
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        public Task<IPagedResults<DictionaryEntry>> SelectAsync(params object[] inputParams)
+        public Task<IPagedResults<DictionaryEntry>> SelectAsync(DbParam[] dbParams)
         {
             // TODO
             throw new NotImplementedException();
