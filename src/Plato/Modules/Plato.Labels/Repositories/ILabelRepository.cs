@@ -5,7 +5,7 @@ using Plato.Internal.Repositories;
 namespace Plato.Labels.Repositories
 {
 
-    public interface ILabelRepository<T> : IRepository2<T> where T : class
+    public interface ILabelRepository<T> : IRepository<T> where T : class
     {
         Task<IEnumerable<T>> SelectByFeatureIdAsync(int featureId);
 

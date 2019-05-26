@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Repositories.Users
 {
-    public interface IUserDataRepository<T> : IRepository2<T> where T : class
+    public interface IUserDataRepository<T> : IRepository<T> where T : class
     {
         Task<T> SelectByKeyAndUserIdAsync(string key, int userId);
 

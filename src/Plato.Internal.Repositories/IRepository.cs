@@ -5,8 +5,9 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Internal.Repositories
 {
     
-    public interface IRepository2<TModel> where TModel : class
+    public interface IRepository<TModel> where TModel : class
     {
+
         Task<TModel> InsertUpdateAsync(TModel model);
 
         Task<TModel> SelectByIdAsync(int id);
@@ -17,5 +18,4 @@ namespace Plato.Internal.Repositories
 
     }
     
-
 }

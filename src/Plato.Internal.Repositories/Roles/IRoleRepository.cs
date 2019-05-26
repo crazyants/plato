@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Repositories.Roles
 {
-    public interface IRoleRepository<T> : IRepository2<T> where T : class
+    public interface IRoleRepository<T> : IRepository<T> where T : class
     {
         Task<T> SelectByNameAsync(string name);
 

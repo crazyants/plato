@@ -2,7 +2,7 @@
 
 namespace Plato.Email.Repositories
 {
-    public interface IEmailRepository<T> : IRepository2<T> where T : class
+    public interface IEmailRepository<T> : IRepository<T> where T : class
     {
 
     }

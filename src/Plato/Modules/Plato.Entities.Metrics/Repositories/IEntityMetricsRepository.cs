@@ -4,7 +4,7 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Metrics.Repositories
 {
-    public interface IEntityMetricsRepository<TModel> : IRepository2<TModel> where TModel : class
+    public interface IEntityMetricsRepository<TModel> : IRepository<TModel> where TModel : class
     {
 
     }

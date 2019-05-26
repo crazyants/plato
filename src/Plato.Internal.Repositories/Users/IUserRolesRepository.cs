@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Repositories.Users
 {
-    public interface IUserRolesRepository<T> : IRepository2<T> where T : class
+    public interface IUserRolesRepository<T> : IRepository<T> where T : class
     {
 
         Task<IEnumerable<T>> SelectUserRolesByUserId(int userId);

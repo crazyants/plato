@@ -155,6 +155,7 @@ namespace Plato.Labels.Stores
 
         public async Task<bool> DeleteByRoleIdAndLabelIdAsync(int roleId, int labelId)
         {
+
             var success = await _labelRoleRepository.DeleteByRoleIdAndLabelIdAsync(roleId, labelId);
             if (success)
             {
@@ -170,6 +171,7 @@ namespace Plato.Labels.Stores
 
             return success;
         }
+
     }
 
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Repositories.Users
 {
-    public interface IUserBannerRepository<T> : IRepository2<T> where T : class
+    public interface IUserBannerRepository<T> : IRepository<T> where T : class
     {
 
         Task<T> SelectByUserIdAsync(int userId);

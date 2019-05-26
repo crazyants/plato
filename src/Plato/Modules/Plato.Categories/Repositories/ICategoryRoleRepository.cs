@@ -5,7 +5,7 @@ using Plato.Internal.Repositories;
 namespace Plato.Categories.Repositories
 {
 
-    public interface ICategoryRoleRepository<T> : IRepository2<T> where T : class
+    public interface ICategoryRoleRepository<T> : IRepository<T> where T : class
     {
         Task<IEnumerable<T>> SelectByCategoryIdAsync(int categoryId);
 
