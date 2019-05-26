@@ -14,9 +14,9 @@ namespace Plato.Follows.Stores
     public class FollowQuery : DefaultQuery<Follow>
     {
 
-        private readonly IStore2<Follow> _store;
+        private readonly IStore<Follow> _store;
 
-        public FollowQuery(IStore2<Follow> store)
+        public FollowQuery(IStore<Follow> store)
         {
             _store = store;
         }

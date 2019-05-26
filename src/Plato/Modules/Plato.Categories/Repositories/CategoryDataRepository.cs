@@ -40,7 +40,7 @@ namespace Plato.Categories.Repositories
             CategoryData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2<CategoryData>(
+                data = await context.ExecuteReaderAsync<CategoryData>(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumById",
                     async reader =>
@@ -71,7 +71,7 @@ namespace Plato.Categories.Repositories
             List<CategoryData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumByCategoryId",
                     async reader =>
@@ -128,7 +128,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryDatumById",
                     new[]
@@ -146,7 +146,7 @@ namespace Plato.Categories.Repositories
             IPagedResults<CategoryData> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<CategoryData>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<CategoryData>>(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumPaged",
                     async reader =>
@@ -212,7 +212,7 @@ namespace Plato.Categories.Repositories
                     return output;
                 }
                     
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategoryDatum",
                     new []

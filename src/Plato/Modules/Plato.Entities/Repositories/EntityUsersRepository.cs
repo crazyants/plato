@@ -33,7 +33,7 @@ namespace Plato.Entities.Repositories
             using (var context = _dbContext)
             {
 
-                results = await context.ExecuteReaderAsync2<IPagedResults<EntityUser>>(
+                results = await context.ExecuteReaderAsync<IPagedResults<EntityUser>>(
                     CommandType.StoredProcedure,
                     "SelectEntityUsersPaged",
                     async reader =>

@@ -64,7 +64,7 @@ namespace Plato.Categories.Repositories
             CategoryRole categoryRole = null;
             using (var context = _dbContext)
             {
-                categoryRole = await context.ExecuteReaderAsync2<CategoryRole>(
+                categoryRole = await context.ExecuteReaderAsync<CategoryRole>(
                     CommandType.StoredProcedure,
                     "SelectCategoryRoleById",
                     async reader =>
@@ -93,7 +93,7 @@ namespace Plato.Categories.Repositories
             IPagedResults<CategoryRole> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<CategoryRole>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<CategoryRole>>(
                     CommandType.StoredProcedure,
                     "SelectCategoryRolesPaged",
                     async reader =>
@@ -142,7 +142,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryById",
                     new[]
@@ -162,7 +162,7 @@ namespace Plato.Categories.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync2<IList<CategoryRole>>(
+                output = await context.ExecuteReaderAsync<IList<CategoryRole>>(
                     CommandType.StoredProcedure,
                     "SelectCategoryRolesByCategoryId",
                     async reader =>
@@ -201,7 +201,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryRolesByCategoryId",
                     new[]
@@ -225,7 +225,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryRolesByRoleIdAndCategoryId",
                     new[]
@@ -256,7 +256,7 @@ namespace Plato.Categories.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategoryRole",
                     new []

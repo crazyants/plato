@@ -13,9 +13,9 @@ namespace Plato.Entities.Stores
     public class EntityUserQuery : DefaultQuery<EntityUser>
     {
 
-        private readonly IQueryableStore2<EntityUser> _store;
+        private readonly IQueryableStore<EntityUser> _store;
 
-        public EntityUserQuery(IQueryableStore2<EntityUser> store)
+        public EntityUserQuery(IQueryableStore<EntityUser> store)
         {
             _store = store;
         }

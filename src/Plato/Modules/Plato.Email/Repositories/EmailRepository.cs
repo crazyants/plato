@@ -60,7 +60,7 @@ namespace Plato.Email.Repositories
             EmailMessage email = null;
             using (var context = _dbContext)
             {
-                email = await context.ExecuteReaderAsync2<EmailMessage>(
+                email = await context.ExecuteReaderAsync<EmailMessage>(
                     CommandType.StoredProcedure,
                     "SelectEmailById",
                     async reader =>
@@ -89,7 +89,7 @@ namespace Plato.Email.Repositories
             IPagedResults<EmailMessage> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<EmailMessage>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EmailMessage>>(
                     CommandType.StoredProcedure,
                     "SelectEmailsPaged",
                     async reader =>
@@ -132,7 +132,7 @@ namespace Plato.Email.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEmailById", new[]
                     {
@@ -165,7 +165,7 @@ namespace Plato.Email.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync2<int>(
+                emailId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEmail",
                     new[]

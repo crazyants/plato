@@ -16,9 +16,9 @@ namespace Plato.Internal.Stores.Roles
     public class RoleQuery : DefaultQuery<Role>
     {
 
-        private readonly IStore2<Role> _store;
+        private readonly IStore<Role> _store;
 
-        public RoleQuery(IStore2<Role> store)
+        public RoleQuery(IStore<Role> store)
         {
             _store = store;
         }

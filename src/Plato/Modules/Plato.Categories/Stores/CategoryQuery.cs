@@ -14,11 +14,11 @@ namespace Plato.Categories.Stores
     public class CategoryQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore2<TModel> _store;
+        private readonly IStore<TModel> _store;
 
         public IQueryAdapterManager<TModel> QueryAdapterManager { get; set; }
         
-        public CategoryQuery(IStore2<TModel> store)
+        public CategoryQuery(IStore<TModel> store)
         {
             _store = store;
         }

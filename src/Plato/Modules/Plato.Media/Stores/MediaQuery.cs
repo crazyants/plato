@@ -13,9 +13,9 @@ namespace Plato.Media.Stores
     public class MediaQuery : DefaultQuery<Models.Media>
     {
 
-        private readonly IStore2<Models.Media> _store;
+        private readonly IStore<Models.Media> _store;
 
-        public MediaQuery(IStore2<Models.Media> store)
+        public MediaQuery(IStore<Models.Media> store)
         {
             _store = store;
         }

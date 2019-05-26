@@ -13,9 +13,9 @@ namespace Plato.Entities.Stores
     public class EntityReplyQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore2<TModel> _store;
+        private readonly IStore<TModel> _store;
 
-        public EntityReplyQuery(IStore2<TModel> store)
+        public EntityReplyQuery(IStore<TModel> store)
         {
             _store = store;
         }

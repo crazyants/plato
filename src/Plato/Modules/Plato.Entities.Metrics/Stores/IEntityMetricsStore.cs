@@ -4,7 +4,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Metrics.Stores
 {
-    public interface IEntityMetricsStore<TModel> : IStore2<TModel> where TModel : class
+    public interface IEntityMetricsStore<TModel> : IStore<TModel> where TModel : class
     {
   
     }

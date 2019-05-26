@@ -44,7 +44,7 @@ namespace Plato.Internal.Repositories.Abstract
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteDictionaryEntryById",
                     new[]
@@ -78,7 +78,7 @@ namespace Plato.Internal.Repositories.Abstract
             DictionaryEntry output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectDictionaryEntryById",
                     async reader =>
@@ -108,7 +108,7 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 using (var context = _dbContext)
                 {
-                    output = await context.ExecuteReaderAsync2<IList<DictionaryEntry>>(
+                    output = await context.ExecuteReaderAsync<IList<DictionaryEntry>>(
                         CommandType.StoredProcedure,
                         "SelectDictionaryEntries",
                         async reader =>
@@ -141,7 +141,7 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 using (var context = _dbContext)
                 {
-                    entry = await context.ExecuteReaderAsync2(
+                    entry = await context.ExecuteReaderAsync(
                         CommandType.StoredProcedure,
                         "SelectDictionaryEntryByKey",
                         async reader =>
@@ -205,7 +205,7 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 if (context == null)
                     return 0;
-                return await context.ExecuteScalarAsync2<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateDictionaryEntry",
                     new[]

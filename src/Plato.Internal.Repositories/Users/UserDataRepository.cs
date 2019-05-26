@@ -40,7 +40,7 @@ namespace Plato.Internal.Repositories.Users
             UserData userData = null;
             using (var context = _dbContext)
             {
-                userData = await context.ExecuteReaderAsync2(
+                userData = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserDatumById",
                     async reader =>
@@ -71,7 +71,7 @@ namespace Plato.Internal.Repositories.Users
             UserData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserDatumByKeyAndUserId",
                     async reader =>
@@ -102,7 +102,7 @@ namespace Plato.Internal.Repositories.Users
             IList<UserData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2<IList<UserData>>(
+                data = await context.ExecuteReaderAsync<IList<UserData>>(
                     CommandType.StoredProcedure,
                     "SelectUserDatumByUserId",
                     async reader =>
@@ -156,7 +156,7 @@ namespace Plato.Internal.Repositories.Users
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserDatumById",
                     new[]
@@ -175,7 +175,7 @@ namespace Plato.Internal.Repositories.Users
             IPagedResults<UserData> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<UserData>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<UserData>>(
                     CommandType.StoredProcedure,
                     "SelectUserDatumPaged",
                     async reader =>
@@ -240,7 +240,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 if (context == null)
                     return 0;
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserDatum",
                     new[]

@@ -57,7 +57,7 @@ namespace Plato.Internal.Repositories.Users
             UserSecret secret = null;
             using (var context = _dbContext)
             {
-                secret = await context.ExecuteReaderAsync2(
+                secret = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserSecret",
                     async reader =>
@@ -105,7 +105,7 @@ namespace Plato.Internal.Repositories.Users
             var dbId = 0;
             using (var context = _dbContext)
             {
-                dbId = await context.ExecuteScalarAsync2<int>(
+                dbId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "plato_sp_InsertUpdateUserSecret",
                     new[]

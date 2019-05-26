@@ -61,7 +61,7 @@ namespace Plato.Entities.Reactions.Repositories
             EntityReaction entityReaction = null;
             using (var context = _dbContext)
             {
-                entityReaction = await context.ExecuteReaderAsync2<EntityReaction>(
+                entityReaction = await context.ExecuteReaderAsync<EntityReaction>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionById",
                     async reader =>
@@ -90,7 +90,7 @@ namespace Plato.Entities.Reactions.Repositories
             IPagedResults<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<EntityReaction>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsPaged",
                     async reader =>
@@ -136,7 +136,7 @@ namespace Plato.Entities.Reactions.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityReactionById",
                     new[]
@@ -155,7 +155,7 @@ namespace Plato.Entities.Reactions.Repositories
             IList<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<EntityReaction>>(
+                output = await context.ExecuteReaderAsync<IList<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsByEntityId",
                     async reader =>
@@ -189,7 +189,7 @@ namespace Plato.Entities.Reactions.Repositories
             IList<EntityReaction> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<EntityReaction>>(
+                output = await context.ExecuteReaderAsync<IList<EntityReaction>>(
                     CommandType.StoredProcedure,
                     "SelectEntityReactionsByUserIdAndEntityId",
                     async reader =>
@@ -240,7 +240,7 @@ namespace Plato.Entities.Reactions.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync2<int>(
+                emailId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityReaction",
                     new []

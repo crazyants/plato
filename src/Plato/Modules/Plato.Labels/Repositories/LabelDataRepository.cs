@@ -39,7 +39,7 @@ namespace Plato.Labels.Repositories
             LabelData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumById",
                     async reader =>
@@ -67,7 +67,7 @@ namespace Plato.Labels.Repositories
             IList<LabelData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumByLabelId",
                     async reader =>
@@ -124,7 +124,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteLabelDatumById",
                     new[]
@@ -142,7 +142,7 @@ namespace Plato.Labels.Repositories
             IPagedResults<LabelData> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<LabelData>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<LabelData>>(
                     CommandType.StoredProcedure,
                     "SelectLabelDatumPaged",
                     async reader =>
@@ -200,7 +200,7 @@ namespace Plato.Labels.Repositories
             {
                 if (context == null)
                     return 0;
-                return await context.ExecuteScalarAsync2<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabelDatum",
                     new[]

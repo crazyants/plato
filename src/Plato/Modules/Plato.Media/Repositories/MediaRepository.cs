@@ -32,7 +32,7 @@ namespace Plato.Media.Repositories
             IPagedResults<Models.Media> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<Models.Media>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<Models.Media>>(
                     CommandType.StoredProcedure,
                     "SelectMediaPaged",
                     async reader =>
@@ -76,7 +76,7 @@ namespace Plato.Media.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteMediaById",
                     new[]
@@ -112,7 +112,7 @@ namespace Plato.Media.Repositories
             Models.Media media = null;
             using (var context = _dbContext)
             {
-                media = await context.ExecuteReaderAsync2<Models.Media>(
+                media = await context.ExecuteReaderAsync<Models.Media>(
                     CommandType.StoredProcedure,
                     "SelectMediaById",
                     async reader =>
@@ -153,7 +153,7 @@ namespace Plato.Media.Repositories
             var mediaId = 0;
             using (var context = _dbContext)
             {
-                mediaId = await context.ExecuteScalarAsync2<int>(
+                mediaId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateMedia",
                     new []

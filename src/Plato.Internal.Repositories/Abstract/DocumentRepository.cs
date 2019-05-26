@@ -71,7 +71,7 @@ namespace Plato.Internal.Repositories.Abstract
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteDocumentEntryById",
                     new[]
@@ -110,7 +110,7 @@ namespace Plato.Internal.Repositories.Abstract
             {
                 if (context == null)
                     return 0;
-                return await context.ExecuteScalarAsync2<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateDocumentEntry",
                     new[]
@@ -139,7 +139,7 @@ namespace Plato.Internal.Repositories.Abstract
             DocumentEntry entry = null;
             using (var context = _dbContext)
             {
-                entry = await context.ExecuteReaderAsync2<DocumentEntry>(
+                entry = await context.ExecuteReaderAsync<DocumentEntry>(
                     CommandType.StoredProcedure,
                     "SelectDocumentEntryById",
                     async reader =>
@@ -178,7 +178,7 @@ namespace Plato.Internal.Repositories.Abstract
             DocumentEntry entry = null;
             using (var context = _dbContext)
                 {
-                    entry = await context.ExecuteReaderAsync2<DocumentEntry>(
+                    entry = await context.ExecuteReaderAsync<DocumentEntry>(
                         CommandType.StoredProcedure,
                         "SelectDocumentEntryByType",
                         async reader =>

@@ -15,9 +15,9 @@ namespace Plato.Tags.Stores
     public class EntityTagQuery : DefaultQuery<EntityTag>
     {
 
-        private readonly IStore2<EntityTag> _store;
+        private readonly IStore<EntityTag> _store;
 
-        public EntityTagQuery(IStore2<EntityTag> store)
+        public EntityTagQuery(IStore<EntityTag> store)
         {
             _store = store;
         }

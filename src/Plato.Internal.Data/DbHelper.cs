@@ -43,7 +43,7 @@ namespace Plato.Internal.Data
             var output = default(T);
             using (var db = _dbContext)
             {
-                var value = await db.ExecuteScalarAsync2<T>(CommandType.Text, ReplaceTablePrefix(sql));
+                var value = await db.ExecuteScalarAsync<T>(CommandType.Text, ReplaceTablePrefix(sql));
                 if (value != null)
                 {
                     output = value;
@@ -78,7 +78,7 @@ namespace Plato.Internal.Data
             T output = null;
             using (var db = _dbContext)
             {
-                output = await db.ExecuteReaderAsync2<T>(CommandType.Text, ReplaceTablePrefix(sql), populate);
+                output = await db.ExecuteReaderAsync<T>(CommandType.Text, ReplaceTablePrefix(sql), populate);
             }
 
             return output;

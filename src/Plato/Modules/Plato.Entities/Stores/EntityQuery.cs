@@ -23,11 +23,11 @@ namespace Plato.Entities.Stores
 
         public EntityQueryParams Params { get; set; }
 
-        private readonly IStore2<TModel> _store;
+        private readonly IStore<TModel> _store;
         
         public EntityQueryBuilder<TModel> Builder { get; private set; }
         
-        public EntityQuery(IStore2<TModel> store)
+        public EntityQuery(IStore<TModel> store)
         {
             _store = store;
         }

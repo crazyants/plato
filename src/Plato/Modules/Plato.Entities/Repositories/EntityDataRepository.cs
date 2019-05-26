@@ -45,7 +45,7 @@ namespace Plato.Entities.Repositories
             EntityData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2<EntityData>(
+                data = await context.ExecuteReaderAsync<EntityData>(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumById",
                     async reader =>
@@ -79,7 +79,7 @@ namespace Plato.Entities.Repositories
             IList<EntityData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2<IList<EntityData>>(
+                data = await context.ExecuteReaderAsync<IList<EntityData>>(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumByEntityId",
                     async reader =>
@@ -140,7 +140,7 @@ namespace Plato.Entities.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityDatumById", new[]
                     {
@@ -157,7 +157,7 @@ namespace Plato.Entities.Repositories
             IPagedResults<IEntityData> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync2<PagedResults<IEntityData>>(
+                results = await context.ExecuteReaderAsync<PagedResults<IEntityData>>(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumPaged",
                     async reader =>
@@ -218,7 +218,7 @@ namespace Plato.Entities.Repositories
             {
                 if (context == null)
                     return 0;
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityDatum",
                     new[]

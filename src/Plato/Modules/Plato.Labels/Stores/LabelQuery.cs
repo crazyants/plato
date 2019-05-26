@@ -14,9 +14,9 @@ namespace Plato.Labels.Stores
     public class LabelQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore2<TModel> _store;
+        private readonly IStore<TModel> _store;
 
-        public LabelQuery(IStore2<TModel> store)
+        public LabelQuery(IStore<TModel> store)
         {
             _store = store;
         }

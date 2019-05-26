@@ -37,7 +37,7 @@ namespace Plato.Internal.Repositories.Shell
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteShellFeatureById",
                     new[]
@@ -77,7 +77,7 @@ namespace Plato.Internal.Repositories.Shell
             ShellFeature feature = null;
             using (var context = _dbContext)
             {
-                feature = await context.ExecuteReaderAsync2<ShellFeature>(
+                feature = await context.ExecuteReaderAsync<ShellFeature>(
                     CommandType.StoredProcedure,
                     "SelectShellFeatureById",
                     async reader => await BuildObjectFromResultSets(reader),
@@ -96,7 +96,7 @@ namespace Plato.Internal.Repositories.Shell
             IPagedResults<ShellFeature> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync2<IPagedResults<ShellFeature>>(
+                results = await context.ExecuteReaderAsync<IPagedResults<ShellFeature>>(
                     CommandType.StoredProcedure,
                     "SelectShellFeaturesPaged",
                     async reader =>
@@ -137,7 +137,7 @@ namespace Plato.Internal.Repositories.Shell
             IList<ShellFeature> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync2(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectShellFeatures",
                     async reader =>
@@ -200,7 +200,7 @@ namespace Plato.Internal.Repositories.Shell
             
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync2<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateShellFeature",
                     new[]

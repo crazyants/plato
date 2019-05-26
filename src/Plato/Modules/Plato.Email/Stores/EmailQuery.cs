@@ -14,9 +14,9 @@ namespace Plato.Email.Stores
     public class EmailQuery : DefaultQuery<EmailMessage>
     {
 
-        private readonly IStore2<EmailMessage> _store;
+        private readonly IStore<EmailMessage> _store;
 
-        public EmailQuery(IStore2<EmailMessage> store)
+        public EmailQuery(IStore<EmailMessage> store)
         {
             _store = store;
         }

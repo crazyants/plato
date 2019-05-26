@@ -4,7 +4,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Categories.Stores
 {
-    public interface ICategoryDataStore<T> : IStore2<T> where T : class
+    public interface ICategoryDataStore<T> : IStore<T> where T : class
     {
 
         Task<IEnumerable<T>> GetByCategoryIdAsync(int entityId);

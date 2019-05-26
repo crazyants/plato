@@ -14,9 +14,9 @@ namespace Plato.Entities.Stores
     public class EntityDataQuery : DefaultQuery<IEntityData>
     {
 
-        private readonly IStore2<IEntityData> _store;
+        private readonly IStore<IEntityData> _store;
 
-        public EntityDataQuery(IStore2<IEntityData> store)
+        public EntityDataQuery(IStore<IEntityData> store)
         {
             _store = store;
         }

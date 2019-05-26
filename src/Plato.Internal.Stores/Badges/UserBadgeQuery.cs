@@ -14,9 +14,9 @@ namespace Plato.Internal.Stores.Badges
     public class UserBadgeQuery : DefaultQuery<UserBadge>
     {
 
-        private readonly IStore2<UserBadge> _store;
+        private readonly IStore<UserBadge> _store;
 
-        public UserBadgeQuery(IStore2<UserBadge> store)
+        public UserBadgeQuery(IStore<UserBadge> store)
         {
             _store = store;
         }

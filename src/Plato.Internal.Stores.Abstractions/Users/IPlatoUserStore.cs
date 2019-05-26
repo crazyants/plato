@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Stores.Abstractions.Users
 {
-    public interface IPlatoUserStore<T> : IStore2<T> where T : class
+    public interface IPlatoUserStore<T> : IStore<T> where T : class
     {
 
         Task<T> GetByUserNameNormalizedAsync(string userNameNormalized);

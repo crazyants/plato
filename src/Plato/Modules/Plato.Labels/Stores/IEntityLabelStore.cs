@@ -4,7 +4,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Labels.Stores
 {
-    public interface IEntityLabelStore<TModel> : IStore2<TModel> where TModel : class
+    public interface IEntityLabelStore<TModel> : IStore<TModel> where TModel : class
     {
 
         Task<IEnumerable<TModel>> GetByEntityIdAsync(int entityId);

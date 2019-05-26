@@ -131,7 +131,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserById",
                     async reader => await BuildUserFromResultSets(reader),
@@ -156,7 +156,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2(
+                user = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameNormalized",
                     async reader => await BuildUserFromResultSets(reader),
@@ -180,7 +180,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByEmail",
                     async reader => await BuildUserFromResultSets(reader),
@@ -204,7 +204,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByEmailNormalized",
                     async reader => await BuildUserFromResultSets(reader),
@@ -227,7 +227,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByUserName",
                     async reader => await BuildUserFromResultSets(reader),
@@ -257,7 +257,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameAndPassword",
                     async reader => await BuildUserFromResultSets(reader),
@@ -287,7 +287,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2(
+                user = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserByEmailAndPassword",
                     async reader => await BuildUserFromResultSets(reader),
@@ -312,7 +312,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByResetToken",
                     async reader => await BuildUserFromResultSets(reader),
@@ -335,7 +335,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByConfirmationToken",
                     async reader => await BuildUserFromResultSets(reader),
@@ -359,7 +359,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync2<User>(
+                user = await context.ExecuteReaderAsync<User>(
                     CommandType.StoredProcedure,
                     "SelectUserByApiKey",
                     async reader => await BuildUserFromResultSets(reader),
@@ -378,7 +378,7 @@ namespace Plato.Internal.Repositories.Users
             IPagedResults<User> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync2<IPagedResults<User>>(
+                results = await context.ExecuteReaderAsync<IPagedResults<User>>(
                     CommandType.StoredProcedure,
                     "SelectUsersPaged",
                     async reader =>
@@ -548,7 +548,7 @@ namespace Plato.Internal.Repositories.Users
             using (var context = _dbContext)
             {
 
-                userId = await context.ExecuteScalarAsync2<int>(
+                userId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUser",
                     new[]

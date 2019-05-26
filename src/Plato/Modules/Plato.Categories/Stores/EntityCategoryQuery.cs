@@ -14,9 +14,9 @@ namespace Plato.Categories.Stores
     public class EntityCategoryQuery : DefaultQuery<EntityCategory>
     {
 
-        private readonly IStore2<EntityCategory> _store;
+        private readonly IStore<EntityCategory> _store;
 
-        public EntityCategoryQuery(IStore2<EntityCategory> store)
+        public EntityCategoryQuery(IStore<EntityCategory> store)
         {
             _store = store;
         }

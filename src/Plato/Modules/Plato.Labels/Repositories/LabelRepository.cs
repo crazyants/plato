@@ -79,7 +79,7 @@ namespace Plato.Labels.Repositories
             TLabel label = null;
             using (var context = _dbContext)
             {
-                label = await context.ExecuteReaderAsync2<TLabel>(
+                label = await context.ExecuteReaderAsync<TLabel>(
                     CommandType.StoredProcedure,
                     "SelectLabelById",
                     async reader =>
@@ -108,7 +108,7 @@ namespace Plato.Labels.Repositories
             IPagedResults<TLabel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<TLabel>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<TLabel>>(
                     CommandType.StoredProcedure,
                     "SelectLabelsPaged",
                     async reader =>
@@ -151,7 +151,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteLabelById",
                     new[]
@@ -170,7 +170,7 @@ namespace Plato.Labels.Repositories
             IList<TLabel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<TLabel>>(
+                output = await context.ExecuteReaderAsync<IList<TLabel>>(
                     CommandType.StoredProcedure,
                     "SelectLabelsByFeatureId",
                     async reader =>
@@ -228,7 +228,7 @@ namespace Plato.Labels.Repositories
             var labelId = 0;
             using (var context = _dbContext)
             {
-                labelId = await context.ExecuteScalarAsync2<int>(
+                labelId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabel",
                     new []

@@ -15,9 +15,9 @@ namespace Plato.Tags.Stores
     public class TagQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore2<TModel> _store;
+        private readonly IStore<TModel> _store;
 
-        public TagQuery(IStore2<TModel> store)
+        public TagQuery(IStore<TModel> store)
         {
             _store = store;
         }

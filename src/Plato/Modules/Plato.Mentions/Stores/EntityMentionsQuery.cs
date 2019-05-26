@@ -14,9 +14,9 @@ namespace Plato.Mentions.Stores
     public class EntityMentionsQuery : DefaultQuery<EntityMention>
     {
 
-        private readonly IStore2<EntityMention> _store;
+        private readonly IStore<EntityMention> _store;
 
-        public EntityMentionsQuery(IStore2<EntityMention> store)
+        public EntityMentionsQuery(IStore<EntityMention> store)
         {
             _store = store;
         }

@@ -14,9 +14,9 @@ namespace Plato.Moderation.Stores
     public class ModeratorQuery : DefaultQuery<Moderator>
     {
 
-        private readonly IStore2<Moderator> _store;
+        private readonly IStore<Moderator> _store;
 
-        public ModeratorQuery(IStore2<Moderator> store)
+        public ModeratorQuery(IStore<Moderator> store)
         {
             _store = store;
         }

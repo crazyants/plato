@@ -58,7 +58,7 @@ namespace Plato.Internal.Repositories.Users
             UserBanner banner = null;
             using (var context = _dbContext)
             {
-                banner = await context.ExecuteReaderAsync2(
+                banner = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserBanner",
                     async reader =>
@@ -86,7 +86,7 @@ namespace Plato.Internal.Repositories.Users
             UserBanner banner = null;
             using (var context = _dbContext)
             {
-                banner = await context.ExecuteReaderAsync2(
+                banner = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserBannerByUserId",
                     async reader =>
@@ -125,7 +125,7 @@ namespace Plato.Internal.Repositories.Users
             var bannerId = 0;
             using (var context = _dbContext)
             {
-                bannerId = await context.ExecuteScalarAsync2<int>(
+                bannerId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserBanner",
                     new[]

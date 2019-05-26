@@ -3,7 +3,7 @@
 namespace Plato.Entities.Stores
 {
 
-    public interface IEntityReplyStore<TModel> : IStore2<TModel> where TModel : class
+    public interface IEntityReplyStore<TModel> : IStore<TModel> where TModel : class
     {
     }
     

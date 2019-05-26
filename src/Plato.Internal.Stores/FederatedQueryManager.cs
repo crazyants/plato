@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
 
 namespace Plato.Internal.Stores

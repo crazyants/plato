@@ -55,7 +55,7 @@ namespace Plato.Follows.Repositories
             Follow follow = null;
             using (var context = _dbContext)
             {
-                follow = await context.ExecuteReaderAsync2(
+                follow = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectFollowById",
                     async reader =>
@@ -84,7 +84,7 @@ namespace Plato.Follows.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectFollowsPaged",
                     async reader =>
@@ -131,7 +131,7 @@ namespace Plato.Follows.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteFollowById",
                     new[]
@@ -148,7 +148,7 @@ namespace Plato.Follows.Repositories
             IList<Follow> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectFollowsByNameAndThingId",
                     async reader =>
@@ -182,7 +182,7 @@ namespace Plato.Follows.Repositories
             Follow follow = null;
             using (var context = _dbContext)
             {
-                follow = await context.ExecuteReaderAsync2(
+                follow = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectFollowByNameThingIdAndCreatedUserId",
                     async reader =>
@@ -224,7 +224,7 @@ namespace Plato.Follows.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateFollow",
                     new[]

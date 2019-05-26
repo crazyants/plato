@@ -58,7 +58,7 @@ namespace Plato.Entities.History.Repositories
             EntityHistory history = null;
             using (var context = _dbContext)
             {
-                history = await context.ExecuteReaderAsync2(
+                history = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityHistoryById",
                     async reader =>
@@ -87,7 +87,7 @@ namespace Plato.Entities.History.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync2<IPagedResults<EntityHistory>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityHistory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityHistoryPaged",
                     async reader =>
@@ -129,7 +129,7 @@ namespace Plato.Entities.History.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityHistoryById",
                     new[]
@@ -161,7 +161,7 @@ namespace Plato.Entities.History.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityHistory",
                     new[]

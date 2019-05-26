@@ -13,9 +13,9 @@ namespace Plato.Labels.Stores
     public class LabelRoleQuery : DefaultQuery<LabelRole>
     {
 
-        private readonly IStore2<LabelRole> _store;
+        private readonly IStore<LabelRole> _store;
 
-        public LabelRoleQuery(IStore2<LabelRole> store)
+        public LabelRoleQuery(IStore<LabelRole> store)
         {
             _store = store;
         }

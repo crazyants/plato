@@ -62,7 +62,7 @@ namespace Plato.Moderation.Repositories
             Moderator moderator = null;
             using (var context = _dbContext)
             {
-                moderator = await context.ExecuteReaderAsync2(
+                moderator = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectModeratorById",
                     async reader =>
@@ -91,7 +91,7 @@ namespace Plato.Moderation.Repositories
             IPagedResults<Moderator> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<Moderator>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<Moderator>>(
                     CommandType.StoredProcedure,
                     "SelectModeratorsPaged",
                     async reader =>
@@ -135,7 +135,7 @@ namespace Plato.Moderation.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteModeratorById",
                     new[]
@@ -165,7 +165,7 @@ namespace Plato.Moderation.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync2<int>(
+                emailId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateModerator",
                     new []

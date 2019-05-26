@@ -4,7 +4,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Stars.Stores
 {
-    public interface IStarStore<TModel> : IStore2<TModel> where TModel : class
+    public interface IStarStore<TModel> : IStore<TModel> where TModel : class
     {
 
         Task<IEnumerable<TModel>> SelectByNameAndThingId(string name, int thingId);

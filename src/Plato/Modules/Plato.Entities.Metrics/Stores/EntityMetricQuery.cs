@@ -14,9 +14,9 @@ namespace Plato.Entities.Metrics.Stores
     public class EntityMetricQuery : DefaultQuery<EntityMetric>
     {
 
-        private readonly IStore2<EntityMetric> _store;
+        private readonly IStore<EntityMetric> _store;
 
-        public EntityMetricQuery(IStore2<EntityMetric> store)
+        public EntityMetricQuery(IStore<EntityMetric> store)
         {
             _store = store;
         }

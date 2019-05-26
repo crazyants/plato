@@ -13,9 +13,9 @@ namespace Plato.Categories.Stores
     public class CategoryRoleQuery : DefaultQuery<CategoryRole>
     {
 
-        private readonly IStore2<CategoryRole> _store;
+        private readonly IStore<CategoryRole> _store;
 
-        public CategoryRoleQuery(IStore2<CategoryRole> store)
+        public CategoryRoleQuery(IStore<CategoryRole> store)
         {
             _store = store;
         }

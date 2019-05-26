@@ -15,9 +15,9 @@ namespace Plato.Entities.History.Stores
     public class EntityHistoryQuery : DefaultQuery<EntityHistory>
     {
 
-        private readonly IStore2<EntityHistory> _store;
+        private readonly IStore<EntityHistory> _store;
 
-        public EntityHistoryQuery(IStore2<EntityHistory> store)
+        public EntityHistoryQuery(IStore<EntityHistory> store)
         {
             _store = store;
         }

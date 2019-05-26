@@ -55,7 +55,7 @@ namespace Plato.Tags.Repositories
             EntityTag output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityTagById",
                     async reader =>
@@ -83,7 +83,7 @@ namespace Plato.Tags.Repositories
             IPagedResults<EntityTag> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<EntityTag>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsPaged",
                     async reader =>
@@ -126,7 +126,7 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityTagById",
                     new[]
@@ -143,7 +143,7 @@ namespace Plato.Tags.Repositories
             IList<EntityTag> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<EntityTag>>(
+                output = await context.ExecuteReaderAsync<IList<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsByEntityId",
                     async reader =>
@@ -177,7 +177,7 @@ namespace Plato.Tags.Repositories
             IList<EntityTag> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<EntityTag>>(
+                output = await context.ExecuteReaderAsync<IList<EntityTag>>(
                     CommandType.StoredProcedure,
                     "SelectEntityTagsByEntityReplyId",
                     async reader =>
@@ -217,7 +217,7 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityTagsByEntityId",
                     new[]
@@ -240,7 +240,7 @@ namespace Plato.Tags.Repositories
             using (var context = _dbContext)
             {
 
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityTagByEntityIdAndTagId",
                     new[]
@@ -269,7 +269,7 @@ namespace Plato.Tags.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityTag",
                     new[]

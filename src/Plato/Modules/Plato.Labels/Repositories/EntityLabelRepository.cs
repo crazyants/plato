@@ -56,7 +56,7 @@ namespace Plato.Labels.Repositories
             EntityLabel output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityLabelById",
                     async reader =>
@@ -86,7 +86,7 @@ namespace Plato.Labels.Repositories
             IPagedResults<EntityLabel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<EntityLabel>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityLabel>>(
                     CommandType.StoredProcedure,
                     "SelectEntityLabelsPaged",
                     async reader =>
@@ -132,7 +132,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityLabelById",
                     new[]
@@ -150,7 +150,7 @@ namespace Plato.Labels.Repositories
             IList<EntityLabel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<EntityLabel>>(
+                output = await context.ExecuteReaderAsync<IList<EntityLabel>>(
                     CommandType.StoredProcedure,
                     "SelectEntityLabelsByEntityId",
                     async reader =>
@@ -188,7 +188,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityLabelsByEntityId",
                     new[]
@@ -211,7 +211,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityLabelByEntityIdAndLabelId",
                     new[]
@@ -241,7 +241,7 @@ namespace Plato.Labels.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityLabel",
                     new[]

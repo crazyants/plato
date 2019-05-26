@@ -14,9 +14,9 @@ namespace Plato.Internal.Stores.Reputations
     public class UserReputationQuery : DefaultQuery<UserReputation>
     {
 
-        private readonly IStore2<UserReputation> _store;
+        private readonly IStore<UserReputation> _store;
 
-        public UserReputationQuery(IStore2<UserReputation> store)
+        public UserReputationQuery(IStore<UserReputation> store)
         {
             _store = store;
         }

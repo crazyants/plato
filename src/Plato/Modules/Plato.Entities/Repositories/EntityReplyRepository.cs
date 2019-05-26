@@ -80,7 +80,7 @@ namespace Plato.Entities.Repositories
             TModel output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<TModel>(
+                output = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectEntityReplyById",
                     async reader => await BuildObjectFromResultSets(reader),
@@ -100,7 +100,7 @@ namespace Plato.Entities.Repositories
             PagedResults<TModel> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync2(
+                results = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityRepliesPaged",
                     async reader =>
@@ -149,7 +149,7 @@ namespace Plato.Entities.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityReplyById",
                     new[]
@@ -212,7 +212,7 @@ namespace Plato.Entities.Repositories
             var entityReplyId = 0;
             using (var context = _dbContext)
             {
-                entityReplyId = await context.ExecuteScalarAsync2<int>(
+                entityReplyId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityReply",
                     new []

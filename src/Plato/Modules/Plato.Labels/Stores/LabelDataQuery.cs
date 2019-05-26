@@ -14,9 +14,9 @@ namespace Plato.Labels.Stores
     public class LabelDataQuery : DefaultQuery<LabelData>
     {
 
-        private readonly IStore2<LabelData> _store;
+        private readonly IStore<LabelData> _store;
 
-        public LabelDataQuery(IStore2<LabelData> store)
+        public LabelDataQuery(IStore<LabelData> store)
         {
             _store = store;
         }

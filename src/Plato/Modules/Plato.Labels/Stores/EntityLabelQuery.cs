@@ -14,9 +14,9 @@ namespace Plato.Labels.Stores
     public class EntityLabelQuery : DefaultQuery<EntityLabel>
     {
 
-        private readonly IStore2<EntityLabel> _store;
+        private readonly IStore<EntityLabel> _store;
 
-        public EntityLabelQuery(IStore2<EntityLabel> store)
+        public EntityLabelQuery(IStore<EntityLabel> store)
         {
             _store = store;
         }

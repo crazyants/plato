@@ -56,7 +56,7 @@ namespace Plato.Entities.Metrics.Repositories
             EntityMetric output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<EntityMetric>(
+                output = await context.ExecuteReaderAsync<EntityMetric>(
                     CommandType.StoredProcedure,
                     "SelectEntityMetricById",
                     async reader =>
@@ -85,7 +85,7 @@ namespace Plato.Entities.Metrics.Repositories
             IPagedResults<EntityMetric> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<EntityMetric>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityMetric>>(
                     CommandType.StoredProcedure,
                     "SelectEntityMetricsPaged",
                     async reader =>
@@ -131,7 +131,7 @@ namespace Plato.Entities.Metrics.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityMetricById",
                     new[]
@@ -160,7 +160,7 @@ namespace Plato.Entities.Metrics.Repositories
             var emailId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync2<int>(
+                emailId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityMetric",
                     new []

@@ -15,9 +15,9 @@ namespace Plato.Notifications.Stores
     public class UserNotificationsQuery : DefaultQuery<UserNotification>
     {
 
-        private readonly IStore2<UserNotification> _store;
+        private readonly IStore<UserNotification> _store;
 
-        public UserNotificationsQuery(IStore2<UserNotification> store)
+        public UserNotificationsQuery(IStore<UserNotification> store)
         {
             _store = store;
         }

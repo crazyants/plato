@@ -14,9 +14,9 @@ namespace Plato.Internal.Stores.Users
     public class UserDataQuery : DefaultQuery<UserData>
     {
 
-        private readonly IStore2<UserData> _store;
+        private readonly IStore<UserData> _store;
 
-        public UserDataQuery(IStore2<UserData> store)
+        public UserDataQuery(IStore<UserData> store)
         {
             _store = store;
         }

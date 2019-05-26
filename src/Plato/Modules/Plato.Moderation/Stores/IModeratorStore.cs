@@ -3,7 +3,7 @@
 namespace Plato.Moderation.Stores
 {
 
-    public interface IModeratorStore<TModel> : IStore2<TModel> where TModel : class
+    public interface IModeratorStore<TModel> : IStore<TModel> where TModel : class
     {
 
     }

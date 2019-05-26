@@ -108,7 +108,7 @@ namespace Plato.Entities.Repositories
             TModel entity = null;
             using (var context = _dbContext)
             {
-                entity = await context.ExecuteReaderAsync2<TModel>(
+                entity = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectEntityById",
                     async reader => await BuildEntityFromResultSets(reader),
@@ -128,7 +128,7 @@ namespace Plato.Entities.Repositories
             IPagedResults<TModel> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync2<IPagedResults<TModel>>(
+                results = await context.ExecuteReaderAsync<IPagedResults<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectEntitiesPaged",
                     async reader =>
@@ -177,7 +177,7 @@ namespace Plato.Entities.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityById",
                     new[]
@@ -283,7 +283,7 @@ namespace Plato.Entities.Repositories
             var entityId = 0;
             using (var context = _dbContext)
             {
-                entityId = await context.ExecuteScalarAsync2<int>(
+                entityId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
                     new []
@@ -422,7 +422,7 @@ namespace Plato.Entities.Repositories
             IList<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<TModel>>(
+                output = await context.ExecuteReaderAsync<IList<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectEntitiesByFeatureId",
                     async reader =>

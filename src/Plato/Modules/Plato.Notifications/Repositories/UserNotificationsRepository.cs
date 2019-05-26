@@ -53,7 +53,7 @@ namespace Plato.Notifications.Repositories
             UserNotification output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<UserNotification>(
+                output = await context.ExecuteReaderAsync<UserNotification>(
                     CommandType.StoredProcedure,
                     "SelectUserNotificationById",
                     async reader =>
@@ -84,7 +84,7 @@ namespace Plato.Notifications.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync2<IPagedResults<UserNotification>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<UserNotification>>(
                     CommandType.StoredProcedure,
                     "SelectUserNotificationsPaged",
                     async reader =>
@@ -130,7 +130,7 @@ namespace Plato.Notifications.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserNotificationById",
                     new[]
@@ -153,7 +153,7 @@ namespace Plato.Notifications.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "UpdateUserNotificationsReadDate",
                     new[]
@@ -185,7 +185,7 @@ namespace Plato.Notifications.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserNotification",
                     new []

@@ -14,7 +14,7 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Entities.Stores
 {
 
-    public interface IEntityDataStore<T> : IStore2<T> where T : class
+    public interface IEntityDataStore<T> : IStore<T> where T : class
     {
 
         Task<IEnumerable<T>> GetByEntityIdAsync(int entityId);

@@ -39,7 +39,7 @@ namespace Plato.Internal.Repositories.Roles
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteRoleById",
                     new[]
@@ -89,7 +89,7 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                role = await context.ExecuteReaderAsync2<Role>(
+                role = await context.ExecuteReaderAsync<Role>(
                     CommandType.StoredProcedure,
                     "SelectRoleById",
                     async reader =>
@@ -118,7 +118,7 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                role = await context.ExecuteReaderAsync2(
+                role = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectRoleByName",
                     async reader =>
@@ -147,7 +147,7 @@ namespace Plato.Internal.Repositories.Roles
             Role role = null;
             using (var context = _dbContext)
             {
-                role = await context.ExecuteReaderAsync2<Role>(
+                role = await context.ExecuteReaderAsync<Role>(
                     CommandType.StoredProcedure,
                     "SelectRoleByNameNormalized",
                     async reader =>
@@ -176,7 +176,7 @@ namespace Plato.Internal.Repositories.Roles
             List<Role> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectRolesByUserId",
                     async reader =>
@@ -210,7 +210,7 @@ namespace Plato.Internal.Repositories.Roles
             IPagedResults<Role> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectRolesPaged",
                     async reader =>
@@ -252,7 +252,7 @@ namespace Plato.Internal.Repositories.Roles
             IList<Role> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectRoles",
                     async reader =>
@@ -298,7 +298,7 @@ namespace Plato.Internal.Repositories.Roles
 
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync2<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateRole",
                     new[]

@@ -63,7 +63,7 @@ namespace Plato.Tags.Repositories
             TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync2<TModel>(
+                tag = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagById",
                     async reader =>
@@ -92,7 +92,7 @@ namespace Plato.Tags.Repositories
             IPagedResults<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<TModel>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectTagsPaged",
                     async reader =>
@@ -136,7 +136,7 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteTagById",
                     new[]
@@ -154,7 +154,7 @@ namespace Plato.Tags.Repositories
             IList<TModel> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<TModel>>(
+                output = await context.ExecuteReaderAsync<IList<TModel>>(
                     CommandType.StoredProcedure,
                     "SelectTagsByFeatureId",
                     async reader =>
@@ -188,7 +188,7 @@ namespace Plato.Tags.Repositories
             TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync2<TModel>(
+                tag = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagByName",
                     async reader =>
@@ -217,7 +217,7 @@ namespace Plato.Tags.Repositories
             TModel tag = null;
             using (var context = _dbContext)
             {
-                tag = await context.ExecuteReaderAsync2<TModel>(
+                tag = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectTagByNameNormalized",
                     async reader =>
@@ -263,7 +263,7 @@ namespace Plato.Tags.Repositories
             var tagId = 0;
             using (var context = _dbContext)
             {
-                tagId = await context.ExecuteScalarAsync2<int>(
+                tagId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateTag",
                     new[]

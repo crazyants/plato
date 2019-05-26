@@ -50,7 +50,7 @@ namespace Plato.Internal.Data.Migrations
                 {
                     try
                     {
-                        migrationId = await context.ExecuteScalarAsync2<int>(
+                        migrationId = await context.ExecuteScalarAsync<int>(
                             System.Data.CommandType.Text, statement);
                     }
                     catch (Exception ex)

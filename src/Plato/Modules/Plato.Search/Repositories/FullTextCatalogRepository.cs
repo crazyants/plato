@@ -25,7 +25,7 @@ namespace Plato.Search.Repositories
             IList<FullTextCatalog> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.Text, 
                     BySql,
                     async reader =>

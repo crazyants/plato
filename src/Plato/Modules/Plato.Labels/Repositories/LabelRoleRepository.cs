@@ -64,7 +64,7 @@ namespace Plato.Labels.Repositories
             LabelRole labelRole = null;
             using (var context = _dbContext)
             {
-                labelRole = await context.ExecuteReaderAsync2<LabelRole>(
+                labelRole = await context.ExecuteReaderAsync<LabelRole>(
                     CommandType.StoredProcedure,
                     "SelectLabelRoleById",
                     async reader =>
@@ -95,7 +95,7 @@ namespace Plato.Labels.Repositories
             using (var context = _dbContext)
             {
                 
-                output = await context.ExecuteReaderAsync2<IPagedResults<LabelRole>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<LabelRole>>(
                     CommandType.StoredProcedure,
                     "SelectLabelRolesPaged",
                     async reader =>
@@ -141,7 +141,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteLabelById", new[]
                     {
@@ -159,7 +159,7 @@ namespace Plato.Labels.Repositories
             List<LabelRole> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectLabelRolesByLabelId",
                     async reader =>
@@ -198,7 +198,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteLabelRolesByLabelId",
                     new []
@@ -222,7 +222,7 @@ namespace Plato.Labels.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteLabelRolesByRoleIdAndLabelId",
                     new[]
@@ -253,7 +253,7 @@ namespace Plato.Labels.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabelRole",
                     new []

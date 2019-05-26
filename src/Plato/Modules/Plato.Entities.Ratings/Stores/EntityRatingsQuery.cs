@@ -14,9 +14,9 @@ namespace Plato.Entities.Ratings.Stores
     public class EntityRatingsQuery : DefaultQuery<EntityRating>
     {
 
-        private readonly IStore2<EntityRating> _store;
+        private readonly IStore<EntityRating> _store;
 
-        public EntityRatingsQuery(IStore2<EntityRating> store)
+        public EntityRatingsQuery(IStore<EntityRating> store)
         {
             _store = store;
         }

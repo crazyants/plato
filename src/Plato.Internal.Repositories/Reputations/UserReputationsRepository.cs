@@ -54,7 +54,7 @@ namespace Plato.Internal.Repositories.Reputations
             UserReputation userReputation = null;
             using (var context = _dbContext)
             {
-                userReputation = await context.ExecuteReaderAsync2(
+                userReputation = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserReputationById",
                     async reader =>
@@ -83,7 +83,7 @@ namespace Plato.Internal.Repositories.Reputations
             IPagedResults<UserReputation> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserReputationsPaged",
                     async reader =>
@@ -129,7 +129,7 @@ namespace Plato.Internal.Repositories.Reputations
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserReputationById",
                     new[]
@@ -158,7 +158,7 @@ namespace Plato.Internal.Repositories.Reputations
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserReputation",
                     new[]

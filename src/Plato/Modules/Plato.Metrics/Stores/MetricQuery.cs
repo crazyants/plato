@@ -15,9 +15,9 @@ namespace Plato.Metrics.Stores
     public class MetricQuery : DefaultQuery<Metric>
     {
 
-        private readonly IStore2<Metric> _store;
+        private readonly IStore<Metric> _store;
 
-        public MetricQuery(IStore2<Metric> store)
+        public MetricQuery(IStore<Metric> store)
         {
             _store = store;
         }

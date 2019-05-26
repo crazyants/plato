@@ -55,7 +55,7 @@ namespace Plato.Stars.Repositories
             Star star = null;
             using (var context = _dbContext)
             {
-                star = await context.ExecuteReaderAsync2<Star>(
+                star = await context.ExecuteReaderAsync<Star>(
                     CommandType.StoredProcedure,
                     "SelectStarById",
                     async reader =>
@@ -83,7 +83,7 @@ namespace Plato.Stars.Repositories
             IPagedResults<Star> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync2<IPagedResults<Star>>(
+                results = await context.ExecuteReaderAsync<IPagedResults<Star>>(
                     CommandType.StoredProcedure,
                     "SelectStarsPaged",
                     async reader =>
@@ -127,7 +127,7 @@ namespace Plato.Stars.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteStarById", new[]
                     {
@@ -143,7 +143,7 @@ namespace Plato.Stars.Repositories
             IList<Star> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync2<List<Star>>(
+                results = await context.ExecuteReaderAsync<List<Star>>(
                     CommandType.StoredProcedure,
                     "SelectStarsByNameAndThingId",
                     async reader =>
@@ -179,7 +179,7 @@ namespace Plato.Stars.Repositories
             Star star = null;
             using (var context = _dbContext)
             {
-                star = await context.ExecuteReaderAsync2(
+                star = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectStarByNameThingIdAndCreatedUserId",
                     async reader =>
@@ -221,7 +221,7 @@ namespace Plato.Stars.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateStar",
                     new []

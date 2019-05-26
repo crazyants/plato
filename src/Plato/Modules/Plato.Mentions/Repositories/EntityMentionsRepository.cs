@@ -50,7 +50,7 @@ namespace Plato.Mentions.Repositories
             EntityMention output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<EntityMention>(
+                output = await context.ExecuteReaderAsync<EntityMention>(
                     CommandType.StoredProcedure,
                     "SelectEntityMentionById",
                     async reader =>
@@ -79,7 +79,7 @@ namespace Plato.Mentions.Repositories
             IPagedResults<EntityMention> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<EntityMention>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityMention>>(
                     CommandType.StoredProcedure,
                     "SelectEntityMentionsPaged",
                     async reader =>
@@ -125,7 +125,7 @@ namespace Plato.Mentions.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityMentionById",
                     new[]
@@ -149,7 +149,7 @@ namespace Plato.Mentions.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityMentionsByEntityId",
                     new[]
@@ -172,7 +172,7 @@ namespace Plato.Mentions.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityMentionsByEntityReplyId",
                     new[]
@@ -201,7 +201,7 @@ namespace Plato.Mentions.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityMention",
                     new []

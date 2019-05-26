@@ -14,9 +14,9 @@ namespace Plato.Stars.Stores
     public class StarQuery : DefaultQuery<Star>
     {
 
-        private readonly IStore2<Star> _store;
+        private readonly IStore<Star> _store;
 
-        public StarQuery(IStore2<Star> store)
+        public StarQuery(IStore<Star> store)
         {
             _store = store;
         }

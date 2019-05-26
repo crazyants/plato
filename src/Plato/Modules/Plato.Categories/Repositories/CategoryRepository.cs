@@ -71,7 +71,7 @@ namespace Plato.Categories.Repositories
             TCategory category = null;
             using (var context = _dbContext)
             {
-                category = await context.ExecuteReaderAsync2(
+                category = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectCategoryById",
                     async reader => await BuildCategoryFromResultSets(reader),
@@ -91,7 +91,7 @@ namespace Plato.Categories.Repositories
             IPagedResults<TCategory> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<TCategory>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<TCategory>>(
                     CommandType.StoredProcedure,
                     "SelectCategoriesPaged",
                     async reader =>
@@ -137,7 +137,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryById",
                     new[]
@@ -156,7 +156,7 @@ namespace Plato.Categories.Repositories
             IList<TCategory> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IList<TCategory>>(
+                output = await context.ExecuteReaderAsync<IList<TCategory>>(
                     CommandType.StoredProcedure,
                     "SelectCategoriesByFeatureId",
                     async reader =>
@@ -244,7 +244,7 @@ namespace Plato.Categories.Repositories
             var categoryId = 0;
             using (var context = _dbContext)
             {
-                categoryId = await context.ExecuteScalarAsync2<int>(
+                categoryId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategory",
                     new []

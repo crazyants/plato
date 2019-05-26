@@ -47,7 +47,7 @@ namespace Plato.Internal.Repositories.Users
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserPhotoById",
                     new[]
@@ -84,7 +84,7 @@ namespace Plato.Internal.Repositories.Users
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                photo = await context.ExecuteReaderAsync2<UserPhoto>(
+                photo = await context.ExecuteReaderAsync<UserPhoto>(
                     CommandType.StoredProcedure,
                     "SelectUserPhotoById",
                     async reader =>
@@ -112,7 +112,7 @@ namespace Plato.Internal.Repositories.Users
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                photo = await context.ExecuteReaderAsync2<UserPhoto>(
+                photo = await context.ExecuteReaderAsync<UserPhoto>(
                     CommandType.StoredProcedure,
                     "SelectUserPhotoByUserId",
                     async reader =>
@@ -153,7 +153,7 @@ namespace Plato.Internal.Repositories.Users
         {
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync2<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserPhoto",
                     new []

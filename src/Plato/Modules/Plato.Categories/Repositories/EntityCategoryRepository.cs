@@ -55,7 +55,7 @@ namespace Plato.Categories.Repositories
             EntityCategory output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<EntityCategory>(
+                output = await context.ExecuteReaderAsync<EntityCategory>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoryById",
                     async reader =>
@@ -85,7 +85,7 @@ namespace Plato.Categories.Repositories
             IPagedResults<EntityCategory> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2<IPagedResults<EntityCategory>>(
+                output = await context.ExecuteReaderAsync<IPagedResults<EntityCategory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoriesPaged",
                     async reader =>
@@ -130,7 +130,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityCategoryById",
                     new[]
@@ -149,7 +149,7 @@ namespace Plato.Categories.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync2<IList<EntityCategory>>(
+                output = await context.ExecuteReaderAsync<IList<EntityCategory>>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoriesByEntityId",
                     async reader =>
@@ -184,7 +184,7 @@ namespace Plato.Categories.Repositories
             using (var context = _dbContext)
             {
 
-                output = await context.ExecuteReaderAsync2<EntityCategory>(
+                output = await context.ExecuteReaderAsync<EntityCategory>(
                     CommandType.StoredProcedure,
                     "SelectEntityCategoryByEntityIdAndCategoryId",
                     async reader =>
@@ -218,7 +218,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityCategoriesByEntityId",
                     new []
@@ -240,7 +240,7 @@ namespace Plato.Categories.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityCategoryByEntityIdAndCategoryId",
                     new[]
@@ -270,7 +270,7 @@ namespace Plato.Categories.Repositories
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityCategory",
                     new []

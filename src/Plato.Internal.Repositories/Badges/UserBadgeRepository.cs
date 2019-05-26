@@ -52,7 +52,7 @@ namespace Plato.Internal.Repositories.Badges
             UserBadge userBadge = null;
             using (var context = _dbContext)
             {
-                userBadge = await context.ExecuteReaderAsync2<UserBadge>(
+                userBadge = await context.ExecuteReaderAsync<UserBadge>(
                     CommandType.StoredProcedure,
                     "SelectUserBadgeById",
                     async reader =>
@@ -81,7 +81,7 @@ namespace Plato.Internal.Repositories.Badges
             PagedResults<UserBadge> output = null;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteReaderAsync2(
+                output = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserBadgesPaged",
                     async reader =>
@@ -128,7 +128,7 @@ namespace Plato.Internal.Repositories.Badges
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync2<int>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserBadgeById",
                     new[]
@@ -154,7 +154,7 @@ namespace Plato.Internal.Repositories.Badges
             var output = 0;
             using (var context = _dbContext)
             {
-                output = await context.ExecuteScalarAsync2<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserBadge",
                     new[]

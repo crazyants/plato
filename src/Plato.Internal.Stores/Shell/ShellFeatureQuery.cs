@@ -15,9 +15,9 @@ namespace Plato.Internal.Stores.Shell
     public class ShellFeatureQuery : DefaultQuery<ShellFeature>
     {
 
-        private readonly IStore2<ShellFeature> _store;
+        private readonly IStore<ShellFeature> _store;
 
-        public ShellFeatureQuery(IStore2<ShellFeature> store)
+        public ShellFeatureQuery(IStore<ShellFeature> store)
         {
             _store = store;
         }

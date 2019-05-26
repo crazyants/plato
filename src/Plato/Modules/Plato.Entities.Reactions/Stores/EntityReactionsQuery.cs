@@ -14,9 +14,9 @@ namespace Plato.Entities.Reactions.Stores
     public class EntityReactionsQuery : DefaultQuery<EntityReaction>
     {
 
-        private readonly IStore2<EntityReaction> _store;
+        private readonly IStore<EntityReaction> _store;
 
-        public EntityReactionsQuery(IStore2<EntityReaction> store)
+        public EntityReactionsQuery(IStore<EntityReaction> store)
         {
             _store = store;
         }
