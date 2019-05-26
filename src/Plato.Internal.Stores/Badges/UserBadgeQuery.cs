@@ -39,16 +39,15 @@ namespace Plato.Internal.Stores.Badges
             var countSql = builder.BuildSqlCount();
             var badgeName = Params?.BadgeName?.Value ?? string.Empty;
 
-            var data = await _store.SelectAsync(new[]
+            return await _store.SelectAsync(new[]
             {
                 new DbParam("PageIndex", DbType.Int32, PageIndex),
                 new DbParam("PageSize", DbType.Int32, PageSize),
                 new DbParam("SqlPopulate", DbType.String, populateSql),
                 new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("badgeName", DbType.String, badgeName)
+                new DbParam("Keywords", DbType.String, badgeName)
             });
 
-            return data;
         }
         
     }

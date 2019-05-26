@@ -37,10 +37,10 @@ namespace Plato.Entities.Reactions.Stores
             var builder = new EntityReactionsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-            var reactionName = Params.ReactionName.Value ?? string.Empty;
-            var ipV4Address = Params.IpV4Address.Value ?? string.Empty;
-            var ipV6Address = Params.IpV6Address.Value ?? string.Empty;
-            var userAgent = Params.UserAgent.Value ?? string.Empty;
+            var reactionName = Params?.ReactionName.Value ?? string.Empty;
+            var ipV4Address = Params?.IpV4Address.Value ?? string.Empty;
+            var ipV6Address = Params?.IpV6Address.Value ?? string.Empty;
+            var userAgent = Params?.UserAgent.Value ?? string.Empty;
             
             return await _store.SelectAsync(new[]
             {
@@ -48,7 +48,7 @@ namespace Plato.Entities.Reactions.Stores
                 new DbParam("PageSize", DbType.Int32, PageSize),
                 new DbParam("SqlPopulate", DbType.String, populateSql),
                 new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("ReactionName", DbType.String, 255, reactionName),
+                new DbParam("Keywords", DbType.String, 255, reactionName),
                 new DbParam("IpV4Address", DbType.String,255, ipV4Address),
                 new DbParam("IpV6Address", DbType.String,255, ipV6Address),
                 new DbParam("UserAgent", DbType.String,255, userAgent)

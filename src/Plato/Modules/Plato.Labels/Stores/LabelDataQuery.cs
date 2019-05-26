@@ -37,7 +37,7 @@ namespace Plato.Labels.Stores
             var builder = new LabelDataQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-            var name = Params.Key.Value ?? string.Empty;
+            var key = Params?.Key.Value ?? string.Empty;
 
             return await _store.SelectAsync(new[]
             {
@@ -45,7 +45,7 @@ namespace Plato.Labels.Stores
                 new DbParam("PageSize", DbType.Int32, PageSize),
                 new DbParam("SqlPopulate", DbType.String, populateSql),
                 new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("Name", DbType.String, name)
+                new DbParam("Key", DbType.String, 255, key)
             });
 
         }

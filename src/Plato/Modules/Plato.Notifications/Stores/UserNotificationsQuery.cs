@@ -38,7 +38,7 @@ namespace Plato.Notifications.Stores
             var builder = new UserNotificationsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-            var notificationName = Params.NotificationName.Value ?? string.Empty;
+            var keywords = Params.NotificationName.Value ?? string.Empty;
 
             return await _store.SelectAsync(new[]
             {
@@ -46,7 +46,7 @@ namespace Plato.Notifications.Stores
                 new DbParam("PageSize", DbType.Int32, PageSize),
                 new DbParam("SqlPopulate", DbType.String, populateSql),
                 new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("NotificationName", DbType.String, notificationName)
+                new DbParam("Keywords", DbType.String, keywords)
             });
 
         }

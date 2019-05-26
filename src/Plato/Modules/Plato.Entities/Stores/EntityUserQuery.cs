@@ -36,7 +36,7 @@ namespace Plato.Entities.Stores
             var builder = new EntityUserQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-            var username = Params.Username.Value ?? string.Empty;
+            var username = Params?.Username.Value ?? string.Empty;
             
             return await _store.SelectAsync(new[]
             {
@@ -44,7 +44,7 @@ namespace Plato.Entities.Stores
                 new DbParam("PageSize", DbType.Int32, PageSize),
                 new DbParam("SqlPopulate", DbType.String, populateSql),
                 new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("UserName", DbType.String, username)
+                new DbParam("Keywords", DbType.String, username)
             });
 
         }

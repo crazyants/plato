@@ -26,126 +26,7 @@ namespace Plato.Internal.Data.Providers
         
         public int CommandTimeout { get; set; }
         
-        public async Task<T> ExecuteReaderAsync<T>(
-            string sql,
-            Func<DbDataReader, Task<T>> populate,
-            params object[] args) where T : class
-        {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("SQL to execute: " + sql);
-            }
-            
-            T output = null;
-
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                try
-                {
-                    await conn.OpenAsync();
-                    using (var command = DbParameterHelper.CreateSqlCommand(conn, sql, args))
-                    {
-                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
-                        {
-                            OnExecutedCommand(command);
-                            output = await populate(reader);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    HandleException(ex);
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-            
-            return output;
-
-        }
-
-        //public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
-        //{
-
-        //    if (_logger.IsEnabled(LogLevel.Information))
-        //    {
-        //        _logger.LogInformation("SQL to execute: " + sql);
-        //    }
-
-
-        //    object output = null;
-        //    using (var conn = new SqlConnection(_connectionString))
-        //    {
-
-        //        try
-        //        {
-        //            await conn.OpenAsync();
-        //            using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
-        //            {
-        //                output = await cmd.ExecuteScalarAsync();
-        //                OnExecutedCommand(cmd);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            HandleException(ex);
-        //        }
-        //        finally
-        //        {
-        //            conn.Close();
-        //        }
-        //    }
-
-        //    if (output != null)
-        //    {
-        //        return (T)Convert.ChangeType(output, typeof(T));
-        //    }
-
-        //    return default(T);
-
-        //}
-
-        //public async Task<T> ExecuteNonQueryAsync<T>(string sql, params object[] args)
-        //{
-
-        //    if (_logger.IsEnabled(LogLevel.Information))
-        //    {
-        //        _logger.LogInformation("SQL to execute: " + sql);
-        //    }
-            
-        //    var output = default(T);
-        //    using (var conn = new SqlConnection(_connectionString))
-        //    {
-        //        try
-        //        {
-        //            await conn.OpenAsync();
-        //            using (var cmd = DbParameterHelper.CreateSqlCommand(conn, sql, args))
-        //            {
-        //                var returnValue = await cmd.ExecuteNonQueryAsync();
-        //                OnExecutedCommand(cmd);
-        //                output = (T) Convert.ChangeType(returnValue, typeof(T));
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            HandleException(ex);
-        //        }
-        //        finally
-        //        {
-        //            conn.Close();
-        //        }
-        //    }
-
-        //    return output;
-
-        //}
-
-        // -------- Testing
-
-        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, DbParam[] dbParams = null) where T : class
+        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -182,7 +63,7 @@ namespace Plato.Internal.Data.Providers
             return output;
         }
 
-        public async Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string commandText, DbParam[] dbParams = null)
+        public async Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams = null)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -236,7 +117,7 @@ namespace Plato.Internal.Data.Providers
 
         }
 
-        public async Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string commandText, DbParam[] dbParams = null)
+        public async Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams = null)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
@@ -270,11 +151,13 @@ namespace Plato.Internal.Data.Providers
 
         }
         
+        // ---------------
+
         SqlCommand CreateCommand(
             SqlConnection connection,
             CommandType commandType,
             string commandText,
-            DbParam[] dbParams)
+            IDbDataParameter[] dbParams)
         {
 
             var cmd = connection.CreateCommand();
@@ -286,7 +169,7 @@ namespace Plato.Internal.Data.Providers
             {
                 foreach (var parameter in dbParams)
                 {
-                    var p = CreateSqlParameter(parameter);
+                    var p = CreateSqlParameter(cmd, parameter);
                     cmd.Parameters.Add(p);
                 }
             }
@@ -296,12 +179,10 @@ namespace Plato.Internal.Data.Providers
         }
 
 
-        public IDbDataParameter CreateSqlParameter(DbParam dbParam)
+        public IDbDataParameter CreateSqlParameter(IDbCommand cmd, IDbDataParameter dbParam)
         {
 
-            //var p = cmd.CreateParameter();
-
-            var p = new SqlParameter(); ;
+            var p = cmd.CreateParameter();
             p.ParameterName = $"@{dbParam.ParameterName}";
             p.Value = dbParam.Value;
             p.Direction = dbParam.Direction;

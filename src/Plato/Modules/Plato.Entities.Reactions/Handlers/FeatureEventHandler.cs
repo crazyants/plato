@@ -271,7 +271,7 @@ namespace Plato.Entities.Reactions.Handlers
                                 DbType = DbType.Int32,
                             }
                         }))
-
+                        
                 .CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
                     .ForTable(_entityReactions)
                     .WithParameters(new List<SchemaColumn>()

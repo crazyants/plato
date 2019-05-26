@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
+using System.Collections.Generic;
 
 namespace Plato.Internal.Data.Abstractions
 {
@@ -10,5 +10,7 @@ namespace Plato.Internal.Data.Abstractions
         IList<T> Data { get; set; }
 
         void PopulateTotal(IDataReader reader);
+
     }
+
 }
