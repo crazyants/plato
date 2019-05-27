@@ -102,23 +102,28 @@ namespace Plato.Internal.Data.Schemas.Builders
         {
 
             var tableName = GetTableName(table.Name);
-            var sb = new StringBuilder();
             if (table.Columns.Count > 0)
             {
                 foreach (var column in table.Columns)
                 {
-
+                    var sb = new StringBuilder();
                     if (Options.CheckColumnExistsBeforeCreate)
                     {
-                        sb.Append("IF NOT EXISTS(SELECT * FROM sys.columns")
-                            .Append("WHERE Name = N'")
-                            .Append(column.Name)
+
+                        var normalizedColumnName = column.Name
+                            .Replace("[", "")
+                            .Replace("]", "");
+
+                        sb.Append("IF NOT EXISTS(SELECT * FROM sys.columns ")
+                            .Append("WHERE [Name] = N'")
+                            .Append(normalizedColumnName)
                             .Append("' AND Object_ID = Object_ID(N'")
                             .Append(tableName)
                             .Append("'))")
                             .Append(NewLine)
                             .Append("BEGIN")
                             .Append(NewLine);
+
                     }
 
                     sb.Append("ALTER TABLE ")
@@ -130,14 +135,17 @@ namespace Plato.Internal.Data.Schemas.Builders
 
                     if (Options.CheckColumnExistsBeforeCreate)
                     {
-                        sb.Append("END");
+                        sb.Append("END")
+                            .Append(NewLine);
                     }
+
+                    sb.Append(NewLine);
+                    AddStatement(sb.ToString());
 
                 }
                 
-                AddStatement(sb.ToString());
-
             }
+
             return this;
 
         }
