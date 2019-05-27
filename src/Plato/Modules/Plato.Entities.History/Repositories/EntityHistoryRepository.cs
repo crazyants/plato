@@ -164,7 +164,7 @@ namespace Plato.Entities.History.Repositories
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityHistory",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("EntityId", DbType.Int32, entityId),

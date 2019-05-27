@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Plato.Internal.Data.Migrations.Abstractions\Plato.Internal.Data.Migrations.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Features\Plato.Internal.Features.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />

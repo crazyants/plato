@@ -27,8 +27,8 @@ namespace Plato.Features.Updates
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // View providers
-            services.AddScoped<IViewProviderManager<FeatureUpdatesIndexViewModel>, ViewProviderManager<FeatureUpdatesIndexViewModel>>();
-            services.AddScoped<IViewProvider<FeatureUpdatesIndexViewModel>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<FeatureUpdatesViewModel>, ViewProviderManager<FeatureUpdatesViewModel>>();
+            services.AddScoped<IViewProvider<FeatureUpdatesViewModel>, AdminViewProvider>();
        
             // Register moderation permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

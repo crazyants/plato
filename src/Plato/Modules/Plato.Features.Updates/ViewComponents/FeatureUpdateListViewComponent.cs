@@ -27,9 +27,9 @@ namespace Plato.Features.Updates.ViewComponents
             _featureFacade = featureFacade;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(FeatureIndexOptions options)
+        public async Task<IViewComponentResult> InvokeAsync(FeatureUpdateOptions options)
         {
-            return View(new FeatureUpdatesIndexViewModel()
+            return View(new FeatureUpdatesViewModel()
             {
                 Options = options,
                 Features = await _featureFacade.GetFeatureUpdatesAsync()

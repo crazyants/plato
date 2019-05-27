@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Features.Updates.Services;
 using Plato.Features.Updates.ViewModels;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -25,10 +20,8 @@ namespace Plato.Features.Updates.Controllers
 
         private readonly IFeatureUpdater _featureUpdater;
 
-        private readonly IViewProviderManager<FeatureUpdatesIndexViewModel> _viewProvider;
-        private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IViewProviderManager<FeatureUpdatesViewModel> _viewProvider;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
 
@@ -39,27 +32,24 @@ namespace Plato.Features.Updates.Controllers
         public AdminController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IShellFeatureManager shellFeatureManager,
-            IViewProviderManager<FeatureUpdatesIndexViewModel> viewProvider, 
-            IBreadCrumbManager breadCrumbManager,
+            IViewProviderManager<FeatureUpdatesViewModel> viewProvider, 
             IAuthorizationService authorizationService,
-            IAlerter alerter,
-            IShellDescriptorManager shellDescriptorManager,
-            IFeatureUpdater featureUpdater)
+            IBreadCrumbManager breadCrumbManager,
+            IFeatureUpdater featureUpdater,
+            IAlerter alerter)
         {
-            _shellFeatureManager = shellFeatureManager;
-            _viewProvider = viewProvider;
-            _breadCrumbManager = breadCrumbManager;
-            _authorizationService = authorizationService;
-            _alerter = alerter;
-            _shellDescriptorManager = shellDescriptorManager;
-            _featureUpdater = featureUpdater;
 
+            _authorizationService = authorizationService;
+            _breadCrumbManager = breadCrumbManager;
+            _featureUpdater = featureUpdater;
+            _viewProvider = viewProvider;
+            _alerter = alerter;
+    
             T = htmlLocalizer;
             S = stringLocalizer;
         }
         
-        public async Task<IActionResult> Index(FeatureIndexOptions opts)
+        public async Task<IActionResult> Index(FeatureUpdateOptions opts)
         {
 
             // Ensure we have permission
@@ -70,7 +60,7 @@ namespace Plato.Features.Updates.Controllers
             
             if (opts == null)
             {
-                opts = new FeatureIndexOptions();
+                opts = new FeatureUpdateOptions();
             }
 
             // Build breadcrumb
@@ -86,7 +76,7 @@ namespace Plato.Features.Updates.Controllers
                     .Add(S["Updates"]);
             });
   
-            var model = new FeatureUpdatesIndexViewModel()
+            var model = new FeatureUpdatesViewModel()
             {
                 Options = opts
             };
@@ -105,52 +95,21 @@ namespace Plato.Features.Updates.Controllers
             }
 
             var result = await _featureUpdater.UpdateAsync(id);
-          
             if (result.Errors.Any())
             {
                 foreach (var error in result.Errors)
                 {
                     _alerter.Danger(
-                        T[$"{id} could not be enabled. {error.Code} - {error.Description}"]);
+                        T[$"{id} could not be updated. {error.Code} - {error.Description}"]);
                 }
             }
             else
             {
-                _alerter.Success(T[$"{id} updated successfully!"]);
+                _alerter.Success(T[$"{id} Updated Successfully!"]);
             }
             
             return RedirectToAction(nameof(Index));
             
-        }
-
-        IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return Redirect("~/");
-            }
-        }
-
-        async Task<string> GetCategoriesNameAsync(string id)
-        {
-        
-            var features = await _shellDescriptorManager.GetFeaturesAsync();
-            foreach (var feature in features
-                .GroupBy(f => f.Descriptor.Category)
-                .OrderBy(o => o.Key))
-            {
-                if (feature.Key.Equals(id, StringComparison.OrdinalIgnoreCase))
-                {
-                    return feature.Key;
-                }
-            }
-
-            return string.Empty;
-
         }
         
     }

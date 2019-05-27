@@ -9,7 +9,7 @@ namespace Plato.Internal.Data.Migrations.Abstractions
 
         List<PreparedMigration> Schemas { get; }
 
-        IMigrationProvider LoadSchemas(List<string> versions);
+        IMigrationProvider LoadSchemas(IList<string> versions);
 
     }
 }

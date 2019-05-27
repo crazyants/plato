@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Migrations.Abstractions;
 
 namespace Plato.Internal.Data.Migrations
@@ -8,7 +11,7 @@ namespace Plato.Internal.Data.Migrations
     public class DataMigrationBuilder : IDataMigrationBuilder
     {
     
-        private List<PreparedMigration> _schemas;
+        private IList<PreparedMigration> _schemas;
         private MigrationType _migrationType;
 
         private readonly IEnumerable<IMigrationProvider> _migrationProviders;
@@ -25,8 +28,8 @@ namespace Plato.Internal.Data.Migrations
         }
 
         #region "Implementation"
-
-        public IDataMigrationBuilder BuildMigrations(List<string> versions)
+        
+        public IDataMigrationBuilder BuildMigrations(IList<string> versions)
         {
 
             foreach (var provider in _migrationProviders)
@@ -39,6 +42,48 @@ namespace Plato.Internal.Data.Migrations
                 DetectMigrationType();
             }
             return this;
+        }
+
+        public IDataMigrationBuilder BuildMigrations(
+            string moduleId, Version from, Version to)
+        {
+
+            if (from == null)
+            {
+                throw new ArgumentNullException(nameof(from));
+            }
+
+            if (to == null)
+            {
+                throw new ArgumentNullException(nameof(to));
+            }
+            
+            // All versions between from and to
+            var versions = from.GetVersionsBetween(to)?.ToList() ?? new List<Version>();
+
+            // Add our final version if it's not already present
+            if (!versions.Contains(to))
+            {
+                versions.Add(to);
+            }
+
+            // Build a string array of all versions to search
+            var versionsToSearch = versions.Select(v => v.ToString()).ToArray();
+
+            // Iterate all migration providers loading schemas for feature and versions
+            foreach (var provider in _migrationProviders)
+            {
+                // Load all schemas for supplied module and versions
+                _schemas = provider.LoadSchemas(versionsToSearch).Schemas
+                    .Where(s => s.ModuleId.Equals(moduleId, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (_schemas?.Count > 0)
+            {
+                DetectMigrationType();
+            }
+            return this;
+
         }
 
         public async Task<DataMigrationResult> ApplyMigrationsAsync()
@@ -65,14 +110,14 @@ namespace Plato.Internal.Data.Migrations
             {
                 migrations.Migrations.Add(new DataMigration()
                 {
+                    ModuleId = schema.ModuleId,
                     Version = schema.Version,
                     Statements = schema.Statements
                 });
             }
             return migrations;
         }
-
-     
+        
         void DetectMigrationType()
         {
             var first = _schemas[0];

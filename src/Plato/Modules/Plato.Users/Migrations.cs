@@ -22,6 +22,7 @@ namespace Plato.Users
             {
                 new PreparedMigration()
                 {
+                    ModuleId = "Plato.Users",
                     Version = "1.0.1",
                     Statements = v_1_0_1()
                 }
@@ -454,7 +455,7 @@ namespace Plato.Users
             return _migrations.FirstOrDefault(s => s.Version.Equals(version, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IMigrationProvider LoadSchemas(List<string> versions)
+        public IMigrationProvider LoadSchemas(IList<string> versions)
         {
             foreach (var migration in _migrations)
             {

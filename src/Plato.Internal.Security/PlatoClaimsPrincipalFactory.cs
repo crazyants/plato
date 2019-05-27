@@ -11,7 +11,7 @@ namespace Plato.Internal.Security
     // A custom UserClaimsPrincipalFactory implementation.
     // Roles within Plato can contain many claims. For this reason to avoid cookie
     // chunking and exceeding maximum request header length issues caused by persisting claims
-    // within the a cookie we don't persist the role claims within the cookie and instead
+    // within a cookie we don't persist the role claims within the cookie and instead
     // query these claims as necessary based on our minimal claims principal created by this implementation.
     // </summary>
     /// <typeparam name="TUser"></typeparam>
@@ -48,7 +48,7 @@ namespace Plato.Internal.Security
             claims.Add(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
             claims.Add(new Claim(Options.ClaimsIdentity.UserNameClaimType, userNameAsync));
 
-            // If the security stamp changes the authentication cookie will be ivalidated
+            // If the security stamp changes the authentication cookie will be invalidated
             if (this.UserManager.SupportsUserSecurityStamp)
             {
                 claims.Add(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, await this.UserManager.GetSecurityStampAsync(user)));

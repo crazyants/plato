@@ -17,9 +17,11 @@ namespace Plato.Internal.Data.Migrations.Abstractions
     {
 
         MigrationType DataMigrationType { get;  }
+        
+        IDataMigrationBuilder BuildMigrations(IList<string> versions);
 
-        IDataMigrationBuilder BuildMigrations(List<string> versions);
-
+        IDataMigrationBuilder BuildMigrations(string moduleId, Version from, Version to);
+        
         Task<DataMigrationResult> ApplyMigrationsAsync();
 
     }

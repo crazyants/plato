@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Plato.Internal.Models.Features;
 
 namespace Plato.Features.Updates.ViewModels
 {
     
-    public class FeatureUpdatesIndexViewModel
+    public class FeatureUpdatesViewModel
     {
 
-        public FeatureIndexOptions Options { get; set; } = new FeatureIndexOptions();
+        public FeatureUpdateOptions Options { get; set; } = new FeatureUpdateOptions();
         
         public IEnumerable<IShellFeature> Features { get; set; }
 
     }
 
-    public class FeatureIndexOptions
+    public class FeatureUpdateOptions
     {
         
         public bool HideEnabled { get; set; }

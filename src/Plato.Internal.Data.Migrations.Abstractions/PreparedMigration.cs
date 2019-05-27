@@ -5,6 +5,9 @@ namespace Plato.Internal.Data.Migrations.Abstractions
 {
     public class PreparedMigration
     {
+
+        public string ModuleId { get; set; }
+
         public string Version { get; set; }
 
         public Version TypedVersion { get; set; }

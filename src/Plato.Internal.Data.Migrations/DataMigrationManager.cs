@@ -18,8 +18,7 @@ namespace Plato.Internal.Data.Migrations
             _dbContext = dbContext;
             _errors = new List<Exception>();
         }
-
-  
+        
         #region "Implementation"
         
         public async Task<DataMigrationResult> ApplyMigrationsAsync(DataMigrationRecord dataMigrationRecord)
