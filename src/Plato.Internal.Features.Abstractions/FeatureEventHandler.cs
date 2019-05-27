@@ -16,5 +16,14 @@ namespace Plato.Internal.Features.Abstractions
 
         public abstract Task UninstalledAsync(IFeatureEventContext context);
 
+        public virtual Task UpdatingAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
+
+        public virtual Task UpdatedAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

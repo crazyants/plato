@@ -396,16 +396,13 @@ namespace Plato.Users
                     {
                         options.ModuleName = "Plato.Users";
                         options.Version = "1.0.1";
-                        options.DropTablesBeforeCreate = true;
-                        options.DropProceduresBeforeCreate = true;
-                        options.CheckColumnExistsBeforeCreate = true;
                     });
 
                 // ---------------
                 // 1.0.1
                 // ---------------
 
-                // Add new columns
+                // Add new columns to users table
                 builder.TableBuilder.AlterTableColumns(new SchemaTable()
                 {
                     Name = "Users",
@@ -432,7 +429,7 @@ namespace Plato.Users
                     }
                 });
 
-                // insert / update by primary key
+                // Drop & recreate InsertUpdateUser stored procedure
                 builder.ProcedureBuilder.CreateProcedure(
                     new SchemaProcedure($"InsertUpdateUser",
                             StoredProcedureType.InsertUpdate)

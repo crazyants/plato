@@ -100,6 +100,44 @@ namespace Plato.Internal.Features
 
         }
 
+        public async Task<IFeatureEventContext> UpdatingAsync(IFeatureEventContext context)
+        {
+            foreach (var eventProvider in _eventProviders)
+            {
+                try
+                {
+                    await eventProvider.UpdatingAsync(context);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred while raising the 'Updating' event within feature: {context.Feature.ModuleId}");
+                    context.Errors.Add($"{context.Feature.ModuleId} threw an exception within the Updating event!", e.Message);
+                }
+            }
+
+            return context;
+        }
+
+        public async Task<IFeatureEventContext> UpdatedAsync(IFeatureEventContext context)
+        {
+
+            foreach (var eventProvider in _eventProviders)
+            {
+                try
+                {
+                    await eventProvider.UpdatedAsync(context);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred while raising the 'Updated' event within feature: {context.Feature.ModuleId}");
+                    context.Errors.Add($"{context.Feature.ModuleId} threw an exception within the Updated event!", e.Message);
+                }
+            }
+
+            return context;
+
+        }
+
     }
 
 }

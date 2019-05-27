@@ -6,14 +6,18 @@ namespace Plato.Internal.Features.Abstractions
     public interface IFeatureEventManager
     {
 
-        Task<IFeatureEventContext> InstallingAsync(IFeatureEventContext feature);
+        Task<IFeatureEventContext> InstallingAsync(IFeatureEventContext context);
 
-        Task<IFeatureEventContext> InstalledAsync(IFeatureEventContext feature);
+        Task<IFeatureEventContext> InstalledAsync(IFeatureEventContext context);
 
-        Task<IFeatureEventContext> UninstallingAsync(IFeatureEventContext feature);
+        Task<IFeatureEventContext> UninstallingAsync(IFeatureEventContext context);
 
-        Task<IFeatureEventContext> UninstalledAsync(IFeatureEventContext feature);
+        Task<IFeatureEventContext> UninstalledAsync(IFeatureEventContext context);
+
+        Task<IFeatureEventContext> UpdatingAsync(IFeatureEventContext context);
+
+        Task<IFeatureEventContext> UpdatedAsync(IFeatureEventContext context);
+
     }
-
 
 }

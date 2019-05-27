@@ -7,13 +7,13 @@
 
         public string ModuleName { get; set; }
 
-        public bool DropTablesBeforeCreate { get; set; } = false;
+        public bool DropTablesBeforeCreate { get; set; }
 
-        public bool DropProceduresBeforeCreate { get; set; } = false;
+        public bool DropProceduresBeforeCreate { get; set; } = true;
         
-        public bool DropCatalogBeforeCreate { get; set; } = false;
+        public bool DropCatalogBeforeCreate { get; set; } 
 
-        public bool DropIndexesBeforeCreate { get; set; } = false;
+        public bool DropIndexesBeforeCreate { get; set; } 
         
         public bool CheckColumnExistsBeforeCreate { get; set; } = true;
 

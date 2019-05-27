@@ -16,6 +16,10 @@ namespace Plato.Internal.Features.Abstractions
 
         Task UninstalledAsync(IFeatureEventContext context);
 
+        Task UpdatingAsync(IFeatureEventContext context);
+
+        Task UpdatedAsync(IFeatureEventContext context);
+        
     }
 
 }

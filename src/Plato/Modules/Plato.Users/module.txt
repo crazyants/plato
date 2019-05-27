@@ -3,8 +3,8 @@ Description: Provides core functionality to manage and authenticate users.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core
-PlatoVersion: 1.0.0
-Version: 1.0.1
+PlatoVersion: 1.0.1
+Version: 1.0.2
 Dependencies: 
 [
 	{

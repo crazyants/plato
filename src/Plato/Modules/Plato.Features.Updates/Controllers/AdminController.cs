@@ -99,8 +99,7 @@ namespace Plato.Features.Updates.Controllers
             {
                 foreach (var error in result.Errors)
                 {
-                    _alerter.Danger(
-                        T[$"{id} could not be updated. {error.Code} - {error.Description}"]);
+                    _alerter.Danger(T[error.Description]);
                 }
             }
             else

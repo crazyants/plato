@@ -135,7 +135,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserById",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -160,7 +160,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameNormalized",
                     async reader => await BuildUserFromResultSets(reader),
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("NormalizedUserName", DbType.String, 255, userNameNormalized), 
                     });
@@ -184,7 +184,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByEmail",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Email", DbType.String, 255, email)
                     });
@@ -208,7 +208,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByEmailNormalized",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("NormalizedEmail", DbType.String, 255, normalizedEmail),
                     });
@@ -231,7 +231,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByUserName",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("UserName", DbType.String, 255, userName)
                     });
@@ -261,7 +261,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByUserNameAndPassword",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("UserName", DbType.String, 255, userName),
                         new DbParam("Password", DbType.String, 255, password),
@@ -291,7 +291,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByEmailAndPassword",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Email", DbType.String, 255, email),
                         new DbParam("Password", DbType.String, 255, password),
@@ -316,7 +316,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByResetToken",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("ResetToken", DbType.String, 255, resetToken)
                     });
@@ -339,7 +339,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByConfirmationToken",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("ConfirmationToken", DbType.String, 255, confirmationToken),
                     });
@@ -363,7 +363,7 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserByApiKey",
                     async reader => await BuildUserFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("ApiKey", DbType.String, 255, apiKey)
                     });
@@ -551,7 +551,7 @@ namespace Plato.Internal.Repositories.Users
                 userId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUser",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("PrimaryRoleId", DbType.Int32, primaryRoleId),
@@ -640,5 +640,6 @@ namespace Plato.Internal.Repositories.Users
         }
 
         #endregion
+
     }
 }
