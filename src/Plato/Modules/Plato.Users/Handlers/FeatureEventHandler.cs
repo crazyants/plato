@@ -2,7 +2,7 @@
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Star.Handlers
+namespace Plato.Users.Handlers
 {
     
     public class FeatureEventHandler : BaseFeatureEventHandler
@@ -15,15 +15,9 @@ namespace Plato.Discuss.Star.Handlers
             _defaultRolesManager = defaultRolesManager;
         }
         
-        public override async Task InstalledAsync(IFeatureEventContext context)
-        {
-            // Apply default permissions to default roles for new feature
-            await _defaultRolesManager.UpdateDefaultRolesAsync(new Permissions());
-        }
-
         public override async Task UpdatedAsync(IFeatureEventContext context)
         {
-            // Apply any additional permissions to default roles for updated feature
+            // Apply any additional permissions to default roles when feature is updated
             await _defaultRolesManager.UpdateDefaultRolesAsync(new Permissions());
         }
 

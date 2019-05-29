@@ -24,7 +24,7 @@ namespace Plato.Features.Updates.Navigation
             builder
                 .Add(T["Features"], int.MaxValue - 5, features => features
                     .IconCss("fal fa-cube")
-                    .Add(T["Update Features"], 2, manage => manage
+                    .Add(T["Update Features"], int.MaxValue, manage => manage
                         .Action("Index", "Admin", "Plato.Features.Updates")
                         .Permission(Permissions.ManageFeatureUpdates)
                         .LocalNav())

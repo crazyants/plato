@@ -53,7 +53,11 @@ namespace Plato.Features.ViewComponents
             // Filter features by category
             if (!string.IsNullOrEmpty(options.Category))
             {
-                features = features.Where(f => f.Descriptor?.Category != null && f.Descriptor.Category.Equals(options.Category, StringComparison.OrdinalIgnoreCase));
+                // Don't apply filter if all categories are selected
+                if (!options.Category.Equals("all", StringComparison.OrdinalIgnoreCase))
+                {
+                    features = features.Where(f => f.Descriptor?.Category != null && f.Descriptor.Category.Equals(options.Category, StringComparison.OrdinalIgnoreCase));
+                }
             }
 
             if (options.HideEnabled)
@@ -77,7 +81,7 @@ namespace Plato.Features.ViewComponents
                 new SelectListItem
                 {
                     Text = S["All"],
-                    Value = null
+                    Value = "all"
                 }
             };
 
@@ -87,7 +91,7 @@ namespace Plato.Features.ViewComponents
                 output.Add(new SelectListItem
                 {
                     Text = feature.Key,
-                    Value = feature.Key
+                    Value = feature.Key.ToLower()
                 });
             }
 

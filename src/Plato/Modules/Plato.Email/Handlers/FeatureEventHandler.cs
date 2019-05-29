@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Email.Handlers
 {
@@ -133,12 +132,7 @@ namespace Plato.Email.Handlers
             }
             
         }
-
-        public override Task InstalledAsync(IFeatureEventContext context)
-        {
-            return Task.CompletedTask;
-        }
-
+        
         public override async Task UninstallingAsync(IFeatureEventContext context)
         {
 
@@ -175,11 +169,6 @@ namespace Plato.Email.Handlers
                 
             }
 
-        }
-
-        public override Task UninstalledAsync(IFeatureEventContext context)
-        {
-            return Task.CompletedTask;
         }
         
         #endregion

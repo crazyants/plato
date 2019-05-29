@@ -304,11 +304,11 @@ namespace Plato.Internal.Repositories.Roles
                     new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
-                        new DbParam("Name", DbType.String, 255, name),
-                        new DbParam("NormalizedName", DbType.String, 255, normalizedName),
-                        new DbParam("Description", DbType.String, 255, description),
-                        new DbParam("Claims", DbType.String, claims),
-                        new DbParam("ConcurrencyStamp", DbType.String, 255, concurrencyStamp),
+                        new DbParam("Name", DbType.String, 255, name.ToEmptyIfNull()),
+                        new DbParam("NormalizedName", DbType.String, 255, normalizedName.ToEmptyIfNull()),
+                        new DbParam("Description", DbType.String, 255, description.ToEmptyIfNull()),
+                        new DbParam("Claims", DbType.String, claims.ToEmptyIfNull()),
+                        new DbParam("ConcurrencyStamp", DbType.String, 255, concurrencyStamp.ToEmptyIfNull()),
                         new DbParam("CreatedUserId", DbType.Int32, createdUserId),
                         new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
                         new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),

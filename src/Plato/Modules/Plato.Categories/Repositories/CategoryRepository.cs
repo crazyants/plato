@@ -75,7 +75,7 @@ namespace Plato.Categories.Repositories
                     CommandType.StoredProcedure,
                     "SelectCategoryById",
                     async reader => await BuildCategoryFromResultSets(reader),
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -140,7 +140,7 @@ namespace Plato.Categories.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -174,7 +174,7 @@ namespace Plato.Categories.Repositories
 
                         return output;
 
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("FeatureId", DbType.Int32, featureId)
                     });
@@ -247,22 +247,22 @@ namespace Plato.Categories.Repositories
                 categoryId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategory",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("ParentId", DbType.Int32, parentId),
                         new DbParam("FeatureId", DbType.Int32, featureId),
-                        new DbParam("Name", DbType.String, 255, name),
+                        new DbParam("Name", DbType.String, 255, name.ToEmptyIfNull()),
                         new DbParam("Description", DbType.String, 500, description.ToEmptyIfNull()),
-                        new DbParam("Alias", DbType.String, 255, alias),
-                        new DbParam("IconCss", DbType.String, 50, iconCss),
-                        new DbParam("ForeColor", DbType.String, 50, foreColor),
-                        new DbParam("BackColor", DbType.String, 50, backColor),
+                        new DbParam("Alias", DbType.String, 255, alias.ToEmptyIfNull()),
+                        new DbParam("IconCss", DbType.String, 50, iconCss.ToEmptyIfNull()),
+                        new DbParam("ForeColor", DbType.String, 50, foreColor.ToEmptyIfNull()),
+                        new DbParam("BackColor", DbType.String, 50, backColor.ToEmptyIfNull()),
                         new DbParam("SortOrder", DbType.Int32, sortOrder),
                         new DbParam("CreatedUserId", DbType.Int32, createdUserId),
                         new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
                         new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
-                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate.ToDateIfNull()),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
                         new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
                     });
             }

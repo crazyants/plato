@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -25,7 +26,10 @@ namespace Plato.Features.Navigation
                 .Add(T["Features"], int.MaxValue - 5, features => features
                     .IconCss("fal fa-cube")
                     .Add(T["Manage Features"], 1, manage => manage
-                        .Action("Index", "Admin", "Plato.Features")
+                        .Action("Index", "Admin", "Plato.Features", new RouteValueDictionary()
+                        {
+                            ["opts.category"] = "all"
+                        })
                         .Permission(Permissions.ManageFeatures)
                         .LocalNav())
                 );

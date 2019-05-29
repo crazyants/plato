@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Migrations.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Models.Roles;
@@ -51,8 +52,11 @@ namespace Plato.Users
         public override void ConfigureServices(IServiceCollection services)
         {
           
-            // register set-up event handler
+            // Register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
+
+            // Register feature event handlers
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
             
             // Adds default token providers
             new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();

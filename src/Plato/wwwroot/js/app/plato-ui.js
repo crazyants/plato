@@ -5128,8 +5128,7 @@ $(function (win, doc, $) {
                 this.find(".layout-sidebar-sticky").sticky();
             }
         }
-
-
+        
         // Scroll to validation errors?
         if (opts.validation.scrollToErrors) {
             // Raised when the form is submitted but invalid
@@ -5148,10 +5147,26 @@ $(function (win, doc, $) {
                 });
         }
 
+
+        // Stack sticky alerts
+        var offset = 6;
+        $(".alert").each(function () {
+            $(this).css({ "top": offset });
+            offset += $(this).outerHeight() + 6;
+            if (!$(this).hasClass("alert-visible")) {
+                $(this).addClass("alert-visible");
+            }
+        });
+        
         // Auto close alerts?
         if (opts.alerts.autoClose) {
-            win.setTimeout(function() {
-                    $(".alert").alert('close');
+            win.setTimeout(function () {
+                    $(".alert").each(function() {
+                        if (!$(this).hasClass("alert-hidden")) {
+                            $(this).addClass("alert-hidden");
+                        }
+                    });
+                    //$(".alert").alert('close');
                 },
                 opts.alerts.autoCloseDelay * 1000);
         }

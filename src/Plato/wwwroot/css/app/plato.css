@@ -57,7 +57,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 .plato-brand-sm { padding: 3px; border-width: 3px; }
-.plato-brand-lg { padding: 12px; border-width: 12px; }
+.plato-brand-lg { padding: 8px; border-width: 8px; }
 .plato-brand-xl { padding: 20px; border-width: 20px; }
 
 /* ------------------------- */
@@ -985,9 +985,23 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .layout-header .alert {
     position: fixed;
     left: 50%;
-    top: 6px;
+    margin-top: -6px;
+    visibility: hidden;
     transform: translate(-50%, 0);
 }
+
+.layout-header .alert-visible {
+    visibility: visible;
+    margin-top: 0;
+    transition: all 0.20s ease-out;
+}
+
+.layout-header .alert-hidden {
+    visibility: hidden !important;
+    margin-top: -6px;
+    transition: all 0.20s ease-in;
+}
+
 
 /* make table of contents sticky on larger screens */
 @media (min-width: 992px) {

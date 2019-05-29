@@ -423,6 +423,7 @@ namespace Plato.Users.Handlers
                     {
                         Name = "ModifiedDate",
                         DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     },
                     new SchemaColumn()
                     {

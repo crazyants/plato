@@ -18,7 +18,7 @@ namespace Plato.Features.Updates.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IFeatureUpdater _featureUpdater;
+        private readonly IShellFeatureUpdater _shellFeatureUpdater;
 
         private readonly IViewProviderManager<FeatureUpdatesViewModel> _viewProvider;
         private readonly IAuthorizationService _authorizationService;
@@ -35,13 +35,13 @@ namespace Plato.Features.Updates.Controllers
             IViewProviderManager<FeatureUpdatesViewModel> viewProvider, 
             IAuthorizationService authorizationService,
             IBreadCrumbManager breadCrumbManager,
-            IFeatureUpdater featureUpdater,
+            IShellFeatureUpdater shellFeatureUpdater,
             IAlerter alerter)
         {
 
             _authorizationService = authorizationService;
             _breadCrumbManager = breadCrumbManager;
-            _featureUpdater = featureUpdater;
+            _shellFeatureUpdater = shellFeatureUpdater;
             _viewProvider = viewProvider;
             _alerter = alerter;
     
@@ -94,7 +94,7 @@ namespace Plato.Features.Updates.Controllers
                 return Unauthorized();
             }
 
-            var result = await _featureUpdater.UpdateAsync(id);
+            var result = await _shellFeatureUpdater.UpdateAsync(id);
             if (result.Errors.Any())
             {
                 foreach (var error in result.Errors)

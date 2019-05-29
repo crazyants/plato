@@ -8,13 +8,25 @@ namespace Plato.Internal.Features.Abstractions
 
         public string ModuleId => Path.GetFileNameWithoutExtension(this.GetType().Assembly.ManifestModule.Name);
 
-        public abstract Task InstallingAsync(IFeatureEventContext context);
-        
-        public abstract Task InstalledAsync(IFeatureEventContext context);
+        public virtual Task InstallingAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
 
-        public abstract Task UninstallingAsync(IFeatureEventContext context);
+        public virtual Task InstalledAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
 
-        public abstract Task UninstalledAsync(IFeatureEventContext context);
+        public virtual Task UninstallingAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
+
+        public virtual Task UninstalledAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
 
         public virtual Task UpdatingAsync(IFeatureEventContext context)
         {
@@ -25,5 +37,7 @@ namespace Plato.Internal.Features.Abstractions
         {
             return Task.CompletedTask;
         }
+
     }
+
 }

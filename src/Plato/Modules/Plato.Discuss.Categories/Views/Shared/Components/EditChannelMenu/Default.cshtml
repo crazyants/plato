@@ -30,13 +30,13 @@
                 @T["Move To Bottom"]
             </a>
             <div class="dropdown-divider"></div>
-            <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+            <button type="submit" asp-route-area="Plato.Discuss.Categories" asp-route-controller="Admin" asp-route-action="Close" asp-route-id="@Model.Id" class="dropdown-item">
                 @T["Close Category"]
-            </a>
+            </button>
             <div class="dropdown-divider"></div>
-            <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
+            <button type="submit" asp-route-area="Plato.Discuss.Categories" asp-route-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id" data-provide="confirm" class="dropdown-item dropdown-item-danger">
                 @T["Delete"]
-            </a>
+            </button>
         </div>
     </div>
 </div>

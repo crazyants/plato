@@ -34,7 +34,7 @@ namespace Plato.Features.Updates
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
             // Update service
-            services.AddScoped<IFeatureUpdater, FeatureUpdater>();
+            services.AddScoped<IShellFeatureUpdater, ShellFeatureUpdater>();
 
         }
 

@@ -58,34 +58,8 @@ namespace Plato.Features.Controllers
             T = htmlLocalizer;
             S = stringLocalizer;
         }
-        
-        public async Task<IActionResult> Index()
-        {
 
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageFeatures))
-            {
-                return Unauthorized();
-            }
-
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    .LocalNav()
-                ).Add(S["Features"]);
-            });
-          
-            var model = new FeaturesIndexViewModel()
-            {
-                Options =  new FeatureIndexOptions()
-            };
-            
-            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
-            
-        }
-
-        public async Task<IActionResult> Category(FeatureIndexOptions opts)
+        public async Task<IActionResult> Index(FeatureIndexOptions opts)
         {
 
             // Ensure we have permission
@@ -98,18 +72,19 @@ namespace Plato.Features.Controllers
             {
                 opts = new FeatureIndexOptions();
             }
-            
-            if (!string.IsNullOrEmpty(opts.Category))
+
+
+            var category = await GetCategoriesNameAsync(opts.Category);
+
+            // Ensure the supplied category is valid
+            if (string.IsNullOrEmpty(category))
             {
+                return NotFound();
+            }
 
-                var category = await GetCategoriesNameAsync(opts.Category);
-
-                // Ensure the supplied category is valid
-                if (string.IsNullOrEmpty(category))
-                {
-                    return NotFound();
-                }
-
+            if (category.ToLower() != "all")
+            {
+                
                 // Build page title
                 _pageTitleBuilder.AddSegment(S[category], int.MaxValue);
 
@@ -140,16 +115,16 @@ namespace Plato.Features.Controllers
                 });
             }
 
+            opts.Category = category;
 
             var model = new FeaturesIndexViewModel()
             {
                 Options = opts
             };
 
-            return View((LayoutViewModel)await _viewProvider.ProvideIndexAsync(model, this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(model, this));
 
         }
-
 
         public async Task<IActionResult> Enable(
             string id, 
@@ -255,7 +230,17 @@ namespace Plato.Features.Controllers
 
         async Task<string> GetCategoriesNameAsync(string id)
         {
-        
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return "all";
+            }
+
+            if (id.Equals("all", StringComparison.OrdinalIgnoreCase))
+            {
+                return "all";
+            }
+
             var features = await _shellDescriptorManager.GetFeaturesAsync();
             foreach (var feature in features
                 .GroupBy(f => f.Descriptor.Category)
@@ -267,7 +252,7 @@ namespace Plato.Features.Controllers
                 }
             }
 
-            return string.Empty;
+            return "all";
 
         }
         

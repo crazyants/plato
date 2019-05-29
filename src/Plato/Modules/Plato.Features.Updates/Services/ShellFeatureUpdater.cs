@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,43 +16,46 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Features.Updates.Services
 {
 
-    public class FeatureUpdater : IFeatureUpdater
+    public class ShellFeatureUpdater : IShellFeatureUpdater
     {
 
-        private readonly IOptions<PlatoOptions> _platoOptions;
-        private readonly IFeatureFacade _featureFacade;
-        private readonly IShellDescriptorManager _shellDescriptorManager;
-        private readonly IDataMigrationBuilder _migrationBuilder;
         private readonly IShellFeatureStore<ShellFeature> _shellFeatureStore;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IShellDescriptorStore _shellDescriptorStore;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IShellContextFactory _shellContextFactory;
+        private readonly IDataMigrationBuilder _migrationBuilder;
         private readonly IRunningShellTable _runningShellTable;
-        private readonly IPlatoHost _platoHost;
-        private readonly ILogger<FeatureUpdater> _logger;
+        private readonly IOptions<PlatoOptions> _platoOptions;
+        private readonly ILogger<ShellFeatureUpdater> _logger;
+        private readonly IFeatureFacade _featureFacade;
 
-        public FeatureUpdater(
-            IOptions<PlatoOptions> platoOptions,
-            IFeatureFacade featureFacade,
-            IDataMigrationBuilder migrationBuilder,
-            IShellDescriptorManager shellDescriptorManager,
+        private readonly IPlatoHost _platoHost;
+
+        public ShellFeatureUpdater(
             IShellFeatureStore<ShellFeature> shellFeatureStore,
-            ILogger<FeatureUpdater> logger,
+            IShellDescriptorManager shellDescriptorManager,
+            IShellDescriptorStore shellDescriptorStore,
             IHttpContextAccessor httpContextAccessor,
-            IShellContextFactory shellContextFactory, 
+            IShellContextFactory shellContextFactory,
+            IDataMigrationBuilder migrationBuilder,
             IRunningShellTable runningShellTable,
+            IOptions<PlatoOptions> platoOptions,
+            ILogger<ShellFeatureUpdater> logger,
+            IFeatureFacade featureFacade,
             IPlatoHost platoHost)
         {
             _platoOptions = platoOptions;
             _featureFacade = featureFacade;
             _migrationBuilder = migrationBuilder;
             _shellDescriptorManager = shellDescriptorManager;
+            _shellDescriptorStore = shellDescriptorStore;
             _shellFeatureStore = shellFeatureStore;
             _httpContextAccessor = httpContextAccessor;
             _shellContextFactory = shellContextFactory;
@@ -75,7 +77,8 @@ namespace Plato.Features.Updates.Services
             }
 
             // 1. Invoke FeatureEventHandlers
-            var results = await InvokeFeatureEventHandlersAsync(feature, async context =>
+            var results = await InvokeFeatureEventHandlersAsync(
+                feature, async context =>
             {
 
                 // The result to return
@@ -107,7 +110,7 @@ namespace Plato.Features.Updates.Services
                         // Does the module require a newer version of Plato?
                         if (modulePlatoVersion > currentPlatoVersion)
                         {
-                            return result.Failed($"{moduleId} {module.Descriptor.Version} requires Plato {modulePlatoVersion.ToString()} whilst you are using Plato {currentPlatoVersion.ToString()}. Please upgrade to Plato {modulePlatoVersion.ToString()} and try updating {moduleId} again.");
+                            return result.Failed($"{moduleId} {module.Descriptor.Version} requires Plato {modulePlatoVersion.ToString()} whilst you are running Plato {currentPlatoVersion.ToString()}. Please upgrade to Plato {modulePlatoVersion.ToString()} and try updating {moduleId} again.");
                         }
                     }
 
@@ -141,15 +144,20 @@ namespace Plato.Features.Updates.Services
                 // Apply migrations
                 var migrationResults = await migrations.ApplyMigrationsAsync();
 
-                // Did any errors occur whilst applying the migration?
-                if (migrationResults.Errors.Any())
+                // We may not have migrations
+                if (migrationResults != null)
                 {
-                    var errors = new List<CommandError>();
-                    foreach (var error in migrationResults.Errors)
+                    // Did any errors occur whilst applying the migration?
+                    if (migrationResults.Errors.Any())
                     {
-                        errors.Add(new CommandError(error.Message));
+                        var errors = new List<CommandError>();
+                        foreach (var error in migrationResults.Errors)
+                        {
+                            errors.Add(new CommandError(error.Message));
+                        }
+                        return result.Failed(errors.ToArray());
                     }
-                    return result.Failed(errors.ToArray());
+
                 }
 
                 // ------------------------------------------------------------------
@@ -158,16 +166,18 @@ namespace Plato.Features.Updates.Services
                 // the version of the module we've just updated to
                 // ------------------------------------------------------------------
 
-                // Update version
-                feature.Version = module.Descriptor.Version;
-                await _shellFeatureStore.UpdateAsync((ShellFeature)feature);
+                var updateResult = await UpdateShellFeatureVersionAsync(feature, module.Descriptor.Version);
+                if (updateResult.Errors.Any())
+                {
+                    return result.Failed(updateResult.Errors.ToArray());
+                }
                 
                 // Return success
                 return result.Success();
-
+                
             });
             
-            // Did any event encounter errors?
+            // Did any errors occur?
             var handlerErrors = results
                 .Where(c => c.Value.Errors.Any())
                 .SelectMany(h => h.Value.Errors)
@@ -189,8 +199,9 @@ namespace Plato.Features.Updates.Services
             
 
         }
-
-
+        
+        // ------------------------
+        
         async Task<IDictionary<string, IFeatureEventContext>> InvokeFeatureEventHandlersAsync(
             IShellFeature feature,
             Func<IFeatureEventContext, Task<CommandResultBase>> configure)
@@ -272,14 +283,23 @@ namespace Plato.Features.Updates.Services
                                 {
                                     context.Errors = new Dictionary<string, string>();
                                 }
-                                context.Errors.Add(error.Code, error.Description);
+
+                                if (!context.Errors.ContainsKey(error.Code))
+                                {
+                                    context.Errors.Add(error.Code, error.Description);
+                                }
+                                
                             }
 
                             contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in configureResult.Errors)
                                 {
-                                    v.Errors.Add(error.Code, error.Description);
+                                    if (!v.Errors.ContainsKey(error.Code))
+                                    {
+                                        v.Errors.Add(error.Code, error.Description);
+                                    }
+                                  
                                 }
 
                                 return v;
@@ -313,7 +333,10 @@ namespace Plato.Features.Updates.Services
                         {
                             foreach (var error in configureResult.Errors)
                             {
-                                v.Errors.Add(error.Code, error.Description);
+                                if (!v.Errors.ContainsKey(error.Code))
+                                {
+                                    v.Errors.Add(error.Code, error.Description);
+                                }
                             }
 
                             return v;
@@ -326,8 +349,64 @@ namespace Plato.Features.Updates.Services
 
         }
         
+        async Task<CommandResultBase> UpdateShellFeatureVersionAsync(IShellFeature feature, string newVersion)
+        {
 
-        public async Task<ConcurrentDictionary<string, IFeatureEventContext>> InvokeFeatureEvents(
+            var result = new CommandResultBase();
+
+            // Ensure the version is valid
+            if (newVersion.ToVersion() == null)
+            {
+                return result.Failed(
+                    $"The version '{newVersion}' for feature '{feature.ModuleId}' is not a valid version. Versions must contain major, minor & build numbers. For example 1.0.0, 2.4.0 or 3.2.1");
+            }
+            
+            // Update version
+            feature.Version = newVersion; // module.Descriptor.Version;
+
+            // Update shell features
+            var shellFeature = await _shellFeatureStore.UpdateAsync((ShellFeature)feature);
+
+            // Ensure the update was successful before updating shell descriptor
+            if (shellFeature == null)
+            {
+                return result.Failed(
+                    $"Could not update shell descriptor. An error occurred whilst updating the version for feature {feature.ModuleId} to {newVersion}.");
+            }
+            
+            // First get all existing enabled features
+            var enabledFeatures = await _shellDescriptorManager.GetEnabledFeaturesAsync();
+
+            // Update version for enabled feature
+            var descriptor = new ShellDescriptor();
+            foreach (var enabledFeature in enabledFeatures)
+            {
+                if (enabledFeature.ModuleId.Equals(feature.ModuleId, StringComparison.OrdinalIgnoreCase))
+                {
+                    enabledFeature.Version = newVersion;
+                }
+                descriptor.Modules.Add(new ShellModule(enabledFeature));
+            }
+
+            // Ensure we have a descriptor
+            if (descriptor.Modules?.Count == 0)
+            {
+                return result.Failed("A valid shell descriptor could not be constructed.");
+            }
+
+            // Update shell descriptor
+            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+            if (updatedDescriptor == null)
+            {
+                return result.Failed(
+                    $"Could not update shell descriptor. An error occurred whilst updating the version for feature {feature.ModuleId} to {newVersion}.");
+            }
+
+            return result.Success();
+            
+        }
+
+        async Task<ConcurrentDictionary<string, IFeatureEventContext>> InvokeFeatureEvents(
            IList<IShellFeature> features,
            Func<IFeatureEventContext, IFeatureEventHandler, Task<ConcurrentDictionary<string, IFeatureEventContext>>> handler,
            Func<IFeatureEventContext, Task<ConcurrentDictionary<string, IFeatureEventContext>>> noHandler)
@@ -417,7 +496,6 @@ namespace Plato.Features.Updates.Services
                                     return v;
                                 });
 
-
                             }
 
                         }
@@ -428,7 +506,7 @@ namespace Plato.Features.Updates.Services
                             foreach (var error in context.Errors)
                             {
                                 _logger.LogCritical(error.Value,
-                                    $"An error occurred whilst invoking within {this.GetType().FullName}");
+                                    $"An error occurred updating feature {feature.ModuleId} within {this.GetType().FullName}");
                             }
                         }
 
@@ -442,7 +520,7 @@ namespace Plato.Features.Updates.Services
 
         }
 
-        public void RecycleShell()
+        void RecycleShell()
         {
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);

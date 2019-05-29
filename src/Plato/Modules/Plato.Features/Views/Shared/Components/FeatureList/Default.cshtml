@@ -27,7 +27,7 @@
                     : "dropdown-item";
                 var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
                 {
-                    ["action"] = option.Text == "All" ? "Index" : "Category",
+                    ["action"] = "Index",
                     ["opts.category"] = option.Value?.ToLower(),
                 };
                 <div class="col-3">
