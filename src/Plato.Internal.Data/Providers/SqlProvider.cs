@@ -83,11 +83,13 @@ namespace Plato.Internal.Data.Providers
 
                         var result = await cmd.ExecuteScalarAsync();
                         
+                        // Use result if available
                         if (result != null)
                         {
                             output = result;
                         }
 
+                        // Use output parameters if available
                         if (cmd.Parameters != null)
                         {
                             foreach (IDbDataParameter parameter in cmd.Parameters)
@@ -130,7 +132,7 @@ namespace Plato.Internal.Data.Providers
                 _logger.LogInformation("SQL to execute: " + commandText);
             }
 
-            var output = default(T);
+            object output = null;
             using (var conn = new SqlConnection(_connectionString))
             {
                 try
@@ -139,26 +141,31 @@ namespace Plato.Internal.Data.Providers
                     using (var cmd = CreateCommand(conn, commandType, commandText, dbParams))
                     {
 
-                        await cmd.ExecuteNonQueryAsync();
+                        //  returns the number of rows affected
+                        var rowsEffected = await cmd.ExecuteNonQueryAsync();
 
-                        object returnValue = null;
+                        // Use output parameters if available
                         if (cmd.Parameters != null)
                         {
                             foreach (IDbDataParameter parameter in cmd.Parameters)
                             {
                                 if (parameter.Direction == ParameterDirection.Output)
                                 {
-                                    returnValue = parameter.Value;
+                                    output = parameter.Value;
                                     break;
                                 }
                             }
                         }
-                        
-                        OnExecutedCommand(cmd);
-                        if (returnValue != null)
+
+                        // If we don't have any output params to populate the value
+                        // Return the standard number of rows effected by the query
+                        if (output == null)
                         {
-                            output = (T)Convert.ChangeType(returnValue, typeof(T));
+                            output = rowsEffected;
                         }
+
+                        OnExecutedCommand(cmd);
+                  
                         
                     }
                 }
@@ -172,7 +179,12 @@ namespace Plato.Internal.Data.Providers
                 }
             }
 
-            return output;
+            if (output != null)
+            {
+                output = (T)Convert.ChangeType(output, typeof(T));
+            }
+
+            return default(T);
 
         }
         

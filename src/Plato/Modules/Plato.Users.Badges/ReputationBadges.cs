@@ -2,7 +2,7 @@
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
 
-namespace Plato.Users.Badges.BadgeProviders
+namespace Plato.Users.Badges
 {
 
     public class ReputationBadges : IBadgesProvider<Badge>

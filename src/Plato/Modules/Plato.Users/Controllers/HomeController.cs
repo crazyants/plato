@@ -227,9 +227,9 @@ namespace Plato.Users.Controllers
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
-                Location = data.Profile.Location,
-                Bio = data.Profile.Bio,
-                Url = data.Profile.Url,
+                Location = user.Location,
+                Biography = user.Biography,
+                Url = user.Url,
                 Avatar = user.Avatar
             };
 
@@ -238,7 +238,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost, ActionName(nameof(EditProfile))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditProfile))]
         public async Task<IActionResult> EditProfilePost(EditProfileViewModel model)
         {
 
@@ -248,8 +248,7 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-
-
+            
             // Validate model state within all view providers
             if (await _editProfileViewProvider.IsModelStateValid(model, this))
             {
@@ -307,7 +306,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost, ActionName(nameof(EditAccount)), ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditAccount))]
         public async Task<IActionResult> EditAccountPost(EditAccountViewModel model)
         {
 
@@ -432,7 +431,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost, ActionName(nameof(EditSettings)), ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditSettings))]
         public async Task<IActionResult> EditSettingsPost(EditSettingsViewModel model)
         {
 
@@ -501,7 +500,7 @@ namespace Plato.Users.Controllers
 
         }
 
-        [HttpPost, ActionName(nameof(EditSignature)), ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditSignature))]
         public async Task<IActionResult> EditSignaturePost(EditSignatureViewModel model)
         {
 

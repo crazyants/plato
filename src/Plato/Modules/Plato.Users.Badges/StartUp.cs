@@ -9,7 +9,6 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Users.Badges.BadgeProviders;
 using Plato.Users.Badges.Navigation;
 using Plato.Users.Badges.Notifications;
 using Plato.Internal.Abstractions.SetUp;
@@ -44,6 +43,7 @@ namespace Plato.Users.Badges
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, AutobiographerBadgeAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, PersonalizerBadgeAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ConfirmedMemberBadgeAwarder>();
             services.AddScoped<IBackgroundTaskProvider, VisitBadgesAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ReputationBadgesAwarder>();

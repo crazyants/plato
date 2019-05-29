@@ -15,6 +15,8 @@ namespace Plato.Questions.Categories.Models
 
         public LatestPost LatestReply { get; set; } = new LatestPost();
 
+        public bool Closed { get; set; }
+
     }
     
     public class LatestPost

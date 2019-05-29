@@ -1,6 +1,6 @@
 ﻿@model User
 @{
-    var details = Model.GetOrCreate<UserDetail>();
+    //var details = Model.GetOrCreate<UserDetail>();
 }
 
 <div class="vcard form-group">
@@ -18,22 +18,27 @@
         <li class="vcard-username text-muted">
             @@@Model.UserName
         </li>
-        @if (!String.IsNullOrEmpty(details.Profile.Location))
+        @if (!String.IsNullOrEmpty(Model.Location))
         {
             <li class="vcard-location">
-                <i class="fal fa-map-marker"></i> @details.Profile.Location
+                <i class="fal fa-map-marker"></i> @Model.Location
             </li>
         }
-        @if (!String.IsNullOrWhiteSpace(details.Profile.Url))
+        @if (!String.IsNullOrWhiteSpace(Model.Url))
         {
             <li class="vcard-url">
                 <i class="fal fa-link"></i>
-                <a href="@details.Profile.Url">
-                    @details.Profile.Url
+                <a href="@Model.Url">
+                    @Model.Url
                 </a>
             </li>
         }
-       
+       @if (!String.IsNullOrEmpty(Model.Biography))
+       {
+           <li>
+               @Model.Biography
+           </li>
+       }
     </ul>
 
 </div>

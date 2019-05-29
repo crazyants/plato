@@ -114,7 +114,7 @@ namespace Plato.Issues
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
 
             // Badge providers
-            services.AddScoped<IBadgesProvider<Badge>, Issueadges>();
+            services.AddScoped<IBadgesProvider<Badge>, IssueBadges>();
             services.AddScoped<IBadgesProvider<Badge>, IssueCommentBadges>();
 
             // Background tasks

@@ -33,32 +33,34 @@
                 </div>
             }
         </div>
-        @if (Model.SideBar != null)
-        {
-            <div class="row layout-body">
-                <div class="col-lg-9 layout-content">
-                    @if (Model.Content != null)
-                    {
-                        <view model="@Model.Content"></view>
-                    }
+        <div class=" layout-body">
+            @if (Model.SideBar != null)
+            {
+                <div class="row">
+                    <div class="col-lg-9 layout-content">
+                        @if (Model.Content != null)
+                        {
+                            <view model="@Model.Content"></view>
+                        }
+                    </div>
+                    <div class="col-lg-3 layout-sidebar">
+                        @if (Model.SideBar != null)
+                        {
+                            <view model="@Model.SideBar"></view>
+                        }
+                    </div>
                 </div>
-                <div class="col-lg-3 layout-sidebar">
-                    @if (Model.SideBar != null)
-                    {
-                        <view model="@Model.SideBar"></view>
-                    }
-                </div>
-            </div>
-        }
-        else
-        {
-            @if (Model.Content != null)
-             {
-                 <div class="layout-content">
-                     <view model="@Model.Content"></view>
-                 </div>
-             }
-        }
+            }
+            else
+            {
+                @if (Model.Content != null)
+                 {
+                     <div class="layout-content">
+                         <view model="@Model.Content"></view>
+                     </div>
+                 }
+            }
+        </div>
         <div class="layout-footer">
             @if (Model.Actions != null)
             {

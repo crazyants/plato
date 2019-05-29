@@ -504,6 +504,7 @@ namespace Plato.Discuss.Categories.Controllers
                     if (childResult.Errors.Any())
                     {
                         errors.AddRange(childResult.Errors);
+                        break; // Exit if we encounter any errors
                     }
                 }
             }
@@ -519,7 +520,7 @@ namespace Plato.Discuss.Categories.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // If everything was OK delete the target category 
+            // Next if everything was OK delete the target category 
             var result = await _categoryManager.DeleteAsync(category);
             if (result.Succeeded)
             {

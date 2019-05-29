@@ -11,29 +11,22 @@ namespace Plato.Users.ViewModels
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        [DataType(DataType.Text)]
-        [Display(Name = "display name")]
+        [Required, StringLength(255), DataType(DataType.Text), Display(Name = "display name")]
         public string DisplayName { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        [DataType(DataType.Text)]
-        [Display(Name = "username")]
+        [Required, StringLength(255), DataType(DataType.Text), Display(Name = "username")]
         public string UserName { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [DataType(DataType.EmailAddress)]
-        [Display(Name = "email address")]
+        [Required, EmailAddress, DataType(DataType.EmailAddress), Display(Name = "email address")]
         public string Email { get; set; }
-        
+
+        [StringLength(255), Display(Name = "location")]
         public string Location { get; set; }
 
-        public string Bio { get; set; }
+        [StringLength(255), DataType(DataType.MultilineText), Display(Name = "biography")]
+        public string Biography { get; set; }
 
-        [DataType(DataType.Url)]
+        [StringLength(255), DataType(DataType.Url), Display(Name = "url")]
         public string Url { get; set; }
 
         [StringLength(255), DataType(DataType.Password)]

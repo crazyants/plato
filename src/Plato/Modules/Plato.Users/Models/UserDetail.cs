@@ -32,11 +32,11 @@ namespace Plato.Users.Models
     public class ProfileData : Serializable
     {
 
-        public string Location { get; set; }
+        //public string Location { get; set; }
 
-        public string Bio { get; set; }
+        //public string Bio { get; set; }
 
-        public string Url { get; set; }
+        //public string Url { get; set; }
 
     }
 

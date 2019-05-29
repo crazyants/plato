@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -15,6 +16,7 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Ideas.Categories.Models;
 using Plato.Ideas.Categories.ViewModels;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Layout;
 
 namespace Plato.Ideas.Categories.Controllers
@@ -259,49 +261,6 @@ namespace Plato.Ideas.Categories.Controllers
         }
 
         // --------------
-        // Delete
-        // --------------
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(string id)
-        {
-            
-            var ok = int.TryParse(id, out int categoryId);
-            if (!ok)
-            {
-                return NotFound();
-            }
-
-            // Get category
-            var currentCategory = await _categoryStore.GetByIdAsync(categoryId);
-
-            // Ensure category exists
-            if (currentCategory == null)
-            {
-                return NotFound();
-            }
-
-            // Delete
-            var result = await _categoryManager.DeleteAsync(currentCategory);
-
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["Category Deleted Successfully"]);
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    _alerter.Danger(T[error.Description]);
-                }
-         
-            }
-
-            return RedirectToAction(nameof(Index));
-
-        }
-
-        // --------------
         // Move Up / Down
         // --------------
 
@@ -407,6 +366,173 @@ namespace Plato.Ideas.Categories.Controllers
                 {
                     _alerter.Danger(T[error.Description]);
                 }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        
+        // --------------
+        // Open / Close
+        // --------------
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Open(string id)
+        {
+
+            var ok = int.TryParse(id, out var categoryId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get category
+            var category = await _categoryStore.GetByIdAsync(categoryId);
+
+            // Ensure category exists
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            // Flag category as closed
+            var details = category.GetOrCreate<CategoryDetails>();
+            details.Closed = false;
+            category.AddOrUpdate(details);
+
+            // Delete
+            var result = await _categoryManager.UpdateAsync(category);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Category Opened Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Close(string id)
+        {
+
+            var ok = int.TryParse(id, out var categoryId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get category
+            var category = await _categoryStore.GetByIdAsync(categoryId);
+
+            // Ensure category exists
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            // Flag category as closed
+            var details = category.GetOrCreate<CategoryDetails>();
+            details.Closed = true;
+            category.AddOrUpdate(details);
+
+            // Delete
+            var result = await _categoryManager.UpdateAsync(category);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Category Closed Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        // --------------
+        // Delete
+        // --------------
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string id)
+        {
+
+            var ok = int.TryParse(id, out var categoryId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get category
+            var category = await _categoryStore.GetByIdAsync(categoryId);
+
+            // Ensure category exists
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            // Compile any errors that may occur
+            var errors = new List<CommandError>();
+
+            // First delete all child categories
+            var children = await _categoryStore.GetChildrenByIdAsync(category.Id);
+            if (children != null)
+            {
+                foreach (var child in children)
+                {
+                    if (child.Id == category.Id)
+                    {
+                        continue;
+                    }
+                    var childResult = await _categoryManager.DeleteAsync(child);
+                    if (childResult.Errors.Any())
+                    {
+                        errors.AddRange(childResult.Errors);
+                        break; // Exit if we encounter any errors
+                    }
+                }
+            }
+
+            // Report any errors that may have occurred whilst deleting
+            // child categories and return
+            if (errors.Any())
+            {
+                foreach (var error in errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Next if everything was OK delete the target category 
+            var result = await _categoryManager.DeleteAsync(category);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Category Deleted Successfully"]);
+            }
+            else
+            {
+                // Report any errors
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+
             }
 
             return RedirectToAction(nameof(Index));

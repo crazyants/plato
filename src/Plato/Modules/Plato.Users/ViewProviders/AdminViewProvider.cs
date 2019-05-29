@@ -131,9 +131,9 @@ namespace Plato.Users.ViewProviders
                 UserName = user.UserName,
                 Email = user.Email,
                 Avatar = user.Avatar,
-                Location = details.Profile.Location,
-                Url = details.Profile.Url,
-                Bio = details.Profile.Bio,
+                Location = user.Location,
+                Url = user.Url,
+                Biography = user.Biography,
                 CreatedDate = user.CreatedDate,
                 LastLoginDate = user.LastLoginDate,
                 IsNewUser = user.Id == 0,
@@ -225,13 +225,16 @@ namespace Plato.Users.ViewProviders
 
                 // Update display name. Username and email address are update via UserManager
                 user.DisplayName = model.DisplayName;
-
-                // Update meta data
-                var data = user.GetOrCreate<UserDetail>();
-                data.Profile.Location = model.Location;
-                data.Profile.Bio = model.Bio;
-                data.Profile.Url = model.Url;
-                user.AddOrUpdate<UserDetail>(data);
+                user.Biography = model.Biography;
+                user.Location = model.Location;
+                user.Url = model.Url;
+            
+                //// Update meta data
+                //var data = user.GetOrCreate<UserDetail>();
+                //data.Profile.Location = model.Location;
+                //data.Profile.Bio = model.Biography;
+                //data.Profile.Url = model.Url;
+                //user.AddOrUpdate<UserDetail>(data);
 
                 // Update photo
                 if (model.AvatarFile != null)

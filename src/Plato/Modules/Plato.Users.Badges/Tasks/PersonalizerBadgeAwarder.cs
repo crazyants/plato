@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Notifications;
@@ -13,52 +12,52 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Internal.Models.Badges;
-using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
+using Plato.Internal.Badges.NotificationTypes;
+using Plato.Internal.Notifications.Extensions;
 
 namespace Plato.Users.Badges.Tasks
 {
-
-    public class ConfirmedMemberBadgeAwarder : IBackgroundTaskProvider
+ 
+    public class PersonalizerBadgeAwarder : IBackgroundTaskProvider
     {
 
-        private const string Sql = @"                   
-                DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
-                DECLARE @badgeName nvarchar(255) = '{name}';
-                DECLARE @threshold int = {threshold};                  
-                DECLARE @userId int;
-                DECLARE @myTable TABLE
-                (
-                    Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-                    UserId int NOT NULL
-                );
-                DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
-                WHERE (u.EmailConfirmed = 1)
-                AND NOT EXISTS (
-                   SELECT Id FROM {prefix}_UserBadges ub 
-                   WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName
-                 )
-                ORDER BY u.Id DESC;
-
-                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
-                WHILE @@FETCH_STATUS = 0
+        private const string Sql = @"             
+            DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
+            DECLARE @badgeName nvarchar(255) = '{name}';              
+            DECLARE @userId int;
+            DECLARE @myTable TABLE
+            (
+                Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+                UserId int NOT NULL
+            );
+            DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
+            WHERE (u.Signature != '')
+            AND NOT EXISTS (
+		             SELECT Id FROM {prefix}_UserBadges ub 
+		             WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName
+	            )
+            ORDER BY u.ModifiedDate DESC;
+            
+            OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                DECLARE @identity int;
+	            EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
+                IF (@identity > 0)
                 BEGIN
-                    DECLARE @identity int;
-                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
-                    IF (@identity > 0)
-                    BEGIN
-                        INSERT INTO @myTable (UserId) VALUES (@userId);                     
-                    END
-                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
-                END;
-                CLOSE MSGCURSOR;
-                DEALLOCATE MSGCURSOR;
-                SELECT UserId FROM @myTable;";
+                    INSERT INTO @myTable (UserId) VALUES (@userId);                     
+                END
+	            FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
+            END;
+            CLOSE MSGCURSOR;
+            DEALLOCATE MSGCURSOR;
+            SELECT UserId FROM @myTable;";
 
-        public int IntervalInSeconds => 120;
+        public int IntervalInSeconds => 240;
 
-        public IBadge Badge => ProfileBadges.ConfirmedMember;
+        public IBadge Badge => ProfileBadges.Personalizer;
 
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
@@ -67,7 +66,7 @@ namespace Plato.Users.Badges.Tasks
         private readonly IUserReputationAwarder _userReputationAwarder;
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
 
-        public ConfirmedMemberBadgeAwarder(
+        public PersonalizerBadgeAwarder(
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
@@ -85,12 +84,11 @@ namespace Plato.Users.Badges.Tasks
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
-            
+
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
-                ["{name}"] = Badge.Name,
-                ["{threshold}"] = Badge.Threshold.ToString()
+                ["{name}"] = Badge.Name
             };
 
             var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
@@ -125,13 +123,13 @@ namespace Plato.Users.Badges.Tasks
                     {
 
                         // ---------------
-                        // Award badge points 
+                        // Award badge reputation 
                         // ---------------
 
                         var badgeReputation = Badge.GetReputation();
                         if (badgeReputation.Points != 0)
                         {
-                            await _userReputationAwarder.AwardAsync(badgeReputation, user.Id, $"Confirmed my email address");
+                            await _userReputationAwarder.AwardAsync(badgeReputation, user.Id, $"{Badge.Name} badge awarded");
                         }
 
                         // ---------------
@@ -154,13 +152,14 @@ namespace Plato.Users.Badges.Tasks
                             {
                                 To = user,
                                 From = bot
-                            }, (Badge) Badge);
+                            }, (Badge)Badge);
                         }
 
                     }
                 }
 
                 _cacheManager.CancelTokens(typeof(UserBadgeStore));
+
             }
 
         }

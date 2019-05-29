@@ -85,7 +85,7 @@ namespace Plato.Users.ViewProviders
             {
                 DisplayName = viewModel.DisplayName,
                 Location = viewModel.Location,
-                Bio = viewModel.Bio,
+                Biography = viewModel.Biography,
                 Url = viewModel.Url
             });
         }
@@ -110,13 +110,16 @@ namespace Plato.Users.ViewProviders
 
                 // Update user 
                 user.DisplayName = model.DisplayName.Trim();
-            
-                // Update meta data
-                var data = user.GetOrCreate<UserDetail>();
-                data.Profile.Location = model.Location;
-                data.Profile.Bio = model.Bio;
-                data.Profile.Url = model.Url;
-                user.AddOrUpdate<UserDetail>(data);
+                user.Biography = model.Biography;
+                user.Location = model.Location;
+                user.Url = model.Url;
+
+                // Example of how to store on custom user data object
+                //var data = user.GetOrCreate<UserDetail>();
+                //data.Profile.Location = model.Location;
+                //data.Profile.Bio = model.Bio;
+                //data.Profile.Url = model.Url;
+                //user.AddOrUpdate<UserDetail>(data);
 
                 // Update user avatar
 

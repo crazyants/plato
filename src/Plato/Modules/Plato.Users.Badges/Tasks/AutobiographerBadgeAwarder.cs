@@ -11,11 +11,9 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
-using Plato.Users.Badges.BadgeProviders;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
-using Plato.Users.Models;
 using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Notifications.Extensions;
 
@@ -27,21 +25,20 @@ namespace Plato.Users.Badges.Tasks
 
         private const string Sql = @"             
             DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
-            DECLARE @badgeName nvarchar(255) = '{name}';
-            DECLARE @threshold int = {threshold};                  
+            DECLARE @badgeName nvarchar(255) = '{name}';              
             DECLARE @userId int;
             DECLARE @myTable TABLE
             (
                 Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
                 UserId int NOT NULL
             );
-            DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 ud.UserId FROM {prefix}_UserData AS ud
-            WHERE (ud.[Key] = '{key}')
+            DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
+            WHERE (u.Biography != '')
             AND NOT EXISTS (
 		             SELECT Id FROM {prefix}_UserBadges ub 
-		             WHERE ub.UserId = ud.UserId AND ub.BadgeName = @badgeName
+		             WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName
 	            )
-            ORDER BY ud.CreatedDate DESC;
+            ORDER BY u.ModifiedDate DESC;
             
             OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
             WHILE @@FETCH_STATUS = 0
@@ -91,9 +88,7 @@ namespace Plato.Users.Badges.Tasks
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
-                ["{name}"] = Badge.Name,
-                ["{threshold}"] = Badge.Threshold.ToString(),
-                ["{key}"] = typeof(UserDetail).ToString()
+                ["{name}"] = Badge.Name
             };
 
             var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
