@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -16,6 +17,7 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Categories.Models;
 using Plato.Discuss.Categories.ViewModels;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Layout;
 
 namespace Plato.Discuss.Categories.Controllers
@@ -370,8 +372,7 @@ namespace Plato.Discuss.Categories.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-
+        
         // --------------
         // Open / Close
         // --------------
@@ -380,7 +381,7 @@ namespace Plato.Discuss.Categories.Controllers
         public async Task<IActionResult> Open(string id)
         {
 
-            var ok = int.TryParse(id, out int categoryId);
+            var ok = int.TryParse(id, out var categoryId);
             if (!ok)
             {
                 return NotFound();
@@ -423,7 +424,7 @@ namespace Plato.Discuss.Categories.Controllers
         public async Task<IActionResult> Close(string id)
         {
 
-            var ok = int.TryParse(id, out int categoryId);
+            var ok = int.TryParse(id, out var categoryId);
             if (!ok)
             {
                 return NotFound();
@@ -486,7 +487,39 @@ namespace Plato.Discuss.Categories.Controllers
                 return NotFound();
             }
 
-            // Delete
+            // Compile any errors that may occur
+            var errors = new List<CommandError>();
+
+            // First delete all child categories
+            var children = await _categoryStore.GetChildrenByIdAsync(category.Id);
+            if (children != null)
+            {
+                foreach (var child in children)
+                {
+                    if (child.Id == category.Id)
+                    {
+                        continue;
+                    }
+                    var childResult = await _categoryManager.DeleteAsync(child);
+                    if (childResult.Errors.Any())
+                    {
+                        errors.AddRange(childResult.Errors);
+                    }
+                }
+            }
+
+            // Report any errors that may have occurred whilst deleting
+            // child categories and return
+            if (errors.Any())
+            {
+                foreach (var error in errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            // If everything was OK delete the target category 
             var result = await _categoryManager.DeleteAsync(category);
             if (result.Succeeded)
             {
@@ -494,6 +527,7 @@ namespace Plato.Discuss.Categories.Controllers
             }
             else
             {
+                // Report any errors
                 foreach (var error in result.Errors)
                 {
                     _alerter.Danger(T[error.Description]);

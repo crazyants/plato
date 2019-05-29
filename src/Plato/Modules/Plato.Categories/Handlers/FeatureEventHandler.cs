@@ -131,23 +131,25 @@ namespace Plato.Categories.Handlers
                 },
                 new SchemaColumn()
                 {
-                    Name = "CreatedDate",
-                    DbType = DbType.DateTimeOffset
-                },
-                new SchemaColumn()
-                {
                     Name = "CreatedUserId",
                     DbType = DbType.Int32
                 },
                 new SchemaColumn()
                 {
-                    Name = "ModifiedDate",
+                    Name = "CreatedDate",
                     DbType = DbType.DateTimeOffset
                 },
                 new SchemaColumn()
                 {
                     Name = "ModifiedUserId",
-                    DbType = DbType.Int32
+                    DbType = DbType.Int32,
+                  
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTimeOffset,
+                    Nullable = true
                 }
             }
         };
@@ -192,7 +194,8 @@ namespace Plato.Categories.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     }
                 }
         };

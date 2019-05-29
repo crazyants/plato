@@ -88,7 +88,7 @@ namespace Plato.Categories.Repositories
                         }
 
                         return data;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("CategoryId", DbType.Int32, categoryId)
                     });
@@ -131,7 +131,7 @@ namespace Plato.Categories.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteCategoryDatumById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -215,16 +215,16 @@ namespace Plato.Categories.Repositories
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategoryDatum",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("CategoryId", DbType.Int32, categoryId),
                         new DbParam("Key", DbType.String, 255, key.ToEmptyIfNull()),
                         new DbParam("Value", DbType.String, value.ToEmptyIfNull()),
                         new DbParam("CreatedUserId", DbType.Int32, createdUserId),
-                        new DbParam("CreatedDate", DbType.Int32, createdDate.ToDateIfNull()),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
                         new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
-                        new DbParam("ModifiedDate", DbType.Int32, modifiedDate.ToDateIfNull()),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
                         new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
                     });
             }
@@ -236,7 +236,6 @@ namespace Plato.Categories.Repositories
         #endregion
 
     }
-
-
+    
 
 }

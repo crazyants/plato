@@ -81,7 +81,12 @@ namespace Plato.Internal.Data.Providers
                     using (var cmd = CreateCommand(conn, commandType, commandText, dbParams))
                     {
 
-                        await cmd.ExecuteScalarAsync();
+                        var result = await cmd.ExecuteScalarAsync();
+                        
+                        if (result != null)
+                        {
+                            output = result;
+                        }
 
                         if (cmd.Parameters != null)
                         {

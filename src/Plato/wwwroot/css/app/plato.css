@@ -732,8 +732,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* Admin Nav */
 /* ------------------------- */
 
-.main-container > .container-fluid:last-child { padding-bottom: 6rem; }
-
 .nav-asides .navbar-collapse .navbar-nav { margin: 1rem 0; }
 .nav-asides > .navbar .nav-link { padding: 0.5rem 1rem; border-radius: 0.20rem; }
 .nav-asides > .navbar .nav-link i { margin-right: 0.50rem; }
@@ -800,6 +798,11 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         max-width: calc(100vw - 264px);
     }
     
+    /* Accomodate for asides when positioning alerts */
+    .nav-asides .main-container .layout-header .alert {
+        margin-left: 132px;
+    }
+
     .nav-asides > .navbar hr { width: 100%; display: block; }
     .nav-asides .navbar-lg { display: flex; }
 } 
@@ -987,21 +990,23 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     left: 50%;
     margin-top: -6px;
     visibility: hidden;
+    opacity: 0;
     transform: translate(-50%, 0);
 }
 
 .layout-header .alert-visible {
     visibility: visible;
     margin-top: 0;
+    opacity: 1;
     transition: all 0.20s ease-out;
 }
 
 .layout-header .alert-hidden {
-    visibility: hidden !important;
-    margin-top: -6px;
+    visibility: hidden;
+    margin-top: -12px;
+    opacity: 0;
     transition: all 0.20s ease-in;
 }
-
 
 /* make table of contents sticky on larger screens */
 @media (min-width: 992px) {
