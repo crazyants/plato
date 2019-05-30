@@ -17,7 +17,7 @@ namespace Plato.Articles.Badges
             new Badge("Author", "Contributed many articles", "fal fa-brush", BadgeLevel.Silver, 25, 10);
         
         public static readonly Badge Gold =
-            new Badge("Novelist", "Contributed dozens of articles", "fal fa-books", BadgeLevel.Gold, 50, 20);
+            new Badge("Novelist", "Contributed dozens of articles", "fal fa-book", BadgeLevel.Gold, 50, 20);
 
         public IEnumerable<Badge> GetBadges()
         {

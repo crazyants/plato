@@ -16,6 +16,8 @@ namespace Plato.Core.ViewModels
 
         public bool AutoFocus { get; set; }
 
+        public int Rows { get; set; } = 10;
+
     }
 
 }

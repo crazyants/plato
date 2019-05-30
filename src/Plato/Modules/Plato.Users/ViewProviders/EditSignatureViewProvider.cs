@@ -55,6 +55,8 @@ namespace Plato.Users.ViewProviders
                         signature = _request.Form[key];
                     }
                 }
+
+                viewModel.Signature = signature;
             }
             
             var user = await _platoUserStore.GetByIdAsync(viewModel.Id);

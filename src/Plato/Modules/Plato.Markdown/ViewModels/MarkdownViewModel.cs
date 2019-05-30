@@ -19,6 +19,8 @@ namespace Plato.Markdown.ViewModels
 
         public int TabIndex { get; set; }
 
+        public int Rows { get; set; } = 10;
+
     }
 
 }

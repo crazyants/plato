@@ -67,10 +67,10 @@ namespace Plato.Questions.Tasks
 
         public IEnumerable<Badge> Badges => new[]
         {
-            ArticleBadges.First,
-            ArticleBadges.Bronze,
-            ArticleBadges.Silver,
-            ArticleBadges.Gold
+            QuestionBadges.First,
+            QuestionBadges.Bronze,
+            QuestionBadges.Silver,
+            QuestionBadges.Gold
         };
         
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;

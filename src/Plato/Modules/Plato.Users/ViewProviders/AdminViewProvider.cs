@@ -27,6 +27,8 @@ namespace Plato.Users.ViewProviders
         private static string _pathToAvatarFolder;
         private static string _urlToAvatarFolder;
 
+        private const string BySignatureHtmlName = "Signature";
+
         private readonly IPlatoUserStore<User> _userStore;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly UserManager<User> _userManager;
@@ -134,6 +136,9 @@ namespace Plato.Users.ViewProviders
                 Location = user.Location,
                 Url = user.Url,
                 Biography = user.Biography,
+                Signature = user.Signature,
+                SignatureHtml = user.SignatureHtml,
+                SignatureHtmlName = BySignatureHtmlName,
                 CreatedDate = user.CreatedDate,
                 LastLoginDate = user.LastLoginDate,
                 IsNewUser = user.Id == 0,
@@ -227,14 +232,8 @@ namespace Plato.Users.ViewProviders
                 user.DisplayName = model.DisplayName;
                 user.Biography = model.Biography;
                 user.Location = model.Location;
+                user.Signature = model.Signature;
                 user.Url = model.Url;
-            
-                //// Update meta data
-                //var data = user.GetOrCreate<UserDetail>();
-                //data.Profile.Location = model.Location;
-                //data.Profile.Bio = model.Biography;
-                //data.Profile.Url = model.Url;
-                //user.AddOrUpdate<UserDetail>(data);
 
                 // Update photo
                 if (model.AvatarFile != null)

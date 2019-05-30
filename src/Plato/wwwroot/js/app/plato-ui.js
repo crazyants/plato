@@ -5150,7 +5150,7 @@ $(function (win, doc, $) {
 
         // Stack sticky alerts
         var offset = 6;
-        $(".alert").each(function () {
+        $(".layout-header").find(".alert").each(function () {
             $(this).css({ "top": offset });
             offset += $(this).outerHeight() + 6;
             if (!$(this).hasClass("alert-visible")) {
@@ -5161,7 +5161,7 @@ $(function (win, doc, $) {
         // Auto close alerts?
         if (opts.alerts.autoClose) {
             win.setTimeout(function () {
-                    $(".alert").each(function() {
+                    $(".layout-header").find(".alert").each(function() {
                         if (!$(this).hasClass("alert-hidden")) {
                             $(this).addClass("alert-hidden");
                         }

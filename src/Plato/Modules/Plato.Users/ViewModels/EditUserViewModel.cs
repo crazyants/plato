@@ -26,6 +26,13 @@ namespace Plato.Users.ViewModels
         [StringLength(255), DataType(DataType.MultilineText), Display(Name = "biography")]
         public string Biography { get; set; }
 
+        [DataType(DataType.MultilineText), Display(Name = "signature")]
+        public string Signature { get; set; }
+
+        public string SignatureHtml { get; set; }
+        
+        public string SignatureHtmlName { get; set; } = "signature";
+
         [StringLength(255), DataType(DataType.Url), Display(Name = "url")]
         public string Url { get; set; }
 

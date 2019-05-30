@@ -255,6 +255,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* ------------------------- */
 
 .markdown-body>:first-child { margin-top: 0!important; }
+.markdown-body>:last-child { margin-bottom: 0!important; }
 .markdown-body img { max-width: 100%; } 
 
 /* quotes */

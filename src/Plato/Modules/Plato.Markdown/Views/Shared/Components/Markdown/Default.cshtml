@@ -10,7 +10,7 @@
         tabindex="@Model.TabIndex"
         class="form-control md-textarea"
         placeholder="@Model.PlaceHolderText"
-        rows="10">@if (!String.IsNullOrEmpty(Model.Value))
+        rows="@Model.Rows">@if (!String.IsNullOrEmpty(Model.Value))
     {
         @Model.Value
     }
