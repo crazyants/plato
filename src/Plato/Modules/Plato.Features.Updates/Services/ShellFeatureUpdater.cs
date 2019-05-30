@@ -69,24 +69,23 @@ namespace Plato.Features.Updates.Services
 
             var output = new CommandResultBase();
 
-            // Get installed shell feature
+            // Get installed feature
             var feature = await _featureFacade.GetFeatureByIdAsync(moduleId);
 
-            // Ensure we found the installed feature 
+            // Ensure we found the feature 
             if (feature == null)
             {
                 return output.Failed(
-                    $"A feature with Id '{moduleId}' could not be found within the ShellFeatures table.");
+                    $"A feature named '{moduleId}' could not be found within the ShellFeatures table.");
             }
             
-
             // Get available module
             var module = await _shellDescriptorManager.GetFeatureAsync(moduleId);
 
             // Ensure we found the module 
             if (module == null)
             {
-                return output.Failed($"A module with Id '{moduleId}' could not be found on the file system.");
+                return output.Failed($"A module named '{moduleId}' could not be found on the file system. Please ensure the '{moduleId}' module exists within the root/modules folder.");
             }
 
             // ------------------------------------------------------------------
@@ -99,13 +98,13 @@ namespace Plato.Features.Updates.Services
             if (from == null)
             {
                 return output.Failed(
-                    $"Could not convert version for feature {feature.ModuleId} of {feature.Version} to a valid version object. Please check the version within the ShellFeatures database table.");
+                    $"Could not convert version for feature {feature.ModuleId} of {feature.Version} to a valid version. Please check the version within the shell features database table.");
             }
 
             if (to == null)
             {
                 return output.Failed(
-                    $"Could not convert version for module {module.Descriptor.Id} of {module.Descriptor.Version} to a valid version object. Please check the version within the modules manifest file.");
+                    $"Could not convert version for module {module.Descriptor.Id} of {module.Descriptor.Version} to a valid version. Please check the version within the modules manifest file.");
             }
 
             // No newer version simply return
@@ -139,7 +138,7 @@ namespace Plato.Features.Updates.Services
             }
             
             // ------------------------------------------------------------------
-            // 3. Invoke FeatureEventHandlers & migrations
+            // 3. Invoke FeatureEventHandlers & database migrations
             // ------------------------------------------------------------------
 
             var results = await InvokeFeatureEventHandlersAsync(
@@ -149,11 +148,9 @@ namespace Plato.Features.Updates.Services
                     // The result to return
                     var result = new CommandResultBase();
                 
-                    // ------------------------------------------------------------------
                     // Perform migrations from current installed feature version
-                    // to latest available migration available within modules IMigrationProvider
-                    // ------------------------------------------------------------------
-                    
+                    // to latest available version defined via the modules IMigrationProvider
+              
                     // All versions between from and to
                     var versions = from.GetVersionsBetween(to);
 
@@ -185,12 +182,11 @@ namespace Plato.Features.Updates.Services
 
                     }
 
-                    // ------------------------------------------------------------------
                     // If we reach this point everything went OK, finally update
                     // the feature version within the ShellFeatures table to reflect
-                    // the version of the module we've just updated to
-                    // ------------------------------------------------------------------
-
+                    // the version of the module we've just updated to, also update
+                    // shell descriptor to reflect version within dictionary store
+                 
                     var updateResult = await UpdateShellFeatureVersionAsync(feature, module.Descriptor.Version);
                     if (updateResult.Errors.Any())
                     {
@@ -399,7 +395,7 @@ namespace Plato.Features.Updates.Services
             }
             
             // Update version
-            feature.Version = newVersion; // module.Descriptor.Version;
+            feature.Version = newVersion; 
 
             // Update shell features
             var shellFeature = await _shellFeatureStore.UpdateAsync((ShellFeature)feature);
@@ -408,7 +404,7 @@ namespace Plato.Features.Updates.Services
             if (shellFeature == null)
             {
                 return result.Failed(
-                    $"Could not update shell descriptor. An error occurred whilst updating the version for feature {feature.ModuleId} to {newVersion}.");
+                    $"Could not update shell feature. An error occurred whilst updating the version for feature {feature.ModuleId} to version {newVersion}.");
             }
             
             // First get all existing enabled features
@@ -436,7 +432,7 @@ namespace Plato.Features.Updates.Services
             if (updatedDescriptor == null)
             {
                 return result.Failed(
-                    $"Could not update shell descriptor. An error occurred whilst updating the version for feature {feature.ModuleId} to {newVersion}.");
+                    $"Could not update shell descriptor. An error occurred whilst updating the version for feature {feature.ModuleId} to version {newVersion}.");
             }
 
             return result.Success();
