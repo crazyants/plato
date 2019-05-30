@@ -36,6 +36,9 @@ namespace Plato.Features.Updates
             // Update service
             services.AddScoped<IShellFeatureUpdater, ShellFeatureUpdater>();
 
+            // Automated feature migrations
+            services.AddScoped<IAutomaticFeatureMigrations, AutomaticFeatureMigrations>();
+
         }
 
         public override void Configure(

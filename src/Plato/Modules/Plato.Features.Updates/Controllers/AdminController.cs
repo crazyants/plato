@@ -21,6 +21,8 @@ namespace Plato.Features.Updates.Controllers
         private readonly IShellFeatureUpdater _shellFeatureUpdater;
 
         private readonly IViewProviderManager<FeatureUpdatesViewModel> _viewProvider;
+        private readonly IAutomaticFeatureMigrations _automaticFeatureMigrations;
+
         private readonly IAuthorizationService _authorizationService;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
@@ -32,19 +34,21 @@ namespace Plato.Features.Updates.Controllers
         public AdminController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IViewProviderManager<FeatureUpdatesViewModel> viewProvider, 
+            IViewProviderManager<FeatureUpdatesViewModel> viewProvider,
+            IAutomaticFeatureMigrations automaticFeatureMigrations,
             IAuthorizationService authorizationService,
-            IBreadCrumbManager breadCrumbManager,
             IShellFeatureUpdater shellFeatureUpdater,
+            IBreadCrumbManager breadCrumbManager,
             IAlerter alerter)
         {
 
+            _automaticFeatureMigrations = automaticFeatureMigrations;
             _authorizationService = authorizationService;
             _breadCrumbManager = breadCrumbManager;
             _shellFeatureUpdater = shellFeatureUpdater;
             _viewProvider = viewProvider;
             _alerter = alerter;
-    
+
             T = htmlLocalizer;
             S = stringLocalizer;
         }
@@ -85,6 +89,7 @@ namespace Plato.Features.Updates.Controllers
             
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(string id)
         {
 
@@ -110,7 +115,33 @@ namespace Plato.Features.Updates.Controllers
             return RedirectToAction(nameof(Index));
             
         }
-        
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAll()
+        {
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.UpdateFeatures))
+            {
+                return Unauthorized();
+            }
+            
+            var result = await _automaticFeatureMigrations.InitialMigrationsAsync();
+            if (result.Errors.Any())
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+            else
+            {
+                _alerter.Success(T[$"All Features Updated Successfully!"]);
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
     }
 
 }

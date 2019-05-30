@@ -3,6 +3,8 @@ Description: Provides the admin dashboard for Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core
+Version: 1.0.0
+PlatoVersion: 1.0.0
 Dependencies: 
 [
 	{

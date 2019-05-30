@@ -2,18 +2,29 @@
 @model FeatureUpdatesViewModel
 @{
     var enablePermission = Permissions.UpdateFeatures;
+    var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
 }
 
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title d-inline-block">@T["Updates"]</h6>
+        @if (features != null)
+        {
+            <div class="nav navbar p-0 float-right">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <button type="submit" asp-route-controller="Admin" asp-route-action="UpdateAll" class="btn btn-primary cursor-pointer">
+                            @T["Update All"]
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        }
     </card-title>
     <card-body>
 
         <ul class="list-group list-group-flush list-group-hover">
-            @{
-                var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
-            }
+          
             @if (features != null)
             {
                 foreach (var feature in features)

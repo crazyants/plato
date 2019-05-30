@@ -25,7 +25,7 @@ namespace Plato.Admin
             services.AddScoped<IViewProviderManager<AdminIndex>, ViewProviderManager<AdminIndex>>();
             services.AddScoped<IViewProvider<AdminIndex>, AdminViewProvider>();
         
-            // Action filter
+            // Authorization filter
             services.AddScoped<IModularActionFilter, AuthorizationFilter>();
 
         }

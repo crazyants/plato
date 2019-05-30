@@ -36,52 +36,42 @@ namespace Plato.Internal.Data.Migrations
             {
                 _schemas = provider.LoadSchemas(versions).Schemas;
             }
-         
+
+            // Set migration type
             if (_schemas?.Count > 0)
             {
                 DetectMigrationType();
             }
+
             return this;
+
         }
 
-        public IDataMigrationBuilder BuildMigrations(
-            string moduleId, Version from, Version to)
+        public IDataMigrationBuilder BuildMigrations(string moduleId, IList<string> versions)
         {
 
-            if (from == null)
+            if (versions == null)
             {
-                throw new ArgumentNullException(nameof(from));
+                throw new ArgumentNullException(nameof(versions));
             }
 
-            if (to == null)
-            {
-                throw new ArgumentNullException(nameof(to));
-            }
+            // Build all migrations
+            BuildMigrations(versions);
             
-            // All versions between from and to
-            var versions = from.GetVersionsBetween(to)?.ToList() ?? new List<Version>();
-
-            // Add our final version if it's not already present
-            if (!versions.Contains(to))
+            // Filter by moduleId
+            if (_schemas?.Count > 0)
             {
-                versions.Add(to);
+                _schemas = _schemas
+                    .Where(s => s.ModuleId.Equals(moduleId, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
             }
 
-            // Build a string array of all versions to search
-            var versionsToSearch = versions.Select(v => v.ToString()).ToArray();
-
-            // Iterate all migration providers loading schemas for feature and versions
-            foreach (var provider in _migrationProviders)
-            {
-                // Load all schemas for supplied module and versions
-                _schemas = provider.LoadSchemas(versionsToSearch).Schemas
-                    .Where(s => s.ModuleId.Equals(moduleId, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-
+            // Set migration type
             if (_schemas?.Count > 0)
             {
                 DetectMigrationType();
             }
+
             return this;
 
         }

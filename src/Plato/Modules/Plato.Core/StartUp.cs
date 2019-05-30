@@ -73,12 +73,12 @@ namespace Plato.Core
 
             // Register client options middleware 
             app.UseMiddleware<SettingsClientOptionsMiddleware>();
-
-
-            var result = _automaticDataMigrations
-                .InitialMigrationAsync()
-                .GetAwaiter()
-                .GetResult();
+            
+            //// Automatically apply any schema changes
+            //var result = _automaticDataMigrations
+            //    .InitialMigrationAsync()
+            //    .GetAwaiter()
+            //    .GetResult();
 
             //// Add IModularViewsFeatureProvider application part
             //// Required to allow modules to extend features
