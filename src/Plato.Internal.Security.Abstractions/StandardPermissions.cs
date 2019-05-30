@@ -5,7 +5,7 @@
 
         public const string CategoryName = "Plato";
 
-        public static readonly Permission Administrator = 
+        public static readonly Permission AdminAccess = 
             new Permission("AdminAccess", "Can access administrator dashboard", CategoryName);
 
     }

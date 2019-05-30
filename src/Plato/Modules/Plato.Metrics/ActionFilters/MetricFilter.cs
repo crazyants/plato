@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.ActionFilters;
@@ -23,7 +21,6 @@ namespace Plato.Metrics.ActionFilters
         private readonly IMetricsManager<Metric> _metricManager;
         private readonly IClientIpAddress _clientIpAddress;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IPageTitleBuilder _pageTitleBuilder;
 
         public MetricFilter(
             IMetricsManager<Metric> metricManager,
@@ -34,7 +31,6 @@ namespace Plato.Metrics.ActionFilters
             _metricManager = metricManager;
             _clientIpAddress = clientIpAddress;
             _featureFacade = featureFacade;
-            _pageTitleBuilder = pageTitleBuilder;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
@@ -56,11 +52,13 @@ namespace Plato.Metrics.ActionFilters
         {
             
             // The controller action didn't return a view result so no need to continue execution
-            var result = context.Result as ViewResult;
+            if (!(context.Result is ViewResult result))
+            {
+                return;
+            }
 
             // Check early to ensure we are working with a LayoutViewModel
-            var model = result?.Model as LayoutViewModel;
-            if (model == null)
+            if (!(result?.Model is LayoutViewModel model))
             {
                 return;
             }
@@ -71,7 +69,7 @@ namespace Plato.Metrics.ActionFilters
             // Get client details
             var ipV4Address = _clientIpAddress.GetIpV4Address();
             var ipV6Address = _clientIpAddress.GetIpV6Address();
-            var userAgent = "";
+            var userAgent = string.Empty;
             if (context.HttpContext.Request.Headers.ContainsKey("User-Agent"))
             {
                 userAgent = context.HttpContext.Request.Headers["User-Agent"].ToString();
@@ -86,7 +84,7 @@ namespace Plato.Metrics.ActionFilters
                 : string.Empty;
             
             // Get area name
-            var areaName = "";
+            var areaName = string.Empty;
             if (context.RouteData.Values["area"] != null)
             {
                 areaName = context.RouteData.Values["area"].ToString();
