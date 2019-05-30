@@ -3,7 +3,7 @@ Description: Provides services & settings allowing modules to implement RESTful 
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core
-Version: 1.0.2
+Version: 1.0.4
 PlatoVersion: 1.0.0
 Dependencies: 
 [

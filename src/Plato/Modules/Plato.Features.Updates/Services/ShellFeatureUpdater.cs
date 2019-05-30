@@ -67,86 +67,93 @@ namespace Plato.Features.Updates.Services
         public async Task<ICommandResultBase> UpdateAsync(string moduleId)
         {
 
+            var output = new CommandResultBase();
+
             // Get installed shell feature
             var feature = await _featureFacade.GetFeatureByIdAsync(moduleId);
 
             // Ensure we found the installed feature 
             if (feature == null)
             {
-                return new CommandResultBase().Failed(
+                return output.Failed(
                     $"A feature with Id '{moduleId}' could not be found within the ShellFeatures table.");
             }
+            
 
-            // 1. Invoke FeatureEventHandlers
+            // Get available module
+            var module = await _shellDescriptorManager.GetFeatureAsync(moduleId);
+
+            // Ensure we found the module 
+            if (module == null)
+            {
+                return output.Failed($"A module with Id '{moduleId}' could not be found on the file system.");
+            }
+
+            // ------------------------------------------------------------------
+            // 1. Check to ensure we have a newer version of the module
+            // ------------------------------------------------------------------
+
+            var from = feature.Version.ToVersion();
+            var to = module.Descriptor.Version.ToVersion();
+
+            if (from == null)
+            {
+                return output.Failed(
+                    $"Could not convert version for feature {feature.ModuleId} of {feature.Version} to a valid version object. Please check the version within the ShellFeatures database table.");
+            }
+
+            if (to == null)
+            {
+                return output.Failed(
+                    $"Could not convert version for module {module.Descriptor.Id} of {module.Descriptor.Version} to a valid version object. Please check the version within the modules manifest file.");
+            }
+
+            // No newer version simply return
+            if (from >= to)
+            {
+                return output.Success();
+            }
+
+            // ------------------------------------------------------------------
+            // 2. Check to ensure the module we are updating is compatible 
+            // with the current version of Plato we are running
+            // ------------------------------------------------------------------
+
+            var modulePlatoVersion = module.Descriptor.PlatoVersion.ToVersion();
+
+            // Does the module have a Plato version defined?
+            if (modulePlatoVersion != null)
+            {
+                // Get current plato version
+                var currentPlatoVersion = _platoOptions.Value.Version.ToVersion();
+                if (currentPlatoVersion != null)
+                {
+                    // Does the module require a newer version of Plato?
+                    if (modulePlatoVersion > currentPlatoVersion)
+                    {
+                        return output.Failed(
+                            $"{moduleId} {module.Descriptor.Version} requires Plato {modulePlatoVersion.ToString()} whilst you are running Plato {currentPlatoVersion.ToString()}. Please upgrade to Plato {modulePlatoVersion.ToString()} and try updating {moduleId} again.");
+                    }
+                }
+
+            }
+            
+            // ------------------------------------------------------------------
+            // 3. Invoke FeatureEventHandlers & migrations
+            // ------------------------------------------------------------------
+
             var results = await InvokeFeatureEventHandlersAsync(
                 feature, async context =>
                 {
-
-                    var currentFeature = context.Feature;
-
+                    
                     // The result to return
                     var result = new CommandResultBase();
-
-                    // Get available module
-                    var module = await _shellDescriptorManager.GetFeatureAsync(moduleId);
-
-                    // Ensure we found the module 
-                    if (module == null)
-                    {
-                        return result.Failed($"A module with Id '{moduleId}' could not be found on the file system.");
-                    }
-
+                
                     // ------------------------------------------------------------------
-                    // 1. Check to ensure the module we are updating is compatible 
-                    // with the current version of Plato we are running
-                    // ------------------------------------------------------------------
-
-                    var mPlatoVersion = context.Feature.Descriptor.PlatoVersion;
-
-                    var modulePlatoVersion = module.Descriptor.PlatoVersion.ToVersion();
-
-                    // Does the module have a Plato version defined?
-                    if (modulePlatoVersion != null)
-                    {
-                        // Get current plato version
-                        var currentPlatoVersion = _platoOptions.Value.Version.ToVersion();
-                        if (currentPlatoVersion != null)
-                        {
-                            // Does the module require a newer version of Plato?
-                            if (modulePlatoVersion > currentPlatoVersion)
-                            {
-                                return result.Failed(
-                                    $"{moduleId} {module.Descriptor.Version} requires Plato {modulePlatoVersion.ToString()} whilst you are running Plato {currentPlatoVersion.ToString()}. Please upgrade to Plato {modulePlatoVersion.ToString()} and try updating {moduleId} again.");
-                            }
-                        }
-
-                    }
-
-                    // ------------------------------------------------------------------
-                    // 2. Perform migrations from current installed feature version
+                    // Perform migrations from current installed feature version
                     // to latest available migration available within modules IMigrationProvider
                     // ------------------------------------------------------------------
                     
-                    var from = feature.Version.ToVersion();
-                    var to = module.Descriptor.Version.ToVersion();
-
-                    if (from == null)
-                    {
-                        return result.Failed(
-                            $"Could not convert version for feature {feature.ModuleId} of {feature.Version} to a valid version object. Please check the version within the ShellFeatures database table.");
-                    }
-
-                    if (to == null)
-                    {
-                        return result.Failed(
-                            $"Could not convert version for module {module.Descriptor.Id} of {module.Descriptor.Version} to a valid version object. Please check the version within the modules manifest file.");
-                    }
-
-                    if (to > from)
-                    {
-
-                    }
-
                     // All versions between from and to
                     var versions = from.GetVersionsBetween(to);
 
@@ -179,7 +186,7 @@ namespace Plato.Features.Updates.Services
                     }
 
                     // ------------------------------------------------------------------
-                    // 3. If we reach this point everything went OK, finally update
+                    // If we reach this point everything went OK, finally update
                     // the feature version within the ShellFeatures table to reflect
                     // the version of the module we've just updated to
                     // ------------------------------------------------------------------
@@ -200,8 +207,7 @@ namespace Plato.Features.Updates.Services
                 .Where(c => c.Value.Errors.Any())
                 .SelectMany(h => h.Value.Errors)
                 .ToList();
-
-            var output = new CommandResultBase();
+            
             if (handlerErrors.Count > 0)
             {
                 var errors = new List<CommandError>();
@@ -214,8 +220,7 @@ namespace Plato.Features.Updates.Services
             RecycleShell();
 
             return output.Success();
-
-
+            
         }
 
         // ------------------------
@@ -224,6 +229,11 @@ namespace Plato.Features.Updates.Services
             IShellFeature feature,
             Func<IFeatureEventContext, Task<CommandResultBase>> configure)
         {
+
+            var output = new CommandResultBase();
+
+            // Get available module
+            var module = await _shellDescriptorManager.GetFeatureAsync(feature.ModuleId);
             
             // Raise updating & updated event handlers for features
             return await InvokeFeatureEvents(new[] {feature},
@@ -234,7 +244,11 @@ namespace Plato.Features.Updates.Services
 
                     try
                     {
-                        await handler.UpdatingAsync(context);
+                        // Ensure we only invoke handlers for the feature we are updating
+                        if (context.Feature.ModuleId.Equals(feature.ModuleId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            await handler.UpdatingAsync(context);
+                        }
                         contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                         {
                             foreach (var error in context.Errors)
@@ -270,7 +284,12 @@ namespace Plato.Features.Updates.Services
 
                             try
                             {
-                                await handler.UpdatedAsync(context);
+                                // Ensure we only invoke handlers for the feature we've updated
+                                if (context.Feature.ModuleId.Equals(feature.ModuleId,
+                                    StringComparison.OrdinalIgnoreCase))
+                                {
+                                    await handler.UpdatedAsync(context);
+                                }
                                 contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                                 {
                                     foreach (var error in context.Errors)
@@ -469,7 +488,7 @@ namespace Plato.Features.Updates.Services
                 minimumShellDescriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
             }
 
-            // Create a new shell context with features and all dependencies we need to enable / disable feature
+            // Create a new shell context with features and all dependencies we need to update
             using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, minimumShellDescriptor))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())

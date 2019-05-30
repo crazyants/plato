@@ -4,4 +4,4 @@ Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Users
 PlatoVersion: 1.0.0
-Version: 1.0.2
+Version: 1.0.4
