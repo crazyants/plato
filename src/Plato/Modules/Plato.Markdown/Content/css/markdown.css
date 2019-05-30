@@ -62,7 +62,7 @@
 .md-editor .md-preview {
     outline: 0 !important;
     width: 100%;
-    min-height: 50px;
+    min-height: 75px;
     resize: vertical;
     border: 0 !important;
     box-shadow: none !important;

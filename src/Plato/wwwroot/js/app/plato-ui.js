@@ -5097,7 +5097,8 @@ $(function (win, doc, $) {
         /* replySpy */
         this.replySpy();
         
-        var stickyHeaderHeight = 98;
+        var stickyHeaderHeight = 98,
+            $alerts = $(".layout-header").find(".alert");
 
         // Apply sticky headers?
         if (opts.layout.stickyHeaders) {
@@ -5147,30 +5148,34 @@ $(function (win, doc, $) {
                 });
         }
 
+        // SEt-up header alerts
+        if ($alerts.length > 0) {
 
-        // Stack sticky alerts
-        var offset = 6;
-        $(".layout-header").find(".alert").each(function () {
-            $(this).css({ "top": offset });
-            offset += $(this).outerHeight() + 6;
-            if (!$(this).hasClass("alert-visible")) {
-                $(this).addClass("alert-visible");
+            // Stack sticky alerts
+            var initialOffset = 6,
+                offset = initialOffset;
+            $alerts.each(function () {
+                $(this).css({ "top": offset });
+                offset += $(this).outerHeight() + initialOffset;
+                if (!$(this).hasClass("alert-visible")) {
+                    $(this).addClass("alert-visible");
+                }
+            });
+
+            // Auto close alerts?
+            if (opts.alerts.autoClose) {
+                win.setTimeout(function () {
+                        $alerts.each(function () {
+                            if (!$(this).hasClass("alert-hidden")) {
+                                $(this).addClass("alert-hidden");
+                            }
+                        });
+                        //$(".alert").alert('close');
+                    },
+                    opts.alerts.autoCloseDelay * 1000);
             }
-        });
-        
-        // Auto close alerts?
-        if (opts.alerts.autoClose) {
-            win.setTimeout(function () {
-                    $(".layout-header").find(".alert").each(function() {
-                        if (!$(this).hasClass("alert-hidden")) {
-                            $(this).addClass("alert-hidden");
-                        }
-                    });
-                    //$(".alert").alert('close');
-                },
-                opts.alerts.autoCloseDelay * 1000);
         }
-        
+      
     };
     
     // --------------

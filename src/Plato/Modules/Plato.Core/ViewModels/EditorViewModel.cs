@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Plato.Core.ViewModels
+﻿namespace Plato.Core.ViewModels
 {
     public class EditorViewModel
     {
@@ -12,8 +10,7 @@ namespace Plato.Core.ViewModels
         public string Value { get; set; }
 
         public string PlaceHolderText { get; set; }
-
-
+        
         public bool AutoFocus { get; set; }
 
         public int Rows { get; set; } = 10;

@@ -41,90 +41,6 @@ namespace Plato.Internal.Repositories.Users
         
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int id)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        public async Task<User> InsertUpdateAsync(User user)
-        {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            var userId = await InsertUpdateInternal(
-                user.Id,
-                user.PrimaryRoleId,
-                user.UserName,
-                user.NormalizedUserName,
-                user.Email,
-                user.NormalizedEmail,
-                user.EmailConfirmed,
-                user.DisplayName,
-                user.FirstName,
-                user.LastName,
-                user.Alias,
-                user.PhotoUrl,
-                user.PhotoColor,
-                user.SamAccountName,
-                user.PasswordHash,
-                user.PasswordExpiryDate,
-                user.PasswordUpdatedDate,
-                user.SecurityStamp,
-                user.PhoneNumber,
-                user.PhoneNumberConfirmed,
-                user.TwoFactorEnabled,
-                user.LockoutEnd,
-                user.LockoutEnabled,
-                user.AccessFailedCount,
-                user.ResetToken,
-                user.ConfirmationToken,
-                user.ApiKey,
-                user.TimeZone,
-                user.ObserveDst,
-                user.Culture,
-                user.Theme,
-                user.IpV4Address,
-                user.IpV6Address,
-                user.Biography,
-                user.Location,
-                user.Url,
-                user.Visits,
-                user.VisitsUpdatedDate,
-                user.MinutesActive,
-                user.MinutesActiveUpdatedDate,
-                user.Reputation,
-                user.ReputationUpdatedDate,
-                user.Rank,
-                user.RankUpdatedDate,
-                user.Signature,
-                user.SignatureHtml,
-                user.IsSpam,
-                user.IsSpamUpdatedUserId,
-                user.IsSpamUpdatedDate,
-                user.IsVerified,
-                user.IsVerifiedUpdatedUserId,
-                user.IsVerifiedUpdatedDate,
-                user.IsBanned,
-                user.IsBannedUpdatedUserId,
-                user.IsBannedUpdatedDate,
-                user.IsBannedExpiryDate,
-                (short) user.UserType,
-                user.CreatedUserId,
-                user.CreatedDate,
-                user.ModifiedUserId,
-                user.ModifiedDate,
-                user.LastLoginDate,
-                user.Data);
-
-            if (userId > 0)
-            {
-                return await SelectByIdAsync(userId);
-            }
-
-            return null;
-        }
-
         public async Task<User> SelectByIdAsync(int id)
         {
 
@@ -415,6 +331,107 @@ namespace Plato.Internal.Repositories.Users
 
             return results;
 
+        }
+        
+        public async Task<bool> DeleteAsync(int id)
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting user with id: {id}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteUserById",
+                    new IDbDataParameter[]
+                    {
+                        new DbParam("Id", DbType.Int32, id)
+                    });
+            }
+
+            return success > 0 ? true : false;
+
+        }
+
+        public async Task<User> InsertUpdateAsync(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            var userId = await InsertUpdateInternal(
+                user.Id,
+                user.PrimaryRoleId,
+                user.UserName,
+                user.NormalizedUserName,
+                user.Email,
+                user.NormalizedEmail,
+                user.EmailConfirmed,
+                user.DisplayName,
+                user.FirstName,
+                user.LastName,
+                user.Alias,
+                user.PhotoUrl,
+                user.PhotoColor,
+                user.SamAccountName,
+                user.PasswordHash,
+                user.PasswordExpiryDate,
+                user.PasswordUpdatedDate,
+                user.SecurityStamp,
+                user.PhoneNumber,
+                user.PhoneNumberConfirmed,
+                user.TwoFactorEnabled,
+                user.LockoutEnd,
+                user.LockoutEnabled,
+                user.AccessFailedCount,
+                user.ResetToken,
+                user.ConfirmationToken,
+                user.ApiKey,
+                user.TimeZone,
+                user.ObserveDst,
+                user.Culture,
+                user.Theme,
+                user.IpV4Address,
+                user.IpV6Address,
+                user.Biography,
+                user.Location,
+                user.Url,
+                user.Visits,
+                user.VisitsUpdatedDate,
+                user.MinutesActive,
+                user.MinutesActiveUpdatedDate,
+                user.Reputation,
+                user.ReputationUpdatedDate,
+                user.Rank,
+                user.RankUpdatedDate,
+                user.Signature,
+                user.SignatureHtml,
+                user.IsSpam,
+                user.IsSpamUpdatedUserId,
+                user.IsSpamUpdatedDate,
+                user.IsVerified,
+                user.IsVerifiedUpdatedUserId,
+                user.IsVerifiedUpdatedDate,
+                user.IsBanned,
+                user.IsBannedUpdatedUserId,
+                user.IsBannedUpdatedDate,
+                user.IsBannedExpiryDate,
+                (short)user.UserType,
+                user.CreatedUserId,
+                user.CreatedDate,
+                user.ModifiedUserId,
+                user.ModifiedDate,
+                user.LastLoginDate,
+                user.Data);
+
+            if (userId > 0)
+            {
+                return await SelectByIdAsync(userId);
+            }
+
+            return null;
         }
 
         #endregion

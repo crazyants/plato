@@ -144,10 +144,20 @@ namespace Plato.Internal.Stores.Users
         public async Task<bool> DeleteAsync(User user)
         {
             
+            // Delete user
             var success = await _userRepository.DeleteAsync(user.Id);
             if (success)
             {
+
+                // Delete user data
+                foreach (var userData in user.Data)
+                {
+                    await _userDataStore.DeleteAsync(userData);
+                }
+           
+                // Cancel tokens
                 CancelTokens(user);
+
             }
 
             return success;

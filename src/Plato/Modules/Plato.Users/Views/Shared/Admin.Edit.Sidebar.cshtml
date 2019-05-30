@@ -2,23 +2,27 @@
 
 @if (!Model.EmailConfirmed && !Model.IsNewUser)
 {
-    <div class="alert alert-secondary">
-        <p>
-            <i class="fal fa-envelope mr-2"></i>
-            <strong>@T["Unconfirmed Email"]</strong>
-        </p>
-        <p>
-            @T["This user has not confirmed there email address. They can't login or participate until they do."]
-            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ResendConfirmationEmail" asp-route-id="@Model.Id">
-                @T["Resend"]
-            </a>
-            @T["the confirmation email or "]
-            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
-                @T["manually confirm"]
-            </a>
-            @T["the user."]
-        </p>
-    </div>
+    <card>
+        <card-title>
+            <h6 class="card-title">
+                <i class="fal fa-envelope mr-2"></i>
+                @T["Unconfirmed Email"]
+            </h6>
+        </card-title>
+        <card-body>
+            <p>
+                @T["This user has not confirmed there email address yet. They can't login or participate until they do."]
+                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ResendConfirmationEmail" asp-route-id="@Model.Id">
+                    @T["Resend"]
+                </a>
+                @T["the confirmation email or "]
+                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
+                    @T["manually confirm"]
+                </a>
+                @T["the user."]
+            </p>
+        </card-body>
+    </card>
 }
 
 <card>
@@ -44,13 +48,3 @@
     </card-body>
 </card>
 
-<card>
-    <card-title>
-        <h6 class="card-title">@T["Test Panel"]</h6>
-    </card-title>
-    <card-body>
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-    </card-body>
-</card>

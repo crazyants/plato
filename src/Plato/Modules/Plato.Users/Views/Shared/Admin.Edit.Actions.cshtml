@@ -2,7 +2,9 @@
 
 @if (!Model.IsNewUser)
 {
-    <a class="btn btn-danger" asp-route-action="Delete" asp-route-id="@Model.Id" data-provide="confirm">@T["Delete User"]</a>
+    <button type="submit" asp-route-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id" data-provide="confirm" class="btn btn-danger" >
+        @T["Delete User"]
+    </button>
 }
 
 

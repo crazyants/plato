@@ -361,6 +361,40 @@ namespace Plato.Users.Controllers
         }
 
         // --------------
+        // Delete
+        // --------------
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string id)
+        {
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+
+            // Delete
+            var result = await _platoUserManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["User Deleted Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        // --------------
         // Edit Password
         // --------------
 
