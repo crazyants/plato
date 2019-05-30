@@ -10,7 +10,9 @@ namespace Plato.Internal.Repositories.Users
 {
     public class UserPhotoRepository : IUserPhotoRepository<UserPhoto>
     {
-        #region "Constructor"
+
+        private readonly IDbContext _dbContext;
+        private readonly ILogger<UserPhotoRepository> _logger;
 
         public UserPhotoRepository(
             IDbContext dbContext,
@@ -19,15 +21,7 @@ namespace Plato.Internal.Repositories.Users
             _dbContext = dbContext;
             _logger = logger;
         }
-
-        #endregion
-        
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly ILogger<UserPhotoRepository> _logger;
-
-        #endregion
+       
 
         #region "Implementation"
      
@@ -50,7 +44,7 @@ namespace Plato.Internal.Repositories.Users
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserPhotoById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -96,11 +90,10 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return photo;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
-
 
             }
 
@@ -124,7 +117,7 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return photo;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("UserId", DbType.Int32, userId)
                     });
@@ -151,30 +144,35 @@ namespace Plato.Internal.Repositories.Users
             int modifiedUserId,
             DateTimeOffset? modifiedDate)
         {
+
+            var output = 0;
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserPhoto",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("UserId", DbType.Int32, userId),
-                        new DbParam("Name", DbType.String, 255, name.ToSafeFileName()),
+                        new DbParam("Name", DbType.String, 255, name.ToEmptyIfNull().ToSafeFileName()),
                         new DbParam("ContentBlob", DbType.Binary, contentBlob ?? new byte[0]),
-                        new DbParam("ContentType", DbType.String, 75, contentType),
+                        new DbParam("ContentType", DbType.String, 75, contentType.ToEmptyIfNull()),
                         new DbParam("ContentLength", DbType.Int64, contentLength),
                         new DbParam("CreatedUserId", DbType.Int32, createdUserId),
-                        new DbParam("CreatedDate", DbType.DateTimeOffset,  createdDate.ToDateIfNull()),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
                         new DbParam("ModifiedUserId", DbType.Int32, modifiedUserId),
-                        new DbParam("ModifiedDate", DbType.DateTimeOffset,  modifiedDate),
-                        new DbParam("UniqueId", DbType.Int32,  ParameterDirection.Output),
+                        new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
+                        new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
                     });
             }
+
+            return output;
+
         }
 
         #endregion
-
-
+        
     }
+
 }

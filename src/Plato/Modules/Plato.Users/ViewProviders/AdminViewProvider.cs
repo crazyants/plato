@@ -24,8 +24,8 @@ namespace Plato.Users.ViewProviders
     public class AdminViewProvider : BaseViewProvider<User>
     {
 
-        private static string _pathToAvatarFolder;
-        private static string _urlToAvatarFolder;
+        private static string _pathToImages;
+        private static string _urlToImages;
 
         private const string BySignatureHtmlName = "Signature";
 
@@ -64,9 +64,8 @@ namespace Plato.Users.ViewProviders
             T = stringLocalizer;
 
             // paths
-            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars");
-            _urlToAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
-
+            _pathToImages = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
+            _urlToImages = $"/sites/{shellSettings.Location.ToLower()}/images/";
         }
 
         #region "Implementation"
@@ -256,27 +255,30 @@ namespace Plato.Users.ViewProviders
                 var result = await _platoUserManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
+                    
+                    // TODO Move to CreatePost
                     // Mark admin created users as confirmed
-                    var tokenResult = await _platoUserManager.GetEmailConfirmationUserAsync(user.Email);
-                    if (tokenResult.Succeeded)
-                    {
-                        //var confirmationResult = await _platoUserManager.ConfirmEmailAsync(model.Email,
-                        //    tokenResult.Response.ConfirmationToken);
-                        //if (!confirmationResult.Succeeded)
-                        //{
-                        //    foreach (var error in confirmationResult.Errors)
-                        //    {
-                        //        updater.ModelState.AddModelError(string.Empty, error.Description);
-                        //    }
-                        //}
-                    }
-                    else
-                    {
-                        foreach (var error in tokenResult.Errors)
-                        {
-                            context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
+                    //var tokenResult = await _platoUserManager.GetEmailConfirmationUserAsync(result.Response.Email);
+                    //if (tokenResult.Succeeded)
+                    //{
+                    //    var confirmationResult = await _platoUserManager.ConfirmEmailAsync(model.Email,
+                    //        tokenResult.Response.ConfirmationToken);
+                    //    if (!confirmationResult.Succeeded)
+                    //    {
+                    //        foreach (var error in confirmationResult.Errors)
+                    //        {
+                    //            context.Updater.ModelState.AddModelError(string.Empty, error.Description);
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    foreach (var error in tokenResult.Errors)
+                    //    {
+                    //        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
+                    //    }
+                    //}
+
                 }
                 else
                 {
@@ -321,7 +323,7 @@ namespace Plato.Users.ViewProviders
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
 
             // Upload the new file
-            var fileName = await _sitesFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
+            var fileName = await _sitesFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToImages);
 
             // Ensure the new file was created
             if (!string.IsNullOrEmpty(fileName))
@@ -329,7 +331,7 @@ namespace Plato.Users.ViewProviders
                 // Delete any existing file
                 if (existingPhoto != null)
                 {
-                    _sitesFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
+                    _sitesFolder.DeleteFile(existingPhoto.Name, _pathToImages);
                 }
             }
 
@@ -352,7 +354,7 @@ namespace Plato.Users.ViewProviders
                 : await _userPhotoStore.CreateAsync(userPhoto);
             if (newOrUpdatedPhoto != null)
             {
-                return _urlToAvatarFolder + newOrUpdatedPhoto.Name;
+                return _urlToImages + newOrUpdatedPhoto.Name;
             }
 
             return string.Empty;

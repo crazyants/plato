@@ -6,28 +6,29 @@
         <card-title>
             <h6 class="card-title">
                 <i class="fal fa-envelope mr-2"></i>
-                @T["Unconfirmed Email"]
+                @T["Unconfirmed"]
             </h6>
         </card-title>
         <card-body>
-            <p>
-                @T["This user has not confirmed there email address yet. They can't login or participate until they do."]
-                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ResendConfirmationEmail" asp-route-id="@Model.Id">
-                    @T["Resend"]
-                </a>
-                @T["the confirmation email or "]
-                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
-                    @T["manually confirm"]
-                </a>
-                @T["the user."]
-            </p>
+            @T["This user has not confirmed there email address yet. They can't login or participate until they do."]
+            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ResendConfirmationEmail" asp-route-id="@Model.Id">
+                @T["Resend"]
+            </a>
+            @T["the confirmation email or "]
+            <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ConfirmEmail" asp-route-id="@Model.Id">
+                @T["manually confirm"]
+            </a>
+            @T["the user."]
         </card-body>
     </card>
 }
 
 <card>
     <card-title>
-        <h6 class="card-title">@T["Photo"]</h6>
+        <h6 class="card-title">
+            <i class="fal fa-user-circle mr-2"></i>
+            @T["Photo"]
+        </h6>
     </card-title>
     <card-body>
         <div class="profile-avatar">
@@ -36,7 +37,7 @@
                        asp-for="AvatarFile"
                        data-upload="avatar"
                        data-upload-preview-selector="#avatarPreview"
-                       data-upload-accept=".png, .jpg, .jpeg" />
+                       data-upload-accept=".png, .jpg, .jpeg, .gif" />
                 <label for="imageUpload">
                     <i class="fa fa-upload"></i>
                 </label>

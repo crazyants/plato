@@ -10,7 +10,6 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Users.Models;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
@@ -20,22 +19,22 @@ namespace Plato.Users.ViewProviders
     public class EditProfileViewProvider : BaseViewProvider<EditProfileViewModel>
     {
 
-        private static string _pathToAvatarFolder;
-        private static string _urlToAvatarFolder;
+        private static string _pathToImages;
+        private static string _urlToImages;
         
-        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly ISitesFolder _sitesFolder;
         private readonly IPlatoUserManager<User> _platoUserManager;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly ISitesFolder _sitesFolder;
 
         public EditProfileViewProvider(
-            IShellSettings shellSettings,
+            IUserPhotoStore<UserPhoto> userPhotoStore,
+            IPlatoUserManager<User> platoUserManager,
             IPlatoUserStore<User> platoUserStore,
             IHostingEnvironment hostEnvironment,
-            IFileStore fileStore,
-            IUserPhotoStore<UserPhoto> userPhotoStore,
+            IShellSettings shellSettings,
             ISitesFolder sitesFolder,
-            IPlatoUserManager<User> platoUserManager)
+            IFileStore fileStore)
         {
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
@@ -43,8 +42,8 @@ namespace Plato.Users.ViewProviders
             _platoUserManager = platoUserManager;
 
             // paths
-            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
-            _urlToAvatarFolder = $"/sites/{shellSettings.Location}/images/";
+            _pathToImages = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
+            _urlToImages = $"/sites/{shellSettings.Location.ToLower()}/images/";
             
         }
 
@@ -170,7 +169,7 @@ namespace Plato.Users.ViewProviders
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
 
             // Upload the new file
-            var fileName = await _sitesFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
+            var fileName = await _sitesFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToImages);
            
             // Ensure the new file was created
             if (!string.IsNullOrEmpty(fileName))
@@ -178,7 +177,7 @@ namespace Plato.Users.ViewProviders
                 // Delete any existing file
                 if (existingPhoto != null)
                 {
-                    _sitesFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
+                    _sitesFolder.DeleteFile(existingPhoto.Name, _pathToImages);
                 }
             }
 
@@ -201,7 +200,7 @@ namespace Plato.Users.ViewProviders
                 : await _userPhotoStore.CreateAsync(userPhoto);
             if (newOrUpdatedPhoto != null)
             {
-                return _urlToAvatarFolder + newOrUpdatedPhoto.Name;
+                return _urlToImages + newOrUpdatedPhoto.Name;
             }
             
             return string.Empty;

@@ -373,11 +373,9 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-
-
+            
             // Delete
             var result = await _platoUserManager.DeleteAsync(user);
-
             if (result.Succeeded)
             {
                 _alerter.Success(T["User Deleted Successfully"]);
