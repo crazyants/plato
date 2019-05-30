@@ -15,7 +15,7 @@ namespace Plato.Internal.Text
         // is correctly HTML encoded as this may be displayed via the Html.Raw HtmlHelper
         
         // This class offers a default implementation fo the HtmlEncoder which can be
-        // overriden or replaced by other modules as needed
+        // overriden or replaced by modules as needed
 
         public string Encode(string html)
         {

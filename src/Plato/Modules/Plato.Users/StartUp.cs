@@ -15,6 +15,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation.Abstractions;
@@ -29,6 +30,7 @@ using Plato.Users.ActionFilters;
 using Plato.Users.Middleware;
 using Plato.Users.Navigation;
 using Plato.Users.Services;
+using Plato.Users.Subscribers;
 
 namespace Plato.Users
 {
@@ -169,6 +171,9 @@ namespace Plato.Users
 
             // Migrations
             services.AddScoped<IMigrationProvider, Migrations>();
+
+            // Broker subscriptions
+            services.AddScoped<IBrokerSubscriber, ParseSignatureHtmlSubscriber>();
 
         }
 

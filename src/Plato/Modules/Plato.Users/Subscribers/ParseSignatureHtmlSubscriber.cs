@@ -1,49 +1,45 @@
 ﻿using System.Threading.Tasks;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Models.Shell;
 using Plato.Internal.Text.Abstractions;
 
-namespace Plato.Entities.Subscribers
+namespace Plato.Users.Subscribers
 {
 
-    public class ParseEntityHtmlSubscriber : IBrokerSubscriber
+    public class ParseSignatureHtmlSubscriber : IBrokerSubscriber
     {
 
         private readonly IBroker _broker;
-        private readonly IShellDescriptor _shellDescriptor;
         private readonly IDefaultHtmlEncoder _defaultHtmlEncoder;
 
-        public ParseEntityHtmlSubscriber(
-            IBroker broker, 
-            IShellDescriptor shellDescriptor, 
+        public ParseSignatureHtmlSubscriber(
+            IBroker broker,
             IDefaultHtmlEncoder defaultHtmlEncoder)
         {
             _broker = broker;
-            _shellDescriptor = shellDescriptor;
             _defaultHtmlEncoder = defaultHtmlEncoder;
         }
-        
+
         public void Subscribe()
         {
-            // Add a default subscription to parse entity html
+            // Add a default subscription to parse signature html
             _broker.Sub<string>(new MessageOptions()
             {
-                Key = "ParseEntityHtml",
+                Key = "ParseSignatureHtml",
                 Order = short.MinValue // our default parser should always runs first
-            }, async message => await ParseEntityHtmlAsync(message.What));
-            
+            }, async message => await ParseSignatureHtmlAsync(message.What));
+
         }
 
         public void Unsubscribe()
         {
             _broker.Unsub<string>(new MessageOptions()
             {
-                Key = "ParseEntityHtml"
-            }, async message => await ParseEntityHtmlAsync(message.What));
-            
+                Key = "ParseSignatureHtml"
+            }, async message => await ParseSignatureHtmlAsync(message.What));
+
         }
-        
-        private Task<string> ParseEntityHtmlAsync(string message)
+
+        private Task<string> ParseSignatureHtmlAsync(string message)
         {
 
             // IDefaultHtmlEncoder ensures user supplied input is correctly HTML encoded

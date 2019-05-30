@@ -20,8 +20,8 @@ namespace Plato.Users.Controllers
         private readonly ISitesFolder _sitesFolder;
         private readonly IHostingEnvironment _hostEnvironment;
 
-        private static string _pathToAvatarFolder;
-        private static string _urlToAvatarFolder;
+        private static string _pathToImages;
+        private static string _urlToImages;
 
         public LetterController(
             IInMemoryLetterRenderer letterRenderer,
@@ -35,8 +35,8 @@ namespace Plato.Users.Controllers
             _sitesFolder = sitesFolder;
             _hostEnvironment = hostEnvironment;
 
-            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
-            _urlToAvatarFolder = $"/sites/{shellSettings.Location}/images/";
+            _pathToImages = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
+            _urlToImages = $"/sites/{shellSettings.Location.ToLower()}/images/";
 
         }
 
@@ -55,7 +55,7 @@ namespace Plato.Users.Controllers
     
             var existingFileBytes = await _fileStore.GetFileBytesAsync(_fileStore.Combine(
                 _sitesFolder.RootPath,
-                _pathToAvatarFolder,
+                _pathToImages,
                 fileName));
             if (existingFileBytes != null)
             {
@@ -90,7 +90,7 @@ namespace Plato.Users.Controllers
                     
                     using (var stream = new MemoryStream(fileBytes))
                     {
-                       await _sitesFolder.SaveFileAsync(stream, fileName, _pathToAvatarFolder);
+                       await _sitesFolder.SaveFileAsync(stream, fileName, _pathToImages);
                     }
 
                     r.ContentType = "image/png";
