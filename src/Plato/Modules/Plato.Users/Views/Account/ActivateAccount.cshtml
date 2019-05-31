@@ -5,9 +5,9 @@
 
 @if (Model.IsValidConfirmationToken)
 {
-    <h4>@ViewData["Title"]</h4>
+    <h4>@T["Activate Account"]</h4>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-6">
             <form asp-controller="Account" asp-action="ActivateAccount" method="post" data-disable-submit="true" role="form">
                 <span class="text-muted">@T["Enter your email address below to activate your account"]</span>
                 <hr />
@@ -19,7 +19,7 @@
                 </div>
                 <input asp-for="ConfirmationToken" type="hidden" />
                 <div class="form-group">
-                    <button type="submit" role="button" class="btn btn-lg btn-primary btn-block">@ViewData["Title"]</button>
+                    <button type="submit" role="button" class="btn btn-lg btn-primary btn-block">@T["Activate Account"]</button>
                 </div>
             </form>
         </div>
@@ -29,7 +29,7 @@ else
 {
     <h4>@T["Invalid Token"]</h4>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-6">
             <span class="text-muted">@T["The confirmation token has expired"]</span>
         </div>
     </div>

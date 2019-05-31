@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ namespace Plato.Internal.Repositories.Users
                 success = await context.ExecuteScalarAsync<bool>(
                     CommandType.StoredProcedure,
                     "DeleteUserRoleById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -50,6 +51,21 @@ namespace Plato.Internal.Repositories.Users
 
         public async Task<UserRole> InsertUpdateAsync(UserRole userRole)
         {
+
+            // Validate
+
+            if (userRole.UserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userRole.UserId));
+            }
+
+            if (userRole.RoleId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userRole.RoleId));
+            }
+
+            // Insert / Update
+
             var id = 0;
             id = await InsertUpdateInternal(
                 userRole.Id,
@@ -251,7 +267,7 @@ namespace Plato.Internal.Repositories.Users
 
         #region "Private Methods"
 
-        private async Task<int> InsertUpdateInternal(
+        async Task<int> InsertUpdateInternal(
             int id,
             int userId,
             int roleId)
@@ -261,7 +277,7 @@ namespace Plato.Internal.Repositories.Users
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserRole",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("UserId", DbType.Int32, userId),

@@ -3,13 +3,14 @@
     AddTitleSegment(T["Account Activated"]);
 }
 
-<h4>@ViewData["Title"]</h4>
+<h4>@T["Account Activated"]</h4>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <p>
-            @T["Your account has been activated."]
+            @T["Thank You. Your account has been activated. You can now login using the link below..."]
             <br /><br/>
-            <a asp-route-area="Plato.Users" asp-controller="Account" asp-route-action="Login" class="btn btn-primary">
+            <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" class="btn btn-primary">
+                <i class="fal fa-lock"></i>
                 @T["Login"]
             </a>
         </p> 

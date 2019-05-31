@@ -73,7 +73,7 @@ namespace Plato.Email.Repositories
                         }
 
                         return email;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -134,7 +134,8 @@ namespace Plato.Email.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEmailById", new[]
+                    "DeleteEmailById",
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -168,19 +169,19 @@ namespace Plato.Email.Repositories
                 emailId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEmail",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
-                        new DbParam("To", DbType.String, 255, to),
-                        new DbParam("Cc", DbType.String, 255, cc),
-                        new DbParam("Bcc", DbType.String, 255, bcc),
-                        new DbParam("From", DbType.String, 255, from),
-                        new DbParam("Subject", DbType.String, 255, subject),
-                        new DbParam("Body", DbType.String, body),
+                        new DbParam("To", DbType.String, 255, to.ToEmptyIfNull()),
+                        new DbParam("Cc", DbType.String, 255, cc.ToEmptyIfNull()),
+                        new DbParam("Bcc", DbType.String, 255, bcc.ToEmptyIfNull()),
+                        new DbParam("From", DbType.String, 255, from.ToEmptyIfNull()),
+                        new DbParam("Subject", DbType.String, 255, subject.ToEmptyIfNull()),
+                        new DbParam("Body", DbType.String, body.ToEmptyIfNull()),
                         new DbParam("Priority", DbType.Int16, priority),
                         new DbParam("SendAttempts", DbType.Int16, sendAttempts),
                         new DbParam("CreatedUserId", DbType.Int32, createdUserId),
-                        new DbParam("CreatedDate", DbType.Int32, createdDate.ToDateIfNull()),
+                        new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),
                         new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output),
                     });
             }

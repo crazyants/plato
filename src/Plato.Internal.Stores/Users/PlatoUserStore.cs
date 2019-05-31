@@ -176,6 +176,12 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetByUserNameNormalizedAsync(string userNameNormalized)
         {
+
+            if (String.IsNullOrEmpty(userNameNormalized))
+            {
+                throw new ArgumentNullException(nameof(userNameNormalized));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByUsernameNormalized, userNameNormalized);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {

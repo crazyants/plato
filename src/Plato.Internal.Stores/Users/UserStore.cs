@@ -398,15 +398,21 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-
+            
             cancellationToken.ThrowIfCancellationRequested();
 
             var roleNames = await GetRolesAsync(user, cancellationToken);
+
             if (roleNames == null)
             {
                 return false;
             }
-                
+
+            if (roleNames.Count == 0)
+            {
+                return false;
+            }
+
             foreach (var name in roleNames)
             {
                 if (string.Equals(name, roleName, StringComparison.CurrentCultureIgnoreCase))
@@ -422,6 +428,12 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
+
+            if (string.IsNullOrEmpty(roleName))
+            {
+                throw new ArgumentNullException(nameof(roleName));
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
 
             var results  = await _platoUserStore.QueryAsync()
@@ -430,6 +442,7 @@ namespace Plato.Internal.Stores.Users
                 .ToList();
 
             return results.Data;
+
         }
 
         #endregion

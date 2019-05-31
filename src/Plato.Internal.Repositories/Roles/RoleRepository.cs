@@ -173,6 +173,7 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<IList<Role>> SelectByUserIdAsync(int userId)
         {
+
             List<Role> output = null;
             using (var context = _dbContext)
             {

@@ -507,49 +507,20 @@ namespace Plato.Users.Controllers
 
                         // Update EmailConfirmed
                         var result = await _platoUserManager.ConfirmEmailAsync(model.Email, confirmationToken);
-                        if (result.Succeeded)
-                        {
-                            // Add to default member roles
-                            var hasRoleChanges = false;
-                            foreach (var role in rolesToAdd)
-                            {
-                                if (!await _userManager.IsInRoleAsync(user, role))
-                                {
-                                    hasRoleChanges = true;
-                                    await _userManager.AddToRoleAsync(user, role);
-                                }
-                            }
-
-                            // Ensure we have changes
-                            if (hasRoleChanges)
-                            {
-                                // Update user
-                                var updateResult = await _userManager.UpdateAsync(user);
-                                if (updateResult.Succeeded)
-                                {
-                                    // Authenticate user if confirmation token and email are correct
-                                    await _signInManager.SignInAsync(user, isPersistent: false);
-                                }
-                                else
-                                {
-                                    foreach (var error in updateResult.Errors)
-                                    {
-                                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
-                                    }
-                                }
-                            }
-
-                            return RedirectToLocal(Url.Action("ActivateAccountConfirmation"));
-                        }
-                        else
+                        if (!result.Succeeded)
                         {
                             foreach (var error in result.Errors)
                             {
                                 ViewData.ModelState.AddModelError(string.Empty, error.Description);
                             }
                         }
+
+                        return RedirectToLocal(Url.Action("ActivateAccountConfirmation"));
+
                     }
+
                 }
+
             }
 
             // If we reach this point the found user's confirmation token does not match the supplied confirmation code

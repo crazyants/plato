@@ -102,7 +102,7 @@ namespace Plato.Users.Services
 
             if (String.IsNullOrEmpty(model.UserName) || String.IsNullOrWhiteSpace(model.UserName))
             {
-                return result.Failed(new CommandError("UserMame", T["A username is required"]));
+                return result.Failed(new CommandError("UserName", T["A username is required"]));
             }
 
             if (String.IsNullOrEmpty(model.Email) || String.IsNullOrWhiteSpace(model.Email))
@@ -127,7 +127,7 @@ namespace Plato.Users.Services
             // Is this a unique username?
             if (await _userManager.FindByNameAsync(model.UserName.Normalize()) != null)
             {
-                return result.Failed(new CommandError("UserMame", T["The username already exists"]));
+                return result.Failed(new CommandError("UserName", T["The username already exists"]));
             }
 
             // -------------------------
@@ -155,15 +155,6 @@ namespace Plato.Users.Services
             // Add security stamp
             await _securityStampStore.SetSecurityStampAsync(model, System.Guid.NewGuid().ToString(), new CancellationToken());
             
-            // Add new roles
-            foreach (var role in model.RoleNames)
-            {
-                if (!await _userManager.IsInRoleAsync(model, role))
-                {
-                    await _userManager.AddToRoleAsync(model, role);
-                }
-            }
-            
             // Invoke UserCreating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this, "UserCreating"))
             {
@@ -175,14 +166,32 @@ namespace Plato.Users.Services
             if (identityResult.Succeeded)
             {
 
+                // Get newly created user
+                var updatedOrNewUser = await _userManager.FindByEmailAsync(model.Email);
+
+                // Add roles from model
+                if (updatedOrNewUser != null)
+                {
+                    if (model.RoleNames != null)
+                    {
+                        foreach (var role in model.RoleNames)
+                        {
+                            if (!await _userManager.IsInRoleAsync(updatedOrNewUser, role))
+                            {
+                                await _userManager.AddToRoleAsync(updatedOrNewUser, role);
+                            }
+                        }
+                    }
+                }
+                
                 // Invoke UserCreated subscriptions
                 foreach (var handler in _broker.Pub<TUser>(this, "UserCreated"))
                 {
-                    model = await handler.Invoke(new Message<TUser>(model, this));
+                    updatedOrNewUser = await handler.Invoke(new Message<TUser>(updatedOrNewUser, this));
                 }
 
                 // Return success
-                return result.Success(model);
+                return result.Success(updatedOrNewUser);
 
             }
 

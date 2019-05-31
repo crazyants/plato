@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -93,16 +94,30 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<Role> GetByIdAsync(int id)
         {
+
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _roleRepository.SelectByIdAsync(id));
+
         }
 
         public async Task<Role> GetByNameAsync(string name)
         {
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), name);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _roleRepository.SelectByNameAsync(name));
+
         }
 
         public async Task<IEnumerable<Role>> GetRolesAsync()
@@ -114,9 +129,16 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<Role> GetByNormalizedNameAsync(string nameNormalized)
         {
+
+            if (string.IsNullOrEmpty(nameNormalized))
+            {
+                throw new ArgumentNullException(nameof(nameNormalized));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), nameNormalized);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _roleRepository.SelectByNormalizedNameAsync(nameNormalized));
+
         }
 
         public IQuery<Role> QueryAsync()
@@ -133,9 +155,16 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<IList<Role>> GetRolesByUserIdAsync(int userId)
         {
+
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), UserId, userId);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _roleRepository.SelectByUserIdAsync(userId));
+
         }
 
         public async Task<IEnumerable<string>> GetRoleNamesAsync()
