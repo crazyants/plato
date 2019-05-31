@@ -123,7 +123,7 @@ namespace Plato.Articles.Controllers
                 pager = new PagerOptions();
             }
             
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -2003,13 +2003,10 @@ namespace Plato.Articles.Controllers
 
         string GetSampleMarkDown(int number)
         {
-            return @"Hi There, 
-
-This is just a sample article to demonstrate articles within Plato. Articles use markdown for formatting and can be organized using tags, labels or categories. 
+            return @"This is just a sample article to demonstrate articles within Plato. Articles use markdown for formatting and can be organized using tags, labels or categories. 
 
 We hope you enjoy this early version of Plato :)
 
-        string GetSampleMarkDown(int number)
 Ryan :heartpulse: :heartpulse: :heartpulse:" + number;
 
         }

@@ -32,13 +32,13 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditSignatureViewModel> _editSignatureViewProvider;
         private readonly IViewProviderManager<Profile> _viewProvider;
         private readonly IPlatoUserManager<User> _platoUserManager;
-        private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly ITimeZoneProvider _timeZoneProvider;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
+        private readonly ITimeZoneProvider _timeZoneProvider;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
         private readonly IUserEmails _userEmails;
-        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -219,9 +219,15 @@ namespace Plato.Users.Controllers
                 return Unauthorized();
             }
             
-            // Meta data
-            var data = user.GetOrCreate<UserDetail>();
-
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Your Account"]);
+            });
+       
             // Build view model
             var editProfileViewModel = new EditProfileViewModel()
             {
@@ -292,6 +298,15 @@ namespace Plato.Users.Controllers
             {
                 return Unauthorized();
             }
+            
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Your Account"]);
+            });
 
             // Build view model
             var viewModel = new EditAccountViewModel()
@@ -398,6 +413,82 @@ namespace Plato.Users.Controllers
         }
 
         // -----------------
+        // Edit Signature
+        // -----------------
+
+        public async Task<IActionResult> EditSignature()
+        {
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure user is authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Your Account"]);
+            });
+
+            // Build view model
+            var viewModel = new EditSignatureViewModel()
+            {
+                Id = user.Id,
+                Signature = user.Signature
+            };
+
+            // Return view
+            return View((LayoutViewModel)await _editSignatureViewProvider.ProvideEditAsync(viewModel, this));
+
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditSignature))]
+        public async Task<IActionResult> EditSignaturePost(EditSignatureViewModel model)
+        {
+
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Validate model state within all view providers
+            if (await _editSignatureViewProvider.IsModelStateValid(model, this))
+            {
+
+                await _editSignatureViewProvider.ProvideUpdateAsync(model, this);
+
+                // Ensure model state is still valid after view providers have executed
+                if (ModelState.IsValid)
+                {
+                    _alerter.Success(T["Signature Updated Successfully!"]);
+                    return RedirectToAction(nameof(EditSignature));
+                }
+
+            }
+
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await EditSignature();
+
+        }
+
+        // -----------------
         // Edit Settings
         // -----------------
 
@@ -413,9 +504,15 @@ namespace Plato.Users.Controllers
                 return Unauthorized();
             }
             
-            // Get user data
-            var data = user.GetOrCreate<UserDetail>();
-
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Your Account"]);
+            });
+            
             // Build view model
             var viewModel = new EditSettingsViewModel()
             {
@@ -466,76 +563,6 @@ namespace Plato.Users.Controllers
             }
 
             return await EditSettings();
-
-        }
-
-        // -----------------
-        // Edit Signature
-        // -----------------
-
-        public async Task<IActionResult> EditSignature()
-        {
-
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Ensure user is authenticated
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            // Get user data
-            var data = user.GetOrCreate<UserDetail>();
-
-            // Build view model
-            var viewModel = new EditSignatureViewModel()
-            {
-                Id = user.Id,
-                Signature = user.Signature
-            };
-
-            // Return view
-            return View((LayoutViewModel) await _editSignatureViewProvider.ProvideEditAsync(viewModel, this));
-
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditSignature))]
-        public async Task<IActionResult> EditSignaturePost(EditSignatureViewModel model)
-        {
-
-            var user = await _userManager.FindByIdAsync(model.Id.ToString());
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // Validate model state within all view providers
-            if (await _editSignatureViewProvider.IsModelStateValid(model, this))
-            {
-
-                await _editSignatureViewProvider.ProvideUpdateAsync(model, this);
-
-                // Ensure model state is still valid after view providers have executed
-                if (ModelState.IsValid)
-                {
-                    _alerter.Success(T["Signature Updated Successfully!"]);
-                    return RedirectToAction(nameof(EditSignature));
-                }
-
-            }
-
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    _alerter.Danger(T[error.ErrorMessage]);
-                }
-            }
-
-            return await EditSignature();
 
         }
         

@@ -7,7 +7,8 @@
 }
 
 <div class="text-center">
-    <div class="form-group">
+    
+    <div>
         @Model.User.Reputation.ToPrettyInt() reputation, @badgesList.Count @T[badgesText]
     </div>
 
@@ -15,7 +16,7 @@
     {
         foreach (var badge in badgesList.OrderByDescending(b => b.AwardedDate).Take(3))
         {
-            <div class="d-inline-block" data-toggle="tooltip" title="@badge.Name">
+            <div class="d-inline-block my-2" data-toggle="tooltip" title="@badge.Name">
                 <div class="medallion medallion-sm medallion-@badge.Level.ToString().ToLower()">
                     <i class="@badge.BackgroundIconCss medallion-bg"></i>
                     <i class="@badge.IconCss medallion-icon"></i>
@@ -25,14 +26,15 @@
     }
     else
     {
-        <span class="text-muted">
+        <div class="text-muted">
             @T["No badges awarded"]
-        </span>
+        </div>
     }
 
-    <br />
-    <a asp-route-area="Plato.Users.Badges" asp-route-controller="Profile" asp-route-action="Index" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias">
-        @T["All Badges"]
-    </a>
-
+  
+    <div>
+        <a asp-route-area="Plato.Users.Badges" asp-route-controller="Profile" asp-route-action="Index" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias">
+            @T["All Badges"]
+        </a>
+    </div>
 </div>

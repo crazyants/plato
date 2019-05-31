@@ -37,15 +37,15 @@ namespace Plato.Mentions.Stores
             var builder = new EntityMentionsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-            var keywords = Params.Keywords.Value ?? string.Empty;
+            var keywords = Params?.Username.Value ?? string.Empty;
 
-            return await _store.SelectAsync(new[]
+            return await _store.SelectAsync(new IDbDataParameter[]
             {
                 new DbParam("PageIndex", DbType.Int32, PageIndex),
                 new DbParam("PageSize", DbType.Int32, PageSize),
                 new DbParam("SqlPopulate", DbType.String, populateSql),
                 new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("Keywords", DbType.String, keywords)
+                new DbParam("Username", DbType.String, keywords)
             });
 
         }
@@ -82,7 +82,7 @@ namespace Plato.Mentions.Stores
             set => _entityReplyId = value;
         }
 
-        public WhereString Keywords
+        public WhereString Username
         {
             get => _username ?? (_username = new WhereString());
             set => _username = value;
@@ -201,11 +201,11 @@ namespace Plato.Mentions.Stores
                 sb.Append(_query.Params.EntityReplyId.ToSqlString("em.EntityReplyId"));
             }
             
-            if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
+            if (!string.IsNullOrEmpty(_query.Params.Username.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Username", "Keywords"));
+                    sb.Append(_query.Params.Username.Operator);
+                sb.Append(_query.Params.Username.ToSqlString("Username", "Username"));
             }
 
             return sb.ToString();

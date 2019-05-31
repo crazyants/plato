@@ -3,7 +3,7 @@
     //var details = Model.GetOrCreate<UserDetail>();
 }
 
-<div class="vcard form-group">
+<div class="vcard">
 
     <div class="profile-avatar vcard-photo">
         <div class="avatar-preview">
@@ -13,7 +13,7 @@
 
     <ul class="vcard-details">
         <li class="vcard-display-name">
-            <h4 class="d-block p-0 m-0">@Model.DisplayName</h4>
+            <h4 class="d-block p-0 m-0 text-truncate">@Model.DisplayName</h4>
         </li>
         <li class="vcard-username text-muted">
             @@@Model.UserName
@@ -21,21 +21,19 @@
         @if (!String.IsNullOrEmpty(Model.Location))
         {
             <li class="vcard-location">
-                <i class="fal fa-map-marker"></i> @Model.Location
+                <i class="fal fa-map-marker d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Location"]"></i> 
+                <div class="d-inline-block align-middle max-w-200 text-truncate">@Model.Location</div>
             </li>
         }
         @if (!String.IsNullOrWhiteSpace(Model.Url))
         {
             <li class="vcard-url">
-                <i class="fal fa-link"></i>
-                <a href="@Model.Url">
-                    @Model.Url
-                </a>
+                <i class="fal fa-link d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Web Site"]"></i><a href="@Model.Url" title="@Model.Url" data-toggle="tooltip" class="d-inline-block align-middle max-w-200 text-truncate">@Model.Url</a>
             </li>
         }
        @if (!String.IsNullOrEmpty(Model.Biography))
        {
-           <li>
+           <li class="vcard-bio">
                @Model.Biography
            </li>
        }

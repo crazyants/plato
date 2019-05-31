@@ -13,6 +13,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
 using Plato.Users.Notifications.ViewModels;
@@ -24,6 +25,7 @@ namespace Plato.Users.Notifications.Controllers
 
         private readonly IViewProviderManager<EditNotificationsViewModel> _editProfileViewProvider;
         private readonly INotificationTypeManager _notificationTypeManager;
+        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
@@ -37,16 +39,18 @@ namespace Plato.Users.Notifications.Controllers
             IStringLocalizer stringLocalizer,
             IViewProviderManager<EditNotificationsViewModel> editProfileViewProvider,
             INotificationTypeManager notificationTypeManager,
+            IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager, 
-            IContextFacade contextFacade,
-            IAlerter alerter)
+            IContextFacade contextFacade)
         {
-            _contextFacade = contextFacade;
+            
+            _notificationTypeManager = notificationTypeManager;
             _editProfileViewProvider = editProfileViewProvider;
+            _breadCrumbManager = breadCrumbManager;
+            _contextFacade = contextFacade;
             _userManager = userManager;
             _alerter = alerter;
-            _notificationTypeManager = notificationTypeManager;
-
+        
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -61,6 +65,15 @@ namespace Plato.Users.Notifications.Controllers
             {
                 return NotFound();
             }
+            
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Your Account"]);
+            });
 
             // Get saved notification types
             var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();

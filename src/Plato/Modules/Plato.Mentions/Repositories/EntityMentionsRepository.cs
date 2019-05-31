@@ -63,7 +63,7 @@ namespace Plato.Mentions.Repositories
                         }
 
                         return output;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -128,7 +128,7 @@ namespace Plato.Mentions.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityMentionById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -152,7 +152,7 @@ namespace Plato.Mentions.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityMentionsByEntityId",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("EntityId", DbType.Int32, entityId)
                     });
@@ -175,7 +175,7 @@ namespace Plato.Mentions.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityMentionsByEntityReplyId",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("EntityReplyId", DbType.Int32, entityReplyId)
                     });
@@ -204,7 +204,7 @@ namespace Plato.Mentions.Repositories
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityMention",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("EntityId", DbType.Int32, entityId),
