@@ -374,8 +374,7 @@ namespace Plato.Users.Controllers
         // Logoff
         // -----------------
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();
@@ -491,6 +490,11 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> ActivateAccount(ActivateAccountViewModel model)
         {
 
+            var rolesToAdd = new List<string>()
+            {
+                DefaultRoles.Member
+            };
+            
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
@@ -500,9 +504,41 @@ namespace Plato.Users.Controllers
                     var confirmationToken = Encoding.UTF8.GetString(Convert.FromBase64String(model.ConfirmationToken));
                     if (user.ConfirmationToken == confirmationToken)
                     {
+
+                        // Update EmailConfirmed
                         var result = await _platoUserManager.ConfirmEmailAsync(model.Email, confirmationToken);
                         if (result.Succeeded)
                         {
+                            // Add to default member roles
+                            var hasRoleChanges = false;
+                            foreach (var role in rolesToAdd)
+                            {
+                                if (!await _userManager.IsInRoleAsync(user, role))
+                                {
+                                    hasRoleChanges = true;
+                                    await _userManager.AddToRoleAsync(user, role);
+                                }
+                            }
+
+                            // Ensure we have changes
+                            if (hasRoleChanges)
+                            {
+                                // Update user
+                                var updateResult = await _userManager.UpdateAsync(user);
+                                if (updateResult.Succeeded)
+                                {
+                                    // Authenticate user if confirmation token and email are correct
+                                    await _signInManager.SignInAsync(user, isPersistent: false);
+                                }
+                                else
+                                {
+                                    foreach (var error in updateResult.Errors)
+                                    {
+                                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                                    }
+                                }
+                            }
+
                             return RedirectToLocal(Url.Action("ActivateAccountConfirmation"));
                         }
                         else

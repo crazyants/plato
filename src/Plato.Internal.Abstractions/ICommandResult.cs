@@ -17,7 +17,6 @@ namespace Plato.Internal.Abstractions
         
         TResponse Response { get; }
         
-
     }
 
 }

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -182,10 +182,11 @@ namespace Plato.Features.Updates.Services
 
                     }
 
-                    // If we reach this point everything went OK, finally update
-                    // the feature version within the ShellFeatures table to reflect
-                    // the version of the module we've just updated to, also update
-                    // shell descriptor to reflect version within dictionary store
+                    // If we reach this point everything went OK, Migrations applied
+                    // successfully and no errors occurred within the features update handlers
+                    // finally update the features version within the ShellFeatures table to reflect
+                    // the new version of the module we've just updated to, also update
+                    // shell descriptor to reflect version changes within dictionary store
                  
                     var updateResult = await UpdateShellFeatureVersionAsync(feature, module.Descriptor.Version);
                     if (updateResult.Errors.Any())
