@@ -3,26 +3,33 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">@T["Opps"]</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h4>@T["Opps"]</h4>
+<div class="text-muted">
+    An error occurred while processing your request.
+</div>
+<hr/>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+<div class="row">
+    <div class="col-lg-6">
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed
-    information about the error that occurred.
-</p>
-<p>
-    <strong>
-        Development environment should not be enabled in deployed applications
-    </strong>, as it can result in sensitive information from exceptions being
-    displayed to end users. For local debugging, development environment can be
-    enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment
-    variable to <strong>Development</strong>, and restarting the application.
-</p>
+        <p>
+            Sorry but an unhandled error occured whilst processing your request. Please use your browsers back button and try again. If this error continues please contact us.
+        </p>
+        @if (Model.ShowRequestId)
+        {
+            <p>
+                If your the site administrator please review the logs for detailed error information.
+            </p>
+            <p>
+                <strong>Request ID:</strong> <code>@Model.RequestId</code>
+            </p>
+        }
+
+        <p>
+            Swapping to the <strong>Development</strong> environment will also display more detailed information about the error that occurred.
+        </p>
+        <p>
+            The development environment should not be enabled in production or deployed applications as it can result in sensitive information from exceptions being displayed to end users. For local debugging, the development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
+        </p>
+    </div>
+</div>
