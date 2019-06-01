@@ -48,7 +48,7 @@ namespace Plato.Questions.Navigation
                         .Action("Create", "Home", "Plato.Questions", new RouteValueDictionary())
                         .Permission(Permissions.PostQuestions)
                         .LocalNav()
-                    ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
+                    ));
         }
 
     }

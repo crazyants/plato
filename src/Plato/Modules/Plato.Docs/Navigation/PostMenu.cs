@@ -48,7 +48,7 @@ namespace Plato.Docs.Navigation
                         .Action("Create", "Home", "Plato.Docs", new RouteValueDictionary())
                         .Permission(Permissions.PostDocs)
                         .LocalNav()
-                    ), new List<string>() {"nav-item", "text-hidden", "text-muted" });
+                    ));
 
         }
 

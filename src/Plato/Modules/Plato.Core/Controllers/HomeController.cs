@@ -58,15 +58,15 @@ namespace Plato.Core.Controllers
         public async Task<IActionResult> Index()
         {
 
-            // Build breadcrumb
-            _breadCrumbManager.Configure(builder =>
-            {
-                builder
-                    .Add(S["Home"], home => home
-                        .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    );
-            });
+            //// Build breadcrumb
+            //_breadCrumbManager.Configure(builder =>
+            //{
+            //    builder
+            //        .Add(S["Home"], home => home
+            //            .Action("Index", "Home", "Plato.Core")
+            //            .LocalNav()
+            //        );
+            //});
 
             // Return view
             return View((LayoutViewModel)await _viewProvider.ProvideIndexAsync(new HomeIndex(), this));
