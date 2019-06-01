@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Entities.ActionFilters;
 //using Plato.Core.Models;
 using Plato.Entities.Assets;
 using Plato.Internal.Features.Abstractions;
@@ -17,6 +18,7 @@ using Plato.Entities.Subscribers;
 using Plato.Entities.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
@@ -97,11 +99,14 @@ namespace Plato.Entities
             // User view providers
             services.AddScoped<IViewProviderManager<EntityUserIndex>, ViewProviderManager<EntityUserIndex>>();
             services.AddScoped<IViewProvider<EntityUserIndex>, UserViewProvider>();
-            
+
             // Homepage view providers
             //services.AddScoped<IViewProviderManager<HomeIndex>, ViewProviderManager<HomeIndex>>();
             //services.AddScoped<IViewProvider<HomeIndex>, HomeViewProvider>();
-            
+
+            // Action filter
+            services.AddScoped<IModularActionFilter, HomeMenuContextualizeFilter>();
+
         }
 
         public override void Configure(

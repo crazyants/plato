@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Models;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Navigation
@@ -25,9 +26,15 @@ namespace Plato.Articles.Navigation
                 return;
             }
 
+            // Get metrics from context, these are registered via the
+            // HomeMenuContextualize action filter within Plato.Entities
+            var model =
+                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
+                    FeatureEntityMetrics;
+
             builder
                 .Add(T["Articles"], 3, discuss => discuss
-                    .View("CoreArticlesMenu")
+                    .View("CoreArticlesMenu", model)
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav()
                 );

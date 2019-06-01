@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Localization;
+using Plato.Entities.Models;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Docs.Navigation
@@ -21,10 +22,16 @@ namespace Plato.Docs.Navigation
             {
                 return;
             }
+            
+            // Get metrics from context, these are registered via the
+            // HomeMenuContextualize action filter within Plato.Entities
+            var model =
+                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
+                    FeatureEntityMetrics;
 
             builder
                 .Add(T["Docs"], 2, docs => docs
-                    .View("CoreDocsMenu")
+                    .View("CoreDocsMenu", model)
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav()
                 );

@@ -12,7 +12,6 @@ using Plato.Core.Models;
 using Plato.Core.ViewProviders;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Assets.Abstractions;
-using Plato.Internal.Data.Migrations;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -24,19 +23,10 @@ namespace Plato.Core
     {
 
         private readonly IShellSettings _shellSettings;
-        private readonly AutomaticDataMigrations _automaticDataMigrations;
-
-        private readonly string _tenantPrefix;
-        private readonly string _cookieSuffix;
-
-        public Startup(
-            IShellSettings shellSettings, 
-            AutomaticDataMigrations automaticDataMigrations)
+  
+        public Startup(IShellSettings shellSettings)
         {
             _shellSettings = shellSettings;
-            _automaticDataMigrations = automaticDataMigrations;
-            _tenantPrefix = shellSettings.RequestedUrlPrefix;
-            _cookieSuffix = shellSettings.AuthCookieName;
         }
 
         public override void ConfigureServices(IServiceCollection services)
@@ -74,27 +64,6 @@ namespace Plato.Core
             // Register client options middleware 
             app.UseMiddleware<SettingsClientOptionsMiddleware>();
             
-            //// Automatically apply any schema changes
-            //var result = _automaticDataMigrations
-            //    .InitialMigrationAsync()
-            //    .GetAwaiter()
-            //    .GetResult();
-
-            //// Add IModularViewsFeatureProvider application part
-            //// Required to allow modules to extend features
-            //var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>(); ;
-            //var modularViewsFeatureProviders = app.ApplicationServices.GetServices<IModularViewsFeatureProvider<ViewsFeature>>();
-            //if (modularViewsFeatureProviders != null)
-            //{
-            //    foreach (var provider in modularViewsFeatureProviders)
-            //    {
-            //        applicationPartManager.FeatureProviders.Add(provider);
-            //    }
-            //}
-
-
-
-
             // Homepage
             routes.MapAreaRoute(
                 name: "Homepage",

@@ -38,8 +38,7 @@ namespace Plato.Entities.ViewProviders
             {
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Entity>).ToString()} has not been registered on the HttpContext!");
             }
-
-
+            
             var featureEntityMetrics = new FeatureEntityMetrics()
             {
                 Metrics = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
