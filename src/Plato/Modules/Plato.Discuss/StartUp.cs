@@ -59,6 +59,7 @@ namespace Plato.Discuss
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
+            services.AddScoped<INavigationProvider, HomeMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
             services.AddScoped<INavigationProvider, PostMenu>();
             services.AddScoped<INavigationProvider, UserEntitiesMenu>();

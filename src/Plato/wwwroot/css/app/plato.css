@@ -628,6 +628,18 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 /* ------------------------- */
+/* Home Nav */
+/* ------------------------- */
+
+.nav-home {
+
+}
+
+.nav-home > .nav-item {
+    background: red;
+}
+
+/* ------------------------- */
 /* Site Nav */
 /* ------------------------- */
 

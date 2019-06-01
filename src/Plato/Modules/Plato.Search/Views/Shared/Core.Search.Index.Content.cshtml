@@ -1,15 +1,4 @@
-﻿@model EntityIndexViewModel<Entity>
-
-@if (!String.IsNullOrEmpty(Model.Options.Search))
-{
-    @await DisplayAsync(new View("SearchList", new
-    {
-        options = @Model.Options,
-        pager = @Model.Pager
-    }))
-}
-else
-{
+﻿
     <card>
         <card-title>
             <h6 class="card-title">
@@ -21,7 +10,7 @@ else
             <form class="form-inline ml-2" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
                 <div class="w-100 position-relative min-w-250">
                     <div class="search-input-group">
-                        <input class="form-control" name="opts.search" value="@Model.Options.Search" type="search" placeholder="@T["Search for keywords..."]" aria-label="Search" autofocus/>
+                        <input class="form-control" name="opts.search" type="search" placeholder="@T["Search for keywords..."]" aria-label="Search" autofocus/>
                         <button class="btn btn-primary" type="submit">
                             <i class="fal fa-search"></i>
                         </button>
@@ -32,5 +21,5 @@ else
 
         </card-body>
     </card>
-}
+
 

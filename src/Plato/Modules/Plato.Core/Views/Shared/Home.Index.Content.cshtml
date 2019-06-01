@@ -1,20 +1,4 @@
 ﻿
-@{
-    var from = new Version(1, 0, 0);
-    var to = new Version(3, 5, 8);
-
-    var versions = from.GetVersionsBetween(to);
-}
-
-@if (versions != null)
-{
-    foreach (var v in versions)
-     {
-         <div>
-             @v
-         </div>
-     }
-}
-
-
-Home Index
+<navigation name="home"
+    class="nav nav-home"
+    child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />

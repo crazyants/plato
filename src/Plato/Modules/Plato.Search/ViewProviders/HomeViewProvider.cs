@@ -1,20 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Plato.Core.Models;
 using Plato.Internal.Layout.ViewProviders;
 
-namespace Plato.Core.ViewProviders
+namespace Plato.Search.ViewProviders
 {
     public class HomeViewProvider : BaseViewProvider<HomeIndex>
     {
 
         public override Task<IViewProviderResult> BuildIndexAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-            
+
             return Task.FromResult(Views(
-                View<HomeIndex>("Home.Index.Header", model => viewModel).Zone("header"),
-                View<HomeIndex>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<HomeIndex>("Home.Index.Content", model => viewModel).Zone("content")
+                View<HomeIndex>("Core.Search.Index.Content", model => viewModel).Zone("content")
             ));
 
         }
@@ -23,7 +23,7 @@ namespace Plato.Core.ViewProviders
         {
             throw new NotImplementedException();
         }
-        
+
         public override Task<IViewProviderResult> BuildEditAsync(HomeIndex viewModel, IViewProviderContext context)
         {
             throw new NotImplementedException();
@@ -35,5 +35,7 @@ namespace Plato.Core.ViewProviders
         }
 
     }
+
+
 
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Core.Models;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
@@ -56,6 +57,10 @@ namespace Plato.Search
             services.AddScoped<IViewProviderManager<SearchSettings>, ViewProviderManager<SearchSettings>>();
             services.AddScoped<IViewProvider<SearchSettings>, AdminViewProvider>();
 
+            // Homepage view providers
+            services.AddScoped<IViewProviderManager<HomeIndex>, ViewProviderManager<HomeIndex>>();
+            services.AddScoped<IViewProvider<HomeIndex>, HomeViewProvider>();
+            
             // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 

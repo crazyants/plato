@@ -7,12 +7,14 @@ namespace Plato.Discuss.Navigation
 {
     public class SiteMenu : INavigationProvider
     {
+
+
+        public IStringLocalizer T { get; set; }
+
         public SiteMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
-
-        public IStringLocalizer T { get; set; }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
         {

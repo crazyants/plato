@@ -1,11 +1,11 @@
 ﻿@model DeniedViewModel
 @{
-    ViewData["Title"] = "Access Denied";
+    AddTitleSegment(T["Access Denied"]);
 }
 
 <h4>@T["Access Denied"]</h4>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         @if (this.CurrentUser == null)  {
             <p>
                 @T["You must be logged in to access the requested page."]
