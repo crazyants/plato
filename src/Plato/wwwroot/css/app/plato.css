@@ -636,7 +636,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 .nav-home > .nav-item {
-    background: red;
+    text-align: center;
 }
 
 /* ------------------------- */
