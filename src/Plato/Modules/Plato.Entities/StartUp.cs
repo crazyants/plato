@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+//using Plato.Core.Models;
 using Plato.Entities.Assets;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -86,18 +87,21 @@ namespace Plato.Entities
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Entity>, QueryAdapterManager<Entity>>();
 
-            // Query adapter
+            // Query adapters
             services.AddScoped<IQueryAdapterManager<EntityQueryParams>, QueryAdapterManager<EntityQueryParams>>();
 
-            // Add profile views
+            // Profile view providers
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
             services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
-            
-            // Add user views
+
+            // User view providers
             services.AddScoped<IViewProviderManager<EntityUserIndex>, ViewProviderManager<EntityUserIndex>>();
             services.AddScoped<IViewProvider<EntityUserIndex>, UserViewProvider>();
-
-       
+            
+            // Homepage view providers
+            //services.AddScoped<IViewProviderManager<HomeIndex>, ViewProviderManager<HomeIndex>>();
+            //services.AddScoped<IViewProvider<HomeIndex>, HomeViewProvider>();
+            
         }
 
         public override void Configure(

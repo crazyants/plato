@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Plato.Internal.Features\Plato.Internal.Features.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Repositories\Plato.Internal.Repositories.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Search.Abstractions\Plato.Internal.Search.Abstractions.csproj" />
