@@ -11,8 +11,8 @@ namespace Plato.Search.ViewProviders
         {
 
             return Task.FromResult(Views(
-                View<HomeIndex>("Core.Search.Index.Sidebar", model => viewModel)
-                    .Zone("sidebar").Order(int.MinValue + 10)
+                View<HomeIndex>("Core.Search.Index.Tools", model => viewModel)
+                    .Zone("tools").Order(int.MinValue + 10)
             ));
 
         }
