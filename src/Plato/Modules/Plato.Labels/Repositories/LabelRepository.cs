@@ -92,7 +92,7 @@ namespace Plato.Labels.Repositories
                         }
 
                         return label;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -154,7 +154,7 @@ namespace Plato.Labels.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteLabelById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -188,7 +188,7 @@ namespace Plato.Labels.Repositories
                         }
 
                         return output;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("FeatureId", DbType.Int32, featureId)
                     });
@@ -231,17 +231,17 @@ namespace Plato.Labels.Repositories
                 labelId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabel",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("ParentId", DbType.Int32, parentId),
                         new DbParam("FeatureId", DbType.Int32, featureId),
-                        new DbParam("Name", DbType.String, 255, name),
-                        new DbParam("Description", DbType.String, 500, description),
-                        new DbParam("Alias", DbType.String, 255, alias),
+                        new DbParam("Name", DbType.String, 255, name.ToEmptyIfNull()),
+                        new DbParam("Description", DbType.String, 500, description.ToEmptyIfNull()),
+                        new DbParam("Alias", DbType.String, 255, alias.ToEmptyIfNull()),
                         new DbParam("IconCss", DbType.String, 50, iconCss.ToEmptyIfNull()),
-                        new DbParam("ForeColor", DbType.String, 50, foreColor),
-                        new DbParam("BackColor", DbType.String, 50, backColor),
+                        new DbParam("ForeColor", DbType.String, 50, foreColor.ToEmptyIfNull()),
+                        new DbParam("BackColor", DbType.String, 50, backColor.ToEmptyIfNull()),
                         new DbParam("SortOrder", DbType.Int32, sortOrder),
                         new DbParam("TotalEntities", DbType.Int32, totalEntities),
                         new DbParam("TotalFollows", DbType.Int32, totalFollows),

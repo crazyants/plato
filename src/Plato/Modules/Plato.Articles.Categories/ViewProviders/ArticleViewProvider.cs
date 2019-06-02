@@ -93,7 +93,7 @@ namespace Plato.Articles.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryIndexViewModel>("Articles.Categories.Sidebar", model => categoryIndexViewModel).Zone("sidebar")
+                View<CategoryIndexViewModel>("Article.Categories.Index.Content", model => categoryIndexViewModel).Zone("content")
                     .Order(1)
             );
 

@@ -1,8 +1,8 @@
 ﻿@model CategoryListItemViewModel<Category>
 @{
     var details = Model.Category.GetOrCreate<CategoryDetails>();
-    var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "#666";
-    var childForeColor = !String.IsNullOrEmpty(Model.Category.ForeColor) ? Model.Category.ForeColor : "#fff";
+    var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "auto";
+    var childForeColor = !String.IsNullOrEmpty(Model.Category.ForeColor) ? Model.Category.ForeColor : "auto";
     var buttonText = details.TotalEntities == 1
         ? "article"
         : "articles";
@@ -33,7 +33,7 @@
     </div>
 </a>
 
-<div class="row" style="display: none;">
+@*<div class="row" style="display: none;">
 
     @if (!String.IsNullOrEmpty(Model.Category.IconCss))
     {
@@ -119,5 +119,5 @@
         }
     </div>
 
-</div>
+</div>*@
 

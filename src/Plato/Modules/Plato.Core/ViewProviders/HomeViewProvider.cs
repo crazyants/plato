@@ -15,7 +15,6 @@ namespace Plato.Core.ViewProviders
                 View<HomeIndex>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<HomeIndex>("Home.Index.Tools", model => viewModel).Zone("tools"),
                 View<HomeIndex>("Home.Index.Content", model => viewModel).Zone("content")
-                //View<HomeIndex>("Home.Index.Sidebar", model => viewModel).Zone("sidebar")
             ));
 
         }

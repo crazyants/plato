@@ -68,6 +68,11 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .cursor-pointer { cursor: pointer !important; }
 .cursor-disabled { cursor: not-allowed !important; }
 
+.font-size-100 { font-size: 100%; }
+.font-size-120 { font-size: 120%; }
+.font-size-140 { font-size: 140%; }
+.font-size-160 { font-size: 160%; }
+
 /* ------------------------- */
 /* Opacity */
 /* ------------------------- */
@@ -973,7 +978,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     top: 0;
     left: 50%;
     height:86px;
-    overflow: hidden;
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
     padding: 12px 15px;

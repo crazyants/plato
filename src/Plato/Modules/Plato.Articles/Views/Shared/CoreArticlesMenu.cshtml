@@ -6,7 +6,9 @@
 <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Index" class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0 text-center">
     <span class="d-inline-block p-4">
         <span class="d-block">
-            <i class="fal fa-copy fa-2x text-primary"></i>
+            <span class="category-icon category-icon-lg">
+                <i class="fal fa-copy"></i>
+            </span>
         </span>
         <span class="d-block my-3">
             <span class="d-block font-weight-bold">
@@ -18,8 +20,8 @@
         </span>
         @if (featureMetrics != null)
         {
-            var text = featureMetrics.Count == 1 
-                ? "{0} article" 
+            var text = featureMetrics.Count == 1
+                ? "{0} article"
                 : "{0} articles";
             <span class="d-block">
                 <span class="btn btn-secondary">

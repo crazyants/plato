@@ -436,13 +436,15 @@ a.label:hover, .label.active {
 /* Category Icon */
 /* ------------------- */
 
+.list-group-item-action.active .category-icon,
 .list-group-item-action:hover .category-icon {
-    color: white;
+    background-color: #EAF4FF;
+    color: #007bff;
 }
 
 .category-icon {
-    background-color: #bbb;
-    color: white;
+    background-color: #EAF4FF;
+    color: #007bff;
 }
 
 /* ------------------- */
