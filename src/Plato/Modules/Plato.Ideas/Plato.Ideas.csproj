@@ -2,33 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Ideas</AssemblyName>
-    <PackageId>Plato.Ideas</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <RootNamespace>Plato.Ideas</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Content\css\ideas.css" />
-    <None Remove="Locales\en-US\emails.json" />
-    <None Remove="Locales\en-US\strings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Content\css\ideas.css">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Locales\en-US\emails.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Locales\en-US\strings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Badges\Plato.Internal.Badges.csproj" />
