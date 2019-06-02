@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Core.Models;
 using Plato.Internal.Layout.ViewProviders;
 
@@ -15,28 +12,26 @@ namespace Plato.Search.ViewProviders
 
             return Task.FromResult(Views(
                 View<HomeIndex>("Core.Search.Index.Sidebar", model => viewModel)
-                    .Zone("content").Order(int.MinValue + 10)
+                    .Zone("sidebar").Order(int.MinValue + 10)
             ));
 
         }
 
         public override Task<IViewProviderResult> BuildDisplayAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override Task<IViewProviderResult> BuildUpdateAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
     }
-
-
-
+    
 }

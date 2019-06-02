@@ -6,13 +6,15 @@
 <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index" class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0 text-center">
     <span class="d-inline-block p-4">
         <span class="d-block">
-            <i class="fal fa-lightbulb fa-2x"></i>
+            <i class="fal fa-lightbulb fa-2x text-primary"></i>
         </span>
-        <span class="d-block font-weight-bold">
-            @T["Ideas"]
-        </span>
-        <span class="d-block text-muted">
-            @T["Suggest an idea or vote for your favorite ideas."]
+        <span class="d-block my-3">
+            <span class="d-block font-weight-bold">
+                @T["Ideas"]
+            </span>
+            <span class="d-block text-muted">
+                @T["Suggest an idea or vote for your favorite ideas."]
+            </span>
         </span>
         @if (featureMetrics != null)
         {
@@ -20,7 +22,7 @@
                 ? "{0} idea"
                 : "{0} ideas";
             <span class="d-block">
-                <span class="badge badge-primary">
+                <span class="btn btn-secondary">
                     @T[text].Value.Replace("{0}", featureMetrics.Count.ToPrettyInt())
                 </span>
             </span>

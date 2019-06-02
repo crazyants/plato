@@ -1,1 +1,19 @@
 ﻿
+@if (base.CurrentUser == null)
+{
+
+}
+else
+{
+    var text = T["Welcome {0}"];
+    <card>
+        <card-title>
+            <h6>
+                @text.Value.Replace("{0}", base.CurrentUser.DisplayName)
+            </h6>
+        </card-title>
+        <card-body>
+
+        </card-body>
+    </card>
+}

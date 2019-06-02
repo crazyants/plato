@@ -6,13 +6,15 @@
 <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Index" class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0 text-center">
     <span class="d-inline-block p-4">
         <span class="d-block">
-            <i class="fal fa-book-open fa-2x"></i>
+            <i class="fal fa-book-open fa-2x text-primary"></i>
         </span>
-        <strong>
-            @T["Docs"]
-        </strong>
-        <span class="d-block text-muted">
-            @T["Browse all our product documentation."]
+        <span class="d-block my-3">
+            <span class="d-block font-weight-bold">
+                @T["Docs"]
+            </span>
+            <span class="d-block text-muted">
+                @T["Browse all our product documentation."]
+            </span>
         </span>
         @if (featureMetrics != null)
         {
@@ -20,7 +22,7 @@
                 ? "{0} doc"
                 : "{0} docs";
             <span class="d-block">
-                <span class="badge badge-primary">
+                <span class="btn btn-secondary">
                     @T[text].Value.Replace("{0}", featureMetrics.Count.ToPrettyInt())
                 </span>
             </span>
