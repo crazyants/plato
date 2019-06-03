@@ -415,7 +415,8 @@ a.label.active {
 /* ------------------- */
 
 .list-group-item-action:hover .category-icon {
-    color: white;
+    background-color: #222;
+    color: #2A9FD6;
 }
 
 .category-icon {

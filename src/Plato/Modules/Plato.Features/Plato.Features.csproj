@@ -2,23 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Features</AssemblyName>
-    <PackageId>Plato.Features</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Content\**" />
-    <Compile Remove="TagHelpers\**" />
-    <EmbeddedResource Remove="Content\**" />
-    <EmbeddedResource Remove="TagHelpers\**" />
-    <None Remove="Content\**" />
-    <None Remove="TagHelpers\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />

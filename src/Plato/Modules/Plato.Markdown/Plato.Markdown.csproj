@@ -2,26 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>  
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="lib\**" />
     <EmbeddedResource Remove="lib\**" />
     <None Remove="lib\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Content\css\markdown.css" />
-    <None Remove="Content\js\markdown.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Content\css\markdown.css">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Content\js\markdown.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
