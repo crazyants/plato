@@ -2,28 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Users</AssemblyName>
-    <PackageId>Plato.Users</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Locales\en-US\emails.json" />
-    <None Remove="Locales\en-US\strings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Locales\en-US\emails.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Locales\en-US\strings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />

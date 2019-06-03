@@ -1,22 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Questions.Tags</AssemblyName>
-    <PackageId>Plato.Questions.Tags</PackageId>
+    <TargetFramework>netstandard2.0</TargetFramework>  
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <RootNamespace>Plato.Questions.Tags</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Content\**" />
-    <EmbeddedResource Remove="Content\**" />
-    <None Remove="Content\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
