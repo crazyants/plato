@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -44,13 +45,27 @@ namespace Plato.Entities.ViewModels
         [DataMember(Name = "category")]
         public int CategoryId { get; set; }
 
+        // ---------------
+
+        [JsonIgnore]
         public int[] CategoryIds { get; set; }
 
         public int CreatedByUserId { get; set; }
 
+        [JsonIgnore]
         public int LabelId { get; set; }
 
+        [JsonIgnore]
         public int TagId { get; set; }
+        
+        private IDictionary<string, OrderBy> _sortColumns;
+
+        [JsonIgnore]
+        public IDictionary<string, OrderBy> SortColumns
+        {
+            get => _sortColumns ?? (_sortColumns = new Dictionary<string, OrderBy>());
+            set => _sortColumns = value;
+        }
 
     }
 
@@ -91,7 +106,8 @@ namespace Plato.Entities.ViewModels
         Stars = 8,
         SortOrder = 9,
         Created = 10,
-        Modified = 11
+        Modified = 11,
+        IsPinned = 12
     }
 
     public enum FilterBy

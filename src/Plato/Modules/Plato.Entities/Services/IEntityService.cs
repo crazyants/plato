@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -14,7 +15,7 @@ namespace Plato.Entities.Services
         Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager);
         
         IEntityService<TModel> ConfigureDb(Action<IQueryOptions> configure);
-
+        
         IEntityService<TModel> ConfigureQuery(Action<EntityQueryParams> configure);
 
     }

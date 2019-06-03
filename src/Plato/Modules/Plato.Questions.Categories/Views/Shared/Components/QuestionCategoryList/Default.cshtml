@@ -7,9 +7,11 @@
         @foreach (var channel in Model.Categories)
         {
             var details = channel.GetOrCreate<CategoryDetails>();
+            var cardHeaderCss = channel.Children.Any()
+                ? "card-header"
+                : "card-header border-bottom-0";
             <card class="card card-body-flush">
-                <card-title>
-                 
+                <card-title class="@cardHeaderCss">
                     <ol class="list-inline text-muted float-right">
                         <li class="list-inline-item">
                             <span title="@T["Topics"]" data-toggle="tooltip">
@@ -22,7 +24,6 @@
                             </span>
                         </li>
                     </ol>
-                   
                     <h6 class="card-title">
                         <a asp-route-area="Plato.Questions.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias">
                             @channel.Name
@@ -34,14 +35,13 @@
                             @channel.Description
                         </span>
                     }
-
                 </card-title>
                 <card-body>
-
-                    <ul class="list-group list-group-flush list-group-hover">
-                        @if (channel.Children.Any())
-                        {
-                            foreach (var child in channel.Children)
+                    
+                    @if (channel.Children.Any())
+                    {
+                        <ul class="list-group list-group-flush list-group-hover">
+                            @foreach (var child in channel.Children)
                             {
                                 <li class="list-group-item list-group-item-action">
                                     @await DisplayAsync(new View("QuestionCategoryListItem", new
@@ -51,16 +51,9 @@
                                     }))
                                 </li>
                             }
-                        }
-                        else
-                        {
-
-                            <li class="list-group-item">
-                                <h6>@T["No child channels"]</h6>
-                            </li>
-
-                        }
-                    </ul>
+                        </ul>
+                    }
+                       
                 </card-body>
             </card>
          }

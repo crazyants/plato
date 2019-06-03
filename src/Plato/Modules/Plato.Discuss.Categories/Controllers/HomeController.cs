@@ -11,6 +11,7 @@ using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
@@ -222,12 +223,12 @@ namespace Plato.Discuss.Categories.Controllers
                 }
             }
 
-            // Ensure results are sorted
+            // Ensure pinned entities appear first
             if (options.Sort == SortBy.Auto)
             {
-                options.Sort = SortBy.LastReply;
+                options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
             }
-
+            
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 

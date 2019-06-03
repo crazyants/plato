@@ -121,7 +121,7 @@ namespace Plato.Discuss.Controllers
                 pager = new PagerOptions();
             }
 
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -1942,10 +1942,10 @@ namespace Plato.Discuss.Controllers
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
-            // Ensure we have a default sort column
+            // Ensure pinned entities appear first
             if (options.Sort == SortBy.Auto)
             {
-                options.Sort = SortBy.LastReply;
+                options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
             }
 
             // Return updated model
@@ -1959,6 +1959,11 @@ namespace Plato.Discuss.Controllers
 
         EntityViewModel<Topic, Reply> GetDisplayViewModel(Topic entity, EntityOptions options, PagerOptions pager)
         {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
 
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
@@ -1978,11 +1983,15 @@ namespace Plato.Discuss.Controllers
         EntityOptions ConfigureEntityDisplayOptions(Topic entity, EntityOptions options)
         {
 
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             // Ensure view model is aware of the entity we are displaying
             options.Id = entity.Id;
 
             // Ensure replies marked as an answer appear first
-            options.SortColumns = new Dictionary<string, OrderBy>(); ;
             options.SortColumns.Add("IsAnswer", OrderBy.Desc);
             options.SortColumns.Add("CreatedDate", OrderBy.Asc);
 

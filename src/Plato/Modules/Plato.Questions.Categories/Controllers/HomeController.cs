@@ -10,6 +10,7 @@ using Plato.Questions.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.ModelBinding;
@@ -216,15 +217,15 @@ namespace Plato.Questions.Categories.Controllers
                     options.CategoryId = category.Id;
                 }
             }
-
-            // Ensure results are sorted
-            if (options.Sort == SortBy.Auto)
-            {
-                options.Sort = SortBy.LastReply;
-            }
-
+            
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
+            
+            // Ensure pinned entities appear first
+            if (options.Sort == SortBy.Auto)
+            {
+                options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
+            }
 
             // Return updated model
             return new EntityIndexViewModel<Question>()

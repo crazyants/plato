@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Core.Models;
 using Plato.Entities.Models;
@@ -14,43 +15,44 @@ namespace Plato.Entities.ViewProviders
 
         public override Task<IViewProviderResult> BuildIndexAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-
-            var latestViewModel = new EntityIndexViewModel<Entity>()
-            {
-                Options = new EntityIndexOptions()
-                {
-                    Sort = SortBy.LastReply,
-                    Order = OrderBy.Desc
-                },
-                Pager = new PagerOptions()
-                {
-                    Page = 1,
-                    Size = 5,
-                    Enabled = false
-                }
-            };
-
-            var popularViewModel = new EntityIndexViewModel<Entity>()
-            {
-                Options = new EntityIndexOptions()
-                {
-                    Sort = SortBy.LastReply,
-                    Order = OrderBy.Desc
-                },
-                Pager = new PagerOptions()
-                {
-                    Page = 1,
-                    Size = 5,
-                    Enabled = false
-                }
-            };
-
+            
+            // Build view model
             var coreIndexViewModel = new CoreIndexViewModel()
             {
-                Latest = latestViewModel,
-                Popular = popularViewModel
+                Latest = new EntityIndexViewModel<Entity>()
+                {
+                    Options = new EntityIndexOptions()
+                    {
+                        Sort = SortBy.LastReply,
+                        Order = OrderBy.Desc
+                    },
+                    Pager = new PagerOptions()
+                    {
+                        Page = 1,
+                        Size = 5,
+                        Enabled = false
+                    }
+                },
+                Popular = new EntityIndexViewModel<Entity>()
+                {
+                    Options = new EntityIndexOptions()
+                    {
+                        SortColumns = new Dictionary<string, OrderBy>()
+                        {
+                            {SortBy.Views.ToString(), OrderBy.Desc},
+                            {SortBy.Replies.ToString(), OrderBy.Desc}
+                        }
+                    },
+                    Pager = new PagerOptions()
+                    {
+                        Page = 1,
+                        Size = 5,
+                        Enabled = false
+                    }
+                }
             };
 
+            // Build view
             return Task.FromResult(Views(
                 View<CoreIndexViewModel>("Core.Entities.Index.Content", model => coreIndexViewModel)
                     .Zone("content").Order(2)

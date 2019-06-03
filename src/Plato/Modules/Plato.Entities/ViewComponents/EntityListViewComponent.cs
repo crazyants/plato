@@ -166,7 +166,7 @@ namespace Plato.Entities.ViewComponents
 
             // Build results
             var results = await _entityService
-                .GetResultsAsync(options, pager); 
+                .GetResultsAsync(options, pager);
 
             // Set pager total
             pager.SetTotal(results?.Total ?? 0);

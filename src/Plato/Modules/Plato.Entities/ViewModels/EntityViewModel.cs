@@ -38,12 +38,21 @@ namespace Plato.Entities.ViewModels
         [DataMember(Name = "sort")]
         public string Sort { get; set; } = "CreatedDate";
 
-        [JsonIgnore]
-        public IDictionary<string, OrderBy> SortColumns { get; set; } 
-
         [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Asc;
-        
+
+        // -----------------
+
+
+        private IDictionary<string, OrderBy> _sortColumns;
+
+        [JsonIgnore]
+        public IDictionary<string, OrderBy> SortColumns
+        {
+            get => _sortColumns ?? (_sortColumns = new Dictionary<string, OrderBy>());
+            set => _sortColumns = value;
+        }
+
     }
 
 }

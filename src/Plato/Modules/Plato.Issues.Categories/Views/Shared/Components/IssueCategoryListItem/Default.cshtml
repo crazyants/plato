@@ -1,8 +1,8 @@
 ﻿@model CategoryListItemViewModel<Category>
 @{
     var details = Model.Category.GetOrCreate<CategoryDetails>();
-    var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "#666";
-    var childForeColor = !String.IsNullOrEmpty(Model.Category.ForeColor) ? Model.Category.ForeColor : "#fff";
+    var childBgColor = !String.IsNullOrEmpty(Model.Category.BackColor) ? Model.Category.BackColor : "auto";
+    var childForeColor = !String.IsNullOrEmpty(Model.Category.ForeColor) ? Model.Category.ForeColor : "auto";
 }
 
 <div class="row">

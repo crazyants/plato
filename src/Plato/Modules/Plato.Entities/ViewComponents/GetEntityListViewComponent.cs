@@ -53,13 +53,7 @@ namespace Plato.Search.ViewComponents
 
             // Get results
             var results = await _entityService
-                .ConfigureDb(o =>
-                {
-                    //if (_searchSettings != null)
-                    //{
-                    //    o.SearchType = _searchSettings.SearchType;
-                    //}
-                }).GetResultsAsync(options, pager);
+                .GetResultsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);

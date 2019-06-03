@@ -123,7 +123,7 @@ namespace Plato.Articles.Controllers
                 pager = new PagerOptions();
             }
             
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new EntityIndexOptions();
@@ -1940,6 +1940,12 @@ namespace Plato.Articles.Controllers
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
+            // Ensure pinned entities appear first
+            if (options.Sort == SortBy.Auto)
+            {
+                options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
+            }
+            
             // Return updated model
             return new EntityIndexViewModel<Article>()
             {
@@ -1948,8 +1954,7 @@ namespace Plato.Articles.Controllers
             };
 
         }
-
-
+        
         EntityViewModel<Article, Comment> GetDisplayViewModel(Article entity, EntityOptions options, PagerOptions pager)
         {
 
@@ -1975,7 +1980,6 @@ namespace Plato.Articles.Controllers
             options.Id = entity.Id;
 
             // Ensure replies marked as an answer appear first
-            options.SortColumns = new Dictionary<string, OrderBy>(); ;
             options.SortColumns.Add("IsAnswer", OrderBy.Desc);
             options.SortColumns.Add("CreatedDate", OrderBy.Asc);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -16,7 +17,7 @@ namespace Plato.Entities.Services
 
         private Action<QueryOptions> _configureDb = null;
         private Action<EntityQueryParams> _configureParams = null;
-
+        
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<TModel> _entityStore;
   
@@ -37,13 +38,14 @@ namespace Plato.Entities.Services
             _configureDb = configure;
             return this;
         }
-
+        
         public IEntityService<TModel> ConfigureQuery(Action<EntityQueryParams> configure)
         {
             _configureParams = configure;
             return this;
         }
         
+
         public async Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
@@ -57,12 +59,31 @@ namespace Plato.Entities.Services
                 pager = new PagerOptions();
             }
 
+         
             // Ensure we have a sort column is non is specified
             if (options.Sort == SortBy.Auto)
             {
                 options.Sort = SortBy.LastReply;
             }
+            
+            // Our list of columns to sort by
+            var sortColumns = new Dictionary<string, OrderBy>();
 
+            // Allow for additional sort columns
+            if (options.SortColumns != null)
+            {
+                foreach (var column in options.SortColumns)
+                {
+                    if (!sortColumns.ContainsKey(column.Key))
+                    {
+                        sortColumns.Add(column.Key, column.Value);
+                    }
+                }
+            }
+
+            // Sort by our primary column
+            sortColumns.Add(options.Sort.ToString(), options.Order);
+  
             // Get authenticated user 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             
@@ -72,7 +93,7 @@ namespace Plato.Entities.Services
                 .Configure(_configureDb)
                 .Select<EntityQueryParams>(q =>
                 {
-
+                    
                     // ----------------
                     // Set current authenticated user id
                     // This is required for various security checks
@@ -161,25 +182,8 @@ namespace Plato.Entities.Services
 
                     _configureParams?.Invoke(q);
                     
-                    // Restrict results via user role if the channels feature is enabled
-                    //if (channelFeature != null)
-                    //{
-                    //    if (user != null)
-                    //    {
-                    //        q.RoleId.IsIn(user.UserRoles?.Select(r => r.Id).ToArray());
-                    //    }
-                    //    else
-                    //    {
-                    //        if (anonymousRole != null)
-                    //        {
-                    //            q.RoleId.Equals(anonymousRole.Id);
-                    //        }
-                    //    }
-                    //}
-                    
                 })
-                .OrderBy("IsPinned", OrderBy.Desc)
-                .OrderBy(options.Sort.ToString(), options.Order)
+                .OrderBy(sortColumns)
                 .ToList();
 
 

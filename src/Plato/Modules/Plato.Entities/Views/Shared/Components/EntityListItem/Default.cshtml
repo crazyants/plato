@@ -33,10 +33,16 @@
 
 </div>
 
-
 <a asp-route-area="@Model.Entity.ModuleId" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">
     @Html.Raw(Model.Entity.Title.HighlightTerms(Model.Options.Search))
 </a>
+@if (Model.Entity.IsPinned)
+{
+    <span title="@T["This content is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+        <i class="fal fa-thumbtack"></i>
+    </span>
+}
+
 <div class="text-muted">
     @Html.Raw(Model.Entity.Abstract.HighlightTerms(Model.Options.Search))
 </div>
