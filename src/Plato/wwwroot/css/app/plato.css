@@ -1029,11 +1029,19 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 @media (min-width: 992px) {
     
     .layout-sidebar.fixed {
-        position: sticky;
-        top: 87px;
-        left: 0;
-        max-height: calc(100vh - 87px);
-        padding: 0.75rem 0;
+
+    }
+
+    .layout-sidebar.fixed > .layout-sidebar-sticky-content {
+        position: fixed;
+        
+
+        display: flex;
+        -webkit-box-orient: vertical!important;
+        -webkit-box-direction: normal!important;
+        -ms-flex-direction: column!important;
+        flex-direction: column!important;
+        
     }
 
     /* ensure collapse is visible by default for desktops */

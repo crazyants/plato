@@ -2,12 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
-using Plato.Internal.Abstractions.SetUp;
 using Plato.Media.Handlers;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Media.Repositories;
@@ -34,9 +31,6 @@ namespace Plato.Media
             services.AddScoped<IMediaRepository<Models.Media>, MediaRepository>();
             services.AddScoped<IMediaStore<Models.Media>, MediaStore>();
             
-            // Register navigation provider
-            services.AddScoped<INavigationProvider, AdminMenu>();
-
         }
 
         public override void Configure(

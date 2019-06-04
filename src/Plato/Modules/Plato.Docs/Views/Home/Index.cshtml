@@ -34,11 +34,13 @@
         @if (Model.SideBar != null)
         {
             <div class="row gutter-sm">
-                <div class="col-lg-3 layout-sidebar layout-sidebar-sticky overflow-auto">
-                    @if (Model.SideBar != null)
-                    {
-                        <view model="@Model.SideBar"></view>
-                    }
+                <div class="col-lg-3 layout-sidebar layout-sidebar-sticky">
+                    <div class="layout-sidebar-sticky-content overflow-auto">
+                        @if (Model.SideBar != null)
+                        {
+                            <view model="@Model.SideBar"></view>
+                        }
+                    </div>
                 </div>
                 <div class="col-lg-9 layout-content">
                     @if (Model.Content != null)

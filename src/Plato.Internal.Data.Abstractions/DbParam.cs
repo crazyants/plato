@@ -104,7 +104,7 @@ namespace Plato.Internal.Data.Abstractions
             }
             else if (DbType == DbType.Int64)
             {
-                Value = ((float) value);
+                Value = System.Convert.ToInt64(value);
             }
             else if (DbType == DbType.DateTime)
             {

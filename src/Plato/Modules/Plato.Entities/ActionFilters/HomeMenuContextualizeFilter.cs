@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.ActionFilters;
 
 namespace Plato.Entities.ActionFilters
@@ -37,6 +38,12 @@ namespace Plato.Entities.ActionFilters
 
             // The controller action didn't return a view result so no need to continue execution
             if (!(context.Result is ViewResult result))
+            {
+                return;
+            }
+            
+            // Check early to ensure we are working with a LayoutViewModel
+            if (!(result.Model is LayoutViewModel model))
             {
                 return;
             }

@@ -131,16 +131,14 @@ namespace Plato.Internal.Layout.Alerts
             }
 
             // The controller action didn't return a view result so no need to continue execution
-            var result = context.Result as ViewResult;
-            if (result == null)
+            if (!(context.Result is ViewResult result))
             {
                 await next();
                 return;
             }
 
             // Check early to ensure we are working with a LayoutViewModel
-            var model = result.Model as LayoutViewModel;
-            if (model == null)
+            if (!(result.Model is LayoutViewModel model))
             {
                 await next();
                 return;

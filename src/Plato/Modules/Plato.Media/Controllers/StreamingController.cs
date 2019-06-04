@@ -65,8 +65,6 @@ namespace Plato.Media.Controllers
         
 
         [HttpPost, DisableFormValueModelBinding, ValidateClientAntiForgeryToken]
-        
-        /*[ValidateAntiForgeryToken]*/
         public async Task<IActionResult> Upload()
         {
 
@@ -176,10 +174,7 @@ namespace Plato.Media.Controllers
                 ContentType = contentType,
                 ContentLength = contentLength,
                 ContentBlob = bytes,
-                CreatedUserId = user.Id,
-                CreatedDate = DateTime.UtcNow,
-                ModifiedUserId = user.Id,
-                ModifiedDate = DateTime.UtcNow
+                CreatedUserId = user.Id
             });
 
             // Build friendly results

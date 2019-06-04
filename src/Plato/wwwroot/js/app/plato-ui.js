@@ -493,8 +493,11 @@ $(function (win, doc, $) {
 
         var defaults = {
             offset: 0, // optional offset from scrollTop to trigger sticky positioning
-            onUpdate: function() {
+            onUpdate: function($caller) {
                 // raised when element is made sticky / not sticky
+            },
+            onScroll: function($caller, e, $win) {
+
             }
         };
 
@@ -513,7 +516,7 @@ $(function (win, doc, $) {
                 // Bind scroll events
                 $(win).scrollSpy({
                     onScroll: function (spy, e, $win) {
-                        
+
                         var scrollTop = $win.scrollTop(),
                             top = methods._getOriginalTop($caller),
                             offset = methods._getOffset($caller);
@@ -534,7 +537,11 @@ $(function (win, doc, $) {
                             }
                         }
 
-
+                        if ($caller.data(dataKey).onScroll) {
+                            $caller.data(dataKey).onScroll($caller, e, $win);
+                        }
+                        
+                        
                     }
                 });
                 
@@ -1972,7 +1979,7 @@ $(function (win, doc, $) {
                         // Events to execute
                         var i = 0, events = $caller.data(eventsKey);
 
-                        // Raise onScrollstart event
+                        // Raise onScrollStart event
                         // _scrolling is set to false when the scroll ends
                         if (methods._scrolling === false) {
                             methods._scrolling = true;
@@ -5097,30 +5104,69 @@ $(function (win, doc, $) {
         /* replySpy */
         this.replySpy();
         
-        var stickyHeaderHeight = 98,
-            $alerts = $(".layout-header").find(".alert");
+        var $alerts = $(".layout-header").find(".alert");
 
         // Apply sticky headers?
         if (opts.layout.stickyHeaders) {
+
+            var $stickyHeader = this.find(".layout-header-sticky"),
+                $stickyLeft = this.find(".layout-sidebar-sticky");
+
             // Apply sticky to headers
-            this.find(".layout-header-sticky").sticky({
-                offset: 12, // padding applied to layout-header-sticky.fixed
-                onUpdate: function($header) {
-                    // When header is made sticky also make sidebar sticky
-                    if (opts.layout.stickySidebars) {
-                        if ($header.hasClass("fixed")) {
-                            $(".layout-sidebar-sticky").addClass("fixed");
-                        } else {
-                            $(".layout-sidebar-sticky").removeClass("fixed");
-                        }
+            $stickyHeader.sticky();
+
+            // Apply sticky to sidebars
+            $stickyLeft.sticky({
+                offset: opts.layout.stickyHeaders === true
+                    ? $stickyHeader.outerHeight()
+                    : 0,
+                onScroll: function ($sideBar, e, $win) {
+
+                    var $footer = $(".layout-footer"),
+                        footerTop = Math.floor($footer.offset().top),
+                        scrollTop = Math.floor($(win).scrollTop() + $(win).height());
+                    
+                    if (scrollTop > footerTop) {
+
+                        var bottom = scrollTop - footerTop;
+
+                        console.log("footer height: : " + $footer.outerHeight());
+                        console.log("footerTop: " + footerTop);
+                        console.log("scrollTop: " + scrollTop);
+                        console.log("bottom: " + bottom);
+
+                        $sideBar.find(".layout-sidebar-sticky-content").css({
+                            "bottom": bottom
+                        });
+                    } else {
+                        $sideBar.find(".layout-sidebar-sticky-content").css({
+                            "bottom": 0
+                        });
+                    }
+
+
+                },
+                onUpdate: function ($sideBar) {
+                    
+                    if ($sideBar.hasClass("fixed")) {
+                        $sideBar.find(".layout-sidebar-sticky-content").css({
+                            "top": $(".layout-header-sticky").outerHeight(),
+                            "width": $stickyLeft.width()
+                        });
+                    } else {
+                        $sideBar.find(".layout-sidebar-sticky-content").css({
+                            "top": "auto",
+                            "bottom": "auto",
+                            "width": "auto"
+                        });
                     }
                 }
             });
-
+            
             // Update infinite default scroll spacing 
             // to accomodate for sticky headers
             $().infiniteScroll({
-                scrollSpacing: stickyHeaderHeight + 12
+                scrollSpacing: $stickyHeader.outerHeight()
             });
 
         } else {

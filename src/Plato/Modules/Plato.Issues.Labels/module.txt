@@ -1,0 +1,18 @@
+Name: Plato Issues Labels
+Description: Adds the ability to label issues.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Issues
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Labels",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Issues",
+		Version: "1.0.0"
+	}
+]
