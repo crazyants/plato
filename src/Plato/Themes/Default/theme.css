@@ -3,9 +3,9 @@
 /* Fixed Header  */
 /* ------------------- */
 
-.layout-header.fixed {
+.layout-sidebar.fixed > .layout-sidebar-content,
+.layout-header.fixed > .layout-header-content {
     background-color: white;
-    border-bottom: 1px solid #ddd;
 }
 
 /* ------------------- */
@@ -390,7 +390,7 @@ a.label:hover, .label.active {
 /* Overflow */
 /* ------------------- */
 
-.overflow-auto::-webkit-scrollbar-thumb:vertical {  background-color: rgba(0, 0, 0, 0.2);  }
+.overflow-auto::-webkit-scrollbar-thumb:vertical { background-color: rgba(0, 0, 0, 0.2);  }
 .overflow-auto::-webkit-scrollbar-thumb:vertical:hover {  background-color: rgba(0, 0, 0, 0.4); }
 
 /* ------------------- */

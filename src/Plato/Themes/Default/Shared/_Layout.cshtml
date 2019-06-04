@@ -143,22 +143,31 @@
             </div>
         }
         <nav aria-label="breadcrumb">
-            <breadcrumb class="breadcrumb p-0 bg-transparent col-12" />
+            <breadcrumb class="breadcrumb p-0 m-0 bg-transparent col-12" />
         </nav>
         @RenderBody()
-        <hr />
-        <footer class="row">
-            <div class="col-lg-6">
-                <p>&copy; @siteOpts.SiteName @System.DateTime.Now.Year</p>
-            </div>
-            <div class="col-lg-6 text-lg-right">
-                <p>
-                    <a href="https://www.instantasp.co.uk/" target="_blank">
-                        @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType
-                    </a>
-                </p>
-            </div>
-        </footer>
+    </div>
+    
+    <div class="py-4 bg-dark text-white">
+        <div class="container-fluid container-fluid-1280">
+            <footer class="row">
+                <div class="col-lg-6">
+                    <p>&copy; @siteOpts.SiteName @System.DateTime.Now.Year</p>
+                </div>
+                <div class="col-lg-6 text-lg-right">
+                    <p>
+                        <span class="plato-brand mr-2"></span>
+                        <a href="https://www.instantasp.co.uk/" target="_blank" class="text-muted">
+                            @T["Powered by Plato"] @platoOpts.Version
+                        </a>
+                        <br/>
+                        <small class="text-uppercase text-muted">
+                            @platoOpts.ReleaseType
+                        </small>
+                    </p>
+                </div>
+            </footer>
+        </div>
     </div>
 
     <assets section="Footer" />

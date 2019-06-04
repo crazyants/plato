@@ -145,12 +145,20 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* Overflow */
 /* ------------------------- */
 
-.overflow-auto { overflow: auto; }
-.overflow-auto::-webkit-scrollbar { background: transparent; }
-.overflow-auto::-webkit-scrollbar-thumb:vertical { margin: 0; padding: 0; }
-.overflow-auto::-webkit-scrollbar-button:start:decrement,
-.overflow-auto::-webkit-scrollbar-button:end:increment { height: 0; display: none; }
+.overflow-auto { overflow: auto;  }
 .overflow-hidden { overflow: hidden; }
+
+.overflow-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar-thumb {
+    width: 26px;
+    border-radius: 13px;
+    background-clip: padding-box;
+    border: 10px solid transparent;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {        
+    box-shadow: inset 0 0 0 10px inherit;
+}
 
 /* ------------------------- */
 /* Disabled elements */
@@ -960,9 +968,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .layout-sidebar-sticky,
 .layout-footer,
 .layout-footer-item,
-.layout-actions {
-
-}
+.layout-actions {}
 
 .layout-tools  {
     white-space: nowrap;
@@ -971,37 +977,42 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     flex-direction: row;
 }
 
-.layout-header.fixed {
+/* Sticky Header & Sidebar */
+
+/* Ensure the header has paddings and margins applied. 
+    This ensures we can correctly calculate the "fixed" header height
+    via JavaScript upon the initial load before the header actually becomes "fixed" */
+.layout-header { margin-bottom: 1rem; }
+.layout-header > .layout-header-content { padding: 1rem 0 0 0; }
+.layout-header > .layout-header-content hr { margin-bottom: 0; }
+
+/* When the header becomes sticky fix layout-header-content */
+.layout-header.fixed > .layout-header-content {
     position: fixed;
-    z-index: 5;
-    width: 100%;
     top: 0;
-    left: 50%;
-    height:86px;
-    -webkit-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
-    padding: 12px 15px;
+    z-index: 5;
     white-space: nowrap;
 }
 
-.layout-header.fixed hr { display: none;  }
-.layout-header.fixed div.text-muted { 
-    display: block; 
-    text-overflow: ellipsis;
-    max-width: 100%;
-    overflow: hidden;
+/* make table of contents sticky on larger screens */
+@media (min-width: 992px) {
+    
+    /* When the sidebar becomes fixed on desktop update content */
+   .layout-sidebar.fixed > .layout-sidebar-content {
+        position: fixed;
+        display: flex;
+        -webkit-box-orient: vertical!important;
+        -webkit-box-direction: normal!important;
+        -ms-flex-direction: column!important;
+        flex-direction: column!important;
+    }
+
+    /* ensure collapse is visible by default for desktops */
+    .layout-sidebar .collapse { display: block !important; }
+
 }
 
-.container-fluid-1024 .layout-header.fixed { max-width:1024px ; }
-.container-fluid-1280 .layout-header.fixed { max-width:1280px ; }
-.container-fluid-1600 .layout-header.fixed { max-width:1600px ; }
-
-/* Add some top padding to the page content as the header gets a new 
-    position at the top of the page (position:fixed and top:0) */
-.layout-header-sticky.fixed + .layout-body {
-    padding-top: 86px;
-}
-
+/* Header Alerts */
 .layout-header .alert {
     position: fixed;
     left: 50%;
@@ -1025,29 +1036,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     transition: all 0.20s ease-in;
 }
 
-/* make table of contents sticky on larger screens */
-@media (min-width: 992px) {
-    
-    .layout-sidebar.fixed {
-
-    }
-
-    .layout-sidebar.fixed > .layout-sidebar-sticky-content {
-        position: fixed;
-        
-
-        display: flex;
-        -webkit-box-orient: vertical!important;
-        -webkit-box-direction: normal!important;
-        -ms-flex-direction: column!important;
-        flex-direction: column!important;
-        
-    }
-
-    /* ensure collapse is visible by default for desktops */
-    .layout-sidebar .collapse { display: block !important; }
-
-}
 
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }

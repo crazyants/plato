@@ -493,12 +493,8 @@ $(function (win, doc, $) {
 
         var defaults = {
             offset: 0, // optional offset from scrollTop to trigger sticky positioning
-            onUpdate: function($caller) {
-                // raised when element is made sticky / not sticky
-            },
-            onScroll: function($caller, e, $win) {
-
-            }
+            onUpdate: function ($caller) { },   // raised when element is made sticky / not sticky
+            onScroll: function($caller, e, $win) {}
         };
 
         var methods = {
@@ -521,6 +517,7 @@ $(function (win, doc, $) {
                             top = methods._getOriginalTop($caller),
                             offset = methods._getOffset($caller);
 
+                        // onUpdate event
                         if (scrollTop > top - offset) {
                             if (!$caller.hasClass("fixed")) {
                                 $caller.addClass("fixed");
@@ -537,11 +534,11 @@ $(function (win, doc, $) {
                             }
                         }
 
+                        // onScroll event
                         if ($caller.data(dataKey).onScroll) {
                             $caller.data(dataKey).onScroll($caller, e, $win);
                         }
-                        
-                        
+
                     }
                 });
                 
@@ -5085,11 +5082,170 @@ $(function (win, doc, $) {
         };
 
     }();
+    
+    /* layout */
+    var layout = function () {
+
+        var dataKey = "layout",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            stickyHeaders: true,
+            stickySidebars: true
+        };
+
+        var methods = {
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                // Layout elements
+                var $header = $caller.find(".layout-header-sticky"),
+                    $sidebar = $caller.find(".layout-sidebar-sticky"),
+                    $footer = $caller.find(".layout-footer");
+
+                // Layout options
+                var stickyHeaders = $caller.data(dataKey).stickyHeaders,
+                    stickySidebars = $caller.data(dataKey).stickySidebars;
+
+                // Apply sticky headers?
+                if (stickyHeaders) {
+
+                    // Important: Set initial height of header
+                    // Height is required to correctly position sticky sidebars
+                    $header.css({
+                        "height": $header.outerHeight()
+                    });
+
+                    // Apply sticky headers
+                    $header.sticky({
+                        onUpdate: function ($this) {
+                            if ($this.hasClass("fixed")) {
+                                // Ensure width matches container when element becomes fixed
+                                $this.find(".layout-header-content").css({
+                                    "width": $this.width()
+                                });
+                            } else {
+                                // Reset width
+                                $this.find(".layout-header-content").css({
+                                    "width": "auto"
+                                });
+                            }
+                        }
+                    });
+
+                    // Update infinite default scroll spacing 
+                    // to accomodate for sticky headers
+                    $().infiniteScroll({
+                        scrollSpacing: $header.outerHeight()
+                    });
+
+                }
+
+                // Apply sticky sidebar?
+                if (stickySidebars) {
+
+                    // Apply sticky to sidebars
+                    $sidebar.sticky({
+                        offset: stickyHeaders === true
+                            ? $header.outerHeight()
+                            : 0,
+                        onScroll: function ($sideBar, e, $win) {
+                            var footerTop = Math.floor($footer.offset().top),
+                                scrollTop = Math.floor($(win).scrollTop() + $(win).height());
+                            if (scrollTop > footerTop) {
+                                $sideBar.find(".layout-sidebar-content").css({
+                                    "bottom": scrollTop - footerTop
+                                });
+                            } else {
+                                $sideBar.find(".layout-sidebar-content").css({
+                                    "bottom": 0
+                                });
+                            }
+                        },
+                        onUpdate: function ($sideBar) {
+                            if ($sideBar.hasClass("fixed")) {
+
+                                $sideBar.find(".layout-sidebar-content").css({
+                                    "top": $header.outerHeight(),
+                                    "width": $sidebar.width()
+                                });
+                            } else {
+                                $sideBar.find(".layout-sidebar-content").css({
+                                    "top": "auto",
+                                    "width": "auto"
+                                });
+                            }
+                        }
+                    });
+                }
+
+            },
+            unbind: function ($caller) {
+              
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).layout()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().layout()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+        };
+
+    }();
+
 
     /* Register Plugins */
     $.fn.extend({
         replySpy: replySpy.init,
-        navSite: navSite.init
+        navSite: navSite.init,
+        layout: layout.init
     });
 
     // ---------------------------
@@ -5101,80 +5257,14 @@ $(function (win, doc, $) {
         /* navigation */
         this.find(".nav-site").navSite();
 
+        /* layout */
+        this.find(".layout").layout({
+            stickyHeaders: opts.layout.stickyHeaders,
+            stickySidebars: opts.layout.stickySidebars
+        });
+
         /* replySpy */
         this.replySpy();
-        
-        var $alerts = $(".layout-header").find(".alert");
-
-        // Apply sticky headers?
-        if (opts.layout.stickyHeaders) {
-
-            var $stickyHeader = this.find(".layout-header-sticky"),
-                $stickyLeft = this.find(".layout-sidebar-sticky");
-
-            // Apply sticky to headers
-            $stickyHeader.sticky();
-
-            // Apply sticky to sidebars
-            $stickyLeft.sticky({
-                offset: opts.layout.stickyHeaders === true
-                    ? $stickyHeader.outerHeight()
-                    : 0,
-                onScroll: function ($sideBar, e, $win) {
-
-                    var $footer = $(".layout-footer"),
-                        footerTop = Math.floor($footer.offset().top),
-                        scrollTop = Math.floor($(win).scrollTop() + $(win).height());
-                    
-                    if (scrollTop > footerTop) {
-
-                        var bottom = scrollTop - footerTop;
-
-                        console.log("footer height: : " + $footer.outerHeight());
-                        console.log("footerTop: " + footerTop);
-                        console.log("scrollTop: " + scrollTop);
-                        console.log("bottom: " + bottom);
-
-                        $sideBar.find(".layout-sidebar-sticky-content").css({
-                            "bottom": bottom
-                        });
-                    } else {
-                        $sideBar.find(".layout-sidebar-sticky-content").css({
-                            "bottom": 0
-                        });
-                    }
-
-
-                },
-                onUpdate: function ($sideBar) {
-                    
-                    if ($sideBar.hasClass("fixed")) {
-                        $sideBar.find(".layout-sidebar-sticky-content").css({
-                            "top": $(".layout-header-sticky").outerHeight(),
-                            "width": $stickyLeft.width()
-                        });
-                    } else {
-                        $sideBar.find(".layout-sidebar-sticky-content").css({
-                            "top": "auto",
-                            "bottom": "auto",
-                            "width": "auto"
-                        });
-                    }
-                }
-            });
-            
-            // Update infinite default scroll spacing 
-            // to accomodate for sticky headers
-            $().infiniteScroll({
-                scrollSpacing: $stickyHeader.outerHeight()
-            });
-
-        } else {
-            // Apply sticky sidebar?
-            if (opts.layout.stickySidebars) {
-                this.find(".layout-sidebar-sticky").sticky();
-            }
-        }
         
         // Scroll to validation errors?
         if (opts.validation.scrollToErrors) {
@@ -5195,6 +5285,7 @@ $(function (win, doc, $) {
         }
 
         // SEt-up header alerts
+        var $alerts = this.find(".layout-header").find(".alert");
         if ($alerts.length > 0) {
 
             // Stack sticky alerts
