@@ -504,11 +504,33 @@ $(function (win, doc, $) {
                 methods._setOriginalTop($caller);
                 methods.update($caller);
 
+                // Invoke onScroll and onUpdate upon load to position correctly
+              
+                if ($caller.data(dataKey).onScroll) {
+                    $caller.data(dataKey).onScroll($caller, $(win));
+                }
+
+                if ($caller.data(dataKey).onUpdate) {
+                    $caller.data(dataKey).onUpdate($caller);
+                }
+                
                 // Bind events
                 this.bind($caller);
             },
             bind: function ($caller) {
-                
+
+                // Bind resize events
+                $(win).resizeSpy({
+                    onResize: function ($win, e) {
+                        if ($caller.data(dataKey).onScroll) {
+                            $caller.data(dataKey).onScroll($caller, win);
+                        }
+                        if ($caller.data(dataKey).onUpdate) {
+                            $caller.data(dataKey).onUpdate($caller);
+                        }
+                    }
+                });
+
                 // Bind scroll events
                 $(win).scrollSpy({
                     onScroll: function (spy, e, $win) {
@@ -536,7 +558,7 @@ $(function (win, doc, $) {
 
                         // onScroll event
                         if ($caller.data(dataKey).onScroll) {
-                            $caller.data(dataKey).onScroll($caller, e, $win);
+                            $caller.data(dataKey).onScroll($caller, $win);
                         }
 
                     }
@@ -2111,6 +2133,182 @@ $(function (win, doc, $) {
         };
 
     }();
+
+    /* resizeSpy */
+    var resizeSpy = function () {
+
+        var dataKey = "resizeSpy",
+            dataIdKey = dataKey + "Id",
+            eventsKey = dataKey + "Events";
+
+        var defaults = {
+            interval: 350, // the duration to wait in milliseconds before invoking the onScrollEnd event
+            onResizeStart: null,
+            onResizeEnd: null,
+            onResize: null
+        };
+
+        var methods = {
+            _timer: null,
+            _resizing: false,
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                // Store resizeSpy events on the caller as multiple 
+                // resizeSpy events could be tied to the same caller 
+                // i.e.$(win).resizeSpy(opts)
+                this._storeEvents($caller);
+
+                // Bind events
+                this.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                // Bind resize
+                $caller.on("resize",
+                    function (e) {
+
+                        // Start timer to detect end of resize
+                        methods.start($caller, e);
+
+                        // Events to execute
+                        var i = 0, events = $caller.data(eventsKey);
+
+                        // Raise onResizeStart event
+                        // _resizing is set to false when the resize ends
+                        if (methods._resizing === false) {
+                            methods._resizing = true;
+                            if (events.onResizeStart.length > 0) {
+                                for (i = 0; i < events.onResizeStart.length; i++) {
+                                    events.onResizeStart[i](e);
+                                }
+                            }
+                        }
+
+                        // Raise onResize
+                        if (events.onResize.length > 0) {
+                            for (i = 0; i < events.onResize.length; i++) {
+                                events.onResize[i]($caller, e);
+                            }
+                        }
+
+                    });
+            },
+            unbind: function ($caller) {
+                $caller.off("resize");
+            },
+            start: function ($caller, e) {
+                methods.stop($caller);
+                methods._timer = win.setTimeout(function () {
+                    methods._resizing = false;
+                    var events = $caller.data(eventsKey);
+                    if (events.onResizeEnd.length > 0) {
+                        for (var i = 0; i < events.onResizeEnd.length; i++) {
+                            events.onResizeEnd[i](e);
+                        }
+                    }
+                },
+                    $caller.data(dataKey).interval);
+            },
+            stop: function ($caller) {
+                win.clearTimeout(methods._timer);
+                methods._timer = null;
+            },
+            _storeEvents: function ($caller) {
+
+                var events = {
+                    onResizeStart: [],
+                    onResizeEnd: [],
+                    onResize: []
+                };
+
+                if ($caller.data(eventsKey)) {
+                    events = $caller.data(eventsKey);
+                }
+
+                if ($caller.data(dataKey).onResizeStart) {
+                    events.onResizeStart.push($caller.data(dataKey).onResizeStart);
+                }
+
+                if ($caller.data(dataKey).onResizeEnd) {
+                    events.onResizeEnd.push($caller.data(dataKey).onResizeEnd);
+                }
+
+                if ($caller.data(dataKey).onResize) {
+                    events.onResize.push($caller.data(dataKey).onResize);
+                }
+
+                // Store events on caller
+                $caller.data(eventsKey, events);
+
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).scrollSpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().scrollSpy()
+                    var $caller = $(win);
+                    if ($caller.length > 0) {
+                        if (!$caller.data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $caller.data(dataIdKey, id);
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
+                        }
+                        methods.init($caller, methodName);
+                    }
+
+                }
+
+            }
+
+        };
+
+    }();
     
     /* InfiniteScroll */
     var infiniteScroll = function() {
@@ -2203,16 +2401,17 @@ $(function (win, doc, $) {
                         onScrollEnd: function() {
                             methods.updateState($caller);
                         },
-                        onScroll: function(spy, e) {
+                        onScroll: function(spy, e, $win) {
 
                             // Ensure we are not already loading 
                             if (methods._loading) {
-                                $(win).scrollSpy("stop");
+                                $(win).scrollTop(spy.scrollTop);
+                                $win.scrollSpy("stop");
                                 e.preventDefault();
                                 e.stopPropagation();
                                 return;
                             }
-
+                            
                             // Get container bounds
                             var top = $caller.offset().top,
                                 bottom = top + $caller.outerHeight();
@@ -2223,6 +2422,7 @@ $(function (win, doc, $) {
                             } else {
                                 // When we reach the top of our container load previous page
                                 if (spy.scrollTop < top) {
+                                    console.log("top at load: " + Math.floor(top));
                                     methods.loadPrevious($caller, spy);
                                 }
                             }
@@ -2321,7 +2521,7 @@ $(function (win, doc, $) {
                                 $(win).scrollSpy("unbind");
                                 $().scrollTo({
                                         offset: $(doc).height() - previousPosition,
-                                        interval: 0,
+                                        interval: 500,
                                         onComplete: function() {
                                             $(win).scrollSpy("bind");
                                         }
@@ -2396,6 +2596,7 @@ $(function (win, doc, $) {
                     url: url,
                     method: "GET",
                     onAlways: function (xhr, textStatus) {
+                        // Update loading flag
                         methods._loading = false;
                     }
                 }).done(function(data) {
@@ -4693,6 +4894,7 @@ $(function (win, doc, $) {
         typeSpy: typeSpy.init,
         blurSpy: blurSpy.init,
         scrollSpy: scrollSpy.init,
+        resizeSpy: resizeSpy.init,
         infiniteScroll: infiniteScroll.init,
         filterList: filterList.init,
         tagIt: tagIt.init,
@@ -5136,7 +5338,7 @@ $(function (win, doc, $) {
                     });
 
                     // Update infinite default scroll spacing 
-                    // to accomodate for sticky headers
+                    // to accomodate for fixed headers
                     $().infiniteScroll({
                         scrollSpacing: $header.outerHeight()
                     });

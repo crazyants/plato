@@ -148,7 +148,8 @@
         @RenderBody()
     </div>
     
-    <div class="py-4 bg-dark text-white">
+    <hr/>
+    <div class="py-4 bg-dark text-muted">
         <div class="container-fluid container-fluid-1280">
             <footer class="row">
                 <div class="col-lg-6">
@@ -156,14 +157,9 @@
                 </div>
                 <div class="col-lg-6 text-lg-right">
                     <p>
-                        <span class="plato-brand mr-2"></span>
-                        <a href="https://www.instantasp.co.uk/" target="_blank" class="text-muted">
-                            @T["Powered by Plato"] @platoOpts.Version
+                        <a href="https://www.instantasp.co.uk/" target="_blank" title=" @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType" data-toggle="tooltip" class="text-muted">
+                            <span class="plato-brand mr-2"></span>
                         </a>
-                        <br/>
-                        <small class="text-uppercase text-muted">
-                            @platoOpts.ReleaseType
-                        </small>
                     </p>
                 </div>
             </footer>

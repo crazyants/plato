@@ -441,8 +441,8 @@ $(function (win, doc, $) {
                 autoCloseDelay: 8 // duration in seconds before auto close
             },
             layout: {
-                stickyHeaders: true,
-                stickySidebars: true
+                stickyHeaders: false,
+                stickySidebars: false
             },
             validation: {
                 scrollToErrors: true
