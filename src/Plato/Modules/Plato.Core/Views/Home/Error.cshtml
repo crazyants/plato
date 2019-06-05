@@ -3,28 +3,39 @@
     AddTitleSegment(T["Error"]);
 }
 
-<h4>@T["Opps"]</h4>
-<div class="text-muted">@T["An error occurred while processing your request."]</div>
-<hr/>
-
-<div class="row">
-    <div class="col-lg-6">
-        <p>
-            @T["Sorry but an unhandled error occured whilst processing your request. Please use your browsers back button and try again. If this error continues please contact us."]
-        </p>
-        @if (Model.ShowRequestId)
-        {
-            <p>
-                <strong>
-                    @T["Request ID:"]
-                </strong> 
-                <code>
-                    @Model.RequestId
-                </code>
-            </p>
-        }
-        <p>
-            @T["If your the site administrator please review the logs for detailed error information."]
-        </p>
+<div class="layout">
+    <div class="layout-header">
+        <div class="layout-header-content">
+            <h4>@T["Opps"]</h4>
+            <div class="text-muted">@T["An error occurred while processing your request."]</div>
+            <hr/>
+        </div>
+    </div>
+    <div class="layout-body">
+        <div class="layout-content">
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>
+                        @T["Sorry but an unhandled error occured whilst processing your request. Please use your browsers back button and try again. If this error continues please contact us."]
+                    </p>
+                    @if (Model.ShowRequestId)
+                    {
+                        <p>
+                            <strong>
+                                @T["Request ID:"]
+                            </strong> 
+                            <code>
+                                @Model.RequestId
+                            </code>
+                        </p>
+                    }
+                    <p>
+                        @T["If your the site administrator please review the logs for detailed error information."]
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+

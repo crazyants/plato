@@ -1,12 +1,11 @@
 
 /* ------------------- */
-/* Fixed Header  */
+/* Fixed Header & Sidebar */
 /* ------------------- */
 
-.layout-header.fixed {
-    background-color: #0a0a0a;
-    border-bottom: 1px solid #222;
-}
+.layout-sidebar.fixed > .layout-sidebar-content,
+.layout-header.fixed > .layout-header-content { background-color: #0a0a0a; }
+.layout-header-content { border-color: #222;}
 
 /* ------------------- */
 /* Navigation  */

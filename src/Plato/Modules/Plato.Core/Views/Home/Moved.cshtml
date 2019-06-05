@@ -3,18 +3,33 @@
     AddTitleSegment(T["Not Found"]);
 }
 
-<h4>@T["404 - Not Found"]</h4>
-<div class="row">
-    <div class="col-lg-6">
-        <p>
-            @T["Sorry but the page you are looking for no longer exists. It could be the content you are trying to access has since been deleted."]
-        </p>
-        <p>
-            <a class="btn btn-primary" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
-                <i class="fal fa-home"></i>
-                @T["Return Home"]
-            </a>
-        </p>
+<div class="layout">
+    <div class="layout-header">
+        <div class="layout-header-content">
+            <h4>@T["404 - Not Found"]</h4>
+            <div class="text-muted">
+                @T["The page could not be found"]
+            </div>
+        </div>
+    </div>
+    <div class="layout-body">
+        <div class="layout-content">
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>
+                        @T["Sorry but the page you are looking for no longer exists. It could be the content you are trying to access has since been deleted."]
+                    </p>
+                    <p>
+                        <a class="btn btn-primary" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                            <i class="fal fa-home"></i>
+                            @T["Return Home"]
+                        </a>
+                    </p>
       
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
