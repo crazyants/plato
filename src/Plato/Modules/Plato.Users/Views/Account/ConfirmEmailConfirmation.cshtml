@@ -1,18 +1,31 @@
 ﻿@model ForgotPasswordViewModel
 @{
-    AddTitleSegment(T["Confirmation Email Sent"]);
+    AddTitleSegment(T["Confirmation Sent"]);
 }
 
-<h4>@T["Confirmation Email Sent"]</h4>
-<div class="row">
-    <div class="col-md-6">
-        <p>
-            @T["If registered an email has been sent to the account email address. You must click the unique confirmation link within this email to confirm ownership of your email address."]
-        </p> 
-        <p>
-            <a class="btn btn-primary" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login">
-                @T["Login"]
-            </a>
-        </p>
+<div class="layout">
+    <div class="layout-header">
+        <div class="layout-header-content">
+            <h4>@T["Confirmation Sent"]</h4>
+            <span class="text-muted">@T["Please check your email."]</span>
+        </div>
+    </div>
+    <div class="layout-body">
+        <div class="layout-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        @T["If registered an email has been sent to the account email address. You must click the unique confirmation link within this email to confirm ownership of your email address."]
+                    </p> 
+                    <p>
+                        <a class="btn btn-primary" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login">
+                            @T["Login"]
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+

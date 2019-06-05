@@ -139,7 +139,7 @@ namespace Plato.Roles.ViewProviders
 
         async Task<bool> IsNewRole(int roleId)
         {
-            return await _roleManager.FindByIdAsync(roleId.ToString()) == null;
+            return roleId == 0 || await _roleManager.FindByIdAsync(roleId.ToString()) == null;
         }
         
         async Task<RolesIndexViewModel> GetPagedModel(

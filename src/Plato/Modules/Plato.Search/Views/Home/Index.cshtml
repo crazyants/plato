@@ -6,30 +6,32 @@
 <form asp-route-action="Index" method="get" role="form">
     <div class="layout">
         <div class="layout-header layout-header-sticky">
-            @if (Model.Alerts != null)
-            {
-                <div class="layout-alerts">
-                    <view model="@Model.Alerts"></view>
-                </div>
-            }
-            @if (Model.Tools != null)
-            {
-                <div class="float-right layout-tools">
-                    <view model="@Model.Tools" />
-                </div>
-            }
-            @if (Model.Header != null)
-            {
-                <div class="layout-header-item">
-                    <view model="@Model.Header" />
-                </div>
-            }
-            @if (Model.Meta != null)
-            {
-                <div class="layout-meta">
-                    <view model="@Model.Meta"></view>
-                </div>
-            }
+            <div class="layout-header-content">
+                @if (Model.Alerts != null)
+                {
+                    <div class="layout-alerts">
+                        <view model="@Model.Alerts"></view>
+                    </div>
+                }
+                @if (Model.Tools != null)
+                {
+                    <div class="float-right layout-tools">
+                        <view model="@Model.Tools" />
+                    </div>
+                }
+                @if (Model.Header != null)
+                {
+                    <div class="layout-header-item">
+                        <view model="@Model.Header" />
+                    </div>
+                }
+                @if (Model.Meta != null)
+                {
+                    <div class="layout-meta">
+                        <view model="@Model.Meta"></view>
+                    </div>
+                }
+            </div>
         </div>
         <div class="layout-body">
             @if (Model.SideBar != null)
@@ -42,10 +44,12 @@
                         }
                     </div>
                     <div class="col-lg-3 layout-sidebar layout-sidebar-sticky overflow-auto" data-provide="sticky" data-sticky-offset="106">
-                        @if (Model.SideBar != null)
-                        {
-                            <view model="@Model.SideBar"></view>
-                        }
+                        <div class="layout-sidebar-content">
+                            @if (Model.SideBar != null)
+                            {
+                                <view model="@Model.SideBar"></view>
+                            }
+                        </div>
                     </div>
                 </div>
             }

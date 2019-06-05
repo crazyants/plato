@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Roles.ViewModels;
 
@@ -24,7 +25,6 @@ namespace Plato.Roles.ViewProviders
 
         private readonly IStringLocalizer T;
         
-
         public UserViewProvider(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -55,15 +55,28 @@ namespace Plato.Roles.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
 
-            var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
+            IEnumerable<string> selectedRoles = null;
+            if (user.Id > 0)
+            {
+                selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
+            }
+
+            // When adding new users ensure the Member role is selected by default
+            // When editing an existing user with no roles use an empty list
+            var defaultRoles = user.Id == 0
+                ? new List<string>()
+                {
+                    DefaultRoles.Member
+                }
+                : new List<string>();
 
             return Views(
                 View<EditUserRolesViewModel>("User.Roles.Edit.Content", model =>
-                    {
-                        model.SelectedRoles = selectedRoles ?? new List<string>();
-                        model.HtmlName = HtmlName;
-                        return model;
-                    }).Order(2)
+                {
+                    model.SelectedRoles = selectedRoles ?? defaultRoles;
+                    model.HtmlName = HtmlName;
+                    return model;
+                }).Order(2)
             );
 
         }
