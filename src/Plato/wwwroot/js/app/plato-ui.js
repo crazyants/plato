@@ -350,6 +350,7 @@ $(function (win, doc, $) {
             event: "click",
             position: "top",
             target: null,
+            animate: true,
             onBeforeComplete: null,
             onComplete: null
         };
@@ -414,20 +415,30 @@ $(function (win, doc, $) {
                 }
                              
                 // animate scroll
-                $body.stop().animate({
-                        scrollTop: top + offset
-                    },
-                    interval,
-                    'easeInOutExpo',
-                    function () {
-                        if ($caller.data(dataKey).onComplete) {
-                            $caller.data(dataKey).onComplete($caller, $target);
-                        }
-                    });
-                if ($caller.data(dataKey).onBeforeComplete) {
-                    $caller.data(dataKey).onBeforeComplete($caller, $target);
+                if ($caller.data(dataKey).animate) {
+                    $body.stop().animate({
+                            scrollTop: top + offset
+                        },
+                        interval,
+                        'easeInOutExpo',
+                        function() {
+                            if ($caller.data(dataKey).onComplete) {
+                                $caller.data(dataKey).onComplete($caller, $target);
+                            }
+                        });
+                    if ($caller.data(dataKey).onBeforeComplete) {
+                        $caller.data(dataKey).onBeforeComplete($caller, $target);
+                    }
+                } else {
+                       if ($caller.data(dataKey).onBeforeComplete) {
+                        $caller.data(dataKey).onBeforeComplete($caller, $target);
+                    }
+                    $caller.scrollTop(top + offset);
+                    if ($caller.data(dataKey).onComplete) {
+                        $caller.data(dataKey).onComplete($caller, $target);
+                    }
                 }
-
+               
             }
         };
 
@@ -2394,7 +2405,9 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                var bindScrollEvents = function() {
+                var bindScrollEvents = function () {
+
+                    var scrollTop = 0;
 
                     // Bind scroll events
                     $(win).scrollSpy({
@@ -2402,16 +2415,18 @@ $(function (win, doc, $) {
                             methods.updateState($caller);
                         },
                         onScroll: function(spy, e, $win) {
-
+                            
                             // Ensure we are not already loading 
                             if (methods._loading) {
-                                $(win).scrollTop(spy.scrollTop);
+                                $win.scrollTop(scrollTop);
                                 $win.scrollSpy("stop");
                                 e.preventDefault();
                                 e.stopPropagation();
-                                return;
+                                return false;
                             }
-                            
+
+                            scrollTop = spy.scrollTop;
+
                             // Get container bounds
                             var top = $caller.offset().top,
                                 bottom = top + $caller.outerHeight();
@@ -2422,7 +2437,6 @@ $(function (win, doc, $) {
                             } else {
                                 // When we reach the top of our container load previous page
                                 if (spy.scrollTop < top) {
-                                    console.log("top at load: " + Math.floor(top));
                                     methods.loadPrevious($caller, spy);
                                 }
                             }
@@ -2491,6 +2505,12 @@ $(function (win, doc, $) {
                     return;
                 }
 
+                // When scrolling up or loading the previous page we disable overflow on the body
+                // This ensures the scrollbar loses focus and the user is forced to focus the scrollbar again
+                // This prevents the user being able to scroll above the page we are loading whilst the 
+                // page is being loaded, once the page is loaded overflow is enabled again via app.http.onAlways
+                $("body").css({ "overflow": "hidden" });
+
                 // Show loader
                 var $loader = methods.getLoader($caller, "previous");
                 if ($loader) {
@@ -2521,7 +2541,7 @@ $(function (win, doc, $) {
                                 $(win).scrollSpy("unbind");
                                 $().scrollTo({
                                         offset: $(doc).height() - previousPosition,
-                                        interval: 500,
+                                        interval: 100,
                                         onComplete: function() {
                                             $(win).scrollSpy("bind");
                                         }
@@ -2596,6 +2616,7 @@ $(function (win, doc, $) {
                     url: url,
                     method: "GET",
                     onAlways: function (xhr, textStatus) {
+                        $("body").css({ "overflow": "auto" });
                         // Update loading flag
                         methods._loading = false;
                     }
