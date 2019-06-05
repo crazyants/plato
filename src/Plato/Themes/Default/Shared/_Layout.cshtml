@@ -148,23 +148,22 @@
         @RenderBody()
     </div>
     
-    <hr/>
-    <div class="py-4 bg-dark text-muted">
+    <footer>
         <div class="container-fluid container-fluid-1280">
-            <footer class="row">
+            <div class="row py-4">
                 <div class="col-lg-6">
                     <p>&copy; @siteOpts.SiteName @System.DateTime.Now.Year</p>
                 </div>
                 <div class="col-lg-6 text-lg-right">
                     <p>
-                        <a href="https://www.instantasp.co.uk/" target="_blank" title=" @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType" data-toggle="tooltip" class="text-muted">
-                            <span class="plato-brand mr-2"></span>
+                        <a href="https://www.instantasp.co.uk/" target="_blank" class="text-muted">
+                            @T["Powered by Plato"] @platoOpts.Version @platoOpts.ReleaseType
                         </a>
                     </p>
                 </div>
-            </footer>
+            </div>
         </div>
-    </div>
+    </footer>
 
     <assets section="Footer" />
     <scripts section="Footer" />

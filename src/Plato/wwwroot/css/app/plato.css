@@ -982,9 +982,16 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* Ensure the header has paddings and margins applied. 
     This ensures we can correctly calculate the "fixed" header height
     via JavaScript upon the initial load before the header actually becomes "fixed" */
-.layout-header { margin-bottom: 1rem; }
-.layout-header > .layout-header-content { padding: 1rem 0 0 0; }
-.layout-header > .layout-header-content hr { margin-bottom: 0; }
+
+.layout-header  { padding-bottom: 1rem; }
+.layout-header > .layout-header-content { 
+    padding: 1rem 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+/* To be removed once all HR elements have been removed from layout-header-content */
+.layout-header > .layout-header-content hr { display: none; }
 
 /* When the header becomes sticky fix layout-header-content */
 .layout-header.fixed > .layout-header-content {

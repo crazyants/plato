@@ -2431,12 +2431,18 @@ $(function (win, doc, $) {
                             var top = $caller.offset().top,
                                 bottom = top + $caller.outerHeight();
 
+                            // Optional scroll spacing
+                            var scrollSpacing = 0;
+                            if ($caller.data(dataKey).scrollSpacing) {
+                                scrollSpacing = $caller.data(dataKey).scrollSpacing;
+                            }
+
                             // At the very top of the window remove offset from url
                             if (spy.scrollTop === 0) {
                                 methods.resetState($caller);
                             } else {
-                                // When we reach the top of our container load previous page
-                                if (spy.scrollTop < top) {
+                                // When we reach the top of our container + any scroll spacing load previous page
+                                if (spy.scrollTop < top - scrollSpacing) {
                                     methods.loadPrevious($caller, spy);
                                 }
                             }

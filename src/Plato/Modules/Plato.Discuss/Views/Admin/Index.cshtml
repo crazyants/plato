@@ -4,7 +4,7 @@
     AddTitleSegment(T["Discuss"]);
 }
 
-<form asp-action="Index" method="post" enctype="multipart/form-data">
+<form asp-action="Index" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
     <div class="layout">
         <div class="layout-header">
             <div class="layout-header-content">
@@ -38,13 +38,13 @@
             @if (Model.SideBar != null)
             {
                 <div class="row">
-                    <div class="col-lg-9 layout-content">
+                    <div class="col-lg-8 layout-content">
                         @if (Model.Content != null)
                         {
                             <view model="@Model.Content"></view>
                         }
                     </div>
-                    <div class="col-lg-3 layout-sidebar">
+                    <div class="col-lg-4 layout-sidebar">
                         @if (Model.SideBar != null)
                         {
                             <view model="@Model.SideBar"></view>
@@ -55,11 +55,11 @@
             else
             {
                 @if (Model.Content != null)
-                 {
-                     <div class="layout-content">
-                         <view model="@Model.Content"></view>
-                     </div>
-                 }
+                {
+                    <div class="layout-content">
+                        <view model="@Model.Content"></view>
+                    </div>
+                }
             }
         </div>
         <div class="layout-footer">

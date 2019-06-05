@@ -2,40 +2,44 @@
 
 <div class="layout">
     <div class="layout-header layout-header-sticky">
-        @if (Model.Alerts != null)
-        {
-            <div class="layout-alerts">
-                <view model="@Model.Alerts"></view>
-            </div>
-        }
-        @if (Model.Tools != null)
-        {
-            <div class="float-right layout-tools">
-                <view model="@Model.Tools" />
-            </div>
-        }
-        @if (Model.Header != null)
-        {
-            <div class="layout-header-item">
-                <view model="@Model.Header" />
-            </div>
-        }
-        @if (Model.Meta != null)
-        {
-            <div class="layout-meta">
-                <view model="@Model.Meta"></view>
-            </div>
-        }
+        <div class="layout-header-content">
+            @if (Model.Alerts != null)
+            {
+                <div class="layout-alerts">
+                    <view model="@Model.Alerts"></view>
+                </div>
+            }
+            @if (Model.Tools != null)
+            {
+                <div class="float-right layout-tools">
+                    <view model="@Model.Tools" />
+                </div>
+            }
+            @if (Model.Header != null)
+            {
+                <div class="layout-header-item">
+                    <view model="@Model.Header" />
+                </div>
+            }
+            @if (Model.Meta != null)
+            {
+                <div class="layout-meta">
+                    <view model="@Model.Meta"></view>
+                </div>
+            }
+        </div>
     </div>
     <div class="layout-body">
         @if (Model.SideBar != null)
         {
             <div class="row gutter-sm">
                 <div class="col-lg-3 layout-sidebar layout-sidebar-sticky">
-                    @if (Model.SideBar != null)
-                    {
-                        <view model="@Model.SideBar"></view>
-                    }
+                    <div class="layout-sidebar-content">
+                        @if (Model.SideBar != null)
+                        {
+                            <view model="@Model.SideBar"></view>
+                        }
+                    </div>
                 </div>
                 <div class="col-lg-9 layout-content">
                     @if (Model.Content != null)
@@ -49,11 +53,9 @@
         {
             @if (Model.Content != null)
              {
-     
                  <div class="layout-content">
                      <view model="@Model.Content"></view>
                  </div>
-        
              }
         }
     </div>
