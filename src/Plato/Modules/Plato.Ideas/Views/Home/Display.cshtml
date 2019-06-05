@@ -5,30 +5,32 @@
 
 <div class="layout">
     <div class="layout-header layout-header-sticky">
-        @if (Model.Alerts != null)
-        {
-            <div class="layout-alerts">
-                <view model="@Model.Alerts"></view>
-            </div>
-        }
-        @if (Model.Tools != null)
-        {
-            <div class="float-right layout-tools">
-                <view model="@Model.Tools" />
-            </div>
-        }
-        @if (Model.Header != null)
-        {
-            <div class="layout-header-item">
-                <view model="@Model.Header" />
-            </div>
-        }
-        @if (Model.Meta != null)
-        {
-            <div class="layout-meta">
-                <view model="@Model.Meta"></view>
-            </div>
-        }
+        <div class="layout-header-content">
+            @if (Model.Alerts != null)
+            {
+                <div class="layout-alerts">
+                    <view model="@Model.Alerts"></view>
+                </div>
+            }
+            @if (Model.Tools != null)
+            {
+                <div class="float-right layout-tools">
+                    <view model="@Model.Tools" />
+                </div>
+            }
+            @if (Model.Header != null)
+            {
+                <div class="layout-header-item">
+                    <view model="@Model.Header" />
+                </div>
+            }
+            @if (Model.Meta != null)
+            {
+                <div class="layout-meta">
+                    <view model="@Model.Meta"></view>
+                </div>
+            }
+        </div>
     </div>
     <div class="layout-body">
         @if (Model.SideBar != null)
@@ -57,7 +59,6 @@
 
                             </div>
                             <div class="resizable-body">
-
                                 <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
                                     <div id="postReply">
                                         @if (Model.Footer != null)
@@ -111,7 +112,6 @@
                                     child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
                     </div>
                     <div class="resizable-body">
-
                         <form asp-controller="Home" asp-action="Display" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
                             @if (Model.Footer != null)
                             {
@@ -131,4 +131,5 @@
             </div>
         }
     </div>
+    <div class="layout-footer"></div>
 </div>

@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Plato.Https.Configuration;
 using Plato.Https.Models;
+using Plato.Https.Navigation;
 using Plato.Https.Stores;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Https

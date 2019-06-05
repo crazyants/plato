@@ -7,30 +7,32 @@
 <form asp-controller="Home" asp-action="Create" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
     <div class="layout">
         <div class="layout-header">
-            @if (Model.Alerts != null)
-            {
-                <div class="layout-alerts">
-                    <view model="@Model.Alerts"></view>
-                </div>
-            }
-            @if (Model.Tools != null)
-            {
-                <div class="float-right layout-tools">
-                    <view model="@Model.Tools" />
-                </div>
-            }
-            @if (Model.Header != null)
-            {
-                <div class="layout-header-item">
-                    <view model="@Model.Header" />
-                </div>
-            }
-            @if (Model.Meta != null)
-            {
-                <div class="layout-meta">
-                    <view model="@Model.Meta"></view>
-                </div>
-            }
+            <div class="layout-header-content">
+                @if (Model.Alerts != null)
+                {
+                    <div class="layout-alerts">
+                        <view model="@Model.Alerts"></view>
+                    </div>
+                }
+                @if (Model.Tools != null)
+                {
+                    <div class="float-right layout-tools">
+                        <view model="@Model.Tools" />
+                    </div>
+                }
+                @if (Model.Header != null)
+                {
+                    <div class="layout-header-item">
+                        <view model="@Model.Header" />
+                    </div>
+                }
+                @if (Model.Meta != null)
+                {
+                    <div class="layout-meta">
+                        <view model="@Model.Meta"></view>
+                    </div>
+                }
+            </div>
         </div>
         <div class="layout-body">
             @if (Model.SideBar != null)
@@ -83,11 +85,11 @@
                     }
                     @if (Model.Actions != null || Model.Footer != null)
                     {
-                        <div class="list-left"></div>
-                        <div class="list-body">
-                            <card>
-                                <card-body>
-                                    <div class="layout-footer">
+                        <div class="layout-footer">
+                            <div class="list-left"></div>
+                            <div class="list-body">
+                                <card>
+                                    <card-body>
                                         @if (Model.Actions != null)
                                         {
                                             <div class="float-right layout-actions">
@@ -100,9 +102,9 @@
                                                 <view model="@Model.Footer"></view>
                                             </div>
                                         }
-                                    </div>
-                                </card-body>
-                            </card>
+                                    </card-body>
+                                </card>
+                            </div>
                         </div>
                     }
                 </div>
