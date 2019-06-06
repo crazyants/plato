@@ -420,6 +420,90 @@ $(function (win, doc, $) {
         }
     };
 
+    /* Plato Social */
+    var platoSocial = {
+        init: function () {
+
+            // Inject facebook & twitter scripts
+            var js,
+                fjs = doc.getElementsByTagName('script')[0],
+                frag = doc.createDocumentFragment(),
+                add = function (url, id) {
+                    if (doc.getElementById(id)) {
+                        return;
+                    }
+                    js = doc.createElement('script');
+                    js.src = url;
+                    id && (js.id = id);
+                    frag.appendChild(js);
+                };
+            add('https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=', 'facebook-jssdk');
+            add('https://platform.twitter.com/widgets.js');
+            fjs.parentNode.insertBefore(frag, fjs);
+
+        },
+        facebook: {
+            init: function (appId) {
+                // Initialize facebook API
+                win.fbAsyncInit = function () {
+                    win.FB.init({
+                        appId: appId,
+                        xfbml: true,
+                        version: 'v2.8'
+                    });
+                };
+            },
+            share: function (url) {
+                win.FB.ui({
+                    method: 'share',
+                    href: url
+                },
+                    function (response) {
+                        //console.log(response);
+                        if (response && response.post_id) {
+                            //alert('published');
+                        } else {
+                            //alert('not published');
+                        }
+                    });
+            },
+            feed: function (url) {
+                win.FB.ui({
+                    method: 'feed',
+                    name: '',
+                    link: url,
+                    picture: '',
+                    caption: '',
+                    description: ''
+                },
+                    function (response) {
+                        //console.log(response);
+                        if (response && response.post_id) {
+                            //alert('published');
+                        } else {
+                            //alert('not published');
+                        }
+                    });
+            }
+        },
+        twitter: {
+            share: function (url) {
+                win.twttr.ready(function (twttr) {
+                    twttr.events.bind('tweet',
+                        function (event) {
+                            //console.log(event);
+                            //alert('published');
+                        });
+                });
+                var popup = window.open('https://twitter.com/intent/tweet?text=' + url,
+                    'popupwindow',
+                    'scrollbars=yes,width=800,height=400');
+                popup.focus();
+            }
+        }
+    };
+
+
     /* Global */
     /* ---------------------------------------------*/
 
@@ -478,7 +562,8 @@ $(function (win, doc, $) {
         ui: platoUi,
         http: platoHttp,
         storage: platoStorage,
-        text: platoText
+        text: platoText,
+        social: platoSocial
     };
     
     /* Initialize */

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
@@ -160,17 +161,44 @@ namespace Plato.Internal.Layout.TagHelpers
         
         IHtmlContent BuildJavaScriptInclude(Asset asset)
         {
-            return new HtmlString($"<script src=\"{asset.Url}\"></script>");
+            return new HtmlString($"<script {BuildAttributes(asset)}src=\"{asset.Url}\"></script>");
         }
 
         IHtmlContent BuildCssInclude(Asset asset)
         {
-            return new HtmlString($"<link rel=\"stylesheet\" href=\"{asset.Url}\" />");
+            return new HtmlString($"<link rel=\"stylesheet\" href=\"{asset.Url}\" {BuildAttributes(asset)}/>");
         }
 
         IHtmlContent BuildMeta(Asset asset)
         {
-            return new HtmlString($"<script src=\"{asset.Url}\"></script>");
+            return new HtmlString($"<meta {BuildAttributes(asset)}/>");
+        }
+
+        string BuildAttributes(Asset asset)
+        {
+
+            if (asset.Attributes == null)
+            {
+                return string.Empty;
+            }
+
+            if (asset.Attributes.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+            foreach (var attribute in asset.Attributes)
+            {
+                sb
+                    .Append(attribute.Key)
+                    .Append("=\"")
+                    .Append(attribute.Value)
+                    .Append("\" ");
+            }
+
+            return sb.ToString();
+
         }
 
         #endregion

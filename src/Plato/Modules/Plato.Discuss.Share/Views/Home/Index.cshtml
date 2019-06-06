@@ -15,18 +15,100 @@
 </div>
 
 <div class="modal-body" style="max-height: 550px; overflow: auto;">
-    
+
     <input readonly value="@Model.Url" type="text" class="form-control col-12" />
+    
+    <ul id="socialLinks" class="social-links">
+        <li>
+            <a href="@Model.Url" class="btn facebook" data-toggle="tooltip" title="@T["Share on Facebook"]">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+        </li>
+        <li>
+            <a href="@Model.Url" class="btn twitter" data-toggle="tooltip" title="@T["Share on twitter"]">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </li>
+    </ul>
     
 </div>
 
+<div id="fb-root"></div>
+
+<style>
+
+    .social-links {
+        margin: 1rem 0 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .social-links > li {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+    }
+
+    .social-links li a.btn {
+        text-align: center;
+        text-decoration: none;
+    }
+    .social-links li a.btn i {
+        min-width: 16px;
+    }
+
+    .social-links .facebook {
+        background: #4267B2;
+        color: white;
+    }
+
+    .social-links .twitter {
+        background: #1DA1F2;
+        color: white;
+    }
+    
+</style>
+
 <script>
+
     $(function (win, doc, $) {
-        $(doc).ready(function () {
+        $(doc).ready(function() {
+            
+            var app = win.$.Plato;
+
+            if (app == null) {
+                throw Error("$.Plato has not been registered!");
+            }
+         
+            // Inject social scripts
+            app.social.init();
+
+            // Init facebook passing in Facebook application Id
+            app.social.facebook.init('353584392011910');
+
             $("#shareDialog").on('shown.bs.modal',
                 function (e) {
+
+                    // Focus & select URL within text box
                     $(this).find("input").select();
+                    
+                    // Facebook click event
+                    $(this).find("#socialLinks").find(".facebook").on("click",
+                        function(e) {
+                            e.preventDefault();
+                            app.social.facebook.share($(this).attr("href"));
+                        });
+
+                    // Twitter click event
+                    $(this).find("#socialLinks").find(".twitter").on("click",
+                        function(e) {
+                            e.preventDefault();
+                            app.social.twitter.share($(this).attr("href"));
+                        });
+
                 });
+            
         });
+
     }(window, document, jQuery));
 </script>

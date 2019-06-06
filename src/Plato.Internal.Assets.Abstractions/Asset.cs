@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Html;
 
 namespace Plato.Internal.Assets.Abstractions
 {
@@ -17,6 +19,9 @@ namespace Plato.Internal.Assets.Abstractions
         public int Order { get; set; }
 
         public IHtmlContent InlineContent { get; set; }
+
+        public IDictionary<string, string> Attributes { get; set; }
+
     }
     
     public enum AssetSection
