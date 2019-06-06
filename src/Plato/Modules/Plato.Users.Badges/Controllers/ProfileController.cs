@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
@@ -24,6 +25,7 @@ namespace Plato.Users.Badges.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly IViewProviderManager<UserBadge> _userBadgeViewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public IHtmlLocalizer T { get; }
@@ -31,15 +33,17 @@ namespace Plato.Users.Badges.Controllers
         public IStringLocalizer S { get; }
 
         public ProfileController(
-            IViewProviderManager<UserBadge> userBadgeViewProvider,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
+            IViewProviderManager<UserBadge> userBadgeViewProvider,
             IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
+            IPageTitleBuilder pageTitleBuilder,
             IContextFacade contextFacade)
         {
             _userBadgeViewProvider = userBadgeViewProvider;
             _breadCrumbManager = breadCrumbManager;
+            _pageTitleBuilder = pageTitleBuilder;
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
 
@@ -68,6 +72,9 @@ namespace Plato.Users.Badges.Controllers
                 return NotFound();
             }
 
+            // Build page title
+            _pageTitleBuilder.AddSegment(S[user.DisplayName], int.MaxValue);
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -86,7 +93,7 @@ namespace Plato.Users.Badges.Controllers
                     .LocalNav()
                 ).Add(S["Badges"]);
             });
-            
+
             // Return view
             return View((LayoutViewModel) await _userBadgeViewProvider.ProvideIndexAsync(new UserBadge()
             {
