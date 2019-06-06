@@ -1245,6 +1245,23 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .medallion .badge { z-index: 2; position: absolute; right: 0;  }
 
 /* -------------- */
+/* Social Buttons */
+/* -------------- */
+
+.social-buttons { margin: 0; padding: 0; list-style: none; }
+.social-buttons > li { display: inline-block; margin: 0; padding: 0; }
+.social-buttons li a.btn { text-align: center; text-decoration: none; }
+.social-buttons li a.btn i { min-width: 16px; }
+.social-buttons .facebook { background: #4267B2; }
+.social-buttons .twitter { background: #1DA1F2;  }
+.social-buttons .facebook,
+.social-buttons .twitter,
+.social-buttons .facebook:hover,
+.social-buttons .twitter:hover {
+    color: white;
+}
+
+/* -------------- */
 /* InfiniteScroll */
 /* -------------- */
 

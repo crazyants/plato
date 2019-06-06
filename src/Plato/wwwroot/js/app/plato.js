@@ -437,7 +437,7 @@ $(function (win, doc, $) {
                     id && (js.id = id);
                     frag.appendChild(js);
                 };
-            add('https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=', 'facebook-jssdk');
+            add('https://connect.facebook.net/en_US/sdk.js', 'facebook-jssdk');
             add('https://platform.twitter.com/widgets.js');
             fjs.parentNode.insertBefore(frag, fjs);
 
@@ -502,8 +502,7 @@ $(function (win, doc, $) {
             }
         }
     };
-
-
+    
     /* Global */
     /* ---------------------------------------------*/
 
