@@ -10,6 +10,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.Localizers;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Tasks;
 using Plato.Internal.Layout.Theming;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;

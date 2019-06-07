@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
@@ -24,31 +25,15 @@ namespace Plato.Discuss.Follow.Subscribers
     /// <typeparam name="TEntityReply"></typeparam>
     public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
-
-        private readonly IEntityStore<Entity> _entityStore;
-
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
-        private readonly INotificationManager<TEntityReply> _notificationManager;
-        private readonly IFollowStore<Follows.Models.Follow> _followStore;
+        
         private readonly IDeferredTaskManager _deferredTaskManager;
-        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IBroker _broker;
 
         public EntityReplySubscriber(
-            IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            INotificationManager<TEntityReply> notificationManager,
-            IFollowStore<Follows.Models.Follow> followStore,
             IDeferredTaskManager deferredTaskManager,
-            IPlatoUserStore<User> platoUserStore,
-            IEntityStore<Entity> entityStore,
             IBroker broker)
         {
-            _userNotificationTypeDefaults = userNotificationTypeDefaults;
-            _notificationManager = notificationManager;
             _deferredTaskManager = deferredTaskManager;
-            _platoUserStore = platoUserStore;
-            _followStore = followStore;
-            _entityStore = entityStore;
             _broker = broker;
         }
 
@@ -118,9 +103,15 @@ namespace Plato.Discuss.Follow.Subscribers
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.AddTask(async context =>
             {
+
+                var entityStore = context.ServiceProvider.GetRequiredService<IEntityStore<Entity>>();
+                var followStore = context.ServiceProvider.GetRequiredService<IFollowStore<Follows.Models.Follow>>();
+                var platoUserStore = context.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
+                var userNotificationTypeDefaults = context.ServiceProvider.GetRequiredService<IUserNotificationTypeDefaults>();
+                var notificationManager = context.ServiceProvider.GetRequiredService<INotificationManager<TEntityReply>>();
                 
                 // Get entity for reply
-                var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+                var entity = await entityStore.GetByIdAsync(reply.EntityId);
 
                 // No need to send notifications if the entity is hidden
                 if (entity.IsHidden())
@@ -129,7 +120,7 @@ namespace Plato.Discuss.Follow.Subscribers
                 }
 
                 // Get all follows for topic
-                var follows = await _followStore.QueryAsync()
+                var follows = await followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
                         q.ThingId.Equals(reply.EntityId);
@@ -145,7 +136,7 @@ namespace Plato.Discuss.Follow.Subscribers
 
                 // Get a collection of all users to notify
                 // Exclude the author so they are not notified of there own posts
-                var users = await _platoUserStore.QueryAsync()
+                var users = await platoUserStore.QueryAsync()
                     .Select<UserQueryParams>(q =>
                     {
                         q.Id.IsIn(follows.Data
@@ -166,18 +157,18 @@ namespace Plato.Discuss.Follow.Subscribers
                 {
 
                     // Email notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewReply))
+                    if (user.NotificationEnabled(userNotificationTypeDefaults, EmailNotifications.NewReply))
                     {
-                        await _notificationManager.SendAsync(new Notification(EmailNotifications.NewReply)
+                        await notificationManager.SendAsync(new Notification(EmailNotifications.NewReply)
                         {
                             To = user,
                         }, reply);
                     }
 
                     // Web notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewReply))
+                    if (user.NotificationEnabled(userNotificationTypeDefaults, WebNotifications.NewReply))
                     {
-                        await _notificationManager.SendAsync(new Notification(WebNotifications.NewReply)
+                        await notificationManager.SendAsync(new Notification(WebNotifications.NewReply)
                         {
                             To = user,
                             From = new User()

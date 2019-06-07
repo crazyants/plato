@@ -15,8 +15,8 @@ namespace Plato.Internal.Tasks
 
         public DeferredTaskManager(
             IDeferredTaskState deferredTaskState,
-       
-            ILogger<DeferredTaskManager> logger){
+            ILogger<DeferredTaskManager> logger)
+        {
             _deferredTaskState = deferredTaskState;
             _logger = logger;
         }

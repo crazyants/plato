@@ -80,6 +80,8 @@ namespace Plato.Internal.Hosting.Web.Middleware
 
                     await _next.Invoke(httpContext);
 
+                    var response = httpContext.Response;
+
                     var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
                     if (deferredTaskEngine == null)
                     {
