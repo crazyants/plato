@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -80,8 +81,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
 
                     await _next.Invoke(httpContext);
 
-                    var response = httpContext.Response;
-
+                    // Check for deferred tasks
                     var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
                     if (deferredTaskEngine == null)
                     {
@@ -92,21 +92,17 @@ namespace Plato.Internal.Hosting.Web.Middleware
                     }
 
                     hasPendingTasks = deferredTaskEngine?.HasPendingTasks ?? false;
-
+                
                 }
-
+                
                 // Create a new scope only if there are pending tasks
                 if (hasPendingTasks)
                 {
-                    shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
-                    using (var pendingScope = shellContext.CreateServiceScope())
+                    using (var scope = shellContext.CreateServiceScope())
                     {
-                        if (pendingScope != null)
-                        {
-                            var deferredTaskEngine = pendingScope.ServiceProvider.GetService<IDeferredTaskManager>();
-                            var context = new DeferredTaskContext(pendingScope.ServiceProvider);
-                            await deferredTaskEngine.ExecuteTaskAsync(context);
-                        }
+                        var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
+                        var context = new DeferredTaskContext(scope.ServiceProvider);
+                        await deferredTaskEngine.ExecuteTaskAsync(context);
                     }
                 }
 

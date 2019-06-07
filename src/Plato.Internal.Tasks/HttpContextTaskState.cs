@@ -29,6 +29,12 @@ namespace Plato.Internal.Tasks
                 return (IList<Func<DeferredTaskContext, Task>>)tasks;
             }
         }
+
+        public void Add(Func<DeferredTaskContext, Task> task)
+        {
+            this.Tasks.Add(task);
+            _httpContext.Items[typeof(HttpContextTaskState)] = this.Tasks;
+        }
     }
 
 }

@@ -26,7 +26,7 @@ namespace Plato.Internal.Abstractions.Extensions
                     {
                         // There is no Func based way to register an open-generic type, instead of
                         // tenantServiceCollection.AddSingleton(typeof(IEnumerable<>), typeof(List<>));
-                        // Right now, we regsiter them as singleton per cloned scope even though it's wrong
+                        // Right now, we register them as singleton per cloned scope even though it's wrong
                         // but in the actual examples it won't matter.
                         clonedCollection.AddSingleton(service.ServiceType, service.ImplementationType);
                     }

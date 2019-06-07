@@ -299,7 +299,7 @@ $(function (win, doc, $) {
             count: 0,
             prevCount: -1,
             onPollComplete: null,
-            pollInterval: 60 // the seconds to wait between polls for new notifications
+            pollInterval: 0 // the seconds to wait between polls for new notifications. Set to 0 to disable polling.
         };
 
         var methods = {
@@ -324,10 +324,13 @@ $(function (win, doc, $) {
 
                 // Periodically check for new notifications
                 var interval = $caller.data(dataKey).pollInterval;
-                window.setInterval(function () {
-                        methods.poll($caller);
-                    },
-                    interval * 1000);
+                if (interval > 0) {
+                    win.setInterval(function () {
+                            methods.poll($caller);
+                        },
+                        interval * 1000);
+                }
+     
 
             },
             poll: function($caller) {

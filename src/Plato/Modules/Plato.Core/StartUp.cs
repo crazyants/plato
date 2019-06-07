@@ -14,8 +14,10 @@ using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Hosting.Extensions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions.Models;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Core
 {
@@ -52,7 +54,7 @@ namespace Plato.Core
                 options.WatchForChanges = false;
                 options.Culture = contextFacade.GetCurrentCultureAsync().Result;
             });
-
+            
         }
 
         public override void Configure(

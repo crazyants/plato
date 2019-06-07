@@ -21,11 +21,12 @@ namespace Plato.Internal.Tasks
             _logger = logger;
         }
 
-        public bool HasPendingTasks => _deferredTaskState.Tasks.Any();
+        public bool HasPendingTasks => _deferredTaskState.Tasks.Count > 0;
 
         public void AddTask(Func<DeferredTaskContext, Task> task)
         {
-            _deferredTaskState.Tasks.Add(task);
+            _deferredTaskState.Add(task);
+            
         }
       
         public async Task ExecuteTaskAsync(DeferredTaskContext context)

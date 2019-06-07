@@ -70,7 +70,7 @@ namespace Plato.Internal.Shell
             var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
             moduleServiceCollection.TryAddSingleton(configuration);
             tenantServiceCollection.TryAddSingleton(configuration);
-
+            
             // Make shell settings available to the modules
             moduleServiceCollection.AddSingleton(settings);
 
@@ -95,7 +95,6 @@ namespace Plato.Internal.Shell
         {
             tenantServiceCollection.AddTransient<IShellFeatureManager, ShellFeatureManager>();
             tenantServiceCollection.AddTransient<IShellDescriptorManager, ShellDescriptorManager>();
-            
         }
 
 
