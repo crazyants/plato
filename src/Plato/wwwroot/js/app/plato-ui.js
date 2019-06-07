@@ -122,6 +122,8 @@ $(function (win, doc, $) {
                         $body.empty();
                         if (response !== "") {
                             $body.html(response);
+                            // Enable tooltips within loaded content
+                            app.ui.initToolTips($body);
                         }
                     }
                     

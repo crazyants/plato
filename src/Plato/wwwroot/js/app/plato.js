@@ -449,7 +449,7 @@ $(function (win, doc, $) {
                     win.FB.init({
                         appId: appId,
                         xfbml: true,
-                        version: 'v2.8'
+                        version: "v2.8"
                     });
                 };
             },
@@ -459,29 +459,27 @@ $(function (win, doc, $) {
                     href: url
                 },
                     function (response) {
-                        //console.log(response);
                         if (response && response.post_id) {
-                            //alert('published');
+                            // published
                         } else {
-                            //alert('not published');
+                            // not published
                         }
                     });
             },
             feed: function (url) {
                 win.FB.ui({
-                    method: 'feed',
-                    name: '',
+                    method: "feed",
+                    name: "",
                     link: url,
-                    picture: '',
-                    caption: '',
-                    description: ''
+                    picture: "",
+                    caption: "",
+                    description: ""
                 },
                     function (response) {
-                        //console.log(response);
                         if (response && response.post_id) {
-                            //alert('published');
+                            // published
                         } else {
-                            //alert('not published');
+                            // not published
                         }
                     });
             }

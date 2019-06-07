@@ -4,9 +4,7 @@
 }
 
 <div class="modal-header">
-    <h6 class="modal-title">
-        @T["Share"]
-    </h6>
+    <h6 class="modal-title">@T["Share"]</h6>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">
             <i class="fal fa-times"></i>
@@ -14,46 +12,43 @@
     </button>
 </div>
 
-<div class="modal-body" style="max-height: 550px; overflow: auto;">
-
+<div class="modal-body">
     <input readonly value="@Model.Url" type="text" class="form-control col-12" />
-    
     <div class="mt-3">
-        <ul id="social" class="social-buttons">
+        <ul class="social-buttons">
             <li>
-                <a href="@Model.Url" class="btn facebook" data-toggle="tooltip" title="@T["Share on Facebook"]">
+                <a href="@Model.Url" class="btn btn-facebook" data-provide="tooltip" title="@T["Share on Facebook"]">
                     <i class="fab fa-facebook-f"></i>
                 </a>
             </li>
             <li>
-                <a href="@Model.Url" class="btn twitter" data-toggle="tooltip" title="@T["Share on twitter"]">
+                <a href="@Model.Url" class="btn btn-twitter" data-provide="tooltip" title="@T["Share on twitter"]">
                     <i class="fab fa-twitter"></i>
                 </a>
             </li>
         </ul>
     </div>
-
 </div>
 
 <div id="fb-root"></div>
 
 <script>
-
     $(function (win, doc, $) {
         $(doc).ready(function() {
-            
-            var app = win.$.Plato;
 
+            // Plato global
+            var app = win.$.Plato;
             if (app == null) {
                 throw Error("$.Plato has not been registered!");
             }
          
-            // Inject social scripts
+            // Ensure social scripts are injected
             app.social.init();
 
-            // Init facebook passing in Facebook application Id
-            app.social.facebook.init('353584392011910');
+            // Init facebook application Id
+            app.social.facebook.init("353584392011910");
 
+            // modal show
             $("#shareDialog").on('shown.bs.modal',
                 function (e) {
 
@@ -61,14 +56,14 @@
                     $(this).find("input").select();
                     
                     // Facebook click event
-                    $(this).find(".facebook").on("click",
+                    $(this).find(".btn-facebook").on("click",
                         function(e) {
                             e.preventDefault();
                             app.social.facebook.share($(this).attr("href"));
                         });
 
                     // Twitter click event
-                    $(this).find(".twitter").on("click",
+                    $(this).find(".btn-twitter").on("click",
                         function(e) {
                             e.preventDefault();
                             app.social.twitter.share($(this).attr("href"));

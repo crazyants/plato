@@ -82,9 +82,10 @@ namespace Plato.Discuss.Follow.Notifications
                 {
                     ["area"] = "Plato.Discuss",
                     ["controller"] = "Home",
-                    ["action"] = "Display",
+                    ["action"] = "Reply",
                     ["opts.id"] = topic.Id,
-                    ["opts.alias"] = topic.Alias
+                    ["opts.alias"] = topic.Alias,
+                    ["opts.replyId"] = context.Model.Id
                 })
             };
 

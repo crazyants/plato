@@ -12,6 +12,8 @@ using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Entities.Extensions;
+using Plato.Entities.Stores;
 
 namespace Plato.Discuss.Follow.Subscribers
 {
@@ -22,31 +24,34 @@ namespace Plato.Discuss.Follow.Subscribers
     /// <typeparam name="TEntityReply"></typeparam>
     public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
-        
-        private readonly IBroker _broker;
+
+        private readonly IEntityStore<Entity> _entityStore;
+
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<TEntityReply> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IDeferredTaskManager _deferredTaskManager;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IBroker _broker;
 
         public EntityReplySubscriber(
-            IBroker broker,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<TEntityReply> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
             IDeferredTaskManager deferredTaskManager,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            IPlatoUserStore<User> platoUserStore)
+            IPlatoUserStore<User> platoUserStore,
+            IEntityStore<Entity> entityStore,
+            IBroker broker)
         {
-            _broker = broker;
-            _notificationManager = notificationManager;
-            _followStore = followStore;
-      
-            _deferredTaskManager = deferredTaskManager;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _notificationManager = notificationManager;
+            _deferredTaskManager = deferredTaskManager;
             _platoUserStore = platoUserStore;
+            _followStore = followStore;
+            _entityStore = entityStore;
+            _broker = broker;
         }
-        
+
         #region "Implementation"
 
         public void Subscribe()
@@ -98,22 +103,31 @@ namespace Plato.Discuss.Follow.Subscribers
                 throw new ArgumentNullException(nameof(reply));
             }
 
+            // The reply always need an entity Id
+            if (reply.EntityId <= 0)
+            {
+                throw new ArgumentNullException(nameof(reply.EntityId));
+            }
+
             // No need to send notifications for hidden replies
-            if (reply.IsHidden)
+            if (reply.IsHidden())
             {
                 return Task.FromResult(reply);
             }
 
-            // No need to send notifications for replies flagged as spam
-            if (reply.IsSpam)
-            {
-                return Task.FromResult(reply);
-            }
-            
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.AddTask(async context =>
             {
                 
+                // Get entity for reply
+                var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+                // No need to send notifications if the entity is hidden
+                if (entity.IsHidden())
+                {
+                    return;
+                }
+
                 // Get all follows for topic
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
@@ -147,7 +161,7 @@ namespace Plato.Discuss.Follow.Subscribers
                     return;
                 }
 
-                // Send mention notifications
+                // Send notifications
                 foreach (var user in users.Data)
                 {
 
