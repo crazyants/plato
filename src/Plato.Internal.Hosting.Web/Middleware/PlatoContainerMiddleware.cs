@@ -73,7 +73,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
 
                                 // Activate tasks 
                                 var backgroundTaskManager = scope.ServiceProvider.GetService<IBackgroundTaskManager>();
-                                backgroundTaskManager?.StartTasks();
+                                backgroundTaskManager?.StartTasks(scope.ServiceProvider);
 
                             }
                         }
@@ -83,14 +83,6 @@ namespace Plato.Internal.Hosting.Web.Middleware
 
                     // Check for deferred tasks
                     var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
-                    if (deferredTaskEngine == null)
-                    {
-                        if (_logger.IsEnabled(LogLevel.Information))
-                        {
-                            _logger.LogInformation("No service has been found for type IDeferredTaskManager. Deferred tasks cannot execute.");
-                        }
-                    }
-
                     hasPendingTasks = deferredTaskEngine?.HasPendingTasks ?? false;
                 
                 }

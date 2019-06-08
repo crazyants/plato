@@ -10,11 +10,12 @@ namespace Plato.Internal.Tasks
     {
        
         private readonly HttpContext _httpContext;
-
+        
         public HttpContextTaskState(IHttpContextAccessor httpContextAccessor)
         {
             _httpContext = httpContextAccessor.HttpContext;
         }
+        
 
         public IList<Func<DeferredTaskContext, Task>> Tasks
         {
@@ -25,16 +26,10 @@ namespace Plato.Internal.Tasks
                     tasks = new List<Func<DeferredTaskContext, Task>>();
                     _httpContext.Items[typeof(HttpContextTaskState)] = tasks;
                 }
-
                 return (IList<Func<DeferredTaskContext, Task>>)tasks;
             }
         }
 
-        public void Add(Func<DeferredTaskContext, Task> task)
-        {
-            this.Tasks.Add(task);
-            _httpContext.Items[typeof(HttpContextTaskState)] = this.Tasks;
-        }
     }
 
 }

@@ -1,9 +1,12 @@
-﻿namespace Plato.Internal.Tasks.Abstractions
+﻿using System;
+
+namespace Plato.Internal.Tasks.Abstractions
 {
 
     public interface IBackgroundTaskManager
     {
-        void StartTasks();
+        
+        void StartTasks(IServiceProvider serviceProvider);
 
         void StopTasks();
 

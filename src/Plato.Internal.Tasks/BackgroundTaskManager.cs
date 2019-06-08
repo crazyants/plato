@@ -23,15 +23,20 @@ namespace Plato.Internal.Tasks
             _logger = logger;
         }
 
-        public void StartTasks()
+        public void StartTasks(IServiceProvider serviceProvider)
         {
+
+            var timerFactory = new SafeTimerFactory(serviceProvider);
+            
             foreach (var provider in _providers)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation($"Initializing background task provider of type '{provider.GetType()}'.");
                 }
-                _safeTimerFactory.Start(async (sender, args) =>
+
+
+                timerFactory.Start(async (sender, args) =>
                 {
                     try
                     {
@@ -47,6 +52,8 @@ namespace Plato.Internal.Tasks
                     Owner = provider.GetType(),
                     IntervalInSeconds = provider.IntervalInSeconds
                 });
+
+
             }
 
         }

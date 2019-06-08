@@ -8,15 +8,15 @@ namespace Plato.Internal.Tasks.Abstractions
     public class SafeTimerEventArgs : EventArgs
     {
 
-        public HttpContext HttpContext;
+        public IServiceProvider ServiceProvider { get; }
 
         public SafeTimerEventArgs()
         {
         }
 
-        public SafeTimerEventArgs(HttpContext context)
+        public SafeTimerEventArgs(IServiceProvider serviceProvider)
         {
-            HttpContext = context;
+            ServiceProvider = serviceProvider;
         }
 
     }

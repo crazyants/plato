@@ -72,7 +72,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-         
+            
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
             services.AddPlatoSecurity();

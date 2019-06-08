@@ -21,10 +21,10 @@ namespace Plato.Internal.Tasks
         
         private readonly ILogger _logger;
         
-        public SafeTimer(HttpContext context)
+        public SafeTimer(IServiceProvider serviceProvider)
         {
-            _logger = context.RequestServices.GetRequiredService<ILogger<SafeTimerFactory>>();
-            _timer = new Timer(TimerCallBack, context, Timeout.Infinite, Timeout.Infinite);
+            _logger = serviceProvider.GetRequiredService<ILogger<SafeTimerFactory>>();
+            _timer = new Timer(TimerCallBack, serviceProvider, Timeout.Infinite, Timeout.Infinite);
         }
 
         public override void Start()
@@ -131,7 +131,7 @@ namespace Plato.Internal.Tasks
                     }
                     
                     Elapsed(this, state != null
-                        ? new SafeTimerEventArgs(state as HttpContext)
+                        ? new SafeTimerEventArgs(state as IServiceProvider)
                         : new SafeTimerEventArgs());
         
                     if (_logger.IsEnabled(LogLevel.Information))
