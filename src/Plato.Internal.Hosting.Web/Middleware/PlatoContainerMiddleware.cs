@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.TagHelpers;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
@@ -73,7 +74,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
 
                                 // Activate tasks 
                                 var backgroundTaskManager = scope.ServiceProvider.GetService<IBackgroundTaskManager>();
-                                backgroundTaskManager?.StartTasks(scope.ServiceProvider);
+                                backgroundTaskManager?.StartTasks();
 
                             }
                         }
@@ -83,13 +84,26 @@ namespace Plato.Internal.Hosting.Web.Middleware
 
                     // Check for deferred tasks
                     var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
-                    hasPendingTasks = deferredTaskEngine?.HasPendingTasks ?? false;
+
+                    // Only check for deferred tasks after a full round trip
+                    var isGet = httpContext.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase);                    
+                    var isHtml = httpContext.Response.ContentType?.IndexOf("text/html", StringComparison.OrdinalIgnoreCase) >= 0;
+                    var isSuccess = httpContext.Response.StatusCode == 200;
+                    if (isGet && isHtml && isSuccess)
+                    {
+                        hasPendingTasks = deferredTaskEngine?.HasPendingTasks ?? false;
+                    }
+                    if (hasPendingTasks)
+                    {
+                        _logger.LogInformation("We have pending deferred tasks");
+                    }
                 
                 }
                 
                 // Create a new scope only if there are pending tasks
                 if (hasPendingTasks)
                 {
+                    shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
                     using (var scope = shellContext.CreateServiceScope())
                     {
                         var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();

@@ -9,6 +9,8 @@ namespace Plato.Internal.Tasks.Abstractions
     {
         IList<Func<DeferredTaskContext, Task>> Tasks { get; }
 
+        void Add(Func<DeferredTaskContext, Task> task);
+
     }
 
     public interface IDeferredTaskManager

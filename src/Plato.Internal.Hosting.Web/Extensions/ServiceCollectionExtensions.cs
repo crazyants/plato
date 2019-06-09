@@ -72,7 +72,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-            
+
+            services.AddHttpContextAccessor();
+            services.AddPlatoDeferredTasks();
+
+
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
             services.AddPlatoSecurity();
@@ -92,7 +96,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
            
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-                internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+           
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
                 internalServices.AddSingleton<ICapturedHttpContext, CapturedHttpContext>();
                 internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();

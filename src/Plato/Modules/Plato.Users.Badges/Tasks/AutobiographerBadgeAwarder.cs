@@ -56,7 +56,7 @@ namespace Plato.Users.Badges.Tasks
             DEALLOCATE MSGCURSOR;
             SELECT UserId FROM @myTable;";
         
-        public int IntervalInSeconds => 240;
+        public int IntervalInSeconds => 30;
 
         public IBadge Badge => ProfileBadges.Autobiographer;
 
@@ -85,18 +85,14 @@ namespace Plato.Users.Badges.Tasks
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
-
-
-            var dbHelper = args.ServiceProvider.GetRequiredService<IDbHelper>();
-
-
+            
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
                 ["{name}"] = Badge.Name
             };
 
-            var userIds = await dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
+            var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
             {
                 var users = new List<int>();
                 while (await reader.ReadAsync())

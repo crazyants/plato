@@ -24,7 +24,7 @@ namespace Plato.Internal.Tasks
 
         public void AddTask(Func<DeferredTaskContext, Task> task)
         {
-            _deferredTaskState.Tasks.Add(task);
+            _deferredTaskState.Add(task);
             
         }
       

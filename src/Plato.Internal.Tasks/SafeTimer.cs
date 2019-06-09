@@ -130,6 +130,9 @@ namespace Plato.Internal.Tasks
                             $"Executing delegate within timer for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}");
                     }
                     
+
+
+
                     Elapsed(this, state != null
                         ? new SafeTimerEventArgs(state as IServiceProvider)
                         : new SafeTimerEventArgs());
