@@ -72,11 +72,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-
-            services.AddHttpContextAccessor();
-            services.AddPlatoDeferredTasks();
-
-
+            
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
             services.AddPlatoSecurity();
@@ -93,10 +89,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
             return services.AddHPlatoTennetHost(internalServices =>
             {
-           
+
+                services.AddHttpContextAccessor();
+
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-           
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
                 internalServices.AddSingleton<ICapturedHttpContext, CapturedHttpContext>();
                 internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
@@ -140,7 +137,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             this IServiceCollection services,
             Action<IServiceCollection> configure)
         {
-
+            
             // Add host
             services.AddPlatoDefaultHost();
 
@@ -149,8 +146,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             // Let the app change the default tenant behavior and set of features
             configure?.Invoke(services);
-             
-            // Register the list of services to be resolved later on
+
+            // Register the list of services to be resolved later on via ShellContainerFactory
             services.AddSingleton(_ => services);
 
             return services;

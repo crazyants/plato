@@ -97,7 +97,7 @@ namespace Plato.Internal.Messaging
                     // Wrap our subscriber delegate within a dummy delegate
                     // This allows us to invoke the dummy delegate externally
                     // passing in a custom message for our real subscriber delegate
-                    output.Add(async input => await func.Invoke(input));
+                    output.Add(async input => await func(input));
                 }
             }
 

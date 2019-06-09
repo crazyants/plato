@@ -16,7 +16,7 @@ namespace Plato.Internal.Tasks.Extensions
             services.TryAddSingleton<ISafeTimerFactory, SafeTimerFactory>();
 
             // Deferred tasks
-            //services.AddPlatoDeferredTasks();
+            services.AddPlatoDeferredTasks();
 
             return services;
 
@@ -25,8 +25,10 @@ namespace Plato.Internal.Tasks.Extensions
         public static IServiceCollection AddPlatoDeferredTasks(
             this IServiceCollection services)
         {
-            services.TryAddScoped<IDeferredTaskState, HttpContextTaskState>();
+
+            services.TryAddSingleton<IDeferredTaskStore, DeferredTaskStore>();
             services.TryAddScoped<IDeferredTaskManager, DeferredTaskManager>();
+            services.TryAddScoped<IDeferredTaskState, HttpContextTaskState>();
             return services;
         }
         

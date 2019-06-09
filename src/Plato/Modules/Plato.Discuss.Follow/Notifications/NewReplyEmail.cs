@@ -14,6 +14,7 @@ using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 
 
 namespace Plato.Discuss.Follow.Notifications
@@ -27,6 +28,7 @@ namespace Plato.Discuss.Follow.Notifications
         private readonly IEmailManager _emailManager;
         private readonly IEntityStore<Topic> _topicStore;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
+   
 
         public NewReplyEmail(
             IContextFacade contextFacade,
@@ -40,6 +42,7 @@ namespace Plato.Discuss.Follow.Notifications
             _emailManager = emailManager;
             _topicStore = topicStore;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
+         
         }
 
         public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)

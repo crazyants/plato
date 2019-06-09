@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Tasks.Abstractions;
 
@@ -11,7 +12,7 @@ namespace Plato.Internal.Tasks
  
         private readonly ILogger<DeferredTaskManager> _logger;
         private readonly IDeferredTaskState _deferredTaskState;
-  
+
         public DeferredTaskManager(
             IDeferredTaskState deferredTaskState,
             ILogger<DeferredTaskManager> logger)
@@ -24,8 +25,7 @@ namespace Plato.Internal.Tasks
 
         public void AddTask(Func<DeferredTaskContext, Task> task)
         {
-            _deferredTaskState.Add(task);
-            
+            _deferredTaskState.Tasks.Add(task);
         }
       
         public async Task ExecuteTaskAsync(DeferredTaskContext context)

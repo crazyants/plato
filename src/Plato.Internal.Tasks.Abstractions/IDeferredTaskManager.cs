@@ -1,16 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Plato.Internal.Tasks.Abstractions
 {
 
-    public interface IDeferredTaskState
+    public interface IDeferredTaskStore
     {
         IList<Func<DeferredTaskContext, Task>> Tasks { get; }
 
-        void Add(Func<DeferredTaskContext, Task> task);
+        bool Process(HttpContext httpContext);
 
+        void AddTask(Func<DeferredTaskContext, Task> task);
+
+        Task ExecuteTaskAsync(DeferredTaskContext context);
+
+    }
+
+
+    public interface IDeferredTaskState
+    {
+        IList<Func<DeferredTaskContext, Task>> Tasks { get; }
+        
     }
 
     public interface IDeferredTaskManager
