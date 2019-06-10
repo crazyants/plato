@@ -38,7 +38,7 @@ namespace Plato.Internal.Tasks
             }
 
             // Only process after a round trip
-            var isGet = httpContext.Request.Method.Equals("get", StringComparison.OrdinalIgnoreCase);
+            var isGet = httpContext.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase);
             var isSuccess = httpContext.Response.StatusCode == 200;
             var isHtml = httpContext.Response.ContentType?.StartsWith("text/html", StringComparison.OrdinalIgnoreCase) ?? false;
             return isGet && isSuccess && isHtml;

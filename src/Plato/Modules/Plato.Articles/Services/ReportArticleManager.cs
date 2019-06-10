@@ -39,7 +39,7 @@ namespace Plato.Articles.Services
         {
             
             // Defer notifications for execution after request completes
-            _deferredTaskManager.AddTask(async ctx =>
+            _deferredTaskManager.AddTask(async context =>
             {
 
                 // Get users to notify

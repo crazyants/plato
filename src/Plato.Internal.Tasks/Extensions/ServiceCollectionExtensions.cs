@@ -18,7 +18,6 @@ namespace Plato.Internal.Tasks.Extensions
             // Deferred tasks
             services.TryAddSingleton<IDeferredTaskState, SingletonTaskState>();
             services.TryAddScoped<IDeferredTaskManager, DeferredTaskManager>();
-            //services.TryAddScoped<IDeferredTaskState, HttpContextTaskState>();
 
             return services;
 

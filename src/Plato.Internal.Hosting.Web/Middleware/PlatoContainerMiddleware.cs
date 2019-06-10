@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.TagHelpers;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
@@ -15,6 +12,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
 {
     public class PlatoContainerMiddleware
     {
+
         private readonly RequestDelegate _next;
         private readonly IPlatoHost _platoHost;
         private readonly IRunningShellTable _runningShellTable;
@@ -35,16 +33,16 @@ namespace Plato.Internal.Hosting.Web.Middleware
         public async Task Invoke(HttpContext httpContext)
         {
 
-            // Ensure all shells are loaded and available.
+            // Ensure all tenants are loaded and available.
             _platoHost.Initialize();
 
-            // Get ShellSettings for current tennet
+            // Get ShellSettings for current tenant
             var shellSettings = _runningShellTable.Match(httpContext);
             
-            // register shell settings as a custom feature
+            // Register shell settings as a custom feature
             httpContext.Features[typeof(ShellSettings)] = shellSettings;
 
-            // only serve the next request if the tenant has been resolved.
+            // Only serve the next request if the tenant has been resolved.
             if (shellSettings != null)
             {
 
@@ -52,17 +50,20 @@ namespace Plato.Internal.Hosting.Web.Middleware
                 var shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
                 using (var scope = shellContext.CreateServiceScope())
                 {
+
+                    // Mimic the services provided by our host and tenant
                     httpContext.RequestServices = scope.ServiceProvider;
-                    
+
+                    // Ensure the tenant is activated
                     if (!shellContext.IsActivated)
                     {
                         lock (shellSettings)
                         {
-                            // Activate the tanant
+                            // Activate the tenant
                             if (!shellContext.IsActivated)
                             {
 
-                                // BuildPipeline ensures we always rebuild routes for new tennets
+                                // BuildPipeline ensures we always rebuild routes for new tenants
                                 httpContext.Items["BuildPipeline"] = true;
                                 shellContext.IsActivated = true;
                                 
@@ -73,7 +74,7 @@ namespace Plato.Internal.Hosting.Web.Middleware
                                     subscriber.Subscribe();
                                 }
 
-                                // Activate tasks 
+                                // Activate background tasks 
                                 var backgroundTaskManager = scope.ServiceProvider.GetService<IBackgroundTaskManager>();
                                 backgroundTaskManager?.StartTasks();
 
@@ -81,18 +82,19 @@ namespace Plato.Internal.Hosting.Web.Middleware
                         }
                     }
 
+                    // Invoke the next middleware in pipeline
                     await _next.Invoke(httpContext);
 
-                    // Determine if we need to process deferred tasks
+                    // At the end determine if we need to process deferred tasks
                     var deferredTaskManager = scope.ServiceProvider.GetService<IDeferredTaskManager>();
                     hasDeferredTasks = deferredTaskManager?.Process(httpContext) ?? false;
                     
                 }
                 
-                // Process deferred tasks within a new scope once the entire response has completed
+                // Execute deferred tasks (if any) within a new scope
+                // once the entire response has been sent to the client.
                 if (hasDeferredTasks)
                 {
-                    // OnCompleted
                     httpContext.Response.OnCompleted(async () =>
                     {
                         using (var scope = shellContext.CreateServiceScope())
@@ -101,7 +103,6 @@ namespace Plato.Internal.Hosting.Web.Middleware
                             var deferredTaskManager = scope.ServiceProvider.GetService<IDeferredTaskManager>();
                             await deferredTaskManager.ExecuteTaskAsync(context);
                         }
-
                     });
                 }
                 
