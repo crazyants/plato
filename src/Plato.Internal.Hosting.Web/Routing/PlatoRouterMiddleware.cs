@@ -81,7 +81,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             }
             
             await pipeline.Invoke(httpContext);
-
+            
         }
 
         // Build the middleware pipeline for the current tenant

@@ -47,8 +47,8 @@ namespace Plato.Internal.Hosting.Web.Middleware
             if (shellSettings != null)
             {
 
-                var shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
                 var hasPendingTasks = false;
+                var shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
                 using (var scope = shellContext.CreateServiceScope())
                 {
                     httpContext.RequestServices = scope.ServiceProvider;
@@ -79,29 +79,23 @@ namespace Plato.Internal.Hosting.Web.Middleware
                             }
                         }
                     }
-
-
-                    await _next.Invoke(httpContext);
                     
-                    // Do we need to add any deferred tasks from our store?
+                    await _next.Invoke(httpContext);
+
                     var deferredTaskStore = scope.ServiceProvider.GetService<IDeferredTaskStore>();
                     hasPendingTasks = deferredTaskStore?.Process(httpContext) ?? false;
-
+                    
                 }
+                
+                // ---------------
 
-                // Create a new scope only if there are pending tasks
                 if (hasPendingTasks)
                 {
-                    //shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
+                    shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
                     using (var scope = shellContext.CreateServiceScope())
                     {
-                        // Execute deferred tasks
-                        //var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskManager>();
-                        var context = new DeferredTaskContext(scope.ServiceProvider);
-                        //await deferredTaskEngine.ExecuteTaskAsync(context);
-
-                        // Clear store
                         var deferredTaskStore = scope.ServiceProvider.GetService<IDeferredTaskStore>();
+                        var context = new DeferredTaskContext(scope.ServiceProvider);
                         await deferredTaskStore.ExecuteTaskAsync(context);
 
                     }

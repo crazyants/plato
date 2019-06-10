@@ -13,12 +13,12 @@ namespace Plato.Internal.Layout.Tasks
     //public class DeferredTasksFilter : IActionFilter, IAsyncResultFilter
     //{
 
-    //    private readonly IDeferredTaskManager _deferredTaskManager;
+    //    private readonly IDeferredTaskStore _deferredTaskManager;
     //    private readonly IRunningShellTable _runningShellTable;
     //    private readonly IPlatoHost _platoHost;
 
     //    public DeferredTasksFilter(
-    //        IDeferredTaskManager deferredTaskManager,
+    //        IDeferredTaskStore deferredTaskManager,
     //        IPlatoHost platoHost,
     //        IRunningShellTable runningShellTable)
     //    {
@@ -42,7 +42,7 @@ namespace Plato.Internal.Layout.Tasks
 
     //        // Process everything else first
     //        await next();
-            
+
     //        // The controller action didn't return a view result so no need to continue execution
     //        if (!(context.Result is ViewResult result))
     //        {
@@ -54,12 +54,12 @@ namespace Plato.Internal.Layout.Tasks
     //        {
     //            return;
     //        }
-            
-    //        // Get ShellSettings for current tennet
-    //        var shellSettings = _runningShellTable.Match(context.HttpContext);
+
+    //        //Get ShellSettings for current tennet
+    //       var shellSettings = _runningShellTable.Match(context.HttpContext);
 
     //        // Create a new scope only if there are pending tasks
-    //        if (_deferredTaskManager.HasPendingTasks)
+    //        if (_deferredTaskManager.Process(context.HttpContext)) 
     //        {
     //            var shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
     //            using (var pendingScope = shellContext.CreateServiceScope())

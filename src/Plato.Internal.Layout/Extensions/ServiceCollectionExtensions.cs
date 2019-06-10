@@ -54,6 +54,7 @@ namespace Plato.Internal.Layout.Extensions
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
                 options.Filters.Add(typeof(AlertFilter));
+                //options.Filters.Add(typeof(DeferredTasksFilter));
                 options.Filters.Add(typeof(ModularFilter));
             });
 

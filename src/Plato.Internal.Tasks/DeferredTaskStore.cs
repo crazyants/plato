@@ -27,23 +27,30 @@ namespace Plato.Internal.Tasks
             {
                 return false;
             }
-
+            
             // Only process after a round trip
             var isGet = httpContext.Request.Method.Equals("get", StringComparison.OrdinalIgnoreCase);
-            var is200 = httpContext.Response.StatusCode == 200;
+            var isSuccess = httpContext.Response.StatusCode == 200;
             var isHtml = httpContext.Response.ContentType?.StartsWith("text/html", StringComparison.OrdinalIgnoreCase) ?? false;
-            return isGet && is200 && isHtml;
+            return isGet && isSuccess && isHtml;
 
         }
 
         public void AddTask(Func<DeferredTaskContext, Task> task)
         {
 
-
             Tasks.Add(async input => await task(input));
-    
-            //Tasks.Add(async input => await task.Invoke(input));
 
+            //Tasks.Add( input =>
+            //{
+            //    return Task.Factory.StartNew(() =>
+            //    {
+            //        task(input);
+            //    });
+            //});
+
+
+            //Tasks.Add(task);
         }
 
         public async Task ExecuteTaskAsync(DeferredTaskContext context)
