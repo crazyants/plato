@@ -35,7 +35,7 @@ namespace Plato.Discuss.Follow.Subscribers
 
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IBroker _broker;
-        private readonly IDeferredTaskStore _deferredTaskStore;
+
 
         public EntityReplySubscriber(
             IDeferredTaskManager deferredTaskManager,
@@ -44,8 +44,7 @@ namespace Plato.Discuss.Follow.Subscribers
             IFollowStore<Follows.Models.Follow> followStore, 
             IPlatoUserStore<User> platoUserStore,
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            INotificationManager<TEntityReply> notificationManager,
-            IDeferredTaskStore deferredTaskStore)
+            INotificationManager<TEntityReply> notificationManager)
         {
             _deferredTaskManager = deferredTaskManager;
             _broker = broker;
@@ -54,7 +53,6 @@ namespace Plato.Discuss.Follow.Subscribers
             _platoUserStore = platoUserStore;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _notificationManager = notificationManager;
-            _deferredTaskStore = deferredTaskStore;
         }
 
         #region "Implementation"
@@ -103,89 +101,7 @@ namespace Plato.Discuss.Follow.Subscribers
         Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
         {
 
-            Func<DeferredTaskContext, Task> ToDefer() =>
-                async context =>
-                {
-
-                    //var entityStore = context.ServiceProvider.GetRequiredService<IEntityStore<Entity>>();
-
-                    // Get entity for reply
-                    var entity = await _entityStore.GetByIdAsync(reply.EntityId);
-
-                    // No need to send notifications if the entity is hidden
-                    if (entity.IsHidden())
-                    {
-                        return;
-                    }
-
-                    // Get all follows for topic
-                    var follows = await _followStore.QueryAsync()
-                        .Select<FollowQueryParams>(q =>
-                        {
-                            q.ThingId.Equals(reply.EntityId);
-                            q.Name.Equals(FollowTypes.Topic.Name);
-                        })
-                        .ToList();
-
-                    // No follows simply return
-                    if (follows?.Data == null)
-                    {
-                        return;
-                    }
-
-                    // Get a collection of all users to notify
-                    // Exclude the author so they are not notified of there own posts
-                    var users = await _platoUserStore.QueryAsync()
-                        .Select<UserQueryParams>(q =>
-                        {
-                            q.Id.IsIn(follows.Data
-                                .Where(f => f.CreatedUserId != reply.CreatedUserId)
-                                .Select(f => f.CreatedUserId)
-                                .ToArray());
-                        })
-                        .ToList();
-
-                    // No follows simply return
-                    if (users?.Data == null)
-                    {
-                        return;
-                    }
-
-                    // Send notifications
-                    foreach (var user in users.Data)
-                    {
-
-                        // Email notifications
-                        if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewReply))
-                        {
-                            await _notificationManager.SendAsync(new Notification(EmailNotifications.NewReply)
-                            {
-                                To = user,
-                            }, reply);
-                        }
-
-                        // Web notifications
-                        if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewReply))
-                        {
-                            await _notificationManager.SendAsync(new Notification(WebNotifications.NewReply)
-                            {
-                                To = user,
-                                From = new User()
-                                {
-                                    Id = reply.CreatedBy.Id,
-                                    UserName = reply.CreatedBy.UserName,
-                                    DisplayName = reply.CreatedBy.DisplayName,
-                                    Alias = reply.CreatedBy.Alias,
-                                    PhotoUrl = reply.CreatedBy.PhotoUrl,
-                                    PhotoColor = reply.CreatedBy.PhotoColor
-                                }
-                            }, reply);
-                        }
-
-                    }
-
-                };
-
+       
             if (reply == null)
             {
                 throw new ArgumentNullException(nameof(reply));
@@ -203,8 +119,88 @@ namespace Plato.Discuss.Follow.Subscribers
                 return Task.FromResult(reply);
             }
             
-            // Persist tasks to store
-            _deferredTaskStore.AddTask(ToDefer());
+            // Add deferred task
+            _deferredTaskManager.AddTask(async context =>
+            {
+
+                //var entityStore = context.ServiceProvider.GetRequiredService<IEntityStore<Entity>>();
+
+                // Get entity for reply
+                var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+                // No need to send notifications if the entity is hidden
+                if (entity.IsHidden())
+                {
+                    return;
+                }
+
+                // Get all follows for topic
+                var follows = await _followStore.QueryAsync()
+                    .Select<FollowQueryParams>(q =>
+                    {
+                        q.ThingId.Equals(reply.EntityId);
+                        q.Name.Equals(FollowTypes.Topic.Name);
+                    })
+                    .ToList();
+
+                // No follows simply return
+                if (follows?.Data == null)
+                {
+                    return;
+                }
+
+                // Get a collection of all users to notify
+                // Exclude the author so they are not notified of there own posts
+                var users = await _platoUserStore.QueryAsync()
+                    .Select<UserQueryParams>(q =>
+                    {
+                        q.Id.IsIn(follows.Data
+                            .Where(f => f.CreatedUserId != reply.CreatedUserId)
+                            .Select(f => f.CreatedUserId)
+                            .ToArray());
+                    })
+                    .ToList();
+
+                // No follows simply return
+                if (users?.Data == null)
+                {
+                    return;
+                }
+
+                // Send notifications
+                foreach (var user in users.Data)
+                {
+
+                    // Email notifications
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewReply))
+                    {
+                        await _notificationManager.SendAsync(new Notification(EmailNotifications.NewReply)
+                        {
+                            To = user,
+                        }, reply);
+                    }
+
+                    // Web notifications
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewReply))
+                    {
+                        await _notificationManager.SendAsync(new Notification(WebNotifications.NewReply)
+                        {
+                            To = user,
+                            From = new User()
+                            {
+                                Id = reply.CreatedBy.Id,
+                                UserName = reply.CreatedBy.UserName,
+                                DisplayName = reply.CreatedBy.DisplayName,
+                                Alias = reply.CreatedBy.Alias,
+                                PhotoUrl = reply.CreatedBy.PhotoUrl,
+                                PhotoColor = reply.CreatedBy.PhotoColor
+                            }
+                        }, reply);
+                    }
+
+                }
+
+            });
 
             // Defer notifications to first available thread pool thread
             //_deferredTaskManager.AddTask(async context =>
@@ -288,7 +284,7 @@ namespace Plato.Discuss.Follow.Subscribers
             //    }
 
             //});
-            
+
 
             return Task.FromResult(reply);
 

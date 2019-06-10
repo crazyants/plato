@@ -5,20 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Plato.Internal.Tasks.Abstractions
 {
-
-    public interface IDeferredTaskStore
-    {
-        IList<Func<DeferredTaskContext, Task>> Tasks { get; }
-
-        bool Process(HttpContext httpContext);
-
-        void AddTask(Func<DeferredTaskContext, Task> task);
-
-        Task ExecuteTaskAsync(DeferredTaskContext context);
-
-    }
-
-
+    
     public interface IDeferredTaskState
     {
         IList<Func<DeferredTaskContext, Task>> Tasks { get; }
@@ -27,14 +14,18 @@ namespace Plato.Internal.Tasks.Abstractions
 
     public interface IDeferredTaskManager
     {
-
-        bool HasPendingTasks { get; }
+        
+        bool HasTasks { get; }
 
         void AddTask(Func<DeferredTaskContext, Task> task);
         
         Task ExecuteTaskAsync(DeferredTaskContext context);
 
+        bool Process(HttpContext httpContext);
+
     }
+
+
 
     public class DeferredTaskContext
     {

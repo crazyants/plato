@@ -54,7 +54,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var img = new TagBuilder("span");
             if (!string.IsNullOrEmpty(Url))
             {
-                img.Attributes.Add("style", $"background-image: url('{Url}');");
+                //img.Attributes.Add("style", $"background-image: url('{Url}');");
             }
             else
             {
