@@ -32,12 +32,12 @@ namespace Plato.Discuss.StopForumSpam.Navigation
                 return;
             }
             
-            // Get reply from context
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
-            if (reply == null)
-            {
-                return;
-            }
+            //// Get reply from context
+            //var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            //if (reply == null)
+            //{
+            //    return;
+            //}
        
             // If the entity if flagged as spam display additional options
             if (entity.IsSpam)
@@ -49,12 +49,12 @@ namespace Plato.Discuss.StopForumSpam.Navigation
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-toggle", "tooltip"},
-                                {"title", T["Help keep the web clean by submit this spammers details to the central StopForumSpam database"]}
+                                {"title", T["Submit this spammer to the central StopForumSpam database"]}
                             })
-                            .Action("ToStopForumSpam", "Home", "Plato.Questions.Answers",
+                            .Action("AddSpammer", "Home", "Plato.Discuss.StopForumSpam",
                                 new RouteValueDictionary()
                                 {
-                                    ["Id"] = reply.Id
+                                    ["Id"] = entity.Id
                                 })
                             .Permission(Permissions.AddToStopForumSpam)
                             .LocalNav()

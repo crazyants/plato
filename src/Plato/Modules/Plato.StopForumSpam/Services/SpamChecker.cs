@@ -88,7 +88,7 @@ namespace Plato.StopForumSpam.Services
                 return result.Success();
             }
 
-            // Configure frequency checker
+            // Configure spam client
             _spamProxy.Configure(o => { o.ApiKey = apiKey; });
 
             // Get frequencies

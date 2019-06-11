@@ -24,6 +24,11 @@ namespace Plato.StopForumSpam.Client.Services
 
         Task<Response> CheckAsync(string username, string emailAddress, IPAddress ipAddress);
 
+        Task<Response> AddSpammerAsync(string username, string emailAddress, string ipAddress);
+
+        Task<Response> AddSpammerAsync(string username, string emailAddress, IPAddress ipAddress);
+
+
     }
 
 }

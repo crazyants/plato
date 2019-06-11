@@ -30,9 +30,8 @@ namespace Plato.Discuss.Moderation.Controllers
         public IStringLocalizer S { get; }
         
         public HomeController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
-     
+            IHtmlLocalizer<HomeController> htmlLocalizer,
+            IStringLocalizer<HomeController> stringLocalizer,
             IEntityStore<Topic> entityStore,
             IContextFacade contextFacade,
             IAuthorizationService authorizationService,
