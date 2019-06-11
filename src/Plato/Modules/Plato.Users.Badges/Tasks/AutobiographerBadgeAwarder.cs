@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -56,7 +55,7 @@ namespace Plato.Users.Badges.Tasks
             DEALLOCATE MSGCURSOR;
             SELECT UserId FROM @myTable;";
         
-        public int IntervalInSeconds => 30;
+        public int IntervalInSeconds => 240;
 
         public IBadge Badge => ProfileBadges.Autobiographer;
 
@@ -75,12 +74,12 @@ namespace Plato.Users.Badges.Tasks
             IUserReputationAwarder userReputationAwarder,
             IUserNotificationTypeDefaults userNotificationTypeDefaults)
         {
-            _cacheManager = cacheManager;
-            _dbHelper = dbHelper;
-            _userStore = userStore;
-            _notificationManager = notificationManager;
-            _userReputationAwarder = userReputationAwarder;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _userReputationAwarder = userReputationAwarder;
+            _notificationManager = notificationManager;
+            _cacheManager = cacheManager;
+            _userStore = userStore;
+            _dbHelper = dbHelper;
         }
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)

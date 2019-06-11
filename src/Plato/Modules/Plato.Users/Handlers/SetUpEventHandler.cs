@@ -900,6 +900,7 @@ namespace Plato.Users.Handlers
                     Email = "bot@plato.com",
                     UserName = "PlatoBot",
                     DisplayName = "Plato Bot",
+                    Biography = "I'm not a real person. I'm a bot that keeps an eye on things.",
                     EmailConfirmed = true,
                     IsVerified = true,
                     IsVerifiedUpdatedUserId = 1,

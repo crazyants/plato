@@ -115,6 +115,7 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
                 return null;
             }
 
+            // TODO: Update to use real client IP
             // Ensure we check against the IP address being used at the time of the post
             user.IpV4Address = "77.247.181.163"; // _clientIpAddress.GetIpV4Address();
             user.IpV6Address = "77.247.181.163"; // _clientIpAddress.GetIpV6Address();

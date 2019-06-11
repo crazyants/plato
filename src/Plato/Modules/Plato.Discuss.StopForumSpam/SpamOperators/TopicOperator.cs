@@ -74,8 +74,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             // Return failed with our updated model and operation
             // This provides the calling code with the operation error message
             return result.Failed(context.Model, context.Operation);
-
-
+            
         }
 
         public async Task<ISpamOperatorResult<Topic>> UpdateModelAsync(ISpamOperatorContext<Topic> context)
@@ -99,7 +98,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
                 return result.Success(context.Model);
             }
             
-            // Get topic author
+            // Get entity author
             var user = await _platoUserStore.GetByIdAsync(context.Model.CreatedUserId);
             if (user == null)
             {
@@ -120,7 +119,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
                     await _platoUserStore.UpdateAsync(user);
                 }
 
-                // Mark topic as SPAM
+                // Mark entity as SPAM
                 if (!context.Model.IsSpam)
                 {
                     context.Model.IsSpam = true;

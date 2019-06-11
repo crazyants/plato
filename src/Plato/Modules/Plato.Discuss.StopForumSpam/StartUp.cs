@@ -12,8 +12,13 @@ using Plato.Discuss.StopForumSpam.NotificationTypes;
 using Plato.Discuss.StopForumSpam.SpamOperators;
 using Plato.Discuss.StopForumSpam.ViewProviders;
 using Plato.Discuss.Models;
+using Plato.Internal.Features.Abstractions;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
+using Plato.Discuss.StopForumSpam.Handlers;
+using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
+using Plato.Discuss.StopForumSpam.Navigation;
 
 namespace Plato.Discuss.StopForumSpam
 {
@@ -28,6 +33,13 @@ namespace Plato.Discuss.StopForumSpam
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
+            // Navigation providers
+            services.AddScoped<INavigationProvider, TopicMenu>();
+            //services.AddScoped<INavigationProvider, TopicReplyMenu>();
 
             // Register spam operations provider
             services.AddScoped<ISpamOperationProvider<SpamOperation>, SpamOperations>();
@@ -60,6 +72,9 @@ namespace Plato.Discuss.StopForumSpam
             services.AddScoped<INotificationProvider<Reply>, ReplySpamWeb>();
             services.AddScoped<INotificationProvider<Reply>, ReplySpamEmail>();
 
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
         }
 
         public override void Configure(
@@ -68,5 +83,7 @@ namespace Plato.Discuss.StopForumSpam
             IServiceProvider serviceProvider)
         {
         }
+
     }
+
 }

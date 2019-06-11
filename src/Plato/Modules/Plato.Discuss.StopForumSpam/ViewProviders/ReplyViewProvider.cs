@@ -40,7 +40,6 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
 
         public override Task<IViewProviderResult> BuildEditAsync(Reply reply, IViewProviderContext updater)
         {
-
             return Task.FromResult(default(IViewProviderResult));
         }
 
@@ -59,7 +58,8 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
             // Validate model within registered spam operators
             var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Reply, reply);
 
-            // IF any operators failed ensure we display the operator error message
+            // If any operators failed and it has a error message
+            // ensure we display the operator error message
             var valid = true;
             if (results != null)
             {
@@ -117,6 +117,7 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
                 return null;
             }
 
+            // TODO: Update to use real client IP
             // Ensure we check against the IP address being used at the time of the post
             user.IpV4Address = "77.247.181.163"; // _clientIpAddress.GetIpV4Address();
             user.IpV6Address = "77.247.181.163"; // _clientIpAddress.GetIpV6Address();
