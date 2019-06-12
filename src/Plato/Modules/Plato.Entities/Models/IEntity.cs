@@ -109,7 +109,11 @@ namespace Plato.Entities.Models
         double DailyStars { get; set; }
 
         double DailyRatings { get; set; }
-        
+
+        string IpV4Address { get; set; }
+
+        string IpV6Address { get; set; }
+
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }

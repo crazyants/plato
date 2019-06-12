@@ -223,6 +223,18 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "IpV4Address",
+                        DbType = DbType.String,
+                        Length = "20"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV6Address",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },
@@ -433,6 +445,18 @@ namespace Plato.Entities.Handlers
                     {
                         Name = "TotalImages",
                         DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV4Address",
+                        DbType = DbType.String,
+                        Length = "20"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV6Address",
+                        DbType = DbType.String,
+                        Length = "50"
                     },
                     new SchemaColumn()
                     {

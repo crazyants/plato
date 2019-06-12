@@ -73,6 +73,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
                 return NotFound();
             }
 
+            // Get entity
             var entity = await _entityStore.GetByIdAsync(entityId);
 
             // Ensure the topic exists
@@ -96,28 +97,14 @@ namespace Plato.Discuss.StopForumSpam.Controllers
                 return NotFound();
             }
 
-
-            // Get spam settings
-            var settings = await _spamSettingsStore.GetAsync();
-
-            // Ensure we have an api key
-            if (String.IsNullOrEmpty(settings.ApiKey))
-            {
-                throw new Exception("A StopForumSpam API key is required!");
-            }
-            
             // Configure spam client
-            _spamClient.Configure(o => { o.ApiKey = settings.ApiKey; });
-            
-            var username = "TestUser";
-            var email = "test@test.com";
-            var ip = "123.123.123.123";
+            await ConfigureSpamClient();
             
             // Add the user
             var result = await _spamClient.AddSpammerAsync(
-                username,
-                email,
-                ip);
+                user.UserName,
+                user.Email,
+                user.IpV4Address);
             
             if (result.Success)
             {
@@ -270,6 +257,28 @@ namespace Plato.Discuss.StopForumSpam.Controllers
         ////}
 
         #endregion
+
+        async Task ConfigureSpamClient()
+        {
+            // Get spam settings
+            var settings = await _spamSettingsStore.GetAsync();
+
+            // Ensure we have settings
+            if (settings == null)
+            {
+                throw new Exception("No spam settings have been configured!");
+            }
+
+            // Ensure we have an api key
+            if (String.IsNullOrEmpty(settings.ApiKey))
+            {
+                throw new Exception("A StopForumSpam API key is required!");
+            }
+
+            // Configure spam client
+            _spamClient.Configure(o => { o.ApiKey = settings.ApiKey; });
+
+        }
 
     }
 

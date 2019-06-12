@@ -5,9 +5,11 @@ namespace Plato.Internal.Data.Migrations.Abstractions
     public interface IMigrationProvider
     {
 
+        string ModuleId { get; }
+
         PreparedMigration GetSchema(string version);
 
-        List<PreparedMigration> Schemas { get; }
+        IList<PreparedMigration> Schemas { get; }
 
         IMigrationProvider LoadSchemas(IList<string> versions);
 

@@ -52,6 +52,10 @@ namespace Plato.Entities.Models
 
         public int TotalImages { get; set; }
 
+        public string IpV4Address { get; set; }
+
+        public string IpV6Address { get; set; }
+
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
@@ -137,6 +141,12 @@ namespace Plato.Entities.Models
             
             if (dr.ColumnIsNotNull("TotalImages"))
                 TotalImages = Convert.ToInt32(dr["TotalImages"]);
+
+            if (dr.ColumnIsNotNull("IpV4Address"))
+                IpV4Address = Convert.ToString(dr["IpV4Address"]);
+
+            if (dr.ColumnIsNotNull("IpV6Address"))
+                IpV6Address = Convert.ToString(dr["IpV6Address"]);
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);

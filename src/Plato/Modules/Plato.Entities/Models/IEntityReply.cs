@@ -49,6 +49,10 @@ namespace Plato.Entities.Models
         int TotalLinks { get; set; }
 
         int TotalImages { get; set; }
+        
+        string IpV4Address { get; set; }
+
+        string IpV6Address { get; set; }
 
         int CreatedUserId { get; set; }
 

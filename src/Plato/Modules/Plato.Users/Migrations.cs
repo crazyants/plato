@@ -7,10 +7,8 @@ using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Users
 {
-    public class Migrations : IMigrationProvider
+    public class Migrations : BaseMigrationProvider
     {
-
-        private readonly List<PreparedMigration> _migrations;
         
         private readonly ISchemaBuilder _schemaBuilder;
 
@@ -18,18 +16,18 @@ namespace Plato.Users
         {
             _schemaBuilder = schemaBuilder;
 
-            _migrations = new List<PreparedMigration>
+            AvailableMigrations = new List<PreparedMigration>
             {
                 new PreparedMigration()
                 {
-                    ModuleId = "Plato.Users",
+                    ModuleId = ModuleId,
                     Version = "1.0.1",
                     Statements = v_1_0_1()
                 }
             };
 
         }
-
+ 
         public ICollection<string> v_1_0_1()
         {
 
@@ -394,12 +392,12 @@ namespace Plato.Users
                 builder
                     .Configure(options =>
                     {
-                        options.ModuleName = "Plato.Users";
+                        options.ModuleName = ModuleId;
                         options.Version = "1.0.1";
                     });
 
                 // ---------------
-                // 1.0.1
+                // Users
                 // ---------------
 
                 // Add new columns to users table
@@ -434,7 +432,8 @@ namespace Plato.Users
                     new SchemaProcedure($"InsertUpdateUser",
                             StoredProcedureType.InsertUpdate)
                         .ForTable(users));
-                
+
+                // Add builder results to output
                 output.AddRange(builder.Statements);
 
             }
@@ -443,27 +442,6 @@ namespace Plato.Users
 
         }
 
-        // -----
-
-        public List<PreparedMigration> Schemas { get; } = new List<PreparedMigration>();
-
-        public PreparedMigration GetSchema(string version)
-        {
-            return _migrations.FirstOrDefault(s => s.Version.Equals(version, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public IMigrationProvider LoadSchemas(IList<string> versions)
-        {
-            foreach (var migration in _migrations)
-            {
-                if (versions.Contains(migration.Version))
-                {
-                    Schemas.Add(migration);
-                }
-            }
-
-            return this;
-        }
 
     }
 

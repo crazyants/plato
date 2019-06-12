@@ -18,6 +18,7 @@ using Plato.Entities.Subscribers;
 using Plato.Entities.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Data.Migrations.Abstractions;
 using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
@@ -106,6 +107,9 @@ namespace Plato.Entities
 
             // Action filter
             services.AddScoped<IModularActionFilter, HomeMenuContextualizeFilter>();
+       
+            // Migrations
+            services.AddScoped<IMigrationProvider, Migrations>();
 
         }
 
