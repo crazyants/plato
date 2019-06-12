@@ -7,6 +7,7 @@ using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Entities
 {
+
     public class Migrations : BaseMigrationProvider
     {
    

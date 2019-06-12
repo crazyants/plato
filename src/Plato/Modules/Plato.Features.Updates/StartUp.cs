@@ -47,6 +47,12 @@ namespace Plato.Features.Updates
             IServiceProvider serviceProvider)
         {
 
+            // Apply automatic feature migrations
+            var automaticFeatureMigrations = serviceProvider.GetService<IAutomaticFeatureMigrations>();
+            automaticFeatureMigrations.InitialMigrationsAsync()
+                .GetAwaiter()
+                .GetResult();
+
             // Index
             routes.MapAreaRoute(
                 name: "FeatureUpdatesIndex",

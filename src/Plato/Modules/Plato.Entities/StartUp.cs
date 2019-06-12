@@ -109,7 +109,7 @@ namespace Plato.Entities
             services.AddScoped<IModularActionFilter, HomeMenuContextualizeFilter>();
        
             // Migrations
-            services.AddScoped<IMigrationProvider, Migrations>();
+            services.AddSingleton<IMigrationProvider, Migrations>();
 
         }
 

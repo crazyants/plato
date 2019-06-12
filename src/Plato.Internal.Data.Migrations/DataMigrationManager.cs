@@ -26,11 +26,15 @@ namespace Plato.Internal.Data.Migrations
             var result = new DataMigrationResult();
             foreach (var migration in dataMigrationRecord.Migrations)
             {
-                var commit = await CommitMigrationAsync(migration);
-                if (commit > 0)
+                var success = await CommitMigrationAsync(migration);
+                if (success)
+                {
                     result.SuccessfulMigrations.Add(migration);
+                }
                 else
+                {
                     result.FailedMigrations.Add(migration);
+                }
             }
             result.Errors = _errors;
             return result;
@@ -40,17 +44,17 @@ namespace Plato.Internal.Data.Migrations
 
         #region "Private Methods"
 
-        private async Task<int> CommitMigrationAsync(DataMigration migration)
+        private async Task<bool> CommitMigrationAsync(DataMigration migration)
         {
 
-            var migrationId = 0;
+            var success = true;
             using (var context = _dbContext)
             {
                 foreach (var statement in migration.Statements)
                 {
                     try
                     {
-                        migrationId = await context.ExecuteScalarAsync<int>(
+                       await context.ExecuteScalarAsync<int>(
                             System.Data.CommandType.Text, statement);
                     }
                     catch (Exception ex)
@@ -58,10 +62,11 @@ namespace Plato.Internal.Data.Migrations
                         if (_errors == null)
                             _errors = new List<Exception>(); ;
                         _errors.Add(ex);
+                        success = false;
                     }
                 }
             }
-            return migrationId;
+            return success;
 
         }
 

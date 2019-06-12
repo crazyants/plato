@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Migrations.Abstractions;
 
 namespace Plato.Internal.Data.Migrations
 {
+
     public class DataMigrationBuilder : IDataMigrationBuilder
     {
     
@@ -32,9 +31,18 @@ namespace Plato.Internal.Data.Migrations
         public IDataMigrationBuilder BuildMigrations(IList<string> versions)
         {
 
+            if (_schemas == null)
+            {
+                _schemas = new List<PreparedMigration>();
+            }
+
+            // Build all migrations matching supplied versions
             foreach (var provider in _migrationProviders)
             {
-                _schemas = provider.LoadSchemas(versions).Schemas;
+                foreach (var schema in provider.LoadSchemas(versions).Schemas)
+                {
+                    _schemas.Add(schema);
+                }
             }
 
             // Set migration type

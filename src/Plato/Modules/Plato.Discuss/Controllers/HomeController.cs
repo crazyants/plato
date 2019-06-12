@@ -27,6 +27,7 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Titles;
+using Plato.Internal.Net.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
@@ -35,21 +36,22 @@ namespace Plato.Discuss.Controllers
 
         #region "Constructor"
 
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IViewProviderManager<Topic> _topicViewProvider;
-        private readonly IViewProviderManager<Reply> _replyViewProvider;
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IEntityReplyStore<Reply> _entityReplyStore;
-        private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IEntityReplyService<Reply> _replyService;
         private readonly IReportEntityManager<Topic> _reportEntityManager;
         private readonly IReportEntityManager<Reply> _reportReplyManager;
+        private readonly IViewProviderManager<Topic> _topicViewProvider;
+        private readonly IViewProviderManager<Reply> _replyViewProvider;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IEntityReplyStore<Reply> _entityReplyStore;
+        private readonly IEntityReplyService<Reply> _replyService;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
+        private readonly IClientIpAddress _clientIpAddress;
         private readonly IPostManager<Topic> _topicManager;
         private readonly IPostManager<Reply> _replyManager;
-        private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -62,8 +64,8 @@ namespace Plato.Discuss.Controllers
             IPostManager<Topic> topicManager,
             IPostManager<Reply> replyManager,
             IEntityStore<Topic> entityStore,
-            IEntityReplyStore<Reply> entityReplyStore,
             IPlatoUserStore<User> platoUserStore,
+            IEntityReplyStore<Reply> entityReplyStore,
             IViewProviderManager<Topic> topicViewProvider,
             IViewProviderManager<Reply> replyViewProvider,
             IReportEntityManager<Topic> reportEntityManager,
@@ -71,10 +73,11 @@ namespace Plato.Discuss.Controllers
             IAuthorizationService authorizationService,
             IEntityReplyService<Reply> replyService,
             IBreadCrumbManager breadCrumbManager,
+            IPageTitleBuilder pageTitleBuilder,
+            IClientIpAddress clientIpAddress,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade,
-            IAlerter alerter,
-            IPageTitleBuilder pageTitleBuilder)
+            IAlerter alerter)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -92,6 +95,7 @@ namespace Plato.Discuss.Controllers
             _reportReplyManager = reportReplyManager;
             _alerter = alerter;
             _pageTitleBuilder = pageTitleBuilder;
+            _clientIpAddress = clientIpAddress;
 
             T = localizer;
             S = stringLocalizer;
@@ -261,6 +265,8 @@ namespace Plato.Discuss.Controllers
                 // Populated created by
                 entity.CreatedUserId = user?.Id ?? 0;
                 entity.CreatedDate = DateTimeOffset.UtcNow;
+                entity.IpV4Address = _clientIpAddress.GetIpV4Address();
+                entity.IpV6Address = _clientIpAddress.GetIpV6Address();
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
@@ -478,6 +484,12 @@ namespace Plato.Discuss.Controllers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
 
+                // Populate created by
+                reply.CreatedUserId = user?.Id ?? 0;
+                reply.CreatedDate = DateTimeOffset.UtcNow;
+                reply.IpV4Address = _clientIpAddress.GetIpV4Address();
+                reply.IpV6Address = _clientIpAddress.GetIpV6Address();
+                
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
                 var result = await _replyManager.CreateAsync(reply);

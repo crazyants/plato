@@ -170,7 +170,7 @@ namespace Plato.Users
             services.AddScoped<IModularActionFilter, UpdateUserLastLoginDateFilter>();
 
             // Migrations
-            services.AddScoped<IMigrationProvider, Migrations>();
+            services.AddSingleton<IMigrationProvider, Migrations>();
 
             // Broker subscriptions
             services.AddScoped<IBrokerSubscriber, ParseSignatureHtmlSubscriber>();
