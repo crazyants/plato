@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Plato.Discuss.Models;
 using Plato.Discuss.StopForumSpam.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Models.Users;
@@ -27,18 +29,20 @@ namespace Plato.Discuss.StopForumSpam.Controllers
     public class HomeController : Controller
     {
 
+
+
         private readonly ISpamSettingsStore<SpamSettings> _spamSettingsStore;
-        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly ISpamClient _spamClient;
-
         private readonly ISpamChecker _spamChecker;
-
+        private readonly ISpamClient _spamClient;
         private readonly IAlerter _alerter;
-   
+
+        private readonly PlatoOptions _platoOpts;
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -50,6 +54,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             IAuthorizationService authorizationService,
             IEntityReplyStore<Reply> entityReplyStore,
             IPlatoUserStore<User> platoUserStore,
+            IOptions<PlatoOptions> platoOpts,
             IEntityStore<Topic> entityStore,
             IContextFacade contextFacade,
             ISpamChecker spamChecker, 
@@ -62,10 +67,11 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             _spamSettingsStore = spamSettingsStore;
             _entityReplyStore = entityReplyStore;
             _platoUserStore = platoUserStore;
+            _platoOpts = platoOpts.Value;
             _spamChecker = spamChecker;
             _spamClient = spamClient;
             _alerter = alerter;
-        
+
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -142,6 +148,12 @@ namespace Plato.Discuss.StopForumSpam.Controllers
 
         public async Task<IActionResult> AddSpammer(EntityOptions opts)
         {
+
+            // Disable functionality within demo mode
+            if (_platoOpts.DemoMode)
+            {
+                return Unauthorized();
+            }
 
             if (opts.Id <= 0)
             {

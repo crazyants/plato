@@ -1,6 +1,8 @@
 ﻿@using Plato.Discuss
+@using Plato.Internal.Abstractions.Settings
 @model StopForumSpamViewModel
 @{
+    var platoOpts = GetOptions<PlatoOptions>();
     Layout = null;
 }
 
@@ -89,13 +91,19 @@
     <authorize asp-permission="@Plato.Discuss.StopForumSpam.Permissions.AddToStopForumSpam.Name">
         <authorize-success>
             <hr />
-            <a asp-route-area="Plato.Discuss.StopForumSpam" asp-route-controller="Home" asp-route-action="AddSpammer" asp-route-opts.id="@Model.Options.Id" asp-route-opts.alias="@Model.Options.Alias" asp-route-opts.replyId="@Model.Options.ReplyId" data-toggle="tooltip" title="@T["Submit this users details to the central StopForumSpam database"]" class="btn btn-primary">
-                @T["Submit Spammer"]
-            </a>
+            @if (platoOpts.DemoMode)
+            {
+                <span class="d-inline-block disabled" data-toggle="tooltip" title="@T["Sorry but this option is disabled within the demo"]">
+                    <a href="#" class="btn btn-primary disabled">@T["Submit Spammer"]</a>
+                </span>
+            }
+            else
+            {
+                <a asp-route-area="Plato.Discuss.StopForumSpam" asp-route-controller="Home" asp-route-action="AddSpammer" asp-route-opts.id="@Model.Options.Id" asp-route-opts.alias="@Model.Options.Alias" asp-route-opts.replyId="@Model.Options.ReplyId" data-toggle="tooltip" title="@T["Submit this users details to the central StopForumSpam database"]" class="btn btn-primary">@T["Submit Spammer"]</a>
+            }
         </authorize-success>
     </authorize>
-
-
+    
 </div>
 
 
