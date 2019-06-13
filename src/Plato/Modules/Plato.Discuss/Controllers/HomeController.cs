@@ -61,41 +61,41 @@ namespace Plato.Discuss.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer localizer,
-            IPostManager<Topic> topicManager,
-            IPostManager<Reply> replyManager,
-            IEntityStore<Topic> entityStore,
-            IPlatoUserStore<User> platoUserStore,
-            IEntityReplyStore<Reply> entityReplyStore,
-            IViewProviderManager<Topic> topicViewProvider,
-            IViewProviderManager<Reply> replyViewProvider,
             IReportEntityManager<Topic> reportEntityManager,
             IReportEntityManager<Reply> reportReplyManager,
+            IViewProviderManager<Topic> topicViewProvider,
+            IViewProviderManager<Reply> replyViewProvider,
             IAuthorizationService authorizationService,
+            IEntityReplyStore<Reply> entityReplyStore,
             IEntityReplyService<Reply> replyService,
+            IPlatoUserStore<User> platoUserStore,
             IBreadCrumbManager breadCrumbManager,
             IPageTitleBuilder pageTitleBuilder,
             IClientIpAddress clientIpAddress,
+            IPostManager<Topic> topicManager,
+            IPostManager<Reply> replyManager,
+            IEntityStore<Topic> entityStore,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade,
             IAlerter alerter)
         {
-            _topicViewProvider = topicViewProvider;
-            _replyViewProvider = replyViewProvider;
-            _entityStore = entityStore;
-            _contextFacade = contextFacade;
-            _entityReplyStore = entityReplyStore;
-            _topicManager = topicManager;
-            _replyManager = replyManager;
-            _breadCrumbManager = breadCrumbManager;
-            _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
-            _replyService = replyService;
-            _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
-            _alerter = alerter;
+            _topicViewProvider = topicViewProvider;
+            _breadCrumbManager = breadCrumbManager;
+            _replyViewProvider = replyViewProvider;
+            _entityReplyStore = entityReplyStore;
             _pageTitleBuilder = pageTitleBuilder;
             _clientIpAddress = clientIpAddress;
+            _platoUserStore = platoUserStore;
+            _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
+            _replyManager = replyManager;
+            _topicManager = topicManager;
+            _replyService = replyService;
+            _entityStore = entityStore;
+            _alerter = alerter;
 
             T = localizer;
             S = stringLocalizer;

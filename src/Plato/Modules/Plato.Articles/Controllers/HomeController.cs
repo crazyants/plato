@@ -25,6 +25,7 @@ using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Net.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -35,22 +36,22 @@ namespace Plato.Articles.Controllers
 
         #region "Constructor"
 
-        private readonly IViewProviderManager<UserIndex> _userIndexProvider;
+        private readonly IReportEntityManager<Article> _reportEntityManager;
+        private readonly IReportEntityManager<Comment> _reportReplyManager;
         private readonly IViewProviderManager<Article> _entityViewProvider;
         private readonly IViewProviderManager<Comment> _replyViewProvider;
-        private readonly IEntityStore<Article> _entityStore;
         private readonly IEntityReplyStore<Comment> _entityReplyStore;
-        private readonly IPostManager<Article> _articleManager;
-        private readonly IPostManager<Comment> _commentManager;
-        private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IContextFacade _contextFacade;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyService<Comment> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IFeatureFacade _featureFacade;
+        private readonly IPostManager<Article> _articleManager;
+        private readonly IPostManager<Comment> _commentManager;
+        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IPageTitleBuilder _pageTitleBuilder;
-        private readonly IReportEntityManager<Article> _reportEntityManager;
-        private readonly IReportEntityManager<Comment> _reportReplyManager;
+        private readonly IEntityStore<Article> _entityStore;
+        private readonly IClientIpAddress _clientIpAddress;
+        private readonly IFeatureFacade _featureFacade;
+        private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -60,40 +61,42 @@ namespace Plato.Articles.Controllers
         public HomeController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IContextFacade contextFacade,
-            IEntityStore<Article> entityStore,
-            IViewProviderManager<Article> entityViewProvider,
-            IEntityReplyStore<Comment> entityReplyStore,
-            IViewProviderManager<Comment> replyViewProvider,
-            IPostManager<Article> articleManager,
-            IPostManager<Comment> commentManager,
-            IAlerter alerter, IBreadCrumbManager breadCrumbManager,
-            IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService,
-            IEntityReplyService<Comment> replyService,
-            IViewProviderManager<UserIndex> userIndexProvider,
-            IFeatureFacade featureFacade,
             IReportEntityManager<Article> reportEntityManager,
             IReportEntityManager<Comment> reportReplyManager,
-            IPageTitleBuilder pageTitleBuilder)
+            IViewProviderManager<Article> entityViewProvider,
+            IViewProviderManager<Comment> replyViewProvider,
+            IEntityReplyStore<Comment> entityReplyStore,
+            IAuthorizationService authorizationService,
+            IEntityReplyService<Comment> replyService,
+            IPostManager<Article> articleManager,
+            IPostManager<Comment> commentManager,
+            IPlatoUserStore<User> platoUserStore,
+            IBreadCrumbManager breadCrumbManager,
+            IPageTitleBuilder pageTitleBuilder,
+            IEntityStore<Article> entityStore,
+            IClientIpAddress clientIpAddress,
+            IFeatureFacade featureFacade,
+            IContextFacade contextFacade,
+            IAlerter alerter)
         {
+
+            _authorizationService = authorizationService;
+            _reportEntityManager = reportEntityManager;
+            _reportReplyManager = reportReplyManager;
             _entityViewProvider = entityViewProvider;
+            _breadCrumbManager = breadCrumbManager;
             _replyViewProvider = replyViewProvider;
-            _entityStore = entityStore;
-            _contextFacade = contextFacade;
+            _pageTitleBuilder = pageTitleBuilder;
             _entityReplyStore = entityReplyStore;
             _articleManager = articleManager;
             _commentManager = commentManager;
-            _alerter = alerter;
-            _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
-            _authorizationService = authorizationService;
-            _replyService = replyService;
-            _userIndexProvider = userIndexProvider;
+            _contextFacade = contextFacade;
+            _clientIpAddress = clientIpAddress;
             _featureFacade = featureFacade;
-            _reportEntityManager = reportEntityManager;
-            _reportReplyManager = reportReplyManager;
-            _pageTitleBuilder = pageTitleBuilder;
+            _replyService = replyService;
+            _entityStore = entityStore;
+            _alerter = alerter;
 
             T = localizer;
             S = stringLocalizer;
@@ -263,6 +266,8 @@ namespace Plato.Articles.Controllers
                 // Populated created by
                 entity.CreatedUserId = user?.Id ?? 0;
                 entity.CreatedDate = DateTimeOffset.UtcNow;
+                entity.IpV4Address = _clientIpAddress.GetIpV4Address();
+                entity.IpV6Address = _clientIpAddress.GetIpV6Address();
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
@@ -479,6 +484,12 @@ namespace Plato.Articles.Controllers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
 
+                // Populate created by
+                reply.CreatedUserId = user?.Id ?? 0;
+                reply.CreatedDate = DateTimeOffset.UtcNow;
+                reply.IpV4Address = _clientIpAddress.GetIpV4Address();
+                reply.IpV6Address = _clientIpAddress.GetIpV6Address();
+                
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
                 var result = await _commentManager.CreateAsync(reply);

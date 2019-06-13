@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Net.Abstractions\Plato.Internal.Net.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Notifications.Abstractions\Plato.Internal.Notifications.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Reputations.Abstractions\Plato.Internal.Reputations.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />

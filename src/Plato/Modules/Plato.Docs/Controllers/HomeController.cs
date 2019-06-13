@@ -27,6 +27,7 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Titles;
+using Plato.Internal.Net.Abstractions;
 
 namespace Plato.Docs.Controllers
 {
@@ -35,21 +36,22 @@ namespace Plato.Docs.Controllers
 
         #region "Constructor"
 
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IViewProviderManager<Doc> _docViewProvider;
         private readonly IViewProviderManager<DocComment> _docCommentViewProvider;
-        private readonly IEntityStore<Doc> _entityStore;
+        private readonly IReportEntityManager<DocComment> _reportReplyManager;
         private readonly IEntityReplyStore<DocComment> _entityReplyStore;
-        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityReplyService<DocComment> _replyService;
         private readonly IReportEntityManager<Doc> _reportEntityManager;
-        private readonly IReportEntityManager<DocComment> _reportReplyManager;
-        private readonly IPostManager<Doc> _docManager;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IViewProviderManager<Doc> _docViewProvider;
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IPostManager<DocComment> _replyManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IPageTitleBuilder _pageTitleBuilder;
+        private readonly IClientIpAddress _clientIpAddress;
+        private readonly IEntityStore<Doc> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IPageTitleBuilder _pageTitleBuilder;
+        private readonly IPostManager<Doc> _docManager;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -59,39 +61,42 @@ namespace Plato.Docs.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer localizer,
-            IPostManager<Doc> docManager,
-            IPostManager<DocComment> replyManager,
-            IEntityStore<Doc> entityStore,
-            IEntityReplyStore<DocComment> entityReplyStore,
-            IPlatoUserStore<User> platoUserStore,
-            IViewProviderManager<Doc> docViewProvider,
             IViewProviderManager<DocComment> docCommentViewProvider,
-            IReportEntityManager<Doc> reportEntityManager,
             IReportEntityManager<DocComment> reportReplyManager,
+            IReportEntityManager<Doc> reportEntityManager,
+            IEntityReplyStore<DocComment> entityReplyStore,
+            IViewProviderManager<Doc> docViewProvider,
             IAuthorizationService authorizationService,
             IEntityReplyService<DocComment> replyService,
+            IPostManager<DocComment> replyManager,
+            IPlatoUserStore<User> platoUserStore,
             IBreadCrumbManager breadCrumbManager,
+            IPageTitleBuilder pageTitleBuilder,
+            IClientIpAddress clientIpAddress,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade,
-            IPageTitleBuilder pageTitleBuilder,
+            IPostManager<Doc> docManager,
+            IEntityStore<Doc> entityStore,
             IAlerter alerter)
         {
-            _docViewProvider = docViewProvider;
+      
             _docCommentViewProvider = docCommentViewProvider;
-            _entityStore = entityStore;
-            _contextFacade = contextFacade;
-            _entityReplyStore = entityReplyStore;
-            _docManager = docManager;
-            _replyManager = replyManager;
-            _breadCrumbManager = breadCrumbManager;
-            _platoUserStore = platoUserStore;
             _authorizationService = authorizationService;
-            _replyService = replyService;
-            _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
-            _alerter = alerter;
+            _breadCrumbManager = breadCrumbManager;
+            _entityReplyStore = entityReplyStore;
             _pageTitleBuilder = pageTitleBuilder;
+            _docViewProvider = docViewProvider;
+            _clientIpAddress = clientIpAddress;
+            _platoUserStore = platoUserStore;
+            _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
+            _replyService = replyService;
+            _entityStore = entityStore;
+            _replyManager = replyManager;
+            _docManager = docManager;
+            _alerter = alerter;
 
             T = localizer;
             S = stringLocalizer;
@@ -285,7 +290,9 @@ namespace Plato.Docs.Controllers
                 // Populated created by
                 entity.CreatedUserId = user?.Id ?? 0;
                 entity.CreatedDate = DateTimeOffset.UtcNow;
-
+                entity.IpV4Address = _clientIpAddress.GetIpV4Address();
+                entity.IpV6Address = _clientIpAddress.GetIpV6Address();
+                
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
@@ -526,6 +533,12 @@ namespace Plato.Docs.Controllers
             if (await _docCommentViewProvider.IsModelStateValid(reply, this))
             {
 
+                // Populate created by
+                reply.CreatedUserId = user?.Id ?? 0;
+                reply.CreatedDate = DateTimeOffset.UtcNow;
+                reply.IpV4Address = _clientIpAddress.GetIpV4Address();
+                reply.IpV6Address = _clientIpAddress.GetIpV6Address();
+                
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
                 var result = await _replyManager.CreateAsync(reply);

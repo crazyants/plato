@@ -81,21 +81,20 @@ namespace Plato.Internal.Net
 
             WebResponse response = null;
             StreamReader responseStream = null;
-            var output = "";
-
+   
             try
             {
+
                 response = await request.GetResponseAsync();
                 var readStream = response.GetResponseStream();
-                if (readStream == null)
+                if (readStream != null)
                 {
-                    throw new InvalidOperationException();
+                    responseStream = new StreamReader(readStream, Encoding.UTF8);
+                    result.Response = responseStream.ReadToEnd();
                 }
 
-                responseStream = new StreamReader(readStream, Encoding.UTF8);
-                result.Response = responseStream.ReadToEnd();
                 result.Succeeded = true;
-
+                
             }
             catch (Exception e)
             {

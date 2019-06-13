@@ -25,6 +25,7 @@ using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Net.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -35,22 +36,23 @@ namespace Plato.Ideas.Controllers
 
         #region "Constructor"
         
-        private readonly IViewProviderManager<Idea> _entityViewProvider;
-        private readonly IViewProviderManager<IdeaComment> _replyViewProvider;
-        private readonly IReportEntityManager<Idea> _reportEntityManager;
         private readonly IReportEntityManager<IdeaComment> _reportReplyManager;
+        private readonly IViewProviderManager<IdeaComment> _replyViewProvider;
         private readonly IEntityReplyStore<IdeaComment> _ideaCommentManager;
         private readonly IEntityReplyStore<IdeaComment> _entityReplyStore;
-        private readonly IPostManager<Idea> _ideaManager;
-        private readonly IEntityStore<Idea> _entityStore;
+        private readonly IReportEntityManager<Idea> _reportEntityManager;
+        private readonly IEntityReplyService<IdeaComment> _replyService;
+        private readonly IViewProviderManager<Idea> _entityViewProvider;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IPostManager<IdeaComment> _replyManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IContextFacade _contextFacade;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IEntityReplyService<IdeaComment> _replyService;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IFeatureFacade _featureFacade;
         private readonly IPageTitleBuilder _pageTitleBuilder;
+        private readonly IClientIpAddress _clientIpAddress;
+        private readonly IPostManager<Idea> _ideaManager;
+        private readonly IEntityStore<Idea> _entityStore;
+        private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
         private readonly IAlerter _alerter;
   
         public IHtmlLocalizer T { get; }
@@ -58,43 +60,47 @@ namespace Plato.Ideas.Controllers
         public IStringLocalizer S { get; }
 
         public HomeController(
-            IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IContextFacade contextFacade,
-            IEntityStore<Idea> entityStore,
-            IViewProviderManager<Idea> entityViewProvider,
-            IEntityReplyStore<IdeaComment> ideaCommentManager,
-            IViewProviderManager<IdeaComment> replyViewProvider,
-            IPostManager<Idea> ideaManager,
-            IPostManager<IdeaComment> replyManager,
-            IAlerter alerter, IBreadCrumbManager breadCrumbManager,
-            IPlatoUserStore<User> platoUserStore,
-            IAuthorizationService authorizationService,
-            IEntityReplyService<IdeaComment> replyService,
-            IFeatureFacade featureFacade,
-            IReportEntityManager<Idea> reportEntityManager,
+            IStringLocalizer<HomeController> stringLocalizer,
             IReportEntityManager<IdeaComment> reportReplyManager,
+            IViewProviderManager<IdeaComment> replyViewProvider,
+            IEntityReplyStore<IdeaComment> ideaCommentManager,
             IEntityReplyStore<IdeaComment> entityReplyStore,
-            IPageTitleBuilder pageTitleBuilder)
+            IReportEntityManager<Idea> reportEntityManager,
+            IEntityReplyService<IdeaComment> replyService,
+            IViewProviderManager<Idea> entityViewProvider,
+            IAuthorizationService authorizationService,
+            IPostManager<IdeaComment> replyManager,
+            IBreadCrumbManager breadCrumbManager,
+            IPlatoUserStore<User> platoUserStore,
+            IPageTitleBuilder pageTitleBuilder,
+            IClientIpAddress clientIpAddress,
+            IPostManager<Idea> ideaManager,
+            IEntityStore<Idea> entityStore,
+            IContextFacade contextFacade,
+            IFeatureFacade featureFacade,
+            IAlerter alerter)
         {
-            _entityViewProvider = entityViewProvider;
-            _replyViewProvider = replyViewProvider;
-            _entityStore = entityStore;
-            _contextFacade = contextFacade;
-            _ideaCommentManager = ideaCommentManager;
-            _ideaManager = ideaManager;
-            _replyManager = replyManager;
-            _alerter = alerter;
-            _breadCrumbManager = breadCrumbManager;
-            _platoUserStore = platoUserStore;
+
             _authorizationService = authorizationService;
-            _replyService = replyService;
-            _featureFacade = featureFacade;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
+            _ideaCommentManager = ideaCommentManager;
+            _entityViewProvider = entityViewProvider;
+            _breadCrumbManager = breadCrumbManager;
+            _replyViewProvider = replyViewProvider;
             _entityReplyStore = entityReplyStore;
             _pageTitleBuilder = pageTitleBuilder;
-
+            _clientIpAddress = clientIpAddress;
+            _platoUserStore = platoUserStore;
+            _contextFacade = contextFacade;
+            _featureFacade = featureFacade;
+            _replyService = replyService;
+            _replyManager = replyManager;
+            _entityStore = entityStore;
+            _ideaManager = ideaManager;
+            _alerter = alerter;
+      
             T = localizer;
             S = stringLocalizer;
 
@@ -259,11 +265,13 @@ namespace Plato.Ideas.Controllers
 
                 // Get composed type from all involved view providers
                 var entity = await _entityViewProvider.GetComposedType(this);
-                
+
                 // Populated created by
                 entity.CreatedUserId = user?.Id ?? 0;
                 entity.CreatedDate = DateTimeOffset.UtcNow;
-
+                entity.IpV4Address = _clientIpAddress.GetIpV4Address();
+                entity.IpV6Address = _clientIpAddress.GetIpV6Address();
+                
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
@@ -478,6 +486,12 @@ namespace Plato.Ideas.Controllers
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
+
+                // Populate created by
+                reply.CreatedUserId = user?.Id ?? 0;
+                reply.CreatedDate = DateTimeOffset.UtcNow;
+                reply.IpV4Address = _clientIpAddress.GetIpV4Address();
+                reply.IpV6Address = _clientIpAddress.GetIpV6Address();
 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers

@@ -52,9 +52,9 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<Topic> entityStore,
             IContextFacade contextFacade,
+            ISpamChecker spamChecker, 
             ISpamClient spamClient,
-            IAlerter alerter, 
-            ISpamChecker spamChecker)
+            IAlerter alerter)
         {
             _entityStore = entityStore;
             _contextFacade = contextFacade;
@@ -62,11 +62,10 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             _spamSettingsStore = spamSettingsStore;
             _entityReplyStore = entityReplyStore;
             _platoUserStore = platoUserStore;
+            _spamChecker = spamChecker;
             _spamClient = spamClient;
             _alerter = alerter;
         
-            _spamChecker = spamChecker;
-
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -118,7 +117,13 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             var user = reply != null
                 ? await GetUserToValidateAsync(reply)
                 : await GetUserToValidateAsync(entity);
-            
+
+            // Ensure we found the user
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             // Build view model
             var viewModel = new StopForumSpamViewModel()
             {
@@ -170,7 +175,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
                 ? await GetUserToValidateAsync(reply)
                 : await GetUserToValidateAsync(entity);
 
-            // Ensure the user exists
+            // Ensure we found the user
             if (user == null)
             {
                 return NotFound();
@@ -236,12 +241,16 @@ namespace Plato.Discuss.StopForumSpam.Controllers
         async Task<User> GetUserToValidateAsync(IEntity entity)
         {
 
+            // Get author
             var user = await _platoUserStore.GetByIdAsync(entity.CreatedUserId);
 
+            // Ensure we found the user
             if (user == null)
             {
                 return null;
             }
+
+            // Use IP information from entity
 
             if (!string.IsNullOrEmpty(entity.IpV4Address))
             {
@@ -266,12 +275,16 @@ namespace Plato.Discuss.StopForumSpam.Controllers
         async Task<User> GetUserToValidateAsync(IEntityReply reply)
         {
 
+            // Get author
             var user = await _platoUserStore.GetByIdAsync(reply.CreatedUserId);
 
+            // Ensure we found the user
             if (user == null)
             {
                 return null;
             }
+
+            // Use IP information from entity
 
             if (!string.IsNullOrEmpty(reply.IpV4Address))
             {

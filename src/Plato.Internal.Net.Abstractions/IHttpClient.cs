@@ -31,7 +31,6 @@ namespace Plato.Internal.Net.Abstractions
 
     }
 
-
     public enum HttpMethod
     {
         Get,

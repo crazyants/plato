@@ -207,6 +207,5 @@ namespace Plato.StopForumSpam.Client.Services
         }
 
     }
-
-
+    
 }
