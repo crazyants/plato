@@ -8,7 +8,7 @@ using Plato.StopForumSpam.Client.Models;
 
 namespace Plato.StopForumSpam.Client.Services
 {
-    
+
     public class SpamClient : ISpamClient
     {
         private const string ByFormat = "json";
@@ -102,7 +102,8 @@ namespace Plato.StopForumSpam.Client.Services
         private async Task<Response> CheckAsync(Dictionary<string, string> parameters)
         {
             parameters.Add("f", ByFormat);
-            return Response.Parse(await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters), ByFormat);
+            return Response.Parse(await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters),
+                ByFormat);
         }
 
         public async Task<Response> AddSpammerAsync(string username, string emailAddress, string ipAddress)
@@ -146,10 +147,24 @@ namespace Plato.StopForumSpam.Client.Services
                 {"api_key", this.Options.ApiKey}
             };
 
-            return Response.Parse(await _httpClient.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters), ByFormat);
+            // Attempt to post
+            var reply = await _httpClient.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters);
+
+            // Ensure we received a reply to parse
+            if (!string.IsNullOrEmpty(reply))
+            {
+                return Response.Parse(reply, ByFormat);
+            }
+
+            // Return failure as no response was received
+            return new FailResponse(reply, ByFormat)
+            {
+                Error = "No response was received from StopForumSpam!"
+            };
 
         }
 
     }
+
 
 }

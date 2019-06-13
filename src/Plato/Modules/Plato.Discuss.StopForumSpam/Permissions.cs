@@ -6,6 +6,9 @@ namespace Plato.Discuss.StopForumSpam
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        public static readonly Permission ViewStopForumSpam =
+            new Permission("DiscussViewSFS", "Can view  StopForumSpam details");
+
         public static readonly Permission AddToStopForumSpam =
             new Permission("DiscussAddToSFS", "Can submit spammers to StopForumSpam");
         
@@ -13,6 +16,7 @@ namespace Plato.Discuss.StopForumSpam
         {
             return new[]
             {
+                ViewStopForumSpam,
                 AddToStopForumSpam
             };
         }
@@ -26,6 +30,7 @@ namespace Plato.Discuss.StopForumSpam
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
+                        ViewStopForumSpam,
                         AddToStopForumSpam
                     }
                 },
@@ -34,6 +39,7 @@ namespace Plato.Discuss.StopForumSpam
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
+                        ViewStopForumSpam,
                         AddToStopForumSpam
                     }
                 }

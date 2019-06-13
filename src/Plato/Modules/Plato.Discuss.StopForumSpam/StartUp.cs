@@ -39,7 +39,7 @@ namespace Plato.Discuss.StopForumSpam
 
             // Navigation providers
             services.AddScoped<INavigationProvider, TopicMenu>();
-            //services.AddScoped<INavigationProvider, TopicReplyMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyMenu>();
 
             // Register spam operations provider
             services.AddScoped<ISpamOperationProvider<SpamOperation>, SpamOperations>();
@@ -82,6 +82,23 @@ namespace Plato.Discuss.StopForumSpam
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // Index
+            routes.MapAreaRoute(
+                name: "DiscussSpammerIndex",
+                areaName: "Plato.Discuss.StopForumSpam",
+                template: "discuss/t/spam/details/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+
+            // AddSpammer
+            routes.MapAreaRoute(
+                name: "DiscussAddSpammer",
+                areaName: "Plato.Discuss.StopForumSpam",
+                template: "discuss/t/spam/add/{opts.id:int}/{opts.alias}/{opts.replyId:int?}",
+                defaults: new { controller = "Home", action = "AddSpammer" }
+            );
+            
         }
 
     }

@@ -7,8 +7,7 @@
         {
         }
 
-        public string Error { get; internal set; }
-
+       
     }
 
 }

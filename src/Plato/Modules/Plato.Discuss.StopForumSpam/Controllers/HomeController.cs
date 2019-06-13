@@ -6,15 +6,19 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
+using Plato.Discuss.StopForumSpam.ViewModels;
+using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Entities.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.StopForumSpam.Client.Models;
 using Plato.StopForumSpam.Client.Services;
 using Plato.StopForumSpam.Models;
+using Plato.StopForumSpam.Services;
 using Plato.StopForumSpam.Stores;
 
 namespace Plato.Discuss.StopForumSpam.Controllers
@@ -29,6 +33,9 @@ namespace Plato.Discuss.StopForumSpam.Controllers
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly ISpamClient _spamClient;
+
+        private readonly ISpamChecker _spamChecker;
+
         private readonly IAlerter _alerter;
    
         public IHtmlLocalizer T { get; }
@@ -45,7 +52,8 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             IEntityStore<Topic> entityStore,
             IContextFacade contextFacade,
             ISpamClient spamClient,
-            IAlerter alerter)
+            IAlerter alerter, 
+            ISpamChecker spamChecker)
         {
             _entityStore = entityStore;
             _contextFacade = contextFacade;
@@ -55,67 +63,150 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             _platoUserStore = platoUserStore;
             _spamClient = spamClient;
             _alerter = alerter;
+        
+            _spamChecker = spamChecker;
 
             T = htmlLocalizer;
             S = stringLocalizer;
 
         }
-
-        #region "Topics"
         
-        public async Task<IActionResult> AddSpammer(string id)
+        // -----------------
+        // Index
+        // -----------------
+
+        public async Task<IActionResult> Index(EntityOptions opts)
         {
 
-            // Ensure we have a valid id
-            var ok = int.TryParse(id, out var entityId);
-            if (!ok)
+            if (opts == null)
             {
-                return NotFound();
+                opts = new EntityOptions();
             }
 
-            // Get entity
-            var entity = await _entityStore.GetByIdAsync(entityId);
+            // We always need an entity Id
+            if (opts.Id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(opts.Id));
+            }
 
-            // Ensure the topic exists
+            // We always need an entity
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
             if (entity == null)
             {
                 return NotFound();
             }
 
             // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.ViewStopForumSpam))
+            {
+                return Unauthorized();
+            }
+            
+            // Get reply
+            IEntityReply reply = null;
+            if (opts.ReplyId > 0)
+            {
+                reply = await _entityReplyStore.GetByIdAsync(opts.ReplyId);
+                if (reply == null)
+                {
+                    return NotFound();
+                }
+            }
+            
+            // Get user to validate
+            var user = reply != null
+                ? await GetUserToValidateAsync(reply)
+                : await GetUserToValidateAsync(entity);
+            
+            // Build view model
+            var viewModel = new StopForumSpamViewModel()
+            {
+                Options = opts,
+                Checker = await _spamChecker.CheckAsync(user)
+            };
+
+            // Return view
+            return View(viewModel);
+
+        }
+
+        // -----------------
+        // AddSpammer
+        // -----------------
+
+        public async Task<IActionResult> AddSpammer(EntityOptions opts)
+        {
+
+            if (opts.Id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(opts.Id));
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
+
+            // Ensure the topic exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            
+            // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.AddToStopForumSpam))
             {
                 return Unauthorized();
             }
+            
+            // Get reply
+            IEntityReply reply = null;
+            if (opts.ReplyId > 0)
+            {
+                reply = await _entityReplyStore.GetByIdAsync(opts.ReplyId);
+            }
+            
+            // Get user for reply or entity
+            var user = reply != null 
+                ? await GetUserToValidateAsync(reply)
+                : await GetUserToValidateAsync(entity);
 
-            // Get user for topic
-            var user = await _platoUserStore.GetByIdAsync(entity.CreatedUserId);
-           
             // Ensure the user exists
             if (user == null)
             {
                 return NotFound();
             }
 
-            // Configure spam client
-            await ConfigureSpamClient();
-            
-            // Add the user
-            var result = await _spamClient.AddSpammerAsync(
-                user.UserName,
-                user.Email,
-                user.IpV4Address);
-            
+            // Add spammer for reply or entity
+            var result = reply != null
+                ? await EntityReplyToSpamAsync(reply, user)
+                : await EntityToSpamAsync(entity, user);
+
+            // Confirmation
             if (result.Success)
             {
                 _alerter.Success(T["Spammer Added Successfully"]);
             }
             else
             {
-                _alerter.Danger(T["Could not add the user details to the StopForumSpam database"]);
+                _alerter.Danger(!string.IsNullOrEmpty(result.Error)
+                    ? T[result.Error]
+                    : T["An error occurred adding the user to the StopForumSpam database."]);
             }
 
-            // Redirect back to topic
+            // Redirect back to reply
+            if (reply != null)
+            {
+                return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                {
+                    ["area"] = "Plato.Discuss",
+                    ["controller"] = "Home",
+                    ["action"] = "Reply",
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias,
+                    ["opts.replyId"] = reply.Id
+                }));
+            }
+
+            // Redirect back to entity
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",
@@ -126,139 +217,104 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             }));
 
         }
-              
-        #endregion
+        
+        // ----------------------
 
-        #region "Replies"
+        async Task<Response> EntityToSpamAsync(IEntity entity, IUser user)
+        {
+            
+            // Configure client
+            ConfigureSpamClient();
 
-        ////public async Task<IActionResult> HideReply(string id)
-        ////{
+            // Add the user
+            return await _spamClient.AddSpammerAsync(
+                user.UserName,
+                user.Email,
+                user.IpV4Address);
 
-        ////    // Ensure we have a valid id
-        ////    var ok = int.TryParse(id, out var replyId);
-        ////    if (!ok)
-        ////    {
-        ////        return NotFound();
-        ////    }
+        }
+        
+        async Task<Response> EntityReplyToSpamAsync(IEntityReply reply, IUser user)
+        {
 
-        ////    var reply = await _entityReplyStore.GetByIdAsync(replyId);
-        ////    if (reply == null)
-        ////    {
-        ////        return NotFound();
-        ////    }
+            // Configure client
+            ConfigureSpamClient();
 
-        ////    var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+            // Add the user
+            return await _spamClient.AddSpammerAsync(
+                user.UserName,
+                user.Email,
+                user.IpV4Address);
 
-        ////    // Ensure the topic exists
-        ////    if (topic == null)
-        ////    {
-        ////        return NotFound();
-        ////    }
+        }
 
-        ////    // Ensure we have permission
-        ////    if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.HideReplies))
-        ////    {
-        ////        return Unauthorized();
-        ////    }
+        async Task<User> GetUserToValidateAsync(IEntity entity)
+        {
 
-        ////    var user = await _contextFacade.GetAuthenticatedUserAsync();
+            var user = await _platoUserStore.GetByIdAsync(entity.CreatedUserId);
 
-        ////    // Update topic
-        ////    reply.ModifiedUserId = user?.Id ?? 0;
-        ////    reply.ModifiedDate = DateTimeOffset.UtcNow;
-        ////    reply.IsHidden = true;
+            if (user == null)
+            {
+                return null;
+            }
 
-        ////    // Save changes and return results
-        ////    var result = await _replyManager.UpdateAsync(reply);
+            if (!string.IsNullOrEmpty(entity.IpV4Address))
+            {
+                if (!entity.IpV4Address.Equals(user.IpV4Address, StringComparison.OrdinalIgnoreCase))
+                {
+                    user.IpV4Address = entity.IpV4Address;
+                }
+            }
 
-        ////    if (result.Succeeded)
-        ////    {
-        ////        _alerter.Success(T["Reply Hidden Successfully"]);
-        ////    }
-        ////    else
-        ////    {
-        ////        _alerter.Danger(T["Could not hide the reply"]);
-        ////    }
+            if (!string.IsNullOrEmpty(entity.IpV6Address))
+            {
+                if (!entity.IpV6Address.Equals(user.IpV6Address, StringComparison.OrdinalIgnoreCase))
+                {
+                    user.IpV6Address = entity.IpV6Address;
+                }
+            }
+            
+            return user;
 
-        ////    // Redirect back to reply
-        ////    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-        ////    {
-        ////        ["area"] = "Plato.Discuss",
-        ////        ["controller"] = "Home",
-        ////        ["action"] = "Reply",
-        ////        ["opts.id"] = topic.Id,
-        ////        ["opts.alias"] = topic.Alias,
-        ////        ["opts.replyId"] = reply.Id
-        ////    }));
+        }
 
-        ////}
+        async Task<User> GetUserToValidateAsync(IEntityReply reply)
+        {
 
-        ////public async Task<IActionResult> ShowReply(string id)
-        ////{
+            var user = await _platoUserStore.GetByIdAsync(reply.CreatedUserId);
 
-        ////    // Ensure we have a valid id
-        ////    var ok = int.TryParse(id, out var replyId);
-        ////    if (!ok)
-        ////    {
-        ////        return NotFound();
-        ////    }
+            if (user == null)
+            {
+                return null;
+            }
 
-        ////    var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (!string.IsNullOrEmpty(reply.IpV4Address))
+            {
+                if (!reply.IpV4Address.Equals(user.IpV4Address, StringComparison.OrdinalIgnoreCase))
+                {
+                    user.IpV4Address = reply.IpV4Address;
+                }
+            }
 
-        ////    if (reply == null)
-        ////    {
-        ////        return NotFound();
-        ////    }
+            if (!string.IsNullOrEmpty(reply.IpV6Address))
+            {
+                if (!reply.IpV6Address.Equals(user.IpV6Address, StringComparison.OrdinalIgnoreCase))
+                {
+                    user.IpV6Address = reply.IpV6Address;
+                }
+            }
 
-        ////    var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+            return user;
 
-        ////    // Ensure the topic exists
-        ////    if (topic == null)
-        ////    {
-        ////        return NotFound();
-        ////    }
+        }
 
-        ////    // Ensure we have permission
-        ////    if (!await _authorizationService.AuthorizeAsync(User, topic.CategoryId, ModeratorPermissions.ShowReplies))
-        ////    {
-        ////        return Unauthorized();
-        ////    }
-
-        ////    var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-        ////    // Update topic
-        ////    reply.ModifiedUserId = user?.Id ?? 0;
-        ////    reply.ModifiedDate = DateTimeOffset.UtcNow;
-        ////    reply.IsHidden = false;
-
-        ////    // Save changes and return results
-        ////    var result = await _replyManager.UpdateAsync(reply);
-
-        ////    if (result.Succeeded)
-        ////    {
-        ////        _alerter.Success(T["Reply Made Public Successfully"]);
-        ////    }
-        ////    else
-        ////    {
-        ////        _alerter.Danger(T["Could not make the reply public"]);
-        ////    }
-        ////    // Redirect back to reply
-        ////    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-        ////    {
-        ////        ["area"] = "Plato.Discuss",
-        ////        ["controller"] = "Home",
-        ////        ["action"] = "Reply",
-        ////        ["opts.id"] = topic.Id,
-        ////        ["opts.alias"] = topic.Alias,
-        ////        ["opts.replyId"] = reply.Id
-        ////    }));
-
-
-        ////}
-
-        #endregion
-
-        async Task ConfigureSpamClient()
+        void ConfigureSpamClient()
+        {
+            // Configure spam client
+            _spamClient.Configure(async o => { o.ApiKey = await GetStopForumSpamApiKey(); });
+        }
+        
+        async Task<string> GetStopForumSpamApiKey()
         {
             // Get spam settings
             var settings = await _spamSettingsStore.GetAsync();
@@ -275,8 +331,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
                 throw new Exception("A StopForumSpam API key is required!");
             }
 
-            // Configure spam client
-            _spamClient.Configure(o => { o.ApiKey = settings.ApiKey; });
+            return settings.ApiKey;
 
         }
 

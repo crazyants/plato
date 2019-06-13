@@ -15,13 +15,13 @@ namespace Plato.Discuss.Share.Controllers
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly IEntityStore<Topic> _topicStore;
+        private readonly IEntityStore<Topic> _entityStore;
       
         public HomeController(
-            IEntityStore<Topic> topicStore,
+            IEntityStore<Topic> entityStore,
             IContextFacade contextFacade)
         {
-            _topicStore = topicStore;
+            _entityStore = entityStore;
             _contextFacade = contextFacade;
         }
 
@@ -37,7 +37,7 @@ namespace Plato.Discuss.Share.Controllers
             }
 
             // We always need an entity
-            var entity = await _topicStore.GetByIdAsync(opts.Id);
+            var entity = await _entityStore.GetByIdAsync(opts.Id);
             if (entity == null)
             {
                 return NotFound();

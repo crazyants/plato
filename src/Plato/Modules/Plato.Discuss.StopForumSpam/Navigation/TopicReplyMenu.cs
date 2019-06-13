@@ -7,12 +7,12 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.StopForumSpam.Navigation
 {
-    public class TopicMenu : INavigationProvider
+    public class TopicReplyMenu : INavigationProvider
     {
         
         public IStringLocalizer T { get; set; }
 
-        public TopicMenu(IStringLocalizer localizer)
+        public TopicReplyMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -20,7 +20,7 @@ namespace Plato.Discuss.StopForumSpam.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-reply", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -31,9 +31,16 @@ namespace Plato.Discuss.StopForumSpam.Navigation
             {
                 return;
             }
-            
+
+            // Get reply from context
+            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            if (reply == null)
+            {
+                return;
+            }
+
             // If the entity if flagged as spam display additional options
-            if (entity.IsSpam)
+            if (reply.IsSpam)
             {
 
                 builder
@@ -52,7 +59,7 @@ namespace Plato.Discuss.StopForumSpam.Navigation
                                 {
                                     ["opts.id"] = entity.Id.ToString(),
                                     ["opts.alias"] = entity.Alias,
-                                    ["opts.replyId"] = "0"
+                                    ["opts.replyId"] = reply.Id.ToString()
                                 })
                             .Permission(Permissions.ViewStopForumSpam)
                             .LocalNav()

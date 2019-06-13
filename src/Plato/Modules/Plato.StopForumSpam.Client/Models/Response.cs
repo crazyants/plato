@@ -7,6 +7,8 @@ namespace Plato.StopForumSpam.Client.Models
     public abstract class Response
     {
 
+        public string Error { get; internal set; }
+
         private readonly string _reply;
         private readonly List<ResponsePart> _parts = new List<ResponsePart>();
 

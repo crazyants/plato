@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Users;
@@ -21,28 +20,29 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
 
     public class TopicOperator : ISpamOperatorProvider<Topic>
     {
-
-        private readonly ISpamChecker _spamChecker;
-        private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IEntityStore<Topic> _topicStore;
-        private readonly IDeferredTaskManager _deferredTaskManager;
+        
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Topic> _notificationManager;
+        private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IEntityStore<Topic> _topicStore;
+        private readonly ISpamChecker _spamChecker;
 
         public TopicOperator(
-            ISpamChecker spamChecker,
+
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            INotificationManager<Topic> notificationManager,
+            IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<Topic> topicStore,
-            IDeferredTaskManager deferredTaskManager,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            INotificationManager<Topic> notificationManager)
+            ISpamChecker spamChecker)
         {
-            _spamChecker = spamChecker;
-            _platoUserStore = platoUserStore;
-            _topicStore = topicStore;
-            _deferredTaskManager = deferredTaskManager;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
+            _platoUserStore = platoUserStore;
+            _spamChecker = spamChecker;
+            _topicStore = topicStore;
         }
 
         public async Task<ISpamOperatorResult<Topic>> ValidateModelAsync(ISpamOperatorContext<Topic> context)
