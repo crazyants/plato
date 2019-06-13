@@ -25,28 +25,31 @@ namespace Plato.Internal.Net
 
         #region "Implementation"
 
-        public async Task<string> GetAsync(Uri url)
+        public async Task<HttpClientResponse> GetAsync(Uri url)
         {
             return await GetAsync(url, null);
         }
 
-        public async Task<string> GetAsync(Uri url, IDictionary<string, string> parameters)
+        public async Task<HttpClientResponse> GetAsync(Uri url, IDictionary<string, string> parameters)
         {
             return await RequestAsync(HttpMethod.Get, url, parameters);
         }
 
-        public async Task<string> PostAsync(Uri url)
+        public async Task<HttpClientResponse> PostAsync(Uri url)
         {
             return await PostAsync(url, null);
         }
 
-        public async Task<string> PostAsync(Uri url, IDictionary<string, string> parameters)
+        public async Task<HttpClientResponse> PostAsync(Uri url, IDictionary<string, string> parameters)
         {
             return await RequestAsync(HttpMethod.Post, url, parameters);
         }
         
-        public async Task<string> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters)
+        public async Task<HttpClientResponse> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters)
         {
+
+            var result = new HttpClientResponse();
+
             var encoding = new UTF8Encoding();
             var data = string.Empty;
             if (parameters != null)
@@ -90,7 +93,9 @@ namespace Plato.Internal.Net
                 }
 
                 responseStream = new StreamReader(readStream, Encoding.UTF8);
-                output = responseStream.ReadToEnd();
+                result.Response = responseStream.ReadToEnd();
+                result.Succeeded = true;
+
             }
             catch (Exception e)
             {
@@ -98,6 +103,9 @@ namespace Plato.Internal.Net
                 {
                     _logger.LogError(e, e.Message);
                 }
+
+                result.Succeeded = false;
+                result.Error = e.Message;
             }
             finally
             {
@@ -105,7 +113,7 @@ namespace Plato.Internal.Net
                 responseStream?.Close();
             }
 
-            return output;
+            return result;
 
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -176,9 +177,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             }
 
             // Add spammer for reply or entity
-            var result = reply != null
-                ? await EntityReplyToSpamAsync(reply, user)
-                : await EntityToSpamAsync(entity, user);
+            var result = await AddSpammerAsync(user);
 
             // Confirmation
             if (result.Success)
@@ -220,13 +219,13 @@ namespace Plato.Discuss.StopForumSpam.Controllers
         
         // ----------------------
 
-        async Task<Response> EntityToSpamAsync(IEntity entity, IUser user)
+        async Task<Response> AddSpammerAsync(IUser user)
         {
-            
+
             // Configure client
             ConfigureSpamClient();
 
-            // Add the user
+            // Add the user & return the result
             return await _spamClient.AddSpammerAsync(
                 user.UserName,
                 user.Email,
@@ -234,20 +233,6 @@ namespace Plato.Discuss.StopForumSpam.Controllers
 
         }
         
-        async Task<Response> EntityReplyToSpamAsync(IEntityReply reply, IUser user)
-        {
-
-            // Configure client
-            ConfigureSpamClient();
-
-            // Add the user
-            return await _spamClient.AddSpammerAsync(
-                user.UserName,
-                user.Email,
-                user.IpV4Address);
-
-        }
-
         async Task<User> GetUserToValidateAsync(IEntity entity)
         {
 

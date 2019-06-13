@@ -102,18 +102,62 @@ namespace Plato.StopForumSpam.Client.Services
         private async Task<Response> CheckAsync(Dictionary<string, string> parameters)
         {
             parameters.Add("f", ByFormat);
-            return Response.Parse(await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters),
-                ByFormat);
+
+            var result = await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters);
+            if (result.Succeeded)
+            {
+                return Response.Parse(result.Response, ByFormat);
+            }
+            
+            // Return failure as no response was received
+            return new FailResponse(result.Response, ByFormat)
+            {
+                Error = result.Error
+            };
         }
 
         public async Task<Response> AddSpammerAsync(string username, string emailAddress, string ipAddress)
         {
-            if (IPAddress.TryParse(ipAddress, out var address))
+            
+            // Validate
+
+            if (string.IsNullOrEmpty(username))
             {
-                return await this.AddSpammerAsync(username, emailAddress, address);
+                return new FailResponse(string.Empty, string.Empty)
+                {
+                    Error = "A username is required!"
+                };
             }
 
-            throw new ArgumentException("The ipAddress argument is not a valid IP address.");
+            if (string.IsNullOrEmpty(emailAddress))
+            {
+                return new FailResponse(string.Empty, string.Empty)
+                {
+                    Error = "An email address is required!"
+                };
+            }
+
+            if (string.IsNullOrEmpty(ipAddress))
+            {
+                return new FailResponse(string.Empty, string.Empty)
+                {
+                    Error = "An IP address is required!"
+                };
+            }
+
+            // Validate the IP address
+
+            var ok = IPAddress.TryParse(ipAddress, out var address);
+            if (!ok)
+            {
+                return new FailResponse(string.Empty, string.Empty)
+                {
+                    Error = "The supplied IP address is invalid!"
+                };
+            }
+            
+            return await this.AddSpammerAsync(username, emailAddress, address);
+         
         }
 
         public async Task<Response> AddSpammerAsync(string username, string emailAddress, IPAddress ipAddress)
@@ -148,18 +192,16 @@ namespace Plato.StopForumSpam.Client.Services
             };
 
             // Attempt to post
-            var reply = await _httpClient.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters);
-
-            // Ensure we received a reply to parse
-            if (!string.IsNullOrEmpty(reply))
+            var result = await _httpClient.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters);
+            if (result.Succeeded)
             {
-                return Response.Parse(reply, ByFormat);
+                return Response.Parse(result.Response, ByFormat);
             }
-
+             
             // Return failure as no response was received
-            return new FailResponse(reply, ByFormat)
+            return new FailResponse(result.Response, ByFormat)
             {
-                Error = "No response was received from StopForumSpam!"
+                Error = result.Error
             };
 
         }

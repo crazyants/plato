@@ -10,17 +10,28 @@ namespace Plato.Internal.Net.Abstractions
 
         int Timeout { get; set; }
 
-        Task<string> GetAsync(Uri url);
+        Task<HttpClientResponse> GetAsync(Uri url);
 
-        Task<string> GetAsync(Uri url, IDictionary<string, string> parameters);
+        Task<HttpClientResponse> GetAsync(Uri url, IDictionary<string, string> parameters);
 
-        Task<string> PostAsync(Uri url);
+        Task<HttpClientResponse> PostAsync(Uri url);
 
-        Task<string> PostAsync(Uri url, IDictionary<string, string> parameters);
+        Task<HttpClientResponse> PostAsync(Uri url, IDictionary<string, string> parameters);
 
-        Task<string> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters);
+        Task<HttpClientResponse> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters);
     }
-    
+
+    public class HttpClientResponse
+    {
+        public string Response { get; set; }
+        
+        public bool Succeeded { get; set; }
+
+        public string Error { get; set; }
+
+    }
+
+
     public enum HttpMethod
     {
         Get,
