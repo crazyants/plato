@@ -167,8 +167,7 @@ namespace Plato.Discuss.Navigation
                         , new List<string>() { "topic-permanent-delete", "text-muted", "text-hidden" }
                     );
             }
-
-
+            
             // If entity & reply are not hidden and entity is not locked allow replies
             if (!entity.IsHidden() && !reply.IsHidden() && !entity.IsLocked)
             {

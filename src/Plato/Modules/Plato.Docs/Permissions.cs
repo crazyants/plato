@@ -31,31 +31,43 @@ namespace Plato.Docs
             new Permission("EditAnyDocComment", "Edit any comment");
         
         public static readonly Permission DeleteOwnDocs = 
-            new Permission("DeleteOwnDocs", "Delete own docs");
+            new Permission("DeleteOwnDocs", "Soft delete own docs");
 
         public static readonly Permission RestoreOwnDocs =
-            new Permission("RestoreOwnDocs", "Restore own docs");
-        
+            new Permission("RestoreOwnDocs", "Restore own soft deleted docs");
+
+        public static readonly Permission PermanentDeleteOwnDocs =
+            new Permission("PermanentDeleteOwnDocs", "Permanently delete own docs");
+
         public static readonly Permission DeleteAnyDoc =
-            new Permission("DeleteAnyDoc", "Delete any doc");
+            new Permission("DeleteAnyDoc", "Soft delete any doc");
 
         public static readonly Permission RestoreAnyDoc =
-            new Permission("RestoreAnyDoc", "Restore any doc");
+            new Permission("RestoreAnyDoc", "Restore any soft deleted doc");
+
+        public static readonly Permission PermanentDeleteAnyDoc =
+            new Permission("PermanentDeleteAnyDoc", "Permanently delete any doc");
 
         public static readonly Permission ViewDeletedDocs =
             new Permission("ViewDeletedDocs", "View deleted docs");
         
         public static readonly Permission DeleteOwnDocComments =
-            new Permission("DeleteOwnDocComments", "Delete own comments");
+            new Permission("DeleteOwnDocComments", "Soft delete own comments");
 
         public static readonly Permission RestoreOwnDocComments =
-            new Permission("RestoreOwnDocComments", "Restore own comments");
-        
+            new Permission("RestoreOwnDocComments", "Restore own soft deleted comments");
+
+        public static readonly Permission PermanentDeleteOwnDocComments =
+            new Permission("PermanentDeleteOwnDocComments", "Permanently delete own comments");
+
         public static readonly Permission DeleteAnyDocComment =
-            new Permission("DeleteAnyDocComment", "Delete any comment");
+            new Permission("DeleteAnyDocComment", "Soft delete any comment");
 
         public static readonly Permission RestoreAnyDocComment =
-            new Permission("RestoreAnyDocComment", "Restore any comment");
+            new Permission("RestoreAnyDocComment", "Restore any soft deleted comment");
+
+        public static readonly Permission PermanentDeleteAnyDocComment =
+            new Permission("PermanentDeleteAnyDocComment", "Permanently delete any comment");
 
         public static readonly Permission ViewDeletedDocComments =
             new Permission("ViewDeletedDocComments", "View deleted comments");
@@ -131,12 +143,16 @@ namespace Plato.Docs
                 EditAnyDocComment,
                 DeleteOwnDocs,
                 RestoreOwnDocs,
+                PermanentDeleteOwnDocs,
                 DeleteAnyDoc,
                 RestoreAnyDoc,
+                PermanentDeleteAnyDoc,
                 DeleteOwnDocComments,
                 RestoreOwnDocComments,
+                PermanentDeleteOwnDocComments,
                 DeleteAnyDocComment,
                 RestoreAnyDocComment,
+                PermanentDeleteAnyDocComment,
                 ReportDocs,
                 ReportDocComments,
                 ViewDeletedDocs,
@@ -180,13 +196,17 @@ namespace Plato.Docs
                         EditAnyDocComment,
                         DeleteOwnDocs,
                         RestoreOwnDocs,
+                        PermanentDeleteOwnDocs,
                         DeleteAnyDoc,
                         RestoreAnyDoc,
+                        PermanentDeleteAnyDoc,
                         ViewDeletedDocs,
                         DeleteOwnDocComments,
                         RestoreOwnDocComments,
+                        PermanentDeleteOwnDocComments,
                         DeleteAnyDocComment,
                         RestoreAnyDocComment,
+                        PermanentDeleteAnyDocComment,
                         ViewDeletedDocComments,
                         ReportDocs,
                         ReportDocComments,
@@ -235,13 +255,17 @@ namespace Plato.Docs
                         EditAnyDocComment,
                         DeleteOwnDocs,
                         RestoreOwnDocs,
+                        PermanentDeleteOwnDocs,
                         DeleteAnyDoc,
                         RestoreAnyDoc,
+                        PermanentDeleteAnyDoc,
                         ViewDeletedDocs,
                         DeleteOwnDocComments,
                         RestoreOwnDocComments,
+                        PermanentDeleteOwnDocComments,
                         DeleteAnyDocComment,
                         RestoreAnyDocComment,
+                        PermanentDeleteAnyDocComment,
                         ViewDeletedDocComments,
                         ReportDocs,
                         ReportDocComments,

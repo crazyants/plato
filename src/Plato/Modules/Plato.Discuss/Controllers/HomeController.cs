@@ -1595,8 +1595,7 @@ namespace Plato.Discuss.Controllers
             }));
 
         }
-
-
+        
         // -----------------
         // Entity Reply Helpers
         // -----------------
