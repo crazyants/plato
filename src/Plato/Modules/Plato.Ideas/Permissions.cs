@@ -3,6 +3,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Ideas
 {
+
     public class Permissions : IPermissionsProvider<Permission>
     {
 
@@ -10,7 +11,7 @@ namespace Plato.Ideas
             new Permission("PostIdeas", "Post ideas");
 
         public static readonly Permission PostIdeaComments =
-            new Permission("PostIdeaComments", "Post idea comments");
+            new Permission("PostIdeaComments", "Post comments");
 
         public static readonly Permission EditOwnIdeas =
             new Permission("EditOwnIdeas", "Edit own ideas");
@@ -19,10 +20,10 @@ namespace Plato.Ideas
             new Permission("EditAnyIdea", "Edit any idea");
         
         public static readonly Permission EditOwnIdeaComments =
-            new Permission("EditOwnIdeaComments", "Edit own idea comments");
+            new Permission("EditOwnIdeaComments", "Edit own comments");
 
         public static readonly Permission EditAnyIdeaComment =
-            new Permission("EditAnyIdeaComment", "Edit any idea comment");
+            new Permission("EditAnyIdeaComment", "Edit any comment");
         
         public static readonly Permission DeleteOwnIdeas = 
             new Permission("DeleteOwnIdeas", "Soft delete own ideas");
@@ -70,7 +71,7 @@ namespace Plato.Ideas
             new Permission("ReportIdeas", "Report ideas");
 
         public static readonly Permission ReportIdeaComments =
-            new Permission("ReportIdeaComments", "Report idea comments");
+            new Permission("ReportIdeaComments", "Report comments");
         
         public static readonly Permission PinIdeas =
             new Permission("PinIdeas", "Pin ideas");

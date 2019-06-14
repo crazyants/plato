@@ -955,8 +955,7 @@ namespace Plato.Questions.Controllers
             }));
 
         }
-
-
+        
         // -----------------
         // Entity Helpers
         // -----------------
@@ -1533,6 +1532,64 @@ namespace Plato.Questions.Controllers
 
         }
 
+        public async Task<IActionResult> PermanentDelete(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == entity.CreatedUserId
+                    ? Permissions.PermanentDeleteOwnQuestions
+                    : Permissions.PermanentDeleteAnyQuestion))
+            {
+                return Unauthorized();
+            }
+
+            // Delete entity
+            var result = await _questionManager.DeleteAsync(entity);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Question Permanently Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not permanently delete the question"]);
+            }
+
+            // Redirect back to index
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Questions",
+                ["controller"] = "Home",
+                ["action"] = "Index"
+            }));
+
+        }
+
         // -----------------
         // Entity Reply Helpers
         // -----------------
@@ -1929,7 +1986,72 @@ namespace Plato.Questions.Controllers
             }));
 
         }
-        
+
+        public async Task<IActionResult> PermanentDeleteReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Ensure the reply exists
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the entity exists
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == reply.CreatedUserId
+                    ? Permissions.PermanentDeleteOwnAnswers
+                    : Permissions.PermanentDeleteAnyAnswer))
+            {
+                return Unauthorized();
+            }
+
+            // Delete reply
+            var result = await _answerManager.DeleteAsync(reply);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Answer Permanently Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not permanently delete the answer"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Questions",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
         #endregion
 
         #region "Private Methods"

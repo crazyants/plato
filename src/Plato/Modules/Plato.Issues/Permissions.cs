@@ -25,34 +25,46 @@ namespace Plato.Issues
             new Permission("EditAnyIssueComment", "Edit any comment");
         
         public static readonly Permission DeleteOwnIssues = 
-            new Permission("DeleteOwnIssues", "Delete own issues");
+            new Permission("DeleteOwnIssues", "Soft delete own issues");
 
         public static readonly Permission RestoreOwnIssues =
-            new Permission("RestoreOwnIssues", "Restore own issues");
-        
+            new Permission("RestoreOwnIssues", "Restore own soft deleted issues");
+
+        public static readonly Permission PermanentDeleteOwnIssues =
+            new Permission("PermanentDeleteOwnIssues", "Permanently delete own issues");
+
         public static readonly Permission DeleteAnyIssue =
-            new Permission("DeleteAnyIssue", "Delete any issue");
+            new Permission("DeleteAnyIssue", "Soft delete any issue");
 
         public static readonly Permission RestoreAnyIssue =
-            new Permission("RestoreAnyIssue", "Restore any issue");
+            new Permission("RestoreAnyIssue", "Restore any soft deleted issue");
+
+        public static readonly Permission PermanentDeleteAnyIssue =
+            new Permission("PermanentDeleteAnyIssue", "Permanently delete any issue");
 
         public static readonly Permission ViewDeletedIssues =
-            new Permission("ViewDeletedIssues", "View deleted issues");
+            new Permission("ViewDeletedIssues", "View soft deleted issues");
         
         public static readonly Permission DeleteOwnIssueComments =
-            new Permission("DeleteOwnIssueComments", "Delete own comments");
+            new Permission("DeleteOwnIssueComments", "Soft delete own comments");
 
         public static readonly Permission RestoreOwnIssueComments =
-            new Permission("RestoreOwnIssueComments", "Restore own comments");
+            new Permission("RestoreOwnIssueComments", "Restore own soft deleted comments");
+
+        public static readonly Permission PermanentDeleteOwnIssueComments =
+            new Permission("PermanentDeleteOwnIssueComments", "Permanently delete own comments");
         
         public static readonly Permission DeleteAnyIssueComment =
-            new Permission("DeleteAnyIssueComment", "Delete any comment");
+            new Permission("DeleteAnyIssueComment", "Soft delete any comment");
 
         public static readonly Permission RestoreAnyIssueComment =
-            new Permission("RestoreAnyIssueComment", "Restore any comment");
+            new Permission("RestoreAnyIssueComment", "Restore any soft deleted comment");
+
+        public static readonly Permission PermanentDeleteAnyIssueComment =
+            new Permission("PermanentDeleteAnyIssueComment", "Permanently delete any comment");
         
         public static readonly Permission ViewDeletedIssueComments =
-            new Permission("ViewDeletedIssueComments", "View deleted comments");
+            new Permission("ViewDeletedIssueComments", "View soft deleted comments");
         
         public static readonly Permission ReportIssues =
             new Permission("ReportIssues", "Report issues");
@@ -129,13 +141,17 @@ namespace Plato.Issues
                 EditAnyIssueComment,
                 DeleteOwnIssues,
                 RestoreOwnIssues,
+                PermanentDeleteOwnIssues,
                 DeleteAnyIssue,
                 RestoreAnyIssue,
+                PermanentDeleteAnyIssue,
                 ViewDeletedIssues,
                 DeleteOwnIssueComments,
                 RestoreOwnIssueComments,
+                PermanentDeleteOwnIssueComments,
                 DeleteAnyIssueComment,
                 RestoreAnyIssueComment,
+                PermanentDeleteAnyIssueComment,
                 ViewDeletedIssueComments,
                 ReportIssues,
                 ReportIssueComments,
@@ -178,13 +194,17 @@ namespace Plato.Issues
                         EditAnyIssueComment,
                         DeleteOwnIssues,
                         RestoreOwnIssues,
+                        PermanentDeleteOwnIssues,
                         DeleteAnyIssue,
                         RestoreAnyIssue,
+                        PermanentDeleteAnyIssue,
                         ViewDeletedIssues,
                         DeleteOwnIssueComments,
                         RestoreOwnIssueComments,
+                        PermanentDeleteOwnIssueComments,
                         DeleteAnyIssueComment,
                         RestoreAnyIssueComment,
+                        PermanentDeleteAnyIssueComment,
                         ViewDeletedIssueComments,
                         ReportIssues,
                         ReportIssueComments,
@@ -235,9 +255,11 @@ namespace Plato.Issues
                         EditOwnIssueComments,
                         DeleteOwnIssues,
                         RestoreOwnIssues,
+                        PermanentDeleteOwnIssues,
                         ViewDeletedIssues,
                         DeleteOwnIssueComments,
                         RestoreOwnIssueComments,
+                        PermanentDeleteOwnIssueComments,
                         ViewDeletedIssueComments,
                         ReportIssues,
                         ReportIssueComments,

@@ -25,41 +25,53 @@ namespace Plato.Questions
             new Permission("EditAnyAnswer", "Edit any answer");
         
         public static readonly Permission DeleteOwnQuestions = 
-            new Permission("DeleteOwnQuestions", "Delete own questions");
+            new Permission("DeleteOwnQuestions", "Soft delete own questions");
 
         public static readonly Permission RestoreOwnQuestions =
-            new Permission("RestoreOwnQuestions", "Restore own questions");
-        
+            new Permission("RestoreOwnQuestions", "Restore own soft deleted questions");
+
+        public static readonly Permission PermanentDeleteOwnQuestions =
+            new Permission("PermanentDeleteOwnQuestions", "Permanently delete own questions");
+
         public static readonly Permission DeleteAnyQuestion =
-            new Permission("DeleteAnyQuestion", "Delete any question");
+            new Permission("DeleteAnyQuestion", "Soft delete any question");
 
         public static readonly Permission RestoreAnyQuestion =
-            new Permission("RestoreAnyQuestion", "Restore any question");
-        
+            new Permission("RestoreAnyQuestion", "Restore any soft deleted question");
+
+        public static readonly Permission PermanentDeleteAnyQuestion =
+            new Permission("PermanentDeleteAnyQuestion", "Permanently delete any question");
+
+        public static readonly Permission ViewDeletedQuestions =
+            new Permission("ViewDeletedQuestions", "View soft deleted questions");
+
         public static readonly Permission DeleteOwnAnswers =
-            new Permission("DeleteOwnAnswers", "Delete own answers");
+            new Permission("DeleteOwnAnswers", "Soft delete own answers");
 
         public static readonly Permission RestoreOwnAnswers =
-            new Permission("RestoreOwnAnswers", "Restore own answers");
-        
+            new Permission("RestoreOwnAnswers", "Restore own soft deleted answers");
+
+        public static readonly Permission PermanentDeleteOwnAnswers =
+            new Permission("PermanentDeleteOwnAnswers", "Permanently delete own answers");
+
         public static readonly Permission DeleteAnyAnswer =
-            new Permission("DeleteAnyAnswer", "Delete any answer");
+            new Permission("DeleteAnyAnswer", "Soft delete any answer");
 
         public static readonly Permission RestoreAnyAnswer =
-            new Permission("RestoreAnyAnswer", "Restore any answer");
+            new Permission("RestoreAnyAnswer", "Restore any soft deleted answer");
+
+        public static readonly Permission PermanentDeleteAnyAnswer =
+            new Permission("PermanentDeleteAnyAnswer", "Permanently delete any answer");
+        
+        public static readonly Permission ViewDeletedAnswers =
+            new Permission("ViewDeletedAnswers", "View soft deleted answers");
 
         public static readonly Permission ReportQuestions =
             new Permission("ReportQuestions", "Report questions");
 
         public static readonly Permission ReportAnswers =
             new Permission("ReportAnswers", "Report answers");
-        
-        public static readonly Permission ViewDeletedQuestions =
-            new Permission("ViewDeletedQuestions", "View deleted questions");
-
-        public static readonly Permission ViewDeletedAnswers =
-            new Permission("ViewDeletedAnswers", "View deleted answers");
-        
+  
         public static readonly Permission PinQuestions =
             new Permission("PinQuestions", "Pin questions");
 
@@ -123,13 +135,17 @@ namespace Plato.Questions
                 EditAnyAnswer,
                 DeleteOwnQuestions,
                 RestoreOwnQuestions,
+                PermanentDeleteOwnQuestions,
                 DeleteAnyQuestion,
                 RestoreAnyQuestion,
+                PermanentDeleteAnyQuestion,
                 ViewDeletedQuestions,
                 DeleteOwnAnswers,
                 RestoreOwnAnswers,
+                PermanentDeleteOwnAnswers,
                 DeleteAnyAnswer,
                 RestoreAnyAnswer,
+                PermanentDeleteAnyAnswer,
                 ViewDeletedAnswers,
                 ReportQuestions,
                 ReportAnswers,
@@ -170,13 +186,17 @@ namespace Plato.Questions
                         EditAnyAnswer,
                         DeleteOwnQuestions,
                         RestoreOwnQuestions,
+                        PermanentDeleteOwnQuestions,
                         DeleteAnyQuestion,
                         RestoreAnyQuestion,
+                        PermanentDeleteAnyQuestion,
                         ViewDeletedQuestions,
                         DeleteOwnAnswers,
                         RestoreOwnAnswers,
+                        PermanentDeleteOwnAnswers,
                         DeleteAnyAnswer,
                         RestoreAnyAnswer,
+                        PermanentDeleteAnyAnswer,
                         ViewDeletedAnswers,
                         ReportQuestions,
                         ReportAnswers,
@@ -226,13 +246,17 @@ namespace Plato.Questions
                         EditAnyAnswer,
                         DeleteOwnQuestions,
                         RestoreOwnQuestions,
+                        PermanentDeleteOwnQuestions,
                         DeleteAnyQuestion,
                         RestoreAnyQuestion,
+                        PermanentDeleteAnyQuestion,
                         ViewDeletedQuestions,
                         DeleteOwnAnswers,
+                        PermanentDeleteOwnAnswers,
                         RestoreOwnAnswers,
                         DeleteAnyAnswer,
                         RestoreAnyAnswer,
+                        PermanentDeleteAnyAnswer,
                         ViewDeletedAnswers,
                         ReportQuestions,
                         ReportAnswers,
