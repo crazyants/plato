@@ -138,6 +138,35 @@ namespace Plato.Articles.Navigation
                     , new List<string>() {"article-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
+            // If the reply if deleted display permanent delete option
+            if (reply.IsDeleted)
+            {
+
+                // Permanent delete permissions
+                var permanentDeletePermission = reply.CreatedUserId == user?.Id
+                    ? Permissions.PermanentDeleteOwnArticleComments
+                    : Permissions.PermanentDeleteAnyArticleComment;
+
+                builder
+                    .Add(T["Delete"], int.MinValue, options => options
+                            .IconCss("fal fa-trash-alt")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-toggle", "tooltip"},
+                                {"data-provide", "confirm"},
+                                {"title", T["Permanent Delete"]},
+                            })
+                            .Action("PermanentDeleteReply", "Home", "Plato.Articles",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = reply.Id
+                                })
+                            .Permission(permanentDeletePermission)
+                            .LocalNav()
+                        , new List<string>() { "article-permanent-delete", "text-muted", "text-hidden" }
+                    );
+            }
+
             // If entity & reply are not hidden and entity is not locked allow replies
             if (!entity.IsHidden() && !reply.IsHidden() && !entity.IsLocked)
             {

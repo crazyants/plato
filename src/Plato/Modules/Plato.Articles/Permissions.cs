@@ -25,32 +25,44 @@ namespace Plato.Articles
             new Permission("EditAnyArticleComment", "Edit any comment");
         
         public static readonly Permission DeleteOwnArticles = 
-            new Permission("DeleteOwnArticles", "Delete own articles");
+            new Permission("DeleteOwnArticles", "Soft delete own articles");
 
         public static readonly Permission RestoreOwnArticles =
-            new Permission("RestoreOwnArticles", "Restore own articles");
-        
+            new Permission("RestoreOwnArticles", "Restore own soft deleted articles");
+
+        public static readonly Permission PermanentDeleteOwnArticles =
+            new Permission("PermanentDeleteOwnArticles", "Permanently delete own articles");
+
         public static readonly Permission DeleteAnyArticle =
             new Permission("DeleteAnyArticle", "Delete any article");
 
         public static readonly Permission RestoreAnyArticle =
             new Permission("RestoreAnyArticle", "Restore any article");
+        
+        public static readonly Permission PermanentDeleteAnyArticle =
+            new Permission("PermanentDeleteAnyArticle", "Permanently delete any article");
 
         public static readonly Permission ViewDeletedArticles =
             new Permission("ViewDeletedArticles", "View deleted articles");
         
         public static readonly Permission DeleteOwnArticleComments =
-            new Permission("DeleteOwnArticleComments", "Delete own comments");
+            new Permission("DeleteOwnArticleComments", "Soft delete own comments");
 
         public static readonly Permission RestoreOwnArticleComments =
-            new Permission("RestoreOwnArticleComments", "Restore own comments");
-        
+            new Permission("RestoreOwnArticleComments", "Restore own soft deleted comments");
+
+        public static readonly Permission PermanentDeleteOwnArticleComments =
+            new Permission("PermanentDeleteOwnArticleComments", "Permanently delete own comments");
+
         public static readonly Permission DeleteAnyArticleComment =
-            new Permission("DeleteAnyArticleComment", "Delete any comment");
+            new Permission("DeleteAnyArticleComment", "Soft delete any comment");
 
         public static readonly Permission RestoreAnyArticleComment =
-            new Permission("RestoreAnyArticleComment", "Restore any comment");
-        
+            new Permission("RestoreAnyArticleComment", "Restore any soft deleted comment");
+
+        public static readonly Permission PermanentDeleteAnyArticleComment =
+            new Permission("PermanentDeleteAnyArticleComment", "Permanently delete any comment");
+
         public static readonly Permission ViewDeletedArticleComments =
             new Permission("ViewDeletedArticleComments", "View deleted comments");
         
@@ -123,13 +135,17 @@ namespace Plato.Articles
                 EditAnyArticleComment,
                 DeleteOwnArticles,
                 RestoreOwnArticles,
+                PermanentDeleteOwnArticles,
                 DeleteAnyArticle,
                 RestoreAnyArticle,
+                PermanentDeleteAnyArticle,
                 ViewDeletedArticles,
                 DeleteOwnArticleComments,
                 RestoreOwnArticleComments,
+                PermanentDeleteOwnArticleComments,
                 DeleteAnyArticleComment,
                 RestoreAnyArticleComment,
+                PermanentDeleteAnyArticleComment,
                 ViewDeletedArticleComments,
                 ReportArticles,
                 ReportArticleComments,
@@ -170,13 +186,17 @@ namespace Plato.Articles
                         EditAnyArticleComment,
                         DeleteOwnArticles,
                         RestoreOwnArticles,
+                        PermanentDeleteOwnArticles,
                         DeleteAnyArticle,
                         RestoreAnyArticle,
+                        PermanentDeleteAnyArticle,
                         ViewDeletedArticles,
                         DeleteOwnArticleComments,
                         RestoreOwnArticleComments,
+                        PermanentDeleteOwnArticleComments,
                         DeleteAnyArticleComment,
                         RestoreAnyArticleComment,
+                        PermanentDeleteAnyArticleComment,
                         ViewDeletedArticleComments,
                         ReportArticles,
                         ReportArticleComments,
@@ -222,9 +242,11 @@ namespace Plato.Articles
                         EditOwnArticleComment,
                         DeleteOwnArticles,
                         RestoreOwnArticles,
+                        PermanentDeleteOwnArticles,
                         ViewDeletedArticles,
                         DeleteOwnArticleComments,
                         RestoreOwnArticleComments,
+                        PermanentDeleteOwnArticleComments,
                         ViewDeletedArticleComments,
                         ReportArticles,
                         ReportArticleComments,
