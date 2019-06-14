@@ -1,0 +1,55 @@
+﻿@model CategoryBase
+@{
+    var dropdownId = "editChannel" + Model.Id;
+    var details = Model.GetOrCreate<CategoryDetails>();
+}
+
+<div class="dropdown float-right">
+    <a class="btn btn-secondary dropdown-toggle" href="#" id="@dropdownId" role="button" data-toggle="dropdown" aria-haspopup="true" data-display="static" aria-expanded="false">
+        @T["Edit"]
+    </a>
+    <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="@dropdownId">
+        <div class="min-w-200 max-h-250 overflow-auto">
+            <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Edit"]
+            </a>
+            <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Add Child"]
+            </a>
+            <div class="dropdown-divider"></div>
+            <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="MoveUp" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move Up"]
+            </a>
+            <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move Down"]
+            </a>
+            <div class="dropdown-divider"></div>
+            <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="MoveToTop" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move To Top"]
+            </a>
+            <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="MoveToBottom" asp-route-id="@Model.Id" class="dropdown-item">
+                @T["Move To Bottom"]
+            </a>
+            <div class="dropdown-divider"></div>
+            @if (details.Closed)
+            {
+                <button type="submit" asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="Open" asp-route-id="@Model.Id" class="dropdown-item">
+                    @T["Open Category"]
+                </button>
+            }
+            else
+            {
+                <button type="submit" asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="Close" asp-route-id="@Model.Id" class="dropdown-item cursor-pointer">
+                    @T["Close Category"]
+                </button>
+            }
+            <div class="dropdown-divider"></div>
+            <button type="submit" asp-route-area="Plato.Docs.Categories" asp-route-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id" data-provide="confirm" class="dropdown-item dropdown-item-danger cursor-pointer">
+                @T["Delete"]
+            </button>
+        </div>
+    </div>
+</div>
+
+
+                    

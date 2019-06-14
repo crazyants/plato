@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Docs.Navigation
+namespace Plato.Docs.Categories.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -21,10 +21,9 @@ namespace Plato.Docs.Navigation
             }
 
             builder
-                .Add(T["Docs"], 2, users => users
-                    .IconCss("fal fa-book-open")
-                    .Add(T["Overview"], int.MinValue, home => home
-                        .Action("Index", "Admin", "Plato.Docs")
+                .Add(T["Docs"], 2, docs => docs
+                    .Add(T["Categories"], 1, manage => manage
+                        .Action("Index", "Admin", "Plato.Docs.Categories")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));

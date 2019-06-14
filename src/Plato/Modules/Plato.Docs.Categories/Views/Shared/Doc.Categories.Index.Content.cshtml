@@ -1,0 +1,6 @@
+﻿@model CategoryIndexViewModel
+
+@await DisplayAsync(new View("DocCategoryList", new
+{
+    options = @Model.Options
+}))

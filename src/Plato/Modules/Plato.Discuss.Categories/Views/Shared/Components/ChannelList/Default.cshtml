@@ -4,10 +4,10 @@
 {
     if (Model.Categories != null)
     {
-        @foreach (var channel in Model.Categories)
+        @foreach (var category in Model.Categories)
          {
-             var details = channel.GetOrCreate<CategoryDetails>();
-             var cardHeaderCss = channel.Children.Any()
+             var details = category.GetOrCreate<CategoryDetails>();
+             var cardHeaderCss = category.Children.Any()
                  ? "card-header"
                  : "card-header border-bottom-0";
              <card class="card card-body-flush">
@@ -25,22 +25,22 @@
                          </li>
                      </ol>
                      <h6 class="card-title">
-                         <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@channel.Id" asp-route-opts.alias="@channel.Alias">
-                             @channel.Name
+                         <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@category.Id" asp-route-opts.alias="@category.Alias">
+                             @category.Name
                          </a>
                      </h6>
-                     @if (!String.IsNullOrEmpty(@channel.Description))
+                     @if (!String.IsNullOrEmpty(category.Description))
                      {
                          <span class="text-muted">
-                             @channel.Description
+                             @category.Description
                          </span>
                      }
                  </card-title>
                  <card-body>
-                     @if (channel.Children.Any())
+                     @if (category.Children.Any())
                      {
                          <ul class="list-group list-group-flush list-group-hover">
-                             @foreach (var child in channel.Children)
+                             @foreach (var child in category.Children)
                              {
                                  <li class="list-group-item list-group-item-action">
                                      @await DisplayAsync(new View("ChannelListItem", new
@@ -60,7 +60,7 @@
     {
         <card class="card card-body-flush">
             <card-title>
-                <h6 class="card-title">@T["Channels"]</h6>
+                <h6 class="card-title">@T["Categories"]</h6>
             </card-title>
             <card-body>
                 <ul class="list-group list-group-flush list-group-hover">
@@ -78,7 +78,7 @@ else
      {
          <card class="card card-body-flush">
              <card-title>
-                 <h6 class="card-title">@T["Child Channels"]</h6>
+                 <h6 class="card-title">@T["Child Categories"]</h6>
              </card-title>
              <card-body>
                  <ul class="list-group list-group-flush list-group-hover">

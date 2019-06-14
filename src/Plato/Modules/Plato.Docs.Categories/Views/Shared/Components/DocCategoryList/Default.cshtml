@@ -1,0 +1,56 @@
+﻿@model CategoryListViewModel<Category>
+
+@if (Model.Options.CategoryId == 0)
+{
+    if (Model.Categories != null)
+    {
+        <card class="card card-body-flush">
+            <card-title>
+                <h6 class="card-title d-inline-block">@T["Categories"]</h6>
+            </card-title>
+            <card-body>
+                <div class="list-group list-group-flush list-group-hover">
+                    <div class="row no-gutters">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <div class="float-left list-group-item list-group-item-action  col-lg-4 col-md-6 col-sm-12 border-0 p-0">
+                                @await DisplayAsync(new View("DocCategoryListItem", new
+                                {
+                                    category = category,
+                                    options = Model.Options
+                                }))
+                            </div>
+                        }
+                    </div>
+                </div>
+            </card-body>
+        </card>
+    }
+}
+else
+{
+    if (Model.Categories.Any())
+    {
+        <card class="card card-body-flush">
+            <card-title>
+                <h6 class="card-title">@T["Child Categories"]</h6>
+            </card-title>
+            <card-body>
+                <div class="list-group list-group-flush list-group-hover">
+                    <div class="row no-gutters">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 p-0">
+                                @await DisplayAsync(new View("DocCategoryListItem", new
+                                {
+                                    category = category,
+                                    options = Model.Options
+                                }))
+                            </div>
+                        }
+                    </div>
+                </div>
+            </card-body>
+        </card>
+    }
+}
