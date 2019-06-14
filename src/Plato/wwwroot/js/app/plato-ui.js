@@ -3988,7 +3988,7 @@ $(function (win, doc, $) {
 
         var defaults = {
             event: "click", // unique namespace
-            message: "Are you sure you wish to delete this item?\n\nClick OK to confirm..."
+            message: "Are you sure you wish to permanently delete this item?\n\nThis operation cannot be undone.\n\nClick OK to confirm..."
         };
 
         var methods = {

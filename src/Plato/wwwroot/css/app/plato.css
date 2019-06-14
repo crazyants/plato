@@ -1023,6 +1023,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .layout-header .alert {
     position: fixed;
     left: 50%;
+    z-index: 999;
     margin-top: -6px;
     visibility: hidden;
     opacity: 0;

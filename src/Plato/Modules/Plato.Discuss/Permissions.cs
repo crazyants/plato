@@ -25,34 +25,46 @@ namespace Plato.Discuss
             new Permission("EditAnyReply", "Edit any reply");
         
         public static readonly Permission DeleteOwnTopics = 
-            new Permission("DeleteOwnTopics", "Delete own topics");
+            new Permission("DeleteOwnTopics", "Soft delete own topics");
 
         public static readonly Permission RestoreOwnTopics =
-            new Permission("RestoreOwnTopics", "Restore own topics");
-        
+            new Permission("RestoreOwnTopics", "Restore own soft deleted topics");
+
+        public static readonly Permission PermanentDeleteOwnTopics =
+            new Permission("PermanentDeleteOwnTopics", "Permanently delete own topics");
+
         public static readonly Permission DeleteAnyTopic =
-            new Permission("DeleteAnyTopic", "Delete any topic");
+            new Permission("DeleteAnyTopic", "Soft delete any topic");
 
         public static readonly Permission RestoreAnyTopic =
-            new Permission("RestoreAnyTopic", "Restore any topic");
-        
+            new Permission("RestoreAnyTopic", "Restore any soft deleted topic");
+
+        public static readonly Permission PermanentDeleteAnyTopic =
+            new Permission("PermanentDeleteAnyTopic", "Permanently delete any topic");
+
         public static readonly Permission ViewDeletedTopics =
-            new Permission("ViewDeletedTopics", "View deleted topics");
+            new Permission("ViewDeletedTopics", "View soft deleted topics");
 
         public static readonly Permission DeleteOwnReplies =
-            new Permission("DeleteOwnReplies", "Delete own replies");
+            new Permission("DeleteOwnReplies", "Soft delete own replies");
 
         public static readonly Permission RestoreOwnReplies =
-            new Permission("RestoreOwnReplies", "Restore own replies");
-        
+            new Permission("RestoreOwnReplies", "Restore own soft deleted replies");
+
+        public static readonly Permission PermanentDeleteOwnReplies =
+            new Permission("PermanentDeleteOwnReplies", "Permanently delete own replies");
+
         public static readonly Permission DeleteAnyReply =
-            new Permission("DeleteAnyReply", "Delete any reply");
-        
-        public static readonly Permission ViewDeletedReplies =
-            new Permission("ViewDeletedReplies", "View deleted replies");
+            new Permission("DeleteAnyReply", "Soft delete any reply");
         
         public static readonly Permission RestoreAnyReply =
-            new Permission("RestoreAnyReply", "Restore any reply");
+            new Permission("RestoreAnyReply", "Restore any soft deleted reply");
+
+        public static readonly Permission ViewDeletedReplies =
+            new Permission("ViewDeletedReplies", "View soft deleted replies");
+
+        public static readonly Permission PermanentDeleteAnyReply =
+            new Permission("PermanentDeleteAnyReply", "Permanently delete any reply");
 
         public static readonly Permission ReportTopics =
             new Permission("ReportTopics", "Report topics");
@@ -123,13 +135,17 @@ namespace Plato.Discuss
                 EditAnyReply,
                 DeleteOwnTopics,
                 RestoreOwnTopics,
+                PermanentDeleteOwnTopics,
                 DeleteAnyTopic,
                 RestoreAnyTopic,
+                PermanentDeleteAnyTopic,
                 ViewDeletedTopics,
                 DeleteOwnReplies,
                 RestoreOwnReplies,
+                PermanentDeleteOwnReplies,
                 DeleteAnyReply,
                 RestoreAnyReply,
+                PermanentDeleteAnyReply,
                 ViewDeletedReplies,
                 ReportTopics,
                 ReportReplies,
@@ -170,12 +186,16 @@ namespace Plato.Discuss
                         EditAnyReply,
                         DeleteOwnTopics,
                         RestoreOwnTopics,
+                        PermanentDeleteOwnTopics,
                         DeleteAnyTopic,
                         RestoreAnyTopic,
+                        PermanentDeleteAnyTopic,
                         DeleteOwnReplies,
                         RestoreOwnReplies,
+                        PermanentDeleteOwnReplies,
                         DeleteAnyReply,
                         RestoreAnyReply,
+                        PermanentDeleteAnyReply,
                         ReportTopics,
                         ReportReplies,
                         ViewHiddenTopics,
@@ -225,8 +245,10 @@ namespace Plato.Discuss
                         EditOwnReplies,
                         DeleteOwnTopics,
                         RestoreOwnTopics,
+                        PermanentDeleteOwnTopics,
                         DeleteOwnReplies,
                         RestoreOwnReplies,
+                        PermanentDeleteOwnReplies,
                         ReportTopics,
                         ReportReplies,
                         ViewHiddenTopics,

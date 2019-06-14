@@ -1454,7 +1454,7 @@ namespace Plato.Discuss.Controllers
             var result = await _topicManager.UpdateAsync(entity);
             if (result.Succeeded)
             {
-                _alerter.Success(T["Topic deleted successfully"]);
+                _alerter.Success(T["Topic Deleted Successfully"]);
             }
             else
             {
@@ -1472,7 +1472,7 @@ namespace Plato.Discuss.Controllers
             }));
 
         }
-
+ 
         public async Task<IActionResult> Restore(string id)
         {
 
@@ -1538,10 +1538,69 @@ namespace Plato.Discuss.Controllers
 
         }
 
+        public async Task<IActionResult> PermanentDelete(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var entityId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(entityId);
+
+            // Ensure the entity exists
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == entity.CreatedUserId
+                    ? Permissions.PermanentDeleteOwnTopics
+                    : Permissions.PermanentDeleteAnyTopic))
+            {
+                return Unauthorized();
+            }
+
+            // Delete entity
+            var result = await _topicManager.DeleteAsync(entity);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Topic Permanently Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not permanently delete the topic"]);
+            }
+
+            // Redirect back to index
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Index"
+            }));
+
+        }
+
+
         // -----------------
         // Entity Reply Helpers
         // -----------------
-        
+
         public async Task<IActionResult> HideReply(string id)
         {
 
@@ -1863,7 +1922,7 @@ namespace Plato.Discuss.Controllers
             }));
 
         }
-
+        
         public async Task<IActionResult> RestoreReply(string id)
         {
 
@@ -1934,7 +1993,72 @@ namespace Plato.Discuss.Controllers
             }));
 
         }
-        
+
+        public async Task<IActionResult> PermanentDeleteReply(string id)
+        {
+
+            // Ensure we have a valid id
+            var ok = int.TryParse(id, out var replyId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Ensure we are authenticated
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Ensure the reply exists
+            var reply = await _entityReplyStore.GetByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the entity exists
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                user.Id == reply.CreatedUserId
+                    ? Permissions.PermanentDeleteOwnReplies
+                    : Permissions.PermanentDeleteAnyReply))
+            {
+                return Unauthorized();
+            }
+
+            // Delete reply
+            var result = await _replyManager.DeleteAsync(reply);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Reply Permanently Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not permanently delete the reply"]);
+            }
+
+            // Redirect back to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Display",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias
+            }));
+
+        }
+
         #endregion
 
         #region "Private Methods"

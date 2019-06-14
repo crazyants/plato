@@ -39,6 +39,7 @@ namespace Plato.Discuss.Navigation
                 );
 
         }
+
     }
 
 }

@@ -155,7 +155,36 @@ namespace Plato.Discuss.Navigation
                         )
                     , new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
+            
+            // If the entity if deleted display permanent delete option
+            if (entity.IsDeleted)
+            {
 
+                // Permanent delete permissions
+                var permanentDeletePermission = entity.CreatedUserId == user?.Id
+                    ? Permissions.PermanentDeleteOwnTopics
+                    : Permissions.PermanentDeleteAnyTopic;
+
+                builder
+                    .Add(T["Delete"], int.MinValue, options => options
+                            .IconCss("fal fa-trash-alt")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-toggle", "tooltip"},
+                                {"data-provide", "confirm"},
+                                {"title", T["Permanent Delete"]},
+                            })
+                            .Action("PermanentDelete", "Home", "Plato.Discuss",
+                                new RouteValueDictionary()
+                                {
+                                    ["id"] = entity.Id.ToString(),
+                                })
+                            .Permission(permanentDeletePermission)
+                            .LocalNav()
+                        , new List<string>() { "topic-permanent-delete", "text-muted", "text-hidden" }
+                    );
+            }
+            
             // If entity is not hidden or locked allow replies
             if (!entity.IsHidden() && !entity.IsLocked)
             {

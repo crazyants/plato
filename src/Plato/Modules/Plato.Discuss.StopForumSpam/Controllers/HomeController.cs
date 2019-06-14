@@ -155,6 +155,13 @@ namespace Plato.Discuss.StopForumSpam.Controllers
                 return Unauthorized();
             }
 
+            // Empty options
+            if (opts == null)
+            {
+                opts = new EntityOptions();
+            }
+
+            // Validate
             if (opts.Id <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(opts.Id));
