@@ -25,34 +25,46 @@ namespace Plato.Ideas
             new Permission("EditAnyIdeaComment", "Edit any idea comment");
         
         public static readonly Permission DeleteOwnIdeas = 
-            new Permission("DeleteOwnIdeas", "Delete own ideas");
+            new Permission("DeleteOwnIdeas", "Soft delete own ideas");
 
         public static readonly Permission RestoreOwnIdeas =
-            new Permission("RestoreOwnIdeas", "Restore own ideas");
+            new Permission("RestoreOwnIdeas", "Restore own soft deleted ideas");
+
+        public static readonly Permission PermanentDeleteOwnIdeas =
+            new Permission("PermanentDeleteOwnIdeas", "Permanently delete own ideas");
         
         public static readonly Permission DeleteAnyIdea =
-            new Permission("DeleteAnyIdea", "Delete any idea");
+            new Permission("DeleteAnyIdea", "Soft delete any idea");
 
         public static readonly Permission RestoreAnyIdea =
-            new Permission("RestoreAnyIdea", "Restore any idea");
+            new Permission("RestoreAnyIdea", "Restore any soft deleted idea");
 
+        public static readonly Permission PermanentDeleteAnyIdea =
+            new Permission("PermanentDeleteAnyIdea", "Permanently delete any idea");
+        
         public static readonly Permission ViewDeletedIdeas =
-            new Permission("ViewDeletedIdeas", "View deleted ideas");
+            new Permission("ViewDeletedIdeas", "View soft deleted ideas");
         
         public static readonly Permission DeleteOwnIdeaComments =
-            new Permission("DeleteOwnIdeaComments", "Delete own idea comments");
+            new Permission("DeleteOwnIdeaComments", "Soft delete own comments");
 
         public static readonly Permission RestoreOwnIdeaComments =
-            new Permission("RestoreOwnIdeaComments", "Restore own idea comments");
+            new Permission("RestoreOwnIdeaComments", "Restore own soft deleted comments");
+
+        public static readonly Permission PermanentDeleteOwnIdeaComments =
+            new Permission("PermanentDeleteOwnIdeaComments", "Permanently delete own comments");
         
         public static readonly Permission DeleteAnyIdeaComment =
-            new Permission("DeleteAnyIdeaComment", "Delete any idea comment");
+            new Permission("DeleteAnyIdeaComment", "Soft delete any comment");
 
         public static readonly Permission RestoreAnyIdeaComment =
-            new Permission("RestoreAnyIdeaComment", "Restore any idea comment");
+            new Permission("RestoreAnyIdeaComment", "Restore any soft deleted comment");
+
+        public static readonly Permission PermanentDeleteAnyIdeaComment =
+            new Permission("PermanentDeleteAnyIdeaComment", "Permanently delete any comment");
 
         public static readonly Permission ViewDeletedIdeaComment =
-            new Permission("ViewDeletedIdeaComment", "View deleted idea comments");
+            new Permission("ViewDeletedIdeaComment", "View soft deleted comments");
 
         public static readonly Permission ReportIdeas =
             new Permission("ReportIdeas", "Report ideas");
@@ -123,13 +135,17 @@ namespace Plato.Ideas
                 EditAnyIdeaComment,
                 DeleteOwnIdeas,
                 RestoreOwnIdeas,
+                PermanentDeleteOwnIdeas,
                 DeleteAnyIdea,
                 RestoreAnyIdea,
+                PermanentDeleteAnyIdea,
                 ViewDeletedIdeas,
                 DeleteOwnIdeaComments,
                 RestoreOwnIdeaComments,
+                PermanentDeleteOwnIdeaComments,
                 DeleteAnyIdeaComment,
                 RestoreAnyIdeaComment,
+                PermanentDeleteAnyIdeaComment,
                 ViewDeletedIdeaComment,
                 ReportIdeas,
                 ReportIdeaComments,
@@ -170,13 +186,17 @@ namespace Plato.Ideas
                         EditAnyIdeaComment,
                         DeleteOwnIdeas,
                         RestoreOwnIdeas,
+                        PermanentDeleteOwnIdeas,
                         DeleteAnyIdea,
                         RestoreAnyIdea,
+                        PermanentDeleteAnyIdea,
                         ViewDeletedIdeas,
                         DeleteOwnIdeaComments,
                         RestoreOwnIdeaComments,
+                        PermanentDeleteOwnIdeaComments,
                         DeleteAnyIdeaComment,
                         RestoreAnyIdeaComment,
+                        PermanentDeleteAnyIdeaComment,
                         ViewDeletedIdeaComment,
                         ReportIdeas,
                         ReportIdeaComments,
@@ -227,13 +247,17 @@ namespace Plato.Ideas
                         EditAnyIdeaComment,
                         DeleteOwnIdeas,
                         RestoreOwnIdeas,
+                        PermanentDeleteOwnIdeas,
                         DeleteAnyIdea,
                         RestoreAnyIdea,
+                        PermanentDeleteAnyIdea,
                         ViewDeletedIdeas,
                         DeleteOwnIdeaComments,
                         RestoreOwnIdeaComments,
+                        PermanentDeleteOwnIdeaComments,
                         DeleteAnyIdeaComment,
                         RestoreAnyIdeaComment,
+                        PermanentDeleteAnyIdeaComment,
                         ViewDeletedIdeaComment,
                         ReportIdeas,
                         ReportIdeaComments,

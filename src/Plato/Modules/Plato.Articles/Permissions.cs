@@ -43,7 +43,7 @@ namespace Plato.Articles
             new Permission("PermanentDeleteAnyArticle", "Permanently delete any article");
 
         public static readonly Permission ViewDeletedArticles =
-            new Permission("ViewDeletedArticles", "View deleted articles");
+            new Permission("ViewDeletedArticles", "View soft deleted articles");
         
         public static readonly Permission DeleteOwnArticleComments =
             new Permission("DeleteOwnArticleComments", "Soft delete own comments");
@@ -64,7 +64,7 @@ namespace Plato.Articles
             new Permission("PermanentDeleteAnyArticleComment", "Permanently delete any comment");
 
         public static readonly Permission ViewDeletedArticleComments =
-            new Permission("ViewDeletedArticleComments", "View deleted comments");
+            new Permission("ViewDeletedArticleComments", "View soft deleted comments");
         
         public static readonly Permission ReportArticles =
             new Permission("ReportArticles", "Report articles");

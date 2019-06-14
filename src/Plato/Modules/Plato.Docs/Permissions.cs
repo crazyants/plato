@@ -49,7 +49,7 @@ namespace Plato.Docs
             new Permission("PermanentDeleteAnyDoc", "Permanently delete any doc");
 
         public static readonly Permission ViewDeletedDocs =
-            new Permission("ViewDeletedDocs", "View deleted docs");
+            new Permission("ViewDeletedDocs", "View soft deleted docs");
         
         public static readonly Permission DeleteOwnDocComments =
             new Permission("DeleteOwnDocComments", "Soft delete own comments");
@@ -70,7 +70,7 @@ namespace Plato.Docs
             new Permission("PermanentDeleteAnyDocComment", "Permanently delete any comment");
 
         public static readonly Permission ViewDeletedDocComments =
-            new Permission("ViewDeletedDocComments", "View deleted comments");
+            new Permission("ViewDeletedDocComments", "View soft deleted comments");
 
         public static readonly Permission ReportDocs =
             new Permission("ReportDocs", "Report docs");
