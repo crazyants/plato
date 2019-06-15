@@ -126,7 +126,8 @@ namespace Plato.Docs.ViewProviders
             {
                 Options = new EntityIndexOptions()
                 {
-                    FeatureId = feature.Id
+                    FeatureId = feature.Id,
+                    CategoryId = doc.CategoryId
                 },
                 HtmlName = ParentHtmlName,
                 SelectedEntity = doc?.ParentId ?? 0

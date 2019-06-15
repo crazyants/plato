@@ -5334,6 +5334,7 @@ $(function (win, doc, $) {
                 // Layout elements
                 var $header = $caller.find(".layout-header-sticky"),
                     $sidebar = $caller.find(".layout-sidebar-sticky"),
+                    $sidebarContent = $sidebar.find(".layout-sidebar-content"),
                     $content = $caller.find(".layout-content"),
                     $footer = $caller.find(".layout-footer");
 
@@ -5382,45 +5383,61 @@ $(function (win, doc, $) {
                 if (stickySidebars) {
 
                     // top offset for sticky sidebars
-                    var offsetTop = stickyHeaders === true
+                    var sidebarOffsetTop = stickyHeaders === true
                         ? $header.outerHeight()
                         : 0;
 
                     // Important: If fixed sidebars are enabled ensure we always
-                    // set the content minimum height to the window height, this accomodates
+                    // set the content minimum height to the window height, this accomodate
                     // for the content being smaller than the sidebar
-                    $content.css({ "minHeight": $(win).height() - offsetTop });
-
+                    if ($content.length > 0) {
+                        var heightMinusOffset = $(win).height() - sidebarOffsetTop;
+                        if ($sidebar.height() > heightMinusOffset) {
+                            $content.css({ "minHeight": heightMinusOffset });
+                        }                        
+                    }
+                    
                     // Apply sticky to sidebars
                     $sidebar.sticky({
-                        offset: offsetTop,
+                        offset: sidebarOffsetTop,
                         onScroll: function ($el) {
+
                             var winHeight = $(win).height(),
                                 footerTop = Math.floor($footer.offset().top),
                                 scrollTop = Math.floor($(win).scrollTop() + winHeight);
-                            if (scrollTop > footerTop && footerTop > winHeight) {
-                                $el.find(".layout-sidebar-content").css({
+
+                            if (scrollTop > footerTop) {
+                                $sidebarContent.css({
                                     "bottom": scrollTop - footerTop
                                 });
                             } else {
-                                $el.find(".layout-sidebar-content").css({
+                                $sidebarContent.css({
                                     "bottom": 0
                                 });
                             }
+
                         },
-                        onUpdate: function($el) {
+                        onUpdate: function ($el) {
                             if ($el.hasClass("fixed")) {
-                                $el.find(".layout-sidebar-content").css({
-                                    "top": offsetTop,
+                                $sidebarContent.css({
+                                    "overflow": "auto",
+                                    "top": sidebarOffsetTop,
                                     "width": $sidebar.width()
                                 });
+                                if (!$sidebarContent.hasClass("overflow-auto")) {
+                                    $sidebarContent.addClass("overflow-auto");
+                                }
                             } else {
-                                
-                                $el.find(".layout-sidebar-content").css({
+                                $sidebarContent.css({
+                                    "overflow": "visible",
                                     "top": "auto",
                                     "width": "auto"
                                 });
+                                if ($sidebarContent.hasClass("overflow-auto")) {
+                                    $sidebarContent.removeClass("overflow-auto");
+                                }
                             }
+
                         }
                     });
                 }

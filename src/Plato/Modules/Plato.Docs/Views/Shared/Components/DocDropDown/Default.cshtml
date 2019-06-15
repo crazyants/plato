@@ -30,6 +30,7 @@
                 {
                     options = new EntityTreeOptions()
                     {
+                        IndexOptions = Model.Options,
                         SelectedEntity = Model.SelectedEntity,
                         HtmlName = Model.HtmlName,
                         EnableCheckBoxes = true,
@@ -56,7 +57,7 @@
     }
     @if (selectedEntities.Count > 0)
     {
-        <ul data-empty-preview-text="@T["No channels selected."]" class="list-group list-group-flush select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No parent selected."]" class="list-group list-group-flush select-dropdown-preview">
             @foreach (var channel in selectedEntities)
             {
                 <li class="list-group-item">
