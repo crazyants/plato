@@ -518,7 +518,7 @@ $(function (win, doc, $) {
                 methods.update($caller);
 
                 // Invoke onScroll and onUpdate upon load to position correctly
-              
+
                 if ($caller.data(dataKey).onScroll) {
                     $caller.data(dataKey).onScroll($caller, $(win));
                 }
@@ -5334,11 +5334,15 @@ $(function (win, doc, $) {
                 // Layout elements
                 var $header = $caller.find(".layout-header-sticky"),
                     $sidebar = $caller.find(".layout-sidebar-sticky"),
+                    $content = $caller.find(".layout-content"),
                     $footer = $caller.find(".layout-footer");
 
                 // Layout options
                 var stickyHeaders = $caller.data(dataKey).stickyHeaders,
                     stickySidebars = $caller.data(dataKey).stickySidebars;
+
+                if ($header.length === 0) { stickyHeaders = false; }
+                if ($sidebar.length === 0) { stickySidebars = false; }
 
                 // Apply sticky headers?
                 if (stickyHeaders) {
@@ -5373,37 +5377,46 @@ $(function (win, doc, $) {
                     });
 
                 }
-
+                
                 // Apply sticky sidebar?
                 if (stickySidebars) {
 
+                    // top offset for sticky sidebars
+                    var offsetTop = stickyHeaders === true
+                        ? $header.outerHeight()
+                        : 0;
+
+                    // Important: If fixed sidebars are enabled ensure we always
+                    // set the content minimum height to the window height, this accomodates
+                    // for the content being smaller than the sidebar
+                    $content.css({ "minHeight": $(win).height() });
+
                     // Apply sticky to sidebars
                     $sidebar.sticky({
-                        offset: stickyHeaders === true
-                            ? $header.outerHeight()
-                            : 0,
-                        onScroll: function ($sideBar, e, $win) {
-                            var footerTop = Math.floor($footer.offset().top),
-                                scrollTop = Math.floor($(win).scrollTop() + $(win).height());
-                            if (scrollTop > footerTop) {
-                                $sideBar.find(".layout-sidebar-content").css({
+                        offset: offsetTop,
+                        onScroll: function ($el) {
+                            var winHeight = $(win).height(),
+                                footerTop = Math.floor($footer.offset().top),
+                                scrollTop = Math.floor($(win).scrollTop() + winHeight);
+                            if (scrollTop > footerTop && footerTop > winHeight) {
+                                $el.find(".layout-sidebar-content").css({
                                     "bottom": scrollTop - footerTop
                                 });
                             } else {
-                                $sideBar.find(".layout-sidebar-content").css({
+                                $el.find(".layout-sidebar-content").css({
                                     "bottom": 0
                                 });
                             }
                         },
-                        onUpdate: function ($sideBar) {
-                            if ($sideBar.hasClass("fixed")) {
-
-                                $sideBar.find(".layout-sidebar-content").css({
-                                    "top": $header.outerHeight(),
+                        onUpdate: function($el) {
+                            if ($el.hasClass("fixed")) {
+                                $el.find(".layout-sidebar-content").css({
+                                    "top": offsetTop,
                                     "width": $sidebar.width()
                                 });
                             } else {
-                                $sideBar.find(".layout-sidebar-content").css({
+                                
+                                $el.find(".layout-sidebar-content").css({
                                     "top": "auto",
                                     "width": "auto"
                                 });
@@ -5414,7 +5427,6 @@ $(function (win, doc, $) {
 
             },
             unbind: function ($caller) {
-              
             }
         };
 
