@@ -363,8 +363,7 @@ namespace Plato.Discuss.Categories.ViewProviders
             return await BuildEditAsync(topic, context);
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"

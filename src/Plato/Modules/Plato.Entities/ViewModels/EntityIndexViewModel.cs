@@ -43,7 +43,7 @@ namespace Plato.Entities.ViewModels
         public OrderBy Order { get; set; } = OrderBy.Desc;
 
         [DataMember(Name = "category")]
-        public int CategoryId { get; set; }
+        public int CategoryId { get; set; } = -1;
 
         // ---------------
 

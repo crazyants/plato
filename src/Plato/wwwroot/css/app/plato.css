@@ -1001,8 +1001,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     white-space: nowrap;
 }
 
-.layout-sidebar { background: red; }
-
 /* make table of contents sticky on larger screens */
 @media (min-width: 992px) {
     

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Docs.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +20,8 @@ namespace Plato.Docs.ViewComponents
    public class DocTreeViewComponent : ViewComponent
     {
 
-        private readonly IEntityService<Doc> _entityService;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IEntityService<Doc> _entityService;
         private readonly IFeatureFacade _featureFacade;
 
         public DocTreeViewComponent(
@@ -36,8 +37,13 @@ namespace Plato.Docs.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(EntityTreeOptions options)
         {
 
+            if (options == null)
+            {
+                options = new EntityTreeOptions();;
+            }
+            
             // Get entities
-            var entities = await GetEntities();
+            var entities = await GetEntities(options.IndexOptions);
 
             // Add entities to view model
             options.Entities = entities?.Data?.BuildHierarchy<Doc>()?.OrderBy(r => r.SortOrder);
@@ -59,21 +65,32 @@ namespace Plato.Docs.ViewComponents
 
         }
 
-        private async Task<IPagedResults<Doc>> GetEntities()
+        private async Task<IPagedResults<Doc>> GetEntities(EntityIndexOptions options)
         {
 
+            // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
+
+            // Ensure we found the feature
             if (feature == null)
             {
                 throw new Exception("The feature Plato.Docs could not be found");
             }
 
-            var indexOptions = new EntityIndexOptions()
+            if (options.FeatureId <= 0)
             {
-                FeatureId = feature.Id,
-                Sort = SortBy.SortOrder,
-                Order = OrderBy.Asc
-            };
+                options.FeatureId = feature.Id;
+            }
+
+            options.Sort = SortBy.SortOrder;
+            options.Order = OrderBy.Asc;
+
+            //var indexOptions = new EntityIndexOptions()
+            //{
+            //    FeatureId = feature.Id,
+            //    Sort = SortBy.SortOrder,
+            //    Order = OrderBy.Asc
+            //};
 
             // Get results
             return await _entityService
@@ -107,9 +124,9 @@ namespace Plato.Docs.ViewComponents
                     {
                         q.HideDeleted.True();
                     }
-
+                    
                 })
-                .GetResultsAsync(indexOptions, new PagerOptions()
+                .GetResultsAsync(options, new PagerOptions()
                 {
                     Page = 1,
                     Size = int.MaxValue

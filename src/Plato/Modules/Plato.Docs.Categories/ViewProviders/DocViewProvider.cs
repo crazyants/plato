@@ -77,7 +77,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Doc viewModel, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Doc doc, IViewProviderContext updater)
         {
 
             // Ensure we explicitly set the featureId
@@ -102,14 +102,14 @@ namespace Plato.Docs.Categories.ViewProviders
             
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Doc topic, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Doc doc, IViewProviderContext updater)
         {
 
             // Override breadcrumb configuration within base controller 
             IEnumerable<CategoryAdmin> parents = null;
-            if (topic.CategoryId > 0)
+            if (doc.CategoryId > 0)
             {
-                parents = await _categoryStore.GetParentsByIdAsync(topic.CategoryId);
+                parents = await _categoryStore.GetParentsByIdAsync(doc.CategoryId);
             }
 
             _breadCrumbManager.Configure(builder =>
@@ -146,7 +146,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     }
                 }
 
-                builder.Add(S[topic.Title]);
+                builder.Add(S[doc.Title]);
 
             });
 
@@ -155,7 +155,7 @@ namespace Plato.Docs.Categories.ViewProviders
             
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(Doc entity, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Doc doc, IViewProviderContext updater)
         {
 
             // Get feature
@@ -169,9 +169,9 @@ namespace Plato.Docs.Categories.ViewProviders
             
             // Override breadcrumb configuration within base controller 
             IEnumerable<CategoryAdmin> parents = null;
-            if (entity.CategoryId > 0)
+            if (doc.CategoryId > 0)
             {
-                parents = await _categoryStore.GetParentsByIdAsync(entity.CategoryId);
+                parents = await _categoryStore.GetParentsByIdAsync(doc.CategoryId);
             }
             _breadCrumbManager.Configure(builder =>
             {
@@ -208,19 +208,19 @@ namespace Plato.Docs.Categories.ViewProviders
                 }
 
                 // Ensure we have a topic title
-                if (!String.IsNullOrEmpty(entity.Title))
+                if (!String.IsNullOrEmpty(doc.Title))
                 {
-                    builder.Add(S[entity.Title], t => t
+                    builder.Add(S[doc.Title], t => t
                         .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary
                         {
-                            ["opts.id"] = entity.Id,
-                            ["opts.alias"] = entity.Alias,
+                            ["opts.id"] = doc.Id,
+                            ["opts.alias"] = doc.Alias,
                         })
                         .LocalNav()
                     );
                 }
            
-                builder.Add(S[entity.Id > 0 ? "Edit Topic" : "New Topic"]);
+                builder.Add(S[doc.Id > 0 ? "Edit Doc" : "New Doc"]);
 
             });
             
@@ -231,7 +231,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     FeatureId = feature.Id
                 },
                 HtmlName = CategoryHtmlName,
-                SelectedCategories = await GetCategoryIdsByEntityIdAsync(entity)
+                SelectedCategories = await GetCategoryIdsByEntityIdAsync(doc)
             };
 
             return Views(
@@ -240,7 +240,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
         }
         
-        public override async Task<bool> ValidateModelAsync(Doc topic, IUpdateModel updater)
+        public override async Task<bool> ValidateModelAsync(Doc doc, IUpdateModel updater)
         {
             return await updater.TryUpdateModelAsync(new CategoryInputViewModel
             {
@@ -249,7 +249,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Doc topic, IUpdateModel updater)
+        public override async Task ComposeTypeAsync(Doc doc, IUpdateModel updater)
         {
 
             var model = new CategoryInputViewModel
@@ -268,7 +268,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     {
                         if (categoryId > 0)
                         {
-                            topic.CategoryId = categoryId;
+                            doc.CategoryId = categoryId;
                         }
                     }
                 }
@@ -276,18 +276,18 @@ namespace Plato.Docs.Categories.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Doc topic, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Doc doc, IViewProviderContext context)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(doc.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(topic, context);
+                return await BuildIndexAsync(doc, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(topic, context.Updater))
+            if (await ValidateModelAsync(doc, context.Updater))
             {
                
                 // Get selected categories
@@ -297,7 +297,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     
                     // Build categories to remove
                     var categoriesToRemove = new List<int>();
-                    foreach (var categoryId in await GetCategoryIdsByEntityIdAsync(topic))
+                    foreach (var categoryId in await GetCategoryIdsByEntityIdAsync(doc))
                     {
                         if (!categoriesToAdd.Contains(categoryId))
                         {
@@ -308,7 +308,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     // Remove categories
                     foreach (var categoryId in categoriesToRemove)
                     {
-                        var entityCategory = await _entityCategoryStore.GetByEntityIdAndCategoryIdAsync(topic.Id, categoryId);
+                        var entityCategory = await _entityCategoryStore.GetByEntityIdAndCategoryIdAsync(doc.Id, categoryId);
                         if (entityCategory != null)
                         {
                             await _entityCategoryManager.DeleteAsync(entityCategory);
@@ -322,13 +322,13 @@ namespace Plato.Docs.Categories.ViewProviders
                     foreach (var categoryId in categoriesToAdd)
                     {
                         // Ensure relationship does not already exist
-                        var entityCategory = await _entityCategoryStore.GetByEntityIdAndCategoryIdAsync(topic.Id, categoryId);
+                        var entityCategory = await _entityCategoryStore.GetByEntityIdAndCategoryIdAsync(doc.Id, categoryId);
                         if (entityCategory == null)
                         {
                             // Add relationship
                             await _entityCategoryManager.CreateAsync(new EntityCategory()
                             {
-                                EntityId = topic.Id,
+                                EntityId = doc.Id,
                                 CategoryId = categoryId,
                                 CreatedUserId = user?.Id ?? 0,
                                 ModifiedUserId = user?.Id ?? 0,
@@ -339,8 +339,8 @@ namespace Plato.Docs.Categories.ViewProviders
                     // Update entity with first found category 
                     foreach (var id in categoriesToAdd)
                     {
-                        topic.CategoryId = id;
-                        await _entityStore.UpdateAsync(topic);
+                        doc.CategoryId = id;
+                        await _entityStore.UpdateAsync(doc);
                         break;
                     }
                     
@@ -360,11 +360,10 @@ namespace Plato.Docs.Categories.ViewProviders
 
             }
            
-            return await BuildEditAsync(topic, context);
+            return await BuildEditAsync(doc, context);
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
@@ -399,12 +398,12 @@ namespace Plato.Docs.Categories.ViewProviders
         async Task<IEnumerable<int>> GetCategoryIdsByEntityIdAsync(Doc entity)
         {
 
-            // When creating a new topic use the categoryId set on the topic
+            // When creating a new entity use the categoryId set on the entity
             if (entity.Id == 0)
             {
                 if (entity.CategoryId > 0)
                 {
-                    // return empty collection for new topics
+                    // return empty collection for new entities
                     return new List<int>()
                     {
                         entity.CategoryId

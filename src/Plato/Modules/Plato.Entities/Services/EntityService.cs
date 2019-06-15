@@ -112,7 +112,7 @@ namespace Plato.Entities.Services
                     if (!string.IsNullOrEmpty(options.Search))
                         q.Keywords.Like(options.Search);
 
-                    if (options.CategoryId > 0)
+                    if (options.CategoryId >= 0)
                         q.CategoryId.Equals(options.CategoryId);
 
                     if (options.CategoryIds != null)

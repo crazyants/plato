@@ -5389,7 +5389,7 @@ $(function (win, doc, $) {
                     // Important: If fixed sidebars are enabled ensure we always
                     // set the content minimum height to the window height, this accomodates
                     // for the content being smaller than the sidebar
-                    $content.css({ "minHeight": $(win).height() });
+                    $content.css({ "minHeight": $(win).height() - offsetTop });
 
                     // Apply sticky to sidebars
                     $sidebar.sticky({

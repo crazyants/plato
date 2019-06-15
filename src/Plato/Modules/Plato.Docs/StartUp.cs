@@ -187,7 +187,7 @@ namespace Plato.Docs
             routes.MapAreaRoute(
                 name: "DocsNew",
                 areaName: "Plato.Docs",
-                template: "docs/new/{parentId:int?}",
+                template: "docs/new/{categoryId:int?}/{parentId:int?}",
                 defaults: new { controller = "Home", action = "Create" }
             );
 

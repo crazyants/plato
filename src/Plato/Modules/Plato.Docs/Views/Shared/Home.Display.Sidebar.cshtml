@@ -21,6 +21,11 @@
         {
             SelectedEntity = Model.Id,
             EditMenuViewName = "DocTreeMenu",
+            IndexOptions = new EntityIndexOptions()
+            {
+                FeatureId = Model.FeatureId,
+                CategoryId = Model.CategoryId
+            },
             RouteValues = new RouteValueDictionary()
             {
                 ["area"] = "Plato.Docs",

@@ -1,4 +1,5 @@
-﻿@model Plato.Entities.ViewModels.EntityIndexViewModel<Doc>
+﻿@using Plato.Entities.ViewModels
+@model Plato.Entities.ViewModels.EntityIndexViewModel<Doc>
 @{
     var postPermission = Permissions.PostDocs;
 }
@@ -14,16 +15,17 @@
     </div>
 
     @await DisplayAsync(new View("DocTree", new
+{
+    options = new EntityTreeOptions()
     {
-        options = new EntityTreeOptions()
+        EditMenuViewName = "DocTreeMenu",
+        IndexOptions = Model.Options,
+        RouteValues = new RouteValueDictionary()
         {
-            EditMenuViewName = "DocTreeMenu",
-            RouteValues = new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Docs",
-                ["controller"] = "Home",
-                ["action"] = "Display"
-            }
+            ["area"] = "Plato.Docs",
+            ["controller"] = "Home",
+            ["action"] = "Display"
         }
-    }))
+    }
+}))
 </div>

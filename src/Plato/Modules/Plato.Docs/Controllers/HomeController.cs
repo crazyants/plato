@@ -210,7 +210,7 @@ namespace Plato.Docs.Controllers
         // New Entity
         // -----------------
 
-        public async Task<IActionResult> Create(int parentId)
+        public async Task<IActionResult> Create(int categoryId, int parentId)
         {
 
             if (!await _authorizationService.AuthorizeAsync(this.User, Permissions.PostDocs))
@@ -219,6 +219,12 @@ namespace Plato.Docs.Controllers
             }
 
             var entity = new Doc();
+
+            if (categoryId > 0)
+            {
+                entity.CategoryId = categoryId;
+            }
+
             if (parentId > 0)
             {
                 entity.ParentId = parentId;
@@ -331,17 +337,7 @@ namespace Plato.Docs.Controllers
 
             }
 
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    //_alerter.Danger(T[error.ErrorMessage]);
-                }
-            }
-
-            return await Create(0);
+            return await Create(0, 0);
 
         }
 
@@ -732,7 +728,7 @@ namespace Plato.Docs.Controllers
                 }
             }
 
-            return await Create(0);
+            return await Create(0, 0);
 
         }
 
@@ -878,7 +874,7 @@ namespace Plato.Docs.Controllers
                 }
             }
 
-            return await Create(0);
+            return await Create(0, 0);
 
         }
 
