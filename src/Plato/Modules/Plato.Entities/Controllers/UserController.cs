@@ -20,8 +20,7 @@ namespace Plato.Entities.Controllers
 {
     public class UserController : Controller, IUpdateModel
     {
-
-        private readonly IFeatureFacade _featureFacade;
+        
         private readonly IViewProviderManager<EntityUserIndex> _userViewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
@@ -39,14 +38,12 @@ namespace Plato.Entities.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IPlatoUserStore<User> platoUserStore,
             IViewProviderManager<EntityUserIndex> userViewProvider,
-            IFeatureFacade featureFacade,
             IPageTitleBuilder pageTitleBuilder)
         {
             _contextFacade = contextFacade;
             _breadCrumbManager = breadCrumbManager;
             _platoUserStore = platoUserStore;
             _userViewProvider = userViewProvider;
-            _featureFacade = featureFacade;
             _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;

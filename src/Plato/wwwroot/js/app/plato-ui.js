@@ -5384,8 +5384,7 @@ $(function (win, doc, $) {
                     });
 
                 }
-
-             
+                
                 // Apply sticky sidebar?
                 if (stickySidebars) {
                     

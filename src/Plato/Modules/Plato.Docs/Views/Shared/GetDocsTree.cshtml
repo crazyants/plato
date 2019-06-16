@@ -1,0 +1,19 @@
+﻿@model EntityIndexViewModel<Doc>
+@{
+    Layout = null;
+}
+
+@await DisplayAsync(new View("DocTree", new
+{
+    options = new EntityTreeOptions()
+    {
+        EditMenuViewName = "DocTreeMenu",
+        IndexOptions = Model.Options,
+        RouteValues = new RouteValueDictionary()
+        {
+            ["area"] = "Plato.Docs",
+            ["controller"] = "Home",
+            ["action"] = "Display"
+        }
+    }
+}))

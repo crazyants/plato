@@ -67,19 +67,22 @@ namespace Plato.Docs.ViewComponents
 
         private async Task<IPagedResults<Doc>> GetEntities(EntityIndexOptions options)
         {
-
-            // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
-
-            // Ensure we found the feature
-            if (feature == null)
-            {
-                throw new Exception("The feature Plato.Docs could not be found");
-            }
-
+            
+            // Set default feature
             if (options.FeatureId <= 0)
             {
+
+                // Get feature
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
+
+                // Ensure we found the feature
+                if (feature == null)
+                {
+                    throw new Exception("The feature Plato.Docs could not be found");
+                }
+                
                 options.FeatureId = feature.Id;
+
             }
 
             options.Sort = SortBy.SortOrder;

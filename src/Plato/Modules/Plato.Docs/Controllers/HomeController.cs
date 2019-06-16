@@ -1034,7 +1034,29 @@ namespace Plato.Docs.Controllers
             }));
 
         }
+        
+        // -----------------
+        // GetDocsTree 
+        // -----------------
 
+        public Task<IActionResult> GetDocsTree(EntityIndexOptions opts)
+        {
+
+            // Default options
+            if (opts == null)
+            {
+                opts = new EntityIndexOptions();
+            }
+            
+            var viewModel = new EntityIndexViewModel<Doc>()
+            {
+                Options = opts
+            };
+
+            return Task.FromResult((IActionResult) View(viewModel));
+
+        }
+        
         // -----------------
         // Entity Helpers
         // -----------------

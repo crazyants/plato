@@ -45,7 +45,7 @@
                 </authorize>
                 <authorize asp-permission="@postPermission.Name">
                     <authorize-success>
-                        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Create" asp-route-parentId="@Model.Id" class="dropdown-item">
+                        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Create" asp-route-categoryId="@Model.CategoryId" asp-route-parentId="@Model.Id" class="dropdown-item">
                             @T["Add Child"]
                         </a>
                     </authorize-success>

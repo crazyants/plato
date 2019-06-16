@@ -73,7 +73,7 @@ $(function (win, doc, $) {
                             // get tree
                             var $tree = $dropdown.find('[data-provide="tree"]');
 
-                            // Focus & set-up search on dropdown shwn
+                            // Focus & set-up search on dropdown show
                             var $input = $dropdown.find('[type="search"]');
                             if ($input.length > 0) {
                                 $input.focus()
@@ -83,7 +83,6 @@ $(function (win, doc, $) {
                             }
 
                             // Expand tree view selection on dropdown shown
-
                             if ($tree.length > 0) {
                                 $tree.treeView("scrollToSelected");
                             }
@@ -94,7 +93,7 @@ $(function (win, doc, $) {
                             e.preventDefault();
                             e.stopPropagation();
 
-                            // Get all checked labels within the dropdown
+                            // Get all checked inputs within the dropdown
                             var $checked = $dropdown.find('input:checked');
                             if ($checked.length > 0) {
                                 $checked.each(function() {
@@ -175,7 +174,6 @@ $(function (win, doc, $) {
                 }
                 return index;
             }
-
         };
 
         return {
