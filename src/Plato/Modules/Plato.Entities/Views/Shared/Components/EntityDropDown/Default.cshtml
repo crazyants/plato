@@ -22,28 +22,29 @@
             <div class="dropdown-header hidden">
                 @T["No results found"]
             </div>
-            @if (Model.Entities != null)
-            {
-                @await DisplayAsync(new View("EntityTree", new
+            <div class="dropdown-body">
+                @if (Model.Entities != null)
                 {
-                    options = new EntityTreeOptions()
+                    @await DisplayAsync(new View("EntityTree", new
                     {
-                        SelectedEntity = Model.SelectedEntity,
-                        HtmlName = Model.HtmlName,
-                        EnableCheckBoxes = true,
-                        CssClass = "max-h-350 overflow-auto"
-                    }
-                }))
-            }
-            else
-            {
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        @T["No results."]
-                    </li>
-                </ul>
-            }
-
+                        options = new EntityTreeOptions()
+                        {
+                            SelectedEntity = Model.SelectedEntity,
+                            HtmlName = Model.HtmlName,
+                            EnableCheckBoxes = true,
+                            CssClass = "max-h-350 overflow-auto"
+                        }
+                    }))
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            @T["No results."]
+                        </li>
+                    </ul>
+                }
+            </div>
         </div>
     </div>
 

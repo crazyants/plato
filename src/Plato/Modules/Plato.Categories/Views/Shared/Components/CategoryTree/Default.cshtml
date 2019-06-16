@@ -86,6 +86,8 @@
 
                     sb.Append("<label for=\"")
                         .Append(checkId)
+                        .Append("\" data-category-id=\"")
+                        .Append(channel.Value.Id)
                         .Append("\">");
 
                     if (@Model.EnableCheckBoxes)

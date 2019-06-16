@@ -67,9 +67,7 @@
                         .Append(entity.Value.Title)
                         .Append("\">");
 
-                    sb.Append("<div class=\"tree-row\"");
-                  
-                    sb.Append("\">");
+                    sb.Append("<div class=\"tree-row\">");
 
                     if (entity.Value.Children.Any())
                     {
@@ -187,8 +185,8 @@
     var css = string.IsNullOrEmpty(Model.CssClass)
         ? "tree"
         : "tree " + Model.CssClass;
-    var html = await BuildAsync(Model);
 }
+
 <div class="@css" data-provide="tree">
-    @Html.Raw(html)
+    @Html.Raw(await BuildAsync(Model))
 </div>

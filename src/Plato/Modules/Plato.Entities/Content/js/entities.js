@@ -26,8 +26,8 @@ $(function (win, doc, $) {
 
     // --------
 
-    /* categorySelectDropdown */
-    var entityDropdown = function (options) {
+    /* entityDropdown */
+    var entityDropdown = function () {
 
         var dataKey = "entityDropdown",
             dataIdKey = dataKey + "Id";
@@ -35,11 +35,8 @@ $(function (win, doc, $) {
         var defaults = {};
 
         var methods = {
-            init: function($caller, methodName, func) {
-
-                if (func) {
-                    return func(this);
-                }
+            init: function($caller, methodName) {
+                
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
@@ -50,93 +47,98 @@ $(function (win, doc, $) {
                 }
 
                 this.bind($caller);
-
-                return null;
-
+                
             },
             bind: function($caller) {
+                methods.bindSelect($caller);
+                methods.bindTree($caller);
+            },
+            bindSelect: function($caller) {
 
                 // init selectDropdown
                 $caller.selectDropdown($.extend({
-                        itemTemplate:
-                            '<li class="list-group-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
+                    itemTemplate:
+                        '<li class="list-group-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
                     parseItemTemplate: function (html, $label) {
-                            var $div = $('<div class="list-group-item">');
-                            $div.append($label.clone().removeAttr("for"));
-                            return $div;
-                        },
-                        onAddItem: function($input, result, e) {
-                            $input.val("");
-                        },
-                        onShow: function($sender, $dropdown) {
-
-                            // get tree
-                            var $tree = $dropdown.find('[data-provide="tree"]');
-
-                            // Focus & set-up search on dropdown shwn
-                            var $input = $dropdown.find('[type="search"]');
-                            if ($input.length > 0) {
-                                $input.focus()
-                                    .filterList({
-                                        target: $tree
-                                    });
-                            }
-
-                            // Expand tree view selection on dropdown shown
-
-                            if ($tree.length > 0) {
-                                $tree.treeView("scrollToSelected");
-                            }
-
-                        },
-                        onChange: function($dropdown, $input, e) {
-
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            // Get all checked labels within the dropdown
-                            var $checked = $dropdown.find('input:checked');
-                            if ($checked.length > 0) {
-                                $checked.each(function() {
-
-                                    var checkId = $(this).attr("id");
-                                    var $label = $dropdown.find('[for="' + checkId + '"]');
-                                    if ($label.length > 0) {
-                                        var index = methods.getIndex($caller, $label);
-
-                                        if (index === -1) {
-                                            $dropdown.data("selectDropdown").items = [];
-                                            $dropdown.data("selectDropdown").items.push($label);
-                                            $dropdown.selectDropdown("update");
-                                        } else {
-                                            $dropdown.selectDropdown({
-                                                    highlightIndex: index
-                                                },
-                                                "highlight");
-                                        }
-
-                                    }
-                                });
-                            } else {
-                                $dropdown.data("selectDropdown").items = [];
-                                $dropdown.selectDropdown("update");
-                            }
-
-                        }
+                        var $div = $('<div class="list-group-item">');
+                        $div.append($label.clone().removeAttr("for"));
+                        return $div;
                     },
-                    defaults,
-                    options));
+                    onAddItem: function ($input, result, e) {
+                        $input.val("");
+                    },
+                    onShow: function ($sender, $dropdown) {
 
+                        // get tree
+                        var $tree = $dropdown.find('[data-provide="tree"]');
+
+                        // Focus & set-up search on dropdown shwn
+                        var $input = $dropdown.find('[type="search"]');
+                        if ($input.length > 0) {
+                            $input.focus()
+                                .filterList({
+                                    target: $tree
+                                });
+                        }
+
+                        // Expand tree view selection on dropdown shown
+
+                        if ($tree.length > 0) {
+                            $tree.treeView("scrollToSelected");
+                        }
+
+                    },
+                    onChange: function ($dropdown, $input, e) {
+
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Get all checked labels within the dropdown
+                        var $checked = $dropdown.find('input:checked');
+                        if ($checked.length > 0) {
+                            $checked.each(function () {
+
+                                var checkId = $(this).attr("id");
+                                var $label = $dropdown.find('[for="' + checkId + '"]');
+                                if ($label.length > 0) {
+                                    var index = methods.getIndex($caller, $label);
+
+                                    if (index === -1) {
+                                        $dropdown.data("selectDropdown").items = [];
+                                        $dropdown.data("selectDropdown").items.push($label);
+                                        $dropdown.selectDropdown("update");
+                                    } else {
+                                        $dropdown.selectDropdown({
+                                            highlightIndex: index
+                                        },
+                                            "highlight");
+                                    }
+
+                                }
+                            });
+                        } else {
+                            $dropdown.data("selectDropdown").items = [];
+                            $dropdown.selectDropdown("update");
+                        }
+
+                    }
+                },
+                    defaults,
+                    $caller.data(dataKey)));
+
+            },
+            bindTree: function($caller) {
+                
                 // init treeView
                 $caller.find('[data-provide="tree"]').treeView($.extend({
-                            onClick: function($tree, $link, e) {
+                            onClick: function ($tree, $link, e) {
 
                                 e.preventDefault();
                                 e.stopPropagation();
 
                                 // Toggle checkbox when we click a tree node item
                                 var $inputs = $link.find("input").first();
-                                $inputs.each(function(i) {
+                                $inputs.each(function (i) {
                                     if ($(this).is(":checked")) {
                                         $(this).prop("checked", false);
                                     } else {
@@ -145,7 +147,7 @@ $(function (win, doc, $) {
                                     $(this).trigger("change");
                                 });
                             },
-                            onToggle: function($tree, $toggler, e) {
+                            onToggle: function ($tree, $toggler, e) {
                                 // Prevent onClick raising when we toggle a node
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -153,10 +155,8 @@ $(function (win, doc, $) {
                             }
                         },
                         defaults,
-                        options),
+                        $caller.data(dataKey)),
                     "expandAll");
-
-
             },
             getIndex: function($caller, $label) {
 
@@ -230,10 +230,8 @@ $(function (win, doc, $) {
         };
 
     }();
-
- 
+     
     $.fn.extend({
-        
         entityDropdown: entityDropdown.init
     });
 

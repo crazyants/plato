@@ -4,3 +4,56 @@
 {
     @Model
 }))
+
+<script section="Footer">
+    
+    $(function (win, doc, $) {
+
+        "use strict";
+
+        // --------
+
+        var app = win.$.Plato;
+    
+        /* Update entities tree upon any category change */
+        $('[data-provide="category-dropdown"]')
+            .categoryDropdown({
+                onCategoryUpdated: function($caller, categoryId) {
+                    
+                    var $dropdown = $('[data-provide="entity-dropdown"]'),
+                        $body = $dropdown.find('.dropdown-body');
+                
+                    app.http({
+                        method: "GET",
+                        url: 'Plato.Docs/Home/GetDocsTree?opts.featureId=115&opts.categoryId=' + categoryId
+                    }).done(function(response) {
+                    
+                        if ($body.length > 0) {
+                            $body.empty();
+                            if (response !== "") {
+
+                                // Populate tree
+                                $body.html(response);
+
+                                // Bind default tree
+                                $dropdown.find('[data-provide="tree"]').treeView();
+
+                                // Configure dropdown tree
+                                $dropdown.entityDropdown("bindTree");
+
+                            }
+                        }
+                    
+                    });
+
+
+
+
+                }
+            });
+    
+     
+
+    }(window, document, jQuery));
+    
+</script>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Docs.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -25,12 +24,13 @@ namespace Plato.Docs.ViewComponents
         private readonly IFeatureFacade _featureFacade;
 
         public DocTreeViewComponent(
-            IEntityService<Doc> entityService,
+        
             IAuthorizationService authorizationService,
+            IEntityService<Doc> entityService,
             IFeatureFacade featureFacade)
         {
-            _entityService = entityService;
             _authorizationService = authorizationService;
+            _entityService = entityService;
             _featureFacade = featureFacade;
         }
 

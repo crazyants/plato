@@ -3590,8 +3590,7 @@ $(function (win, doc, $) {
             return getOffsetFromParent($caller.find(".active"), $caller);
 
         }
-
-
+        
         var defaults = {
             event: "click",
             items: [], // our array of selected items
@@ -3839,7 +3838,7 @@ $(function (win, doc, $) {
                 }
 
                 var $item = $(itemTemplate);
-                $item.data("tagitItem", data);
+                $item.data("selectDropdownItem", data);
 
                 var $del = $item.find(".select-dropdown-delete");
                 if ($del.length > 0) {
@@ -3904,6 +3903,7 @@ $(function (win, doc, $) {
                     var items = this.getItems($caller);
                     if (items) {
                         if (items.length > 0) {
+                            console.log(JSON.stringify(items))
                             $store.val(JSON.stringify(items));
                         } else {
                             $store.val("");
