@@ -47,7 +47,7 @@ namespace Plato.Entities.Stores
             var populateSql = Builder.BuildSqlPopulate();
             var countSql = Builder.BuildSqlCount();
 
-            return await _store.SelectAsync(new[]
+            return await _store.SelectAsync(new IDbDataParameter[]
             {
                 new DbParam("PageIndex", DbType.Int32, PageIndex),
                 new DbParam("PageSize", DbType.Int32, PageSize),
@@ -847,7 +847,7 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // pinned 
+            // IsPinned 
             // -----------------
 
             // hide = true, show = false

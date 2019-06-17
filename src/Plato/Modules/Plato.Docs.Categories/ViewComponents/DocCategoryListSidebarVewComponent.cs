@@ -52,9 +52,7 @@ namespace Plato.Docs.Categories.ViewComponents
                 Categories = categories?.Data
             };
         }
-
-
+        
     }
-
-
+    
 }

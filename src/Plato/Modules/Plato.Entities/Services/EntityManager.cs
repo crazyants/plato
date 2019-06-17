@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
@@ -255,7 +256,7 @@ namespace Plato.Entities.Services
 
                     // Find entity above the supplied entity at the same level
                     TEntity above = null;
-                    foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
+                    foreach (var entity in entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId))
                     {
                         if (entity.SortOrder < sortOrder)
                         {
@@ -304,7 +305,7 @@ namespace Plato.Entities.Services
 
                     // Find entity below the supplied entity at the same level
                     TEntity below = null;
-                    children = entities.Where(c => c.ParentId == model.ParentId).ToList();
+                    children = entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId).ToList();
                     for (var i = children.Count - 1; i >= 0; i--)
                     {
                         if (children[i].SortOrder > sortOrder)
@@ -356,7 +357,7 @@ namespace Plato.Entities.Services
 
                     // Find entity at the top of the current level
                     TEntity top = null;
-                    children = entities.Where(c => c.ParentId == model.ParentId).ToList();
+                    children = entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId).ToList();
                     for (var i = children.Count - 1; i >= 0; i--)
                     {
                         top = (TEntity)children[i];
@@ -379,7 +380,7 @@ namespace Plato.Entities.Services
 
                     // Find entity at the bottom of the current level
                     TEntity bottom = null;
-                    foreach (var entity in entities.Where(c => c.ParentId == model.ParentId))
+                    foreach (var entity in entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId))
                     {
                         bottom = (TEntity)entity;
                     }

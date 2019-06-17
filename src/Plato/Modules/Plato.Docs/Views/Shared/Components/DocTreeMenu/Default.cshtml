@@ -83,7 +83,7 @@
                 {
                     <authorize asp-permission="@deletePermission.Name">
                         <authorize-success>
-                            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Delete" data-provide="confirm" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
+                            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Delete" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
                                 @T["Delete"]
                             </a>
                         </authorize-success>

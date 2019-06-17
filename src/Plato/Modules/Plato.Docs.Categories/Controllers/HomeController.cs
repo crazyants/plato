@@ -197,6 +197,7 @@ namespace Plato.Docs.Categories.Controllers
             if (feature != null)
             {
                 options.FeatureId = feature.Id;
+
             }
             
             // Include child categories
@@ -215,6 +216,10 @@ namespace Plato.Docs.Categories.Controllers
                 {
                     options.CategoryId = category.Id;
                 }
+            }
+            else
+            {
+                options.CategoryId = 0;
             }
 
             // Ensure pinned entities appear first

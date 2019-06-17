@@ -6,9 +6,6 @@
     {
         parentCategory = Model.Categories.FirstOrDefault(c => c.Id == selectedCategory.ParentId);
     }
-    var allCss = Model.Options.CategoryId == 0
-        ? "list-group-item list-group-item-action active"
-        : "list-group-item list-group-item-action";
     var allText = "All Categories";
 }
 
@@ -30,7 +27,7 @@
                 
             @if (parentCategory != null)
             {
-                <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@parentCategory.Id" asp-route-opts.alias="@parentCategory.Alias" title="@parentCategory.Description" class="@allCss">
+                <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@parentCategory.Id" asp-route-opts.alias="@parentCategory.Alias" title="@parentCategory.Description" class="list-group-item list-group-item-action">
                     <i class="fal fa-level-up mr-2"></i> @parentCategory.Name
                 </a>
             }
@@ -38,7 +35,7 @@
             {
                 if (selectedCategory != null)
                 {
-                    <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="" asp-route-opts.alias="" title="@T["All Categories"]" class="@allCss">
+                    <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="" asp-route-opts.alias="" title="@T["All Categories"]" class="list-group-item list-group-item-action">
                         <i class="fal fa-level-up mr-2"></i> @T[allText]
                     </a>
                 }

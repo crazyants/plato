@@ -1,8 +1,5 @@
 ﻿@using Plato.Entities.ViewModels
 @model Plato.Entities.ViewModels.EntityIndexViewModel<Doc>
-@{
-    var postPermission = Permissions.PostDocs;
-}
 
 <div id="tocCollapse" class="collapse">
     
@@ -15,17 +12,17 @@
     </div>
 
     @await DisplayAsync(new View("DocTree", new
-{
-    options = new EntityTreeOptions()
     {
-        EditMenuViewName = "DocTreeMenu",
-        IndexOptions = Model.Options,
-        RouteValues = new RouteValueDictionary()
+        options = new EntityTreeOptions()
         {
-            ["area"] = "Plato.Docs",
-            ["controller"] = "Home",
-            ["action"] = "Display"
+            EditMenuViewName = "DocTreeMenu",
+            IndexOptions = Model.Options,
+            RouteValues = new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Docs",
+                ["controller"] = "Home",
+                ["action"] = "Display"
+            }
         }
-    }
-}))
+    }))
 </div>

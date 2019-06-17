@@ -86,12 +86,13 @@ namespace Plato.Docs.Categories.ViewProviders
             {
                 return default(IViewProviderResult);
             }
-
+                
             var categoryIndexViewModel = new CategoryIndexViewModel()
             {
                 Options = new CategoryIndexOptions()
                 {
-                    FeatureId = feature.Id
+                    FeatureId = feature.Id,
+                    CategoryId = doc.CategoryId
                 }
             };
 
@@ -119,6 +120,7 @@ namespace Plato.Docs.Categories.ViewProviders
                 parents = await _categoryStore.GetParentsByIdAsync(doc.CategoryId);
             }
 
+            // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
 
@@ -158,12 +160,12 @@ namespace Plato.Docs.Categories.ViewProviders
             });
             
             // Build view
-            
             var categoryIndexViewModel = new CategoryIndexViewModel()
             {
                 Options = new CategoryIndexOptions()
                 {
-                    FeatureId = feature.Id
+                    FeatureId = feature.Id,
+                    CategoryId = doc.CategoryId
                 }
             };
             
