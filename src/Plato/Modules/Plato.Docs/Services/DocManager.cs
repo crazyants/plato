@@ -37,8 +37,7 @@ namespace Plato.Docs.Services
                     model.FeatureId = feature.Id;
                 }
             }
-
-        
+            
             return await _entityManager.CreateAsync(model);
 
         }
@@ -55,8 +54,7 @@ namespace Plato.Docs.Services
                     model.FeatureId = feature.Id;
                 }
             }
-
-
+            
             return await _entityManager.UpdateAsync(model);
 
         }
@@ -70,8 +68,7 @@ namespace Plato.Docs.Services
         {
             return await _entityManager.Move(model, direction);
         }
-
-      
+        
     }
 
 }

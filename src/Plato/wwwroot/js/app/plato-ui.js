@@ -825,9 +825,9 @@ $(function (win, doc, $) {
                 // Ensure selected are expanded
                 methods.expandSelected($caller);
 
-                // Focus active item
-                var offset = methods._getSelectedOffset($caller),
-                    top = offset.top - $caller.height();
+                // Scroll to active item
+                var offset = $caller.find(".active").offset(),
+                    top = offset.top - $caller.offset().top;
                 $caller.scrollTo({
                         offset: top - 20,
                         interval: 500
@@ -839,25 +839,6 @@ $(function (win, doc, $) {
                 $caller.find(".list-group-item").each(function () {
                     methods._collapse($caller, $(this).attr("id"));
                 });
-            },
-            _getSelectedOffset: function($caller) {
-                
-                function getOffset($el, $parent) {
-
-                    var x = 0,
-                        y = 0,
-                        el = $el[0],
-                        parent = $parent[0];
-                    while (el && el !== parent && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-                        x += el.offsetLeft - el.scrollLeft + el.clientLeft;
-                        y += el.offsetTop - el.scrollTop + el.clientTop;
-                        el = el.offsetParent;
-                    }
-                    return { top: y, left: x };
-                }
-
-                return getOffset($caller.find(".active"), $caller);
-
             },
             _toggleNode: function ($caller, nodeId, e) {
                 var $item = methods.getNodeListItem($caller, nodeId);

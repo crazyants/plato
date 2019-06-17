@@ -6,14 +6,14 @@
     {
         <card class="card card-body-flush">
             <card-title>
-                <h6 class="card-title d-inline-block">@T["Categories"]</h6>
+                <h6 class="card-title">@T["Categories"]</h6>
             </card-title>
             <card-body>
                 <div class="list-group list-group-flush list-group-hover">
                     <div class="row no-gutters">
                         @foreach (var category in Model.Categories)
                         {
-                            <div class="float-left list-group-item list-group-item-action  col-lg-4 col-md-6 col-sm-12 border-0 p-0">
+                            <div class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0">
                                 @await DisplayAsync(new View("ArticleCategoryListItem", new
                                 {
                                     category = category,

@@ -1641,7 +1641,7 @@ select.form-control:focus::-ms-value {
 
 .dropdown-menu {
     color: #888;
-    background-color: #1a1a1a;
+    background-color: #0a0a0a;
     border: 1px solid #282828;
 }
 
