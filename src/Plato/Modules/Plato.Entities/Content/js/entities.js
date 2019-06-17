@@ -127,6 +127,9 @@ $(function (win, doc, $) {
                     $caller.data(dataKey)));
 
             },
+            clear: function($caller) {
+                $caller.selectDropdown("clear");
+            },
             bindTree: function($caller) {
                 
                 // init treeView

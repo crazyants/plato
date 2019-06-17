@@ -22,7 +22,11 @@
                     
                     var $dropdown = $('[data-provide="entity-dropdown"]'),
                         $body = $dropdown.find('.dropdown-body');
-                
+
+                    // Reset select dropdown
+                    $dropdown.entityDropdown("clear");
+
+                    // Update entity tree
                     app.http({
                         method: "GET",
                         url: 'Plato.Docs/Home/GetDocsTree?opts.featureId=115&opts.categoryId=' + categoryId
