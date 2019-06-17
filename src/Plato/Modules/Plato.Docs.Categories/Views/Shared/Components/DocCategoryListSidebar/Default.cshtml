@@ -1,12 +1,18 @@
 ﻿@model CategoryListViewModel<Category>
 @{
     var selectedCategory = Model.Categories.FirstOrDefault(c => c.Id == Model.Options.CategoryId);
+    Category parentCategory = null;
+    if (selectedCategory != null)
+    {
+        parentCategory = Model.Categories.FirstOrDefault(c => c.Id == selectedCategory.ParentId);
+    }
     var allCss = Model.Options.CategoryId == 0
         ? "list-group-item list-group-item-action active"
         : "list-group-item list-group-item-action";
+    var allText = "All Categories";
 }
 
-<div class="dropdown" id="allCategories">
+<div class="dropdown">
     <a href="#" class="text-decoration-none" id="allCategoriesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
         @if (selectedCategory != null)
         {
@@ -14,85 +20,72 @@
         }
         else
         {
-            @T["All Categories"]
+            @T[allText]
         }
-
         <i class="fal fa-chevron-down"></i>
     </a>
     <div class="dropdown-menu w-100 anim anim-2x anim-scale-in" aria-labelledby="allCategoriesDropdown">
         <div class="max-h-300 overflow-auto">
             <div class="list-group list-group-flush list-group-hover">
-                <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="" asp-route-opts.alias="" title="@T["All Categories"]" class="@allCss">
-                    @T["All Categories"]
-                </a>
-
-                @if (Model.Categories != null && Model.Categories.Any())
-                {
-
-                    @foreach (var category in Model.Categories)
-                     {
-                         var css = category.Id == Model.Options.CategoryId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
-                         var categoryDetails = category.GetOrCreate<CategoryDetails>();
-                         <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@category.Id" asp-route-opts.alias="@category.Alias" title="@category.Description" class="@css">
-                             <span data-toggle="tooltip" title="@T["Public Topics"]" class="badge badge-info float-right">
-                                 @categoryDetails.TotalEntities.ToPrettyInt()
-                             </span>
-                             @if (!String.IsNullOrWhiteSpace(category.IconCss))
-                             {
-                                 <div class="float-left mr-3">
-                                     <span class="category-icon category-icon-sm" style="background-color: @category.BackColor; color: @category.ForeColor">
-                                         <i class="@category.IconCss"></i>
-                                     </span>
-                                 </div>
-                             }
-                             else
-                             {
-                                 <div class="float-left mr-3">
-                                     <span class="category-icon category-icon-sm">
-                                         <i class="fal fa-folder"></i>
-                                     </span>
-                                 </div>
-                             }
-                             @category.Name
-                         </a>
-                     }
-
-                }
-            
-            </div>
-
-
-            @*@await DisplayAsync(new View("CategoryTree", new
+                
+            @if (parentCategory != null)
             {
-                options = new CategoryTreeOptions()
+                <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@parentCategory.Id" asp-route-opts.alias="@parentCategory.Alias" title="@parentCategory.Description" class="@allCss">
+                    <i class="fal fa-level-up mr-2"></i> @parentCategory.Name
+                </a>
+            }
+            else
+            {
+                if (selectedCategory != null)
                 {
-                    IndexOptions = Model.Options,
-                    SelectedCategories = new List<int>()
-                    {
-                        Model.Options.CategoryId
-                    },
-                    RouteValues = new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Docs.Categories",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }
+                    <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="" asp-route-opts.alias="" title="@T["All Categories"]" class="@allCss">
+                        <i class="fal fa-level-up mr-2"></i> @T[allText]
+                    </a>
                 }
-            }))*@
+           
+            }
 
+                @{
+                    var childCategories = Model.Categories
+                        .Where(c => c.ParentId == Model.Options.CategoryId)
+                        .ToList();
+                }
+
+                @if (childCategories.Any())
+                {
+
+                    @foreach (var category in childCategories)
+                    {
+                        var css = category.Id == Model.Options.CategoryId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                        var categoryDetails = category.GetOrCreate<CategoryDetails>();
+                        <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@category.Id" asp-route-opts.alias="@category.Alias" title="@category.Description" class="@css">
+                            <span data-toggle="tooltip" title="@T["Public Docs"]" class="badge badge-info float-right">
+                                @categoryDetails.TotalEntities.ToPrettyInt()
+                            </span>
+                            @if (!String.IsNullOrWhiteSpace(category.IconCss))
+                            {
+                                <div class="float-left mr-3">
+                                    <span class="category-icon category-icon-sm" style="background-color: @category.BackColor; color: @category.ForeColor">
+                                        <i class="@category.IconCss"></i>
+                                    </span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="float-left mr-3">
+                                    <span class="category-icon category-icon-sm">
+                                        <i class="fal fa-folder"></i>
+                                    </span>
+                                </div>
+                            }
+                            @category.Name
+                        </a>
+                    }
+
+                }
+             
+            </div>
+            
         </div>
     </div>
 </div>
-
-<script section="Footer">
-    $(function (win, doc, $) {
-        "use strict";
-        win.$.Plato.ready(function () {
-            var $dropdown = $("#allCategories");
-            $dropdown.on('shown.bs.dropdown',
-                function () {
-                    $dropdown.find('[data-provide="tree"]').treeView("scrollToSelected");
-                });
-        });
-    }(window, document, jQuery));
-</script>

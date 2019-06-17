@@ -49,7 +49,7 @@ namespace Plato.Docs.Categories.ViewComponents
             return new CategoryListViewModel<Category>()
             {
                 Options = options,
-                Categories = categories?.Data?.Where(c => c.ParentId == 0)
+                Categories = categories?.Data
             };
         }
 

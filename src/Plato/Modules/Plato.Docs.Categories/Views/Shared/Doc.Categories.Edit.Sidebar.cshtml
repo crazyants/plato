@@ -2,7 +2,7 @@
 
 @await DisplayAsync(new View("CategoryDropDown", new
 {
-    options = Model.Options
+    @Model
 }))
 
 <script section="Footer">
@@ -19,44 +19,33 @@
         $('[data-provide="category-dropdown"]')
             .categoryDropdown({
                 onCategoryUpdated: function($caller, categoryId) {
-                    
+
+                    // Get entity dropdown
                     var $dropdown = $('[data-provide="entity-dropdown"]'),
                         $body = $dropdown.find('.dropdown-body');
 
-                    // Reset select dropdown
+                    // Reset entity dropdown
                     $dropdown.entityDropdown("clear");
 
-                    // Update entity tree
+                    // Update entity dropdown
                     app.http({
                         method: "GET",
                         url: 'Plato.Docs/Home/GetDocsTree?opts.featureId=115&opts.categoryId=' + categoryId
                     }).done(function(response) {
-                    
                         if ($body.length > 0) {
                             $body.empty();
                             if (response !== "") {
-
                                 // Populate tree
                                 $body.html(response);
-
                                 // Bind default tree
                                 $dropdown.find('[data-provide="tree"]').treeView();
-
                                 // Configure dropdown tree
                                 $dropdown.entityDropdown("bindTree");
-
                             }
                         }
-                    
                     });
-
-
-
-
                 }
             });
-    
-     
 
     }(window, document, jQuery));
     
