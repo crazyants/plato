@@ -79,6 +79,7 @@ namespace Plato.Docs.Categories.ViewProviders
                 View<CategoryBase>("Home.Index.Header", model => existingCategory).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => existingCategory).Zone("tools").Order(1),
                 View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
+                View<CategoryIndexViewModel>("Doc.Categories.Index.Sidebar", model => indexViewModel).Zone("sidebar").Order(int.MinValue + 10),
                 View<EntityIndexViewModel<Doc>>("Home.Index.Sidebar", model => viewModel).Zone("sidebar")
             );
 

@@ -720,7 +720,7 @@ $(function (win, doc, $) {
                     event = $caller.data(dataKey).event;
 
                 // Bind toggle events
-                $(toggleSelector).unbind(event).bind(event,
+                $caller.find(toggleSelector).off(event).on(event,
                     function (e) {
                         var toggle = true;
                         if ($caller.data(dataKey).onToggle) {
@@ -765,7 +765,7 @@ $(function (win, doc, $) {
                     });
 
                 // Bind link click events
-                $caller.find(linkSelector).unbind(event).bind(event,
+                $caller.find(linkSelector).off(event).on(event,
                     function (e) {
                         if ($caller.data(dataKey).onClick) {
                             $caller.data(dataKey).onClick($caller, $(this), e);
@@ -773,7 +773,7 @@ $(function (win, doc, $) {
                     });
 
                 // Bind active state on mouse events
-                $caller.find(".list-group-item").unbind("mouseover").bind("mouseover",
+                $caller.find(".list-group-item").off("mouseover").on("mouseover",
                     function (e) {
                         e.stopPropagation();
                         $(this).parents(".list-group-item").each(function () {
@@ -784,7 +784,7 @@ $(function (win, doc, $) {
                         $(this).addClass("active");
                     });
 
-                $caller.find(".list-group-item").unbind("mouseleave").bind("mouseleave",
+                $caller.find(".list-group-item").off("mouseleave").on("mouseleave",
                     function () {
                         if (!$(this).hasClass("checked")) {
                             $(this).removeClass("active");
@@ -5414,7 +5414,7 @@ $(function (win, doc, $) {
                             if ($this.hasClass("fixed")) {
                                 // Setup content when container becomes fixed
                                 $stickySidebarContent.css({
-                                    "overflow": "auto",
+                                    "overflowY": "auto",
                                     "top": sidebarOffsetTop,
                                     "width": $this.width()
                                 });
@@ -5425,7 +5425,7 @@ $(function (win, doc, $) {
                             } else {
                                 // Reset
                                 $stickySidebarContent.css({
-                                    "overflow": "visible",
+                                    "overflowY": "visible",
                                     "top": "auto",
                                     "width": "auto"
                                 });
@@ -5496,8 +5496,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* Register Plugins */
     $.fn.extend({
         replySpy: replySpy.init,

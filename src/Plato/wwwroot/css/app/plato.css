@@ -73,6 +73,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .font-size-140 { font-size: 140%; }
 .font-size-160 { font-size: 160%; }
 
+.text-decoration-none { text-decoration: none !important; }
+
 /* ------------------------- */
 /* Opacity */
 /* ------------------------- */
@@ -145,7 +147,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* Overflow */
 /* ------------------------- */
 
-.overflow-auto { overflow: auto;  }
+.overflow-auto { overflow-y: auto; overflow-x: visible;  }
 .overflow-hidden { overflow: hidden; }
 
 .overflow-auto::-webkit-scrollbar,

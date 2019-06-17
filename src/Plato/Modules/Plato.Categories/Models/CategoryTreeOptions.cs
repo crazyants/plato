@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
 using Plato.Categories.ViewModels;
 
 namespace Plato.Categories.Models
@@ -17,6 +18,8 @@ namespace Plato.Categories.Models
         public string EditMenuViewName { get; set; }
 
         public string CssClass { get; set; }
+
+        public RouteValueDictionary RouteValues { get; set; }
 
     }
 

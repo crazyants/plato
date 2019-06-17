@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -9,12 +8,10 @@ using Plato.Categories.Stores;
 using Plato.Docs.Categories.Models;
 using Plato.Docs.Models;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
-using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.ViewProviders;
@@ -31,8 +28,7 @@ namespace Plato.Docs.Categories.Controllers
         private readonly IPageTitleBuilder _pageTitleBuilder;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IAlerter _alerter;
-
+ 
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -43,20 +39,18 @@ namespace Plato.Docs.Categories.Controllers
             IViewProviderManager<Category> channelViewProvider,
             IBreadCrumbManager breadCrumbManager,
             ICategoryStore<Category> channelStore,
-            ISiteSettingsStore settingsStore,
+            IPageTitleBuilder pageTitleBuilder,
             IContextFacade contextFacade1, 
-            IFeatureFacade featureFacade,
-            IAlerter alerter, IPageTitleBuilder pageTitleBuilder)
+            IFeatureFacade featureFacade)
         {
       
             _channelViewProvider = channelViewProvider;
             _breadCrumbManager = breadCrumbManager;
+            _pageTitleBuilder = pageTitleBuilder;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
             _channelStore = channelStore;
-            _alerter = alerter;
-            _pageTitleBuilder = pageTitleBuilder;
-
+       
             T = localizer;
             S = stringLocalizer;
         }

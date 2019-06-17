@@ -39,7 +39,8 @@ namespace Plato.Categories.ViewComponents
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 EditMenuViewName = options.EditMenuViewName,
                 SelectedCategories = selected,
-                CssClass = options.CssClass
+                CssClass = options.CssClass,
+                RouteValues = options.RouteValues
             });
 
         }

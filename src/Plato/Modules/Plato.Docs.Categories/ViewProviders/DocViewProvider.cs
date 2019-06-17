@@ -96,14 +96,21 @@ namespace Plato.Docs.Categories.ViewProviders
             };
 
             return Views(
-                View<CategoryIndexViewModel>("Doc.Categories.Index.Content", model => categoryIndexViewModel).Zone("content")
-                    .Order(1)
+                View<CategoryIndexViewModel>("Doc.Categories.Index.Content", model => categoryIndexViewModel).Zone("content").Order(1),
+                View<CategoryIndexViewModel>("Doc.Categories.Index.Sidebar", model => categoryIndexViewModel).Zone("sidebar").Order(int.MinValue + 10)
             );
             
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Doc doc, IViewProviderContext updater)
         {
+
+            // Ensure we explicitly set the featureId
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs.Categories");
+            if (feature == null)
+            {
+                return default(IViewProviderResult);
+            }
 
             // Override breadcrumb configuration within base controller 
             IEnumerable<CategoryAdmin> parents = null;
@@ -149,12 +156,23 @@ namespace Plato.Docs.Categories.ViewProviders
                 builder.Add(S[doc.Title]);
 
             });
-
-
-            return default(IViewProviderResult);
             
+            // Build view
+            
+            var categoryIndexViewModel = new CategoryIndexViewModel()
+            {
+                Options = new CategoryIndexOptions()
+                {
+                    FeatureId = feature.Id
+                }
+            };
+            
+            return Views(
+                View<CategoryIndexViewModel>("Doc.Categories.Index.Sidebar", model => categoryIndexViewModel).Zone("sidebar").Order(int.MinValue + 10)
+            );
+
         }
-        
+
         public override async Task<IViewProviderResult> BuildEditAsync(Doc doc, IViewProviderContext updater)
         {
 

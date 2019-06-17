@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
@@ -51,8 +49,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(DocComment viewModel, IViewProviderContext context)
         {
-
-
+            
             var topic = await _entityStore.GetByIdAsync(viewModel.EntityId);
             if (topic == null)
             {
