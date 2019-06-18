@@ -14,6 +14,7 @@ using Plato.Internal.Notifications.Extensions;
 using Plato.Mentions.Models;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
+using Plato.Entities.Extensions;
 
 namespace Plato.Discuss.Mentions.Subscribers
 {
@@ -98,6 +99,12 @@ namespace Plato.Discuss.Mentions.Subscribers
             {
                 return reply;
             }
+            
+            // No need to send @mention notifications if the reply is hidden
+            if (reply.IsHidden())
+            {
+                return reply;
+            }
 
             // Get users mentioned within entity message
             var users = await _mentionParser.GetUsersAsync(reply.Message);
@@ -149,6 +156,12 @@ namespace Plato.Discuss.Mentions.Subscribers
 
             // If  we don't have a message we can't parse mentions
             if (String.IsNullOrEmpty(reply.Message))
+            {
+                return reply;
+            }
+
+            // No need to send @mention notifications if the reply is hidden
+            if (reply.IsHidden())
             {
                 return reply;
             }
