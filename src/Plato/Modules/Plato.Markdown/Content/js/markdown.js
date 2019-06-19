@@ -1577,7 +1577,6 @@
             url: '/api/media/streaming/upload',
             fallbackClick: false,
             autoProcessQueue: true,
-            clickable: true,
             disablePreview: true,
             dictDefaultMessage:
                 'Attach files by dragging and dropping here, <a id="#dzUpload" href="#">click to browse</a> or paste from the clipboard'

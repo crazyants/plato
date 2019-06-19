@@ -4891,9 +4891,8 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
-    // keyBinder
+    
+    /* keyBinder */
     var keyBinder = function () {
 
         var dataKey = "keyBinder",
@@ -5079,7 +5078,7 @@ $(function (win, doc, $) {
 
     }();
 
-    // textFieldMirror
+    /* textFieldMirror */
     var textFieldMirror = function () {
 
         var dataKey = "textFieldMirror",
@@ -5220,7 +5219,7 @@ $(function (win, doc, $) {
 
     }();
 
-    // suggester
+    /* suggester */
     var suggester = function () {
 
         var dataKey = "suggester",
@@ -5555,6 +5554,95 @@ $(function (win, doc, $) {
 
     }();
     
+    /* popper */
+    var popper = function () {
+
+        var dataKey = "popper",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "hover"
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                
+                if (methodName) {
+                    if (this[methodName]) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                this.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                var event = $caller.data(dataKey).event;
+
+                $caller.off(event).on(event,
+                    function() {
+
+                        console.log(event);
+
+                        var $card = methods._getOrCreateCard($(this));
+
+                    });
+            },
+            _getOrCreateCard: function($caller) {
+
+
+
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).popper()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                }
+
+            }
+
+        };
+
+    }();
+
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -5581,7 +5669,8 @@ $(function (win, doc, $) {
         resizeable: resizeable.init,
         keyBinder: keyBinder.init,
         textFieldMirror: textFieldMirror.init,
-        suggester: suggester.init
+        suggester: suggester.init,
+        popper: popper.init
     });
 
     // ---------------------------
@@ -5640,7 +5729,10 @@ $(function (win, doc, $) {
 
         /* resizeable */
         this.find('[data-provide="resizeable"]').resizeable();
-        
+
+        /* popper */
+        this.find('[data-provide="popper"]').popper();
+
     };
 
     // --------------

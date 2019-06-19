@@ -21,7 +21,7 @@ namespace Plato.Mentions.Services
         private const string SearchPattern = "@([\\n|^\\s|^,]*.[^\\n|^\\s|^\\<|^,]*)";
 
         public string ReplacePattern { get; set; }
-            = "<a href=\"{url}\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
+            = "<a href=\"{url}\" data-popper-url=\"{url}\" data-provide=\"popper\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
