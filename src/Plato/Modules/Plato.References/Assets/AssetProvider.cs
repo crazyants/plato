@@ -62,7 +62,6 @@ namespace Plato.References.Assets
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };
@@ -71,6 +70,6 @@ namespace Plato.References.Assets
 
         }
         
-
     }
+
 }

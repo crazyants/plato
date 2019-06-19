@@ -16,10 +16,12 @@ namespace Plato.Mentions.Services
     public class MentionsParser : IMentionsParser
     {
         
-        private const string SearchPattern = "@([^\\n|^\\s][a-z0-9\\-_\\/]*)";
+        // Allow all characters, numbers and special characters
+        // within usernames until we find a space or newline
+        private const string SearchPattern = "@([^\\n|^\\s][a-z0-9\\-_\\/\\@\\.\\*\\!\\~\\=\\(\\)\\{\\}\\'\\\"\\£\\$\\%\\^\\&\\\\:\\<\\>\\|\\;\\[\\]\\?]*)";
 
         public string ReplacePattern { get; set; }
-            = "<a href=\"{url}\">@{userName}</a>";
+            = "<a href=\"{url}\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -105,6 +107,7 @@ namespace Plato.Mentions.Services
                         // parse template
                         var sb = new StringBuilder(ReplacePattern);
                         sb.Replace("{url}", baseUrl + url);
+                        sb.Replace("{userId}", user.Id.ToString());
                         sb.Replace("{userName}", user.UserName);
 
                         // Replace match with template

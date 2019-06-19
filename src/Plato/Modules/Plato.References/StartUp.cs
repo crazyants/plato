@@ -5,7 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.References.Assets;
+using Plato.References.Services;
+using Plato.References.Subscribers;
 
 namespace Plato.References
 {
@@ -21,6 +24,12 @@ namespace Plato.References
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Parsers
+            services.AddScoped<IReferencesParser, ReferencesParser>();
+          
+            // Register broker subscribers
+            services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
+
             // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();
             
@@ -32,5 +41,7 @@ namespace Plato.References
             IServiceProvider serviceProvider)
         {
         }
+
     }
+
 }
