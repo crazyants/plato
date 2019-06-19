@@ -1880,3 +1880,20 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 a.accepted-answer {  color: #28a745; }
 a.accepted-answer i { font-size: 18pt; }
+
+/* popper */
+
+.popper { display: block; visibility: hidden; opacity: 0; position: absolute; z-index: 20;border-width: 1px;border-style: solid; top: 0; left: 0; }
+.popper .content {display: block; font-weight: normal; margin: 1rem; padding: 0; }
+
+.i-tip-arrow-top { top: -8px; border-left-color: transparent !important; border-top-color: transparent !important; border-right-color: transparent !important; border-left-width: 8px; border-right-width: 8px; border-bottom-width: 8px; }
+.i-tip-arrow-bottom { bottom: -8px; border-left-color: transparent !important; border-bottom-color: transparent !important; border-right-color: transparent !important; border-left-width: 8px; border-right-width: 8px; border-top-width: 8px;  } 
+.i-tip-arrow-left  { left: -8px; border-bottom-color: transparent !important; border-top-color: transparent !important; border-left-color: transparent !important; border-bottom-width: 8px; border-top-width: 8px; border-right-width: 8px; }
+.i-tip-arrow-right  { border-bottom-color: transparent !important; border-top-color: transparent !important; border-right-color: transparent !important;  border-bottom-width: 8px; border-top-width: 8px; border-left-width: 8px; }
+
+/* tip animation */
+
+.i-tip-top-visible { visibility: visible; opacity: 1; -webkit-transform: translateY(10px); -moz-transform: translateY(10px); -ms-transform: translateY(10px); -o-transform: translateY(10px); transform: translateY(10px); }
+.i-tip-bottom-visible { visibility: visible; opacity: 1; -webkit-transform: translateY(-10px); -moz-transform: translateY(-10px); -ms-transform: translateY(-10px); -o-transform: translateY(-10px); transform: translateY(-10px); }
+.i-tip-left-visible { visibility: visible; opacity: 1; -webkit-transform: translateX(10px); -moz-transform: translateX(10px); -ms-transform: translateX(10px); -o-transform: translateX(10px); transform: translateX(10px); }
+.i-tip-right-visible { visibility: visible; opacity: 1; -webkit-transform: translateX(-10px); -moz-transform: translateX(-10px); -ms-transform: translateX(-10px); -o-transform: translateX(-10px); transform: translateX(-10px); }
