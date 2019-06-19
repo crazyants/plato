@@ -55,7 +55,7 @@
 /* Disable some borders */
 
 .md-editor > .md-footer,
-.md-editor > .dz-message  { border-width: 0; border-top-width: 4px; border-style: dashed; }
+.md-editor > .md-dropzone > .dz-message  { border-width: 0; border-top-width: 4px; border-style: dashed; }
 
 /* Style textarea and preview */
 .md-editor .md-textarea,

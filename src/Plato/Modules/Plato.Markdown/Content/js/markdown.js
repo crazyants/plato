@@ -501,9 +501,21 @@
 
                 var previewTabBody = $("<div/>",
                     {
-                        'class': 'tab-pane md-preview markdown-body',
-                        'role': 'tabpanel',
-                        'id': 'previewTab' + editorId
+                        'class': "tab-pane md-preview markdown-body",
+                        'role': "tabpanel",
+                        'id': "previewTab" + editorId
+                    });
+
+
+                var editorDropZone = $("<div/>",
+                    {
+                        "class": "md-dropzone"
+                    });
+
+
+                var editorFooter = $("<div/>",
+                    {
+                        "class": "md-footer"
                     });
 
                 // Merge the main & additional button groups together
@@ -602,7 +614,7 @@
                     tabBody.append(previewTabBody);
 
                     editor.append(tabBody);
-
+                
                 } else {
 
                     var rawContent = (typeof toMarkdown === 'function')
@@ -633,11 +645,7 @@
                     container.replaceWith(editor);
                 }
 
-                var editorFooter = $('<div/>',
-                        {
-                            'class': 'md-footer'
-                        }),
-                    createFooter = false,
+                var createFooter = false,
                     footer = '';
                 // Create the footer if savable
                 if (options.savable) {
@@ -664,6 +672,8 @@
                     createFooter = true;
                     editorFooter.append(footer);
                 }
+
+                editor.append(editorDropZone);
 
                 if (createFooter) editor.append(editorFooter);
 
@@ -865,10 +875,11 @@
                         };
                     }
 
-                    this.$editor.addClass('dropzone');
-                    this.$editor.dropzone(options.dropZoneOptions);
+                    this.$editor.find(".md-dropzone").addClass('dropzone');
+                    this.$editor.find(".md-dropzone").dropzone(options.dropZoneOptions);
 
                     // disable any links witin dropzone message area (i.e. Browse to select)
+                    this.$editor.find(".dz-message").find("a").addClass("dz-clickable");
                     this.$editor.find(".dz-message").find("a").click(function(e) {
                         e.preventDefault();
                     });
@@ -1566,9 +1577,10 @@
             url: '/api/media/streaming/upload',
             fallbackClick: false,
             autoProcessQueue: true,
+            clickable: true,
             disablePreview: true,
             dictDefaultMessage:
-                'Attach files by dragging and dropping here, <a href="#">click to browse</a> or paste from the clipboard'
+                'Attach files by dragging and dropping here, <a id="#dzUpload" href="#">click to browse</a> or paste from the clipboard'
         },
         enableDropDataUri: false,
 

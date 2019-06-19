@@ -223,9 +223,7 @@
     box-sizing: border-box;
 }
 
-.dropzone {
-min-height: 150px;
-}
+
 .dropzone.dz-clickable {}
 .dropzone.dz-clickable * {}
 

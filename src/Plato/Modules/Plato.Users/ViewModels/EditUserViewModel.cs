@@ -15,6 +15,7 @@ namespace Plato.Users.ViewModels
         public string DisplayName { get; set; }
 
         [Required, StringLength(255), DataType(DataType.Text), Display(Name = "username")]
+        [RegularExpression("[^\\n|^\\s|^,|^@]*", ErrorMessage = "The username cannot contain the @ or , characters.")]
         public string UserName { get; set; }
 
         [Required, EmailAddress, DataType(DataType.EmailAddress), Display(Name = "email address")]

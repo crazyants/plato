@@ -551,7 +551,7 @@ a.label:hover, .label.active {
 .md-editor > .md-footer, 
 .md-editor > .md-header,
 .md-editor .md-header-row,
-.md-editor > .dz-message {
+.md-editor .dz-message {
     border-color:#ced4da;
 }
 

@@ -4,11 +4,6 @@
     width: 400px;
 }
 
-.history-dropdown .dropdown-body {
-    max-height: 300px;
-    overflow: auto;
-}
-
 .history-dropdown .list-left + .list-body { margin-left: 34px; }
 
 /* diff css */

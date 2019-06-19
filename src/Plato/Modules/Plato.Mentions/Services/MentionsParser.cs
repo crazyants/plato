@@ -17,8 +17,8 @@ namespace Plato.Mentions.Services
     {
         
         // Allow all characters, numbers and special characters
-        // within usernames until we find a space or newline
-        private const string SearchPattern = "@([^\\n|^\\s][a-z0-9\\-_\\/\\@\\.\\*\\!\\~\\=\\(\\)\\{\\}\\'\\\"\\£\\$\\%\\^\\&\\\\:\\<\\>\\|\\;\\[\\]\\?]*)";
+        // within usernames until we find a space, comma or newline
+        private const string SearchPattern = "@([\\n|^\\s|^,]*.[^\\n|^\\s|^\\<|^,]*)";
 
         public string ReplacePattern { get; set; }
             = "<a href=\"{url}\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
