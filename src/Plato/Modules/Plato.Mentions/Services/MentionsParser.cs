@@ -21,7 +21,7 @@ namespace Plato.Mentions.Services
         private const string SearchPattern = "@([\\n|^\\s|^,]*.[^\\n|^\\s|^\\<|^,]*)";
 
         public string ReplacePattern { get; set; }
-            = "<a href=\"{url}\" data-popper-url=\"{url}\" data-provide=\"popper\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
+            = "<a href=\"{url}\" data-popper-url=\"{getUrl}\" data-provide=\"popper\" data-popper-css=\"w-500\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -104,9 +104,20 @@ namespace Plato.Mentions.Services
                             ["opts.alias"] = user.Alias
                         });
 
+                        var getUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Users",
+                            ["controller"] = "Home",
+                            ["action"] = "GetUser",
+                            ["opts.id"] = user.Id,
+                            ["opts.alias"] = user.Alias
+                        });
+
+
                         // parse template
                         var sb = new StringBuilder(ReplacePattern);
-                        sb.Replace("{url}", baseUrl + url);
+                        sb.Replace("{url}", url);
+                        sb.Replace("{getUrl}", getUrl);
                         sb.Replace("{userId}", user.Id.ToString());
                         sb.Replace("{userName}", user.UserName);
 

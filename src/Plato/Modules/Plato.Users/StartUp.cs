@@ -282,7 +282,15 @@ namespace Plato.Users
                 template: "u/{opts.id:int}/{opts.alias?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
-            
+
+            routes.MapAreaRoute(
+                name: "GetUser",
+                areaName: "Plato.Users",
+                template: "u/get/{opts.id:int}/{opts.alias?}",
+                defaults: new { controller = "Home", action = "GetUser" }
+            );
+
+
             routes.MapAreaRoute(
                 name: "UserLetter",
                 areaName: "Plato.Users",

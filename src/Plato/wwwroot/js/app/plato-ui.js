@@ -5695,6 +5695,7 @@ $(function (win, doc, $) {
             event: "mouseenter",
             position: "top", // popper position
             content: "Example Popper Content", // Html content
+            css: "p-2", // css class to apply to content area
             url: "" // optional URL to load content via XmlHttp
         };
 
@@ -5730,7 +5731,7 @@ $(function (win, doc, $) {
                 if (event === "mouseenter" || event === "mouseover") {
 
                     $caller.leaveSpy({
-                        interval: 250,
+                        interval: 150,
                         onLeave: function () {
                             methods.hideAll();
                         }
@@ -5788,11 +5789,14 @@ $(function (win, doc, $) {
 
                         // add to stack
                         methods.callers.push($caller);
-                        
-                        // position
+
+                        // Populate content
+                        methods._populate($caller);
+
+                        // Position popper
                         methods._position($caller);
                         
-                        // load ajax content
+                        // Load content
                         methods._load($caller);
                         
                         // show
@@ -5844,16 +5848,10 @@ $(function (win, doc, $) {
                     };
 
                     // hide everything 
-                    if (hideSticky) {
+                 
                         removeCss();
                         return true;
-                    } else {
-                        // hide all expect stickies
-                        if (!$popper.data("popperSticky")) {
-                            removeCss();
-                            return true;
-                        }
-                    }
+                   
 
                 }
 
@@ -5876,75 +5874,59 @@ $(function (win, doc, $) {
                 var url = $caller.data("popperUrl") || ($caller.data(dataKey) ? $caller.data(dataKey).url : null);
                 if (!url) { return; }
 
-                var $tip = methods._getOrCreate($caller);
+                var $popper = methods._getOrCreate($caller);
+                if ($popper) {
 
-                if ($tip) {
+                    // reposition to adjust for loader template
+                    methods._position($caller);
 
-                    if ($tip.data("ajaxUrlLoaded") !== url) {
 
-                        $tip.data("ajaxUrlLoaded", url);
-                        
-                        // reposition to adjust for loader template
-                        methods._position($caller);
-                        
-                        // delay for transition to complete
-                        if (!this.loadingTimer) {
-                            this.loadingTimer = win.setTimeout(function () {
+                    // Update entity dropdown
+                    app.http({
+                        method: "GET",
+                        url: url
+                    }).done(function(response) {
 
-                                //$.ajax({
-                                //    url: url,
-                                //    cache: false,
-                                //    dataType: "html",
-                                //    success: function (data) {
-                                //        $tip.empty()
-                                //            .html(data)
-                                //            .tidyUI({
-                                //                onComplete: function () {
-                                //                    tooltip.position($caller);
-                                //                }
-                                //            });
-
-                                //        if ($caller.data("tooltip") && $caller.data("tooltip").onLoad) {
-                                //            $caller.data("tooltip").onLoad();
-                                //        }
-                                //    },
-                                //    error: function (xhr, ajaxOptions, thrownError) {
-                                //        window.jAjax.handleCallBackError(xhr, thrownError);
-                                //    }
-                                //});
-
-                            },
-                                200); // allow at least 200ms for i-transision
-
+                        // Populate content
+                        var $content = $popper.find(".popper-content");
+                        if ($content.length > 0) {
+                            $content.empty();
+                            if (response !== "") {
+                                $content.html(response);
+                            }
                         }
-                    } else {
-                        //$tip.tidyUI();
-                    }
+
+                        // onLoad event
+                        if ($caller.data(dataKey) && $caller.data(dataKey).onLoad) {
+                            $caller.data(dataKey).onLoad($caller, $popper);
+                        }
+
+
+                    });
+
+
                 }
-                
+
             },
             _getOrCreate: function($caller) {
 
                 var id = $caller.data(dataKey).id,
                     selector = "#" + id,
                     content = $caller.data("popperContent") || $caller.data(dataKey).content,
+                    css = $caller.data("popperCss") || $caller.data(dataKey).css,
                     $popper = $("<div/>",
-                    {
-                        "id": id,
-                        "class": "popper"
+                        {
+                            "id": id,
+                            "class": "popper"
                         }),
                     $content = $("<div/>",
                         {
-                            "class": "popper-content"
+                            "class": "popper-content" + (css !== "" ? " " + css : "")
                         });
-                
 
-                // Return if the popper has already been added
+                // Build popper
                 if ($(selector).length === 0) {
-
-                    // Set initial content
-                    $content.html(content);
-
+               
                     // Build popper
                     $popper.append($content);
                     
@@ -5959,13 +5941,21 @@ $(function (win, doc, $) {
                 return $(selector);
           
             },
+            _populate: function($caller) {
+
+                var $popper = methods._getOrCreate($caller),
+                    content = $caller.data("popperContent") || $caller.data(dataKey).content;
+
+                // Set initial content
+                $popper.find(".popper-content").empty().html(content);
+                
+            },
             _position($caller) {
 
                 var $tip = methods._getOrCreate($caller);
 
                 if ($tip) {
-
-              
+                    
                     // get caller coords
                     var $offset = $caller.offset(),
                         callerTop = Math.floor($offset.top),
@@ -6018,37 +6008,23 @@ $(function (win, doc, $) {
                             "top": (callerTop - height) - animationOffset,
                             "left": tipAlignedLeft
                         });
-                        //$arrow.css({
-                        //    "top": (callerTop - arrowHeight) - animationOffset,
-                        //    "left": arrowAlignedLeft
-                        //});
+                       
                     } else if (position === "right") {
                         $tip.css({
                             "top": centerPointVert - tipHeight / 2,
                             "left": (callerLeft + callerWidth + arrowWidth) + animationOffset
                         });
-                        //$arrow.css({
-                        //    "top": (centerPointVert - arrowWidth),
-                        //    "left": (callerLeft + callerWidth) + animationOffset
-                        //});
+                      
                     } else if (position === "left") {
                         $tip.css({
                             "top": centerPointVert - (tipHeight / 2),
-                            "left": (callerLeft - arrowWidth - tipWidth) - animationOffset
+                            "left": callerLeft - arrowWidth - tipWidth - animationOffset
                         });
-                        //$arrow.css({
-                        //    "top": centerPointVert - arrowWidth,
-                        //    "left": (callerLeft - arrowWidth) - +animationOffset
-                        //});
                     } else if (position === "bottom") {
                         $tip.css({
                             "top": (callerTop + callerHeight + arrowHeight) + animationOffset,
                             "left": tipAlignedLeft
                         });
-                        //$arrow.css({
-                        //    "top": (callerTop + callerHeight) + animationOffset,
-                        //    "left": arrowAlignedLeft
-                        //});
                     }
 
                     // check bounds

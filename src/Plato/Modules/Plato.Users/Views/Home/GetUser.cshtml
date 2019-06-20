@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Internal.Data.Abstractions
+@model User
+@{
+    Layout = null;
+}
+
+<div class="p-4">
+    <div class="list-left">
+        <avatar class="avatar" url="@Model.Avatar.Url" />
+    </div>
+    <div class="list-body">
+    
+        <h4 class="d-block text-truncate">@Model.DisplayName</h4>
+
+        <div class="text-muted">
+            @@@Model.UserName
+        </div>
+  
+        @if (!String.IsNullOrEmpty(Model.Biography))
+        {
+            <div>
+                @Model.Biography
+            </div>
+        }
+
+        <hr/>
+
+        @if (!String.IsNullOrEmpty(Model.Location))
+        {
+            <div>
+                <i class="fal fa-map-marker d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Location"]"></i>
+                <div class="d-inline-block align-middle max-w-200 text-truncate">@Model.Location</div>
+            </div>
+        }
+
+        @if (!String.IsNullOrWhiteSpace(Model.Url))
+        {
+            <div>
+                <i class="fal fa-link d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Web Site"]"></i><a href="@Model.Url" title="@Model.Url" data-toggle="tooltip" class="d-inline-block align-middle max-w-200 text-truncate">@Model.Url</a>
+            </div>
+        }
+    
+    </div>
+</div>

@@ -96,7 +96,7 @@ namespace Plato.Users.Controllers
             //{
             //    return Unauthorized();
             //}
-        
+
             // default options
             if (opts == null)
             {
@@ -137,14 +137,14 @@ namespace Plato.Users.Controllers
 
             // Add view model to context
             HttpContext.Items[typeof(UserIndexViewModel)] = viewModel;
-            
+
             // If we have a pager.page querystring value return paged results
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {
                 if (page > 0)
                     return View("GetUsers", viewModel);
             }
-            
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -153,14 +153,14 @@ namespace Plato.Users.Controllers
                     .LocalNav()
                 ).Add(S["Users"]);
             });
-            
+
             // Return view
             return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(new Profile(), this));
 
         }
 
         // -----------------
-        // User Profile
+        // Display User
         // -----------------
 
         public async Task<IActionResult> Display(DisplayUserOptions opts)
@@ -173,7 +173,7 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-            
+
             // Build page title
             _pageTitleBuilder.AddSegment(S[user.DisplayName], int.MaxValue);
 
@@ -191,7 +191,7 @@ namespace Plato.Users.Controllers
 
             // Add user to context
             HttpContext.Items[typeof(User)] = user;
-            
+
             // Build view model
             var viewModel = new Profile()
             {
@@ -203,8 +203,39 @@ namespace Plato.Users.Controllers
 
         }
 
+
         // -----------------
-        // Edit Profile
+        // Get User
+        // -----------------
+        
+        public async Task<IActionResult> GetUser(DisplayUserOptions opts)
+        {
+
+            if (opts == null)
+            {
+                opts = new DisplayUserOptions();
+            }
+
+            if (opts.Id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(opts.Id));
+            }
+
+            // Get user
+            var user = await _platoUserStore.GetByIdAsync(opts.Id);
+             
+            // Ensure user exists
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Return view
+            return View(user);
+
+        }
+
+
         // -----------------
 
         public async Task<IActionResult> EditProfile()
@@ -218,7 +249,7 @@ namespace Plato.Users.Controllers
             {
                 return Unauthorized();
             }
-            
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -227,7 +258,7 @@ namespace Plato.Users.Controllers
                     .LocalNav()
                 ).Add(S["Your Account"]);
             });
-       
+
             // Build view model
             var editProfileViewModel = new EditProfileViewModel()
             {
@@ -243,6 +274,8 @@ namespace Plato.Users.Controllers
             return View((LayoutViewModel) await _editProfileViewProvider.ProvideEditAsync(editProfileViewModel, this));
 
         }
+        // Edit Profile
+        // -----------------
 
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditProfile))]
         public async Task<IActionResult> EditProfilePost(EditProfileViewModel model)
@@ -254,7 +287,7 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-            
+
             // Validate model state within all view providers
             if (await _editProfileViewProvider.IsModelStateValid(model, this))
             {
@@ -298,7 +331,7 @@ namespace Plato.Users.Controllers
             {
                 return Unauthorized();
             }
-            
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -315,7 +348,7 @@ namespace Plato.Users.Controllers
                 UserName = user.UserName,
                 Email = user.Email
             };
-            
+
             // Return view
             return View((LayoutViewModel) await _editAccountViewProvider.ProvideEditAsync(viewModel, this));
 
@@ -359,7 +392,7 @@ namespace Plato.Users.Controllers
             return await EditAccount();
 
         }
-        
+
         public async Task<IActionResult> ResetPassword()
         {
 
@@ -390,14 +423,15 @@ namespace Plato.Users.Controllers
                         {
                             _alerter.Danger(T[error.Description]);
                             //ViewData.ModelState.AddModelError(string.Empty, error.Description);
-                        }}
+                        }
+                    }
                 }
                 else
                 {
                     _alerter.Danger(T["You must confirm your email before you can reset your password!"]);
                     //ViewData.ModelState.AddModelError(string.Empty, "You must confirm your email before you can reset your password!");
                 }
-                 
+
             }
             else
             {
@@ -427,7 +461,7 @@ namespace Plato.Users.Controllers
             {
                 return Unauthorized();
             }
-            
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -445,7 +479,7 @@ namespace Plato.Users.Controllers
             };
 
             // Return view
-            return View((LayoutViewModel)await _editSignatureViewProvider.ProvideEditAsync(viewModel, this));
+            return View((LayoutViewModel) await _editSignatureViewProvider.ProvideEditAsync(viewModel, this));
 
         }
 
@@ -503,7 +537,7 @@ namespace Plato.Users.Controllers
             {
                 return Unauthorized();
             }
-            
+
             // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -512,7 +546,7 @@ namespace Plato.Users.Controllers
                     .LocalNav()
                 ).Add(S["Your Account"]);
             });
-            
+
             // Build view model
             var viewModel = new EditSettingsViewModel()
             {
@@ -565,7 +599,7 @@ namespace Plato.Users.Controllers
             return await EditSettings();
 
         }
-        
+
         #endregion
 
         #region "Private Methods"
@@ -593,8 +627,9 @@ namespace Plato.Users.Controllers
 
             return timeZones;
         }
-        
+
         #endregion
 
     }
+
 }
