@@ -1,5 +1,21 @@
 ﻿@model EntityViewModel<Topic, Reply>
 
+<a href="#" data-provide="popper" data-popper-position="top" class="d-inline-block">
+    Popper Top
+</a>
+
+<a href="#" data-provide="popper" data-popper-position="bottom" class="d-inline-block">
+    Popper Bottom
+</a>
+
+<a href="#" data-provide="popper" data-popper-position="left" class="d-inline-block">
+    Popper Left
+</a>
+
+<a href="#" data-provide="popper" data-popper-position="right" class="d-inline-block">
+    Popper Right
+</a>
+
 <div class="list-row">
     <navigation name="topic-details"
                 model="Model.Entity"
@@ -35,7 +51,7 @@
                             model="Model.Entity"
                             class="nav navbar p-0 float-right"
                             child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in"
-                            child-ul-inner-css-class="min-w-200 max-h-250 overflow-auto"/>
+                            child-ul-inner-css-class="min-w-200 max-h-250 overflow-auto" />
             </card-title>
             <card-body>
                 <div class="markdown-body p-3" data-provide="markdownBody">
@@ -49,7 +65,7 @@
                 </div>
                 <navigation name="topic-footer"
                             model="Model.Entity"
-                            enable-list="false"/>
+                            enable-list="false" />
             </card-body>
 
         </card>

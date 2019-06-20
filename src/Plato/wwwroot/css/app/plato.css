@@ -1881,19 +1881,71 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 a.accepted-answer {  color: #28a745; }
 a.accepted-answer i { font-size: 18pt; }
 
+
+
 /* popper */
 
-.popper { display: block; visibility: hidden; opacity: 0; position: absolute; z-index: 20;border-width: 1px;border-style: solid; top: 0; left: 0; }
-.popper .content {display: block; font-weight: normal; margin: 1rem; padding: 0; }
+.popper {
+    position: absolute;
+    z-index: 1000;
+    min-width: 10rem;
+    display: none;
+    top: 0;
+    left: 0; 
+    background: red;
+}
 
-.i-tip-arrow-top { top: -8px; border-left-color: transparent !important; border-top-color: transparent !important; border-right-color: transparent !important; border-left-width: 8px; border-right-width: 8px; border-bottom-width: 8px; }
-.i-tip-arrow-bottom { bottom: -8px; border-left-color: transparent !important; border-bottom-color: transparent !important; border-right-color: transparent !important; border-left-width: 8px; border-right-width: 8px; border-top-width: 8px;  } 
-.i-tip-arrow-left  { left: -8px; border-bottom-color: transparent !important; border-top-color: transparent !important; border-left-color: transparent !important; border-bottom-width: 8px; border-top-width: 8px; border-right-width: 8px; }
-.i-tip-arrow-right  { border-bottom-color: transparent !important; border-top-color: transparent !important; border-right-color: transparent !important;  border-bottom-width: 8px; border-top-width: 8px; border-left-width: 8px; }
+.popper-top,
+.popper-bottom,
+.popper-left,
+.popper-right { display: block; }
 
-/* tip animation */
+.popper-content {
+    padding: 0.50rem 1rem;
+    border-width: 1px;
+    border-style: solid;
+}
 
-.i-tip-top-visible { visibility: visible; opacity: 1; -webkit-transform: translateY(10px); -moz-transform: translateY(10px); -ms-transform: translateY(10px); -o-transform: translateY(10px); transform: translateY(10px); }
-.i-tip-bottom-visible { visibility: visible; opacity: 1; -webkit-transform: translateY(-10px); -moz-transform: translateY(-10px); -ms-transform: translateY(-10px); -o-transform: translateY(-10px); transform: translateY(-10px); }
-.i-tip-left-visible { visibility: visible; opacity: 1; -webkit-transform: translateX(10px); -moz-transform: translateX(10px); -ms-transform: translateX(10px); -o-transform: translateX(10px); transform: translateX(10px); }
-.i-tip-right-visible { visibility: visible; opacity: 1; -webkit-transform: translateX(-10px); -moz-transform: translateX(-10px); -ms-transform: translateX(-10px); -o-transform: translateX(-10px); transform: translateX(-10px); }
+/* arrow */
+.popper-content:after,
+.popper-content:before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+}
+
+/* arrow border */
+.popper-content:before {
+    border: 8px solid transparent;
+}
+
+/* arrow background */
+.popper-content:after {
+    border: 7px solid transparent;
+}
+
+/* position arrow */
+.popper-top .popper-content:before { left: 9px; right: auto; bottom: -16px; }
+.popper-top .popper-content:after { left: 10px; right: auto; bottom: -14px; }
+.popper-left .popper-content:before { left: auto; right: -16px; top: 9px; }
+.popper-left .popper-content:after { left: auto; right: -14px; top: 10px; }
+.popper-right .popper-content:before { left: -16px; right: auto; top: 9px; }
+.popper-right .popper-content:after { left: -14px; right: auto; top: 10px; }
+.popper-bottom .popper-content:before { left: 9px; right: auto; top: -16px; }
+.popper-bottom .popper-content:after { left: 10px; right: auto; top: -14px; }
+
+
+/* arrow border */
+.popper-left .popper-content:before { border-left-color: #444; }
+.popper-top .popper-content:before { border-top-color: #444; }
+.popper-right .popper-content:before { border-right-color: #444; }
+.popper-bottom .popper-content:before { border-bottom-color: #444; }
+
+/* arrow background */
+.popper-left .popper-content:after { border-left-color: #222; }
+.popper-top .popper-content:after { border-top-color: #222; }
+.popper-right .popper-content:after { border-right-color: #222; }
+.popper-bottom .popper-content:after { border-bottom-color: #222; }
+
+/* popped content */
+.popper-content { background: #222; border-color: #444; }

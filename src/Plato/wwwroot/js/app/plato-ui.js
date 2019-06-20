@@ -2303,6 +2303,136 @@ $(function (win, doc, $) {
         };
 
     }();
+
+    /* leaveSpy */
+    var leaveSpy = function () {
+
+        var dataKey = "leaveSpy",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            selector: null, // the selector we must leave to trigger the onLeave event 
+            interval: 500, // interval in milliseconds to wait before firing leave
+            onLeave: null // triggers after interval when mouse leaves element
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                $caller.on("mouseleave", function (e) {
+
+                    var target = e.target,
+                        related = e.relatedTarget,
+                        selector = $caller.data(dataKey).selector,
+                        match;
+
+                    if (selector) {
+
+                        // search for a parent node matching our selector
+                        while (target && target !== document && !(match = matches(target, selector))) {
+                            target = target.parentNode;
+                        }
+
+                        // exit if no matching node has been found
+                        if (!match) { return; }
+
+                        // loop through the parent of the related target to make sure that it's not a child of the target
+                        while (related && related !== target && related !== document) {
+                            related = related.parentNode;
+                        }
+
+                        // exit if this is the case
+                        if (related === target) { return; }
+
+                    }
+                 
+                    // we are not on selector, start timer to trigger event
+                    methods.startTimer($(this));
+
+                    // We'll use querySelectorAll to find all element matching the selector,
+                    // then check if the given element is included in that list.
+                    // Executing the query on the parentNode reduces the resulting nodeList,
+                    // document doesn't have a parentNode, though.
+                    function matches(elem, selector) {
+                        var nodeList = (elem.parentNode || document).querySelectorAll(selector) || [],
+                            i = nodeList.length;
+                        while (i--) {
+                            if (nodeList[i] === elem) { return true; }
+                        }
+                        return false;
+                    };
+
+                });
+
+                $caller.on("mouseenter", function (e) {
+                    // we've moved back in, cancel timer
+                    methods.stopTimer();
+                });
+
+            },
+            unbind: function ($caller) {
+                $caller.off('mouseenter');
+                $caller.off('mouseenter');
+            },
+            startTimer: function ($caller) {
+                this.stopTimer();
+                this.timer = setTimeout(function () {
+                    if ($caller.data(dataKey).onLeave) {
+                        $caller.data(dataKey).onLeave($caller);
+                    }
+                }, $caller.data(dataKey).interval);
+            },
+            stopTimer: function () {
+                win.clearTimeout(this.timer);
+                this.timer = null;
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).leaveSpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } 
+            }
+
+        };
+
+    }();
     
     /* InfiniteScroll */
     var infiniteScroll = function() {
@@ -5562,7 +5692,7 @@ $(function (win, doc, $) {
 
         var defaults = {
             id: "popper",
-            event: "mouseover",
+            event: "mouseenter",
             position: "top", // popper position
             content: "Example Popper Content", // Html content
             url: "" // optional URL to load content via XmlHttp
@@ -5598,13 +5728,16 @@ $(function (win, doc, $) {
                     });
                 
                 if (event === "mouseenter" || event === "mouseover") {
+
+                    $caller.leaveSpy({
+                        interval: 250,
+                        onLeave: function () {
+                            methods.hideAll();
+                        }
+                    });
+
                     $caller.mouseleave(function () {
                         methods._clearTimer();
-                        // leave sticky tips open
-                        if ($(this).data("popperSticky")) {
-                            return;
-                        }
-                        methods.hideAll();
                     });
                 }
 
@@ -5627,78 +5760,54 @@ $(function (win, doc, $) {
 
                 function showTip() {
 
-                    console.log("showTip");
-
                     // get 
                     var position = methods._getPosition($caller),
-                        $tip = methods._getOrCreate($caller);
+                        $popper = methods._getOrCreate($caller);
                  
-                    if ($tip) {
-
-                        if ($caller.css("position") === "fixed") {
-                            $tip.css({ "position": "fixed" });
-                        }
-
-                        alert(methods._isVisible($caller))
+                    if ($popper) {
+                        
                         // already visible do nothing
                         if (methods._isVisible($caller)) {
                             return;
                         }
 
                         // hide tips
-                        tooltip.hideAll($caller.data("popperSticky"));
+                        methods.hideAll($caller.data("popperSticky"));
 
                         // hide sticky tips
-                        if ($caller.data("popperSticky")) {
-                            // use leavespy to delay hiding
-                            //$tip.ileavespy({
-                            //    selector: ".i-tip",
-                            //    interval: 500,
-                            //    onLeave: function () {
-                            //        tooltip.hideAll(true);
-                            //    }
-                            //});
-                        }
+                        //if ($caller.data("popperSticky")) {
+                            // use leaveSpy to delay hiding
+                            $popper.leaveSpy({
+                                selector: ".popper",
+                                interval: 500,
+                                onLeave: function () {
+                                    methods.hideAll(true);
+                                }
+                            });
+                        //}
 
                         // add to stack
                         methods.callers.push($caller);
-
+                        
                         // position
                         methods._position($caller);
-
-                        // add transition
-                        //$tip.addClass("i-transition");
-                        //$arrow.addClass("i-transition");
-
+                        
                         // load ajax content
                         methods._load($caller);
-                        //tooltip.loadFrameUrl($caller, $tip);
-
+                        
                         // show
                         if (position === "top") {
-                            $tip.addClass("i-tip-top-visible");
-                            //if (enableArrow) {
-                            //    $arrow.addClass("i-tip-top-visible");
-                            //}
+                            $popper.addClass("popper-top");
                         } else if (position === "bottom") {
-                            $tip.addClass("i-tip-bottom-visible");
-                            //if (enableArrow) {
-                            //    $arrow.addClass("i-tip-bottom-visible");
-                            //}
+                            $popper.addClass("popper-bottom");
                         } else if (position === "left") {
-                            $tip.addClass("i-tip-left-visible");
-                            //if (enableArrow) {
-                            //    $arrow.addClass("i-tip-left-visible");
-                            //}
+                            $popper.addClass("popper-left");
                         } else if (position === "right") {
-                            $tip.addClass("i-tip-right-visible");
-                            //if (enableArrow) {
-                            //    $arrow.addClass("i-tip-right-visible");
-                            //}
+                            $popper.addClass("popper-right");
                         }
-
+                        
                         if ($caller.data(dataKey) && $caller.data(dataKey).onShow) {
-                            $caller.data(dataKey).onShow($caller, $tip);
+                            $caller.data(dataKey).onShow($caller, $popper);
                         }
 
                     }
@@ -5712,26 +5821,20 @@ $(function (win, doc, $) {
                     methods.loadingTimer = false;
                 }
 
-                var $tip = methods._getOrCreate($caller);
-
-                if ($tip) {
+                var $popper = methods._getOrCreate($caller);
+                if ($popper) {
 
                     var removeCss = function() {
 
-                        var position = tooltip._getPosition($tip);
-
+                        var position = methods._getPosition($caller);
                         if (position === "top") {
-                            $tip.removeClass("i-tip-top-visible");
-                            //$arrow.removeClass("i-tip-top-visible");
+                            $popper.removeClass("popper-top");
                         } else if (position === "bottom") {
-                            $tip.removeClass("i-tip-bottom-visible");
-                            //$arrow.removeClass("i-tip-bottom-visible");
+                            $popper.removeClass("popper-bottom");
                         } else if (position === "left") {
-                            $tip.removeClass("i-tip-left-visible");
-                            //$arrow.removeClass("i-tip-left-visible");
+                            $popper.removeClass("popper-left");
                         } else if (position === "right") {
-                            $tip.removeClass("i-tip-right-visible");
-                            //$arrow.removeClass("i-tip-right-visible");
+                            $popper.removeClass("popper-right");
                         }
 
                         if ($caller.data(dataKey) && $caller.data(dataKey).onHide) {
@@ -5746,7 +5849,7 @@ $(function (win, doc, $) {
                         return true;
                     } else {
                         // hide all expect stickies
-                        if (!$tip.data("popperSticky")) {
+                        if (!$popper.data("popperSticky")) {
                             removeCss();
                             return true;
                         }
@@ -5828,7 +5931,7 @@ $(function (win, doc, $) {
                     $popper = $("<div/>",
                     {
                         "id": id,
-                        "class": "popper dropdown-menu"
+                        "class": "popper"
                         }),
                     $content = $("<div/>",
                         {
@@ -5890,7 +5993,7 @@ $(function (win, doc, $) {
                     var centerPoint = callerLeft + (Math.floor(callerWidth / 2));
                     var centerPointVert = callerTop + (Math.floor(callerHeight / 2));
 
-                    // set left based on data-tooltip-align attribute
+                    // set left based on data-popper-align attribute
                     var tipAlignedLeft = centerPoint - (tipWidth / 2);
                     var arrowAlignedLeft = centerPoint - arrowHeight;
                     if ($caller.data("popperAlign")) {
@@ -6050,6 +6153,7 @@ $(function (win, doc, $) {
         autoComplete: autoComplete.init,
         typeSpy: typeSpy.init,
         blurSpy: blurSpy.init,
+        leaveSpy: leaveSpy.init,
         scrollSpy: scrollSpy.init,
         resizeSpy: resizeSpy.init,
         infiniteScroll: infiniteScroll.init,
