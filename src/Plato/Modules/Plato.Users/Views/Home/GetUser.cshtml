@@ -5,18 +5,18 @@
     Layout = null;
 }
 
-<div class="p-4">
+<div class="popper-content p-4">
     <div class="list-left">
-        <avatar class="avatar" url="@Model.Avatar.Url" />
+        <avatar class="avatar" url="@Model.Avatar.Url"/>
     </div>
     <div class="list-body">
-    
+
         <h4 class="d-block text-truncate">@Model.DisplayName</h4>
 
         <div class="text-muted">
             @@@Model.UserName
         </div>
-  
+
         @if (!String.IsNullOrEmpty(Model.Biography))
         {
             <div>
@@ -40,6 +40,6 @@
                 <i class="fal fa-link d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Web Site"]"></i><a href="@Model.Url" title="@Model.Url" data-toggle="tooltip" class="d-inline-block align-middle max-w-200 text-truncate">@Model.Url</a>
             </div>
         }
-    
+
     </div>
 </div>

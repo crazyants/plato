@@ -1895,8 +1895,6 @@ a.accepted-answer i { font-size: 18pt; }
     z-index: 1000;
     min-width: 10rem;
     display: none;
-    top: 0;
-    left: 0;
 }
 
 .popper-top,
