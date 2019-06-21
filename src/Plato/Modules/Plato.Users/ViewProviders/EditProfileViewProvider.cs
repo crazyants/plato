@@ -177,7 +177,7 @@ namespace Plato.Users.ViewProviders
                 // Delete any existing file
                 if (existingPhoto != null)
                 {
-                    _sitesFolder.DeleteFile(existingPhoto.Name, _pathToImages);
+                    //_sitesFolder.DeleteFile(existingPhoto.Name, _pathToImages);
                 }
             }
 

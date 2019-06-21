@@ -303,6 +303,25 @@ a.label.active {
 }
 
 /* ------------------- */
+/* Popper */
+/* ------------------- */
+
+/* arrow border */
+.popper-left .popper-content:before { border-left-color: #282828; }
+.popper-top .popper-content:before { border-top-color: #282828; }
+.popper-right .popper-content:before { border-right-color: #282828; }
+.popper-bottom .popper-content:before { border-bottom-color: #282828; }
+
+/* arrow background */
+.popper-left .popper-content:after { border-left-color: #0a0a0a; }
+.popper-top .popper-content:after { border-top-color: #0a0a0a; }
+.popper-right .popper-content:after { border-right-color: #0a0a0a; }
+.popper-bottom .popper-content:after { border-bottom-color: #0a0a0a; }
+
+/* popped content */
+.popper-content { background: #0a0a0a; border-color: #282828; }
+
+/* ------------------- */
 /* Switches */
 /* ------------------- */
 

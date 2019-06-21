@@ -5,41 +5,66 @@
     Layout = null;
 }
 
-<div class="popper-content p-4">
-    <div class="list-left">
-        <avatar class="avatar" url="@Model.Avatar.Url"/>
-    </div>
-    <div class="list-body">
-
-        <h4 class="d-block text-truncate">@Model.DisplayName</h4>
-
-        <div class="text-muted">
-            @@@Model.UserName
+<div class="popper-content">
+    
+    <div class="p-3">
+        <div class="list-left list-left-80">
+            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" data-toggle="tooltip" title="@T["Goto Profile"]" class="d-inline-block">
+                <avatar class="avatar avatar-md" url="@Model.Avatar.Url" />
+            </a>
         </div>
+        <div class="list-body">
+        
+            @if (Model.IsVerified)
+            {
+                <div data-provide="tooltip" title="@T["Verified Member"]" class="badge badge-md badge-primary rounded-circle float-right">
+                    <i class="fal fa-check"></i>
+                </div>
+            }
 
-        @if (!String.IsNullOrEmpty(Model.Biography))
-        {
+            <h6 class="d-inline-block m-0 p-0 text-truncate">@Model.DisplayName</h6>
+                
+            <div class="text-muted">@@@Model.UserName</div>
+
+            @if (!String.IsNullOrEmpty(Model.Biography))
+            {
+                <div>@Model.Biography</div>
+            }
+            
+            @if (!String.IsNullOrEmpty(Model.Location))
+            {
+                <div>
+                    <i class="fal fa-map-marker d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Location"]"></i>
+                    <div class="d-inline-block align-middle max-w-200 text-truncate">@Model.Location</div>
+                </div>
+            }
+          
+            
             <div>
-                @Model.Biography
+                @T["Last active "] <date utc="@Model.LastLoginDate"></date>
             </div>
-        }
 
-        <hr/>
-
-        @if (!String.IsNullOrEmpty(Model.Location))
-        {
-            <div>
-                <i class="fal fa-map-marker d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Location"]"></i>
-                <div class="d-inline-block align-middle max-w-200 text-truncate">@Model.Location</div>
-            </div>
-        }
-
-        @if (!String.IsNullOrWhiteSpace(Model.Url))
-        {
-            <div>
-                <i class="fal fa-link d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Web Site"]"></i><a href="@Model.Url" title="@Model.Url" data-toggle="tooltip" class="d-inline-block align-middle max-w-200 text-truncate">@Model.Url</a>
-            </div>
-        }
-
+        </div>
     </div>
+    <hr class="m-0 p-0"/>
+    <div class="p-3">
+        
+        <div>
+            <span class="mr-2" title="@T["Rank"]" data-toggle="tooltip">
+                <i class="fal fa-hashtag"></i>
+                @Model.Rank
+            </span>
+            <span class="mr-2" title="@T["Reputation"]" data-toggle="tooltip">
+                <i class="fal fa-gem"></i>
+                @Model.Reputation.ToPrettyInt()
+            </span>
+            <span class="mr-2" title="@T["visits"]" data-toggle="tooltip">
+                <i class="fal fa-heart"></i>
+                @Model.Visits.ToPrettyInt()
+            </span>
+        </div>
+   
+    </div>
+
+  
 </div>

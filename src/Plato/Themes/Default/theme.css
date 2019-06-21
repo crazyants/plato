@@ -326,6 +326,26 @@ a.label:hover, .label.active {
     border-bottom-color: #fff;
 }
 
+
+/* ------------------- */
+/* Popper */
+/* ------------------- */
+
+/* arrow border */
+.popper-left .popper-content:before { border-left-color: #E5E5E5; }
+.popper-top .popper-content:before { border-top-color: #E5E5E5; }
+.popper-right .popper-content:before { border-right-color: #E5E5E5; }
+.popper-bottom .popper-content:before { border-bottom-color: #E5E5E5; }
+
+/* arrow background */
+.popper-left .popper-content:after { border-left-color: #fff; }
+.popper-top .popper-content:after { border-top-color: #fff; }
+.popper-right .popper-content:after { border-right-color: #fff; }
+.popper-bottom .popper-content:after { border-bottom-color: #fff; }
+
+/* popped content */
+.popper-content { background: #fff; border-color: #E5E5E5;    box-shadow: 2px 2px 7px 0 rgba(100, 100, 100, 0.3); }
+
 /* ------------------- */
 /* Switches */
 /* ------------------- */

@@ -5806,20 +5806,16 @@ $(function (win, doc, $) {
             },
             hide: function ($caller, hideSticky) {
 
-                if (methods.loadingTimer) {
-                    win.clearTimeout(this.loadingTimer);
-                    methods.loadingTimer = false;
-                }
-
                 var $popper = methods._getOrCreate($caller);
                 if ($popper) {
                     
-                    // Remove optional Css
+                    // Remove Css
                     methods._removeCss($caller);
 
-                    // Reset popper position to original
+                    // Reset popper position
                     $caller.data("popperPosition", $caller.data("popperOriginalPosition") || "top");
 
+                    // onHide event
                     if ($caller.data(dataKey) && $caller.data(dataKey).onHide) {
                         $caller.data(dataKey).onHide();
                     }
@@ -5830,13 +5826,12 @@ $(function (win, doc, $) {
             hideAll: function () {
                 var len = methods.callers.length;
                 for (var i = 0; i < len; i++) {
-                    var $caller = methods.callers[i];
-                    var hidden = methods.hide($caller);
+                    var $caller = methods.callers[i],
+                        hidden = methods.hide($caller);
                     if (hidden) {
                         methods.callers.splice(i, 1);
                     }
                 }
-
             },
             _load: function ($caller, func) {
 
@@ -5863,6 +5858,10 @@ $(function (win, doc, $) {
                             }
                         }
 
+                        // Init tooltips within loaded content
+                        app.ui.initToolTips($popper);
+
+                        // Callback 
                         if (func) {
                             func($popper);
                         }
@@ -5894,7 +5893,7 @@ $(function (win, doc, $) {
                     // Add to dom
                     $("body").append($popper);
                     
-                    // hide sticky tips
+                    // Bind leave events
                     $popper.leaveSpy({
                         selector: ".popper",
                         interval: 500,
@@ -5903,11 +5902,12 @@ $(function (win, doc, $) {
                         }
                     });
                     
-                    // Return popper
+                    // Return new popper
                     return $popper;
 
                 }
-                
+
+                // Return existing popper
                 return $(selector);
           
             },
@@ -5917,6 +5917,7 @@ $(function (win, doc, $) {
                     css = $caller.data("popperCss") || $caller.data(dataKey).css,
                     position = methods._getPosition($caller);
 
+                // Custom Css
                 if (css) {
                     if (!$popper.hasClass(css)) {
                         $popper.addClass(css);
@@ -5941,12 +5942,14 @@ $(function (win, doc, $) {
                     css = $caller.data("popperCss") || $caller.data(dataKey).css,
                     position = methods._getPosition($caller);
 
+                // Custom Css
                 if (css) {
                     if ($popper.hasClass(css)) {
                         $popper.removeClass(css);
                     }
                 }
-                
+
+                // Hide Css
                 if (position === "top") {
                     $popper.removeClass("popper-top");
                 } else if (position === "bottom") {
@@ -5970,41 +5973,20 @@ $(function (win, doc, $) {
                         callerLeft = Math.floor($offset.left),
                         callerWidth = Math.floor($caller.outerWidth()),
                         callerHeight = Math.floor($caller.outerHeight()),
-                        callerRight = callerLeft + callerWidth;
-
-                    // get dims
-                    var width = $popper.outerWidth();
-                    if ($caller.data("popperWidth")) {
-                        width = parseInt($caller.data("popperWidth"));
-                        $popper.css({ "width": width });
-                    } else {
-                        $popper.css({ "white-space": "nowrap" });
-                    }
-
-                    // get tip height
-                    var height = $popper.outerHeight();
-
-                    // center position
+                        callerRight = callerLeft + callerWidth,
+                        width = $popper.outerWidth(),
+                        height = $popper.outerHeight();
+                    
+                    
+                    // Get center positions
                     var centerX = callerLeft + Math.floor(callerWidth / 2),
                         centerY = callerTop + Math.floor(callerHeight / 2);
 
-                    // set left based on data-popper-align attribute
-                    //var tipAlignedLeft = centerPoint - width / 2;
-                 
-                    //if ($caller.data("popperAlign")) {
-                    //    if ($caller.data("popperAlign") === "left") {
-                    //        tipAlignedLeft = callerLeft - 6;
-                    //        //arrowAlignedLeft = callerLeft + 6;
-                    //    } else if ($caller.data("popperAlign") === "right") {
-                    //        tipAlignedLeft = callerRight - width;
-                    //        //arrowAlignedLeft = (callerRight - (arrowWidth * 2)) - 6;
-                    //    }
-                    //}
-                    
+                    // Position popper
                     var position = methods._getPosition($caller);
                     if (position === "top") {
                         $popper.css({
-                            "top": (callerTop - height),
+                            "top": callerTop - height,
                             "left": callerLeft
                         });
                     } else if (position === "right") {
@@ -6025,16 +6007,16 @@ $(function (win, doc, $) {
                     }
 
                     // Checks bounds
-                    var boundPadding = 12;
-                    var left = parseInt($popper.css("left").split("p")[0]),
+                    var padding = 20,
+                        left = parseInt($popper.css("left").split("p")[0]),
                         top = parseInt($popper.css("top").split("p")[0]),
                         right = left + width,
                         bottom = top + height;
 
                     if (position === "top" || position === "bottom") {
 
-                        var aboveFold = top < $(win).scrollTop(),
-                            belowFold = bottom > $(win).scrollTop() + $(win).height();
+                        var aboveFold = top < $(win).scrollTop() + padding,
+                            belowFold = bottom > $(win).scrollTop() + $(win).height() + padding;
 
                         if (aboveFold && !belowFold) {
 
@@ -6065,11 +6047,11 @@ $(function (win, doc, $) {
                         }
                         
                         if (left <= 0) {
-                            $popper.css({ "left": boundPadding });
+                            $popper.css({ "left": padding });
                         } else {
                             var winWidth = $(win).width();
                             if (right >= winWidth) {
-                                $popper.css({ "left": winWidth - (right + boundPadding) });
+                                $popper.css({ "left": winWidth - (right + padding) });
                             }
                         }
 
