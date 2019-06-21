@@ -14,7 +14,7 @@
             </a>
         </div>
         <div class="list-body">
-        
+
             @if (Model.IsVerified)
             {
                 <div data-provide="tooltip" title="@T["Verified Member"]" class="badge badge-md badge-primary rounded-circle float-right">
@@ -23,14 +23,17 @@
             }
 
             <h6 class="d-inline-block m-0 p-0 text-truncate">@Model.DisplayName</h6>
-                
-            <div class="text-muted">@@@Model.UserName</div>
+            
 
             @if (!String.IsNullOrEmpty(Model.Biography))
             {
-                <div>@Model.Biography</div>
+                <div>@Model.Biography.TrimToAround(150)</div>
             }
-            
+            else
+            {
+                <div class="text-muted">@@@Model.UserName</div>
+            }
+
             @if (!String.IsNullOrEmpty(Model.Location))
             {
                 <div>
@@ -38,18 +41,18 @@
                     <div class="d-inline-block align-middle max-w-200 text-truncate">@Model.Location</div>
                 </div>
             }
-          
             
-            <div>
-                @T["Last active "] <date utc="@Model.LastLoginDate"></date>
-            </div>
-
         </div>
     </div>
     <hr class="m-0 p-0"/>
     <div class="p-3">
         
-        <div>
+        
+        <div class="float-right">
+            @T["Last active "] <date utc="@Model.LastLoginDate"></date>
+        </div>
+
+
             <span class="mr-2" title="@T["Rank"]" data-toggle="tooltip">
                 <i class="fal fa-hashtag"></i>
                 @Model.Rank
@@ -62,7 +65,7 @@
                 <i class="fal fa-heart"></i>
                 @Model.Visits.ToPrettyInt()
             </span>
-        </div>
+   
    
     </div>
 

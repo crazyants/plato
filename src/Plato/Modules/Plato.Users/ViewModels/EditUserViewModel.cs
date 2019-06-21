@@ -21,10 +21,10 @@ namespace Plato.Users.ViewModels
         [Required, EmailAddress, DataType(DataType.EmailAddress), Display(Name = "email address")]
         public string Email { get; set; }
 
-        [StringLength(255), Display(Name = "location")]
+        [StringLength(100), Display(Name = "location")]
         public string Location { get; set; }
 
-        [StringLength(255), DataType(DataType.MultilineText), Display(Name = "biography")]
+        [StringLength(150), DataType(DataType.MultilineText), Display(Name = "biography")]
         public string Biography { get; set; }
 
         [DataType(DataType.MultilineText), Display(Name = "signature")]

@@ -118,7 +118,15 @@ namespace Plato.Entities
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
+            
+            // Get Entity
+            routes.MapAreaRoute(
+                name: "GetEntity",
+                areaName: "Plato.Entities",
+                template: "e/{opts.id:int}/{opts.alias?}",
+                defaults: new { controller = "Home", action = "GetEntity" }
+            );
+            
             // User Index
             routes.MapAreaRoute(
                 name: "EntitiesUser",

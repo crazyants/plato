@@ -10,10 +10,10 @@ namespace Plato.Users.ViewModels
         [Required]
         public int Id { get; set; }
 
-        [Required, DataType(DataType.Text), StringLength(255)]
+        [Required, DataType(DataType.Text), StringLength(255), Display(Name = "display name")]
         public string DisplayName { get; set; }
 
-        [DataType(DataType.Text), StringLength(255)]
+        [DataType(DataType.Text), StringLength(100), Display(Name = "location")]
         public string Location { get; set; }
 
         [DataType(DataType.Url), StringLength(255)]
@@ -21,7 +21,7 @@ namespace Plato.Users.ViewModels
 
         public UserAvatar Avatar { get; set; }
 
-        [DataType(DataType.MultilineText), StringLength(255)]
+        [DataType(DataType.MultilineText), StringLength(150), Display(Name = "biography")]
         public string Biography { get; set; }
         
         [DataType(DataType.Upload)]

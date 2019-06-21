@@ -279,13 +279,13 @@ namespace Plato.Users.Handlers
                     {
                         Name = "Biography",
                         DbType = DbType.String,
-                        Length = "255"
+                        Length = "150"
                     },
                     new SchemaColumn()
                     {
                         Name = "Location",
                         DbType = DbType.String,
-                        Length = "255"
+                        Length = "100"
                     },
                     new SchemaColumn()
                     {

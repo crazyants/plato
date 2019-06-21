@@ -1,0 +1,19 @@
+﻿@model Entity
+@{
+    Layout = null;
+}
+
+<div class="popper-content">
+    
+    <div class="p-3">
+
+        <h6>@Model.Title</h6>
+        <div class="text-muted">@Model.Abstract</div>
+
+    </div>
+    <hr class="m-0 p-0"/>
+    <div class="p-3">
+    
+        @T["Posted"] <date utc="@Model.CreatedDate"></date>
+    </div>
+</div>

@@ -5772,24 +5772,18 @@ $(function (win, doc, $) {
                  
                     if ($popper) {
                         
-                        // already visible do nothing
-                        if (methods._isVisible($caller)) {
-                            return;
-                        }
-
                         // hide all poppers
-                        methods.hideAll($caller.data("popperSticky"));
-
-
+                        methods.hideAll();
+                        
                         // add to stack
                         methods.callers.push($caller);
 
+                        // Add optional Css
+                        methods._addCss($caller);
+
                         // Load content
                         methods._load($caller, function($el) {
-
-                            // Add optional Css
-                            methods._addCss($caller);
-
+                        
                             // Position
                             methods._position($caller);
                             
@@ -5826,11 +5820,9 @@ $(function (win, doc, $) {
             hideAll: function () {
                 var len = methods.callers.length;
                 for (var i = 0; i < len; i++) {
-                    var $caller = methods.callers[i],
-                        hidden = methods.hide($caller);
-                    if (hidden) {
-                        methods.callers.splice(i, 1);
-                    }
+                    var $caller = methods.callers[i];
+                    methods.hide($caller);
+                    methods.callers.splice(i, 1);
                 }
             },
             _load: function ($caller, func) {
@@ -5840,9 +5832,6 @@ $(function (win, doc, $) {
 
                 var $popper = methods._getOrCreate($caller);
                 if ($popper) {
-
-                    // reposition to adjust for loader template
-                    methods._position($caller);
                     
                     // Update entity dropdown
                     app.http({
@@ -5884,7 +5873,8 @@ $(function (win, doc, $) {
                     $popper = $("<div/>",
                         {
                             "id": id,
-                            "class": "popper" 
+                            "class": "popper",
+                            "style": "display: none;"
                         });
 
                 // Build popper
@@ -5926,46 +5916,48 @@ $(function (win, doc, $) {
                 
                 // Add show Css
                 if (position === "top") {
-                    $popper.addClass("popper-top");
+                    $popper.addClass("popper-n");
                 } else if (position === "bottom") {
-                    $popper.addClass("popper-bottom");
+                    $popper.addClass("popper-s");
                 } else if (position === "left") {
-                    $popper.addClass("popper-left");
+                    $popper.addClass("popper-w");
                 } else if (position === "right") {
-                    $popper.addClass("popper-right");
+                    $popper.addClass("popper-e");
                 }
                 
             },
             _removeCss: function ($caller) {
 
                 var $popper = methods._getOrCreate($caller),
-                    css = $caller.data("popperCss") || $caller.data(dataKey).css,
-                    position = methods._getPosition($caller);
+                    css = $caller.data("popperCss") || $caller.data(dataKey).css;
 
+                $popper
+                    .css({
+                        "display": "none"
+                    })
+                    .removeClass("popper-right")
+                    .removeClass("popper-n")
+                    .removeClass("popper-e")
+                    .removeClass("popper-s")
+                    .removeClass("popper-w");
+                
                 // Custom Css
                 if (css) {
                     if ($popper.hasClass(css)) {
                         $popper.removeClass(css);
                     }
                 }
-
-                // Hide Css
-                if (position === "top") {
-                    $popper.removeClass("popper-top");
-                } else if (position === "bottom") {
-                    $popper.removeClass("popper-bottom");
-                } else if (position === "left") {
-                    $popper.removeClass("popper-left");
-                } else if (position === "right") {
-                    $popper.removeClass("popper-right");
-                }
                 
             },
             _position($caller) {
 
                 var $popper = methods._getOrCreate($caller);
-
                 if ($popper) {
+
+                    $popper.css({
+                        "display": "block",
+                        "visibility": "hidden"
+                    });
                     
                     // get caller coords
                     var $offset = $caller.offset(),
@@ -5976,7 +5968,6 @@ $(function (win, doc, $) {
                         callerRight = callerLeft + callerWidth,
                         width = $popper.outerWidth(),
                         height = $popper.outerHeight();
-                    
                     
                     // Get center positions
                     var centerX = callerLeft + Math.floor(callerWidth / 2),
@@ -6045,25 +6036,26 @@ $(function (win, doc, $) {
                             methods._position($caller);
 
                         }
-                        
+                            
                         if (left <= 0) {
                             $popper.css({ "left": padding });
                         } else {
-                            var winWidth = $(win).width();
-                            if (right >= winWidth) {
-                                $popper.css({ "left": winWidth - (right + padding) });
+                            if (right >= $(win).width()) {
+                                $popper.css({ "left": callerRight - width });
+                                $popper.addClass("popper-right");
                             }
                         }
 
                     }
-
-
-                
                     
-
                     // important: force CSS reflow 
                     // prevents overflow positioning issues
-                    $popper[0].offsetHeight;
+                    //$popper[0].offsetHeight;
+                    
+                    $popper.css({
+                        "display": "block",
+                        "visibility": "visible"
+                    });
 
                 }
 
@@ -6077,22 +6069,6 @@ $(function (win, doc, $) {
             _clearTimer: function () {
                 win.clearTimeout(methods.timer);
                 methods.timer = false;
-            },
-            _isVisible: function ($caller) {
-                var position = methods._getPosition($caller);
-                var $tip = methods._getOrCreate($caller);
-                if ($tip) {
-                    if (position === "top") {
-                        return $tip.hasClass("i-tip-top-visible");
-                    } else if (position === "bottom") {
-                        return $tip.hasClass("i-tip-bottom-visible");
-                    } else if (position === "left") {
-                        return $tip.hasClass("i-tip-left-visible");
-                    } else if (position === "right") {
-                        return $tip.hasClass("i-tip-right-visible");
-                    }
-                }
-                return false;
             }
         };
 

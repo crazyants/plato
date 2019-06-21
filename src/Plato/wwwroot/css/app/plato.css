@@ -1889,26 +1889,19 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 a.accepted-answer {  color: #28a745; }
 a.accepted-answer i { font-size: 18pt; }
 
-
-
 /* popper */
 
 .popper {
     position: absolute;
     z-index: 1000;
     min-width: 10rem;
-    display: none;
+    display: block;
 }
 
-.popper-top,
-.popper-bottom,
-.popper-left,
-.popper-right { display: block; }
-
-.popper-top { margin-top: -16px; }
-.popper-bottom { margin-top: 16px; }
-.popper-left { margin-left: -16px; }
-.popper-right { margin-left: 16px; }
+.popper-n { margin-top: -12px; }
+.popper-e { margin-left: 12px; }
+.popper-s { margin-top: 12px; }
+.popper-w { margin-left: -12px; }
 
 .popper-content {
     border-radius: 3px;
@@ -1936,13 +1929,19 @@ a.accepted-answer i { font-size: 18pt; }
 }
 
 /* position arrow */
-.popper-top .popper-content:before { left: 9px; right: auto; bottom: -19px;  }
-.popper-top .popper-content:after { left: 10px; right: auto; bottom: -17px;  }
+.popper-n .popper-content:before { left: 9px; right: auto; bottom: -19px;  }
+.popper-n .popper-content:after { left: 10px; right: auto; bottom: -17px;  }
+.popper-right.popper-n .popper-content:before { left: auto; right: 9px;   }
+.popper-right.popper-n .popper-content:after { left: auto; right: 10px;  }
 
-.popper-left .popper-content:before { left: auto; right: -19px; top: 50%; transform: translate(0, -50%); }
-.popper-left .popper-content:after { left: auto; right: -17px; top: 50%; transform: translate(0, -50%);   }
-.popper-right .popper-content:before { left: -19px; right: auto; top: 50%; transform: translate(0, -50%); }
-.popper-right .popper-content:after { left: -17px; right: auto; top: 50%; transform: translate(0, -50%);  }
+.popper-e .popper-content:before { left: -19px; right: auto; top: 50%; transform: translate(0, -50%); }
+.popper-e .popper-content:after { left: -17px; right: auto; top: 50%; transform: translate(0, -50%);  }
+.popper-s .popper-content:before { left: 9px; right: auto; top: -19px; }
+.popper-s .popper-content:after { left: 10px; right: auto; top: -17px; }
+.popper-right.popper-s .popper-content:before { left: auto; right: 9px;   }
+.popper-right.popper-s .popper-content:after { left: auto; right: 10px;  }
 
-.popper-bottom .popper-content:before { left: 9px; right: auto; top: -19px; }
-.popper-bottom .popper-content:after { left: 10px; right: auto; top: -17px; }
+
+
+.popper-w .popper-content:before { left: auto; right: -19px; top: 50%; transform: translate(0, -50%); }
+.popper-w .popper-content:after { left: auto; right: -17px; top: 50%; transform: translate(0, -50%);   }

@@ -34,7 +34,7 @@
        @if (!String.IsNullOrEmpty(Model.Biography))
        {
            <li class="vcard-bio">
-               @Model.Biography
+               @Model.Biography.TrimToAround(150)
            </li>
        }
     </ul>

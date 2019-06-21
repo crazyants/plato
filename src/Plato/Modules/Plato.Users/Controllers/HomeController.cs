@@ -202,8 +202,7 @@ namespace Plato.Users.Controllers
             return View((LayoutViewModel) await _viewProvider.ProvideDisplayAsync(viewModel, this));
 
         }
-
-
+        
         // -----------------
         // Get User
         // -----------------
@@ -234,8 +233,7 @@ namespace Plato.Users.Controllers
             return View(user);
 
         }
-
-
+        
         // -----------------
 
         public async Task<IActionResult> EditProfile()

@@ -18,7 +18,7 @@ namespace Plato.References.Services
         private const string SearchPattern = "#([^\\n|^\\s][0-9\\-_\\/]*)";
 
         public string ReplacePattern { get; set; }
-            = "<a href=\"{url}\" data-entity-id=\"{entityId}\" class=\"reference-link\">#{entityId}</a>";
+            = "<a href=\"{url}\" data-popper-url=\"{popperUrl}\" data-provide=\"popper\" data-popper-css=\"w-500\"  data-entity-id=\"{entityId}\" class=\"reference-link\">#{entityId}</a>";
 
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Entity> _entityStore;
@@ -104,9 +104,19 @@ namespace Plato.References.Services
                                 ["opts.alias"] = entity.Alias
                             });
 
+                            var popperUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                            {
+                                ["area"] = "Plato.Entities",
+                                ["controller"] = "Home",
+                                ["action"] = "GetEntity",
+                                ["opts.id"] = entity.Id,
+                                ["opts.alias"] = entity.Alias
+                            });
+
                             // parse template
                             var sb = new StringBuilder(ReplacePattern);
-                            sb.Replace("{url}", baseUrl + url);
+                            sb.Replace("{url}", url);
+                            sb.Replace("{popperUrl}", popperUrl);
                             sb.Replace("{entityId}", entity.Id.ToString());
 
                             // Replace match with template
