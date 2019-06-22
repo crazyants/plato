@@ -1898,10 +1898,10 @@ a.accepted-answer i { font-size: 18pt; }
     display: block;
 }
 
-.popper-n { margin-top: -12px; }
-.popper-e { margin-left: 12px; }
-.popper-s { margin-top: 12px; }
-.popper-w { margin-left: -12px; }
+.popper-n { margin-top: -19px; }
+.popper-e { margin-left: 19px; }
+.popper-s { margin-top: 19px; }
+.popper-w { margin-left: -19px; }
 
 .popper-content {
     border-radius: 3px;
@@ -1936,6 +1936,7 @@ a.accepted-answer i { font-size: 18pt; }
 
 .popper-e .popper-content:before { left: -19px; right: auto; top: 50%; transform: translate(0, -50%); }
 .popper-e .popper-content:after { left: -17px; right: auto; top: 50%; transform: translate(0, -50%);  }
+
 .popper-s .popper-content:before { left: 9px; right: auto; top: -19px; }
 .popper-s .popper-content:after { left: 10px; right: auto; top: -17px; }
 .popper-right.popper-s .popper-content:before { left: auto; right: 9px;   }

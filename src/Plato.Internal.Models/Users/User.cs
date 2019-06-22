@@ -39,6 +39,8 @@ namespace Plato.Internal.Models.Users
 
         public UserAvatar Avatar => new UserAvatar(this);
 
+        public UserUrls Urls => new UserUrls(this);
+
         public string SamAccountName { get; set; }
 
         public string ResetToken { get; set; }

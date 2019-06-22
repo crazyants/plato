@@ -6,7 +6,6 @@
 }
 
 <div class="popper-content">
-    
     <div class="p-3">
         <div class="list-left list-left-80">
             <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" data-toggle="tooltip" title="@T["Goto Profile"]" class="d-inline-block">
@@ -24,7 +23,6 @@
 
             <h6 class="d-inline-block m-0 p-0 text-truncate">@Model.DisplayName</h6>
             
-
             @if (!String.IsNullOrEmpty(Model.Biography))
             {
                 <div>@Model.Biography.TrimToAround(150)</div>
@@ -47,27 +45,19 @@
     <hr class="m-0 p-0"/>
     <div class="p-3">
         
-        
         <div class="float-right">
             @T["Last active "] <date utc="@Model.LastLoginDate"></date>
         </div>
+        
+        <span class="mr-2" title="@T["Rank"]" data-toggle="tooltip">
+            <i class="fal fa-hashtag"></i> @Model.Rank
+        </span>
+        <span class="mr-2" title="@T["Reputation"]" data-toggle="tooltip">
+            <i class="fal fa-gem"></i> @Model.Reputation.ToPrettyInt()
+        </span>
+        <span class="mr-2" title="@T["visits"]" data-toggle="tooltip">
+            <i class="fal fa-heart"></i> @Model.Visits.ToPrettyInt()
+        </span>
 
-
-            <span class="mr-2" title="@T["Rank"]" data-toggle="tooltip">
-                <i class="fal fa-hashtag"></i>
-                @Model.Rank
-            </span>
-            <span class="mr-2" title="@T["Reputation"]" data-toggle="tooltip">
-                <i class="fal fa-gem"></i>
-                @Model.Reputation.ToPrettyInt()
-            </span>
-            <span class="mr-2" title="@T["visits"]" data-toggle="tooltip">
-                <i class="fal fa-heart"></i>
-                @Model.Visits.ToPrettyInt()
-            </span>
-   
-   
     </div>
-
-  
 </div>

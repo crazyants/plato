@@ -21,6 +21,7 @@
         
         UserAvatar Avatar { get; }
 
+        UserUrls Urls { get; }
     }
 
 }
