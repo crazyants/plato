@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Routing
-@using Plato.Internal.Data.Abstractions
-@model User
+﻿@model User
 @{
     Layout = null;
 }
@@ -8,7 +6,7 @@
 <div class="popper-content">
     <div class="p-3">
         <div class="list-left list-left-80">
-            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" data-toggle="tooltip" title="@T["Goto Profile"]" class="d-inline-block">
+            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" class="d-inline-block">
                 <avatar class="avatar avatar-md" url="@Model.Avatar.Url" />
             </a>
         </div>
@@ -22,7 +20,7 @@
             }
 
             <h6 class="d-inline-block m-0 p-0 text-truncate">@Model.DisplayName</h6>
-            
+
             @if (!String.IsNullOrEmpty(Model.Biography))
             {
                 <div>@Model.Biography.TrimToAround(150)</div>
@@ -39,6 +37,10 @@
                     <div class="d-inline-block align-middle max-w-200 text-truncate">@Model.Location</div>
                 </div>
             }
+            else
+            {
+                @T["Last active "] <date utc="@Model.LastLoginDate"></date>
+            }
             
         </div>
     </div>
@@ -46,7 +48,9 @@
     <div class="p-3">
         
         <div class="float-right">
-            @T["Last active "] <date utc="@Model.LastLoginDate"></date>
+            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias">
+                @T["Goto Profile"]
+            </a>
         </div>
         
         <span class="mr-2" title="@T["Rank"]" data-toggle="tooltip">

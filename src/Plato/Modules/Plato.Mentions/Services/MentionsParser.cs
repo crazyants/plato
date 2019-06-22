@@ -18,10 +18,10 @@ namespace Plato.Mentions.Services
         
         // Allow all characters, numbers and special characters
         // within usernames until we find a space, comma or newline
-        private const string SearchPattern = "@([\\n|^\\s|^,]*.[^\\n|^\\s|^\\<|^,]*)";
+        private const string SearchPattern = "([^\\>|\\s]*)@([\\n|^\\s|^,]*.[^\\n|^\\s|^\\<|^,]*)";
 
         public string ReplacePattern { get; set; }
-            = "<a href=\"{url}\" data-popper-url=\"{popperUrl}\" data-provide=\"popper\" data-popper-css=\"w-500\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
+            = "<a href=\"{url}\" data-popper-url=\"{popperUrl}\" data-provide=\"popper\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -90,7 +90,9 @@ namespace Plato.Mentions.Services
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 foreach (Match match in regex.Matches(input))
                 {
-                    var username = match.Groups[1].Value;
+
+                    var prefix = match.Groups[1].Value;
+                    var username = match.Groups[2].Value;
                     var user = userList.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.Ordinal));
                     if (user != null)
                     {
@@ -114,12 +116,14 @@ namespace Plato.Mentions.Services
                         });
                         
                         // parse template
-                        var sb = new StringBuilder(ReplacePattern);
+                        var sb = new StringBuilder();
+                        sb.Append(prefix)
+                            .Append(ReplacePattern);
                         sb.Replace("{url}", url);
                         sb.Replace("{popperUrl}", popperUrl);
                         sb.Replace("{userId}", user.Id.ToString());
                         sb.Replace("{userName}", user.UserName);
-
+                        
                         // Replace match with template
                         input = input.Replace(match.Value, sb.ToString());
                     }
@@ -159,7 +163,7 @@ namespace Plato.Mentions.Services
                 output = new List<string>();
                 foreach (Match match in regex.Matches(input))
                 {
-                    var username = match.Groups[1].Value;
+                    var username = match.Groups[2].Value;
                     if (!output.Contains(username))
                         output.Add(username);
                 }

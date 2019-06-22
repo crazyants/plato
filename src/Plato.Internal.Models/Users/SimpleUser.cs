@@ -21,6 +21,8 @@
         public string SignatureHtml { get; set; }
 
         public UserAvatar Avatar => new UserAvatar(this);
+
+        public UserUrls Urls => new UserUrls(this);
         
         public SimpleUser()
         {

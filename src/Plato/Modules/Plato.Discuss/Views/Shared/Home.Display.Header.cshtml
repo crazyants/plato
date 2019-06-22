@@ -6,8 +6,8 @@
 }
 
 <div class="list-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias">
-        <avatar data-toggle="tooltip" title="@Model.CreatedBy.DisplayName" class="avatar" url="@Model.CreatedBy.Avatar.Url" />
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias" data-provide="popper" data-popper-url="@Model.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom">
+        <avatar class="avatar" url="@Model.CreatedBy.Avatar.Url" />
     </a>
 </div>
 <div class="list-body">
@@ -32,7 +32,7 @@
         @T["Posted"]
         <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
         @T["by"]
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias">@Model.CreatedBy.DisplayName</a>
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias" data-provide="popper" data-popper-url="@Model.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom">@Model.CreatedBy.DisplayName</a>
         - @Model.TotalReplies.ToPrettyInt() @T[replies]
     </span>
 </div>

@@ -31,12 +31,7 @@
                 <i class="fal fa-link d-inline-block align-middle mr-1" data-toggle="tooltip" title="@T["Web Site"]"></i><a href="@Model.Url" title="@Model.Url" data-toggle="tooltip" class="d-inline-block align-middle max-w-200 text-truncate">@Model.Url</a>
             </li>
         }
-       @if (!String.IsNullOrEmpty(Model.Biography))
-       {
-           <li class="vcard-bio">
-               @Model.Biography.TrimToAround(150)
-           </li>
-       }
+     
     </ul>
 
 </div>

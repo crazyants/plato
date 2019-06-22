@@ -1991,7 +1991,6 @@ $(function (win, doc, $) {
 
                         // Events to execute
                         var i = 0, events = $caller.data(eventsKey);
-
                         // Raise onScrollStart event
                         // _scrolling is set to false when the scroll ends
                         if (methods._scrolling === false) {
@@ -2043,6 +2042,8 @@ $(function (win, doc, $) {
             },
             _storeEvents: function ($caller) {
 
+                //console.log("_storeEvents");
+
                 var events = {
                     onScrollStart: [],
                     onScrollEnd: [],
@@ -2053,18 +2054,23 @@ $(function (win, doc, $) {
                     events = $caller.data(eventsKey);
                 }
 
-                if ($caller.data(dataKey).onScrollStart) {
+                var validEvent = function (arr, func) {
+                    if (!func) { return false; }
+                    return arr.indexOf(func) === -1;
+                };
+                
+                if (validEvent(events.onScrollStart, $caller.data(dataKey).onScrollStart)) {
                     events.onScrollStart.push($caller.data(dataKey).onScrollStart);
                 }
 
-                if ($caller.data(dataKey).onScrollEnd) {
+                if (validEvent(events.onScrollEnd, $caller.data(dataKey).onScrollEnd)) {
                     events.onScrollEnd.push($caller.data(dataKey).onScrollEnd);
                 }
 
-                if ($caller.data(dataKey).onScroll) {
+                if (validEvent(events.onScroll, $caller.data(dataKey).onScroll)) {
                     events.onScroll.push($caller.data(dataKey).onScroll);
                 }
-
+             
                 // Store events on caller
                 $caller.data(eventsKey, events);
 
@@ -2552,6 +2558,7 @@ $(function (win, doc, $) {
 
                             // At the very top of the window remove offset from url
                             if (spy.scrollTop === 0) {
+                                console.log("onScroll")
                                 methods.resetState($caller);
                             } else {
                                 // When we reach the top of our container + any scroll spacing load previous page
@@ -2892,6 +2899,7 @@ $(function (win, doc, $) {
                 $(win).scrollSpy("stop");
                 // Clear offset
                 if (state) {
+                    console.log("replaceState");
                     history.replaceState(state, doc.title, methods.getStateUrl($caller));
                 }
             },
@@ -5694,9 +5702,8 @@ $(function (win, doc, $) {
             id: "popper",
             event: "mouseenter",
             position: "top", // popper position
-            content: "Example Popper Content", // Html content
-            css: "w-600 p-2", // css class to apply to content area
-            url: "" // optional URL to load content via XmlHttp
+            css: "w-500", // css class to apply to popper
+            url: "" // URL to load content via XmlHttp
         };
 
         var methods = {
@@ -5747,11 +5754,11 @@ $(function (win, doc, $) {
                         methods._clearTimer();
                     });
                 }
-
+                
             },
             show: function ($caller) {
 
-                var delay = 50;
+                var delay = 250;
                 
                 if ($caller.data("popperDelay")) {
                     delay = $caller.data("popperDelay");
@@ -5819,6 +5826,9 @@ $(function (win, doc, $) {
             },
             hideAll: function () {
                 var len = methods.callers.length;
+                if (len === 0) {
+                    return;
+                }
                 for (var i = 0; i < len; i++) {
                     var $caller = methods.callers[i];
                     methods.hide($caller);
@@ -5967,10 +5977,8 @@ $(function (win, doc, $) {
                         callerHeight = Math.floor($caller.outerHeight()),
                         callerRight = callerLeft + callerWidth,
                         width = $popper.outerWidth(),
-                        height = $popper.outerHeight();
-                    
-                    // Get center positions
-                    var centerX = callerLeft + Math.floor(callerWidth / 2),
+                        height = $popper.outerHeight(),
+                        centerX = callerLeft + Math.floor(callerWidth / 2),
                         centerY = callerTop + Math.floor(callerHeight / 2);
 
                     // Position popper
@@ -6002,13 +6010,15 @@ $(function (win, doc, $) {
                         left = parseInt($popper.css("left").split("p")[0]),
                         top = parseInt($popper.css("top").split("p")[0]),
                         right = left + width,
-                        bottom = top + height;
-
+                        bottom = top + height,
+                        winHeight = $(win).height(),
+                        scrollTop = $(win).scrollTop(),
+                        scrollBottom = scrollTop + winHeight,
+                        aboveFold = top < scrollTop + padding,
+                        belowFold = bottom > scrollBottom + padding;
+                    
                     if (position === "top" || position === "bottom") {
-
-                        var aboveFold = top < $(win).scrollTop() + padding,
-                            belowFold = bottom > $(win).scrollTop() + $(win).height() + padding;
-
+                        
                         if (aboveFold && !belowFold) {
 
                             // Remove Css
@@ -6047,11 +6057,16 @@ $(function (win, doc, $) {
                         }
 
                     }
-                    
-                    // important: force CSS reflow 
-                    // prevents overflow positioning issues
-                    //$popper[0].offsetHeight;
-                    
+
+                    if (position === "left" || position === "right") {
+                        if (aboveFold && !belowFold) {
+                            $popper.css({ "top": scrollTop + padding });
+                        }
+                        if (belowFold && !aboveFold) {
+                            $popper.css({ "top": scrollBottom - (height + padding) });
+                        }
+                    }
+
                     $popper.css({
                         "display": "block",
                         "visibility": "visible"
