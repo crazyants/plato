@@ -15,10 +15,39 @@ namespace Plato.Mentions.Services
 
     public class MentionsParser : IMentionsParser
     {
-        
-        // Allow all characters, numbers and special characters
-        // within usernames until we find a space, comma or newline
-        private const string SearchPattern = "(@)([^\\n|^\\s|^,|^<]*.)([\\,\\s|\\n])";
+
+        /*      
+            @([^\n|^\s|^,|^\<]*.)(?=[\s|\n|,]|<\/[^a]>+)
+           
+            @ matches the character @ literally (case sensitive)
+            1st Capturing Group ([^\n|^\s|^,|^\<]*.)
+            Match a single character not present in the list below [^\n|^\s|^,|^\<]*
+            * Quantifier — Matches between zero and unlimited times, as many times as possible, giving back as needed (greedy)
+            \n matches a line-feed (newline) character (ASCII 10)
+            |^ matches a single character in the list |^ (case sensitive)
+            \s matches any whitespace character (equal to [\r\n\t\f\v ])
+            |^,|^ matches a single character in the list |^, (case sensitive)
+            \< matches the character < literally (case sensitive)
+            . matches any character (except for line terminators)
+            Positive Lookahead (?=[\s|\n|,]|<\/[^a]>+)
+            Assert that the Regex below matches
+            1st Alternative [\s|\n|,]
+            Match a single character present in the list below [\s|\n|,]
+            \s matches any whitespace character (equal to [\r\n\t\f\v ])
+            | matches the character | literally (case sensitive)
+            \n matches a line-feed (newline) character (ASCII 10)
+            |, matches a single character in the list |, (case sensitive)
+            2nd Alternative <\/[^a]>+
+            < matches the character < literally (case sensitive)
+            \/ matches the character / literally (case sensitive)
+            Match a single character not present in the list below [^a]
+            a matches the character a literally (case sensitive)
+            >+ matches the character > literally (case sensitive)
+            + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
+
+         */
+
+        private const string SearchPattern = "@([^\\t|^\\r|^\\n|^\\s|^,|^\\<]*.)(?=[\\s|\\n|\\r|,]|<\\/[^a]>+)";
 
         public string ReplacePattern { get; set; }
             = "<a href=\"{url}\" data-popper-url=\"{popperUrl}\" data-provide=\"popper\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
@@ -91,10 +120,8 @@ namespace Plato.Mentions.Services
                 foreach (Match match in regex.Matches(input))
                 {
 
-
-                    var prefix = ""; // match.Groups[1].Value;
-                    var username = match.Groups[2].Value;
-                    var suffix = match.Groups[3].Value;
+                    
+                    var username = match.Groups[1].Value;
                     var user = userList.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.Ordinal));
                     if (user != null)
                     {
@@ -118,10 +145,7 @@ namespace Plato.Mentions.Services
                         });
                         
                         // parse template
-                        var sb = new StringBuilder();
-                        sb.Append(prefix)
-                            .Append(ReplacePattern)
-                            .Append(suffix);
+                        var sb = new StringBuilder(ReplacePattern);
                         sb.Replace("{url}", url);
                         sb.Replace("{popperUrl}", popperUrl);
                         sb.Replace("{userId}", user.Id.ToString());
@@ -166,7 +190,7 @@ namespace Plato.Mentions.Services
                 output = new List<string>();
                 foreach (Match match in regex.Matches(input))
                 {
-                    var username = match.Groups[2].Value;
+                    var username = match.Groups[1].Value;
                     if (!output.Contains(username))
                         output.Add(username);
                 }
