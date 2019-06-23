@@ -18,7 +18,7 @@ namespace Plato.Mentions.Services
         
         // Allow all characters, numbers and special characters
         // within usernames until we find a space, comma or newline
-        private const string SearchPattern = "([^\\>|\\s]*)@([\\n|^\\s|^,]*.[^\\n|^\\s|^\\<|^,]*)";
+        private const string SearchPattern = "(@)([^\\n|^\\s|^,|^<]*.)([\\,\\s|\\n])";
 
         public string ReplacePattern { get; set; }
             = "<a href=\"{url}\" data-popper-url=\"{popperUrl}\" data-provide=\"popper\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
@@ -91,8 +91,10 @@ namespace Plato.Mentions.Services
                 foreach (Match match in regex.Matches(input))
                 {
 
-                    var prefix = match.Groups[1].Value;
+
+                    var prefix = ""; // match.Groups[1].Value;
                     var username = match.Groups[2].Value;
+                    var suffix = match.Groups[3].Value;
                     var user = userList.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.Ordinal));
                     if (user != null)
                     {
@@ -118,7 +120,8 @@ namespace Plato.Mentions.Services
                         // parse template
                         var sb = new StringBuilder();
                         sb.Append(prefix)
-                            .Append(ReplacePattern);
+                            .Append(ReplacePattern)
+                            .Append(suffix);
                         sb.Replace("{url}", url);
                         sb.Replace("{popperUrl}", popperUrl);
                         sb.Replace("{userId}", user.Id.ToString());

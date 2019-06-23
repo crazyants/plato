@@ -6122,6 +6122,17 @@ $(function (win, doc, $) {
                         }
                         methods.init($(this), methodName);
                     });
+                } else {
+                    // $().popper
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
                 }
 
             }
@@ -6170,7 +6181,7 @@ $(function (win, doc, $) {
         /* dialogSpy */
         this.find('[data-provide="dialog"]').dialogSpy();
 
-        /* Scroll to a specific element. */
+        /* scrollTo. */
         this.find('[data-provide="scroll"]').scrollTo();
 
         /* sticky */
@@ -6220,6 +6231,13 @@ $(function (win, doc, $) {
 
         /* popper */
         this.find('[data-provide="popper"]').popper();
+        
+        // Bind scroll events
+        $(win).scrollSpy({
+            onScrollStart: function () {
+                $().popper("hideAll");
+            }
+        });
 
     };
 
