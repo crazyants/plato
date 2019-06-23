@@ -40,6 +40,7 @@ namespace Plato.Mentions
 
             // Parsers
             services.AddScoped<IMentionsParser, MentionsParser>();
+            services.AddScoped<IMentionTokenizer, MentionTokenizer>();
 
             // Register broker subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
