@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Mentions.Services
 {
-    public interface IMentionsTokenizer
+    public interface IMentionsTokenizer : ITokenizer
     {
-        IList<MentionToken> Tokenize(string input);
-
+     
     }
 
 }

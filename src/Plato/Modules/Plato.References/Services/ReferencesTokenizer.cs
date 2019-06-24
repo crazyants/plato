@@ -2,30 +2,34 @@
 using System.Text;
 using Plato.Internal.Text.Abstractions;
 
-namespace Plato.Mentions.Services
+namespace Plato.References.Services
 {
     
-    public class MentionsTokenizer : IMentionsTokenizer
+    public class ReferencesTokenizer : IReferencesTokenizer
     {
         
-        private const char StartChar = '@';
+        private const char StartChar = '#';
 
-        // Denotes the end of a @mention
-        private readonly IList<char> _terminators = new List<char>()
+
+        private readonly IList<char> _validChars = new List<char>()
         {
-            ',',
-            ' ',
-            '\r',
-            '\n',
-            '\t',
-            '<'
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '0'
         };
 
         public IEnumerable<IToken> Tokenize(string input)
         {
 
             var start = 0;
-            List<MentionToken> output = null;
+            List<ReferenceToken> output = null;
             StringBuilder sb = null;
 
             for (var i = 0; i < input.Length; i++)
@@ -43,19 +47,19 @@ namespace Plato.Mentions.Services
                 {
 
                     // Not the start character or a terminator
-                    if (c != StartChar && !_terminators.Contains(c))
+                    if (_validChars.Contains(c))
                     {
                         sb.Append(c);
                     }
 
                     // We've reached a terminator or the end of the input
-                    if (_terminators.Contains(c) || i == input.Length - 1)
+                    if (!_validChars.Contains(c) || i == input.Length - 1)
                     {
                         if (output == null)
                         {
-                            output = new List<MentionToken>();
+                            output = new List<ReferenceToken>();
                         }
-                        output.Add(new MentionToken()
+                        output.Add(new ReferenceToken()
                         {
                             Start = start,
                             End = start + sb.ToString().Length,
@@ -74,7 +78,7 @@ namespace Plato.Mentions.Services
         
     }
 
-    public class MentionToken : IToken
+    public class ReferenceToken : IToken
     {
 
         public int Start { get; set; }

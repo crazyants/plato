@@ -4,29 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using Plato.Entities.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Text.Abstractions;
 
-namespace Plato.Mentions.Services
+namespace Plato.References.Services
 {
-    
-    public class MentionsParser : IMentionsParser
+    public class ReferencesParser2 : IReferencesParser
     {
 
-        private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IMentionsTokenizer _tokenizer;
+        private readonly IReferencesTokenizer _tokenizer;
         private readonly IContextFacade _contextFacade;
+        private readonly IEntityStore<Entity> _entityStore;
 
-        public MentionsParser(
-            IMentionsTokenizer tokenizer,
-            IPlatoUserStore<User> platoUserStore,
-            IContextFacade contextFacade)
+        public ReferencesParser2(
+            IReferencesTokenizer tokenizer,
+            IContextFacade contextFacade,
+            IEntityStore<Entity> entityStore)
         {
             _tokenizer = tokenizer;
-            _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
+            _entityStore = entityStore;
         }
 
         public async Task<string> ParseAsync(string input)
@@ -40,41 +39,42 @@ namespace Plato.Mentions.Services
 
             var tokenList = tokens.ToList();
 
-            var users = await GetUsersAsync(tokenList);
+            var entities = await GetEntitiesAsync(tokenList);
 
             var sb = new StringBuilder();
-            if (users != null)
+            if (entities != null)
             {
 
-                var userList = users.ToList();
+                var userList = entities.ToList();
 
                 for (var i = 0; i < input.Length; i++)
                 {
-                    
+
                     foreach (var token in tokenList)
                     {
 
                         // Token start
                         if (i == token.Start)
                         {
-                            var user = userList.FirstOrDefault(u => u.UserName.Equals(token.Value, StringComparison.Ordinal));
-                            if (user != null)
+                            var entity = userList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
+                            if (entity != null)
                             {
                                 var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                                 {
-                                    ["area"] = "Plato.Users",
+                                    ["area"] = entity.ModuleId,
                                     ["controller"] = "Home",
                                     ["action"] = "Display",
-                                    ["opts.id"] = user.Id,
-                                    ["opts.alias"] = user.Alias
+                                    ["opts.id"] = entity.Id,
+                                    ["opts.alias"] = entity.Alias
                                 });
+
                                 var popperUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                                 {
-                                    ["area"] = "Plato.Users",
+                                    ["area"] = "Plato.Entities",
                                     ["controller"] = "Home",
-                                    ["action"] = "GetUser",
-                                    ["opts.id"] = user.Id,
-                                    ["opts.alias"] = user.Alias
+                                    ["action"] = "GetEntity",
+                                    ["opts.id"] = entity.Id,
+                                    ["opts.alias"] = entity.Alias
                                 });
                                 sb.Append("<a href=\"").Append(url).Append("\" ")
                                     .Append("data-provide=\"popper\" ")
@@ -90,20 +90,20 @@ namespace Plato.Mentions.Services
                     {
                         if (i == token.End)
                         {
-                            var user = userList.FirstOrDefault(u => u.UserName.Equals(token.Value, StringComparison.Ordinal));
-                            if (user != null)
+                            var entity = userList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
+                            if (entity != null)
                                 sb.Append("</a>");
                         }
                     }
 
                 }
-                
+
             }
 
             return sb.ToString();
         }
-        
-        public async Task<IEnumerable<User>> GetUsersAsync(string input)
+
+        public async Task<IEnumerable<Entity>> GetEntitiesAsync(string input)
         {
             if (input == null)
             {
@@ -113,44 +113,43 @@ namespace Plato.Mentions.Services
             var tokens = _tokenizer.Tokenize(input);
             if (tokens != null)
             {
-                return await GetUsersAsync(tokens.ToList());
+                return await GetEntitiesAsync(tokens.ToList());
+            }
+
+            return null;
+        }
+
+
+        async Task<IEnumerable<Entity>> GetEntitiesAsync(IEnumerable<IToken> tokens)
+        {
+
+            var entityIds = GetDistinctTokenValues(tokens);
+            if (entityIds?.Length > 0)
+            {
+                return await GetUsersByUsernamesAsync(entityIds.ToArray());
             }
 
             return null;
 
         }
 
-        // -----------
-
-        async Task<IEnumerable<User>> GetUsersAsync(IEnumerable<IToken> tokens)
+        async Task<IEnumerable<Entity>> GetUsersByUsernamesAsync(string[] entityIds)
         {
-            
-            var usernames = GetDistinctTokenValues(tokens);
-            if (usernames?.Length > 0)
+            var output = new List<Entity>();
+            foreach (var entityId in entityIds)
             {
-                return await GetUsersByUsernamesAsync(usernames.ToArray());
-            }
-            
-            return null;
-
-        }
-        
-        async Task<IEnumerable<User>> GetUsersByUsernamesAsync(string[] usernames)
-        {
-            var users = new List<User>();
-            foreach (var username in usernames)
-            {
-                if (!String.IsNullOrEmpty(username))
+                var ok = int.TryParse(entityId, out var id);
+                if (ok)
                 {
-                    var user = await _platoUserStore.GetByUserNameAsync(username);
+                    var user = await _entityStore.GetByIdAsync(id);
                     if (user != null)
                     {
-                        users.Add(user);
+                        output.Add(user);
                     }
                 }
             }
 
-            return users;
+            return output;
 
         }
 
@@ -164,7 +163,6 @@ namespace Plato.Mentions.Services
             }
             return output?.ToArray();
         }
-        
-    }
 
+    }
 }
