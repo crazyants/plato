@@ -4,7 +4,6 @@ namespace Plato.Mentions.Services
 {
     public interface IMentionsTokenizer : ITokenizer
     {
-     
     }
 
 }

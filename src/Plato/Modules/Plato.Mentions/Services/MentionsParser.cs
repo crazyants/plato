@@ -20,13 +20,13 @@ namespace Plato.Mentions.Services
         private readonly IContextFacade _contextFacade;
 
         public MentionsParser(
-            IMentionsTokenizer tokenizer,
             IPlatoUserStore<User> platoUserStore,
+            IMentionsTokenizer tokenizer,
             IContextFacade contextFacade)
         {
-            _tokenizer = tokenizer;
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
+            _tokenizer = tokenizer;
         }
 
         public async Task<string> ParseAsync(string input)

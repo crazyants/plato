@@ -4,7 +4,6 @@ namespace Plato.References.Services
 {
     public interface IReferencesTokenizer : ITokenizer
     {
-     
     }
 
 }

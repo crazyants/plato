@@ -25,8 +25,9 @@ namespace Plato.References
         {
 
             // Parsers
+            services.AddScoped<IReferencesTokenizer, ReferencesTokenizer>();
             services.AddScoped<IReferencesParser, ReferencesParser>();
-          
+
             // Register broker subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
 

@@ -9,6 +9,17 @@ namespace Plato.Internal.Text.Abstractions
 
     }
 
+    public class Token : IToken
+    {
+
+        public int Start { get; set; }
+
+        public int End { get; set; }
+
+        public string Value { get; set; }
+
+    }
+
     public interface IToken
     {
         int Start { get; set; }

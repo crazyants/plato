@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
+using System.Collections.Generic;
 using Plato.Internal.Text.Abstractions;
 
 namespace Plato.References.Services
@@ -9,6 +9,17 @@ namespace Plato.References.Services
     {
         
         private const char StartChar = '#';
+
+        // Denotes the end of a @mention
+        private readonly IList<char> _terminators = new List<char>()
+        {
+            ',',
+            ' ',
+            '\r',
+            '\n',
+            '\t',
+            '<'
+        };
 
 
         private readonly IList<char> _validChars = new List<char>()
@@ -29,7 +40,7 @@ namespace Plato.References.Services
         {
 
             var start = 0;
-            List<ReferenceToken> output = null;
+            List<Token> output = null;
             StringBuilder sb = null;
 
             for (var i = 0; i < input.Length; i++)
@@ -47,19 +58,19 @@ namespace Plato.References.Services
                 {
 
                     // Not the start character or a terminator
-                    if (_validChars.Contains(c))
+                    if (c != StartChar && _validChars.Contains(c))
                     {
                         sb.Append(c);
                     }
 
                     // We've reached a terminator or the end of the input
-                    if (!_validChars.Contains(c) || i == input.Length - 1)
+                    if (_terminators.Contains(c) || i == input.Length - 1)
                     {
                         if (output == null)
                         {
-                            output = new List<ReferenceToken>();
+                            output = new List<Token>();
                         }
-                        output.Add(new ReferenceToken()
+                        output.Add(new Token()
                         {
                             Start = start,
                             End = start + sb.ToString().Length,
@@ -78,15 +89,5 @@ namespace Plato.References.Services
         
     }
 
-    public class ReferenceToken : IToken
-    {
-
-        public int Start { get; set; }
-
-        public int End { get; set; }
-
-        public string Value { get; set; }
-
-    }
 
 }

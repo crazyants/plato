@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
+using System.Collections.Generic;
 using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Mentions.Services
@@ -25,7 +25,7 @@ namespace Plato.Mentions.Services
         {
 
             var start = 0;
-            List<MentionToken> output = null;
+            List<Token> output = null;
             StringBuilder sb = null;
 
             for (var i = 0; i < input.Length; i++)
@@ -42,7 +42,7 @@ namespace Plato.Mentions.Services
                 if (sb != null)
                 {
 
-                    // Not the start character or a terminator
+                    // Not the start character or terminator
                     if (c != StartChar && !_terminators.Contains(c))
                     {
                         sb.Append(c);
@@ -53,9 +53,9 @@ namespace Plato.Mentions.Services
                     {
                         if (output == null)
                         {
-                            output = new List<MentionToken>();
+                            output = new List<Token>();
                         }
-                        output.Add(new MentionToken()
+                        output.Add(new Token()
                         {
                             Start = start,
                             End = start + sb.ToString().Length,
@@ -73,16 +73,5 @@ namespace Plato.Mentions.Services
         }
         
     }
-
-    public class MentionToken : IToken
-    {
-
-        public int Start { get; set; }
-
-        public int End { get; set; }
-
-        public string Value { get; set; }
-
-    }
-
+    
 }

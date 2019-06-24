@@ -541,7 +541,20 @@ namespace Plato.Internal.Abstractions.Extensions
             return ok ? version : null;
 
         }
-        
+
+        public static int[] ToIntArray(this string[] input)
+        {
+            var output = new List<int>();
+            foreach (var value in input)
+            {
+                if (int.TryParse(value, out var id))
+                {
+                    output.Add(id);
+                }
+            }
+            return output.ToArray();
+        }
+
     }
     
 }
