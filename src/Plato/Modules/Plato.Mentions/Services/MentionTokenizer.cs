@@ -23,6 +23,8 @@ namespace Plato.Mentions.Services
         
         private readonly IPlatoUserStore<User> _platoUserStore;
 
+        private const char StartChar = '@';
+
         // Denotes the end of a @mention
         private readonly IList<char> _terminators = new List<char>()
         {
@@ -49,7 +51,7 @@ namespace Plato.Mentions.Services
             {
                 var c = input[i];
 
-                if (c == '@')
+                if (c == StartChar)
                 {
                     position = i;
                     sb = new StringBuilder();
@@ -57,12 +59,15 @@ namespace Plato.Mentions.Services
 
                 if (sb != null)
                 {
-                    if (c != '@' && !_terminators.Contains(c))
+
+                    // Not the start character or a terminator
+                    if (c != StartChar && !_terminators.Contains(c))
                     {
                         sb.Append(c);
                     }
 
-                    if (_terminators.Contains(c))
+                    // We've reached a terminator or the end of the input
+                    if (_terminators.Contains(c) || i == input.Length - 1)
                     {
                         if (output == null)
                         {
@@ -95,44 +100,42 @@ namespace Plato.Mentions.Services
             {
                 return input;
             }
-            
+
             var users = await GetUsersAsync(input);
+            var sb = new StringBuilder();
             if (users != null)
             {
+                for (var i = 0; i < input.Length; i++)
+                {
+           
 
-            
-                var sb = new StringBuilder();
-                    for (var i = 0; i < input.Length; i++)
+                    foreach (var token in tokens)
                     {
-                        var c = input[i];
 
-                        foreach (var token in tokens)
+                        if (i == token.Start)
                         {
-
-                            if (i == token.Start)
-                            {
-                                sb.Append("<a href=\"#\">");
-                            }
+                            sb.Append("<a href=\"#\">");
                         }
+                    }
 
-                        sb.Append(c);
+                    sb.Append(input[i]);
 
-                        foreach (var token in tokens)
+                    foreach (var token in tokens)
+                    {
+
+                        if (i == token.End)
                         {
-
-                            if (i == token.End)
-                            {
-                                sb.Append("</a>");
-                            }
+                            sb.Append("</a>");
                         }
+                    }
 
                 }
-             
-           
+
+
 
             }
 
-            return input;
+            return sb.ToString();
 
         }
 
@@ -144,6 +147,18 @@ namespace Plato.Mentions.Services
             }
 
             var tokens = Tokenize(input);
+            if (tokens != null)
+            {
+                return await GetUsersAsync(tokens);
+            }
+
+            return null;
+
+        }
+
+        async Task<IEnumerable<User>> GetUsersAsync(IList<MentionToken> tokens)
+        {
+           
             var usernames = GetUniqueUsernames(tokens);
             if (usernames?.Length > 0)
             {
@@ -153,7 +168,6 @@ namespace Plato.Mentions.Services
             return null;
 
         }
-
 
         async Task<IEnumerable<User>> GetUsersByUsernamesAsync(string[] usernames)
         {
