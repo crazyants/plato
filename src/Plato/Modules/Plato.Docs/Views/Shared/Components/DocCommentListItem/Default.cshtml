@@ -15,8 +15,8 @@
 
 <div class="list-row">
     <div class="list-left reply-left">
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
-            <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link" data-provide="popper" data-popper-url="@Model.Reply.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom">
+            <avatar class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
         </a>
         <navigation name="doc-comment-details"
                     model="Model.Reply"
@@ -27,7 +27,7 @@
             <card-title>
                 <div data-infinite-scroll-offset="@Model.Reply.Offset">
                     <div class="card-title float-left">
-                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
+                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Reply.CreatedUserId" asp-route-opts.alias="@Model.Reply.CreatedBy.Alias" class="avatar-link" data-provide="popper" data-popper-url="@Model.Reply.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom">
                             @Model.Reply.CreatedBy.DisplayName
                         </a>
                         @T["posted "]

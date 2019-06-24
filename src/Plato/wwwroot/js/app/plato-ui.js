@@ -6269,6 +6269,9 @@ $(function (win, doc, $) {
             /* Initialize replySpy upon infiniteScroll load */
             $ele.replySpy("bind");
 
+            /* popper */
+            $ele.find('[data-provide="popper"]').popper();
+
         }, "ready");
         
     });
