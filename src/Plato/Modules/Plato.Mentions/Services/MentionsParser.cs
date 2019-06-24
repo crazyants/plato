@@ -2,81 +2,117 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Mentions.Services
 {
-
+    
     public class MentionsParser : IMentionsParser
     {
 
-        /*      
-            @([^\n|^\s|^,|^\<]*.)(?=[\s|\n|,]|<\/[^a]>+)
-           
-            @ matches the character @ literally (case sensitive)
-            1st Capturing Group ([^\n|^\s|^,|^\<]*.)
-            Match a single character not present in the list below [^\n|^\s|^,|^\<]*
-            * Quantifier — Matches between zero and unlimited times, as many times as possible, giving back as needed (greedy)
-            \n matches a line-feed (newline) character (ASCII 10)
-            |^ matches a single character in the list |^ (case sensitive)
-            \s matches any whitespace character (equal to [\r\n\t\f\v ])
-            |^,|^ matches a single character in the list |^, (case sensitive)
-            \< matches the character < literally (case sensitive)
-            . matches any character (except for line terminators)
-            Positive Lookahead (?=[\s|\n|,]|<\/[^a]>+)
-            Assert that the Regex below matches
-            1st Alternative [\s|\n|,]
-            Match a single character present in the list below [\s|\n|,]
-            \s matches any whitespace character (equal to [\r\n\t\f\v ])
-            | matches the character | literally (case sensitive)
-            \n matches a line-feed (newline) character (ASCII 10)
-            |, matches a single character in the list |, (case sensitive)
-            2nd Alternative <\/[^a]>+
-            < matches the character < literally (case sensitive)
-            \/ matches the character / literally (case sensitive)
-            Match a single character not present in the list below [^a]
-            a matches the character a literally (case sensitive)
-            >+ matches the character > literally (case sensitive)
-            + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
-
-         */
-
-        private const string SearchPattern = "@([^\\t|^\\r|^\\n|^\\s|^,|^\\<]*.)(?=[\\s|\\n|\\r|,]|<\\/[^a]>+)";
-
-        public string ReplacePattern { get; set; }
-            = "<a href=\"{url}\" data-popper-url=\"{popperUrl}\" data-provide=\"popper\" data-user-id=\"{userId}\" class=\"mention-link\">@{userName}</a>";
-
-        private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
-    
+        private readonly IMentionsTokenizer _tokenizer;
+        private readonly IContextFacade _contextFacade;
+
         public MentionsParser(
-            IPlatoUserStore<User> platoUserStore, 
-            IContextFacade contextFacade)
+            IMentionsTokenizer tokenizer,
+            IPlatoUserStore<User> platoUserStore,
+                IContextFacade contextFacade)
         {
+            _tokenizer = tokenizer;
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
         }
-        
-        #region "Implementation"
 
         public async Task<string> ParseAsync(string input)
         {
-            var users = await GetUsersAsync(input);
-            if (users != null)
+            var tokens = _tokenizer.Tokenize(input);
+
+            if (tokens == null)
             {
-                input = await ConvertToUrlsAsync(input, users);
+                return input;
             }
 
-            return input;
+            var users = await GetUsersAsync(tokens);
 
+            var sb = new StringBuilder();
+            if (users != null)
+            {
+
+                var userList = users.ToList();
+
+                for (var i = 0; i < input.Length; i++)
+                {
+                    
+                    foreach (var token in tokens)
+                    {
+
+                        // Token start
+                        if (i == token.Start)
+                        {
+
+                            var user = userList.FirstOrDefault(u => u.UserName.Equals(token.Value, StringComparison.Ordinal));
+
+                            if (user != null)
+                            {
+
+                                var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                                {
+                                    ["area"] = "Plato.Users",
+                                    ["controller"] = "Home",
+                                    ["action"] = "Display",
+                                    ["opts.id"] = user.Id,
+                                    ["opts.alias"] = user.Alias
+                                });
+
+                                var popperUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                                {
+                                    ["area"] = "Plato.Users",
+                                    ["controller"] = "Home",
+                                    ["action"] = "GetUser",
+                                    ["opts.id"] = user.Id,
+                                    ["opts.alias"] = user.Alias
+                                });
+
+                                sb.Append("<a href=\"").Append(url).Append("\" ")
+                                    .Append("data-provide=\"popper\" ")
+                                    .Append("data-popper-url=\"").Append(popperUrl).Append("\" ")
+                                    .Append("class=\"mention-link\">");
+
+                            }
+                       
+                        }
+
+                    }
+
+                    sb.Append(input[i]);
+
+                    foreach (var token in tokens)
+                    {
+
+                        if (i == token.End)
+                        {
+                            var user = userList.FirstOrDefault(u => u.UserName.Equals(token.Value, StringComparison.Ordinal));
+                            if (user != null)
+                            {
+                                sb.Append("</a>");
+                            }
+                        }
+                    }
+
+                }
+
+
+
+            }
+
+            return sb.ToString();
         }
-
+        
         public async Task<IEnumerable<User>> GetUsersAsync(string input)
         {
             if (input == null)
@@ -84,83 +120,59 @@ namespace Plato.Mentions.Services
                 throw new ArgumentNullException(nameof(input));
             }
 
-            var usernames = GetUniqueUsernames(input);
-            if (usernames?.Length > 0)
+            var tokens = _tokenizer.Tokenize(input);
+            if (tokens != null)
             {
-                return await GetUsersByUsernamesAsync(usernames.ToArray());
+                return await GetUsersAsync(tokens);
             }
 
             return null;
 
         }
 
-        #endregion
+        // -----------
 
-        #region "Private Methods"
-        
-        async Task<string> ConvertToUrlsAsync(string input, IEnumerable<IUser> users)
+        async Task<IEnumerable<User>> GetUsersAsync(IList<MentionToken> tokens)
         {
-
-            if (String.IsNullOrEmpty(input))
+            
+            var usernames = GetDistinctTokenValues(tokens);
+            if (usernames?.Length > 0)
             {
-                throw new ArgumentNullException(nameof(input));
+                return await GetUsersByUsernamesAsync(usernames.ToArray());
             }
-
-            if (users == null)
-            {
-                throw new ArgumentNullException(nameof(users));
-            }
-
-            var opts = RegexOptions.Multiline | RegexOptions.IgnoreCase;
-            var regex = new Regex(SearchPattern, opts);
-            if (regex.IsMatch(input))
-            {
-                var userList = users.ToList();
-                var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                foreach (Match match in regex.Matches(input))
-                {
-
-                    
-                    var username = match.Groups[1].Value;
-                    var user = userList.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.Ordinal));
-                    if (user != null)
-                    {
-
-                        var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                        {
-                            ["area"] = "Plato.Users",
-                            ["controller"] = "Home",
-                            ["action"] = "Display",
-                            ["opts.id"] = user.Id,
-                            ["opts.alias"] = user.Alias
-                        });
-
-                        var popperUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                        {
-                            ["area"] = "Plato.Users",
-                            ["controller"] = "Home",
-                            ["action"] = "GetUser",
-                            ["opts.id"] = user.Id,
-                            ["opts.alias"] = user.Alias
-                        });
-                        
-                        // parse template
-                        var sb = new StringBuilder(ReplacePattern);
-                        sb.Replace("{url}", url);
-                        sb.Replace("{popperUrl}", popperUrl);
-                        sb.Replace("{userId}", user.Id.ToString());
-                        sb.Replace("{userName}", user.UserName);
-                        
-                        // Replace match with template
-                        input = input.Replace(match.Value, sb.ToString());
-                    }
-                }
-            }
-
-            return input;
+            
+            return null;
 
         }
-        
+
+        async Task<IDictionary<MentionToken, User>> GetTokensWithUserAsync(IList<MentionToken> tokens)
+        {
+
+            var usernames = GetDistinctTokenValues(tokens);
+            if (usernames?.Length > 0)
+            {
+                var tokenAndUser = new Dictionary<MentionToken, User>();
+
+                var users = await GetUsersByUsernamesAsync(usernames.ToArray());
+                var userList = users.ToList();
+
+                foreach (var token in tokens)
+                {
+                    var user = userList.FirstOrDefault(u => u.UserName.Equals(token.Value, StringComparison.Ordinal));
+                    tokenAndUser.Add(token, user);
+                }
+
+                return tokenAndUser;
+
+            }
+
+
+
+
+            return null;
+
+        }
+
         async Task<IEnumerable<User>> GetUsersByUsernamesAsync(string[] usernames)
         {
             var users = new List<User>();
@@ -180,28 +192,17 @@ namespace Plato.Mentions.Services
 
         }
 
-        string[] GetUniqueUsernames(string input)
+        string[] GetDistinctTokenValues(IEnumerable<MentionToken> tokens)
         {
-
-            List<string> output = null;
-            var regex = new Regex(SearchPattern, RegexOptions.IgnoreCase);
-            if (regex.IsMatch(input))
+            var output = new List<string>();
+            foreach (var token in tokens)
             {
-                output = new List<string>();
-                foreach (Match match in regex.Matches(input))
-                {
-                    var username = match.Groups[1].Value;
-                    if (!output.Contains(username))
-                        output.Add(username);
-                }
+                if (!output.Contains(token.Value))
+                    output.Add(token.Value);
             }
-
             return output?.ToArray();
-
         }
-
-        #endregion
-
+        
     }
 
 }

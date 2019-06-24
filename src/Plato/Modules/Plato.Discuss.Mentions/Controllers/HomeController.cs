@@ -1,16 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.Extensions.Localization;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Navigation.Abstractions;
-using Plato.Entities.ViewModels;
-using Plato.Internal.Layout;
-using Plato.Internal.Layout.Titles;
 using Plato.Mentions.Services;
 
 namespace Plato.Discuss.Mentions.Controllers
@@ -18,11 +8,15 @@ namespace Plato.Discuss.Mentions.Controllers
     public class HomeController : Controller, IUpdateModel
     {
 
-        public readonly IMentionTokenizer _mentionTokenzier;
+        public readonly IMentionsParser _parser;
+        public readonly IMentionsTokenizer _tokenzier;
 
-        public HomeController(IMentionTokenizer mentionTokenzier)
+        public HomeController(
+            IMentionsParser mentionsParser,
+            IMentionsTokenizer mentionTokenzier)
         {
-            _mentionTokenzier = mentionTokenzier;
+            _tokenzier = mentionTokenzier;
+            _parser = mentionsParser;
         }
         
         public async Task<IActionResult> Index()
@@ -35,7 +29,7 @@ namespace Plato.Discuss.Mentions.Controllers
 
             Hi @admin";
             
-            var tokens = _mentionTokenzier.Tokenize(text);
+            var tokens = _tokenzier.Tokenize(text);
 
             var sb = new System.Text.StringBuilder();
             foreach (var t in tokens)
@@ -51,7 +45,7 @@ namespace Plato.Discuss.Mentions.Controllers
 
             ViewData["test1"] = sb.ToString();
 
-            ViewData["test2"] = await _mentionTokenzier.ParseAsync(text);
+            ViewData["test2"] = await _parser.ParseAsync(text);
 
             return View();
 
