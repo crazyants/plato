@@ -977,6 +977,7 @@ $(function (win, doc, $) {
                             $caller.append(this.buildPager($caller, results));
                         }
                     }
+
                 } else {
                     // no data
                     $caller.empty().append(this.buildNoResults($caller));
@@ -2042,8 +2043,6 @@ $(function (win, doc, $) {
             },
             _storeEvents: function ($caller) {
 
-                //console.log("_storeEvents");
-
                 var events = {
                     onScrollStart: [],
                     onScrollEnd: [],
@@ -2558,7 +2557,6 @@ $(function (win, doc, $) {
 
                             // At the very top of the window remove offset from url
                             if (spy.scrollTop === 0) {
-                                console.log("onScroll")
                                 methods.resetState($caller);
                             } else {
                                 // When we reach the top of our container + any scroll spacing load previous page
@@ -2899,7 +2897,6 @@ $(function (win, doc, $) {
                 $(win).scrollSpy("stop");
                 // Clear offset
                 if (state) {
-                    console.log("replaceState");
                     history.replaceState(state, doc.title, methods.getStateUrl($caller));
                 }
             },
@@ -4022,7 +4019,6 @@ $(function (win, doc, $) {
                     var items = this.getItems($caller);
                     if (items) {
                         if (items.length > 0) {
-                            console.log(JSON.stringify(items))
                             $store.val(JSON.stringify(items));
                         } else {
                             $store.val("");
@@ -5117,6 +5113,8 @@ $(function (win, doc, $) {
                                             return;
                                         case 40: // down
                                             return;
+                                        case 27: // escape
+                                            return;
                                         default:
                                             key.bind($(this), searchResult, e);
                                             break;
@@ -5433,7 +5431,10 @@ $(function (win, doc, $) {
                             $caller.textFieldMirror("hide");
 
                             // Invoke paged list
-                            $menu.pagedList($caller.data(dataKey));
+                            $menu.pagedList($.extend($caller.data(dataKey),
+                                {
+
+                                }));
                         }
 
 
@@ -5503,6 +5504,7 @@ $(function (win, doc, $) {
                                         newIndex = -1;
 
                                     if (itemSelection.enable) {
+                          
                                         switch (e.which) {
                                             case 13: // carriage return
                                                 e.preventDefault();
@@ -5529,6 +5531,11 @@ $(function (win, doc, $) {
                                                 if (newIndex > pageSize - 1) {
                                                     newIndex = pageSize - 1;
                                                 }
+                                                break;
+                                            case 27: // escape
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                $target.hide();
                                                 break;
                                         }
                                         if (newIndex >= 0) {
@@ -5805,7 +5812,7 @@ $(function (win, doc, $) {
                 }
 
             },
-            hide: function ($caller, hideSticky) {
+            hide: function ($caller) {
 
                 var $popper = methods._getOrCreate($caller);
                 if ($popper) {

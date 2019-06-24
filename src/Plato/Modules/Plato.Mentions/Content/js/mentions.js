@@ -55,7 +55,7 @@ $(function (win, doc, $) {
                                 search: function($input, selection) {
 
                                     // The result of the search method is tested
-                                    // against the match regular expiression within keyBinder
+                                    // against the match regular expression within keyBinder
                                     // If a match is found the bind method is called 
                                     // otherwise the unbind method is called
                                     // This code executes on every key press so should be optimized
@@ -191,7 +191,8 @@ $(function (win, doc, $) {
                                                         },
                                                         "insert");
 
-                                            }
+                                        }
+                                          
                                         },
                                         "show");
 

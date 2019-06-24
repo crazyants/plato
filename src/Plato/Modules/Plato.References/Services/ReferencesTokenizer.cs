@@ -10,7 +10,7 @@ namespace Plato.References.Services
         
         private const char StartChar = '#';
 
-        // Denotes the end of a @mention
+        // Denotes the end of a #reference
         private readonly IList<char> _terminators = new List<char>()
         {
             ',',

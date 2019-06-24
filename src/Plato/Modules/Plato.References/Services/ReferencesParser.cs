@@ -31,17 +31,28 @@ namespace Plato.References.Services
 
         public async Task<string> ParseAsync(string input)
         {
+
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            // Build tokens
             var tokens = _tokenizer.Tokenize(input);
 
+            // Ensure we have tokens to parse
             if (tokens == null)
             {
                 return input;
             }
 
+            // Prevent multiple enumeration
             var tokenList = tokens.ToList();
 
+            // Get all entities
             var entities = await GetEntitiesAsync(tokenList);
 
+            // Parse the input
             var sb = new StringBuilder();
             if (entities != null)
             {
@@ -68,7 +79,6 @@ namespace Plato.References.Services
                                     ["opts.id"] = entity.Id,
                                     ["opts.alias"] = entity.Alias
                                 });
-
                                 var popperUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                                 {
                                     ["area"] = "Plato.Entities",
@@ -114,7 +124,7 @@ namespace Plato.References.Services
             var tokens = _tokenizer.Tokenize(input);
             if (tokens != null)
             {
-                return await GetEntitiesAsync(tokens.ToList());
+                return await GetEntitiesAsync(tokens);
             }
 
             return null;
