@@ -28,7 +28,9 @@ $(function (win, doc, $) {
         var dataKey = "labelDropDown",
             dataIdKey = dataKey + "Id";
 
-       var defaults = {};
+       var defaults = {
+           maxItems: 10
+       };
 
         var methods = {
             init: function ($caller, methodName, func) {
@@ -52,9 +54,14 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
+              
+                // Maximum number of allowed labels
+                var maxItems = $caller.data("maxItems")
+                    ? parseInt($caller.data("maxItems"))
+                    : $caller.data(dataKey).maxItems;
+               
                 // init select dropdown
                 $caller.selectDropdown($.extend({
-                    maxItems: 4, // the maximum number of labels that can be selected
                     itemTemplate:
                         '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
                     parseItemTemplate: function (html, result) {
@@ -137,21 +144,18 @@ $(function (win, doc, $) {
 
                         e.preventDefault();
                         e.stopPropagation();
-
-                        // ensure we only add uunque entries
-                        var maxItems = $caller.data("selectDropdown").maxItems,
-                            isBelowMax = maxItems > 0 && $caller.data("selectDropdown").items.length < maxItems,
-                            index = methods.getIndex($caller, result);
-
+                        
+                        // ensure we only add unique entries
+                        var index = methods.getIndex($caller, result);
                         if (index === -1) {
+                            var isBelowMax = maxItems > 0 && $caller.data("selectDropdown").items.length < maxItems;
                             if (isBelowMax) {
                                 $caller.data("selectDropdown").items.push(result);
                             }
                         } else {
                             $caller.data("selectDropdown").items.splice(index, 1);
                         }
-
-
+                        
                         $caller.selectDropdown("update");
                     },
                     onLoaded: function ($input) {
