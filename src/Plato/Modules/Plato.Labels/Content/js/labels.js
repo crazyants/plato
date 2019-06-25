@@ -54,6 +54,7 @@ $(function (win, doc, $) {
 
                 // init select dropdown
                 $caller.selectDropdown($.extend({
+                    maxItems: 4, // the maximum number of labels that can be selected
                     itemTemplate:
                         '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
                     parseItemTemplate: function (html, result) {
@@ -138,12 +139,19 @@ $(function (win, doc, $) {
                         e.stopPropagation();
 
                         // ensure we only add uunque entries
-                        var index = methods.getIndex($caller, result);
+                        var maxItems = $caller.data("selectDropdown").maxItems,
+                            isBelowMax = maxItems > 0 && $caller.data("selectDropdown").items.length < maxItems,
+                            index = methods.getIndex($caller, result);
+
                         if (index === -1) {
-                            $caller.data("selectDropdown").items.push(result);
+                            if (isBelowMax) {
+                                $caller.data("selectDropdown").items.push(result);
+                            }
                         } else {
                             $caller.data("selectDropdown").items.splice(index, 1);
                         }
+
+
                         $caller.selectDropdown("update");
                     },
                     onLoaded: function ($input) {
