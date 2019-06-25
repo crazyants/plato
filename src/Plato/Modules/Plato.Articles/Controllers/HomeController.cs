@@ -328,6 +328,25 @@ namespace Plato.Articles.Controllers
         public async Task<IActionResult> Display(EntityOptions opts, PagerOptions pager)
         {
 
+
+            // Default options
+            if (opts == null)
+            {
+                opts = new EntityOptions();
+            }
+
+            // Default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+            
+            // We always need an entity Id to display
+            if (opts.Id <= 0)
+            {
+                return NotFound();
+            }
+
             // Get entity to display
             var entity = await _entityStore.GetByIdAsync(opts.Id);
 
@@ -336,7 +355,7 @@ namespace Plato.Articles.Controllers
             {
                 return NotFound();
             }
-
+            
             // Ensure we have permission to view deleted entities
             if (entity.IsDeleted)
             {
@@ -345,9 +364,9 @@ namespace Plato.Articles.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Articles",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Articles",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
@@ -360,9 +379,9 @@ namespace Plato.Articles.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Articles",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Articles",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
@@ -375,23 +394,37 @@ namespace Plato.Articles.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Articles",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Articles",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
-
-            // Default options
-            if (opts == null)
+            
+            // Ensure we have permission to view private entities
+            if (entity.IsPrivate)
             {
-                opts = new EntityOptions();
-            }
 
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+                // IF we didn't create this entity ensure we have permission to view private entities
+                if (entity.CreatedBy.Id != user?.Id)
+                {
+                    // Do we have permission to view private entities?
+                    if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                        Permissions.ViewPrivateArticles))
+                    {
+                        // Redirect back to main index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Articles",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
 
             // Maintain previous route data when generating page links

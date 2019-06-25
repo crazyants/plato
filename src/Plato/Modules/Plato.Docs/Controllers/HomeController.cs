@@ -359,7 +359,13 @@ namespace Plato.Docs.Controllers
             {
                 pager = new PagerOptions();
             }
-
+            
+            // We always need an entity Id to display
+            if (opts.Id <= 0)
+            {
+                return NotFound();
+            }
+            
             // Get entity to display
             var entity = await _entityStore.GetByIdAsync(opts.Id);
 

@@ -338,6 +338,12 @@ namespace Plato.Discuss.Controllers
             {
                 pager = new PagerOptions();
             }
+            
+            // We always need an entity Id to display
+            if (opts.Id <= 0)
+            {
+                return NotFound();
+            }
 
             // Get entity to display
             var entity = await _entityStore.GetByIdAsync(opts.Id);
@@ -394,6 +400,32 @@ namespace Plato.Discuss.Controllers
                         ["action"] = "Index"
                     }));
                 }
+            }
+
+            // Ensure we have permission to view private entities
+            if (entity.IsPrivate)
+            {
+
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+                // IF we didn't create this entity ensure we have permission to view private entities
+                if (entity.CreatedBy.Id != user?.Id)
+                {
+                    // Do we have permission to view private entities?
+                    if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                        Permissions.ViewPrivateTopics))
+                    {
+                        // Redirect back to main index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Discuss",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
 
             // Maintain previous route data when generating page links
