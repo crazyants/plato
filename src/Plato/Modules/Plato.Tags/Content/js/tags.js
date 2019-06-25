@@ -32,7 +32,9 @@ $(function (win, doc, $) {
         var dataKey = "tagTagIt",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+            maxItems: 5
+        };
 
         var methods = {
             init: function($caller, methodName, func) {
@@ -53,10 +55,17 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
+                
+                // Maximum number of allowed selections
+                var maxItems = $caller.data("maxItems")
+                    ? parseInt($caller.data("maxItems"))
+                    : $caller.data(dataKey).maxItems;
+
+                console.log("maxItems - " + maxItems);
 
                 // init tagIt
                 $caller.tagIt($.extend({
-                        maxItems: 5,
+                        maxItems: maxItems,
                         itemTemplate:
                             '<li class="tagit-list-item"><div class="btn-group"><div class="btn btn-sm label label-outline font-weight-bold">{name}</div><a href="#" class="btn btn-sm label label-outline dropdown-toggle-split tagit-list-item-delete"><i class="fal fa-times"></i></a></div></li>',
                         parseItemTemplate: function(html, result) {
@@ -88,13 +97,20 @@ $(function (win, doc, $) {
 
                             // ensure we only add unique entries
                             var index = methods.getIndex($caller, result);
-
                             if (index === -1) {
-                                $caller.data("tagIt").items.push(result);
-                                $caller.tagIt("update")
-                                    .tagIt("focus")
-                                    .tagIt("reset")
-                                    .tagIt("show");
+                                var isBelowMax = maxItems > 0 && $caller.data("tagIt").items.length < maxItems;
+                                if (isBelowMax) {
+                                    $caller.data("tagIt").items.push(result);
+                                    $caller.tagIt("update")
+                                        .tagIt("focus")
+                                        .tagIt("reset")
+                                        .tagIt("show");
+                                    if ($caller.data("tagIt").items.length >= maxItems) {
+                                        $caller.tagIt("hide");
+                                    }
+                                } else {
+                                    $caller.tagIt("hide");
+                                }
                             } else {
                                 $caller.tagIt({
                                         highlightIndex: index
@@ -106,9 +122,9 @@ $(function (win, doc, $) {
                         onKeyDown: function($input, e) {
 
                             // handle carriage returns & comma (without modifier)
-                            var noMod = (!e.shiftKey && !e.ctrlKey),
-                                isComma = (noMod && e.keyCode === 188),
-                                isCarriageReturn = (noMod && e.keyCode === 13);
+                            var noMod = !e.shiftKey && !e.ctrlKey,
+                                isComma = noMod && e.keyCode === 188,
+                                isCarriageReturn = noMod && e.keyCode === 13;
                             if (isCarriageReturn | isComma) {
 
                                 e.preventDefault();
@@ -148,11 +164,20 @@ $(function (win, doc, $) {
                                 // ensure we only add unique entries
                                 var index = methods.getIndex($caller, result);
                                 if (index === -1) {
-                                    $caller.data("tagIt").items.push(result);
-                                    $caller
-                                        .tagIt("update")
-                                        .tagIt("reset")
-                                        .tagIt("focus");
+                                    var isBelowMax = maxItems > 0 && $caller.data("tagIt").items.length < maxItems;
+                                    console.log("isBelowMax: " + isBelowMax)
+                                    if (isBelowMax) {
+                                        $caller.data("tagIt").items.push(result);
+                                        $caller
+                                            .tagIt("update")
+                                            .tagIt("reset")
+                                            .tagIt("focus");
+                                        if ($caller.data("tagIt").items.length >= maxItems) {
+                                            $caller.tagIt("hide");
+                                        }
+                                    } else {
+                                        $caller.tagIt("hide");
+                                    }
                                 } else {
                                     $caller.tagIt({
                                             highlightIndex: index

@@ -1,8 +1,7 @@
 ﻿@model LabelDropDownViewModel
 @{
     var maxLabels = 4;
-    var selectText = T["Select up to {0} labels for this post..."].Value;
-    selectText = selectText.Replace("{0}", maxLabels.ToString());
+    var selectText = T["Select up to {0} labels for this post..."].Value.Replace("{0}", maxLabels.ToString());
 }
 <input type="hidden" id="@Model.HtmlName" name="@Model.HtmlName" asp-for="LabelsJson" />
 

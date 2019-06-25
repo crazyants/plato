@@ -53,9 +53,8 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-
-              
-                // Maximum number of allowed labels
+                
+                // Maximum number of allowed selections
                 var maxItems = $caller.data("maxItems")
                     ? parseInt($caller.data("maxItems"))
                     : $caller.data(dataKey).maxItems;

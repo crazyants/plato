@@ -836,7 +836,6 @@ $(function (win, doc, $) {
                         },
                         "go");
                 }
-              
 
             },
             collapseAll: function ($caller) {
@@ -3332,14 +3331,6 @@ $(function (win, doc, $) {
                     return null;
                 }
 
-                // Allow setting of maxItems vai data-attribute
-                if ($caller.data("tagitMaxItems")) {
-                    var num = parseInt($caller.data("tagitMaxItems"));
-                    if (!num.isNaN) {
-                        $caller.data(dataKey).maxItems = num;
-                    }
-                }
-
                 // Bind events
                 this.bind($caller);
                 
@@ -3416,6 +3407,7 @@ $(function (win, doc, $) {
                     }
                     var $input = this.getInput($caller),
                         maxAllowed = this.getMaxItems($caller);
+                    console.log(maxAllowed);
                     if (maxAllowed > 0 && items.length >= maxAllowed) {
                         if ($input) {
                             $input.hide();
@@ -3570,8 +3562,10 @@ $(function (win, doc, $) {
                 }
                 return null;
             },
-            getMaxItems: function($caller) {
-                return $caller.data(dataKey).maxItems;
+            getMaxItems: function ($caller) {
+                return $caller.data("maxItems")
+                    ? parseInt($caller.data("maxItems"))
+                    : $caller.data(dataKey).maxItems;
             },
             getInput: function($caller) {
                 var $li = this.getInputLi($caller);
