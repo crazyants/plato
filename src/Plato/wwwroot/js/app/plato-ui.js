@@ -826,13 +826,17 @@ $(function (win, doc, $) {
                 methods.expandSelected($caller);
 
                 // Scroll to active item
-                var offset = $caller.find(".active").offset(),
-                    top = offset.top - $caller.offset().top;
-                $caller.scrollTo({
-                        offset: top - 20,
-                        interval: 500
-                    },
-                    "go");
+                var $active = $caller.find(".active");
+                if ($active.length > 0) {
+                    var offset = $active.offset(),
+                        top = offset.top - $caller.offset().top;
+                    $caller.scrollTo({
+                            offset: top - 20,
+                            interval: 500
+                        },
+                        "go");
+                }
+              
 
             },
             collapseAll: function ($caller) {
