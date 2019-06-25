@@ -1,8 +1,24 @@
 ﻿@model CategoryIndexViewModel
+@{
+    var postPermission = Plato.Docs.Permissions.PostDocs;
+}
+
+<div class="position-relative">
+    
+    <authorize asp-permission="@postPermission.Name">
+        <authorize-success>
+            <div class="position-absolute" style="right: 0; z-index: 999;">
+                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Create" asp-route-categoryId="@Model.Options.CategoryId" class="btn btn-sm text-muted" data-toggle="tooltip" title="@T["New Doc"]">
+                    <i class="fal fa-fw fa-plus"></i>
+                </a>
+            </div>
+        </authorize-success>
+    </authorize>
+
+    @await DisplayAsync(new View("DocCategoryListSidebar", new
+    {
+        options = Model.Options
+    }))
 
 
-@await DisplayAsync(new View("DocCategoryListSidebar", new
-{
-    options = Model.Options
-}))
-
+</div>

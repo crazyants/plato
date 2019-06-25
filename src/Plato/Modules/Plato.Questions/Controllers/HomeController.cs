@@ -358,9 +358,9 @@ namespace Plato.Questions.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Questions",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Questions",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
@@ -373,9 +373,9 @@ namespace Plato.Questions.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Questions",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Questions",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
@@ -388,13 +388,39 @@ namespace Plato.Questions.Controllers
                     // Redirect back to main index
                     return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Questions",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Index"
+                        ["area"] = "Plato.Questions",
+                        ["controller"] = "Home",
+                        ["action"] = "Index"
                     }));
                 }
             }
+            
+            // Ensure we have permission to view private entities
+            if (entity.IsPrivate)
+            {
 
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+                // IF we didn't create this entity ensure we have permission to view private entities
+                if (entity.CreatedBy.Id != user?.Id)
+                {
+                    // Do we have permission to view private entities?
+                    if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                        Permissions.ViewPrivateQuestions))
+                    {
+                        // Redirect back to main index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Questions",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
+            }
+            
             // Maintain previous route data when generating page links
             var defaultViewOptions = new EntityViewModel<Question, Answer>();
             var defaultPagerOptions = new PagerOptions();

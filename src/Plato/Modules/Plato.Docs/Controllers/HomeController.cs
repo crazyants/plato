@@ -417,6 +417,32 @@ namespace Plato.Docs.Controllers
                 }
             }
 
+            // Ensure we have permission to view private entities
+            if (entity.IsPrivate)
+            {
+
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+                // IF we didn't create this entity ensure we have permission to view private entities
+                if (entity.CreatedBy.Id != user?.Id)
+                {
+                    // Do we have permission to view private entities?
+                    if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
+                        Permissions.ViewPrivateDocs))
+                    {
+                        // Redirect back to main index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Docs",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
+            }
+            
             // Maintain previous route data when generating page links
             var defaultViewOptions = new EntityViewModel<Doc, DocComment>();
             var defaultPagerOptions = new PagerOptions();

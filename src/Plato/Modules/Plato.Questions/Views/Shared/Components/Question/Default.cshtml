@@ -11,7 +11,7 @@
            
                 @if (Model.Entity.IsPrivate)
                 {
-                    if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                    if (Model.Entity.CreatedUserId == base.CurrentUser?.Id)
                     {
                         <span class="badge badge-warning" data-toggle="tooltip" title="@T["This question is private and only visible as you are the question author"]">@T["Private"]</span>
                     }
