@@ -381,13 +381,8 @@ namespace Plato.Docs.Controllers
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                     Permissions.ViewDeletedDocs))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Docs",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -397,13 +392,8 @@ namespace Plato.Docs.Controllers
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                     Permissions.ViewHiddenDocs))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Docs",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -413,13 +403,8 @@ namespace Plato.Docs.Controllers
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                     Permissions.ViewSpamDocs))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Docs",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -437,13 +422,8 @@ namespace Plato.Docs.Controllers
                     if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                         Permissions.ViewPrivateDocs))
                     {
-                        // Redirect back to main index
-                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                        {
-                            ["area"] = "Plato.Docs",
-                            ["controller"] = "Home",
-                            ["action"] = "Index"
-                        }));
+                        // Return 401
+                        return Unauthorized();
                     }
                 }
 

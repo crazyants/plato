@@ -166,6 +166,13 @@ namespace Plato.Entities.ViewComponents
 
             // Build results
             var results = await _entityService
+                .ConfigureQuery(q =>
+                {
+                    q.HideSpam.True();
+                    q.HideHidden.True();
+                    q.HideDeleted.True();
+                    q.HidePrivate.True();
+                })
                 .GetResultsAsync(options, pager);
 
             // Set pager total

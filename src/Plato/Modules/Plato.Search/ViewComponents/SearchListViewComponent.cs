@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Search.Models;
 using Plato.Search.Stores;
 
@@ -115,17 +117,21 @@ namespace Plato.Search.ViewComponents
             },
         };
         
-        private readonly IEntityService<Entity> _entityService;
+        
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IEntityService<Entity> _entityService;
 
         private SearchSettings _searchSettings;
 
         public SearchListViewComponent(
-            IEntityService<Entity> entityService,
-            ISearchSettingsStore<SearchSettings> searchSettingsStore)
+            ISearchSettingsStore<SearchSettings> searchSettingsStore,
+            IAuthorizationService authorizationService,
+            IEntityService<Entity> entityService)
         {
-            _entityService = entityService;
+            _authorizationService = authorizationService;
             _searchSettingsStore = searchSettingsStore;
+            _entityService = entityService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -182,6 +188,38 @@ namespace Plato.Search.ViewComponents
                     {
                         o.SearchType = _searchSettings.SearchType;
                     }
+                })
+                .ConfigureQuery(async q =>
+                {
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.SearchHidden))
+                    {
+                        q.HideHidden.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.SearchSpam))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.SearchDeleted))
+                    {
+                        q.HideDeleted.True();
+                    }
+
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.SearchPrivate))
+                    {
+                        q.HidePrivate.True();
+                    }
+
                 })
                 .GetResultsAsync(options, pager); 
 

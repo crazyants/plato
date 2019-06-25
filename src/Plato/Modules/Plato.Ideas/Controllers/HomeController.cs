@@ -363,13 +363,8 @@ namespace Plato.Ideas.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedIdeas))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Ideas",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -378,13 +373,8 @@ namespace Plato.Ideas.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewHiddenIdeas))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Ideas",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -393,13 +383,8 @@ namespace Plato.Ideas.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamIdeas))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Ideas",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -417,13 +402,8 @@ namespace Plato.Ideas.Controllers
                     if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                         Permissions.ViewPrivateIdeas))
                     {
-                        // Redirect back to main index
-                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                        {
-                            ["area"] = "Plato.Ideas",
-                            ["controller"] = "Home",
-                            ["action"] = "Index"
-                        }));
+                        // Return 401
+                        return Unauthorized();
                     }
                 }
 

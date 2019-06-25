@@ -2,18 +2,26 @@
 @{
     Layout = null;
 }
-
-<div class="popper-content">
-    
-    <div class="p-3">
-
-        <h6>@Model.Title</h6>
-        <div class="text-muted">@Model.Abstract</div>
-
+@if (Model != null)
+{
+    <div class="popper-content">
+        <div class="p-3">
+            <h6>@Model.Title</h6>
+            <div class="text-muted">
+                @Model.Abstract
+            </div>
+        </div>
+        <hr class="m-0 p-0"/>
+        <div class="p-3">
+            @T["Posted"] <date utc="@Model.CreatedDate"></date>
+        </div>
     </div>
-    <hr class="m-0 p-0"/>
-    <div class="p-3">
-    
-        @T["Posted"] <date utc="@Model.CreatedDate"></date>
+}
+else
+{
+    <div class="popper-content">
+        <div class="p-3">
+            @T["This content is private"]
+        </div>
     </div>
-</div>
+}

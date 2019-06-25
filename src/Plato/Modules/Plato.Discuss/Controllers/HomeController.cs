@@ -360,13 +360,8 @@ namespace Plato.Discuss.Controllers
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                     Permissions.ViewDeletedTopics))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Discuss",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -376,13 +371,8 @@ namespace Plato.Discuss.Controllers
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                     Permissions.ViewHiddenTopics))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Discuss",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -392,13 +382,8 @@ namespace Plato.Discuss.Controllers
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                     Permissions.ViewSpamTopics))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Discuss",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -416,13 +401,8 @@ namespace Plato.Discuss.Controllers
                     if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                         Permissions.ViewPrivateTopics))
                     {
-                        // Redirect back to main index
-                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                        {
-                            ["area"] = "Plato.Discuss",
-                            ["controller"] = "Home",
-                            ["action"] = "Index"
-                        }));
+                        // Return 401
+                        return Unauthorized();
                     }
                 }
 

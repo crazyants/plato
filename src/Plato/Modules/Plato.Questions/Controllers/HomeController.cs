@@ -361,13 +361,8 @@ namespace Plato.Questions.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedQuestions))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Questions",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -376,13 +371,8 @@ namespace Plato.Questions.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewHiddenQuestions))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Questions",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -391,13 +381,8 @@ namespace Plato.Questions.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamQuestions))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Questions",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
             
@@ -415,13 +400,8 @@ namespace Plato.Questions.Controllers
                     if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                         Permissions.ViewPrivateQuestions))
                     {
-                        // Redirect back to main index
-                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                        {
-                            ["area"] = "Plato.Questions",
-                            ["controller"] = "Home",
-                            ["action"] = "Index"
-                        }));
+                        // Return 401
+                        return Unauthorized();
                     }
                 }
 

@@ -362,13 +362,8 @@ namespace Plato.Issues.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewDeletedIssues))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Issues",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -377,13 +372,8 @@ namespace Plato.Issues.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewHiddenIssues))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Issues",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
 
@@ -392,13 +382,8 @@ namespace Plato.Issues.Controllers
             {
                 if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId, Permissions.ViewSpamIssues))
                 {
-                    // Redirect back to main index
-                    return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Issues",
-                        ["controller"] = "Home",
-                        ["action"] = "Index"
-                    }));
+                    // Return 401
+                    return Unauthorized();
                 }
             }
             
@@ -416,13 +401,8 @@ namespace Plato.Issues.Controllers
                     if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
                         Permissions.ViewPrivateIssues))
                     {
-                        // Redirect back to main index
-                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
-                        {
-                            ["area"] = "Plato.Issues",
-                            ["controller"] = "Home",
-                            ["action"] = "Index"
-                        }));
+                        // Return 401
+                        return Unauthorized();
                     }
                 }
 

@@ -2,21 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Layout;
-using Plato.Internal.Layout.Titles;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Entities.Controllers
 {
@@ -24,6 +16,9 @@ namespace Plato.Entities.Controllers
     {
 
         private readonly IEntityStore<Entity> _entityStore;
+        private readonly IEntityService<Entity> _entityService;
+        private readonly IContextFacade _contextFacade;
+ 
 
         public IHtmlLocalizer T { get; }
 
@@ -32,10 +27,14 @@ namespace Plato.Entities.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer localizer,
-            IEntityStore<Entity> entityStore)
+            IEntityStore<Entity> entityStore,
+            IEntityService<Entity> entityService,
+            IContextFacade contextFacade)
         {
 
             _entityStore = entityStore;
+            _entityService = entityService;
+            _contextFacade = contextFacade;
 
             T = localizer;
             S = stringLocalizer;
@@ -59,17 +58,30 @@ namespace Plato.Entities.Controllers
                 throw new ArgumentOutOfRangeException(nameof(opts.Id));
             }
 
-            // Get entity
-            var entity = await _entityStore.GetByIdAsync(opts.Id);
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            
+            // Get entity checking to ensure the entity is visible
+            var entities = await _entityStore.QueryAsync()
+                .Select<EntityQueryParams>(q =>
+                {
+                    q.UserId.Equals(user?.Id ?? 0);
+                    q.Id.Equals(opts.Id);
+                    q.HideSpam.True();
+                    q.HideHidden.True();
+                    q.HideDeleted.True();
+                    q.HidePrivate.True();
+                })
+                .ToList();
 
             // Ensure entity exists
-            if (entity == null)
+            if (entities?.Data == null)
             {
-                return NotFound();
+                return View();
             }
 
             // Return view
-            return View(entity);
+            return View(entities.Data[0]);
 
         }
 
