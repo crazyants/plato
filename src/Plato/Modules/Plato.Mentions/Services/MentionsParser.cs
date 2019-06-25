@@ -31,23 +31,34 @@ namespace Plato.Mentions.Services
 
         public async Task<string> ParseAsync(string input)
         {
+
+            // We need input to parse
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            // Get tokens
             var tokens = _tokenizer.Tokenize(input);
 
+            // Ensure we found tokens
             if (tokens == null)
             {
                 return input;
             }
 
+            // Prevent multiple enumeration
             var tokenList = tokens.ToList();
-
+            
+            // Get mentioned users
             var users = await GetUsersAsync(tokenList);
-
-            var sb = new StringBuilder();
             if (users != null)
             {
 
                 var userList = users.ToList();
+                var sb = new StringBuilder();
 
+                // Parse
                 for (var i = 0; i < input.Length; i++)
                 {
                     
@@ -97,10 +108,13 @@ namespace Plato.Mentions.Services
                     }
 
                 }
-                
+
+                return sb.ToString();
+
             }
 
-            return sb.ToString();
+            return input;
+
         }
         
         public async Task<IEnumerable<User>> GetUsersAsync(string input)

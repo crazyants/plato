@@ -70,7 +70,7 @@ namespace Plato.Discuss.Star.ViewProviders
                 {
                     model.StarType = followType;
                     model.ThingId = entity.Id;
-                    model.IsFollowing = isFollowing;
+                    model.IsStarred = isFollowing;
                     model.TotalStars = entity.TotalStars;
                     return model;
                 }).Zone("tools").Order(-5)

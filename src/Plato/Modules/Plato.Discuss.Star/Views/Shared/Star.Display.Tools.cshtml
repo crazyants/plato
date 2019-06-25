@@ -1,8 +1,11 @@
 ﻿@model StarViewModel
+@{
+    var permission = Plato.Discuss.Star.Permissions.StarTopics;
+}
 
-@if (!Model.IsFollowing)
+@if (!Model.IsStarred)
 {
-    <authorize asp-permission="StarTopics">
+    <authorize asp-permission="@permission.Name">
         <authorize-success>
             <button data-toggle="tooltip" title="@T[Model.StarType.SubscribeDescription]" class="btn bg-transparent text-muted star-off" data-on-css="text-danger star-on" data-off-css="text-muted star-off" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-subscribe-tooltip="@T[Model.StarType.SubscribeDescription]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.StarType.UnsubscribeDescription]" data-action="subscribe" data-thing-id="@Model.ThingId" role="button">
                 <i class="fal fa-star"></i> 
@@ -14,7 +17,7 @@ else
 {
     <button data-toggle="tooltip" title="@T[Model.StarType.UnsubscribeDescription]" class="btn bg-transparent text-danger star-on" data-on-css="text-danger star-on" data-off-css="text-muted star-off" data-provide="star-button" data-star-type="@Model.StarType.Name" data-subscribe-text="@T[Model.StarType.SubscribeText]" data-subscribe-tooltip="@T[Model.StarType.SubscribeDescription]" data-unsubscribe-text="@T[Model.StarType.UnsubscribeText]" data-unsubscribe-tooltip="@T[Model.StarType.UnsubscribeDescription]" data-action="unsubscribe" data-thing-id="@Model.ThingId" role="button">
         <i class="fa fa-star"></i>
-</button>
+    </button>
 }
 
 

@@ -27,7 +27,7 @@ namespace Plato.Mentions.Services
             var start = 0;
             List<Token> output = null;
             StringBuilder sb = null;
-
+            
             for (var i = 0; i < input.Length; i++)
             {
                 var c = input[i];
@@ -51,19 +51,24 @@ namespace Plato.Mentions.Services
                     // We've reached a terminator or the end of the input
                     if (_terminators.Contains(c) || i == input.Length - 1)
                     {
-                        if (output == null)
+                        // Ensure we have a token
+                        if (!string.IsNullOrEmpty(sb.ToString()))
                         {
-                            output = new List<Token>();
+                            if (output == null)
+                            {
+                                output = new List<Token>();
+                            }
+                            output.Add(new Token()
+                            {
+                                Start = start,
+                                End = start + sb.ToString().Length,
+                                Value = sb.ToString()
+                            });
                         }
-                        output.Add(new Token()
-                        {
-                            Start = start,
-                            End = start + sb.ToString().Length,
-                            Value = sb.ToString()
-                        });
                         start = 0;
                         sb = null;
                     }
+
                 }
 
             }

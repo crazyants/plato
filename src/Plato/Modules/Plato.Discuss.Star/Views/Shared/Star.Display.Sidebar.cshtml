@@ -6,7 +6,7 @@
     </card-title>
     <card-body>
         
-        @if (!Model.IsFollowing)
+        @if (!Model.IsStarred)
         {
             <div class="text-muted">
                 @T[Model.StarType.SubscribeDescription]

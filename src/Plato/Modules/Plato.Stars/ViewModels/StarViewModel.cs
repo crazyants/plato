@@ -7,7 +7,7 @@ namespace Plato.Stars.ViewModels
 
         public int ThingId { get; set; }
         
-        public bool IsFollowing { get; set; }
+        public bool IsStarred { get; set; }
 
         public int TotalStars { get; set; }
 

@@ -66,16 +66,21 @@ namespace Plato.References.Services
                     // We've reached a terminator or the end of the input
                     if (_terminators.Contains(c) || i == input.Length - 1)
                     {
-                        if (output == null)
+                        // Ensure we have a token to add
+                        if (!string.IsNullOrEmpty(sb.ToString()))
                         {
-                            output = new List<Token>();
+                            if (output == null)
+                            {
+                                output = new List<Token>();
+                            }
+                            output.Add(new Token()
+                            {
+                                Start = start,
+                                End = start + sb.ToString().Length,
+                                Value = sb.ToString()
+                            });
                         }
-                        output.Add(new Token()
-                        {
-                            Start = start,
-                            End = start + sb.ToString().Length,
-                            Value = sb.ToString()
-                        });
+                       
                         start = 0;
                         sb = null;
                     }

@@ -32,6 +32,7 @@ namespace Plato.References.Services
         public async Task<string> ParseAsync(string input)
         {
 
+            // We need input to parse
             if (string.IsNullOrEmpty(input))
             {
                 return input;
@@ -49,15 +50,13 @@ namespace Plato.References.Services
             // Prevent multiple enumeration
             var tokenList = tokens.ToList();
 
-            // Get all entities
+            // Get all referenced entities
             var entities = await GetEntitiesAsync(tokenList);
-
-            // Parse the input
-            var sb = new StringBuilder();
             if (entities != null)
             {
 
-                var userList = entities.ToList();
+                var entityList = entities.ToList();
+                var sb = new StringBuilder();
 
                 for (var i = 0; i < input.Length; i++)
                 {
@@ -68,7 +67,7 @@ namespace Plato.References.Services
                         // Token start
                         if (i == token.Start)
                         {
-                            var entity = userList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
+                            var entity = entityList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
                             if (entity != null)
                             {
                                 var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -101,7 +100,7 @@ namespace Plato.References.Services
                     {
                         if (i == token.End)
                         {
-                            var entity = userList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
+                            var entity = entityList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
                             if (entity != null)
                                 sb.Append("</a>");
                         }
@@ -109,9 +108,11 @@ namespace Plato.References.Services
 
                 }
 
+                return sb.ToString();
             }
 
-            return sb.ToString();
+            return input;
+
         }
 
         public async Task<IEnumerable<Entity>> GetEntitiesAsync(string input)

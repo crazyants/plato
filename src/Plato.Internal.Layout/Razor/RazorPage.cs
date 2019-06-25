@@ -14,7 +14,6 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Layout.Razor
 {
-    
     public abstract class RazorPage<TModel> :
         Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
