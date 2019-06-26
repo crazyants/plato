@@ -1,0 +1,25 @@
+﻿@model TagListViewModel
+@{
+    var total = Model.Tags?.Count() ?? 0;
+    var text = total == 1
+        ? "tag"
+        : "tags";
+}
+@if (total > 0)
+{
+    <div class="pl-3 pb-3">
+        <span class="text-muted mr-2">
+            <i class="fal fa-tag fa-fw" data-toggle="tooltip" title="@total @text"></i>
+        </span>
+        @if (Model.Tags != null)
+        {
+            foreach (var tag in Model.Tags)
+            {
+                var tooltip = $"{T["Show all issues tagged"].Value} '{tag.Name}...'";
+                <a title="@tooltip" asp-route-area="Plato.Issues.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.TagId" asp-route-opts.alias="@tag.Alias" class="btn btn-sm label">
+                    @tag.Name
+                </a>
+            }
+        }
+    </div>
+}

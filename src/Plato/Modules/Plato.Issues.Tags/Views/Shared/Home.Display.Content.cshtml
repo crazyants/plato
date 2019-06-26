@@ -1,0 +1,7 @@
+﻿@model TagDisplayViewModel
+
+@await DisplayAsync(new View("IssueList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))

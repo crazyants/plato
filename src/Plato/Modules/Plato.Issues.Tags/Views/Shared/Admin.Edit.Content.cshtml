@@ -1,0 +1,35 @@
+﻿@model EditTagViewModel
+
+<card>
+    <card-title>
+        @if (Model.IsNewTag)
+        {
+            <h6 class="card-title">@T["Add Tag"]</h6>
+        }
+        else
+        {
+            <h6 class="card-title">@T["Edit Tag"]</h6>
+        }
+    </card-title>
+    <card-body>
+     
+        <fieldset>
+            <div class="form-group" asp-validation-class-for="Name">
+                <label asp-for="Name"><strong>@T["Tag"]</strong></label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <div class="input-group">
+                    <input placeholder="@T["a short tag or keyword..."]" asp-for="Name" class="form-control" autofocus />
+                </div>
+            </div>
+        </fieldset>
+     
+        <fieldset>
+            <div class="form-group" asp-validation-class-for="Description">
+                <label asp-for="Name"><strong>@T["Description"]</strong></label>
+                <span asp-validation-for="Description" class="text-danger"></span>
+                <textarea placeholder="@T["optional description for the tag..."]" asp-for="Description" rows="2" class="form-control"></textarea>
+            </div>
+        </fieldset>
+            
+    </card-body>
+</card>

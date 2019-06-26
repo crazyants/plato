@@ -3345,7 +3345,6 @@ $(function (win, doc, $) {
 
                 return null;
 
-
             },
             bind: function($caller) {
 
@@ -3406,13 +3405,11 @@ $(function (win, doc, $) {
                         $caller.find("li:eq(0)").before($li);
                     }
                     var $input = this.getInput($caller),
-                        maxAllowed = this.getMaxItems($caller);
-                    console.log(maxAllowed);
-                    if (maxAllowed > 0 && items.length >= maxAllowed) {
+                        maxItems = this.getMaxItems($caller);
+                    if (maxItems > 0 && items.length >= maxItems) {
                         if ($input) {
                             $input.hide();
                         }
-
                     } else {
                         if ($input) {
                             $input.show();
@@ -3460,8 +3457,8 @@ $(function (win, doc, $) {
             focus: function($caller) {
                 var $input = this.getInput($caller),
                     items = this.getItems($caller),
-                    maxAllowed = this.getMaxItems($caller);
-                if (maxAllowed > 0 && items.length < maxAllowed) {
+                    maxItems = this.getMaxItems($caller);
+                if (maxItems > 0 && items.length < maxItems) {
                     if ($input && $input.is(":visible")) {
                         $input.focus();
                     }
@@ -3710,7 +3707,6 @@ $(function (win, doc, $) {
             items: [], // our array of selected items
             highlightIndex: 0,
             ensureUnique: true, // boolean to restrict duplicate items
-            maxItems: 0, // the maximum number of allowed selected items - 0 = no limit
             store: null, // optional selector for dom element which will store the JSON representing selected items
             itemTemplate: '<li class="list-group-item select-dropdown-item">{text} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
             itemTemplateEmpty: '<li class="list-group-item">No results</li>',

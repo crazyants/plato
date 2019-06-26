@@ -2,12 +2,12 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Issues.Navigation
+namespace Plato.Issues.Tags.Navigation
 {
 
     public class AdminMenu : INavigationProvider
     {
-        public AdminMenu(IStringLocalizer<AdminMenu> localizer)
+        public AdminMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -16,6 +16,7 @@ namespace Plato.Issues.Navigation
 
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
+
             if (!String.Equals(name, "admin", StringComparison.OrdinalIgnoreCase))
             {
                 return;
@@ -24,14 +25,14 @@ namespace Plato.Issues.Navigation
             builder
                 .Add(T["Issues"], 7, issues => issues
                     .IconCss("fal fa-bug")
-                    .Add(T["Overview"], int.MinValue, home => home
-                        .Action("Index", "Admin", "Plato.Issues")
+                    .Add(T["Tags"], 4, manage => manage
+                        .Action("Index", "Admin", "Plato.Issues.Tags")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));
             
-
         }
+
     }
 
 }

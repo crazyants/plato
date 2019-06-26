@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using Plato.Ideas.Models;
+using Plato.Issues.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
@@ -17,16 +17,16 @@ using Plato.Tags.Services;
 using Plato.Tags.Stores;
 using Plato.Tags.ViewModels;
 
-namespace Plato.Ideas.Tags.ViewProviders
+namespace Plato.Issues.Tags.ViewProviders
 {
-    public class IdeaCommentViewProvider : BaseViewProvider<IdeaComment>
+    public class IssueCommentViewProvider : BaseViewProvider<Comment>
     {
 
         private const string TagsHtmlName = "tags";
 
         private readonly IEntityTagManager<EntityTag> _entityTagManager;
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
-        private readonly IEntityReplyStore<IdeaComment> _replyStore;
+        private readonly IEntityReplyStore<Comment> _replyStore;
         private readonly ITagManager<TagBase> _tagManager;
         private readonly IFeatureFacade _featureFacade;
         private readonly IContextFacade _contextFacade;
@@ -36,12 +36,12 @@ namespace Plato.Ideas.Tags.ViewProviders
 
         private readonly HttpRequest _request;
 
-        public IdeaCommentViewProvider(
+        public IssueCommentViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IStringLocalizer stringLocalize,
             IEntityTagManager<EntityTag> entityTagManager,
             IEntityTagStore<EntityTag> entityTagStore,
-            IEntityReplyStore<IdeaComment> replyStore,
+            IEntityReplyStore<Comment> replyStore,
             ITagManager<TagBase> tagManager,
             IFeatureFacade featureFacade,
             IContextFacade contextFacade,
@@ -63,17 +63,17 @@ namespace Plato.Ideas.Tags.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(IdeaComment comment, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Comment comment, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(IdeaComment comment, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Comment comment, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(IdeaComment comment, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Comment comment, IViewProviderContext updater)
         {
 
             var tagsJson = "";
@@ -115,24 +115,24 @@ namespace Plato.Ideas.Tags.ViewProviders
                 Tags = tagsJson,
                 HtmlName = TagsHtmlName,
                 Permission = comment.Id == 0
-                    ? Permissions.PostIdeaCommentTags
-                    : Permissions.EditIdeaCommentTags
+                    ? Permissions.PostIssueCommentTags
+                    : Permissions.EditIssueCommentTags
             };
 
             return Views(
-                View<EditEntityTagsViewModel>("Idea.Tags.Edit.Footer", model => viewModel).Zone("content")
+                View<EditEntityTagsViewModel>("Issues.Tags.Edit.Footer", model => viewModel).Zone("content")
                     .Order(int.MaxValue)
             );
             
         }
 
-        public override Task<bool> ValidateModelAsync(IdeaComment comment, IUpdateModel updater)
+        public override Task<bool> ValidateModelAsync(Comment comment, IUpdateModel updater)
         {
             // ensure tags are optional
             return Task.FromResult(true);
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(IdeaComment comment, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Comment comment, IViewProviderContext context)
         {
 
             // Ensure entity reply exists before attempting to update
@@ -287,7 +287,7 @@ namespace Plato.Ideas.Tags.ViewProviders
             }
 
             // Get feature for tag
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues");
 
             // We always need a feature
             if (feature == null)

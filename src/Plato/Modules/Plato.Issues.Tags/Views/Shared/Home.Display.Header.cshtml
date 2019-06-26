@@ -1,0 +1,25 @@
+﻿@model Plato.Tags.Models.TagBase
+@{
+    var text = @Model.TotalEntities == 1
+        ? "time"
+        : "times";
+}
+
+<h4>@T["Results for tag"] "@Model.Name"</h4>
+<div class="text-muted">
+    @if (!String.IsNullOrEmpty(Model.Description))
+    {
+        @Model.Description
+    }
+    else
+    {
+        @T["Tag appears "] <span>@Model.TotalEntities.ToPrettyInt()</span> @T[text]
+        @if (Model.LastSeenDate != null)
+         {
+             @T[", Last seen: "] <span><date utc="@Model.LastSeenDate"/></span>
+         }
+    }
+
+ 
+</div>
+<hr />

@@ -65,7 +65,7 @@
                     <div class="col-12">
                         <div class="float-right">
                             <span class="text-muted">@T["last post"]</span>
-                            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
+                            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
                                 <date utc="@Model.Entity.LastReplyDate"></date>
                             </a>
                         </div>
