@@ -7,12 +7,12 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Issues.Tags.Navigation
 {
 
-    public class IdeaCommentFooterMenu : INavigationProvider
+    public class IssueCommentFooterMenu : INavigationProvider
     {
         
         public IStringLocalizer T { get; set; }
 
-        public IdeaCommentFooterMenu(IStringLocalizer localizer)
+        public IssueCommentFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -20,7 +20,7 @@ namespace Plato.Issues.Tags.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "idea-comment-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "issue-comment-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -39,7 +39,7 @@ namespace Plato.Issues.Tags.Navigation
 
             builder
                 .Add(T["Tags"], react => react
-                    .View("IdeaTags", new
+                    .View("IssueTags", new
                     {
                         entity,
                         reply

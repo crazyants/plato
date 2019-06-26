@@ -46,7 +46,6 @@ namespace Plato.Questions.Tags
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
-            services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, QuestionFooterMenu>();
             services.AddScoped<INavigationProvider, QuestionAnswerFooterMenu>();
             

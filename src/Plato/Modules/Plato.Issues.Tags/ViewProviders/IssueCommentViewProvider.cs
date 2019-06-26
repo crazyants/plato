@@ -120,7 +120,7 @@ namespace Plato.Issues.Tags.ViewProviders
             };
 
             return Views(
-                View<EditEntityTagsViewModel>("Issues.Tags.Edit.Footer", model => viewModel).Zone("content")
+                View<EditEntityTagsViewModel>("Issue.Tags.Edit.Footer", model => viewModel).Zone("content")
                     .Order(int.MaxValue)
             );
             

@@ -45,9 +45,8 @@ namespace Plato.Issues.Tags
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
-            services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, IssueFooterMenu>();
-            services.AddScoped<INavigationProvider, IdeaCommentFooterMenu>();
+            services.AddScoped<INavigationProvider, IssueCommentFooterMenu>();
             
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Issue>, ViewProviderManager<Issue>>();

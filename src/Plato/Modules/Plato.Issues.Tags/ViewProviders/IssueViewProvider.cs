@@ -86,7 +86,7 @@ namespace Plato.Issues.Tags.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(Issue idea, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Issue issue, IViewProviderContext context)
         {
             return Task.FromResult(Views(
                 View<EditEntityTagsViewModel>("Issue.Tags.Edit.Footer", model => new EditEntityTagsViewModel()
@@ -98,7 +98,7 @@ namespace Plato.Issues.Tags.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Issue idea, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildEditAsync(Issue issue, IViewProviderContext context)
         {
             
             var tagsJson = "";
@@ -117,7 +117,7 @@ namespace Plato.Issues.Tags.ViewProviders
             else
             {
 
-                var entityTags = await GetEntityTagsByEntityIdAsync(idea.Id);
+                var entityTags = await GetEntityTagsByEntityIdAsync(issue.Id);
 
                 // Exclude replies
                 var entityTagList = entityTags?.Where(t => t.EntityReplyId == 0).ToList();
@@ -162,7 +162,7 @@ namespace Plato.Issues.Tags.ViewProviders
                     {
                         Tags = tagsJson,
                         HtmlName = TagsHtmlName,
-                        Permission = idea.Id == 0
+                        Permission = issue.Id == 0
                             ? Permissions.PostIssueTags
                             : Permissions.EditIssueTags
                     }).Zone("content")
@@ -171,23 +171,23 @@ namespace Plato.Issues.Tags.ViewProviders
 
         }
         
-        public override Task<bool> ValidateModelAsync(Issue idea, IUpdateModel updater)
+        public override Task<bool> ValidateModelAsync(Issue issue, IUpdateModel updater)
         {
             // ensure tags are optional
             return Task.FromResult(true);
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Issue idea, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Issue issue, IViewProviderContext context)
         {
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(idea.Id);
+            var entity = await _entityStore.GetByIdAsync(issue.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(idea, context);
+                return await BuildIndexAsync(issue, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(idea, context.Updater))
+            if (await ValidateModelAsync(issue, context.Updater))
             {
 
                 // Get selected tags
@@ -197,7 +197,7 @@ namespace Plato.Issues.Tags.ViewProviders
                 var tagsToRemove = new List<EntityTag>();
 
                 // Get all existing tags for entity
-                var existingTags = await GetEntityTagsByEntityIdAsync(idea.Id);
+                var existingTags = await GetEntityTagsByEntityIdAsync(issue.Id);
 
                 // Exclude replies
                 var existingTagsList = existingTags?.Where(t => t.EntityReplyId == 0).ToList();
@@ -242,7 +242,7 @@ namespace Plato.Issues.Tags.ViewProviders
                 {
                     var result = await _entityTagManager.CreateAsync(new EntityTag()
                     {
-                        EntityId = idea.Id,
+                        EntityId = issue.Id,
                         TagId = tag.Id,
                         CreatedUserId = user?.Id ?? 0,
                         CreatedDate = DateTime.UtcNow
@@ -258,7 +258,7 @@ namespace Plato.Issues.Tags.ViewProviders
 
             }
 
-            return await BuildEditAsync(idea, context);
+            return await BuildEditAsync(issue, context);
 
         }
 

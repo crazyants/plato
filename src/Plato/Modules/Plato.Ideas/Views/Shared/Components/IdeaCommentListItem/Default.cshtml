@@ -64,8 +64,8 @@
                 </div>
             </card-title>
             <card-body>
-                <div class="@css" data-infinite-scroll-highlight="@Model.Reply.RowOffset" data-provide="markdownBody">
-                    <div class="markdown-body p-3">
+                <div class="@css" data-infinite-scroll-highlight="@Model.Reply.RowOffset">
+                    <div class="markdown-body p-3" data-provide="markdownBody">
                         @Html.Raw(@Model.Reply.Html)
                         @if (!String.IsNullOrEmpty(Model.Reply.CreatedBy.SignatureHtml))
                         {
