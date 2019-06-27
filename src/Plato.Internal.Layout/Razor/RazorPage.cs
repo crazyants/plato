@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
@@ -103,7 +104,34 @@ namespace Plato.Internal.Layout.Razor
             var facade = Context.RequestServices.GetService<IContextFacade>();
             return facade.GetRouteUrl(routeValues);
         }
+        
+        public bool RouteEquals(string area, string controller, string action)
+        {
+            return RouteValueEquals("area", area)
+                   && RouteValueEquals("controller", controller)
+                   && RouteValueEquals("action", action);
+        }
 
+        public bool RouteValueEquals(string key, string value)
+        {
+
+            // We need route values to perform the checks
+            if (ViewContext.RouteData.Values == null)
+            {
+                return false;
+            }
+
+            // Ensure the key exists
+            if (!ViewContext.RouteData.Values.ContainsKey(key))
+            {
+                return false;
+            }
+
+            // Compare values
+            return ViewContext.RouteData.Values[key].ToString().Equals(value, StringComparison.OrdinalIgnoreCase);
+
+        }
+        
     }
-    
+
 }
