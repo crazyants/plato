@@ -7,6 +7,7 @@ using Plato.Discuss.Tags.Badges;
 using Plato.Discuss.Tags.Handlers;
 using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.Navigation;
+using Plato.Discuss.Tags.Subscribers;
 using Plato.Discuss.Tags.Tasks;
 using Plato.Discuss.Tags.ViewAdapters;
 using Plato.Discuss.Tags.ViewProviders;
@@ -16,6 +17,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Notifications;
@@ -25,6 +27,7 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Tags.Repositories;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
+using Plato.Tags.Subscribers;
 
 namespace Plato.Discuss.Tags
 {
@@ -76,14 +79,20 @@ namespace Plato.Discuss.Tags
             services.AddScoped<INotificationManager<Badge>, NotificationManager<Badge>>();
 
             // Data access
+            services.AddScoped<ITagOccurrencesUpdater<Tag>, TagOccurrencesUpdater<Tag>>();
             services.AddScoped<ITagRepository<Tag>, TagRepository<Tag>>();
-            services.AddScoped<ITagStore<Tag>, TagStore<Tag>>();
             services.AddScoped<ITagService<Tag>, TagService<Tag>>();
             services.AddScoped<ITagManager<Tag>, TagManager<Tag>>();
+            services.AddScoped<ITagStore<Tag>, TagStore<Tag>>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
-            
+        
+            // Register broker subscribers
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
+            services.AddScoped<IBrokerSubscriber, EntityTagSubscriber<Tag>>();
+
         }
 
         public override void Configure(

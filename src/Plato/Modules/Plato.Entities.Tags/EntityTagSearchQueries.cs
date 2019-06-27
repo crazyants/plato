@@ -83,8 +83,8 @@ namespace Plato.Entities.Tags
             {
                 fullTextQuery = fullTextQuery.Replace("'", "''");
             }
-            
-            // Can be empty if only puntutaton or stop words were entered
+
+            // Can be empty if only punctuation or stop words were entered
             if (string.IsNullOrEmpty(fullTextQuery))
             {
                 return null;

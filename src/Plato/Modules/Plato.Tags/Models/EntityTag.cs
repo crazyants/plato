@@ -31,6 +31,23 @@ namespace Plato.Tags.Models
 
         }
 
+        public TType ConvertToType<TType>() where TType : class, ITag
+        {
+            var tag = ActivateInstanceOf<TType>.Instance();
+            tag.Id = TagId;
+            tag.FeatureId = FeatureId;
+            tag.Name = Name;
+            tag.NameNormalized = NameNormalized;
+            tag.Description = Description;
+            tag.Alias = Alias;
+            tag.TotalEntities = TotalEntities;
+            tag.TotalFollows = TotalFollows;
+            tag.LastSeenDate = LastSeenDate;
+            tag.CreatedUserId = CreatedUserId;
+            tag.CreatedDate = CreatedDate;
+            return tag;
+        }
+
     }
 
 }

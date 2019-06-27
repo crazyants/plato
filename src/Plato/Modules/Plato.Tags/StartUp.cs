@@ -8,8 +8,6 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Search.Abstractions;
-using Plato.Internal.Stores;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Tags.Assets;
 using Plato.Tags.Handlers;
 using Plato.Tags.Models;
@@ -49,15 +47,13 @@ namespace Plato.Tags
          
             // Services
             services.AddScoped<ITagService<TagBase>, TagService<TagBase>>();
-            
+            services.AddScoped<ITagOccurrencesUpdater<TagBase>, TagOccurrencesUpdater<TagBase>>();
+
             // Register client assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Full text index providers
             services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
-
-            // Register broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntityTagSubscriber>();
             
         }
 

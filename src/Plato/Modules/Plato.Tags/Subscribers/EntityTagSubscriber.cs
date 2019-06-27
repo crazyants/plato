@@ -7,23 +7,20 @@ using Plato.Tags.Stores;
 
 namespace Plato.Tags.Subscribers
 {
-    public class EntityTagSubscriber : IBrokerSubscriber
+    public class EntityTagSubscriber<TTag> : IBrokerSubscriber where TTag : class, ITag
     {
-        
-        private readonly IEntityTagStore<EntityTag> _entityTagStore;
-        private readonly ITagManager<TagBase> _tagManager;
-        private readonly ITagStore<TagBase> _tagStore;
+
+        private readonly ITagOccurrencesUpdater<TTag> _tagOccurrencesUpdater;
+        private readonly ITagStore<TTag> _tagStore;
         private readonly IBroker _broker;
         
         // Updates tag metadata whenever a entity & tag relationship is added or removed.
         public EntityTagSubscriber(
-            IEntityTagStore<EntityTag> entityTagStore,
-            ITagManager<TagBase> tagManager,
-            ITagStore<TagBase> tagStore,
+            ITagOccurrencesUpdater<TTag> tagOccurrencesUpdater,
+            ITagStore<TTag> tagStore,
             IBroker broker)
         {
-            _entityTagStore = entityTagStore;
-            _tagManager = tagManager;
+            _tagOccurrencesUpdater = tagOccurrencesUpdater;
             _tagStore = tagStore;
             _broker = broker;
         }
@@ -95,69 +92,47 @@ namespace Plato.Tags.Subscribers
                 return entityTag;
             }
 
-            // Get count for entities & replies tagged with this tag
-            var entityTags = await _entityTagStore.QueryAsync()
-                .Take(1)
-                .Select<EntityTagQueryParams>(q =>
-                {
-                    q.TagId.Equals(tag.Id);
-                })
-                .ToList();
-            
-            // Update 
-            tag.TotalEntities = entityTags?.Total ?? 0;
+            // Update last seen date for tag
             tag.LastSeenDate = DateTimeOffset.Now;
 
-            // Persist 
-            await _tagManager.UpdateAsync(tag);
+            // Update entity count & last seen date for tag
+            await _tagOccurrencesUpdater.UpdateAsync(tag);
 
             return entityTag;
 
         }
 
-        async Task<EntityTag> EntityTagDeleted(EntityTag entityLabel)
+        async Task<EntityTag> EntityTagDeleted(EntityTag entityTag)
         {
 
-            if (entityLabel == null)
+            if (entityTag == null)
             {
-                throw new ArgumentNullException(nameof(entityLabel));
+                throw new ArgumentNullException(nameof(entityTag));
             }
 
-            if (entityLabel.EntityId <= 0)
+            if (entityTag.EntityId <= 0)
             {
-                return entityLabel;
+                return entityTag;
             }
 
-            if (entityLabel.TagId <= 0)
+            if (entityTag.TagId <= 0)
             {
-                return entityLabel;
+                return entityTag;
             }
 
             // Get tag
-            var tag = await _tagStore.GetByIdAsync(entityLabel.TagId);
+            var tag = await _tagStore.GetByIdAsync(entityTag.TagId);
 
             // No tag found no further work needed
             if (tag == null)
             {
-                return entityLabel;
+                return entityTag;
             }
             
-            // Get count for entities & replies tagged with this tag
-            var entityTags = await _entityTagStore.QueryAsync()
-                .Take(1)
-                .Select<EntityTagQueryParams>(q =>
-                {
-                    q.TagId.Equals(tag.Id);
-                })
-                .ToList();
+            // Update entity count & last seen date for tag
+            await _tagOccurrencesUpdater.UpdateAsync(tag);
 
-            // Update tag
-            tag.TotalEntities = entityTags?.Total ?? 0;
-            
-            // Persist updates
-            await _tagManager.UpdateAsync(tag);
-
-            return entityLabel;
+            return entityTag;
 
         }
 
