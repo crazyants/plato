@@ -98,7 +98,7 @@ $(function(win, doc, $) {
                                     drawBorder: false,
                                     drawOnChartArea: true,
                                     drawTicks: false,
-                                    color: win.Chart.helpers.color(app.ui.chartColors.grey).alpha(0.5).rgbString()
+                                    color: win.Chart.helpers.color(charts.colors.grey).alpha(0.5).rgbString()
                                 },
                                 ticks: {
                                     stepSize: 10,
@@ -115,7 +115,7 @@ $(function(win, doc, $) {
                                     drawBorder: false,
                                     drawOnChartArea: false,
                                     drawTicks: false,
-                                    color: win.Chart.helpers.color(app.ui.chartColors.grey).alpha(0.1).rgbString()
+                                    color: win.Chart.helpers.color(charts.colors.grey).alpha(0.1).rgbString()
                                 },
                                 ticks: {
                                     stepSize: 10,
