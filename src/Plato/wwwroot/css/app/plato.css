@@ -1003,18 +1003,18 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 /* To be removed once all HR elements have been removed from layout-header-content */
 .layout-header > .layout-header-content hr { display: none; }
 
-/* When the header becomes sticky fix layout-header-content */
-.layout-header.fixed > .layout-header-content {
-    position: fixed;
-    top: 0;
-    z-index: 5;
-    white-space: nowrap;
-}
-
-/* make table of contents sticky on larger screens */
+/* Only apply fixed layout for screen sizes above 992px */
 @media (min-width: 992px) {
     
-    /* When the sidebar becomes fixed on desktop update content */
+    /* When the header becomes fixed, fix content */
+    .layout-header.fixed > .layout-header-content {
+        position: fixed;
+        top: 0;
+        z-index: 5;
+        white-space: nowrap;
+    }
+    
+    /* When the sidebar becomes fixed, fix content */
    .layout-sidebar.fixed > .layout-sidebar-content {
         position: fixed;
         display: flex;
@@ -1024,7 +1024,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         flex-direction: column!important;
     }
 
-    /* ensure collapse is visible by default for desktops */
+    /* Ensure collapse is visible by default for desktops */
     .layout-sidebar .collapse { display: block !important; }
 
 }
@@ -1053,7 +1053,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     opacity: 0;
     transition: all 0.20s ease-in;
 }
-
 
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }

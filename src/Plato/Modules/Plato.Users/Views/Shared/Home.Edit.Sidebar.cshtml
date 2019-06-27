@@ -1,17 +1,18 @@
 ﻿@model User
+
 <div class="nav-v d-block">
     <div class="d-block navbar-expand-lg navbar-light">
 
         <card class="card card-body-flush">
             <card-title>
-                <button class="navbar-toggler btn btn-primary float-right" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <a href="#" class="btn float-right navbar-toggler" data-toggle="collapse" data-target="#profile-collapse" aria-controls="profile-collapse" aria-expanded="false" aria-label="Toggle navigation" role="button">
+                    <i class="fal fa-bars"></i>
+                </a>
                 <h6 class="card-title">@T["Your Account"]</h6>
             </card-title>
             <card-body>
         
-                <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
+                <div class="navbar-collapse collapse" id="profile-collapse" role="navigation">
                     <navigation name="edit-profile"
                                 collaspsable="true"
                                 class="list-group list-group-flush  flex-fill"
