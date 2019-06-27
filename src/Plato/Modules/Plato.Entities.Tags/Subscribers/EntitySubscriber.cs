@@ -8,75 +8,77 @@ using Plato.Tags.Stores;
 namespace Plato.Entities.Tags.Subscribers
 {
 
-    //public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
-    //{
+    public class EntitySubscriber<TEntity, TTag> : IBrokerSubscriber 
+        where TEntity : class, IEntity
+        where TTag : class, ITag
+    {
 
-    //    private readonly ITagOccurrencesUpdater<TagBase> _tagOccurrencesUpdater;
-    //    private readonly IEntityTagStore<EntityTag> _entityTagStore;
-    //    private readonly IBroker _broker;
+        private readonly ITagOccurrencesUpdater<TTag> _tagOccurrencesUpdater;
+        private readonly IEntityTagStore<EntityTag> _entityTagStore;
+        private readonly IBroker _broker;
     
-    //    public EntitySubscriber(
-    //        ITagOccurrencesUpdater<TagBase> tagOccurrencesUpdater,
-    //        IEntityTagStore<EntityTag> entityTagStore,
-    //        IBroker broker)
-    //    {
-    //        _tagOccurrencesUpdater = tagOccurrencesUpdater;
-    //        _entityTagStore = entityTagStore;
-    //        _broker = broker;
-    //    }
+        public EntitySubscriber(
+            ITagOccurrencesUpdater<TTag> tagOccurrencesUpdater,
+            IEntityTagStore<EntityTag> entityTagStore,
+            IBroker broker)
+        {
+            _tagOccurrencesUpdater = tagOccurrencesUpdater;
+            _entityTagStore = entityTagStore;
+            _broker = broker;
+        }
 
-    //    #region "Implementation"
+        #region "Implementation"
 
-    //    public void Subscribe()
-    //    {
-    //        _broker.Sub<TEntity>(new MessageOptions()
-    //        {
-    //            Key = "EntityUpdated"
-    //        }, async message => await EntityUpdated(message.What));
-    //    }
+        public void Subscribe()
+        {
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdated(message.What));
+        }
 
-    //    public void Unsubscribe()
-    //    {
-    //        _broker.Unsub<TEntity>(new MessageOptions()
-    //        {
-    //            Key = "EntityUpdated"
-    //        }, async message => await EntityUpdated(message.What));
-    //    }
+        public void Unsubscribe()
+        {
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdated(message.What));
+        }
 
-    //    #endregion
+        #endregion
 
-    //    #region "Private Methods"
+        #region "Private Methods"
         
-    //    async Task<TEntity> EntityUpdated(TEntity entity)
-    //    {
+        async Task<TEntity> EntityUpdated(TEntity entity)
+        {
 
-    //        // Get all tags for entity
-    //        var tags = await _entityTagStore.QueryAsync()
-    //            .Select<EntityTagQueryParams>(q =>
-    //            {
-    //                q.EntityId.Equals(entity.Id);
-    //            })
-    //            .ToList();
+            // Get all tags for entity
+            var tags = await _entityTagStore.QueryAsync()
+                .Select<EntityTagQueryParams>(q =>
+                {
+                    q.EntityId.Equals(entity.Id);
+                })
+                .ToList();
 
-    //        // No tags for entity just continue
-    //        if (tags?.Data == null)
-    //        {
-    //            return entity;
-    //        }
+            // No tags for entity just continue
+            if (tags?.Data == null)
+            {
+                return entity;
+            }
 
-    //        // Update counts for all tags associated with entity
-    //        foreach (var tag in tags.Data)
-    //        {
-    //            await _tagOccurrencesUpdater.UpdateAsync(tag);
-    //        }
+            // Update counts for all tags associated with entity
+            foreach (var entityTag in tags.Data)
+            {
+                await _tagOccurrencesUpdater.UpdateAsync(entityTag.ConvertToType<TTag>());
+            }
             
-    //        // return 
-    //        return entity;
+            // return 
+            return entity;
 
-    //    }
+        }
 
-    //    #endregion
+        #endregion
 
-    //}
+    }
 
 }

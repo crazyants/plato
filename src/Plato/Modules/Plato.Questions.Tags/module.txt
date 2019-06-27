@@ -12,7 +12,7 @@ Dependencies:
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Tags",
+		Id: "Plato.Entities.Tags",
 		Version: "1.0.0"
 	}
 ]

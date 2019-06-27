@@ -8,75 +8,77 @@ using Plato.Tags.Stores;
 namespace Plato.Entities.Tags.Subscribers
 {
 
-    //public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
-    //{
+    public class EntityReplySubscriber<TEntityReply, TTag> : IBrokerSubscriber 
+        where TEntityReply : class, IEntityReply
+        where TTag : class, ITag
+    {
 
-    //    private readonly ITagOccurrencesUpdater<TagBase> _tagOccurrencesUpdater;
-    //    private readonly IEntityTagStore<EntityTag> _entityTagStore;
-    //    private readonly IBroker _broker;
+        private readonly ITagOccurrencesUpdater<TTag> _tagOccurrencesUpdater;
+        private readonly IEntityTagStore<EntityTag> _entityTagStore;
+        private readonly IBroker _broker;
     
-    //    public EntityReplySubscriber(
-    //        ITagOccurrencesUpdater<TagBase> tagOccurrencesUpdater,
-    //        IEntityTagStore<EntityTag> entityTagStore,
-    //        IBroker broker)
-    //    {
-    //        _tagOccurrencesUpdater = tagOccurrencesUpdater;
-    //        _entityTagStore = entityTagStore;
-    //        _broker = broker;
-    //    }
+        public EntityReplySubscriber(
+            ITagOccurrencesUpdater<TTag> tagOccurrencesUpdater,
+            IEntityTagStore<EntityTag> entityTagStore,
+            IBroker broker)
+        {
+            _tagOccurrencesUpdater = tagOccurrencesUpdater;
+            _entityTagStore = entityTagStore;
+            _broker = broker;
+        }
 
-    //    #region "Implementation"
+        #region "Implementation"
 
-    //    public void Subscribe()
-    //    {
-    //        _broker.Sub<TEntityReply>(new MessageOptions()
-    //        {
-    //            Key = "EntityReplyUpdated"
-    //        }, async message => await EntityReplyUpdated(message.What));
-    //    }
+        public void Subscribe()
+        {
+            _broker.Sub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyUpdated(message.What));
+        }
 
-    //    public void Unsubscribe()
-    //    {
-    //        _broker.Unsub<TEntityReply>(new MessageOptions()
-    //        {
-    //            Key = "EntityReplyUpdated"
-    //        }, async message => await EntityReplyUpdated(message.What));
-    //    }
+        public void Unsubscribe()
+        {
+            _broker.Unsub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyUpdated(message.What));
+        }
 
-    //    #endregion
+        #endregion
 
-    //    #region "Private Methods"
+        #region "Private Methods"
         
-    //    async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
-    //    {
+        async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
+        {
 
-    //        // Get all tags for reply
-    //        var tags = await _entityTagStore.QueryAsync()
-    //            .Select<EntityTagQueryParams>(q =>
-    //            {
-    //                q.EntityReplyId.Equals(reply.Id);
-    //            })
-    //            .ToList();
+            // Get all tags for reply
+            var replyTags = await _entityTagStore.QueryAsync()
+                .Select<EntityTagQueryParams>(q =>
+                {
+                    q.EntityReplyId.Equals(reply.Id);
+                })
+                .ToList();
 
-    //        // No tags for reply just continue
-    //        if (tags?.Data == null)
-    //        {
-    //            return reply;
-    //        }
-
-    //        // Update counts for all tags associated with reply
-    //        foreach (var tag in tags.Data)
-    //        {
-    //            await _tagOccurrencesUpdater.UpdateAsync(tag);
-    //        }
+            // No tags for reply just continue
+            if (replyTags?.Data == null)
+            {
+                return reply;
+            }
             
-    //        // return 
-    //        return reply;
+            // Update counts for all tags associated with reply
+            foreach (var replyTag in replyTags.Data)
+            {
+                await _tagOccurrencesUpdater.UpdateAsync(replyTag.ConvertToType<TTag>());
+            }
+            
+            // return 
+            return reply;
 
-    //    }
+        }
 
-    //    #endregion
+        #endregion
 
-    //}
+    }
 
 }

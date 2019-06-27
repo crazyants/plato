@@ -7,7 +7,6 @@ using Plato.Discuss.Tags.Badges;
 using Plato.Discuss.Tags.Handlers;
 using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.Navigation;
-using Plato.Discuss.Tags.Subscribers;
 using Plato.Discuss.Tags.Tasks;
 using Plato.Discuss.Tags.ViewAdapters;
 using Plato.Discuss.Tags.ViewProviders;
@@ -28,6 +27,7 @@ using Plato.Tags.Repositories;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
 using Plato.Tags.Subscribers;
+using Plato.Entities.Tags.Subscribers;
 
 namespace Plato.Discuss.Tags
 {
@@ -89,8 +89,8 @@ namespace Plato.Discuss.Tags
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
         
             // Register broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
-            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic, Tag>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply, Tag>>();
             services.AddScoped<IBrokerSubscriber, EntityTagSubscriber<Tag>>();
 
         }

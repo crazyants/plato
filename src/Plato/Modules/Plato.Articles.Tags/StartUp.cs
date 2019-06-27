@@ -25,6 +25,9 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Tags.Repositories;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
+using Plato.Entities.Tags.Subscribers;
+using Plato.Internal.Messaging.Abstractions;
+using Plato.Tags.Subscribers;
 
 namespace Plato.Articles.Tags
 {
@@ -76,6 +79,7 @@ namespace Plato.Articles.Tags
             services.AddScoped<INotificationManager<Badge>, NotificationManager<Badge>>();
 
             // Data access
+            services.AddScoped<ITagOccurrencesUpdater<Tag>, TagOccurrencesUpdater<Tag>>();
             services.AddScoped<ITagRepository<Tag>, TagRepository<Tag>>();
             services.AddScoped<ITagStore<Tag>, TagStore<Tag>>();
             services.AddScoped<ITagService<Tag>, TagService<Tag>>();
@@ -83,6 +87,11 @@ namespace Plato.Articles.Tags
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+          
+            // Register broker subscribers
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Article, Tag>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment, Tag>>();
+            services.AddScoped<IBrokerSubscriber, EntityTagSubscriber<Tag>>();
 
         }
 

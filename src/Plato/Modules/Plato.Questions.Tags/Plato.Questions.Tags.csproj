@@ -11,8 +11,8 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Tasks.Abstractions\Plato.Internal.Tasks.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Entities.Tags\Plato.Entities.Tags.csproj" />
     <ProjectReference Include="..\Plato.Questions\Plato.Questions.csproj" />
-    <ProjectReference Include="..\Plato.Tags\Plato.Tags.csproj" />
   </ItemGroup>
 
   <ItemGroup>
