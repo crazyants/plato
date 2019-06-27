@@ -40,10 +40,21 @@
                 <div class="row gutter-sm">
                     <div class="col-lg-3 layout-sidebar layout-sidebar-sticky">
                         <div class="layout-sidebar-content">
-                            @if (Model.SideBar != null)
-                            {
-                                <view model="@Model.SideBar"></view>
-                            }
+                       
+                            <div class="d-block navbar-expand-lg">
+                                <a href="#" class="w-100 navbar-toggler p-0 border-0 bg-transparent" data-toggle="collapse" data-target="#sidebar-collapse" aria-controls="sidebar-collapse" aria-expanded="false" aria-label="Toggle navigation" role="button">
+                                    <span class="btn btn-block btn-primary mb-3">
+                                        <i class="fal fa-bars"></i> @T["Table of contents"]
+                                    </span>
+                                </a>
+                                <div class="navbar-collapse collapse" id="sidebar-collapse" role="navigation">
+                                    @if (Model.SideBar != null)
+                                    {
+                                        <view model="@Model.SideBar"></view>
+                                    }
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="col-lg-9 layout-content">

@@ -45,14 +45,12 @@
                                     <i class="fal fa-bars"></i> @T["Table of contents"]
                                 </span>
                             </a>
-                     
-                                <div class="navbar-collapse collapse" id="sidebar-collapse" role="navigation">
-                                    @if (Model.SideBar != null)
-                                    {
-                                        <view model="@Model.SideBar"></view>
-                                    }
-                                </div>
-                    
+                            <div class="navbar-collapse collapse" id="sidebar-collapse" role="navigation">
+                                @if (Model.SideBar != null)
+                                {
+                                    <view model="@Model.SideBar"></view>
+                                }
+                            </div>
                         </div>
               
                     </div>

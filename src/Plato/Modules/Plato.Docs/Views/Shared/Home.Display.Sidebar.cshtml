@@ -1,51 +1,29 @@
 ﻿@model Doc
 
-<div id="tocCollapse" class="collapse">
-    
-    <div class="my-2">
-        <input type="search" class="form-control"
-               data-provide="filter-list"
-               data-filter-list-empty=".no-channel-results"
-               data-filter-list-target=".tree"
-               placeholder="@T["Search docs..."]" />
-    </div>
-    
-    @await DisplayAsync(new View("DocTree", new
-    {
-        options = new EntityTreeOptions()
-        {
-            SelectedEntity = Model.Id,
-            EditMenuViewName = "DocTreeMenu",
-            IndexOptions = new EntityIndexOptions()
-            {
-                FeatureId = Model.FeatureId,
-                CategoryId = Model.CategoryId
-            },
-            RouteValues = new RouteValueDictionary()
-            {
-                ["area"] = "Plato.Docs",
-                ["controller"] = "Home",
-                ["action"] = "Display"
-            }
-        }
-    }))
+<div class="my-2">
+    <input type="search" class="form-control"
+           data-provide="filter-list"
+           data-filter-list-empty=".no-channel-results"
+           data-filter-list-target=".tree"
+           placeholder="@T["Search docs..."]" />
 </div>
 
-@*<card class="card card-body-flush">
-    <card-title>
-        <authorize asp-permission="@postPermission.Name">
-            <authorize-success>
-                <a asp-route-action="Create" class="btn btn-sm dropdown-toggle text-muted dropdown-toggle-no-caret float-right" data-provide="tooltip" title="@T["New Doc"]">
-                    <i class="fal fa-plus"></i>
-                </a>
-            </authorize-success>
-        </authorize>
-        <a href="#tocCollapse" data-toggle="collapse" class="btn btn-sm text-muted float-right d-lg-none" data-provide="tooltip" title="@T["Contents"]">
-            <i class="fal fa-bars"></i> 
-        </a>
-        <h6 class="card-title">@T["Browse Docs"]</h6>
-    </card-title>
-    <card-body>
-      
-    </card-body>
-</card>*@
+@await DisplayAsync(new View("DocTree", new
+{
+    options = new EntityTreeOptions()
+    {
+        SelectedEntity = Model.Id,
+        EditMenuViewName = "DocTreeMenu",
+        IndexOptions = new EntityIndexOptions()
+        {
+            FeatureId = Model.FeatureId,
+            CategoryId = Model.CategoryId
+        },
+        RouteValues = new RouteValueDictionary()
+        {
+            ["area"] = "Plato.Docs",
+            ["controller"] = "Home",
+            ["action"] = "Display"
+        }
+    }
+}))

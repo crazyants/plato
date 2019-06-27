@@ -6640,7 +6640,10 @@ $(function (win, doc, $) {
                     // Important: Accomodate for the static 
                     // content being smaller than the fixed content
                     if ($content.length > 0) {
-                        $content.css({ "minHeight": $body.height() });
+                        // Ensure sidebar is greater than our content
+                        if ($stickySidebar.height() >= $content.height()) {
+                            $content.css({ "minHeight": $body.height() });
+                        }
                     }
                     
                     // Apply sticky to sidebars
