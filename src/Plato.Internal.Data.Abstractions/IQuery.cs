@@ -10,9 +10,9 @@ namespace Plato.Internal.Data.Abstractions
 
         IQueryOptions Options { get; }
         
-        IQuery<TModel> Take(int pageIndex, int pageSize);
+        IQuery<TModel> Take(int page, int size);
 
-        IQuery<TModel> Take(int pageSize);
+        IQuery<TModel> Take(int size);
 
         IQuery<TModel> Configure(Action<QueryOptions> configure);
 

@@ -52,7 +52,7 @@ namespace Plato.Email.Services
             }
             catch (Exception e)
             {
-                _logger.LogCritical(e, "A crtical exception occurred whilst sending an email message. From: {0}, To: {1}, Subject: {2}, Date UTC: {3}'",
+                _logger.LogCritical(e, "A critical exception occurred whilst sending an email message. From: {0}, To: {1}, Subject: {2}, Date UTC: {3}'",
                     message.From.Address,
                     String.Join(",", message.To.Select(t => t.Address).ToArray()),
                     message.Subject,

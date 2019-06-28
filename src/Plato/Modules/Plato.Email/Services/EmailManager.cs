@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -6,6 +7,7 @@ using Plato.Email.Models;
 using Plato.Email.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
+using Plato.Internal.Emails.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Email.Services
@@ -14,17 +16,17 @@ namespace Plato.Email.Services
     public class EmailManager : IEmailManager
     {
 
-        private readonly SmtpSettings _smtpSettings;
         private readonly IEmailStore<EmailMessage> _emailStore;
-        private readonly ISmtpService _smtpService;
         private readonly ILogger<EmailManager> _logger;
+        private readonly SmtpSettings _smtpSettings;
+        private readonly ISmtpService _smtpService;
         private readonly IBroker _broker;
 
         public EmailManager(
             IEmailStore<EmailMessage> emailStore,
-            ISmtpService smtpService,
             IOptions<SmtpSettings> options,
             ILogger<EmailManager> logger,
+            ISmtpService smtpService,
             IBroker broker)
         {
             _emailStore = emailStore;
@@ -62,7 +64,7 @@ namespace Plato.Email.Services
             }
 
             // Persist the message
-            var email = await _emailStore.CreateAsync(new EmailMessage(message));
+            var email = await _emailStore.CreateAsync(message.ToEmailMessage());
             if (email != null)
             {
                 // Invoke EmailCreated subscriptions
@@ -111,7 +113,7 @@ namespace Plato.Email.Services
                 return result.Success(message);
             }
 
-            return result.Failed($"An unknown error occurred whilst attempting to send an email message");
+            return result.Failed(sendResult.Errors.ToArray());
             
         }
 

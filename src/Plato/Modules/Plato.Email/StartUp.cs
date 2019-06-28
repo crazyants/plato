@@ -14,6 +14,7 @@ using Plato.Email.Repositories;
 using Plato.Email.Services;
 using Plato.Email.Stores;
 using Plato.Email.Subscribers;
+using Plato.Email.Tasks;
 using Plato.Email.ViewProviders;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Emails.Abstractions;
@@ -21,6 +22,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Email
 {
@@ -65,10 +67,13 @@ namespace Plato.Email
 
             // Email manager
             services.AddSingleton<IEmailManager, EmailManager>();
-       
-            // Register permissions provider
-            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
+            // Background Tasks
+            services.AddScoped<IBackgroundTaskProvider, EmailSender>();
+
+            // Permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+            
         }
 
         public override void Configure(

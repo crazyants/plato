@@ -20,11 +20,11 @@ namespace Plato.Email.Models
 
         public string Password { get; set; }
 
-        public int SendAttempts { get; set; }
+        public int SendAttempts { get; set; } = 3;
 
-        public int PollingInterval { get; set; }
-        
-        public int BatchSize { get; set; }
+        public int PollingInterval { get; set; } = 120;
+
+        public int BatchSize { get; set; } = 50;
 
         public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
 

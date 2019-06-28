@@ -23,7 +23,7 @@ namespace Plato.Internal.Emails.Abstractions
 
         public string Body { get; set; }
 
-        public EmailPriority Priority { get; set; }
+        public MailPriority Priority { get; set; }
 
         public short SendAttempts { get; set; }
 
@@ -33,41 +33,10 @@ namespace Plato.Internal.Emails.Abstractions
 
         public EmailMessage()
         {
-
         }
-
-        public EmailMessage(MailMessage message)
-        {
-
-            if (message.To.Count > 0)
-            {
-                this.To = message.To[0].Address;
-            }
-
-            if (message.CC.Count > 0)
-            {
-                this.Cc = message.CC[0].Address;
-            }
-
-            if (message.Bcc.Count > 0)
-            {
-                this.Bcc = message.Bcc[0].Address;
-            }
-
-            if (message.From != null)
-            {
-                this.From = message.From.Address;
-            }
-            
-            this.Subject = message.Subject;
-            this.Body = message.Body;
-
-
-        }
-
+        
         public void PopulateModel(IDataReader dr)
         {
-
 
             if (dr.ColumnIsNotNull("Id"))
                 Id = Convert.ToInt32(dr["Id"]);
@@ -91,7 +60,7 @@ namespace Plato.Internal.Emails.Abstractions
                 Body = Convert.ToString(dr["Body"]);
 
             if (dr.ColumnIsNotNull("Priority"))
-                Priority = (EmailPriority)Convert.ToInt32(dr["Priority"]);
+                Priority = (MailPriority)Convert.ToInt32(dr["Priority"]);
 
             if (dr.ColumnIsNotNull("SendAttempts"))
                 SendAttempts = Convert.ToInt16(dr["SendAttempts"]);
@@ -104,13 +73,6 @@ namespace Plato.Internal.Emails.Abstractions
 
         }
 
-    }
-
-    public enum EmailPriority
-    {
-        High = 1,
-        Medium = 2,
-        Low = 3
     }
 
 }

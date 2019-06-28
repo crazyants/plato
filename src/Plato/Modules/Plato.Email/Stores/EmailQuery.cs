@@ -76,7 +76,6 @@ namespace Plato.Email.Stores
             set => _keywords = value;
         }
         
-
     }
 
     #endregion
@@ -209,6 +208,7 @@ namespace Plato.Email.Stores
         }
 
         #endregion
+
     }
 
     #endregion
