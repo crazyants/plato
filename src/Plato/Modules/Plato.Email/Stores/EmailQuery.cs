@@ -37,9 +37,9 @@ namespace Plato.Email.Stores
             var builder = new EmailQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-            var keywords = Params.Keywords.Value ?? string.Empty;
+            var keywords = Params?.Keywords.Value ?? string.Empty;
 
-            return await _store.SelectAsync(new[]
+            return await _store.SelectAsync(new IDbDataParameter[]
             {
                 new DbParam("PageIndex", DbType.Int32, PageIndex),
                 new DbParam("PageSize", DbType.Int32, PageSize),
@@ -58,12 +58,10 @@ namespace Plato.Email.Stores
 
     public class EmailQueryParams
     {
-
-
+        
         private WhereInt _id;
         private WhereString _keywords;
-
-
+        
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -94,7 +92,6 @@ namespace Plato.Email.Stores
         {
             _query = query;
             _emailsTableName = GetTableNameWithPrefix("Emails");
-    
         }
 
         #endregion
@@ -164,6 +161,13 @@ namespace Plato.Email.Stores
         
         private string BuildWhereClause()
         {
+
+            // Ensure we have params
+            if (_query.Params == null)
+            {
+                return string.Empty;
+            }
+
             var sb = new StringBuilder();
 
             // Id

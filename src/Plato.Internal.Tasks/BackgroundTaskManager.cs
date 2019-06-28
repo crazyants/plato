@@ -49,8 +49,7 @@ namespace Plato.Internal.Tasks
                     Owner = provider.GetType(),
                     IntervalInSeconds = provider.IntervalInSeconds
                 });
-
-
+                
             }
 
         }

@@ -46,6 +46,7 @@ namespace Plato.Entities.Stores
             Builder = new EntityQueryBuilder<TModel>(this);
             var populateSql = Builder.BuildSqlPopulate();
             var countSql = Builder.BuildSqlCount();
+            var keywords = Params?.Keywords.Value.ToEmptyIfNull() ?? string.Empty;
 
             return await _store.SelectAsync(new IDbDataParameter[]
             {
@@ -53,7 +54,7 @@ namespace Plato.Entities.Stores
                 new DbParam("PageSize", DbType.Int32, PageSize),
                 new DbParam("SqlPopulate", DbType.String, populateSql),
                 new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("Keywords", DbType.String, Params.Keywords.Value.ToEmptyIfNull())
+                new DbParam("Keywords", DbType.String, keywords)
             });
         }
         
@@ -549,8 +550,17 @@ namespace Plato.Entities.Stores
             // -----------------
 
              _query.QueryAdapterManager?.BuildWhere(_query, sb);
+      
+             // -----------------
+             // Ensure we have params
+             // -----------------
 
-            // -----------------
+             if (_query.Params == null)
+             {
+                 return string.Empty;
+             }
+
+             // -----------------
             // Id
             // -----------------
 
