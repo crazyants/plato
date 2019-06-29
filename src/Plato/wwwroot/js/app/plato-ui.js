@@ -6142,6 +6142,114 @@ $(function (win, doc, $) {
 
     }();
 
+    /* password */
+    var password = function () {
+
+        var dataKey = "password",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "click"
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                // Ensure input is set to password by default
+                $caller.attr("type", "password");
+                // Bind events
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                var $btn = methods._getButton($caller),
+                    event = $caller.data(dataKey).event;
+                if ($btn) {
+                    $btn.off(event).on(event,
+                        function (e) {
+                            e.preventDefault();
+                            methods.toggle($caller);
+                        });
+                }
+            },
+            toggle: function($caller) {
+                if ($caller.attr("type") === "password") {
+                    $caller.attr("type", "text");
+                } else {
+                    $caller.attr("type", "password");
+                }
+            },
+            unbind: function ($caller) {
+                var $btn = methods._getButton($caller),
+                    event = $caller.data(dataKey).event;
+                if ($btn) {
+                    $btn.off(event);
+                }
+            },
+            _getButton: function($caller) {
+                var $btn = $caller.next();
+                if ($btn[0].tagName === "BUTTON" || $btn[0].tagName === "A") {
+                    return $btn;
+                }
+                return null;
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).password()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().password()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -6170,7 +6278,8 @@ $(function (win, doc, $) {
         keyBinder: keyBinder.init,
         textFieldMirror: textFieldMirror.init,
         suggester: suggester.init,
-        popper: popper.init
+        popper: popper.init,
+        password: password.init
     });
 
     // ---------------------------
@@ -6232,7 +6341,10 @@ $(function (win, doc, $) {
 
         /* popper */
         this.find('[data-provide="popper"]').popper();
-        
+
+        /* password */
+        this.find('[data-provide="password"]').password();
+
         // Bind scroll events
         $(win).scrollSpy({
             onScrollStart: function () {

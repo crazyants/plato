@@ -1,0 +1,102 @@
+﻿@model TwitterSettingsViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Consumer API keys"]</h6>
+    </card-title>
+    <card-body>
+
+        <div class="row">
+            <div class="col">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DefaultFrom">
+                        <label asp-for="ConsumerKey">
+                            <strong>@T["Consumer Key"]</strong>
+                            <span asp-validation-for="ConsumerKey" class="text-danger"></span>
+                            <br />
+                            <span class="text-muted">@T["Your twitter consumer API key."]</span>
+                            <a href="https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html" target="_blank">@T["Get your API Keys"]</a>
+                        </label>
+                        <input placeholder="@T["your twitter consumer API key..."]" asp-for="ConsumerKey" class="form-control" autofocus />
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DefaultFrom">
+                        <label asp-for="ConsumerSecret">
+                            <strong>@T["Consumer Secret"]</strong>
+                            <span asp-validation-for="ConsumerSecret" class="text-danger"></span>
+                            <br />
+                            <span class="text-muted">@T["Your twitter consumer key secret."]</span>
+                            <a href="https://developer.twitter.com/en/apps">@T["Twitter App Dashboard"]</a>
+                        </label>
+                        <div class="search-input-group">
+                            <input asp-for="ConsumerSecret"
+                                   type="search"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   data-provide="password"
+                                   placeholder="@T["your twitter consumer key secret..."]" />
+                            <button type="button" class="btn" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                                <i class="fal fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+    </card-body>
+</card>
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Access Tokens"]</h6>
+    </card-title>
+    <card-body>
+
+        <div class="row">
+            <div class="col">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DefaultFrom">
+                        <label asp-for="AccessToken">
+                            <strong>@T["Access Token"]</strong>
+                            <span asp-validation-for="AccessToken" class="text-danger"></span>
+                            <br />
+                            <span class="text-muted">@T["Your twitter access token."]</span>
+                        </label>
+                        <input placeholder="@T["your twitter access token..."]" asp-for="AccessToken" class="form-control" autofocus />
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DefaultFrom">
+                        <label asp-for="AccessTokenSecret">
+                            <strong>@T["Access Token Secret"]</strong>
+                            <span asp-validation-for="AccessTokenSecret" class="text-danger"></span>
+                            <br />
+                            <span class="text-muted">@T["Your twitter access token secret."]</span>
+                        </label>
+                        <div class="search-input-group">
+                            <input asp-for="AccessTokenSecret"
+                                   type="search"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   data-provide="password"
+                                   placeholder="@T["your twitter access token secret..."]" />
+                            <button type="button" class="btn" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                                <i class="fal fa-eye"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+    </card-body>
+</card>
+
+<card class="card mt-4">
+    <card-footer>
+        <button class="btn btn-primary" type="submit">@T["Save"]</button>
+    </card-footer>
+</card>

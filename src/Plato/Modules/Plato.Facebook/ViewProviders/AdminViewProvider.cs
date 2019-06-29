@@ -1,41 +1,51 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Logging;
 using Plato.Facebook.Models;
 using Plato.Facebook.Stores;
 using Plato.Facebook.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
+using Plato.Facebook.Configuration;
 
 namespace Plato.Facebook.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<FacebookSettings>
     {
 
-        private readonly IShellSettings _shellSettings;
         private readonly IFacebookSettingsStore<FacebookSettings> _facebookSettingsStore;
+        private readonly IDataProtectionProvider _dataProtectionProvider;
+        private readonly ILogger<AdminViewProvider> _logger;
+        private readonly IShellSettings _shellSettings;
         private readonly IPlatoHost _platoHost;
 
         public AdminViewProvider(
             IFacebookSettingsStore<FacebookSettings> facebookSettingsStore,
-            IPlatoHost platoHost,
-            IShellSettings shellSettings)
+            IDataProtectionProvider dataProtectionProvider,
+            ILogger<AdminViewProvider> logger,
+            IShellSettings shellSettings,
+            IPlatoHost platoHost)
         {
+            _dataProtectionProvider = dataProtectionProvider;
             _facebookSettingsStore = facebookSettingsStore;
-            _platoHost = platoHost;
             _shellSettings = shellSettings;
+            _platoHost = platoHost;
+            _logger = logger;
         }
         
-        public override Task<IViewProviderResult> BuildIndexAsync(FacebookSettings entity, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(FacebookSettings settings, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(FacebookSettings entity, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(FacebookSettings settings, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(FacebookSettings entity, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildEditAsync(FacebookSettings settings, IViewProviderContext context)
         {
             var viewModel = await GetModel();
             return Views(
@@ -45,7 +55,7 @@ namespace Plato.Facebook.ViewProviders
             );
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(FacebookSettings emailSettings, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(FacebookSettings settings, IViewProviderContext context)
         {
             
             var model = new FacebookSettingsViewModel();
@@ -53,19 +63,37 @@ namespace Plato.Facebook.ViewProviders
             // Validate model
             if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(emailSettings, context);
+                return await BuildEditAsync(settings, context);
             }
             
             // Update settings
             if (context.Updater.ModelState.IsValid)
             {
 
-                emailSettings = new FacebookSettings()
+                // Encrypt the secret
+                var secret = string.Empty;
+                if (!string.IsNullOrWhiteSpace(model.AppSecret))
                 {
-                    AppId = model.AppId
+                    try
+                    {
+                        var protector = _dataProtectionProvider.CreateProtector(nameof(FacebookOptionsConfiguration));
+                        secret = protector.Protect(model.AppSecret);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"There was a problem encrypting the Facebook app secret. {e.Message}");
+                    }
+                }
+                
+                // Create the model
+                settings = new FacebookSettings()
+                {
+                    AppId = model.AppId,
+                    AppSecret = secret
                 };
 
-                var result = await _facebookSettingsStore.SaveAsync(emailSettings);
+                // Persist the settings
+                var result = await _facebookSettingsStore.SaveAsync(settings);
                 if (result != null)
                 {
                     // Recycle shell context to ensure changes take effect
@@ -74,7 +102,7 @@ namespace Plato.Facebook.ViewProviders
               
             }
 
-            return await BuildEditAsync(emailSettings, context);
+            return await BuildEditAsync(settings, context);
 
         }
         
@@ -84,16 +112,35 @@ namespace Plato.Facebook.ViewProviders
             var settings = await _facebookSettingsStore.GetAsync();
             if (settings != null)
             {
+
+                // Decrypt the secret
+                var secret = string.Empty;
+                if (!string.IsNullOrWhiteSpace(settings.AppSecret))
+                {
+                    try
+                    {
+                        var protector = _dataProtectionProvider.CreateProtector(nameof(FacebookOptionsConfiguration));
+                        secret = protector.Unprotect(settings.AppSecret);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"There was a problem encrypting the Facebook app secret. {e.Message}");
+                    }
+                }
+
+
                 return new FacebookSettingsViewModel()
                 {
-                  AppId = settings.AppId
+                  AppId = settings.AppId,
+                  AppSecret = secret
                 };
             }
 
             // return default settings
             return new FacebookSettingsViewModel()
             {
-                AppId = string.Empty
+                AppId = string.Empty,
+                AppSecret = string.Empty
             };
 
         }

@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Plato.Facebook.Configuration;
-using Plato.Facebook.Handlers;
-using Plato.Facebook.Models;
-using Plato.Facebook.Navigation;
-using Plato.Facebook.Stores;
-using Plato.Facebook.ViewProviders;
+using Plato.Twitter.Configuration;
+using Plato.Twitter.Handlers;
+using Plato.Twitter.Models;
+using Plato.Twitter.Navigation;
+using Plato.Twitter.Stores;
+using Plato.Twitter.ViewProviders;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -16,7 +16,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Facebook
+namespace Plato.Twitter
 {
 
     public class Startup : StartupBase
@@ -39,14 +39,14 @@ namespace Plato.Facebook
             services.AddScoped<INavigationProvider, AdminMenu>();
             
             // Configuration
-            services.AddTransient<IConfigureOptions<FacebookOptions>, FacebookOptionsConfiguration>();
+            services.AddTransient<IConfigureOptions<TwitterOptions>, TwitterOptionsConfiguration>();
 
             // Stores
-            services.AddScoped<IFacebookSettingsStore<FacebookSettings>, FacebookSettingsStore>();
+            services.AddScoped<ITwitterSettingsStore<TwitterSettings>, TwitterSettingsStore>();
          
             // View providers
-            services.AddScoped<IViewProviderManager<FacebookSettings>, ViewProviderManager<FacebookSettings>>();
-            services.AddScoped<IViewProvider<FacebookSettings>, AdminViewProvider>();
+            services.AddScoped<IViewProviderManager<TwitterSettings>, ViewProviderManager<TwitterSettings>>();
+            services.AddScoped<IViewProvider<TwitterSettings>, AdminViewProvider>();
             
             // Permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
@@ -60,9 +60,9 @@ namespace Plato.Facebook
         {
 
             routes.MapAreaRoute(
-                name: "PlatoFacebookAdmin",
-                areaName: "Plato.Facebook",
-                template: "admin/settings/facebook",
+                name: "PlatoTwitterAdmin",
+                areaName: "Plato.Twitter",
+                template: "admin/settings/twitter",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 

@@ -2,15 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>  
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
-    <ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
-    <ProjectReference Include="..\Plato.Facebook\Plato.Facebook.csproj" />
   </ItemGroup>
 
   <ItemGroup>

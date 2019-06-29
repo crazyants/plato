@@ -33,12 +33,8 @@ namespace Plato.Email.Configuration
                 .GetResult();
 
             // We have no settings to configure
-            if (settings == null)
-            {
-                return;
-            }
 
-            var smtpSettings = settings.SmtpSettings;
+            var smtpSettings = settings?.SmtpSettings;
             if (smtpSettings != null)
             {
 

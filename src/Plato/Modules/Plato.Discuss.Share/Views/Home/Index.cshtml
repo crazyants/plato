@@ -1,5 +1,7 @@
-﻿@model ShareViewModel
+﻿@using Plato.Facebook.Models
+@model ShareViewModel
 @{
+    var facebookOptions = GetOptions<FacebookOptions>();
     Layout = null;
 }
 
@@ -16,11 +18,14 @@
     <input readonly value="@Model.Url" type="text" class="form-control col-12" />
     <div class="mt-3">
         <ul class="social-buttons">
-            <li>
-                <a href="@Model.Url" class="btn btn-facebook" data-provide="tooltip" title="@T["Share on Facebook"]">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-            </li>
+            @if (!string.IsNullOrEmpty(facebookOptions.AppId))
+            {
+                <li>
+                    <a href="@Model.Url" class="btn btn-facebook" data-provide="tooltip" title="@T["Share on Facebook"]">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </li>
+            }
             <li>
                 <a href="@Model.Url" class="btn btn-twitter" data-provide="tooltip" title="@T["Share on twitter"]">
                     <i class="fab fa-twitter"></i>
@@ -44,9 +49,9 @@
          
             // Ensure social scripts are injected
             app.social.init();
-
+            
             // Init facebook application Id
-            app.social.facebook.init("353584392011910");
+            app.social.facebook.init("@facebookOptions.AppId");
 
             // modal show
             $("#shareDialog").on('shown.bs.modal',

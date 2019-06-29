@@ -9,14 +9,11 @@ namespace Plato.Discuss.Share.Handlers
     public class FeatureEventHandler : BaseFeatureEventHandler
     {
         
-        private readonly ISchemaBuilder _schemaBuilder;
         private readonly IDefaultRolesManager _defaultRolesManager;
 
         public FeatureEventHandler(
-            ISchemaBuilder schemaBuilder,
             IDefaultRolesManager defaultRolesManager)
         {
-            _schemaBuilder = schemaBuilder;
             _defaultRolesManager = defaultRolesManager;
         }
         
@@ -29,7 +26,6 @@ namespace Plato.Discuss.Share.Handlers
         {
             // Apply default permissions to default roles for new feature
             await _defaultRolesManager.UpdateDefaultRolesAsync(new Permissions());
-
         }
 
         public override Task UninstallingAsync(IFeatureEventContext context)

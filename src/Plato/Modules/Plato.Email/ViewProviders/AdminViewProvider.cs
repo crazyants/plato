@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Logging;
+using Plato.Email.Configuration;
 using Plato.Email.Models;
 using Plato.Email.Stores;
 using Plato.Email.ViewModels;
@@ -11,31 +15,37 @@ namespace Plato.Email.ViewProviders
     public class AdminViewProvider : BaseViewProvider<EmailSettings>
     {
 
-        private readonly IShellSettings _shellSettings;
         private readonly IEmailSettingsStore<EmailSettings> _emailSettingsStore;
+        private readonly IDataProtectionProvider _dataProtectionProvider;
+        private readonly ILogger<AdminViewProvider> _logger;
+        private readonly IShellSettings _shellSettings;
         private readonly IPlatoHost _platoHost;
 
         public AdminViewProvider(
             IEmailSettingsStore<EmailSettings> emailSettingsStore,
-            IPlatoHost platoHost,
-            IShellSettings shellSettings)
+            IDataProtectionProvider dataProtectionProvider,
+            ILogger<AdminViewProvider> logger,
+            IShellSettings shellSettings,
+            IPlatoHost platoHost)
         {
+            _dataProtectionProvider = dataProtectionProvider;
             _emailSettingsStore = emailSettingsStore;
-            _platoHost = platoHost;
             _shellSettings = shellSettings;
+            _platoHost = platoHost;
+            _logger = logger;
         }
         
-        public override Task<IViewProviderResult> BuildIndexAsync(EmailSettings entity, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(EmailSettings settings, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(EmailSettings entity, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(EmailSettings settings, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(EmailSettings entity, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildEditAsync(EmailSettings settings, IViewProviderContext context)
         {
             var viewModel = await GetModel();
             return Views(
@@ -45,7 +55,7 @@ namespace Plato.Email.ViewProviders
             );
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(EmailSettings emailSettings, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(EmailSettings settings, IViewProviderContext context)
         {
             
             var model = new EmailSettingsViewModel();
@@ -53,14 +63,29 @@ namespace Plato.Email.ViewProviders
             // Validate model
             if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(emailSettings, context);
+                return await BuildEditAsync(settings, context);
             }
             
             // Update settings
             if (context.Updater.ModelState.IsValid)
             {
-
-                emailSettings = new EmailSettings()
+                
+                // Encrypt the password
+                var password = string.Empty;
+                if (!string.IsNullOrWhiteSpace(model.SmtpSettings.Password))
+                {
+                    try
+                    {
+                        var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettingsConfiguration));
+                        password = protector.Protect(model.SmtpSettings.Password);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"There was a problem encrypting the SMTP password. {e.Message}");
+                    }
+                }
+                
+                settings = new EmailSettings()
                 {
                     SmtpSettings = new SmtpSettings()
                     {
@@ -68,7 +93,7 @@ namespace Plato.Email.ViewProviders
                         Host = model.SmtpSettings.Host,
                         Port = model.SmtpSettings.Port,
                         UserName = model.SmtpSettings.UserName,
-                        Password = model.SmtpSettings.Password,
+                        Password = password,
                         EnableSsl = model.SmtpSettings.EnableSsl,
                         PollingInterval = model.SmtpSettings.PollInterval,
                         BatchSize = model.SmtpSettings.BatchSize,
@@ -77,7 +102,7 @@ namespace Plato.Email.ViewProviders
                     }
                 };
 
-                var result = await _emailSettingsStore.SaveAsync(emailSettings);
+                var result = await _emailSettingsStore.SaveAsync(settings);
                 if (result != null)
                 {
                     // Recycle shell context to ensure changes take effect
@@ -86,7 +111,7 @@ namespace Plato.Email.ViewProviders
               
             }
 
-            return await BuildEditAsync(emailSettings, context);
+            return await BuildEditAsync(settings, context);
 
         }
         

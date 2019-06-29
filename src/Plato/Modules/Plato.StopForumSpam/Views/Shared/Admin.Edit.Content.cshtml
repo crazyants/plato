@@ -22,7 +22,19 @@
                                 <br />
                                 <span class="text-muted">@T["Your StopForumSpam.com API key."]</span>
                             </label>
-                            <input asp-for="@Model.ApiKey" class="form-control" autofocus />
+                            <div class="search-input-group">
+                                <input asp-for="ApiKey"
+                                       type="search" 
+                                       class="form-control" 
+                                       autocomplete="off"
+                                       data-provide="password"
+                                       autofocus
+                                       placeholder="@T["your StopForumSpam API key..."]" />
+                                <button type="button" class="btn" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                                    <i class="fal fa-eye"></i>
+                                </button>
+                            </div>
+
                         </div>
                     </fieldset>
 

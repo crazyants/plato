@@ -27,8 +27,8 @@ namespace Plato.Email.Stores
         {
             _emailRepository = emailRepository;
             _cacheManager = cacheManager;
-            _logger = logger;
             _dbQuery = dbQuery;
+            _logger = logger;
         }
 
         #region "Implementation"

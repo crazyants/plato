@@ -18,7 +18,7 @@
                                 <br />
                                 <span class="text-muted">@T["Your public reCAPTCHA2 site key."]</span>
                             </label>
-                            <input asp-for="@Model.SiteKey" class="form-control" autofocus />
+                            <input  placeholder="@T["your public reCAPTCHA2 site key..."]" asp-for="SiteKey" class="form-control" autofocus />
                         </div>
                     </fieldset>
                     <fieldset>
@@ -29,7 +29,18 @@
                                 <br />
                                 <span class="text-muted">@T["Your private reCAPTCHA2 secret."]</span>
                             </label>
-                            <input asp-for="@Model.Secret" class="form-control" />
+                            <div class="search-input-group">
+                                <input asp-for="Secret"
+                                       type="search" 
+                                       class="form-control" 
+                                       autocomplete="off"
+                                       data-provide="password"
+                                       placeholder="@T["your private reCAPTCHA2 secret..."]" />
+                                <button type="button" class="btn" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                                    <i class="fal fa-eye"></i>
+                                </button>
+                            </div>
+
                         </div>
                     </fieldset>
 

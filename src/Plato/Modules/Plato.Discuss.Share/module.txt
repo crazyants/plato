@@ -14,5 +14,9 @@ Dependencies:
 	{
 		Id: "Plato.Discuss",
 		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Facebook",
+		Version: "1.0.0"
 	}
 ]
