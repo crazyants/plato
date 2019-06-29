@@ -4,7 +4,6 @@ using System.Text;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Search.Abstractions;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
 
 namespace Plato.Entities.Tags
@@ -37,7 +36,7 @@ namespace Plato.Entities.Tags
                 : BuildSqlQueries(entityQuery);
         }
 
-        List<string> BuildSqlQueries(EntityQuery<TModel> query)
+        IList<string> BuildSqlQueries(EntityQuery<TModel> query)
         {
             
             /*
@@ -72,7 +71,7 @@ namespace Plato.Entities.Tags
             
         }
         
-        List<string> BuildFullTextQueries(EntityQuery<TModel> query)
+        IList<string> BuildFullTextQueries(EntityQuery<TModel> query)
         {
             
             // Parse keywords into valid full text query syntax
