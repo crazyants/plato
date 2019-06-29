@@ -3,7 +3,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Email.Models;
 using Plato.Email.Repositories;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -16,10 +15,10 @@ namespace Plato.Email.Stores
     {
 
         private readonly IEmailRepository<EmailMessage> _emailRepository;
+        private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<EmailStore> _logger;
-        private readonly IDbQueryConfiguration _dbQuery;
-
+        
         public EmailStore(
             IEmailRepository<EmailMessage> emailRepository,
             ICacheManager cacheManager,

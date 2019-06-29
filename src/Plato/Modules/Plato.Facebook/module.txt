@@ -1,0 +1,14 @@
+Name: Plato Facebook
+Description: Adds settings to allow for various Facebook integrations.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Social
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Admin",
+		Version: "1.0.0"
+	}
+]

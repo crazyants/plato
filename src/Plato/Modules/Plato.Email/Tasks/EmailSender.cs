@@ -110,7 +110,7 @@ namespace Plato.Email.Tasks
 
             }
 
-            // Delete or increment send attempts
+            // Delete successfully sent or increment send attempts for failures
             await ProcessToDelete(toDelete.ToArray());
             await ProcessToIncrement(toIncrement.ToArray());
 
