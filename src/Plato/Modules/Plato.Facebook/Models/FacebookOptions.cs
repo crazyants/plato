@@ -9,5 +9,7 @@ namespace Plato.Facebook.Models
 
         public string AppId { get; set; }
 
+        public string AppSecret { get; set; }
+
     }
 }

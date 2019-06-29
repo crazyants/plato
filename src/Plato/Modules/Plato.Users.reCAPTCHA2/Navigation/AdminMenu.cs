@@ -4,6 +4,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.reCAPTCHA2.Navigation
 {
+
     public class AdminMenu : INavigationProvider
     {
 
@@ -22,11 +23,10 @@ namespace Plato.Users.reCAPTCHA2.Navigation
                 return;
             }
 
-            // reCAPTCHA2 Admin Settings
             builder
-                .Add(T["SPAM"], int.MaxValue - 1, configuration => configuration
-                    .IconCss("fal fa-exclamation-triangle")
-                    .Add(T["reCAPTCHA2"], 2, installed => installed
+                .Add(T["Settings"], int.MaxValue, settings => settings
+                    .IconCss("fal fa-cog")
+                    .Add(T["reCAPTCHA2"], int.MaxValue - 98, installed => installed
                         .Action("Index", "Admin", "Plato.Users.reCAPTCHA2")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()

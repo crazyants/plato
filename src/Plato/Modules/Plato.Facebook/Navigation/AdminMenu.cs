@@ -22,9 +22,9 @@ namespace Plato.Facebook.Navigation
             }
 
             builder
-                .Add(T["Social"], int.MaxValue - 1, configuration => configuration
-                    .IconCss("fal fa-share")
-                    .Add(T["Facebook"], 1, webApiSettings => webApiSettings
+                .Add(T["Settings"], int.MaxValue, settings => settings
+                    .IconCss("fal fa-cog")
+                    .Add(T["Facebook"], int.MaxValue - 500, webApiSettings => webApiSettings
                         .Action("Index", "Admin", "Plato.Facebook")
                         .Permission(Permissions.EditFacebookSettings)
                         .LocalNav())

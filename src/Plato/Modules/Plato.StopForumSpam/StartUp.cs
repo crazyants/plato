@@ -50,6 +50,14 @@ namespace Plato.StopForumSpam
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+            
+            routes.MapAreaRoute(
+                name: "PlatoStopForumSpamAdmin",
+                areaName: "Plato.StopForumSpam",
+                template: "admin/settings/sfs",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
+
         }
     }
 }

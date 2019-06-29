@@ -22,9 +22,9 @@ namespace Plato.Settings.Navigation
             }
 
             builder
-                .Add(T["Settings"], int.MaxValue, configuration => configuration
+                .Add(T["Settings"], int.MaxValue, settings => settings
                     .IconCss("fal fa-cog")
-                    .Add(T["General"], 1, installed => installed
+                    .Add(T["General"], int.MinValue, installed => installed
                         .Action("Index", "Admin", "Plato.Settings")
                         .Permission(Permissions.ManageGeneralSettings)
                         .LocalNav()

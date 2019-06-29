@@ -55,6 +55,14 @@ namespace Plato.Users.reCAPTCHA2
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "PlatoReCAPTCHA2Admin",
+                areaName: "Plato.Users.reCAPTCHA2",
+                template: "admin/settings/recaptcha2",
+                defaults: new { controller = "Admin", action = "Index" }
+            );
+
         }
 
     }
