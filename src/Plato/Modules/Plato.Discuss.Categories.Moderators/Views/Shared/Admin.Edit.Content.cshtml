@@ -1,0 +1,135 @@
+﻿@model EditModeratorViewModel
+
+<card>
+    <card-title>
+        @if (Model.IsNewModerator)
+        {
+        <h6 class="card-title">@T["Add Moderator"]</h6>
+        }
+        else
+        {
+        <h6 class="card-title">@T["Edit Moderator"]</h6>
+        }
+    </card-title>
+    <card-body>
+        
+        <div class="form-group" asp-validation-class-for="Users">
+            <fieldset>
+                
+                <input asp-for="Users" type="hidden" id="tagItStore"/>
+
+                <label asp-for="Users">
+                    <strong>@T["Username"]</strong>
+                    <span asp-validation-for="Users" class="text-danger"></span><br/>
+                    <span class="text-muted">@T["Find a user to add as a moderator..."]</span>
+                </label>
+                <div class="dropdown">
+                    <ul class="tagit form-control list-inline" data-provide="userTagIt" data-max-items="1" data-tagit-store="#tagItStore">
+                        <li class="tagit-list-item-input">
+                            <input type="text"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   data-autocomplete-target="#moderators"
+                                   placeholder="@T["Search by username or email..."]">
+                        </li>
+                    </ul>
+                    <div id="moderators" class="dropdown-menu dropdown-menu-no-arrow col-12" role="menu">
+                        <p class="text-center">
+                            <i class="fal fa-spinner fa-spin"></i>
+                        </p>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="form-group" asp-validation-class-for="EditAnyPost">
+        
+            <table class="table p-0 m-0">
+                <tr>
+                    <td class="col-10">@T["Enable / Disable All"]</td>
+                    <td class="col-1 text-center">
+                        <label>
+                            <span class="switch switch-round">
+                                <input class="form-check-input" type="checkbox" value="true" id="ckbAll" />
+                                <span class="switch-slider"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td class="col-1 text-center" style="display: none;">
+
+                        <label>
+                            <span class="switch switch-round switch-disabled">
+                                <input type="checkbox" disabled="disabled" />
+                                <span class="switch-slider"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+            
+            @foreach (var category in Model.CategorizedPermissions.Keys)
+            {
+                <table id="tblPermissions" class="table">
+                    <thead>
+                    <tr>
+                        <th colspan="3" class="col-12 bg-light">
+                            <h6>@category</h6>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr>
+                        <td class="col-10 font-weight-bold">@T["Permission"]</td>
+                        <td class="col-1 font-weight-bold text-center">@T["Allow"]</td>
+                        <td class="col-1 font-weight-bold text-center" style="display: none;">@T["Effective"]</td>
+                    </tr>
+
+
+                    @foreach (var permission in Model.CategorizedPermissions[category])
+                    {
+
+                        <tr data-text="@permission.Description">
+                            <td class="col-10">@permission.Description</td>
+                            <td class="col-1 text-center">
+                                <label>
+                                    <span class="switch switch-round">
+                                        <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Moderator?.Claims?.Any(x => x.ClaimValue == permission.Name))"/>
+                                        <span class="switch-slider"></span>
+                                    </span>
+                                </label>
+                            </td>
+                            <td class="col-1 text-center" style="display: none;">
+
+                                <label>
+                                    <span class="switch switch-round switch-disabled">
+                                        <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))"/>
+                                        <span class="switch-slider"></span>
+                                    </span>
+                                </label>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+        
+                
+        </div>
+  
+    </card-body>
+</card>
+
+
+<script section="Footer">
+
+    $(document).ready(function() {
+        $("#ckbAll").change(function() {
+            var checked = $(this).prop("checked");
+            $("#tblPermissions").find('input[type="checkbox"]').each(function() {
+                $(this).prop("checked", checked);
+            });
+        });
+    });
+
+</script>

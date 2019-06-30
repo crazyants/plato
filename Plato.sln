@@ -345,7 +345,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Facebook", "src\Plato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Twitter", "src\Plato\Modules\Plato.Twitter\Plato.Twitter.csproj", "{A35B74F7-2EB5-4C35-9741-F634A0FF4520}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.Categories.Permissions", "src\Plato\Modules\Plato.Discuss.Categories.Permissions\Plato.Discuss.Categories.Permissions.csproj", "{230FF42D-F83B-45A1-90B5-517CDC9F2F7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.Categories.Moderators", "src\Plato\Modules\Plato.Discuss.Categories.Moderators\Plato.Discuss.Categories.Moderators.csproj", "{498EBAA2-D878-4FF5-A458-919B76E8CFF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1021,10 +1021,10 @@ Global
 		{A35B74F7-2EB5-4C35-9741-F634A0FF4520}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A35B74F7-2EB5-4C35-9741-F634A0FF4520}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A35B74F7-2EB5-4C35-9741-F634A0FF4520}.Release|Any CPU.Build.0 = Release|Any CPU
-		{230FF42D-F83B-45A1-90B5-517CDC9F2F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{230FF42D-F83B-45A1-90B5-517CDC9F2F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{230FF42D-F83B-45A1-90B5-517CDC9F2F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{230FF42D-F83B-45A1-90B5-517CDC9F2F7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{498EBAA2-D878-4FF5-A458-919B76E8CFF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{498EBAA2-D878-4FF5-A458-919B76E8CFF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{498EBAA2-D878-4FF5-A458-919B76E8CFF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{498EBAA2-D878-4FF5-A458-919B76E8CFF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1198,7 +1198,7 @@ Global
 		{F4FB05CF-74F7-4147-9575-6A5B201600D8} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{EDFD9888-F1CC-43B7-BCD0-B2F996EDF722} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{A35B74F7-2EB5-4C35-9741-F634A0FF4520} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
-		{230FF42D-F83B-45A1-90B5-517CDC9F2F7E} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{498EBAA2-D878-4FF5-A458-919B76E8CFF0} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

@@ -17,12 +17,12 @@ namespace Plato.Discuss.Categories.ViewProviders
 {
     public class CategoryViewProvider : BaseViewProvider<Category>
     {
-
-        private readonly IContextFacade _contextFacade;
+        
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly ICategoryManager<Category> _categoryManager;
-        private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IFeatureFacade _featureFacade;
+        private readonly IContextFacade _contextFacade;
 
         public CategoryViewProvider(
             IContextFacade contextFacade,

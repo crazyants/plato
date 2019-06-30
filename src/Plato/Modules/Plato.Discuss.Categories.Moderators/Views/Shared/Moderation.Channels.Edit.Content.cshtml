@@ -1,0 +1,17 @@
+﻿@model Plato.Categories.Models.CategoryInputOptions
+
+<card>
+    <card-title>
+        <h6 class="card-title">
+            @T["Categories"]
+        </h6>
+    </card-title>
+    <card-body>
+
+        @await DisplayAsync(new View("CategoryInput", new
+        {
+            options = Model
+        }))
+        
+    </card-body>
+</card>

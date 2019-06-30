@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -24,36 +25,40 @@ namespace Plato.Categories.ViewComponents
             _featureFacade = featureFacade;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(IEnumerable<int> selectedCategories, string htmlName)
+        public async Task<IViewComponentResult> InvokeAsync(CategoryInputOptions options)
         {
-            if (selectedCategories == null)
+
+            if (options.SelectedCategories == null)
             {
-                selectedCategories = new int[0];
+                options.SelectedCategories = new int[0];
             }
             
-            var categories = await BuildChannelSelectionsAsync(selectedCategories);
+            var categories = await BuildChannelSelectionsAsync(options);
             var model = new CategoryInputViewModel(categories)
             {
-                HtmlName = htmlName
+                HtmlName = options.HtmlName
             };
 
             return View(model);
         }
 
         private async Task<IList<Selection<CategoryBase>>> BuildChannelSelectionsAsync(
-            IEnumerable<int> selectedCategories)
+            CategoryInputOptions options)
         {
-            
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
-            var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            if (channels != null)
+
+            if (options == null)
+            {
+                options = new CategoryInputOptions();
+            }
+     
+            if (options.Categories != null)
             {
 
-                var items = await RecurseChannels(channels);
+                var items = await RecurseCategories(options.Categories);
           
                 var selections = items.Select(c => new Selection<CategoryBase>
                     {
-                        IsSelected = selectedCategories.Any(v => v == c.Id),
+                        IsSelected = options.SelectedCategories.Any(v => v == c.Id),
                         Value = c
                     })
                     .OrderBy(r => r.Value)
@@ -67,7 +72,7 @@ namespace Plato.Categories.ViewComponents
         }
 
 
-        Task<IList<CategoryBase>> RecurseChannels(
+        Task<IList<CategoryBase>> RecurseCategories(
             IEnumerable<ICategory> input,
             IList<CategoryBase> output = null,
             int id = 0)
@@ -94,7 +99,7 @@ namespace Plato.Categories.ViewComponents
                         Name = indent + category.Name
                        
                     });
-                    RecurseChannels(categories, output, category.Id);
+                    RecurseCategories(categories, output, category.Id);
                 }
             }
 

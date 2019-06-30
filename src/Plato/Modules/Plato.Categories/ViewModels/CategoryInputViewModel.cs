@@ -15,8 +15,7 @@ namespace Plato.Categories.ViewModels
     public class CategoryInputViewModel
     {
 
-        [Required]
-        [Display(Name = "category")]
+        [Required, Display(Name = "category")]
         public IEnumerable<int> SelectedCategories { get; set; }
         
         public string HtmlName { get; set; }

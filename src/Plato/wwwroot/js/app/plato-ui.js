@@ -4875,8 +4875,12 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
+                // Maximum number of allowed selections
+                var maxItems = methods.getMaxItems($caller);
+
                 // init tagIt
                 $caller.tagIt($.extend({
+                    maxItems: maxItems,
                     itemTemplate:
                         '<li class="tagit-list-item"><div class="btn-group"><div class="btn btn-sm label label-outline font-weight-bold"><span class="avatar avatar-xs mr-2"><span style="background-image: url({avatar.url});"></span></span>{displayName}</div> <a href="#" class="btn btn-sm label label-outline dropdown-toggle-split tagit-list-item-delete"><i class="fal fa-fw fa-times"></i></a></div></li>',
                     parseItemTemplate: function (html, result) {
@@ -4913,19 +4917,22 @@ $(function (win, doc, $) {
                     onItemClick: function ($input, result, e) {
 
                         e.preventDefault();
-
+                        
                         // Get index if item already exists, else return -1
                         var index = methods.getIndex($caller, result);
                         if (index === -1) {
 
                             // Add new item if within allowed bounds
                             var tagIt = $caller.data("tagIt");
-                            if (tagIt.items.length < tagIt.maxItems) {
+                            var isBelowMax = maxItems > 0 && $caller.data("tagIt").items.length < maxItems;
+                            if (isBelowMax) {
                                 tagIt.items.push(result);
                                 $caller.tagIt("update");
                                 $caller.tagIt("focus");
                                 $caller.tagIt("select");
                                 $caller.tagIt("show");
+                            } else {
+                                $caller.tagIt("hide");
                             }
 
                             // We've reached max allowed bounds hide autoComplete
@@ -4963,7 +4970,12 @@ $(function (win, doc, $) {
                     }
                 }
                 return index;
-            }
+            },
+            getMaxItems: function ($caller) {
+                return $caller.data("maxItems")
+                    ? parseInt($caller.data("maxItems"))
+                    : $caller.data(dataKey).maxItems;
+            },
 
         };
 

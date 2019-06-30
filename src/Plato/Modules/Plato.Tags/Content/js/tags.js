@@ -57,11 +57,7 @@ $(function (win, doc, $) {
             bind: function($caller) {
                 
                 // Maximum number of allowed selections
-                var maxItems = $caller.data("maxItems")
-                    ? parseInt($caller.data("maxItems"))
-                    : $caller.data(dataKey).maxItems;
-
-                console.log("maxItems - " + maxItems);
+                var maxItems = methods.getMaxItems($caller);
 
                 // init tagIt
                 $caller.tagIt($.extend({
@@ -165,7 +161,6 @@ $(function (win, doc, $) {
                                 var index = methods.getIndex($caller, result);
                                 if (index === -1) {
                                     var isBelowMax = maxItems > 0 && $caller.data("tagIt").items.length < maxItems;
-                                    console.log("isBelowMax: " + isBelowMax)
                                     if (isBelowMax) {
                                         $caller.data("tagIt").items.push(result);
                                         $caller
@@ -210,7 +205,12 @@ $(function (win, doc, $) {
                     }
                 }
                 return index;
-            }
+            },
+            getMaxItems: function ($caller) {
+                return $caller.data("maxItems")
+                    ? parseInt($caller.data("maxItems"))
+                    : $caller.data(dataKey).maxItems;
+            },
 
         };
 
