@@ -26,7 +26,7 @@ namespace Plato.Internal.Layout.Views
         public async Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext)
         {
 
-            // Contextulize view invoker
+            // Contextualize view invoker
             _viewInvoker.Contextualize(displayContext);
 
             // Apply view & model alterations

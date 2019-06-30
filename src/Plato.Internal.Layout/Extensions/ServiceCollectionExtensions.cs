@@ -38,10 +38,10 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<ILayoutUpdater, LayoutUpdater>();
             
             // Generic views
-            services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
-            services.AddSingleton<IViewFactory, ViewFactory>();
-            services.AddSingleton<IViewTableManager, ViewTableManager>();
-            services.AddSingleton<IViewInvoker, ViewInvoker>();
+            services.AddScoped<IViewFactory, ViewFactory>();
+            services.AddScoped<IViewTableManager, ViewTableManager>();
+            services.AddScoped<IViewInvoker, ViewInvoker>();
+            services.AddScoped<IViewHelperFactory, ViewDisplayHelperFactory>();
 
             // Add page title builder
             services.AddScoped<IPageTitleBuilder, PageTitleBuilder>();

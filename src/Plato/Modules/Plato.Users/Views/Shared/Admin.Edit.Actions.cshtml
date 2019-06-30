@@ -2,7 +2,11 @@
 @model EditUserViewModel
 @{
     var platoOpts = GetOptions<PlatoOptions>();
-    var isAdmin = Model.UserName.Equals("admin", StringComparison.OrdinalIgnoreCase);
+    var isAdmin = false;
+    if (!string.IsNullOrEmpty(Model.UserName))
+    {
+        isAdmin = Model.UserName.Equals("admin", StringComparison.OrdinalIgnoreCase);
+    }
 }
 
 @if (isAdmin && platoOpts.DemoMode)

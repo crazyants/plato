@@ -43,8 +43,7 @@ namespace Plato.Internal.Security.Abstractions
         {
             this.ImpliedBy = impliedBy;
         }
-
-
+        
     }
 
 }

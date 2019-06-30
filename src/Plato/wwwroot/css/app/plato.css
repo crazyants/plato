@@ -931,6 +931,14 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .list-left-3x { width: 168px; }
 .list-left-3x + .list-body { margin-left: 168px; }
 
+/* list sizes - to match avatars */
+.list-left-sm { width: 40px; }
+.list-left-sm + .list-body { margin-left: 40px; }
+.list-left-md { width: 72px; }
+.list-left-md + .list-body { margin-left: 72px; }
+.list-left-lg { width: 122px; }
+.list-left-lg + .list-body { margin-left: 122px; }
+
 /* general list sizes */
 .list-left-24 { width: 24px; }
 .list-left-24 + .list-body { margin-left: 24px; }
@@ -1892,7 +1900,7 @@ a.accepted-answer i { font-size: 18pt; }
 
 .popper {
     position: absolute;
-    z-index: 1000;
+    z-index: 1055;
     min-width: 10rem;
     display: block;
 }

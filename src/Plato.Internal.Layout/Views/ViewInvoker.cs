@@ -12,16 +12,6 @@ using Microsoft.Extensions.Logging;
 namespace Plato.Internal.Layout.Views
 {
 
-    public interface IViewInvoker
-    {
-        ViewContext ViewContext { get; set; }
-
-        void Contextualize(ViewDisplayContext viewContext);
-
-        Task<IHtmlContent> InvokeAsync(IView view);
-
-    }
-
     public class ViewInvoker : IViewInvoker
     {
 
@@ -85,8 +75,7 @@ namespace Plato.Internal.Layout.Views
 
         async Task<IHtmlContent> InvokePartialAsync(string viewName, object model)
         {
-            var helper = _htmlHelper as HtmlHelper;
-            if (helper == null)
+            if (!(_htmlHelper is HtmlHelper helper))
             {
                 throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
             }

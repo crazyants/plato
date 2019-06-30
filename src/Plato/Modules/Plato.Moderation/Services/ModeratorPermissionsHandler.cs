@@ -15,19 +15,19 @@ namespace Plato.Moderation.Services
 
     public class ModeratorPermissionsHandler : AuthorizationHandler<PermissionRequirement>
     {
-
-        private readonly IPlatoUserStore<User> _userStore;
-        private readonly IModeratorStore<Moderator> _moderatorStore;
+        
         private readonly IPermissionsManager<ModeratorPermission> _permissionsManager;
+        private readonly IModeratorStore<Moderator> _moderatorStore;
+        private readonly IPlatoUserStore<User> _userStore;
 
         public ModeratorPermissionsHandler(
+            IPermissionsManager<ModeratorPermission> permissionsManager,
             IModeratorStore<Moderator> moderatorStore,
-            IPlatoUserStore<User> userStore,
-            IPermissionsManager<ModeratorPermission> permissionsManager)
+            IPlatoUserStore<User> userStore)
         {
+            _permissionsManager = permissionsManager;
             _moderatorStore = moderatorStore;
             _userStore = userStore;
-            _permissionsManager = permissionsManager;
         }
 
         #region "Implementation"
@@ -114,10 +114,10 @@ namespace Plato.Moderation.Services
             // Accumulate the set of permissions that would satisfy the access check
             var grantingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         
-            // Accumulate implied permissions
+            // Accumulate permissions implied by supplied permission
             ImpliedPermissionNames(requirement.Permission, grantingNames);
 
-            // Accumulate inferred permissions
+            // Accumulate permissions that imply supplied permission
             var permissions = _permissionsManager.GetPermissions();
             if (permissions != null)
             {
@@ -150,7 +150,7 @@ namespace Plato.Moderation.Services
 
         #region "Private Methods"
 
-        static void InferredPermissionNames(
+        void InferredPermissionNames(
             IPermission permissionToCheck, 
             IList<ModeratorPermission> permissions,
             HashSet<string> stack)
@@ -184,7 +184,7 @@ namespace Plato.Moderation.Services
 
         }
 
-        static void ImpliedPermissionNames(
+        void ImpliedPermissionNames(
             IPermission permission,
             HashSet<string> stack)
         {

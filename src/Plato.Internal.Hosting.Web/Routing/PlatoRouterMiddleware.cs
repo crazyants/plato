@@ -8,16 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewFeatures;
-using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Stores.Abstractions.Settings;
-using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Hosting.Web.Routing
 {
@@ -35,7 +28,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             _logger = logger;
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext context)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -43,20 +36,20 @@ namespace Plato.Internal.Hosting.Web.Routing
                 _logger.LogInformation("Begin Routing Request");
             }
                 
-            var shellSettings = (ShellSettings) httpContext.Features[typeof(ShellSettings)];
+            var shellSettings = (ShellSettings)context.Features[typeof(ShellSettings)];
 
             // Define a PathBase for the current request that is the RequestUrlPrefix.
             // This will allow any view to reference ~/ as the tenant's base url.
             // Because IIS or another middleware might have already set it, we just append the tenant prefix value.
             if (!String.IsNullOrEmpty(shellSettings.RequestedUrlPrefix))
             {
-                httpContext.Request.PathBase += ("/" + shellSettings.RequestedUrlPrefix);
-                httpContext.Request.Path = httpContext.Request.Path.ToString()
-                    .Substring(httpContext.Request.PathBase.Value.Length);
+                context.Request.PathBase += ("/" + shellSettings.RequestedUrlPrefix);
+                context.Request.Path = context.Request.Path.ToString()
+                    .Substring(context.Request.PathBase.Value.Length);
             }
             
             // Do we need to rebuild the pipeline ?
-            var rebuildPipeline = httpContext.Items["BuildPipeline"] != null;
+            var rebuildPipeline = context.Items["BuildPipeline"] != null;
             lock (_pipelines)
             {
                 if (rebuildPipeline && _pipelines.ContainsKey(shellSettings.Name))
@@ -72,7 +65,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             {
                 if (!_pipelines.TryGetValue(shellSettings.Name, out pipeline))
                 {
-                    pipeline = BuildTenantPipeline(shellSettings, httpContext);
+                    pipeline = BuildTenantPipeline(shellSettings, context);
                     if (shellSettings.State == TenantState.Running)
                     {
                         _pipelines.Add(shellSettings.Name, pipeline);
@@ -80,7 +73,7 @@ namespace Plato.Internal.Hosting.Web.Routing
                 }
             }
             
-            await pipeline.Invoke(httpContext);
+            await pipeline.Invoke(context);
             
         }
 
@@ -92,7 +85,6 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             var serviceProvider = httpContext.RequestServices;
             var startUps = serviceProvider.GetServices<IStartup>();
-            //var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
             var appBuilder = new ApplicationBuilder(serviceProvider);
 
