@@ -1,5 +1,5 @@
-Name: Plato Discuss Moderation
-Description: Adds moderation support for discussions.
+Name: Plato Discuss Categories Permissions
+Description: Adds the ability to grant users additional permissions within categories.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Discuss

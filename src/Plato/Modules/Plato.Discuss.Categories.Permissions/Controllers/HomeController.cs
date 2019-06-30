@@ -12,7 +12,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Moderation.Controllers
+namespace Plato.Discuss.Categories.Permissions.Controllers
 {
     public class HomeController : Controller
     {

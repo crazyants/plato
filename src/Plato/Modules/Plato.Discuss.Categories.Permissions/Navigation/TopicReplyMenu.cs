@@ -8,7 +8,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Moderation.Models;
 
-namespace Plato.Discuss.Moderation.Navigation
+namespace Plato.Discuss.Categories.Permissions.Navigation
 {
     public class TopicReplyMenu : INavigationProvider
     {
@@ -75,7 +75,7 @@ namespace Plato.Discuss.Moderation.Navigation
                             .Permission(ModeratorPermissions.EditReplies)
                             .LocalNav())
                         .Add(reply.IsHidden ? T["Unhide"] : T["Hide"], 2, edit => edit
-                            .Action(reply.IsHidden ? "ShowReply" : "HideReply", "Home", "Plato.Discuss.Moderation",
+                            .Action(reply.IsHidden ? "ShowReply" : "HideReply", "Home", "Plato.Discuss.Categories.Permissions",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = reply?.Id ?? 0
@@ -87,7 +87,7 @@ namespace Plato.Discuss.Moderation.Navigation
                             .LocalNav()
                         )
                         .Add(reply.IsSpam ? T["Not Spam"] : T["Spam"], 3, spam => spam
-                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Discuss.Moderation",
+                            .Action(reply.IsSpam ? "ReplyFromSpam" : "ReplyToSpam", "Home", "Plato.Discuss.Categories.Permissions",
                                 new RouteValueDictionary()
                                 {
                                     ["id"] = reply?.Id ?? 0
@@ -103,7 +103,7 @@ namespace Plato.Discuss.Moderation.Navigation
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(reply.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, delete => delete
-                                .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Discuss.Moderation", new RouteValueDictionary()
+                                .Action(reply.IsDeleted ? "RestoreReply" : "DeleteReply", "Home", "Plato.Discuss.Categories.Permissions", new RouteValueDictionary()
                                 {
                                     ["id"] = reply?.Id ?? 0
                                 })

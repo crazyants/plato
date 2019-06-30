@@ -3,7 +3,7 @@ using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Moderation.Handlers
+namespace Plato.Discuss.Categories.Permissions.Handlers
 {
     
     public class FeatureEventHandler : BaseFeatureEventHandler

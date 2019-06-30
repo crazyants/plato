@@ -7,17 +7,17 @@ using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Discuss.Moderation.Navigation;
-using Plato.Discuss.Moderation.ViewProviders;
+using Plato.Discuss.Categories.Permissions.Navigation;
+using Plato.Discuss.Categories.Permissions.ViewProviders;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
-using Plato.Discuss.Moderation.Handlers;
-using Plato.Discuss.Moderation.ViewAdapters;
+using Plato.Discuss.Categories.Permissions.Handlers;
+using Plato.Discuss.Categories.Permissions.ViewAdapters;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Moderation
+namespace Plato.Discuss.Categories.Permissions
 {
 
     public class Startup : StartupBase

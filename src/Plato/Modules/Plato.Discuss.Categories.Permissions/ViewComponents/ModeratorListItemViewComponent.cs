@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Models.Users;
 using Plato.Moderation.Models;
 
-namespace Plato.Discuss.Moderation.ViewComponents
+namespace Plato.Discuss.Categories.Permissions.ViewComponents
 {
     public class ModeratorListItemViewComponent : ViewComponent
     {

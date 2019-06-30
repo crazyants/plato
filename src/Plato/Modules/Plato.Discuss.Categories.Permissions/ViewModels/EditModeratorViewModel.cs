@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Plato.Moderation.Models;
 
-namespace Plato.Discuss.Moderation.ViewModels
+namespace Plato.Discuss.Categories.Permissions.ViewModels
 {
     public class EditModeratorViewModel
     {

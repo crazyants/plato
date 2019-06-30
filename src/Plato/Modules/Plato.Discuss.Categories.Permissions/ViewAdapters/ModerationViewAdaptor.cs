@@ -8,7 +8,7 @@ using Plato.Discuss.Categories.Models;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Moderation.Models;
 
-namespace Plato.Discuss.Moderation.ViewAdapters
+namespace Plato.Discuss.Categories.Permissions.ViewAdapters
 {
 
     public class ModerationViewAdapterProvider : BaseAdapterProvider
@@ -29,7 +29,7 @@ namespace Plato.Discuss.Moderation.ViewAdapters
         public override Task<IViewAdapterResult> ConfigureAsync()
         {
 
-            // Plato.Discuss.Moderation does not have a dependency on Plato.Discuss.Channels
+            // Plato.Discuss.Categories.Permissions does not have a dependency on Plato.Discuss.Channels
             // Instead we update the moderator view here via our view adaptor
             // This way the channel name is only ever populated if the channels feature is enabled
             return Adapt("ModeratorListItem",  v =>

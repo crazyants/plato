@@ -29,7 +29,6 @@
                             <span class="text-muted">@T["Your facebook app secret."]</span>
                             <a href="https://developers.facebook.com/apps/">@T["Manage your Facebook apps"]</a>
                         </label>
-                  
                         <div class="search-input-group">
                             <input asp-for="AppSecret"
                                    type="search" 
@@ -37,11 +36,10 @@
                                    autocomplete="off"
                                    data-provide="password"
                                    placeholder="@T["your facebook app secret..."]" />
-                            <button type="button" class="btn" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                            <button type="button" class="btn btn-secondary" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
                                 <i class="fal fa-eye"></i>
                             </button>
                         </div>
-
                     </div>
                 </fieldset>
             </div>

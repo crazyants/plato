@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using Plato.Discuss.Moderation.ViewModels;
+using Plato.Discuss.Categories.Permissions.ViewModels;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -18,7 +18,7 @@ using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 using Plato.WebApi.Models;
 
-namespace Plato.Discuss.Moderation.Controllers
+namespace Plato.Discuss.Categories.Permissions.Controllers
 {
 
     public class AdminController : Controller, IUpdateModel
@@ -113,7 +113,7 @@ namespace Plato.Discuss.Moderation.Controllers
                         .Action("Index", "Admin", "Plato.Discuss")
                         .LocalNav())
                     .Add(S["Moderators"], moderators => moderators
-                        .Action("Index", "Admin", "Plato.Discuss.Moderation")
+                        .Action("Index", "Admin", "Plato.Discuss.Categories.Permissions")
                         .LocalNav())
                     .Add(S["Add Moderator"]);
             });
@@ -225,7 +225,7 @@ namespace Plato.Discuss.Moderation.Controllers
                         .Action("Index", "Admin", "Plato.Discuss")
                         .LocalNav())
                     .Add(S["Moderators"], moderators => moderators
-                        .Action("Index", "Admin", "Plato.Discuss.Moderation")
+                        .Action("Index", "Admin", "Plato.Discuss.Categories.Permissions")
                         .LocalNav())
                     .Add(S["Edit Moderator"]);
             });

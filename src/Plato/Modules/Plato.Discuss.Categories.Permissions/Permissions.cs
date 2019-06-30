@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Moderation
+namespace Plato.Discuss.Categories.Permissions
 {
     public class Permissions : IPermissionsProvider<Permission>
     {

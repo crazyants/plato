@@ -4,7 +4,7 @@ using System.Text;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 
-namespace Plato.Discuss.Moderation
+namespace Plato.Discuss.Categories.Permissions
 {
     public class ModeratorPermissions : IPermissionsProvider<ModeratorPermission>
     {

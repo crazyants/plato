@@ -13,7 +13,7 @@ using Plato.Internal.Models.Users;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 
-namespace Plato.Discuss.Moderation.ViewProviders
+namespace Plato.Discuss.Categories.Permissions.ViewProviders
 {
     public class ModeratorViewProvider : BaseViewProvider<Moderator>
     {

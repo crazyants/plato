@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Models;
-using Plato.Discuss.Moderation.ViewModels;
+using Plato.Discuss.Categories.Permissions.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -11,7 +11,7 @@ using Plato.Internal.Stores.Users;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 
-namespace Plato.Discuss.Moderation.ViewProviders
+namespace Plato.Discuss.Categories.Permissions.ViewProviders
 {
     public class TopicViewProvider : BaseViewProvider<Topic>
     {

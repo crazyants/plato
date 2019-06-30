@@ -4,7 +4,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Moderation.Models;
 
-namespace Plato.Discuss.Moderation.ViewModels
+namespace Plato.Discuss.Categories.Permissions.ViewModels
 {
     public class ModeratorIndexViewModel
     {

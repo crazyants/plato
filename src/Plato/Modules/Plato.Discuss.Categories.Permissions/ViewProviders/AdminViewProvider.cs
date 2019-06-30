@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using Plato.Discuss.Moderation.ViewModels;
+using Plato.Discuss.Categories.Permissions.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -21,7 +21,7 @@ using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 using Plato.WebApi.Models;
 
-namespace Plato.Discuss.Moderation.ViewProviders
+namespace Plato.Discuss.Categories.Permissions.ViewProviders
 {
     public class AdminViewProvider : BaseViewProvider<Moderator>
     {

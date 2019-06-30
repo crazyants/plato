@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Discuss.Moderation.ViewModels;
+using Plato.Discuss.Categories.Permissions.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
@@ -8,7 +8,7 @@ using Plato.Moderation.Extensions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 
-namespace Plato.Discuss.Moderation.ViewComponents
+namespace Plato.Discuss.Categories.Permissions.ViewComponents
 {
     public class ModeratorListViewComponent : ViewComponent
     {
