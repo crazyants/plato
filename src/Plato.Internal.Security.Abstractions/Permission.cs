@@ -39,6 +39,12 @@ namespace Plato.Internal.Security.Abstractions
             this.Category = category;
         }
 
+        public Permission(string name, string description, string category, IEnumerable<IPermission> impliedBy) : this(name, description, category)
+        {
+            this.ImpliedBy = impliedBy;
+        }
+
+
     }
 
 }

@@ -15,7 +15,6 @@ namespace Plato.Internal.Security
 
         private IEnumerable<TPermission> _permissions;
         
-        private readonly IAuthorizationService _authorizationService;
         private readonly IEnumerable<IPermissionsProvider<TPermission>> _providers;
         private readonly ILogger<PermissionsManager<TPermission>> _logger;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -23,12 +22,10 @@ namespace Plato.Internal.Security
         public PermissionsManager(
             IEnumerable<IPermissionsProvider<TPermission>> providers,
             ILogger<PermissionsManager<TPermission>> logger,
-            ITypedModuleProvider typedModuleProvider,
-            IAuthorizationService authorizationService)
+            ITypedModuleProvider typedModuleProvider)
         {
             _providers = providers;
             _typedModuleProvider = typedModuleProvider;
-            _authorizationService = authorizationService;
             _logger = logger;
         }
         

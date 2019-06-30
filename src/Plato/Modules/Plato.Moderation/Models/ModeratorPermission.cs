@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Moderation.Models
@@ -28,6 +29,16 @@ namespace Plato.Moderation.Models
             this.Category = category;
         }
 
+        public ModeratorPermission(string name, string description, IEnumerable<IPermission> impliedBy) : this(name, description, string.Empty)
+        {
+            this.ImpliedBy = impliedBy;
+        }
+
+        public ModeratorPermission(string name, string description, string category, IEnumerable<IPermission> impliedBy) : this(name, description, category)
+        {
+            this.ImpliedBy = impliedBy;
+        }
+        
     }
 
 }

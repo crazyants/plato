@@ -18,13 +18,16 @@ namespace Plato.Moderation.Services
 
         private readonly IPlatoUserStore<User> _userStore;
         private readonly IModeratorStore<Moderator> _moderatorStore;
+        private readonly IPermissionsManager<ModeratorPermission> _permissionsManager;
 
         public ModeratorPermissionsHandler(
             IModeratorStore<Moderator> moderatorStore,
-            IPlatoUserStore<User> userStore)
+            IPlatoUserStore<User> userStore,
+            IPermissionsManager<ModeratorPermission> permissionsManager)
         {
             _moderatorStore = moderatorStore;
             _userStore = userStore;
+            _permissionsManager = permissionsManager;
         }
 
         #region "Implementation"
@@ -63,13 +66,13 @@ namespace Plato.Moderation.Services
             var moderators = await _moderatorStore
                 .QueryAsync()
                 .ToList();
-        
+
             // No need to check permissions if we don't have any moderators
             if (moderators == null)
             {
                 return;
             }
-    
+
             // Get username from claims
             var claims = context.User.Claims
                 .FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType);
@@ -107,19 +110,31 @@ namespace Plato.Moderation.Services
             {
                 moderatorsToExamine.Add(moderator);
             }
-            
-            // Determine which set of permissions would satisfy the access check
-            var grantingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            PermissionNames(requirement.Permission, grantingNames);
 
+            // Accumulate the set of permissions that would satisfy the access check
+            var grantingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        
+            // Accumulate implied permissions
+            ImpliedPermissionNames(requirement.Permission, grantingNames);
+
+            // Accumulate inferred permissions
+            var permissions = _permissionsManager.GetPermissions();
+            if (permissions != null)
+            {
+                InferredPermissionNames(requirement.Permission, permissions.ToList(), grantingNames);
+            }
+            
+            // Determine if  we satisfy any of the accumulated permissions
             foreach (var moderator in moderatorsToExamine)
             {
                 foreach (var claim in moderator.Claims)
                 {
-                    if (!String.Equals(claim.ClaimType, ModeratorPermission.ClaimTypeName, StringComparison.OrdinalIgnoreCase))
+                    if (!String.Equals(claim.ClaimType, ModeratorPermission.ClaimTypeName,
+                        StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
+
                     var permissionName = claim.ClaimValue;
                     if (grantingNames.Contains(permissionName))
                     {
@@ -128,14 +143,48 @@ namespace Plato.Moderation.Services
                     }
                 }
             }
-            
+
         }
 
         #endregion
-        
+
         #region "Private Methods"
 
-        static void PermissionNames(
+        static void InferredPermissionNames(
+            IPermission permissionToCheck, 
+            IList<ModeratorPermission> permissions,
+            HashSet<string> stack)
+        {
+
+            // The given name is always tested
+            stack.Add(permissionToCheck.Name);
+
+            // Iterate available permissions looking for inferred permissions (those that imply the given permission)
+            foreach (var permission in permissions)
+            {
+                if (permission.ImpliedBy != null && permission.ImpliedBy.Any())
+                {
+                    foreach (var impliedBy in permission.ImpliedBy)
+                    {
+                        // Is our supplied permission implied by the permission
+                        if (impliedBy.Name.Equals(permissionToCheck.Name, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            // The permission that inferred the given permission was already added
+                            if (stack.Contains(permission.Name))
+                            {
+                                continue;
+                            }
+
+                            // Otherwise accumulate the inferred permission names recursively
+                            InferredPermissionNames(permission, permissions, stack);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        static void ImpliedPermissionNames(
             IPermission permission,
             HashSet<string> stack)
         {
@@ -154,16 +203,14 @@ namespace Plato.Moderation.Services
                     }
 
                     // Otherwise accumulate the implied permission names recursively
-                    PermissionNames(impliedBy, stack);
+                    ImpliedPermissionNames(impliedBy, stack);
                 }
             }
 
-            // Administrator permission grants them all
-            //stack.Add(StandardPermissions.Administrator.Name);
         }
 
         #endregion
-        
-    }
 
+    }
+    
 }
