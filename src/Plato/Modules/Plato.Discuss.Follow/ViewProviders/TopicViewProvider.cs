@@ -15,11 +15,11 @@ namespace Plato.Discuss.Follow.ViewProviders
     {
 
         private const string FollowHtmlName = "follow";
-        
-        private readonly IContextFacade _contextFacade;
+         
         private readonly IFollowStore<Plato.Follows.Models.Follow> _followStore;
         private readonly IFollowManager<Follows.Models.Follow> _followManager;
         private readonly IEntityStore<Topic> _entityStore;
+        private readonly IContextFacade _contextFacade;
         private readonly HttpRequest _request;
  
         public TopicViewProvider(

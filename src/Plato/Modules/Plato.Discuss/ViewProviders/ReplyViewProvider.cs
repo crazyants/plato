@@ -18,7 +18,6 @@ namespace Plato.Discuss.ViewProviders
         
         private readonly IEntityReplyStore<Reply> _replyStore;
         private readonly IPostManager<Reply> _replyManager;
- 
         private readonly IStringLocalizer T;
 
         private readonly HttpRequest _request;
@@ -95,6 +94,25 @@ namespace Plato.Discuss.ViewProviders
 
         }
 
+        public override async Task ComposeTypeAsync(Reply reply, IUpdateModel updater)
+        {
+
+            var model = new EditEntityReplyViewModel
+            {
+                EntityId = reply.EntityId,
+                Message = reply.Message
+            };
+
+            await updater.TryUpdateModelAsync(model);
+
+            if (updater.ModelState.IsValid)
+            {
+                reply.EntityId = model.EntityId;
+                reply.Message = model.Message;
+            }
+
+        }
+        
         public override async Task<IViewProviderResult> BuildUpdateAsync(Reply reply, IViewProviderContext context)
         {
             

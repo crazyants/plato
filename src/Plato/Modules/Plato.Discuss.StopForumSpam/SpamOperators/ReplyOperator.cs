@@ -7,7 +7,6 @@ using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Net.Abstractions;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Security.Abstractions;
@@ -27,7 +26,6 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityReplyStore<Reply> _replyStore;
-        private readonly IClientIpAddress _clientIpAddress;
         private readonly ISpamChecker _spamChecker;
 
         public ReplyOperator(
@@ -36,13 +34,11 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityReplyStore<Reply> replyStore, 
-            IClientIpAddress clientIpAddress,
             ISpamChecker spamChecker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _notificationManager = notificationManager;
             _deferredTaskManager = deferredTaskManager;
-            _clientIpAddress = clientIpAddress;
             _platoUserStore = platoUserStore;
             _spamChecker = spamChecker;
             _replyStore = replyStore;
@@ -215,8 +211,8 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             }
 
             // Ensure we check against the IP address being used at the time of the post
-            user.IpV4Address = "77.218.241.112"; // _clientIpAddress.GetIpV4Address();
-            user.IpV6Address = _clientIpAddress.GetIpV6Address();
+            user.IpV4Address = reply.IpV4Address;
+            user.IpV6Address = reply.IpV6Address;
             return user;
 
         }

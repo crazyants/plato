@@ -130,6 +130,24 @@ namespace Plato.Internal.Layout.ViewProviders
 
         }
 
+        public async Task<TModel> GetComposedType(TModel model, IUpdateModel context)
+        {
+            foreach (var provider in _providers)
+            {
+                try
+                {
+                    await provider.ComposeTypeAsync(model, context);
+
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred within the view providers GetComposedModel method. Please review the ComposedModel method within your view provider and try again. {e.Message}");
+                    throw;
+                }
+            }
+            return model;
+        }
+
         public async Task<TModel> GetComposedType(IUpdateModel context)
         {
             var model = ActivateInstanceOf<TModel>.Instance();
@@ -148,5 +166,6 @@ namespace Plato.Internal.Layout.ViewProviders
             }
             return model;
         }
+
     }
 }

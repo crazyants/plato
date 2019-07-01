@@ -48,26 +48,26 @@ namespace Plato.Discuss.Categories.ViewProviders
         public TopicViewProvider(
             IStringLocalizer stringLocalizer,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
-            IEntityCategoryManager entityCategoryManager,
             ICategoryDetailsUpdater categoryDetailsUpdater,
+            IEntityCategoryManager entityCategoryManager,
+            ICategoryService<Category> categoryService,
             IHttpContextAccessor httpContextAccessor,
             ICategoryStore<Category> categoryStore, 
             IBreadCrumbManager breadCrumbManager,
             IPostManager<Topic> entityManager,
             IEntityStore<Topic> entityStore,
             IFeatureFacade featureFacade,
-            IContextFacade contextFacade,
-            ICategoryService<Category> categoryService)
+            IContextFacade contextFacade)
         {
             _request = httpContextAccessor.HttpContext.Request;
             _entityCategoryManager = entityCategoryManager;
             _categoryDetailsUpdater = categoryDetailsUpdater;
             _entityCategoryStore = entityCategoryStore;
             _breadCrumbManager = breadCrumbManager;
+            _categoryService = categoryService;
             _featureFacade = featureFacade;
             _entityManager = entityManager;
             _contextFacade = contextFacade;
-            _categoryService = categoryService;
             _categoryStore = categoryStore;
             _entityStore = entityStore;
 

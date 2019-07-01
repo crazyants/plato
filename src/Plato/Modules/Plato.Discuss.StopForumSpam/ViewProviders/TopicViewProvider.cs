@@ -32,11 +32,11 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
+        public override async Task<bool> ValidateModelAsync(Topic entity, IUpdateModel updater)
         {
             
             // Validate model within registered spam operators
-            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Topic, topic);
+            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Topic, entity);
 
             // IF any operators failed ensure we display the operator error message
             var valid = true;
@@ -61,20 +61,46 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
             return valid;
 
         }
-        
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
+
+        public override async Task ComposeTypeAsync(Topic entity, IUpdateModel updater)
+        {
+
+
+            if (!updater.ModelState.IsValid)
+            {
+                return;
+            }
+
+            // Validate model within registered spam operators
+            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Topic, entity);
+            if (results != null)
+            {
+                foreach (var result in results)
+                {
+                    // If any operator failed flag entity as SPAM
+                    if (!result.Succeeded)
+                    {
+                        entity.IsSpam = true;
+                    }
+                }
+            }
+            
+        }
+
+
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic entity, IViewProviderContext context)
         {
 
             if (!context.Updater.ModelState.IsValid)
             {
-                return await BuildIndexAsync(topic, context);
+                return await BuildIndexAsync(entity, context);
             }
 
             // Execute UpdateModel within registered spam operators
-            await _spamOperatorManager.UpdateModelAsync(SpamOperations.Topic, topic);
+            await _spamOperatorManager.UpdateModelAsync(SpamOperations.Topic, entity);
 
             // Return view
-            return await BuildIndexAsync(topic, context);
+            return await BuildIndexAsync(entity, context);
 
         }
         

@@ -216,8 +216,8 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             }
 
             // Ensure we check against the IP address being used at the time of the post
-            user.IpV4Address = "77.218.241.112"; // _clientIpAddress.GetIpV4Address();
-            user.IpV6Address = _clientIpAddress.GetIpV6Address();
+            user.IpV4Address = entity.IpV4Address;
+            user.IpV6Address = entity.IpV6Address;
             return user;
 
         }

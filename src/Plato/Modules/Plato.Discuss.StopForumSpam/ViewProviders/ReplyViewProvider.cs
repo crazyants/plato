@@ -65,6 +65,30 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
 
         }
 
+        public override async Task ComposeTypeAsync(Reply reply, IUpdateModel updater)
+        {
+
+            if (!updater.ModelState.IsValid)
+            {
+                return;
+            }
+
+            // Validate model within registered spam operators
+            var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Reply, reply);
+            if (results != null)
+            {
+                foreach (var result in results)
+                {
+                    // If any operator failed flag reply as SPAM
+                    if (!result.Succeeded)
+                    {
+                        reply.IsSpam = true;
+                    }
+                }
+            }
+
+        }
+
         public override async Task<IViewProviderResult> BuildUpdateAsync(Reply reply, IViewProviderContext context)
         {
             if (!context.Updater.ModelState.IsValid)

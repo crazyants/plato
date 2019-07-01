@@ -249,24 +249,23 @@ namespace Plato.Discuss.Controllers
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(new Topic()
+            // Build topic
+            var entity = new Topic()
             {
                 Title = model.Title,
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
-                CreatedDate = DateTimeOffset.UtcNow
-            }, this))
+                CreatedDate = DateTimeOffset.UtcNow,
+                IpV4Address = "77.218.241.112", // _clientIpAddress.GetIpV4Address(),
+                IpV6Address = _clientIpAddress.GetIpV6Address()
+            };
+
+            // Validate model state within all view providers
+            if (await _topicViewProvider.IsModelStateValid(entity, this))
             {
 
                 // Get composed type from all involved view providers
-                var entity = await _topicViewProvider.GetComposedType(this);
-
-                // Populated created by
-                entity.CreatedUserId = user?.Id ?? 0;
-                entity.CreatedDate = DateTimeOffset.UtcNow;
-                entity.IpV4Address = _clientIpAddress.GetIpV4Address();
-                entity.IpV6Address = _clientIpAddress.GetIpV6Address();
+                entity = await _topicViewProvider.GetComposedType(entity, this);
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
@@ -489,18 +488,17 @@ namespace Plato.Discuss.Controllers
                 EntityId = model.EntityId,
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
-                CreatedDate = DateTimeOffset.UtcNow
+                CreatedDate = DateTimeOffset.UtcNow,
+                IpV4Address = "77.218.241.112", // _clientIpAddress.GetIpV4Address(),
+                IpV6Address = _clientIpAddress.GetIpV6Address()
             };
 
-            // Validate model state within all view providers
+            // Validate model state within all involved view providers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
 
-                // Populate created by
-                reply.CreatedUserId = user?.Id ?? 0;
-                reply.CreatedDate = DateTimeOffset.UtcNow;
-                reply.IpV4Address = _clientIpAddress.GetIpV4Address();
-                reply.IpV6Address = _clientIpAddress.GetIpV6Address();
+                // Get composed type from all involved view providers
+                reply = await _replyViewProvider.GetComposedType(reply, this);
                 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
