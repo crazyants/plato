@@ -148,6 +148,7 @@ namespace Plato.Internal.Layout.ViewProviders
             return model;
         }
 
+        // TODO: To be removed?
         public async Task<TModel> GetComposedType(IUpdateModel context)
         {
             var model = ActivateInstanceOf<TModel>.Instance();

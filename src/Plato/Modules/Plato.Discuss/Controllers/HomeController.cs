@@ -270,18 +270,18 @@ namespace Plato.Discuss.Controllers
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newEntity = await _topicManager.CreateAsync(entity);
+                var result = await _topicManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
-                if (newEntity.Succeeded)
+                if (result.Succeeded)
                 {
 
                     // Indicate new entity to prevent entity update
                     // on first creation within our view provider
-                    newEntity.Response.IsNew = true;
+                    result.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(newEntity.Response, this);
+                    await _topicViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
@@ -289,15 +289,15 @@ namespace Plato.Discuss.Controllers
                     // Redirect to entity
                     return RedirectToAction(nameof(Display), new RouteValueDictionary()
                     {
-                        ["opts.id"] = newEntity.Response.Id,
-                        ["opts.alias"] = newEntity.Response.Alias
+                        ["opts.id"] = result.Response.Id,
+                        ["opts.alias"] = result.Response.Alias
                     });
 
                 }
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in newEntity.Errors)
+                    foreach (var error in result.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }

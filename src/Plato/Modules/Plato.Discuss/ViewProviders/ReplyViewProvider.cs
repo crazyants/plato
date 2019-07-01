@@ -28,7 +28,6 @@ namespace Plato.Discuss.ViewProviders
             IPostManager<Reply> replyManager, 
             IEntityReplyStore<Reply> replyStore)
         {
-
             _replyManager = replyManager;
             _replyStore = replyStore;
             _request = httpContextAccessor.HttpContext.Request;

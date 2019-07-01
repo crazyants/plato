@@ -280,40 +280,39 @@ namespace Plato.Docs.Controllers
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            // Validate model state within all view providers
-            if (await _docViewProvider.IsModelStateValid(new Doc()
+            // Build entity
+            var entity = new Doc()
             {
                 Title = model.Title,
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
-                CreatedDate = DateTimeOffset.UtcNow
-            }, this))
+                CreatedDate = DateTimeOffset.UtcNow,
+                IpV4Address = _clientIpAddress.GetIpV4Address(),
+                IpV6Address = _clientIpAddress.GetIpV6Address()
+            };
+
+            // Validate model state within all view providers
+            if (await _docViewProvider.IsModelStateValid(entity, this))
             {
 
                 // Get composed type from all involved view providers
-                var entity = await _docViewProvider.GetComposedType(this);
-
-                // Populated created by
-                entity.CreatedUserId = user?.Id ?? 0;
-                entity.CreatedDate = DateTimeOffset.UtcNow;
-                entity.IpV4Address = _clientIpAddress.GetIpV4Address();
-                entity.IpV6Address = _clientIpAddress.GetIpV6Address();
+                entity = await _docViewProvider.GetComposedType(entity, this);
                 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newEntity = await _docManager.CreateAsync(entity);
+                var result = await _docManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
-                if (newEntity.Succeeded)
+                if (result.Succeeded)
                 {
 
                     // Indicate new topic to prevent topic update
                     // on first creation within our topic view provider
-                    newEntity.Response.IsNew = true;
+                    result.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _docViewProvider.ProvideUpdateAsync(newEntity.Response, this);
+                    await _docViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Doc Created Successfully!"]);
@@ -321,15 +320,15 @@ namespace Plato.Docs.Controllers
                     // Redirect to entity
                     return RedirectToAction(nameof(Display), new RouteValueDictionary()
                     {
-                        ["opts.id"] = newEntity.Response.Id,
-                        ["opts.alias"] = newEntity.Response.Alias
+                        ["opts.id"] = result.Response.Id,
+                        ["opts.alias"] = result.Response.Alias
                     });
 
                 }
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in newEntity.Errors)
+                    foreach (var error in result.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -534,18 +533,17 @@ namespace Plato.Docs.Controllers
                 EntityId = model.EntityId,
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
-                CreatedDate = DateTimeOffset.UtcNow
+                CreatedDate = DateTimeOffset.UtcNow,
+                IpV4Address = _clientIpAddress.GetIpV4Address(),
+                IpV6Address = _clientIpAddress.GetIpV6Address()
             };
 
             // Validate model state within all view providers
             if (await _docCommentViewProvider.IsModelStateValid(reply, this))
             {
 
-                // Populate created by
-                reply.CreatedUserId = user?.Id ?? 0;
-                reply.CreatedDate = DateTimeOffset.UtcNow;
-                reply.IpV4Address = _clientIpAddress.GetIpV4Address();
-                reply.IpV6Address = _clientIpAddress.GetIpV6Address();
+                // Get composed type from all involved view providers
+                reply = await _docCommentViewProvider.GetComposedType(reply, this);
                 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
