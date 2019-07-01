@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Follow.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
@@ -20,39 +19,36 @@ namespace Plato.Discuss.Follow.Subscribers
 {
   
     /// <summary>
-    /// Triggers all entity follow notifications when replies are posted.
+    /// Triggers all entity follow notifications when public replies are posted.
     /// </summary>
     /// <typeparam name="TEntityReply"></typeparam>
     public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
-
-        private readonly IEntityStore<Entity> _entityStore;
-        private readonly IFollowStore<Follows.Models.Follow> _followStore;
-        private readonly IPlatoUserStore<User> _platoUserStore;
+        
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<TEntityReply> _notificationManager;
-
-
+        private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IEntityStore<Entity> _entityStore;
         private readonly IBroker _broker;
-
-
+        
         public EntityReplySubscriber(
-            IDeferredTaskManager deferredTaskManager,
-            IBroker broker,
-            IEntityStore<Entity> entityStore,
-            IFollowStore<Follows.Models.Follow> followStore, 
-            IPlatoUserStore<User> platoUserStore,
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            INotificationManager<TEntityReply> notificationManager)
+            INotificationManager<TEntityReply> notificationManager,
+            IFollowStore<Follows.Models.Follow> followStore,
+            IDeferredTaskManager deferredTaskManager,
+            IPlatoUserStore<User> platoUserStore,
+            IEntityStore<Entity> entityStore,
+            IBroker broker)
         {
-            _deferredTaskManager = deferredTaskManager;
-            _broker = broker;
-            _entityStore = entityStore;
-            _followStore = followStore;
-            _platoUserStore = platoUserStore;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _notificationManager = notificationManager;
+            _deferredTaskManager = deferredTaskManager;
+            _platoUserStore = platoUserStore;
+            _entityStore = entityStore;
+            _followStore = followStore;
+            _broker = broker;
         }
 
         #region "Implementation"
@@ -122,8 +118,6 @@ namespace Plato.Discuss.Follow.Subscribers
             // Add deferred task
             _deferredTaskManager.AddTask(async context =>
             {
-
-                //var entityStore = context.ServiceProvider.GetRequiredService<IEntityStore<Entity>>();
 
                 // Get entity for reply
                 var entity = await _entityStore.GetByIdAsync(reply.EntityId);

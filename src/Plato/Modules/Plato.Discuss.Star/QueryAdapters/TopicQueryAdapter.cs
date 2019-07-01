@@ -44,7 +44,6 @@ namespace Plato.Discuss.Star.QueryAdapters
                     .Append("))");
             }
             
-            
         }
 
     }

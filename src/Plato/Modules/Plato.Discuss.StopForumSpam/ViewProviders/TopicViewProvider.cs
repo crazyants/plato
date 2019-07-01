@@ -2,9 +2,6 @@
 using Plato.Discuss.Models;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Net.Abstractions;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.StopForumSpam.Services;
 
 namespace Plato.Discuss.StopForumSpam.ViewProviders
@@ -12,19 +9,12 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
 
     public class TopicViewProvider : BaseViewProvider<Topic>
     {
-
-        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISpamOperatorManager<Topic> _spamOperatorManager;
-        private readonly IClientIpAddress _clientIpAddress;
-
+ 
         public TopicViewProvider(
-            IPlatoUserStore<User> platoUserStore,
-            ISpamOperatorManager<Topic> spamOperatorManager,
-            IClientIpAddress clientIpAddress)
+            ISpamOperatorManager<Topic> spamOperatorManager)
         {
-            _platoUserStore = platoUserStore;
             _spamOperatorManager = spamOperatorManager;
-            _clientIpAddress = clientIpAddress;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
@@ -44,15 +34,6 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
         
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
-            
-            // Build user to validate
-            var user = await BuildUserAsync(topic);
-
-            // Could not build user details from supplied username
-            if (user == null)
-            {
-                return true;
-            }
             
             // Validate model within registered spam operators
             var results = await _spamOperatorManager.ValidateModelAsync(SpamOperations.Topic, topic);
@@ -89,39 +70,14 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
                 return await BuildIndexAsync(topic, context);
             }
 
-            // Build user to validate
-            var user = await BuildUserAsync(topic);
-
-            // Could not build user details from supplied username
-            if (user == null)
-            {
-                return await BuildIndexAsync(topic, context);
-            }
-
             // Execute UpdateModel within registered spam operators
             await _spamOperatorManager.UpdateModelAsync(SpamOperations.Topic, topic);
 
+            // Return view
             return await BuildIndexAsync(topic, context);
-        }
 
+        }
         
-
-        async Task<User> BuildUserAsync(Topic topic)
-        {
-
-            var user = await _platoUserStore.GetByIdAsync(topic.CreatedUserId);
-            if (user == null)
-            {
-                return null;
-            }
-            
-            // Ensure we check against the IP address being used at the time of the post
-            user.IpV4Address = _clientIpAddress.GetIpV4Address();
-            user.IpV6Address = _clientIpAddress.GetIpV6Address();
-            return user;
-
-        }
-
     }
 
 }

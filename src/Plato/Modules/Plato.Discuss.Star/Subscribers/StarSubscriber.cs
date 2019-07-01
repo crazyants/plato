@@ -72,24 +72,24 @@ namespace Plato.Discuss.Star.Subscribers
             }
             
             // Ensure the topic we are starring exists
-            var topic = await _entityStore.GetByIdAsync(star.ThingId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(star.ThingId);
+            if (entity == null)
             {
                 return star;
             }
 
             // Update total stars
-            topic.TotalStars = topic.TotalStars + 1;
+            entity.TotalStars = entity.TotalStars + 1;
 
             // Persist changes
-            var updatedTopic = await _entityStore.UpdateAsync(topic);
-            if (updatedTopic != null)
+            var updatedEntity = await _entityStore.UpdateAsync(entity);
+            if (updatedEntity != null)
             {
-                // Award reputation to user starring the topic
+                // Award reputation to user starring the entity
                 await _reputationAwarder.AwardAsync(Reputations.StarTopic, star.CreatedUserId, "Starred a topic");
 
-                // Award reputation to topic author when there topic is starred
-                await _reputationAwarder.AwardAsync(Reputations.StarredTopic, topic.CreatedUserId, "Someone starred my topic");
+                // Award reputation to entity author when there entity is starred
+                await _reputationAwarder.AwardAsync(Reputations.StarredTopic, entity.CreatedUserId, "Someone starred my topic");
 
             }
 
@@ -112,30 +112,30 @@ namespace Plato.Discuss.Star.Subscribers
             }
 
             // Ensure the topic we are starring exists
-            var topic = await _entityStore.GetByIdAsync(star.ThingId);
-            if (topic == null)
+            var entity = await _entityStore.GetByIdAsync(star.ThingId);
+            if (entity == null)
             {
                 return star;
             }
 
             // Update total stars
-            topic.TotalStars = topic.TotalStars - 1;
+            entity.TotalStars = entity.TotalStars - 1;
         
             // Ensure we don't go negative
-            if (topic.TotalStars < 0)
+            if (entity.TotalStars < 0)
             {
-                topic.TotalStars = 0;
+                entity.TotalStars = 0;
             }
             
             // Persist changes
-            var updatedTopic = await _entityStore.UpdateAsync(topic);
-            if (updatedTopic != null)
+            var updatedEntity = await _entityStore.UpdateAsync(entity);
+            if (updatedEntity != null)
             {
-                // Revoke reputation from user removing the topic star
+                // Revoke reputation from user removing the entity star
                 await _reputationAwarder.RevokeAsync(Reputations.StarTopic, star.CreatedUserId, "Unstarred a topic");
 
-                // Revoke reputation from topic author for user removing there topic star
-                await _reputationAwarder.RevokeAsync(Reputations.StarredTopic, topic.CreatedUserId, "A user unstarred my topic");
+                // Revoke reputation from entity author for user removing there entity star
+                await _reputationAwarder.RevokeAsync(Reputations.StarredTopic, entity.CreatedUserId, "A user unstarred my topic");
 
             }
             

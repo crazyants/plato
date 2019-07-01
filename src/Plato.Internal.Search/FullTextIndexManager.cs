@@ -28,12 +28,12 @@ namespace Plato.Internal.Search
 
             if (_indexes == null)
             {
-                var permissions = new List<FullTextIndex>();
+                var indexes = new List<FullTextIndex>();
                 foreach (var provider in _providers)
                 {
                     try
                     {
-                        permissions.AddRange(provider.GetIndexes());
+                        indexes.AddRange(provider.GetIndexes());
                     }
                     catch (Exception e)
                     {
@@ -42,7 +42,7 @@ namespace Plato.Internal.Search
                     }
                 }
 
-                _indexes = permissions;
+                _indexes = indexes;
             }
 
             return _indexes;

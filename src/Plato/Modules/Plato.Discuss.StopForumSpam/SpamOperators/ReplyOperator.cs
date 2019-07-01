@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Discuss.StopForumSpam.NotificationTypes;
+using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Net.Abstractions;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Security.Abstractions;
@@ -20,27 +21,30 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
 {
     public class ReplyOperator : ISpamOperatorProvider<Reply>
     {
-
-        private readonly ISpamChecker _spamChecker;
-        private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IEntityReplyStore<Reply> _replyStore;
-        private readonly IDeferredTaskManager _deferredTaskManager;
+        
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Reply> _notificationManager;
+        private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IEntityReplyStore<Reply> _replyStore;
+        private readonly IClientIpAddress _clientIpAddress;
+        private readonly ISpamChecker _spamChecker;
 
         public ReplyOperator(
-            ISpamChecker spamChecker,
-            IPlatoUserStore<User> platoUserStore,
-            IDeferredTaskManager deferredTaskManager,
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<Reply> notificationManager,
-            IEntityReplyStore<Reply> replyStore)
+            IDeferredTaskManager deferredTaskManager,
+            IPlatoUserStore<User> platoUserStore,
+            IEntityReplyStore<Reply> replyStore, 
+            IClientIpAddress clientIpAddress,
+            ISpamChecker spamChecker)
         {
-            _spamChecker = spamChecker;
-            _platoUserStore = platoUserStore;
-            _deferredTaskManager = deferredTaskManager;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _notificationManager = notificationManager;
+            _deferredTaskManager = deferredTaskManager;
+            _clientIpAddress = clientIpAddress;
+            _platoUserStore = platoUserStore;
+            _spamChecker = spamChecker;
             _replyStore = replyStore;
         }
 
@@ -54,7 +58,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             }
 
             // Get user for reply
-            var user = await _platoUserStore.GetByIdAsync(context.Model.CreatedUserId);
+            var user = await BuildUserAsync(context.Model);
             if (user == null)
             {
                 return null;
@@ -97,8 +101,8 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
                 return result.Success(context.Model);
             }
 
-            // Get topic author
-            var user = await _platoUserStore.GetByIdAsync(context.Model.CreatedUserId);
+            // Get reply author
+            var user = await BuildUserAsync(context.Model);
             if (user == null)
             {
                 return null;
@@ -200,6 +204,23 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             return users?.Data;
 
         }
+        
+        async Task<User> BuildUserAsync(IEntityReply reply)
+        {
+
+            var user = await _platoUserStore.GetByIdAsync(reply.CreatedUserId);
+            if (user == null)
+            {
+                return null;
+            }
+
+            // Ensure we check against the IP address being used at the time of the post
+            user.IpV4Address = "77.218.241.112"; // _clientIpAddress.GetIpV4Address();
+            user.IpV6Address = _clientIpAddress.GetIpV6Address();
+            return user;
+
+        }
+
 
     }
 

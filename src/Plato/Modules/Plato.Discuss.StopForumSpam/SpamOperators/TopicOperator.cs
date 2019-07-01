@@ -13,7 +13,9 @@ using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 using Plato.Discuss.Models;
 using Plato.Discuss.StopForumSpam.NotificationTypes;
+using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Internal.Net.Abstractions;
 
 namespace Plato.Discuss.StopForumSpam.SpamOperators
 {
@@ -25,21 +27,23 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
         private readonly INotificationManager<Topic> _notificationManager;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IClientIpAddress _clientIpAddress;
         private readonly IEntityStore<Topic> _topicStore;
         private readonly ISpamChecker _spamChecker;
 
         public TopicOperator(
-
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<Topic> notificationManager,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
+            IClientIpAddress clientIpAddress,
             IEntityStore<Topic> topicStore,
             ISpamChecker spamChecker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
+            _clientIpAddress = clientIpAddress;
             _platoUserStore = platoUserStore;
             _spamChecker = spamChecker;
             _topicStore = topicStore;
@@ -54,8 +58,8 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
                 return null;
             }
 
-            // Get user for topic
-            var user = await _platoUserStore.GetByIdAsync(context.Model.CreatedUserId);
+            // Get user for entity
+            var user = await BuildUserAsync(context.Model);
             if (user == null)
             {
                 return null;
@@ -99,7 +103,7 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
             }
             
             // Get entity author
-            var user = await _platoUserStore.GetByIdAsync(context.Model.CreatedUserId);
+            var user = await BuildUserAsync(context.Model);
             if (user == null)
             {
                 return null;
@@ -202,8 +206,25 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
 
         }
 
+        async Task<User> BuildUserAsync(IEntity entity)
+        {
+
+            var user = await _platoUserStore.GetByIdAsync(entity.CreatedUserId);
+            if (user == null)
+            {
+                return null;
+            }
+
+            // Ensure we check against the IP address being used at the time of the post
+            user.IpV4Address = "77.218.241.112"; // _clientIpAddress.GetIpV4Address();
+            user.IpV6Address = _clientIpAddress.GetIpV6Address();
+            return user;
+
+        }
+
+
     }
-    
+
 }
 
 

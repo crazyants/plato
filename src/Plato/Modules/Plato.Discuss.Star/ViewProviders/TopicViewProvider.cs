@@ -15,25 +15,25 @@ namespace Plato.Discuss.Star.ViewProviders
     {
 
         private const string StarHtmlName = "star";
-        
-        private readonly IContextFacade _contextFacade;
-        private readonly IStarStore<Stars.Models.Star> _starStore;
+
         private readonly IStarManager<Stars.Models.Star> _starManager;
+        private readonly IStarStore<Stars.Models.Star> _starStore;
         private readonly IEntityStore<Topic> _entityStore;
+        private readonly IContextFacade _contextFacade;
         private readonly HttpRequest _request;
  
         public TopicViewProvider(
-            IContextFacade contextFacade,
+            IStarManager<Stars.Models.Star> starManager,
             IHttpContextAccessor httpContextAccessor,
             IStarStore<Stars.Models.Star> starStore,
             IEntityStore<Topic> entityStore,
-            IStarManager<Stars.Models.Star> starManager)
+            IContextFacade contextFacade)
         {
+            _request = httpContextAccessor.HttpContext.Request;
             _contextFacade = contextFacade;
-            _starStore = starStore;
             _entityStore = entityStore;
             _starManager = starManager;
-            _request = httpContextAccessor.HttpContext.Request;
+            _starStore = starStore;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(Topic entity, IViewProviderContext updater)
@@ -83,14 +83,14 @@ namespace Plato.Discuss.Star.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic model, IViewProviderContext updater)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(model.Id);
             if (entity == null)
             {
-                return await BuildEditAsync(topic, updater);
+                return await BuildEditAsync(model, updater);
             }
 
             // Get the follow checkbox value
@@ -112,7 +112,7 @@ namespace Plato.Discuss.Star.ViewProviders
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return await BuildEditAsync(topic, updater);
+                return await BuildEditAsync(model, updater);
             }
 
             // The follow type
@@ -149,7 +149,7 @@ namespace Plato.Discuss.Star.ViewProviders
                 }
             }
 
-            return await BuildEditAsync(topic, updater);
+            return await BuildEditAsync(model, updater);
 
         }
 
