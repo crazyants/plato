@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Categories.Follow.NotificationTypes;
@@ -13,33 +12,34 @@ using Plato.Internal.Notifications.Extensions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Entities.Extensions;
 
 namespace Plato.Discuss.Categories.Follow.Subscribers
 {
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-
-        private readonly IBroker _broker;
-        private readonly IDeferredTaskManager _deferredTaskManager;
+        
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IBroker _broker;
 
         public EntitySubscriber(
-            IBroker broker,
-            IDeferredTaskManager deferredTaskManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            IPlatoUserStore<User> platoUserStore)
+            IDeferredTaskManager deferredTaskManager,
+            IPlatoUserStore<User> platoUserStore,
+            IBroker broker)
         {
-            _broker = broker;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
-            _followStore = followStore;
-            _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _platoUserStore = platoUserStore;
+            _followStore = followStore;
+            _broker = broker;
         }
 
         #region "Implementation"
@@ -86,8 +86,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-            entity = await SendNotificationsForChannel(entity);
-            return await SendNotificationsForAllChannels(entity);
+            entity = await SendNotificationsForCategory(entity);
+            return await SendNotificationsForAllCategories(entity);
         }
 
         Task<TEntity> EntityUpdated(TEntity entity)
@@ -97,7 +97,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             return Task.FromResult(entity);
         }
 
-        Task<TEntity> SendNotificationsForChannel(TEntity entity)
+        Task<TEntity> SendNotificationsForCategory(TEntity entity)
         {
 
 
@@ -112,14 +112,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 return Task.FromResult(entity);
             }
 
-            // No need to send notifications for entities flagged as private
-            if (entity.IsHidden)
-            {
-                return Task.FromResult(entity);
-            }
-
-            // No need to send notifications for entities flagged as spam
-            if (entity.IsSpam)
+            // No need to send notifications for hidden entities
+            if (entity.IsHidden())
             {
                 return Task.FromResult(entity);
             }
@@ -200,7 +194,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
         }
 
-        Task<TEntity> SendNotificationsForAllChannels(TEntity entity)
+        Task<TEntity> SendNotificationsForAllCategories(TEntity entity)
         {
             
             if (entity == null)

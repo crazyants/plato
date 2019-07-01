@@ -67,8 +67,14 @@ namespace Plato.Discuss.StopForumSpam.SpamOperators
 
             // Create result
             var result = new SpamOperatorResult<Topic>();
+            
+            // Check if user is already flagged as SPAM within Plato
+            if (user.IsSpam)
+            {
+                return result.Failed(context.Model, context.Operation);
+            }
 
-            // User is OK
+            // Check StopForumSpam service
             var spamResult = await _spamChecker.CheckAsync(user);
             if (spamResult.Succeeded)
             {

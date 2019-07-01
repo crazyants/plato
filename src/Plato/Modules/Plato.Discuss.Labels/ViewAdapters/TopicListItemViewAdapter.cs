@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Models;
@@ -10,6 +11,7 @@ using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
+using Plato.Internal.Security.Abstractions;
 using Plato.Labels.Models;
 using Plato.Labels.Stores;
 using Label = Plato.Discuss.Labels.Models.Label;
@@ -26,6 +28,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityService<Topic> _entityService;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IAuthorizationService _authorizationService;
 
         public TopicListItemViewAdapter(
             ILabelStore<Label> labelStore,
@@ -33,7 +36,8 @@ namespace Plato.Discuss.Labels.ViewAdapters
             IEntityService<Topic> entityService, 
             IEntityLabelStore<EntityLabel> entityLabelStore,
             IHttpContextAccessor httpContextAccessor,
-            IActionContextAccessor actionContextAccessor)
+            IActionContextAccessor actionContextAccessor,
+            IAuthorizationService authorizationService)
         {
             _labelStore = labelStore;
             _featureFacade = featureFacade;
@@ -41,6 +45,7 @@ namespace Plato.Discuss.Labels.ViewAdapters
             _entityLabelStore = entityLabelStore;
             _httpContextAccessor = httpContextAccessor;
             _actionContextAccessor = actionContextAccessor;
+            _authorizationService = authorizationService;
         }
 
         public override async Task<IViewAdapterResult> ConfigureAsync()
@@ -137,9 +142,40 @@ namespace Plato.Discuss.Labels.ViewAdapters
             }
 
             // Get all entities for our current view
-            var entities = await _entityService.GetResultsAsync(
-                viewModel?.Options, 
-                viewModel?.Pager);
+            var entities = await _entityService
+                .ConfigureQuery(async q =>
+                {
+
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(_httpContextAccessor.HttpContext.User,
+                        Permissions.ViewPrivateTopics))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(_httpContextAccessor.HttpContext.User,
+                        Permissions.ViewHiddenTopics))
+                    {
+                        q.HideHidden.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(_httpContextAccessor.HttpContext.User,
+                        Permissions.ViewSpamTopics))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(_httpContextAccessor.HttpContext.User,
+                        Permissions.ViewDeletedTopics))
+                    {
+                        q.HideDeleted.True();
+                    }
+
+                })
+                .GetResultsAsync(viewModel?.Options, viewModel?.Pager);
 
             // Get all entity label relationships for displayed entities
             IPagedResults<EntityLabel> entityLabels = null;

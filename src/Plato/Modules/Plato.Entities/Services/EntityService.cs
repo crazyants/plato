@@ -44,7 +44,6 @@ namespace Plato.Entities.Services
             return this;
         }
         
-
         public async Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
@@ -106,26 +105,44 @@ namespace Plato.Entities.Services
                     // ----------------
 
                     if (options.FeatureId != null && options.FeatureId.Value > 0)
+                    {
                         q.FeatureId.Equals(options.FeatureId.Value);
+                    }
 
                     if (!string.IsNullOrEmpty(options.Search))
+                    {
                         q.Keywords.Like(options.Search);
-
-                    if (options.CategoryId >= 0)
-                        q.CategoryId.Equals(options.CategoryId);
-
+                    }
+                        
+                    // Multiple categories
                     if (options.CategoryIds != null)
+                    {
                         q.CategoryId.IsIn(options.CategoryIds);
+                    }
+                    else
+                    {
+                        // A single category
+                        if (options.CategoryId >= 0)
+                        {
+                            q.CategoryId.Equals(options.CategoryId);
+                        }
+                    }
 
                     if (options.LabelId > 0)
+                    {
                         q.LabelId.Equals(options.LabelId);
-
-                    if (options.TagId > 0)
-                        q.TagId.Equals(options.TagId);
-
-                    if (options.CreatedByUserId > 0)
-                        q.CreatedUserId.Equals(options.CreatedByUserId);
+                    }
                     
+                    if (options.TagId > 0)
+                    {
+                        q.TagId.Equals(options.TagId);
+                    }
+                    
+                    if (options.CreatedByUserId > 0)
+                    {
+                        q.CreatedUserId.Equals(options.CreatedByUserId);
+                    }
+                        
                     // ----------------
                     // Filters
                     // ----------------

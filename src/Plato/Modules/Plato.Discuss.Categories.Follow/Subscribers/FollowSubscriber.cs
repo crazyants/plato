@@ -7,27 +7,28 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 {
     public class FollowSubscriber : IBrokerSubscriber
     {
-
-        private readonly IBroker _broker;
+    
         private readonly IUserReputationAwarder _reputationAwarder;
+        private readonly IBroker _broker;
 
         public FollowSubscriber(
-            IBroker broker,
-            IUserReputationAwarder reputationAwarder)
+            IUserReputationAwarder reputationAwarder,
+            IBroker broker)
         {
-            _broker = broker;
             _reputationAwarder = reputationAwarder;
-
+            _broker = broker;
         }
 
         public void Subscribe()
         {
 
+            // Created
             _broker.Sub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
 
+            // Deleted
             _broker.Sub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowDeleted"
@@ -37,12 +38,13 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
         public void Unsubscribe()
         {
-            // Add a reputation for new follows
+            // Created
             _broker.Unsub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
 
+            // Deleted
             _broker.Unsub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowDeleted"

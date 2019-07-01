@@ -256,7 +256,7 @@ namespace Plato.Discuss.Controllers
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow,
-                IpV4Address = "77.218.241.112", // _clientIpAddress.GetIpV4Address(),
+                IpV4Address = _clientIpAddress.GetIpV4Address(),
                 IpV6Address = _clientIpAddress.GetIpV6Address()
             };
 
@@ -489,7 +489,7 @@ namespace Plato.Discuss.Controllers
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow,
-                IpV4Address = "77.218.241.112", // _clientIpAddress.GetIpV4Address(),
+                IpV4Address = _clientIpAddress.GetIpV4Address(),
                 IpV6Address = _clientIpAddress.GetIpV6Address()
             };
 

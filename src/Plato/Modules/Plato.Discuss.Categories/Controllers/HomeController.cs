@@ -41,21 +41,22 @@ namespace Plato.Discuss.Categories.Controllers
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
             IViewProviderManager<Category> channelViewProvider,
-            IBreadCrumbManager breadCrumbManager,
             ICategoryStore<Category> channelStore,
+            IBreadCrumbManager breadCrumbManager,
+            IPageTitleBuilder pageTitleBuilder,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade1, 
             IFeatureFacade featureFacade,
-            IAlerter alerter, IPageTitleBuilder pageTitleBuilder)
+            IAlerter alerter)
         {
       
             _channelViewProvider = channelViewProvider;
             _breadCrumbManager = breadCrumbManager;
+            _pageTitleBuilder = pageTitleBuilder;
             _contextFacade = contextFacade1;
             _featureFacade = featureFacade;
             _channelStore = channelStore;
             _alerter = alerter;
-            _pageTitleBuilder = pageTitleBuilder;
 
             T = localizer;
             S = stringLocalizer;

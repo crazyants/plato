@@ -10,7 +10,7 @@ namespace Plato.Discuss.Categories.Follow
         
         public static readonly FollowType Category =
             new FollowType(
-                "DiscussChannel",
+                "DiscussCategory",
                 "Follow Category",
                 "Follow this category to get notified when new topics are posted within this category",
                 "Unsubscribe",
@@ -18,8 +18,8 @@ namespace Plato.Discuss.Categories.Follow
         
         public static readonly FollowType AllCategories =
             new FollowType(
-                "DiscussAllChannels",
-                "Follow All Channels",
+                "DiscussAllCategories",
+                "Follow All Categories",
                 "Follow all categories to get notified when new topics are posted within any category",
                 "Unsubscribe",
                 "You are already following all categories, click to unsubscribe");

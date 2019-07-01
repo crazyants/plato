@@ -38,7 +38,7 @@ namespace Plato.Metrics.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "Url",
+                        Name = "[Url]",
                         Length = "255",
                         DbType = DbType.String
                     },
@@ -230,7 +230,7 @@ namespace Plato.Metrics.Handlers
                         },
                         new SchemaColumn()
                         {
-                            Name = "Url",
+                            Name = "[Url]",
                             DbType = DbType.String,
                             Length = "255"
                         },

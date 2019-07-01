@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Plato.Internal.Cache.Abstractions\Plato.Internal.Cache.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Net.Abstractions\Plato.Internal.Net.Abstractions.csproj" />
   </ItemGroup>

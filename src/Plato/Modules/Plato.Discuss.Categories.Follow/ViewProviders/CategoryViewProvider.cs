@@ -10,14 +10,14 @@ using Plato.Internal.Layout.ViewProviders;
 namespace Plato.Discuss.Categories.Follow.ViewProviders
 {
 
-    public class ChannelViewProvider : BaseViewProvider<Category>
+    public class CategoryViewProvider : BaseViewProvider<Category>
     {
 
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
 
-        public ChannelViewProvider(
+        public CategoryViewProvider(
             IContextFacade contextFacade,
             IFollowStore<Follows.Models.Follow> followStore,
             ICategoryStore<Category> categoryStore)

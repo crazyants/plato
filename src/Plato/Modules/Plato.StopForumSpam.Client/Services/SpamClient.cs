@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Net.Abstractions;
 using Plato.StopForumSpam.Client.Models;
 
@@ -16,10 +18,12 @@ namespace Plato.StopForumSpam.Client.Services
         public ClientOptions Options { get; private set; } = new ClientOptions();
 
         private readonly IHttpClient _httpClient;
-
-        public SpamClient(IHttpClient httpClient)
+        private readonly ICacheManager _cacheManager;
+        
+        public SpamClient(IHttpClient httpClient, ICacheManager cacheManager)
         {
             _httpClient = httpClient;
+            _cacheManager = cacheManager;
         }
 
         public void Configure(Action<ClientOptions> configure)
@@ -66,54 +70,75 @@ namespace Plato.StopForumSpam.Client.Services
         public async Task<Response> CheckAsync(string username, string emailAddress, IPAddress ipAddress)
         {
 
-            var parameters = new Dictionary<string, string>();
-            if (!string.IsNullOrWhiteSpace(username))
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), username, emailAddress, ipAddress);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-                parameters.Add("username", username);
-            }
+                
+                var parameters = new Dictionary<string, string>();
+                if (!string.IsNullOrWhiteSpace(username))
+                {
+                    parameters.Add("username", username);
+                }
 
-            if (!string.IsNullOrWhiteSpace(emailAddress))
-            {
-                parameters.Add("email", emailAddress);
-            }
+                if (!string.IsNullOrWhiteSpace(emailAddress))
+                {
+                    parameters.Add("email", emailAddress);
+                }
 
-            if (ipAddress != null)
-            {
-                parameters.Add("ip", ipAddress.ToString());
-            }
+                if (ipAddress != null)
+                {
+                    parameters.Add("ip", ipAddress.ToString());
+                }
 
-            return await this.CheckAsync(parameters);
+                return await this.CheckAsync(parameters);
+
+            });
+            
         }
 
         private async Task<Response> CheckAsync(object values)
         {
-            var parameters = new Dictionary<string, string>();
-            if (values != null)
-            {
-                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(values))
-                {
-                    parameters.Add(property.Name, property.GetValue(values)?.ToString());
-                }
-            }
 
-            return await CheckAsync(parameters);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), values);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+
+                var parameters = new Dictionary<string, string>();
+                if (values != null)
+                {
+                    foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(values))
+                    {
+                        parameters.Add(property.Name, property.GetValue(values)?.ToString());
+                    }
+                }
+
+                return await CheckAsync(parameters);
+                
+            });
+
         }
 
         private async Task<Response> CheckAsync(Dictionary<string, string> parameters)
         {
-            parameters.Add("f", ByFormat);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), parameters.Select(p => p.Value));
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+                parameters.Add("f", ByFormat);
 
-            var result = await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters);
-            if (result.Succeeded)
-            {
-                return Response.Parse(result.Response, ByFormat);
-            }
-            
-            // Return failure as no response was received
-            return new FailResponse(result.Response, ByFormat)
-            {
-                Error = result.Error
-            };
+                var result = await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters);
+                if (result.Succeeded)
+                {
+                    return Response.Parse(result.Response, ByFormat);
+                }
+
+                // Return failure as no response was received
+                return new FailResponse(result.Response, ByFormat)
+                {
+                    Error = result.Error
+                };
+
+            });
+
         }
 
         public async Task<Response> AddSpammerAsync(string username, string emailAddress, string ipAddress)
@@ -195,7 +220,13 @@ namespace Plato.StopForumSpam.Client.Services
             var result = await _httpClient.PostAsync(new Uri("http://www.stopforumspam.com/add.php"), parameters);
             if (result.Succeeded)
             {
+                
+                // Clear cache
+                _cacheManager.CancelTokens(this.GetType());
+
+                // Build parsed response
                 return Response.Parse(result.Response, ByFormat);
+
             }
              
             // Return failure as no response was received
