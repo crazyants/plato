@@ -108,8 +108,8 @@ namespace Plato.Docs
         public static readonly Permission ShowDocComments =
             new Permission("ShowDocComments", "Unhide comments");
         
-        public static readonly Permission ViewPrivateDocComments =
-            new Permission("ViewPrivateDocComments", "View hidden comments");
+        public static readonly Permission ViewHiddenDocComments =
+            new Permission("ViewHiddenDocComments", "View hidden comments");
 
         public static readonly Permission DocToSpam =
             new Permission("DocToSpam", "Move docs to SPAM");
@@ -167,7 +167,7 @@ namespace Plato.Docs
                 ViewPrivateDocs,
                 HideDocComments,
                 ShowDocComments,
-                ViewPrivateDocComments,
+                ViewHiddenDocComments,
                 DocToSpam,
                 DocFromSpam,
                 ViewSpamDocs,
@@ -220,7 +220,7 @@ namespace Plato.Docs
                         ViewPrivateDocs,
                         HideDocComments,
                         ShowDocComments,
-                        ViewPrivateDocComments,
+                        ViewHiddenDocComments,
                         DocToSpam,
                         DocFromSpam,
                         ViewSpamDocs,
@@ -279,7 +279,7 @@ namespace Plato.Docs
                         ViewPrivateDocs,
                         HideDocComments,
                         ShowDocComments,
-                        ViewPrivateDocComments,
+                        ViewHiddenDocComments,
                         DocToSpam,
                         DocFromSpam,
                         ViewSpamDocs,

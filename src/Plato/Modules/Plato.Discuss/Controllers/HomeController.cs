@@ -28,6 +28,8 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Net.Abstractions;
+using Plato.Entities.Extensions;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
@@ -256,7 +258,7 @@ namespace Plato.Discuss.Controllers
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow,
-                IpV4Address = _clientIpAddress.GetIpV4Address(),
+                IpV4Address = "77.218.241.112", // _clientIpAddress.GetIpV4Address(),
                 IpV6Address = _clientIpAddress.GetIpV6Address()
             };
 
@@ -282,17 +284,33 @@ namespace Plato.Discuss.Controllers
 
                     // Execute view providers ProvideUpdateAsync method
                     await _topicViewProvider.ProvideUpdateAsync(result.Response, this);
-
-                    // Everything was OK
-                    _alerter.Success(T["Topic Created Successfully!"]);
-
-                    // Redirect to entity
-                    return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                    
+                    // Get authorize result
+                    var authorizeResult = await AuthorizeAsync(result.Response);
+                    if (authorizeResult.Succeeded)
                     {
-                        ["opts.id"] = result.Response.Id,
-                        ["opts.alias"] = result.Response.Alias
-                    });
 
+                        // Everything was OK
+                        _alerter.Success(T["Topic Added Successfully!"]);
+
+                        // Redirect to entity
+                        return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                        {
+                            ["opts.id"] = result.Response.Id,
+                            ["opts.alias"] = result.Response.Alias
+                        });
+
+                    }
+
+                    // Add any authorization errors
+                    foreach (var error in authorizeResult.Errors)
+                    {
+                        _alerter.Success(T[error.Description]);
+                    }
+
+                    // Redirect to index
+                    return RedirectToAction(nameof(Index));
+                    
                 }
                 else
                 {
@@ -353,39 +371,14 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
-            // Ensure we have permission to view deleted entities
-            if (entity.IsDeleted)
+            // Ensure we have permission to view the entity
+            var authorizeResult = await AuthorizeAsync(entity);
+            if (!authorizeResult.Succeeded)
             {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
-                    Permissions.ViewDeletedTopics))
-                {
-                    // Return 401
-                    return Unauthorized();
-                }
+                // Return 401
+                return Unauthorized();
             }
-
-            // Ensure we have permission to view private entities
-            if (entity.IsHidden)
-            {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
-                    Permissions.ViewHiddenTopics))
-                {
-                    // Return 401
-                    return Unauthorized();
-                }
-            }
-
-            // Ensure we have permission to view spam entities
-            if (entity.IsSpam)
-            {
-                if (!await _authorizationService.AuthorizeAsync(this.User, entity.CategoryId,
-                    Permissions.ViewSpamTopics))
-                {
-                    // Return 401
-                    return Unauthorized();
-                }
-            }
-
+            
             // Ensure we have permission to view private entities
             if (entity.IsPrivate)
             {
@@ -489,7 +482,7 @@ namespace Plato.Discuss.Controllers
                 Message = model.Message,
                 CreatedUserId = user?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow,
-                IpV4Address = _clientIpAddress.GetIpV4Address(),
+                IpV4Address = "77.218.241.112", // _clientIpAddress.GetIpV4Address(),
                 IpV6Address = _clientIpAddress.GetIpV6Address()
             };
 
@@ -513,16 +506,36 @@ namespace Plato.Discuss.Controllers
 
                     // Execute view providers ProvideUpdateAsync method
                     await _replyViewProvider.ProvideUpdateAsync(result.Response, this);
+                    
+                    // Get authorization result
+                    var authorizeResult = await AuthorizeAsync(result.Response);
+                    if (authorizeResult.Succeeded)
+                    {
 
-                    // Everything was OK
-                    _alerter.Success(T["Reply Added Successfully!"]);
+                        // Everything was OK
+                        _alerter.Success(T["Reply Added Successfully!"]);
 
-                    // Redirect
-                    return RedirectToAction(nameof(Reply), new RouteValueDictionary()
+                        // Redirect to reply
+                        return RedirectToAction(nameof(Reply), new RouteValueDictionary()
+                        {
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias,
+                            ["opts.replyId"] = result.Response.Id
+                        });
+                        
+                    }
+
+                    // Add authorization errors
+                    foreach (var error in authorizeResult.Errors)
+                    {
+                        _alerter.Success(T[error.Description]);
+                    }
+
+                    // Redirect to entity
+                    return RedirectToAction(nameof(Display), new RouteValueDictionary()
                     {
                         ["opts.id"] = entity.Id,
-                        ["opts.alias"] = entity.Alias,
-                        ["opts.replyId"] = result.Response.Id
+                        ["opts.alias"] = entity.Alias
                     });
 
                 }
@@ -2071,6 +2084,101 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Private Methods"
+
+        async Task<ICommandResultBase> AuthorizeAsync(IEntity entity)
+        {
+
+            // Our result
+            var result = new CommandResultBase();
+
+            // Generic error message
+            const string error = "Topic added but pending approval";
+         
+            // IsHidden
+            if (entity.IsHidden)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewHiddenTopics))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsSpam
+            if (entity.IsSpam)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewSpamTopics))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsDeleted
+            if (entity.IsDeleted)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewDeletedTopics))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            return result.Success();
+
+        }
+        
+        async Task<ICommandResultBase> AuthorizeAsync(IEntityReply reply)
+        {
+
+            // Our result
+            var result = new CommandResultBase();
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure entity exists
+            if (entity == null)
+            {
+                return result.Failed("The topic has since been deleted!");
+            }
+
+            // Generic failure message
+            const string error = "Reply added but pending approval";
+
+            // IsHidden
+            if (reply.IsHidden)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewHiddenReplies))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsSpam
+            if (reply.IsSpam)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewSpamReplies))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsDeleted
+            if (reply.IsDeleted)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewDeletedReplies))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            return result.Success();
+
+        }
 
         async Task<EntityIndexViewModel<Topic>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
         {

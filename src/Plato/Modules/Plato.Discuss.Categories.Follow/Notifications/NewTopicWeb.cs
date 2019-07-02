@@ -7,7 +7,6 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Categories.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
@@ -59,7 +58,7 @@ namespace Plato.Discuss.Categories.Follow.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = context.Model.Title,
-                Message = S["A topic has been posted within a channel your following"],
+                Message = S["A topic has been posted within a category your following"],
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {

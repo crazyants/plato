@@ -102,8 +102,8 @@ namespace Plato.Articles
         public static readonly Permission ShowArticleComments =
             new Permission("ShowArticleComments", "Unhide comments");
         
-        public static readonly Permission ViewPrivateArticleComments =
-            new Permission("ViewPrivateArticleComments", "View hidden comments");
+        public static readonly Permission ViewHiddenArticleComments =
+            new Permission("ViewHiddenArticleComments", "View hidden comments");
 
         public static readonly Permission ArticleToSpam =
             new Permission("ArticleToSpam", "Move articles to SPAM");
@@ -159,7 +159,7 @@ namespace Plato.Articles
                 ViewPrivateArticles,
                 HideArticleComments,
                 ShowArticleComments,
-                ViewPrivateArticleComments,
+                ViewHiddenArticleComments,
                 ArticleToSpam,
                 ArticleFromSpam,
                 ViewSpamArticles,
@@ -210,7 +210,7 @@ namespace Plato.Articles
                         ViewPrivateArticles,
                         HideArticleComments,
                         ShowArticleComments,
-                        ViewPrivateArticleComments,
+                        ViewHiddenArticleComments,
                         ArticleToSpam,
                         ArticleFromSpam,
                         ViewSpamArticles,
@@ -260,7 +260,7 @@ namespace Plato.Articles
                         ViewPrivateArticles,
                         HideArticleComments,
                         ShowArticleComments,
-                        ViewPrivateArticleComments,
+                        ViewHiddenArticleComments,
                         ArticleToSpam,
                         ArticleFromSpam,
                         ViewSpamArticles,

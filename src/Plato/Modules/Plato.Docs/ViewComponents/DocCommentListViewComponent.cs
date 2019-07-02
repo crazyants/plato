@@ -68,7 +68,7 @@ namespace Plato.Docs.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateDocComments))
+                        Permissions.ViewHiddenDocComments))
                     {
                         q.HideHidden.True();
                     }

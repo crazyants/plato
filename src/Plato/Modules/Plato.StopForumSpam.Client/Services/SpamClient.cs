@@ -111,11 +111,13 @@ namespace Plato.StopForumSpam.Client.Services
         async Task<Response> CheckAsync(IDictionary<string, string> parameters)
         {
 
+            // We always need params
             if (parameters == null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
 
+            // Ensure format is specified
             if (!parameters.ContainsKey("f"))
             {
                 parameters.Add("f", ByFormat);
@@ -128,6 +130,7 @@ namespace Plato.StopForumSpam.Client.Services
                 sb.Append(p.Value).Append(",");
             }
 
+            // Store result in cache for a short period of time to avoid multiple http requests
             var token = _cacheManager.GetOrCreateToken(this.GetType(), sb.ToString().TrimEnd(','));
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry, options) =>
             {
@@ -135,6 +138,7 @@ namespace Plato.StopForumSpam.Client.Services
                 // Keep in cache for this time, reset time if accessed.
                 options.SetSlidingExpiration(TimeSpan.FromMinutes(1));
              
+                // Make request
                 var result = await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters);
                 if (result.Succeeded)
                 {

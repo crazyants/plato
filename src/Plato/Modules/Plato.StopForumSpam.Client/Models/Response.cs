@@ -61,7 +61,6 @@ namespace Plato.StopForumSpam.Client.Models
                 {
 
                     // Failed to add spammer
-
                     return new FailResponse(reply, format)
                     {
                         Error = (string)obj.SelectToken("error"),

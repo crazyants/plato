@@ -16,17 +16,17 @@ namespace Plato.Articles.ViewComponents
     {
         
         private readonly IEntityReplyService<Comment> _replyService;
-        private readonly IEntityStore<Article> _entityStore;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IEntityStore<Article> _entityStore;
 
         public GetArticleCommentListViewComponent(
+            IAuthorizationService authorizationService,
             IEntityReplyService<Comment> replyService,
-            IEntityStore<Article> entityStore,
-            IAuthorizationService authorizationService)
+            IEntityStore<Article> entityStore)
         {
+            _authorizationService = authorizationService;
             _replyService = replyService;
             _entityStore = entityStore;
-            _authorizationService = authorizationService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(EntityOptions options, PagerOptions pager)
@@ -61,7 +61,7 @@ namespace Plato.Articles.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateArticleComments))
+                        Permissions.ViewHiddenArticleComments))
                     {
                         q.HideHidden.True();
                     }
