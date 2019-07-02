@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Net.Abstractions;
 using Plato.StopForumSpam.Client.Models;
@@ -66,65 +68,73 @@ namespace Plato.StopForumSpam.Client.Services
 
             return await this.CheckAsync(username, emailAddress, address);
         }
-
-        public async Task<Response> CheckAsync(string username, string emailAddress, IPAddress ipAddress)
-        {
-
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), username, emailAddress, ipAddress);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-                
-                var parameters = new Dictionary<string, string>();
-                if (!string.IsNullOrWhiteSpace(username))
-                {
-                    parameters.Add("username", username);
-                }
-
-                if (!string.IsNullOrWhiteSpace(emailAddress))
-                {
-                    parameters.Add("email", emailAddress);
-                }
-
-                if (ipAddress != null)
-                {
-                    parameters.Add("ip", ipAddress.ToString());
-                }
-
-                return await this.CheckAsync(parameters);
-
-            });
-            
-        }
-
+        
         private async Task<Response> CheckAsync(object values)
         {
 
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), values);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            var parameters = new Dictionary<string, string>();
+            if (values != null)
             {
-
-                var parameters = new Dictionary<string, string>();
-                if (values != null)
+                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(values))
                 {
-                    foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(values))
-                    {
-                        parameters.Add(property.Name, property.GetValue(values)?.ToString());
-                    }
+                    parameters.Add(property.Name, property.GetValue(values)?.ToString());
                 }
+            }
 
-                return await CheckAsync(parameters);
-                
-            });
+            return await CheckAsync(parameters);
 
         }
 
-        private async Task<Response> CheckAsync(Dictionary<string, string> parameters)
+        public async Task<Response> CheckAsync(string username, string emailAddress, IPAddress ipAddress)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), parameters.Select(p => p.Value));
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            
+            var parameters = new Dictionary<string, string>();
+            if (!string.IsNullOrWhiteSpace(username))
+            {
+                parameters.Add("username", username);
+            }
+
+            if (!string.IsNullOrWhiteSpace(emailAddress))
+            {
+                parameters.Add("email", emailAddress);
+            }
+
+            if (ipAddress != null)
+            {
+                parameters.Add("ip", ipAddress.ToString());
+            }
+
+            return await this.CheckAsync(parameters);
+            
+        }
+
+        async Task<Response> CheckAsync(IDictionary<string, string> parameters)
+        {
+
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            if (!parameters.ContainsKey("f"))
             {
                 parameters.Add("f", ByFormat);
+            }
+            
+            // Avoiding LINQ here intentionally
+            var sb = new StringBuilder();
+            foreach (var p in parameters)
+            {
+                sb.Append(p.Value).Append(",");
+            }
 
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), sb.ToString().TrimEnd(','));
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry, options) =>
+            {
+
+                // Keep in cache for this time, reset time if accessed.
+                options.SetSlidingExpiration(TimeSpan.FromMinutes(1));
+             
                 var result = await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters);
                 if (result.Succeeded)
                 {

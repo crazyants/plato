@@ -33,6 +33,7 @@ namespace Plato.Internal.Cache
         public async Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, Task<TItem>> factory)
         {
 
+
             var key = token.ToString();
 
             // Item does not exist in cache
@@ -42,12 +43,12 @@ namespace Plato.Internal.Cache
                 // Create ICacheEntry
                 var entry = _memoryCache.CreateEntry(key);
              
-                // Invoke our func delegate
+                   // Invoke our delegate
                 obj = (object) await factory(entry);
 
                 // Set expiration tokens
                 entry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
-          
+                
                 entry.SetValue(obj);
                 entry.Dispose();
             
@@ -65,13 +66,58 @@ namespace Plato.Internal.Cache
             return (TItem)obj;
 
         }
-        
+
+        public async Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, MemoryCacheEntryOptions, Task<TItem>> factory)
+        {
+
+            var key = token.ToString();
+
+            // Item does not exist in cache
+            if (!_memoryCache.TryGetValue(key, out var obj))
+            {
+
+                // Create ICacheEntry
+                var entry = _memoryCache.CreateEntry(key);
+                var options = new MemoryCacheEntryOptions();
+
+                // Invoke our delegate
+                obj = (object) await factory(entry, options);
+
+                // Set expiration tokens
+                entry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
+
+                entry.SetOptions(options);
+                entry.SetValue(obj);
+                entry.Dispose();
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    var type = obj != null
+                        ? ((TItem)obj).GetType()
+                        : typeof(TItem);
+                    _logger.LogInformation("Added entry to cache of type {0} with key: {1}",
+                        type.Name, key);
+                }
+
+            }
+
+            return (TItem)obj;
+        }
+
         public CacheToken GetOrCreateToken(Type type, params object[] varyBy)
         {
             var cacheToken = new CacheToken(type, varyBy);
             if (Tokens.ContainsKey(cacheToken))
             {
-                return Tokens.FirstOrDefault(t => t.Key == cacheToken).Key;
+                // Equivalent to .First(t => t.Key == cacheToken).Key
+                // LINQ is avoided for performance / allocation reasons
+                foreach (var t in Tokens)
+                {
+                    if (t.Key == cacheToken)
+                    {
+                        return t.Key;
+                    }
+                }
             }
 
             Tokens.TryAdd(cacheToken, type);
@@ -97,7 +143,6 @@ namespace Plato.Internal.Cache
                 {
                     CancelToken(token);
                 }
-                
             }
         }
 
