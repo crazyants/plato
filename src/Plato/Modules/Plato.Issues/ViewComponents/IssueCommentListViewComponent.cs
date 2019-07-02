@@ -68,7 +68,7 @@ namespace Plato.Issues.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateIssueComments))
+                        Permissions.ViewHiddenIssueComments))
                     {
                         q.HideHidden.True();
                     }

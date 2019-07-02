@@ -14,6 +14,7 @@ using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
@@ -2183,6 +2184,102 @@ namespace Plato.Issues.Controllers
 
         #region "Private Methods"
 
+
+        async Task<ICommandResultBase> AuthorizeAsync(IEntity entity)
+        {
+
+            // Our result
+            var result = new CommandResultBase();
+
+            // Generic error message
+            const string error = "Issue added but pending approval";
+
+            // IsHidden
+            if (entity.IsHidden)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewHiddenIssues))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsSpam
+            if (entity.IsSpam)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewSpamIssues))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsDeleted
+            if (entity.IsDeleted)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewDeletedIssues))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            return result.Success();
+
+        }
+
+        async Task<ICommandResultBase> AuthorizeAsync(IEntityReply reply)
+        {
+
+            // Our result
+            var result = new CommandResultBase();
+
+            // Get entity
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure entity exists
+            if (entity == null)
+            {
+                return result.Failed("The issue has since been deleted!");
+            }
+
+            // Generic failure message
+            const string error = "Comment added but pending approval";
+
+            // IsHidden
+            if (reply.IsHidden)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewHiddenIssueComments))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsSpam
+            if (reply.IsSpam)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewSpamIssueComments))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            // IsDeleted
+            if (reply.IsDeleted)
+            {
+                if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                    entity.CategoryId, Permissions.ViewDeletedIssueComments))
+                {
+                    return result.Failed(error);
+                }
+            }
+
+            return result.Success();
+
+        }
+        
         async Task<EntityIndexViewModel<Issue>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
@@ -2212,8 +2309,7 @@ namespace Plato.Issues.Controllers
             };
 
         }
-
-
+        
         EntityViewModel<Issue, Comment> GetDisplayViewModel(Issue entity, EntityOptions options, PagerOptions pager)
         {
 

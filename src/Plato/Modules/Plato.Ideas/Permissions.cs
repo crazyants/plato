@@ -64,8 +64,8 @@ namespace Plato.Ideas
         public static readonly Permission PermanentDeleteAnyIdeaComment =
             new Permission("PermanentDeleteAnyIdeaComment", "Permanently delete any comment");
 
-        public static readonly Permission ViewDeletedIdeaComment =
-            new Permission("ViewDeletedIdeaComment", "View soft deleted comments");
+        public static readonly Permission ViewDeletedIdeaComments =
+            new Permission("ViewDeletedIdeaComments", "View soft deleted comments");
 
         public static readonly Permission ReportIdeas =
             new Permission("ReportIdeas", "Report ideas");
@@ -103,8 +103,8 @@ namespace Plato.Ideas
         public static readonly Permission ShowIdeaComments =
             new Permission("ShowIdeaComments", "Unhide comments");
 
-        public static readonly Permission ViewPrivateIdeaComments =
-            new Permission("ViewPrivateIdeaComments", "View hidden comments");
+        public static readonly Permission ViewHiddenIdeaComments =
+            new Permission("ViewHiddenIdeaComments", "View hidden comments");
 
         public static readonly Permission IdeaToSpam =
             new Permission("IdeaToSpam", "Move ideas to SPAM");
@@ -147,7 +147,7 @@ namespace Plato.Ideas
                 DeleteAnyIdeaComment,
                 RestoreAnyIdeaComment,
                 PermanentDeleteAnyIdeaComment,
-                ViewDeletedIdeaComment,
+                ViewDeletedIdeaComments,
                 ReportIdeas,
                 ReportIdeaComments,
                 PinIdeas,
@@ -160,7 +160,7 @@ namespace Plato.Ideas
                 ViewPrivateIdeas,
                 HideIdeaComments,
                 ShowIdeaComments,
-                ViewPrivateIdeaComments,
+                ViewHiddenIdeaComments,
                 IdeaToSpam,
                 IdeaFromSpam,
                 ViewSpamIdeas,
@@ -198,7 +198,7 @@ namespace Plato.Ideas
                         DeleteAnyIdeaComment,
                         RestoreAnyIdeaComment,
                         PermanentDeleteAnyIdeaComment,
-                        ViewDeletedIdeaComment,
+                        ViewDeletedIdeaComments,
                         ReportIdeas,
                         ReportIdeaComments,
                         PinIdeas,
@@ -211,7 +211,7 @@ namespace Plato.Ideas
                         ViewPrivateIdeas,
                         HideIdeaComments,
                         ShowIdeaComments,
-                        ViewPrivateIdeaComments,
+                        ViewHiddenIdeaComments,
                         IdeaToSpam,
                         IdeaFromSpam,
                         ViewSpamIdeas,
@@ -259,7 +259,7 @@ namespace Plato.Ideas
                         DeleteAnyIdeaComment,
                         RestoreAnyIdeaComment,
                         PermanentDeleteAnyIdeaComment,
-                        ViewDeletedIdeaComment,
+                        ViewDeletedIdeaComments,
                         ReportIdeas,
                         ReportIdeaComments,
                         PinIdeas,
@@ -272,7 +272,7 @@ namespace Plato.Ideas
                         ViewPrivateIdeas,
                         HideIdeaComments,
                         ShowIdeaComments,
-                        ViewPrivateIdeaComments,
+                        ViewHiddenIdeaComments,
                         IdeaToSpam,
                         IdeaFromSpam,
                         ViewSpamIdeas,

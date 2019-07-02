@@ -68,7 +68,7 @@ namespace Plato.Ideas.ViewComponents
 
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewPrivateIdeaComments))
+                        Permissions.ViewHiddenIdeaComments))
                     {
                         q.HideHidden.True();
                     }
@@ -82,7 +82,7 @@ namespace Plato.Ideas.ViewComponents
 
                     // Hide deleted?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                        Permissions.ViewDeletedIdeaComment))
+                        Permissions.ViewDeletedIdeaComments))
                     {
                         q.HideDeleted.True();
                     }
