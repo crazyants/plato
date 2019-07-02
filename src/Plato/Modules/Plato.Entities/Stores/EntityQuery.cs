@@ -101,10 +101,7 @@ namespace Plato.Entities.Stores
         private WhereInt _totalReactions;
         private WhereInt _totalFollows;
         private WhereInt _totalStars;
-
-
-
-
+        
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -773,7 +770,6 @@ namespace Plato.Entities.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.HidePrivate.Operator);
-
                 if (_query.Params.UserId.Value > 0)
                 {
                     sb.Append("(")

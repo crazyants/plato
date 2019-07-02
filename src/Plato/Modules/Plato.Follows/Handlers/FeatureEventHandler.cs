@@ -54,6 +54,7 @@ namespace Plato.Follows.Handlers
                 }
         };
         
+
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly ISchemaManager _schemaManager;
 
@@ -80,9 +81,9 @@ namespace Plato.Follows.Handlers
                 // configure
                 Configure(builder);
 
-                // Entity follows
+                // Follows
                 Follows(builder);
-                
+
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -273,7 +274,7 @@ namespace Plato.Follows.Handlers
         }
 
         #endregion
-        
+
     }
 
 }

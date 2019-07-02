@@ -7,7 +7,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Follows.Models
 {
-    public class Follow : IDbModel<Follow>
+    public class Follow : IDbModel
     {
 
         public int Id { get; set; }

@@ -17,6 +17,7 @@ namespace Plato.Follows
 {
     public class Startup : StartupBase
     {
+
         private readonly IShellSettings _shellSettings;
 
         public Startup(IShellSettings shellSettings)
@@ -43,7 +44,7 @@ namespace Plato.Follows
             // Follow type providers
             services.AddScoped<IFollowTypeProvider, DefaultFollowTypes>();
 
-            // Follow manager
+            // Follow managers
             services.AddScoped<IFollowManager<Follow>, FollowManager>();
             
         }

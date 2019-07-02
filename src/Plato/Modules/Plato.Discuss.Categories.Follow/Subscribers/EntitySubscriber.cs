@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Categories.Follow.NotificationTypes;
+using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
 using Plato.Internal.Messaging.Abstractions;
@@ -13,6 +14,9 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Entities.Extensions;
+using Plato.Entities.Stores;
+using Plato.Follows.Models;
+using Plato.Follows.Services;
 
 namespace Plato.Discuss.Categories.Follow.Subscribers
 {
@@ -24,6 +28,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IEntityStore<TEntity> _entityStore;
         private readonly IBroker _broker;
 
         public EntitySubscriber(
@@ -32,6 +37,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             IFollowStore<Follows.Models.Follow> followStore,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
+            IEntityStore<TEntity> entityStore,
             IBroker broker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -39,6 +45,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             _notificationManager = notificationManager;
             _platoUserStore = platoUserStore;
             _followStore = followStore;
+            _entityStore = entityStore;
             _broker = broker;
         }
 
@@ -90,16 +97,14 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             return await SendNotificationsForAllCategories(entity);
         }
 
-        Task<TEntity> EntityUpdated(TEntity entity)
+        async Task<TEntity> EntityUpdated(TEntity entity)
         {
-            // Category notifications are not triggered for entity updates
-            // This could possibly be implemented at a later stage
-            return Task.FromResult(entity);
+            entity = await SendNotificationsForCategory(entity);
+            return await SendNotificationsForAllCategories(entity);
         }
 
         Task<TEntity> SendNotificationsForCategory(TEntity entity)
         {
-
 
             if (entity == null)
             {
@@ -121,8 +126,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.AddTask(async context =>
             {
-
-                // Get all follows for channel
+               
+               // Get all follows for category the entity was posted to
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
@@ -130,9 +135,20 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                         q.Name.Equals(FollowTypes.Category.Name);
                     })
                     .ToList();
-
+                
                 // No follows simply return
                 if (follows?.Data == null)
+                {
+                    return;
+                }
+
+                // Get follow state for entity
+                var state = entity.GetOrCreate<FollowState>();
+
+                // Have category notifications already been sent for the entity?
+                var follow = state.FollowsSent.FirstOrDefault(f =>
+                    f.Name.Equals(FollowTypes.Category.Name, StringComparison.InvariantCultureIgnoreCase));
+                if (follow != null && follow.Sent)
                 {
                     return;
                 }
@@ -188,6 +204,13 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
                 }
 
+                // Update state
+                state.AddSent(FollowTypes.Category.Name);
+                entity.AddOrUpdate(state);
+
+                // Persist state
+                await _entityStore.UpdateAsync(entity);
+                
             });
 
             return Task.FromResult(entity);
@@ -202,14 +225,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 throw new ArgumentNullException(nameof(entity));
             }
             
-            // No need to send notifications for entities flagged as private
-            if (entity.IsHidden)
-            {
-                return Task.FromResult(entity);
-            }
-
-            // No need to send notifications for entities flagged as spam
-            if (entity.IsSpam)
+            // No need to send notifications for hidden entities
+            if (entity.IsHidden())
             {
                 return Task.FromResult(entity);
             }
@@ -231,6 +248,17 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 {
                     return;
                 }
+               
+                // Get follow state for entity
+                var state = entity.GetOrCreate<FollowState>();
+
+                // Have category notifications already been sent for the entity?
+                var follow = state.FollowsSent.FirstOrDefault(f =>
+                    f.Name.Equals(FollowTypes.AllCategories.Name, StringComparison.InvariantCultureIgnoreCase));
+                if (follow != null && follow.Sent)
+                {
+                    return;
+                }
                 
                 // Get a collection of all users to notify
                 // Exclude the author so they are not notified of there own posts
@@ -250,7 +278,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                     return;
                 }
                 
-                // Send mention notifications
+                // Send notifications
                 foreach (var user in users.Data)
                 {
 
@@ -282,6 +310,13 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                     }
 
                 }
+
+                // Update state
+                state.AddSent(FollowTypes.AllCategories.Name);
+                entity.AddOrUpdate(state);
+
+                // Persist state
+                await _entityStore.UpdateAsync(entity);
 
             });
 
