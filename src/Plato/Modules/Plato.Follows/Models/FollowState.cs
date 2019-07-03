@@ -6,7 +6,7 @@ namespace Plato.Follows.Models
     
     public class FollowState : Serializable
     {
-        public ICollection<FollowSent> FollowsSent { get; set; }
+        public ICollection<FollowSent> FollowsSent { get; }
         
         public FollowState()
         {
@@ -15,7 +15,7 @@ namespace Plato.Follows.Models
 
         public void AddSent(string name)
         {
-            FollowsSent.Add(new FollowSent(name, true));
+            FollowsSent.Add(new FollowSent(name));
         }
 
     }
@@ -23,13 +23,10 @@ namespace Plato.Follows.Models
     public class FollowSent
     {
         public string Name { get; set; }
-
-        public bool Sent { get; set; }
-
-        public FollowSent(string name, bool sent)
+        
+        public FollowSent(string name)
         {
             Name = name;
-            Sent = sent;
         }
 
     }

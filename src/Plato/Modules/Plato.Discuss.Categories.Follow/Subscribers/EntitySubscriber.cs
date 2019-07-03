@@ -148,7 +148,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 // Have category notifications already been sent for the entity?
                 var follow = state.FollowsSent.FirstOrDefault(f =>
                     f.Name.Equals(FollowTypes.Category.Name, StringComparison.InvariantCultureIgnoreCase));
-                if (follow != null && follow.Sent)
+                if (follow != null)
                 {
                     return;
                 }
@@ -255,7 +255,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 // Have category notifications already been sent for the entity?
                 var follow = state.FollowsSent.FirstOrDefault(f =>
                     f.Name.Equals(FollowTypes.AllCategories.Name, StringComparison.InvariantCultureIgnoreCase));
-                if (follow != null && follow.Sent)
+                if (follow != null)
                 {
                     return;
                 }
