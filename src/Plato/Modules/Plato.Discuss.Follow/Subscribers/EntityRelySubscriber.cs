@@ -224,7 +224,7 @@ namespace Plato.Discuss.Follow.Subscribers
 
                 }
 
-                // Update state
+                // Update sent state
                 state.AddSent(name);
                 reply.AddOrUpdate(state);
 
