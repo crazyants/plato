@@ -10,8 +10,8 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
     {
         
         public static readonly EmailNotification NewTag =
-            new EmailNotification("NewTagEmail",
-                "New Tags", 
+            new EmailNotification("NewTopicTagEmail",
+                "New Topic Tags", 
                 "Send me an email notification  for each new post associated with a tag I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

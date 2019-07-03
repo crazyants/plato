@@ -10,7 +10,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Entities.Repositories
 {
     
-    public class EntityDataRepository : IEntityDataRepository<IEntityData>
+    public class EntityReplyDataRepository : IEntityReplyDataRepository<IEntityReplyData>
     {
 
         #region Private Variables"
@@ -22,7 +22,7 @@ namespace Plato.Entities.Repositories
 
         #region "Constructor"
 
-        public EntityDataRepository(
+        public EntityReplyDataRepository(
             IDbContext dbContext,
             ILogger<EntityDataRepository> logger)
         {
@@ -34,27 +34,27 @@ namespace Plato.Entities.Repositories
 
         #region "Implementation"
 
-        public async Task<IEntityData> SelectByIdAsync(int id)
+        public async Task<IEntityReplyData> SelectByIdAsync(int id)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Selecting entity data with id: {id}");
+                _logger.LogInformation($"Selecting entity reply data with id: {id}");
             }
                 
-            EntityData data = null;
+            EntityReplyData data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<EntityData>(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityDatumById",
+                    "SelectEntityReplyDatumById",
                     async reader =>
                     {
                         if (reader != null)
                         {
                             if (reader.HasRows)
                             {
-                                data = new EntityData();
+                                data = new EntityReplyData();
                                 await reader.ReadAsync();
                                 data.PopulateModel(reader);
                             }
@@ -73,25 +73,25 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<IEnumerable<IEntityData>> SelectByEntityIdAsync(int entityId)
+        public async Task<IEnumerable<IEntityReplyData>> SelectByReplyIdAsync(int entityId)
         {
             
-            IList<EntityData> data = null;
+            IList<EntityReplyData> data = null;
             using (var context = _dbContext)
             {
-                data = await context.ExecuteReaderAsync<IList<EntityData>>(
+                data = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityDatumByEntityId",
+                    "SelectEntityReplyDatumByReplyId",
                     async reader =>
                     {
                         if (reader != null)
                         {
                             if (reader.HasRows)
                             {
-                                data = new List<EntityData>();
+                                data = new List<EntityReplyData>();
                                 while (await reader.ReadAsync())
                                 {
-                                    var entityData = new EntityData();
+                                    var entityData = new EntityReplyData();
                                     entityData.PopulateModel(reader);
                                     data.Add(entityData);
                                 }
@@ -102,7 +102,7 @@ namespace Plato.Entities.Repositories
 
                     }, new IDbDataParameter[]
                     {
-                        new DbParam("EntityId", DbType.Int32, entityId)
+                        new DbParam("ReplyId", DbType.Int32, entityId)
                     });
 
             }
@@ -110,11 +110,11 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<IEntityData> InsertUpdateAsync(IEntityData data)
+        public async Task<IEntityReplyData> InsertUpdateAsync(IEntityReplyData data)
         {
             var id = await InsertUpdateInternal(
                 data.Id,
-                data.EntityId,
+                data.ReplyId,
                 data.Key,
                 data.Value,
                 data.CreatedDate,
@@ -142,7 +142,7 @@ namespace Plato.Entities.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityDatumById",
+                    "DeleteEntityReplyDatumById",
                     new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
@@ -153,22 +153,22 @@ namespace Plato.Entities.Repositories
 
         }
     
-        public async Task<IPagedResults<IEntityData>> SelectAsync(IDbDataParameter[] dbParams)
+        public async Task<IPagedResults<IEntityReplyData>> SelectAsync(IDbDataParameter[] dbParams)
         {
-            IPagedResults<IEntityData> results = null;
+            IPagedResults<IEntityReplyData> results = null;
             using (var context = _dbContext)
             {
-                results = await context.ExecuteReaderAsync<PagedResults<IEntityData>>(
+                results = await context.ExecuteReaderAsync<PagedResults<IEntityReplyData>>(
                     CommandType.StoredProcedure,
-                    "SelectEntityDatumPaged",
+                    "SelectEntityReplyDatumPaged",
                     async reader =>
                     {
                         if ((reader != null) && (reader.HasRows))
                         {
-                            var output = new PagedResults<IEntityData>();
+                            var output = new PagedResults<IEntityReplyData>();
                             while (await reader.ReadAsync())
                             {
-                                var data = new EntityData();
+                                var data = new EntityReplyData();
                                 data.PopulateModel(reader);
                                 output.Data.Add(data);
                             }
@@ -198,7 +198,7 @@ namespace Plato.Entities.Repositories
 
         private async Task<int> InsertUpdateInternal(
             int id,
-            int entityId,
+            int replyId,
             string key,
             string value,
             DateTimeOffset? createdDate,
@@ -210,8 +210,8 @@ namespace Plato.Entities.Repositories
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation(id == 0
-                    ? $"Inserting entity data with key: {key}"
-                    : $"Updating entity data with id: {id}");
+                    ? $"Inserting entity reply data with key: {key}"
+                    : $"Updating entity reply data with id: {id}");
             }
             
             var output = 0;
@@ -221,11 +221,11 @@ namespace Plato.Entities.Repositories
                     return 0;
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateEntityDatum",
+                    "InsertUpdateEntityReplyDatum",
                     new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
-                        new DbParam("EntityId", DbType.Int32, entityId),
+                        new DbParam("ReplyId", DbType.Int32, replyId),
                         new DbParam("Key", DbType.String, 255, key),
                         new DbParam("Value", DbType.String, value),
                         new DbParam("CreatedDate", DbType.DateTimeOffset, createdDate.ToDateIfNull()),

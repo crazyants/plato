@@ -27,7 +27,6 @@ namespace Plato.Internal.Security
             IOptions<IdentityOptions> optionsAccessor) :
             base(userManager, optionsAccessor)
         {
-      
         }
 
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(TUser user)

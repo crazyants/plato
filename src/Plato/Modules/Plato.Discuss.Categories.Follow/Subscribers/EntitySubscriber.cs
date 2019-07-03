@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.Extensions.Options;
 using Plato.Discuss.Categories.Follow.NotificationTypes;
-using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
 using Plato.Internal.Messaging.Abstractions;
@@ -23,7 +17,6 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Entities.Extensions;
 using Plato.Entities.Stores;
 using Plato.Follows.Models;
-using Plato.Follows.Services;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Categories.Follow.Subscribers
@@ -43,24 +36,24 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
         public EntitySubscriber(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
             IAuthorizationService authorizationService,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<TEntity> entityStore,
-            IBroker broker,
-            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory)
+            IBroker broker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
+            _authorizationService = authorizationService;
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
             _platoUserStore = platoUserStore;
             _followStore = followStore;
             _entityStore = entityStore;
             _broker = broker;
-            _claimsPrincipalFactory = claimsPrincipalFactory;
-            _authorizationService = authorizationService;
         }
 
         #region "Implementation"
@@ -226,7 +219,13 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-           
+
+            // We don't need to trigger notifications for hidden entities
+            if (entity.IsHidden())
+            {
+                return Task.FromResult(entity);
+            }
+            
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.AddTask(async context =>
             {
@@ -338,7 +337,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 return null;
             }
             
-            // Build results reducing for permissions
+            // Build users reducing for permissions
             var result = new Dictionary<int, IUser>();
             foreach (var user in users.Data)
             {

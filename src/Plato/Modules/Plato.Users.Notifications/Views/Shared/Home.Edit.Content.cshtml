@@ -15,7 +15,7 @@
                 </h6>
             </div>
             <div id="@contentId" role="tabpanel" aria-labelledby="@headerId" data-parent="#accordion" class="list-group list-group-flush list-group-hover show">
-                @foreach (var notificationType in Model.CategorizedNotificationTypes[category].OrderBy(n => n.Name))
+                @foreach (var notificationType in Model.CategorizedNotificationTypes[category].OrderBy(n => n.Title))
                 {
                     <div class="list-group-item list-group-item-action">
                         <label class="float-right">

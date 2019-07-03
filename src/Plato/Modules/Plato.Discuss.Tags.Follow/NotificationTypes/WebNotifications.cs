@@ -10,8 +10,8 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
     {
         
         public static readonly WebNotification NewTag =
-            new WebNotification("NewTagWeb",
-                "New Tags",
+            new WebNotification("NewTopicTagWeb",
+                "New Topic Tags",
                 "Show me a web notification for each new post associated with a tag I'm following.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

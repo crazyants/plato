@@ -2,18 +2,19 @@
 using System.Data;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models;
 
 namespace Plato.Entities.Models
 {
     
-    public class EntityData : IDbModel, IEntityData
+    public class EntityReplyData : IDbModel, IEntityReplyData
     {
 
         #region "Public Properties"
 
         public int Id { get; set; }
 
-        public int EntityId { get; set; }
+        public int ReplyId { get; set; }
 
         public string Key { get; set; }
 
@@ -31,11 +32,11 @@ namespace Plato.Entities.Models
 
         #region "Constructor"
 
-        public EntityData()
+        public EntityReplyData()
         {
         }
 
-        public EntityData(IDataReader reader)
+        public EntityReplyData(IDataReader reader)
         {
             PopulateModel(reader);
         }
@@ -50,8 +51,8 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("Id"))
                 Id = Convert.ToInt32(dr["Id"]);
 
-            if (dr.ColumnIsNotNull("EntityId"))
-                EntityId = Convert.ToInt32(dr["EntityId"]);
+            if (dr.ColumnIsNotNull("ReplyId"))
+                ReplyId = Convert.ToInt32(dr["ReplyId"]);
 
             if (dr.ColumnIsNotNull("Key"))
                 Key = Convert.ToString(dr["Key"]);

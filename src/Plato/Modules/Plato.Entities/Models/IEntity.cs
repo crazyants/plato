@@ -150,6 +150,27 @@ namespace Plato.Entities.Models
 
     }
     
+    public interface IEntityReplyData
+    {
+
+        int Id { get; set; }
+
+        int ReplyId { get; set; }
+
+        string Key { get; set; }
+
+        string Value { get; set; }
+
+        DateTimeOffset? CreatedDate { get; set; }
+
+        int CreatedUserId { get; set; }
+
+        DateTimeOffset? ModifiedDate { get; set; }
+
+        int ModifiedUserId { get; set; }
+
+    }
+
     public interface IEntityData
     {
 
@@ -170,6 +191,5 @@ namespace Plato.Entities.Models
         int ModifiedUserId { get; set; }
 
     }
-
 }
 

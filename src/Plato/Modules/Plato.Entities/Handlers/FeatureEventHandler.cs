@@ -492,6 +492,58 @@ namespace Plato.Entities.Handlers
                     }
                 }
         };
+
+        // EntityReply data table
+        private readonly SchemaTable _entityReplyData = new SchemaTable()
+        {
+            Name = "EntityReplyData",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ReplyId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Key]",
+                    Length = "255",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Value]",
+                    Length = "max",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedDate",
+                    DbType = DbType.DateTimeOffset
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTimeOffset
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedUserId",
+                    DbType = DbType.Int32
+                }
+            }
+        };
         
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly ISchemaManager _schemaManager;
@@ -527,7 +579,10 @@ namespace Plato.Entities.Handlers
                 
                 // Entity replies
                 EntityReplies(builder);
-                
+
+                // Entity reply data schema
+                EntityReplyData(builder);
+
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -586,6 +641,14 @@ namespace Plato.Entities.Handlers
                 builder.ProcedureBuilder
                     .DropDefaultProcedures(_entityReplies)
                     .DropProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectByKey));
+
+                // drop entity reply data
+                builder.TableBuilder.DropTable(_entityReplyData);
+
+                builder.ProcedureBuilder
+                    .DropDefaultProcedures(_entityReplyData)
+                    .DropProcedure(new SchemaProcedure("SelectEntityReplyDatumByReplyId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityReplyDatumPaged"));
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -806,6 +869,32 @@ namespace Plato.Entities.Handlers
                         new SchemaColumn()
                         {
                             Name = "Keywords",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
+
+        }
+
+        void EntityReplyData(ISchemaBuilder builder)
+        {
+
+            builder.TableBuilder.CreateTable(_entityReplyData);
+
+            builder.ProcedureBuilder
+                .CreateDefaultProcedures(_entityReplyData)
+
+                .CreateProcedure(new SchemaProcedure("SelectEntityReplyDatumByReplyId", StoredProcedureType.SelectByKey)
+                    .ForTable(_entityData)
+                    .WithParameter(new SchemaColumn() { Name = "ReplyId", DbType = DbType.Int32 }))
+
+                .CreateProcedure(new SchemaProcedure("SelectEntityReplyDatumPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(_entityReplyData)
+                    .WithParameters(new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            Name = "[Key]",
                             DbType = DbType.String,
                             Length = "255"
                         }

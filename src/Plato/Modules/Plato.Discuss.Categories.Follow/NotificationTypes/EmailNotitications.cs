@@ -10,7 +10,7 @@ namespace Plato.Discuss.Categories.Follow.NotificationTypes
     {
         
         public static readonly EmailNotification NewTopic =
-            new EmailNotification("NewTopicEmail", "New Topic", "Send me an email notification for each new topic within channels I'm following.");
+            new EmailNotification("NewTopicEmail", "New Topics", "Send me an email notification for each new topic within channels I'm following.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
