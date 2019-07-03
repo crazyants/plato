@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Plato.Discuss.Categories.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Entities.Models;
@@ -17,6 +21,7 @@ using Plato.Entities.Extensions;
 using Plato.Entities.Stores;
 using Plato.Follows.Models;
 using Plato.Follows.Services;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Categories.Follow.Subscribers
 {
@@ -24,8 +29,10 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
     {
         
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IUserClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<TEntity> _entityStore;
@@ -35,10 +42,12 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
+            IAuthorizationService authorizationService,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<TEntity> entityStore,
-            IBroker broker)
+            IBroker broker, 
+            IUserClaimsPrincipalFactory<User> claimsPrincipalFactory)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _deferredTaskManager = deferredTaskManager;
@@ -47,6 +56,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             _followStore = followStore;
             _entityStore = entityStore;
             _broker = broker;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
+            _authorizationService = authorizationService;
         }
 
         #region "Implementation"
@@ -147,13 +158,13 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
                 // Have category notifications already been sent for the entity?
                 var follow = state.FollowsSent.FirstOrDefault(f =>
-                    f.Name.Equals(FollowTypes.Category.Name, StringComparison.InvariantCultureIgnoreCase));
+                    f.Equals(FollowTypes.Category.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (follow != null)
                 {
                     return;
                 }
 
-                // Get a collection of all users to notify
+                // Get a collection of all users following the category
                 // Exclude the author so they are not notified of there own posts
                 var users = await _platoUserStore.QueryAsync()
                     .Select<UserQueryParams>(q =>
@@ -170,8 +181,30 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 {
                     return;
                 }
+
+
+                var recipients = new List<User>();
+
+                // For private entities only send to users
+                // who have permission to view private entities
+
+                foreach (var user in users.Data)
+                {
+                    // Build principal for authorization checks to represent user
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (entity.IsPrivate)
+                    {
+                        // Authorization checks
+                        if (await _authorizationService.AuthorizeAsync(principal,
+                            entity.CategoryId, Permissions.ViewHiddenTopics))
+                        {
+                            recipients.Add(user);
+                        }
+                    }
+                }
                 
-                // Send mention notifications
+
+                // Send notifications
                 foreach (var user in users.Data)
                 {
 
@@ -254,7 +287,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
                 // Have category notifications already been sent for the entity?
                 var follow = state.FollowsSent.FirstOrDefault(f =>
-                    f.Name.Equals(FollowTypes.AllCategories.Name, StringComparison.InvariantCultureIgnoreCase));
+                    f.Equals(FollowTypes.AllCategories.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (follow != null)
                 {
                     return;

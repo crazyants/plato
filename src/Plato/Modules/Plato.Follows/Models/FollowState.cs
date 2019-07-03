@@ -6,29 +6,18 @@ namespace Plato.Follows.Models
     
     public class FollowState : Serializable
     {
-        public ICollection<FollowSent> FollowsSent { get; }
+        public ICollection<string> FollowsSent { get; }
         
         public FollowState()
         {
-            FollowsSent = new List<FollowSent>();
+            FollowsSent = new List<string>();
         }
 
         public void AddSent(string name)
         {
-            FollowsSent.Add(new FollowSent(name));
+            FollowsSent.Add(name);
         }
 
     }
-
-    public class FollowSent
-    {
-        public string Name { get; set; }
-        
-        public FollowSent(string name)
-        {
-            Name = name;
-        }
-
-    }
-
+    
 }
