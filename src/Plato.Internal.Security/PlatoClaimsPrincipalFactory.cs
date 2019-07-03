@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Security
 {
@@ -17,21 +18,16 @@ namespace Plato.Internal.Security
     /// <typeparam name="TUser"></typeparam>
     /// <typeparam name="TRole"></typeparam>
     public class PlatoClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser>
-        where TUser : class
+        where TUser : class, IUser
         where TRole : class
     {
 
-        private readonly UserManager<TUser> _userManager;
-        private readonly RoleManager<TRole> _roleManager;
-
         public PlatoClaimsPrincipalFactory(
             UserManager<TUser> userManager,
-            IOptions<IdentityOptions> optionsAccessor, 
-            RoleManager<TRole> roleManager) :
+            IOptions<IdentityOptions> optionsAccessor) :
             base(userManager, optionsAccessor)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
+      
         }
 
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(TUser user)
@@ -41,8 +37,8 @@ namespace Plato.Internal.Security
             var claims = new List<Claim>();
 
             // Get user details
-            var userId = await _userManager.GetUserIdAsync(user);
-            var userNameAsync = await _userManager.GetUserNameAsync(user);
+            var userId = await this.UserManager.GetUserIdAsync(user);
+            var userNameAsync = await this.UserManager.GetUserNameAsync(user);
 
             // Create user detail claims
             claims.Add(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
@@ -66,6 +62,8 @@ namespace Plato.Internal.Security
             return new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
             
         }
+
+
 
     }
 }

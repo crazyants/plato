@@ -20,24 +20,27 @@ namespace Plato.Roles.ViewProviders
     public class AdminViewProvider : BaseViewProvider<Role>
     {
 
+        private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
+        private readonly IPermissionsManager<Permission> _permissionsManager;
+        private readonly IAuthorizationService _authorizationService;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IPlatoRoleStore _platoRoleStore;
-        private readonly IPermissionsManager<Permission> _permissionsManager;
-        private readonly IAuthorizationService _authorizationService;
-
+        
         public AdminViewProvider(
             UserManager<User> userManager,
             IPlatoRoleStore platoRoleStore,
             RoleManager<Role> roleManager,
             IPermissionsManager<Permission> permissionsManager, 
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory)
         {
             _userManager = userManager;
             _platoRoleStore = platoRoleStore;
             _roleManager = roleManager;
             _permissionsManager = permissionsManager;
             _authorizationService = authorizationService;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
         }
 
         #region "Implementation"
@@ -184,21 +187,15 @@ namespace Plato.Roles.ViewProviders
                 return new List<string>();
             }
 
-            // If the role is anonymous set the auth type to
-            // null to ensure IsAuthenticated is set to false
-            var authType = role.Name != DefaultRoles.Anonymous
-                ? "UserAuthType"
-                : null;
-
-            // Dummy identity
-            var identity = new ClaimsIdentity(new[]
+            // Build a dummy principal
+            var principal = await _claimsPrincipalFactory.CreateAsync(new User()
             {
-                new Claim(ClaimTypes.Role, role.Name)
-            }, authType);
-
-            // Dummy principal
-            var principal = new ClaimsPrincipal(identity);
-
+                RoleNames = new List<string>()
+                {
+                    role.Name
+                }
+            });
+            
             // Permissions grouped by feature
             var categorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync();
 

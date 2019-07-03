@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Principal;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
@@ -10,6 +11,8 @@ namespace Plato.Internal.Hosting.Abstractions
     {
 
         Task<User> GetAuthenticatedUserAsync();
+
+        Task<User> GetAuthenticatedUserAsync(IIdentity identity);
 
         Task<ISiteSettings> GetSiteSettingsAsync();
 

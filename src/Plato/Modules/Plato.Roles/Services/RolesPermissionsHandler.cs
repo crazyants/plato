@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Roles;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Roles.Services
 {
@@ -15,14 +14,14 @@ namespace Plato.Roles.Services
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly RoleManager<Role> _roleManager;
-
+        private readonly IPlatoRoleStore _platoRoleStore;
+        
         public RolesPermissionsHandler(
-            RoleManager<Role> roleManager,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade, 
+            IPlatoRoleStore platoRoleStore)
         {
-            _roleManager = roleManager;
             _contextFacade = contextFacade;
+            _platoRoleStore = platoRoleStore;
         }
 
         #region "Implementation"
@@ -42,23 +41,38 @@ namespace Plato.Roles.Services
 
             PermissionNames(requirement.Permission, grantingNames);
 
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
             // Determine what set of roles should be examined by the access check
             var rolesToExamine = new List<string>();
-            if (user != null)
+
+            // Search specific roles within supplied identity
+            var roleClaims = context.User
+                .Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .ToList();
+
+            if (roleClaims.Count > 0)
             {
-                rolesToExamine.AddRange(user.RoleNames);
+                rolesToExamine.AddRange(roleClaims.Select(r => r.Value));
             }
             else
             {
-                rolesToExamine.Add(DefaultRoles.Anonymous);
-            }
+                // Get supplied user
+                var user = await _contextFacade.GetAuthenticatedUserAsync(context.User.Identity);
+                if (user != null)
+                {
+                    rolesToExamine.AddRange(user.RoleNames);
+                }
+                else
+                {
+                    rolesToExamine.Add(DefaultRoles.Anonymous);
+                }
 
+            }
+            
+            // Iterate roles checking claims
             foreach (var roleName in rolesToExamine)
             {
-                var role = await _roleManager.FindByNameAsync(roleName);
+                var role = await _platoRoleStore.GetByNameAsync(roleName);
                 if (role != null)
                 {
                     foreach (var claim in role.RoleClaims)

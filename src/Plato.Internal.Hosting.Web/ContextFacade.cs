@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
@@ -19,8 +19,8 @@ namespace Plato.Internal.Hosting.Web
 
         public const string DefaultCulture = "en-US";
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -28,29 +28,44 @@ namespace Plato.Internal.Hosting.Web
         private IUrlHelper _urlHelper;
         
         public ContextFacade(
+            IActionContextAccessor actionContextAccessor,
             IHttpContextAccessor httpContextAccessor,
             IPlatoUserStore<User> platoUserStore,
-            IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
             IUrlHelperFactory urlHelperFactory)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _platoUserStore = platoUserStore;
             _actionContextAccessor = actionContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
+            _platoUserStore = platoUserStore;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()
         {
-        
-            var identity = _httpContextAccessor.HttpContext.User?.Identity;
-            if ((identity != null) && (identity.IsAuthenticated))
+            return await GetAuthenticatedUserAsync(_httpContextAccessor.HttpContext.User?.Identity);
+        }
+
+        public async Task<User> GetAuthenticatedUserAsync(IIdentity identity)
+        {
+
+            if (identity == null)
             {
-                return await _platoUserStore.GetByUserNameAsync(identity.Name);
+                return null;
             }
 
-            return null;
+            if (!identity.IsAuthenticated)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(identity.Name))
+            {
+                return null;
+            }
+
+            return await _platoUserStore.GetByUserNameAsync(identity.Name);
+         
         }
         
         public async Task<ISiteSettings> GetSiteSettingsAsync()

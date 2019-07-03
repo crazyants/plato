@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -19,14 +20,17 @@ namespace Plato.Moderation.Services
         private readonly IPermissionsManager<ModeratorPermission> _permissionsManager;
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IPlatoUserStore<User> _userStore;
+        private readonly IContextFacade _contextFacade;
 
         public ModeratorPermissionsHandler(
             IPermissionsManager<ModeratorPermission> permissionsManager,
             IModeratorStore<Moderator> moderatorStore,
-            IPlatoUserStore<User> userStore)
+            IPlatoUserStore<User> userStore,
+            IContextFacade contextFacade)
         {
             _permissionsManager = permissionsManager;
             _moderatorStore = moderatorStore;
+            _contextFacade = contextFacade;
             _userStore = userStore;
         }
 
@@ -73,18 +77,8 @@ namespace Plato.Moderation.Services
                 return;
             }
 
-            // Get username from claims
-            var claims = context.User.Claims
-                .FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType);
-
-            // We need a user
-            if (claims == null)
-            {
-                return;
-            }
-
-            // Get authenticated user
-            var user = await _userStore.GetByUserNameAsync(claims.Value);
+            // Get supplied user
+            var user = await _contextFacade.GetAuthenticatedUserAsync(context.User.Identity);
 
             // We need a user to perform access checks against
             if (user == null)
@@ -92,7 +86,7 @@ namespace Plato.Moderation.Services
                 return;
             }
 
-            // Get all moderator entries for given identity and resource
+            // Get all moderator entries for given user and resource
             var userEntries = moderators.Data
                 .Where(m => m.UserId == user.Id & m.CategoryId == categoryId)
                 .ToList();

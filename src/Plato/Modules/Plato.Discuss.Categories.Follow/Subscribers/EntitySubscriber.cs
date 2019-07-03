@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.Extensions.Options;
 using Plato.Discuss.Categories.Follow.NotificationTypes;
 using Plato.Discuss.Models;
 using Plato.Entities.Models;
@@ -29,7 +32,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
     {
         
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
-        private readonly IUserClaimsPrincipalFactory<User> _claimsPrincipalFactory;
+        private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly INotificationManager<TEntity> _notificationManager;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IAuthorizationService _authorizationService;
@@ -46,8 +49,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<TEntity> entityStore,
-            IBroker broker, 
-            IUserClaimsPrincipalFactory<User> claimsPrincipalFactory)
+            IBroker broker,
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _deferredTaskManager = deferredTaskManager;
@@ -128,84 +131,50 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 return Task.FromResult(entity);
             }
 
-            // No need to send notifications for hidden entities
+            // We don't need to trigger notifications for hidden entities
             if (entity.IsHidden())
             {
                 return Task.FromResult(entity);
             }
-
+            
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.AddTask(async context =>
             {
-               
-               // Get all follows for category the entity was posted to
-                var follows = await _followStore.QueryAsync()
-                    .Select<FollowQueryParams>(q =>
-                    {
-                        q.ThingId.Equals(entity.CategoryId);
-                        q.Name.Equals(FollowTypes.Category.Name);
-                    })
-                    .ToList();
-                
-                // No follows simply return
-                if (follows?.Data == null)
-                {
-                    return;
-                }
+
+                // Follow type name
+                var name = FollowTypes.Category.Name;
 
                 // Get follow state for entity
                 var state = entity.GetOrCreate<FollowState>();
 
-                // Have category notifications already been sent for the entity?
+                // Have notifications already been sent for the entity?
                 var follow = state.FollowsSent.FirstOrDefault(f =>
-                    f.Equals(FollowTypes.Category.Name, StringComparison.InvariantCultureIgnoreCase));
+                    f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                 if (follow != null)
                 {
                     return;
                 }
-
-                // Get a collection of all users following the category
-                // Exclude the author so they are not notified of there own posts
-                var users = await _platoUserStore.QueryAsync()
-                    .Select<UserQueryParams>(q =>
+                
+                // Get all follows for the category
+                var follows = await _followStore.QueryAsync()
+                    .Select<FollowQueryParams>(q =>
                     {
-                        q.Id.IsIn(follows.Data
-                            .Where(f => f.CreatedUserId != entity.CreatedUserId)
-                            .Select(f => f.CreatedUserId)
-                            .ToArray());
+                        q.ThingId.Equals(entity.CategoryId);
+                        q.Name.Equals(name);
                     })
                     .ToList();
 
-                // No follows simply return
-                if (users?.Data == null)
+                // Get all users for the follow
+                var users = await GetUsersAsync(follows?.Data, entity);
+
+                // No users simply return
+                if (users == null)
                 {
                     return;
                 }
 
-
-                var recipients = new List<User>();
-
-                // For private entities only send to users
-                // who have permission to view private entities
-
-                foreach (var user in users.Data)
-                {
-                    // Build principal for authorization checks to represent user
-                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
-                    if (entity.IsPrivate)
-                    {
-                        // Authorization checks
-                        if (await _authorizationService.AuthorizeAsync(principal,
-                            entity.CategoryId, Permissions.ViewHiddenTopics))
-                        {
-                            recipients.Add(user);
-                        }
-                    }
-                }
-                
-
                 // Send notifications
-                foreach (var user in users.Data)
+                foreach (var user in users)
                 {
 
                     // Email notifications
@@ -238,7 +207,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 }
 
                 // Update state
-                state.AddSent(FollowTypes.Category.Name);
+                state.AddSent(name);
                 entity.AddOrUpdate(state);
 
                 // Persist state
@@ -257,62 +226,44 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            
-            // No need to send notifications for hidden entities
-            if (entity.IsHidden())
-            {
-                return Task.FromResult(entity);
-            }
-
+           
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.AddTask(async context =>
             {
+                
+                // Follow type name
+                var name = FollowTypes.AllCategories.Name;
 
-                // Get all follows for channel
-                var follows = await _followStore.QueryAsync()
-                    .Select<FollowQueryParams>(q =>
-                    {
-                        q.Name.Equals(FollowTypes.AllCategories.Name);
-                    })
-                    .ToList();
-
-                // No follows simply return
-                if (follows?.Data == null)
-                {
-                    return;
-                }
-               
                 // Get follow state for entity
                 var state = entity.GetOrCreate<FollowState>();
 
-                // Have category notifications already been sent for the entity?
+                // Have notifications already been sent for the entity?
                 var follow = state.FollowsSent.FirstOrDefault(f =>
-                    f.Equals(FollowTypes.AllCategories.Name, StringComparison.InvariantCultureIgnoreCase));
+                    f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                 if (follow != null)
                 {
                     return;
                 }
                 
-                // Get a collection of all users to notify
-                // Exclude the author so they are not notified of there own posts
-                var users = await _platoUserStore.QueryAsync()
-                    .Select<UserQueryParams>(q =>
+                // Get all follows
+                var follows = await _followStore.QueryAsync()
+                    .Select<FollowQueryParams>(q =>
                     {
-                        q.Id.IsIn(follows.Data
-                            .Where(f => f.CreatedUserId != entity.CreatedUserId)
-                            .Select(f => f.CreatedUserId)
-                            .ToArray());
+                        q.Name.Equals(name);
                     })
                     .ToList();
 
-                // No follows simply return
-                if (users?.Data == null)
+                // Get all users for the follow
+                var users = await GetUsersAsync(follows?.Data, entity);
+
+                // No users simply return
+                if (users == null)
                 {
                     return;
                 }
-                
+
                 // Send notifications
-                foreach (var user in users.Data)
+                foreach (var user in users)
                 {
 
                     // Email notifications
@@ -345,7 +296,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 }
 
                 // Update state
-                state.AddSent(FollowTypes.AllCategories.Name);
+                state.AddSent(name);
                 entity.AddOrUpdate(state);
 
                 // Persist state
@@ -354,6 +305,100 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             });
 
             return Task.FromResult(entity);
+
+        }
+
+        // TODO: Look at centralizing within class
+        async Task<IEnumerable<IUser>> GetUsersAsync(
+            IEnumerable<Follows.Models.Follow> follows,
+            TEntity entity)
+        {
+
+            // We always need follows to process
+            if (follows == null)
+            {
+                return null;
+            }
+
+            // Get all users following the category
+            // Exclude the author so they are not notified of there own posts
+            var users = await _platoUserStore.QueryAsync()
+                .Select<UserQueryParams>(q =>
+                {
+                    q.Id.IsIn(follows
+                        .Where(f => f.CreatedUserId != entity.CreatedUserId)
+                        .Select(f => f.CreatedUserId)
+                        .ToArray());
+                })
+                .ToList();
+
+            // No users to further process
+            if (users?.Data == null)
+            {
+                return null;
+            }
+            
+            // Build results reducing for permissions
+            var result = new Dictionary<int, IUser>();
+            foreach (var user in users.Data)
+            {
+
+                if (!result.ContainsKey(user.Id))
+                {
+                    result.Add(user.Id, user);
+                }
+                
+                // If the entity is hidden but the user does
+                // not have permission to view hidden entities
+                if (entity.IsHidden)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Permissions.ViewHiddenTopics))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+
+                // If we are not the entity author and the entity is private
+                // ensure we have permission to view private entities
+                if (user.Id != entity.CreatedUserId && entity.IsPrivate)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Permissions.ViewPrivateTopics))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+
+                // The entity has been flagged as SPAM but the user does
+                // not have permission to view entities flagged as SPAM
+                if (entity.IsSpam)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Permissions.ViewSpamTopics))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+
+                // The entity is soft deleted but the user does 
+                // not have permission to view soft deleted entities
+                if (entity.IsDeleted)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Permissions.ViewDeletedTopics))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+                
+            }
+
+            return result.Values;
 
         }
         
