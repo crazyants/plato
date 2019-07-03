@@ -100,14 +100,14 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-            entity = await SendNotificationsForCategory(entity);
-            return await SendNotificationsForAllCategories(entity);
+            return await SendNotificationsForCategory(entity);
+            //return await SendNotificationsForAllCategories(entity);
         }
 
         async Task<TEntity> EntityUpdated(TEntity entity)
         {
-            entity = await SendNotificationsForCategory(entity);
-            return await SendNotificationsForAllCategories(entity);
+            return await SendNotificationsForCategory(entity);
+            //return await SendNotificationsForAllCategories(entity);
         }
 
         Task<TEntity> SendNotificationsForCategory(TEntity entity)
@@ -133,6 +133,15 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             // Defer notifications to first available thread pool thread
             _deferredTaskManager.AddTask(async context =>
             {
+
+                //// Get entity
+                //var entity = await _entityStore.GetByIdAsync(model.Id);
+
+                //// Ensure entity exists
+                //if (entity == null)
+                //{
+                //    return;
+                //}
 
                 // Follow type name
                 var name = FollowTypes.Category.Name;

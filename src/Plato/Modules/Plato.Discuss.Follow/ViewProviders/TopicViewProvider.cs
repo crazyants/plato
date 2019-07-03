@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
@@ -8,6 +9,7 @@ using Plato.Follows.Stores;
 using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Follow.ViewProviders
 {
@@ -15,25 +17,28 @@ namespace Plato.Discuss.Follow.ViewProviders
     {
 
         private const string FollowHtmlName = "follow";
-         
+        
         private readonly IFollowStore<Plato.Follows.Models.Follow> _followStore;
         private readonly IFollowManager<Follows.Models.Follow> _followManager;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly HttpRequest _request;
  
         public TopicViewProvider(
-            IContextFacade contextFacade,
-            IHttpContextAccessor httpContextAccessor,
+            IFollowManager<Plato.Follows.Models.Follow> followManager,
             IFollowStore<Plato.Follows.Models.Follow> followStore,
+            IAuthorizationService authorizationService,
+            IHttpContextAccessor httpContextAccessor,
             IEntityStore<Topic> entityStore,
-            IFollowManager<Plato.Follows.Models.Follow> followManager)
+            IContextFacade contextFacade)
         {
+            _request = httpContextAccessor.HttpContext.Request;
+            _authorizationService = authorizationService;
+            _followManager = followManager;
             _contextFacade = contextFacade;
             _followStore = followStore;
             _entityStore = entityStore;
-            _followManager = followManager;
-            _request = httpContextAccessor.HttpContext.Request;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(Topic entity, IViewProviderContext updater)
@@ -77,12 +82,13 @@ namespace Plato.Discuss.Follow.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext context)
         {
             if (entity == null)
             {
-                return await BuildIndexAsync(new Topic(), updater);
+                return await BuildIndexAsync(new Topic(), context);
             }
+
 
             var isFollowing = false;
             var followType = FollowTypes.Topic;
@@ -99,6 +105,16 @@ namespace Plato.Discuss.Follow.ViewProviders
                 }
             }
             
+            // For new entities check if we need to follow by default
+            if (entity.Id == 0)
+            {
+                if (await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                    entity.CategoryId, Permissions.FollowTopicsByDefault))
+                {
+                    isFollowing = true;
+                }
+            }
+
             return Views(
                 View<FollowViewModel>("Follow.Edit.Sidebar", model =>
                 {
@@ -183,4 +199,5 @@ namespace Plato.Discuss.Follow.ViewProviders
         }
 
     }
+
 }

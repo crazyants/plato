@@ -51,8 +51,7 @@ namespace Plato.Entities.Stores
 
             // Transform meta data
             model.Data = await SerializeMetaDataAsync(model);
-
-
+            
             var newReply = await _entityReplyRepository.InsertUpdateAsync(model);
             if (newReply != null)
             {
@@ -66,13 +65,21 @@ namespace Plato.Entities.Stores
                 _cacheManager.CancelTokens(this.GetType(), model.Id);
             }
 
-            return newReply;
+            return await MergeEntityReplyData(newReply); ;
         }
 
-        public async Task<TModel> UpdateAsync(TModel reply)
+        public async Task<TModel> UpdateAsync(TModel model)
         {
 
-            var updatedReply = await _entityReplyRepository.InsertUpdateAsync(reply);
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            // Transform meta data
+            model.Data = await SerializeMetaDataAsync(model);
+            
+            var updatedReply = await _entityReplyRepository.InsertUpdateAsync(model);
             if (updatedReply != null)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -81,28 +88,28 @@ namespace Plato.Entities.Stores
                        updatedReply.Id);
                 }
                 //_cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
-                _cacheManager.CancelTokens(typeof(EntityReplyStore<TModel>), reply.EntityId);
+                _cacheManager.CancelTokens(typeof(EntityReplyStore<TModel>), model.EntityId);
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), reply.Id);
+                _cacheManager.CancelTokens(this.GetType(), model.Id);
             }
 
-            return updatedReply;
+            return await MergeEntityReplyData(updatedReply);
         }
 
-        public async Task<bool> DeleteAsync(TModel reply)
+        public async Task<bool> DeleteAsync(TModel model)
         {
-            var success = await _entityReplyRepository.DeleteAsync(reply.Id);
+            var success = await _entityReplyRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Deleted entity reply with id {0} for entity { 1}",
-                        reply.Id, reply.EntityId);
+                        model.Id, model.EntityId);
                 }
                 //_cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
-                _cacheManager.CancelTokens(typeof(EntityReplyStore<TModel>), reply.EntityId);
+                _cacheManager.CancelTokens(typeof(EntityReplyStore<TModel>), model.EntityId);
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), reply.Id);
+                _cacheManager.CancelTokens(this.GetType(), model.Id);
             }
 
             return success;
@@ -112,14 +119,11 @@ namespace Plato.Entities.Stores
         public async Task<TModel> GetByIdAsync(int id)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
-            //return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityReplyRepository.SelectByIdAsync(id));
-
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var reply = await _entityReplyRepository.SelectByIdAsync(id);
                 return await MergeEntityReplyData(reply);
             });
-
         }
 
         public IQuery<TModel> QueryAsync()

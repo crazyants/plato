@@ -283,7 +283,7 @@ namespace Plato.Entities.Handlers
                 }
         };
 
-        // Entity data table
+        // EntityData table
         private readonly SchemaTable _entityData = new SchemaTable()
         {
             Name = "EntityData",
@@ -335,7 +335,7 @@ namespace Plato.Entities.Handlers
             }
         };
         
-        // Entity replies
+        // EntityReplies
         private readonly SchemaTable _entityReplies = new SchemaTable()
         {
             Name = "EntityReplies",
@@ -493,7 +493,7 @@ namespace Plato.Entities.Handlers
                 }
         };
 
-        // EntityReply data table
+        // EntityReplyData table
         private readonly SchemaTable _entityReplyData = new SchemaTable()
         {
             Name = "EntityReplyData",
@@ -735,11 +735,11 @@ namespace Plato.Entities.Handlers
                                     INNER JOIN {prefix}_ShellFeatures f ON e.FeatureId = f.Id
                                 WHERE (
                                    e.Id = @Id
-                                )
+                                );
                                 SELECT * FROM {prefix}_EntityData WITH (nolock) 
                                 WHERE (
                                    EntityId = @Id
-                                )")
+                                );")
                         .ForTable(_entities)
                         .WithParameter(_entities.PrimaryKeyColumn))
 
@@ -836,7 +836,7 @@ namespace Plato.Entities.Handlers
                 .CreateDefaultProcedures(_entityReplies)
 
                 // Overwrite our SelectEntityReplyById created via CreateDefaultProcedures
-                // above to also return basic user data
+                // above to also return basic user data & reply meta data
                 .CreateProcedure(
                     new SchemaProcedure(
                             "SelectEntityReplyById",
@@ -858,12 +858,16 @@ namespace Plato.Entities.Handlers
                                     LEFT OUTER JOIN {prefix}_Users m ON r.ModifiedUserId = m.Id
                                 WHERE (
                                    r.Id = @Id
-                                )")
-                        .ForTable(_entities)
-                        .WithParameter(_entities.PrimaryKeyColumn))
+                                );
+                                SELECT * FROM {prefix}_EntityReplyData WITH (nolock) 
+                                WHERE (
+                                   ReplyId = @Id
+                                );")
+                        .ForTable(_entityReplies)
+                        .WithParameter(_entityReplies.PrimaryKeyColumn))
 
                 .CreateProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectPaged)
-                    .ForTable(_entities)
+                    .ForTable(_entityReplies)
                     .WithParameters(new List<SchemaColumn>()
                     {
                         new SchemaColumn()

@@ -108,10 +108,21 @@ namespace Plato.Discuss.Follow.Subscribers
 
         #region "Private Methods"
 
-        Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
+        async Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
+        {
+            return await SendNotificationsAsync(reply);
+        }
+
+        async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
+        {
+            return await SendNotificationsAsync(reply);
+        }
+
+        // -----------
+
+        Task<TEntityReply> SendNotificationsAsync(TEntityReply reply)
         {
 
-       
             if (reply == null)
             {
                 throw new ArgumentNullException(nameof(reply));
@@ -128,7 +139,7 @@ namespace Plato.Discuss.Follow.Subscribers
             {
                 return Task.FromResult(reply);
             }
-            
+
             // Add deferred task
             _deferredTaskManager.AddTask(async context =>
             {
@@ -136,12 +147,12 @@ namespace Plato.Discuss.Follow.Subscribers
                 // Follow type name
                 var name = FollowTypes.Topic.Name;
 
-                // Get follow state for reply
+                // Get follow sent state for reply
                 var state = reply.GetOrCreate<FollowState>();
 
-               // Have notifications already been sent for the reply?
-               var follow = state.FollowsSent.FirstOrDefault(f =>
-                   f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                // Have notifications already been sent for the reply?
+                var follow = state.FollowsSent.FirstOrDefault(f =>
+                    f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                 if (follow != null)
                 {
                     return;
@@ -155,8 +166,8 @@ namespace Plato.Discuss.Follow.Subscribers
                 {
                     return;
                 }
-                
-                // Get all follows for topic
+
+                // Get all follows for entity
                 var follows = await _followStore.QueryAsync()
                     .Select<FollowQueryParams>(q =>
                     {
@@ -171,13 +182,15 @@ namespace Plato.Discuss.Follow.Subscribers
                     return;
                 }
 
+                // Get users
                 var users = await GetUsersAsync(follows?.Data, reply);
 
+                // We always need users
                 if (users == null)
                 {
                     return;
                 }
-                
+
                 // Send notifications
                 foreach (var user in users)
                 {
@@ -210,7 +223,7 @@ namespace Plato.Discuss.Follow.Subscribers
                     }
 
                 }
-                
+
                 // Update state
                 state.AddSent(name);
                 reply.AddOrUpdate(state);
@@ -220,20 +233,10 @@ namespace Plato.Discuss.Follow.Subscribers
 
             });
 
-           
             return Task.FromResult(reply);
-            
+
         }
 
-        Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
-        {
-            // No need to send notifications for reply updates
-            // May be implemented at a later stage
-            return Task.FromResult(reply);
-        }
-
-
-        // TODO: Look at centralizing within class
         async Task<IEnumerable<IUser>> GetUsersAsync(
             IEnumerable<Follows.Models.Follow> follows,
             TEntityReply reply)
@@ -324,8 +327,7 @@ namespace Plato.Discuss.Follow.Subscribers
             return result.Values;
 
         }
-
-
+        
         #endregion
 
     }

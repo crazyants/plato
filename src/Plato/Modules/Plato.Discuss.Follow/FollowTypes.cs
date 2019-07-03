@@ -14,7 +14,7 @@ namespace Plato.Discuss.Follow
                 "Follow Topic",
                 "Follow this topic to get notified when replies are posted",
                 "Unsubscribe",
-                "You are already following this topic, click to unsubscribe");
+                "You are following this topic and will be notified when replies are posted, click to unsubscribe");
 
         public IEnumerable<IFollowType> GetFollowTypes()
         {

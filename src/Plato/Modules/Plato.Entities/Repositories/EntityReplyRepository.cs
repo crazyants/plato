@@ -15,14 +15,17 @@ namespace Plato.Entities.Repositories
     {
 
         #region "Constructor"
-
-        private readonly IDbContext _dbContext;
+        
+        private readonly IEntityReplyDataRepository<IEntityReplyData> _entityReplyDataRepository;
         private readonly ILogger<EntityReplyRepository<TModel>> _logger;
+        private readonly IDbContext _dbContext;
 
         public EntityReplyRepository(
-            IDbContext dbContext,
-            ILogger<EntityReplyRepository<TModel>> logger)
+            IEntityReplyDataRepository<IEntityReplyData> entityReplyDataRepository,
+            ILogger<EntityReplyRepository<TModel>> logger,
+            IDbContext dbContext)
         {
+            _entityReplyDataRepository = entityReplyDataRepository;
             _dbContext = dbContext;
             _logger = logger;
         }
@@ -67,13 +70,14 @@ namespace Plato.Entities.Repositories
                 reply.EditedDate,
                 reply.ModifiedUserId,
                 reply.ModifiedDate,
-                null);
+                reply.Data);
             if (id > 0)
             {
                 return await SelectByIdAsync(id);
             }
 
             return null;
+
         }
 
         public async Task<TModel> SelectByIdAsync(int id)
@@ -85,8 +89,8 @@ namespace Plato.Entities.Repositories
                 output = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectEntityReplyById",
-                    async reader => await BuildObjectFromResultSets(reader),
-                    new[]
+                    async reader => await BuildFromResultSets(reader),
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -154,7 +158,7 @@ namespace Plato.Entities.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityReplyById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -167,17 +171,37 @@ namespace Plato.Entities.Repositories
 
         #region "Private Methods"
 
-        async Task<TModel> BuildObjectFromResultSets(DbDataReader reader)
+        async Task<TModel> BuildFromResultSets(DbDataReader reader)
         {
 
-            TModel reply = null;
+            TModel model = null;
             if ((reader != null) && (reader.HasRows))
             {
-                reply = ActivateInstanceOf<TModel>.Instance();
+
+                model = ActivateInstanceOf<TModel>.Instance();
+
                 await reader.ReadAsync();
-                reply.PopulateModel(reader);
+                model.PopulateModel(reader);
+
+                // Data
+                if (await reader.NextResultAsync())
+                {
+                    var data = new List<EntityReplyData>();
+                    if (reader.HasRows)
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var entityData = new EntityReplyData(reader);
+                            data.Add(entityData);
+                        }
+                    }
+
+                    model.Data = data;
+
+                }
+
             }
-            return reply;
+            return model;
 
         }
         
@@ -210,7 +234,7 @@ namespace Plato.Entities.Repositories
           DateTimeOffset? editedDate,
           int modifiedUserId,
           DateTimeOffset? modifiedDate,
-          IEnumerable<EntityData> data)
+          IEnumerable<IEntityReplyData> data)
         {
 
             var entityReplyId = 0;
@@ -219,7 +243,7 @@ namespace Plato.Entities.Repositories
                 entityReplyId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityReply",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id",DbType.Int32, id),
                         new DbParam("ParentId",DbType.Int32, parentId),
@@ -251,6 +275,21 @@ namespace Plato.Entities.Repositories
                         new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
                         new DbParam("UniqueId",DbType.Int32, ParameterDirection.Output)
                     });
+            }
+            
+            // Add entity data
+            if (entityReplyId > 0)
+            {
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        item.ReplyId = entityReplyId;
+                        item.ModifiedDate = DateTimeOffset.UtcNow;
+                        await _entityReplyDataRepository.InsertUpdateAsync(item);
+                    }
+                }
+
             }
 
 

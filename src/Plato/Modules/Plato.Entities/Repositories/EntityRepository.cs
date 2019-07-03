@@ -113,8 +113,8 @@ namespace Plato.Entities.Repositories
                 entity = await context.ExecuteReaderAsync<TModel>(
                     CommandType.StoredProcedure,
                     "SelectEntityById",
-                    async reader => await BuildEntityFromResultSets(reader),
-                    new []
+                    async reader => await BuildFromResultSets(reader),
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
 
@@ -196,7 +196,7 @@ namespace Plato.Entities.Repositories
 
         #region "Private Methods"
 
-        async Task<TModel> BuildEntityFromResultSets(DbDataReader reader)
+        async Task<TModel> BuildFromResultSets(DbDataReader reader)
         {
 
             TModel model = null;
@@ -290,7 +290,7 @@ namespace Plato.Entities.Repositories
                 entityId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
-                    new []
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("ParentId", DbType.Int32, parentId),
@@ -346,62 +346,6 @@ namespace Plato.Entities.Repositories
                     });
             }
 
-            //using (var context = _dbContext)
-            //{
-            //    entityId = await context.ExecuteScalarAsync<int>(
-            //        CommandType.StoredProcedure,
-            //        "InsertUpdateEntity",
-            //        id,
-            //        parentId,
-            //        featureId,
-            //        categoryId,
-            //        title.ToEmptyIfNull().TrimToSize(255),
-            //        alias.ToEmptyIfNull().TrimToSize(255),
-            //        message.ToEmptyIfNull(),
-            //        html.ToEmptyIfNull(),
-            //        messageAbstract.ToEmptyIfNull().TrimToSize(500),
-            //        urls.ToEmptyIfNull(),
-            //        isHidden,
-            //        isPrivate,
-            //        isSpam,
-            //        isPinned,
-            //        isDeleted,
-            //        isLocked,
-            //        isClosed,
-            //        totalViews,
-            //        totalReplies,
-            //        totalAnswers,
-            //        totalParticipants,
-            //        totalReactions,
-            //        totalFollows,
-            //        totalReports,
-            //        totalStars,
-            //        totalRatings,
-            //        summedRating,
-            //        meanRating,
-            //        totalLinks,
-            //        totalImages,
-            //        dailyViews,
-            //        dailyReplies,
-            //        dailyAnswers,
-            //        dailyReactions,
-            //        dailyFollows,
-            //        dailyReports,
-            //        dailyStars,
-            //        dailyRatings,
-            //        sortOrder,
-            //        createdUserId,
-            //        createdDate.ToDateIfNull(),
-            //        editedUserId,
-            //        editedDate,
-            //        modifiedUserId,
-            //        modifiedDate,
-            //        lastReplyId,
-            //        lastReplyUserId,
-            //        lastReplyDate.ToDateIfNull(),
-            //        new DbDataParameter(DbType.Int32, ParameterDirection.Output));
-            //}
-            
             // Add entity data
             if (entityId > 0)
             {

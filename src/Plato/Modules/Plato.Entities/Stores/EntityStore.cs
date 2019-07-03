@@ -79,7 +79,7 @@ namespace Plato.Entities.Stores
                 CancelTokens(newEntity);
             }
 
-            return newEntity;
+            return await MergeEntityData(newEntity); ;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity model)
@@ -106,7 +106,7 @@ namespace Plato.Entities.Stores
 
             }
 
-            return updatedEntity;
+            return await MergeEntityData(updatedEntity);
 
         }
 

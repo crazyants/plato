@@ -9,11 +9,15 @@ namespace Plato.Discuss.Follow
         public static readonly Permission FollowTopics =
             new Permission("FollowTopics", "Can follow topics");
 
+        public static readonly Permission FollowTopicsByDefault =
+            new Permission("FollowTopicsByDefault", "Follow posted topics by default");
+
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                FollowTopics
+                FollowTopics,
+                FollowTopicsByDefault
             };
         }
 
@@ -26,7 +30,8 @@ namespace Plato.Discuss.Follow
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        FollowTopics
+                        FollowTopics,
+                        FollowTopicsByDefault
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -34,7 +39,8 @@ namespace Plato.Discuss.Follow
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        FollowTopics
+                        FollowTopics,
+                        FollowTopicsByDefault
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -42,7 +48,8 @@ namespace Plato.Discuss.Follow
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        FollowTopics
+                        FollowTopics,
+                        FollowTopicsByDefault
                     }
                 }
             };

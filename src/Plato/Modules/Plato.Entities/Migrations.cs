@@ -30,6 +30,12 @@ namespace Plato.Entities
                     ModuleId = ModuleId,
                     Version = "1.0.2",
                     Statements = v_1_0_2()
+                },
+                new PreparedMigration()
+                {
+                    ModuleId = ModuleId,
+                    Version = "1.0.3",
+                    Statements = v_1_0_3()
                 }
             };
 
@@ -640,6 +646,221 @@ namespace Plato.Entities
                             }
                         }));
                 
+                // Add builder results to output
+                output.AddRange(builder.Statements);
+
+            }
+
+            return output;
+
+        }
+
+        private ICollection<string> v_1_0_3()
+        {
+
+            // Entity replies
+            var entityReplies = new SchemaTable()
+            {
+                Name = "EntityReplies",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ParentId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EntityId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Message]",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Html",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Abstract",
+                        Length = "500",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Urls",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsHidden",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsSpam",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsPinned",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsDeleted",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsClosed",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsAnswer",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalReactions",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalReports",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalRatings",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "SummedRating",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanRating",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalLinks",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalImages",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV4Address",
+                        DbType = DbType.String,
+                        Length = "20"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV6Address",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EditedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EditedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    }
+                }
+            };
+
+            var output = new List<string>();
+
+            using (var builder = _schemaBuilder)
+            {
+
+                builder
+                    .Configure(options =>
+                    {
+                        options.ModuleName = ModuleId;
+                        options.Version = "1.0.3";
+                        options.DropTablesBeforeCreate = true;
+                        options.DropProceduresBeforeCreate = true;
+                    });
+
+                // update SelectEntityReplyById
+                builder.ProcedureBuilder.CreateProcedure(
+                    new SchemaProcedure(
+                            "SelectEntityReplyById",
+                            @"SELECT r.*, 
+                                    c.UserName AS CreatedUserName,                                   
+                                    c.DisplayName AS CreatedDisplayName,                                 
+                                    c.Alias AS CreatedAlias,
+                                    c.PhotoUrl AS CreatedPhotoUrl,
+                                    c.PhotoColor AS CreatedPhotoColor,
+                                    c.SignatureHtml AS CreatedSignatureHtml,
+                                    m.UserName AS ModifiedUserName,                                    
+                                    m.DisplayName AS ModifiedDisplayName,                                
+                                    m.Alias AS ModifiedAlias,
+                                    m.PhotoUrl AS ModifiedPhotoUrl,
+                                    m.PhotoColor AS ModifiedPhotoColor,
+                                    m.SignatureHtml AS ModifiedSignatureHtml
+                                FROM {prefix}_EntityReplies r WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users c ON r.CreatedUserId = c.Id
+                                    LEFT OUTER JOIN {prefix}_Users m ON r.ModifiedUserId = m.Id
+                                WHERE (
+                                   r.Id = @Id
+                                );
+                                SELECT * FROM {prefix}_EntityReplyData WITH (nolock) 
+                                WHERE (
+                                   ReplyId = @Id
+                                );")
+                        .ForTable(entityReplies)
+                        .WithParameter(entityReplies.PrimaryKeyColumn));
+
+
                 // Add builder results to output
                 output.AddRange(builder.Statements);
 
