@@ -148,6 +148,8 @@ namespace Plato.Entities.Models
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
         }
 
+        // IMetaData
+
         public void AddOrUpdate<T>(T obj) where T : class
         {
             if (_metaData.ContainsKey(typeof(T)))

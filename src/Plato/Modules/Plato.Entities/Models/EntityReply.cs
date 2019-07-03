@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 
@@ -71,6 +74,17 @@ namespace Plato.Entities.Models
         public ISimpleUser CreatedBy { get; set; } = new SimpleUser();
 
         public ISimpleUser ModifiedBy { get; set; } = new SimpleUser();
+        
+        // IMetaData
+
+        private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
+
+        public IEnumerable<IEntityReplyData> Data { get; set; } = new List<EntityReplyData>();
+        
+        public EntityReply()
+        {
+            _metaData = new ConcurrentDictionary<Type, ISerializable>();
+        }
 
         public async Task<EntityUris> GetEntityUrlsAsync()
         {
@@ -81,6 +95,8 @@ namespace Plato.Entities.Models
 
             return new EntityUris();
         }
+
+        // IDbModel
 
         public void PopulateModel(IDataReader dr)
         {
@@ -199,6 +215,45 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
                 ModifiedDate = (DateTimeOffset)dr["ModifiedDate"];
+
+        }
+
+        // IMetaData
+
+        public IDictionary<Type, ISerializable> MetaData => _metaData;
+
+        public void AddOrUpdate<T>(T obj) where T : class
+        {
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                _metaData.TryUpdate(typeof(T), (ISerializable)obj, _metaData[typeof(T)]);
+            }
+            else
+            {
+                _metaData.TryAdd(typeof(T), (ISerializable)obj);
+            }
+        }
+
+        public void AddOrUpdate(Type type, ISerializable obj)
+        {
+            if (_metaData.ContainsKey(type))
+            {
+                _metaData.TryUpdate(type, (ISerializable)obj, _metaData[type]);
+            }
+            else
+            {
+                _metaData.TryAdd(type, obj);
+            }
+        }
+
+        public T GetOrCreate<T>() where T : class
+        {
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                return (T)_metaData[typeof(T)];
+            }
+
+            return ActivateInstanceOf<T>.Instance();
 
         }
         

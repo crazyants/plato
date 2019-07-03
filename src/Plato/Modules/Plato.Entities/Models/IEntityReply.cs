@@ -6,7 +6,7 @@ using Plato.Internal.Models.Users;
 namespace Plato.Entities.Models
 {
 
-    public interface IEntityReply
+    public interface IEntityReply : IEntityMetaData<IEntityReplyData>
     {
         int Id { get; set; }
 

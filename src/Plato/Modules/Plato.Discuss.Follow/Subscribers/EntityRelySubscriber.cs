@@ -32,17 +32,20 @@ namespace Plato.Discuss.Follow.Subscribers
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly INotificationManager<TEntityReply> _notificationManager;
+        private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IAuthorizationService _authorizationService;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<Entity> _entityStore;
+        
         private readonly IBroker _broker;
         
         public EntityReplySubscriber(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
             INotificationManager<TEntityReply> notificationManager,
+            IEntityReplyStore<TEntityReply> entityReplyStore,
             IFollowStore<Follows.Models.Follow> followStore,
             IAuthorizationService authorizationService,
             IDeferredTaskManager deferredTaskManager,
@@ -55,11 +58,11 @@ namespace Plato.Discuss.Follow.Subscribers
             _authorizationService = authorizationService;
             _notificationManager = notificationManager;
             _deferredTaskManager = deferredTaskManager;
+            _entityReplyStore = entityReplyStore;
             _platoUserStore = platoUserStore;
             _entityStore = entityStore;
             _followStore = followStore;
             _broker = broker;
-       
         }
 
         #region "Implementation"
@@ -134,16 +137,16 @@ namespace Plato.Discuss.Follow.Subscribers
                 var name = FollowTypes.Topic.Name;
 
                 // Get follow state for reply
-                //var state = reply.GetOrCreate<FollowState>();
+                var state = reply.GetOrCreate<FollowState>();
 
-                //// Have notifications already been sent for the entity?
-                //var follow = state.FollowsSent.FirstOrDefault(f =>
-                //    f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                //if (follow != null)
-                //{
-                //    return;
-                //}
-                
+               // Have notifications already been sent for the reply?
+               var follow = state.FollowsSent.FirstOrDefault(f =>
+                   f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                if (follow != null)
+                {
+                    return;
+                }
+
                 // Get entity for reply
                 var entity = await _entityStore.GetByIdAsync(reply.EntityId);
 
@@ -207,14 +210,13 @@ namespace Plato.Discuss.Follow.Subscribers
                     }
 
                 }
+                
+                // Update state
+                state.AddSent(name);
+                reply.AddOrUpdate(state);
 
-
-                //// Update state
-                //state.AddSent(name);
-                //entity.AddOrUpdate(state);
-
-                //// Persist state
-                //await _entityStore.UpdateAsync(entity);
+                // Persist state
+                await _entityReplyStore.UpdateAsync(reply);
 
             });
 

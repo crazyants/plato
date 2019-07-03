@@ -24,6 +24,12 @@ namespace Plato.Entities
                     ModuleId = ModuleId,
                     Version = "1.0.1",
                     Statements = v_1_0_1()
+                },
+                new PreparedMigration()
+                {
+                    ModuleId = ModuleId,
+                    Version = "1.0.2",
+                    Statements = v_1_0_2()
                 }
             };
 
@@ -535,6 +541,108 @@ namespace Plato.Entities
                 // Add builder results to output
                 output.AddRange(builder.Statements);
                 
+            }
+
+            return output;
+
+        }
+
+        private ICollection<string> v_1_0_2()
+        {
+            
+            // New EntityReplyData table
+            var entityReplyData = new SchemaTable()
+            {
+                Name = "EntityReplyData",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ReplyId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Key]",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Value]",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    }
+                }
+            };
+
+
+            var output = new List<string>();
+
+            using (var builder = _schemaBuilder)
+            {
+
+                builder
+                    .Configure(options =>
+                    {
+                        options.ModuleName = ModuleId;
+                        options.Version = "1.0.2";
+                        options.DropTablesBeforeCreate = true;
+                        options.DropProceduresBeforeCreate = true;
+                    });
+
+                // Build table
+                builder.TableBuilder.CreateTable(entityReplyData);
+
+                // Build procedures
+                builder.ProcedureBuilder
+                    .CreateDefaultProcedures(entityReplyData)
+
+                    .CreateProcedure(new SchemaProcedure("SelectEntityReplyDatumByReplyId", StoredProcedureType.SelectByKey)
+                        .ForTable(entityReplyData)
+                        .WithParameter(new SchemaColumn() { Name = "ReplyId", DbType = DbType.Int32 }))
+
+                    .CreateProcedure(new SchemaProcedure("SelectEntityReplyDatumPaged", StoredProcedureType.SelectPaged)
+                        .ForTable(entityReplyData)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "[Key]",
+                                DbType = DbType.String,
+                                Length = "255"
+                            }
+                        }));
+                
+                // Add builder results to output
+                output.AddRange(builder.Statements);
+
             }
 
             return output;

@@ -885,7 +885,7 @@ namespace Plato.Entities.Handlers
                 .CreateDefaultProcedures(_entityReplyData)
 
                 .CreateProcedure(new SchemaProcedure("SelectEntityReplyDatumByReplyId", StoredProcedureType.SelectByKey)
-                    .ForTable(_entityData)
+                    .ForTable(_entityReplyData)
                     .WithParameter(new SchemaColumn() { Name = "ReplyId", DbType = DbType.Int32 }))
 
                 .CreateProcedure(new SchemaProcedure("SelectEntityReplyDatumPaged", StoredProcedureType.SelectPaged)
