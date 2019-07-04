@@ -58,6 +58,9 @@ namespace Plato.Discuss.Tags.Follow.ViewProviders
                     model.FollowType = followType;
                     model.ThingId = existingTag.Id;
                     model.IsFollowing = isFollowing;
+                    model.LoginMessage = "Login to follow this tag";
+                    model.DenyMessage = "You don't have permission to follow this tag";
+                    model.Permission = Permissions.FollowDiscussTags;
                     return model;
                 }).Zone("tools").Order(1)
             );

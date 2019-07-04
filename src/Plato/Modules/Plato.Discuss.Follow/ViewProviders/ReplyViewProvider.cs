@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
 using Plato.Follows.Services;
 using Plato.Follows.Stores;
-using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Security.Abstractions;
@@ -66,7 +64,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             // We must be authenticated to automatically follow entities
             if (user == null)
             {
-                return await BuildIndexAsync(reply, context);
+                return await BuildEditAsync(reply, context);
             }
 
             // Get entity for reply
@@ -75,14 +73,14 @@ namespace Plato.Discuss.Follow.ViewProviders
             // We always need an entity
             if (entity == null)
             {
-                return await BuildIndexAsync(reply, context);
+                return await BuildEditAsync(reply, context);
             }
             
             // Are we authorized to automatically follow entities we participate in?
             if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
                 entity.CategoryId, Permissions.FollowParticipatedTopics))
             {
-                return await BuildIndexAsync(reply, context);
+                return await BuildEditAsync(reply, context);
             }
 
             // ---------
@@ -110,7 +108,7 @@ namespace Plato.Discuss.Follow.ViewProviders
                 });
             }
 
-            return await BuildIndexAsync(reply, context);
+            return await BuildEditAsync(reply, context);
 
         }
 

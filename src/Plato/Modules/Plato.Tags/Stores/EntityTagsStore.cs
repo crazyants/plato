@@ -136,7 +136,7 @@ namespace Plato.Tags.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityTagsRepository.SelectAsync(dbParams));
         }
 
-        public async Task<IEnumerable<EntityTag>> GetByEntityId(int entityId)
+        public async Task<IEnumerable<EntityTag>> GetByEntityIdAsync(int entityId)
         {
 
             if (entityId <= 0)
@@ -148,7 +148,7 @@ namespace Plato.Tags.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityTagsRepository.SelectByEntityId(entityId));
         }
 
-        public async Task<IEnumerable<EntityTag>> GetByEntityReplyId(int entityReplyId)
+        public async Task<IEnumerable<EntityTag>> GetByEntityReplyIdAsync(int entityReplyId)
         {
 
             if (entityReplyId <= 0)
@@ -159,9 +159,8 @@ namespace Plato.Tags.Stores
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityReplyId, entityReplyId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityTagsRepository.SelectByEntityReplyId(entityReplyId));
         }
-
-
-        public async Task<bool> DeleteByEntityId(int entityId)
+        
+        public async Task<bool> DeleteByEntityIdAsync(int entityId)
         {
 
             if (entityId <= 0)
@@ -183,7 +182,7 @@ namespace Plato.Tags.Stores
             return success;
         }
 
-        public async Task<bool> DeleteByEntityIdAndTagIdId(int entityId, int tagId)
+        public async Task<bool> DeleteByEntityIdAndTagIdIdAsync(int entityId, int tagId)
         {
 
             var success = await _entityTagsRepository.DeleteByEntityIdAndTagId(entityId, tagId);

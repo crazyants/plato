@@ -30,7 +30,7 @@ namespace Plato.Issues.Tags.ViewComponents
             }
 
             // Get tags and return view
-            var tags = await _tagStore.GetByEntityId(entity.Id);
+            var tags = await _tagStore.GetByEntityIdAsync(entity.Id);
             return View(new TagListViewModel()
             {
                 Topic = entity,

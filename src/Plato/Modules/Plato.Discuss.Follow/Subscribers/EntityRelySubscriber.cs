@@ -17,7 +17,6 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Entities.Extensions;
 using Plato.Entities.Stores;
 using Plato.Follows.Models;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Follow.Subscribers
@@ -39,7 +38,6 @@ namespace Plato.Discuss.Follow.Subscribers
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<Entity> _entityStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
         
         public EntityReplySubscriber(
@@ -52,7 +50,6 @@ namespace Plato.Discuss.Follow.Subscribers
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<Entity> entityStore,
-            IContextFacade contextFacade,
             IBroker broker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -64,7 +61,6 @@ namespace Plato.Discuss.Follow.Subscribers
             _platoUserStore = platoUserStore;
             _entityStore = entityStore;
             _followStore = followStore;
-            _contextFacade = contextFacade;
             _broker = broker;
         }
 

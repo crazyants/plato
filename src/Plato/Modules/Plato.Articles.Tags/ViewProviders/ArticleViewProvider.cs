@@ -365,7 +365,7 @@ namespace Plato.Articles.Tags.ViewProviders
                 return null;
             }
             
-            return await _entityTagStore.GetByEntityId(entityId);
+            return await _entityTagStore.GetByEntityIdAsync(entityId);
 
         }
 

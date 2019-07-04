@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Plato.Discuss.Categories.Follow.NotificationTypes;
+using Plato.Discuss.Labels.Follow.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
 using Plato.Internal.Messaging.Abstractions;
@@ -19,8 +19,10 @@ using Plato.Entities.Stores;
 using Plato.Follows.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
+using Plato.Labels.Models;
+using Plato.Labels.Stores;
 
-namespace Plato.Discuss.Categories.Follow.Subscribers
+namespace Plato.Discuss.Labels.Follow.Subscribers
 {
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
@@ -28,12 +30,12 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly INotificationManager<TEntity> _notificationManager;
+        private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IAuthorizationService _authorizationService;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<TEntity> _entityStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
 
         public EntitySubscriber(
@@ -41,6 +43,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
             INotificationManager<TEntity> notificationManager,
             IFollowStore<Follows.Models.Follow> followStore,
+            IEntityLabelStore<EntityLabel> entityLabelStore,
             IAuthorizationService authorizationService,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
@@ -53,8 +56,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             _authorizationService = authorizationService;
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
+            _entityLabelStore = entityLabelStore;
             _platoUserStore = platoUserStore;
-            _contextFacade = contextFacade;
             _followStore = followStore;
             _entityStore = entityStore;
             _broker = broker;
@@ -141,29 +144,17 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 return Task.FromResult(entity);
             }
 
-            // Defer notifications to first available thread pool thread
+            // Defer notifications 
             _deferredTaskManager.AddTask(async context =>
             {
-
-                // Send follow for specific category returning a list of notified user ids
-                var notifiedUsers = await SendNotificationsForCategoryAsync(entity, usersToExclude);
-
-                // Append excluded users to our list of already notified users
-                foreach (var userToExclude in usersToExclude)
-                {
-                    notifiedUsers.Add(userToExclude);
-                }
-
-                // Send notifications for all categories excluding any already notified users
-                await SendNotificationsForAllCategoriesAsync(entity, notifiedUsers);
-
+                await SendNotificationsAsync(entity, usersToExclude);
             });
 
             return Task.FromResult(entity);
 
         }
 
-        async Task<IList<int>> SendNotificationsForCategoryAsync(TEntity entity, IList<int> usersToExclude)
+        async Task<IList<int>> SendNotificationsAsync(TEntity entity, IList<int> usersToExclude)
         {
 
             if (entity == null)
@@ -173,15 +164,9 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
             // Compile a list of notified users
             var notifiedUsers = new List<int>();
-
-            // The entity is NOT posted within a specific category so no need to send notifications
-            if (entity.CategoryId == 0)
-            {
-                return notifiedUsers;
-            }
-
+            
             // Follow type name
-            var name = FollowTypes.Category.Name;
+            var name = FollowTypes.Label.Name;
 
             // Get follow state for entity
             var state = entity.GetOrCreate<FollowState>();
@@ -194,12 +179,27 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 return notifiedUsers;
             }
 
-            // Get all follows for the category
+            // Compile all entity label ids for the entity
+            var labels = new List<int>();
+            var entityLabels = await _entityLabelStore.GetByEntityIdAsync(entity.Id);
+            if (entityLabels != null)
+            {
+                foreach (var entityLabel in entityLabels)
+                {
+                    if (!labels.Contains(entityLabel.LabelId))
+                    {
+                        labels.Add(entityLabel.LabelId);
+                    }
+                    
+                }
+            }
+            
+            // Get all follows for entity labels
             var follows = await _followStore.QueryAsync()
                 .Select<FollowQueryParams>(q =>
                 {
                     q.Name.Equals(name);
-                    q.ThingId.Equals(entity.CategoryId);
+                    q.ThingId.IsIn(labels.ToArray());
                     if (usersToExclude.Count > 0)
                     {
                         q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
@@ -207,8 +207,8 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 })
                 .ToList();
 
-            // Get all users for the follow
-            var users = await GetUsersAsync(follows?.Data, entity);
+            // Reduce the users for all found follows
+            var users = await ReduceUsersAsync(follows?.Data, entity);
 
             // No users simply return
             if (users == null)
@@ -219,19 +219,19 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             // Send notifications
             foreach (var user in users)
             {
-
+                
                 // Email notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewLabel))
                 {
 
-                    // Indicate user was notified
+                    // Track notified
                     if (!notifiedUsers.Contains(user.Id))
                     {
                         notifiedUsers.Add(user.Id);
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewLabel)
                     {
                         To = user,
                     }, entity);
@@ -239,17 +239,17 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 }
 
                 // Web notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewLabel))
                 {
 
-                    // Indicate user was notified
+                    // Track notified
                     if (!notifiedUsers.Contains(user.Id))
                     {
                         notifiedUsers.Add(user.Id);
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewLabel)
                     {
                         To = user,
                         From = new User
@@ -262,6 +262,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                             PhotoColor = entity.CreatedBy.PhotoColor
                         }
                     }, entity);
+
                 }
 
             }
@@ -278,116 +279,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
         }
 
-        async Task<IList<int>> SendNotificationsForAllCategoriesAsync(TEntity entity, IList<int> usersToExclude)
-        {
-
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            // Compile a list of notified users
-            var notifiedUsers = new List<int>();
-
-            // Follow type name
-            var name = FollowTypes.AllCategories.Name;
-
-            // Get follow state for entity
-            var state = entity.GetOrCreate<FollowState>();
-
-            // Have notifications already been sent for the entity?
-            var follow = state.FollowsSent.FirstOrDefault(f =>
-                f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (follow != null)
-            {
-                return notifiedUsers;
-            }
-
-            // Get all follows
-            var follows = await _followStore.QueryAsync()
-                .Select<FollowQueryParams>(q =>
-                {
-                    q.Name.Equals(name);
-                    if (usersToExclude.Count > 0)
-                    {
-                        q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
-                    }
-                })
-                .ToList();
-
-            // Get all users for the follow
-            var users = await GetUsersAsync(follows?.Data, entity);
-
-            // No users simply return
-            if (users == null)
-            {
-                return notifiedUsers;
-            }
-
-            // Send notifications
-            foreach (var user in users)
-            {
-
-                // Email notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
-                {
-
-                    // Indicate user was notified
-                    if (!notifiedUsers.Contains(user.Id))
-                    {
-                        notifiedUsers.Add(user.Id);
-                    }
-
-                    // Notify
-                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
-                    {
-                        To = user,
-                    }, entity);
-
-                }
-
-                // Web notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
-                {
-
-                    // Indicate user was notified
-                    if (!notifiedUsers.Contains(user.Id))
-                    {
-                        notifiedUsers.Add(user.Id);
-                    }
-
-                    // Notify
-                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
-                    {
-                        To = user,
-                        From = new User
-                        {
-                            Id = entity.CreatedBy.Id,
-                            UserName = entity.CreatedBy.UserName,
-                            DisplayName = entity.CreatedBy.DisplayName,
-                            Alias = entity.CreatedBy.Alias,
-                            PhotoUrl = entity.CreatedBy.PhotoUrl,
-                            PhotoColor = entity.CreatedBy.PhotoColor
-                        }
-                    }, entity);
-
-                }
-
-            }
-
-            // Update state
-            state.AddSent(name);
-            entity.AddOrUpdate(state);
-
-            // Persist state
-            await _entityStore.UpdateAsync(entity);
-
-            // Return list of notified users
-            return notifiedUsers;
-
-        }
-
-        async Task<IEnumerable<IUser>> GetUsersAsync(
+        async Task<IEnumerable<IUser>> ReduceUsersAsync(
             IEnumerable<Follows.Models.Follow> follows,
             TEntity entity)
         {
@@ -398,7 +290,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 return null;
             }
 
-            // Get all users from the follows
+            // Get all users from the label follows
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {
@@ -419,6 +311,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             foreach (var user in users.Data)
             {
 
+                // Ensure the user is only ever added once
                 if (!result.ContainsKey(user.Id))
                 {
                     result.Add(user.Id, user);

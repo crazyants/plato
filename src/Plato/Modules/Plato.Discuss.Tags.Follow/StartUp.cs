@@ -15,6 +15,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags.Follow
@@ -48,10 +49,13 @@ namespace Plato.Discuss.Tags.Follow
 
             // Subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
-            services.AddScoped<IBrokerSubscriber, EntityTagSubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
+         
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

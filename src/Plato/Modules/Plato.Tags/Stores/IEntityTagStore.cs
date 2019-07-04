@@ -7,13 +7,13 @@ namespace Plato.Tags.Stores
     public interface IEntityTagStore<TModel> : IStore<TModel> where TModel : class
     {
 
-        Task<IEnumerable<TModel>> GetByEntityId(int entityId);
+        Task<IEnumerable<TModel>> GetByEntityIdAsync(int entityId);
 
-        Task<IEnumerable<TModel>> GetByEntityReplyId(int entityReplyId);
+        Task<IEnumerable<TModel>> GetByEntityReplyIdAsync(int entityReplyId);
 
-        Task<bool> DeleteByEntityId(int entityId);
+        Task<bool> DeleteByEntityIdAsync(int entityId);
 
-        Task<bool> DeleteByEntityIdAndTagIdId(int entityId, int tagId);
+        Task<bool> DeleteByEntityIdAndTagIdIdAsync(int entityId, int tagId);
 
     }
 

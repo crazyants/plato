@@ -321,7 +321,20 @@ $(function (win, doc, $) {
             return {
                 promise: function(config) {
                     return $.ajax(config)
-                        .fail(function(xhr, ajaxOptions, thrownError) {
+                        .fail(function (xhr, ajaxOptions, thrownError) {
+                            // If you attempt to navigate away from the page before the XmlHttp request
+                            // completes jQuery raises the failed event with a readyState of 0, this is not 
+                            // an error we need to display so simply return in this scenario
+                            if (xhr) {
+                                if (xhr.readyState !== null && typeof xhr.readyState !== "undefined") {
+                                    var readyState = parseInt(xhr.readyState);
+                                    if (!isNaN(readyState)) {
+                                        if (readyState === 0) {
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
                             if (onError) {
                                 onError(config, xhr, ajaxOptions, thrownError);
                             }

@@ -15,6 +15,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using YamlDotNet.Core.Tokens;
 
 
@@ -49,10 +50,13 @@ namespace Plato.Discuss.Labels.Follow
 
             // Subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
-            services.AddScoped<IBrokerSubscriber, EntityLabelSubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
+
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

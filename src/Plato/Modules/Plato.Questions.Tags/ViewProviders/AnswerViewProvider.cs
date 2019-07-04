@@ -323,7 +323,7 @@ namespace Plato.Questions.Tags.ViewProviders
                 return null;
             }
 
-            return await _entityTagStore.GetByEntityReplyId(entityId);
+            return await _entityTagStore.GetByEntityReplyIdAsync(entityId);
 
         }
 
