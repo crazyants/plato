@@ -1,9 +1,6 @@
 ﻿@model FollowViewModel
-@{
-    var permission = Plato.Discuss.Follow.Permissions.FollowTopics;
-}
 
-<authorize asp-permission="@permission.Name">
+<authorize asp-permission="@Model.Permission.Name">
     <authorize-success>
         @if (!Model.IsFollowing)
         {
@@ -21,13 +18,13 @@
     <authorize-fail>
         @if (base.CurrentUser == null)
         {
-            <a title="@T["Login to follow this topic"]" data-toggle="tooltip" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn bg-transparent text-muted">
+            <a title="@T[Model.LoginMessage]" data-toggle="tooltip" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn bg-transparent text-muted">
                 <i class="fal fa-bell"></i>
             </a>
         }
         else
         {
-            <span title="@T["You don't have permission to follow topics"]" data-toggle="tooltip" class="btn bg-transparent text-muted cursor-default">
+            <span title="@T[Model.DenyMessage]" data-toggle="tooltip" class="btn bg-transparent text-muted cursor-default">
                 <i class="fal fa-bell"></i>
             </span>
         }

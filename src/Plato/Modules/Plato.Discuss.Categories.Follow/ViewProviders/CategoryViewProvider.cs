@@ -13,47 +13,53 @@ namespace Plato.Discuss.Categories.Follow.ViewProviders
     public class CategoryViewProvider : BaseViewProvider<Category>
     {
 
+        private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IFollowStore<Follows.Models.Follow> _followStore;
-
+ 
         public CategoryViewProvider(
-            IContextFacade contextFacade,
             IFollowStore<Follows.Models.Follow> followStore,
-            ICategoryStore<Category> categoryStore)
+            ICategoryStore<Category> categoryStore,
+            IContextFacade contextFacade)
         {
             _contextFacade = contextFacade;
-            _followStore = followStore;
             _categoryStore = categoryStore;
+            _followStore = followStore;
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Category categoryAdmin, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Category category, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Category categoryAdmin, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Category category, IViewProviderContext context)
         {
 
-            if (categoryAdmin == null)
+            // Get category Id
+            var categoryId = 0;
+            if (category != null)
             {
-                return default(IViewProviderResult);
+                categoryId = category.Id;
             }
-            
+         
             // Get follow type
-            FollowType followType = null;
-            followType = categoryAdmin.Id == 0
+            var followType = categoryId == 0
                 ? FollowTypes.AllCategories
                 : FollowTypes.Category;
-            
+
+            // Get permission
+            var permission = categoryId == 0
+                ? Follow.Permissions.FollowDiscussCategories
+                : Follow.Permissions.FollowDiscussCategory;
+
             // Get thingId if available
             var thingId = 0;
-            if (categoryAdmin.Id > 0)
+            if (categoryId > 0)
             {
-                var existingChannel = await _categoryStore.GetByIdAsync(categoryAdmin.Id);
-                if (existingChannel != null)
+                var existingCategory = await _categoryStore.GetByIdAsync(categoryId);
+                if (existingCategory != null)
                 {
-                    thingId = existingChannel.Id;
+                    thingId = existingCategory.Id;
                 }
             }
 
@@ -78,6 +84,9 @@ namespace Plato.Discuss.Categories.Follow.ViewProviders
                     model.FollowType = followType;
                     model.ThingId = thingId;
                     model.IsFollowing = isFollowing;
+                    model.Permission = permission;
+                    model.LoginMessage = "Login to follow categories";
+                    model.DenyMessage = "You don't have permission to follow categories";
                     return model;
                 }).Zone("tools").Order(-4)
             );
@@ -85,12 +94,12 @@ namespace Plato.Discuss.Categories.Follow.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Category categoryAdmin, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Category category, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Category categoryAdmin, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Category category, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

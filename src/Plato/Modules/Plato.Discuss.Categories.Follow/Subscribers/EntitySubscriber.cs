@@ -24,7 +24,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 {
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-        
+
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly INotificationManager<TEntity> _notificationManager;
@@ -54,10 +54,10 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
             _platoUserStore = platoUserStore;
+            _contextFacade = contextFacade;
             _followStore = followStore;
             _entityStore = entityStore;
             _broker = broker;
-            _contextFacade = contextFacade;
         }
 
         #region "Implementation"
@@ -104,239 +104,289 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-            return await SendNotificationsForCategory(entity);
-            //return await SendNotificationsForAllCategories(entity);
+
+            // For new entries we want to exclude the author from any notifications
+            var usersToExclude = new List<int>()
+            {
+                entity.CreatedUserId
+            };
+
+            return await SendAsync(entity, usersToExclude);
         }
 
         async Task<TEntity> EntityUpdated(TEntity entity)
         {
-            return await SendNotificationsForCategory(entity);
-            //return await SendNotificationsForAllCategories(entity);
+
+            // For updated entries we want to exclude the user updating the entry from any notifications
+            var usersToExclude = new List<int>()
+            {
+                entity.ModifiedUserId
+            };
+
+            return await SendAsync(entity, usersToExclude);
+
         }
 
-        Task<TEntity> SendNotificationsForCategory(TEntity entity)
+        Task<TEntity> SendAsync(TEntity entity, IList<int> usersToExclude)
         {
 
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
+                        
+            // We don't need to trigger notifications for hidden entities
+            if (entity.IsHidden())
+            {
+                return Task.FromResult(entity);
+            }
+
+            // Defer notifications to first available thread pool thread
+            _deferredTaskManager.AddTask(async context =>
+            {
+
+                // Send follow for specific category returning a list of notified user ids
+                var notifiedUsers = await SendNotificationsForCategoryAsync(entity, usersToExclude);
+
+                // Append excluded users to our list of notified users
+                foreach (var userToExclude in usersToExclude)
+                {
+                    notifiedUsers.Add(userToExclude);
+                }
+
+                // Send notifications for all categoties excluding any already notified users
+                await SendNotificationsForAllCategoriesAsync(entity, notifiedUsers);
+
+            });
+
+            return Task.FromResult(entity);
+
+        }
+
+        async Task<IList<int>> SendNotificationsForCategoryAsync(TEntity entity, IList<int> usersToExclude)
+        {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            // Compile a list of notified users
+            var notifiedUsers = new List<int>();
 
             // The entity is NOT posted within a specific category so no need to send notifications
             if (entity.CategoryId == 0)
             {
-                return Task.FromResult(entity);
+                return notifiedUsers;
             }
 
-            // We don't need to trigger notifications for hidden entities
-            if (entity.IsHidden())
+            // Follow type name
+            var name = FollowTypes.Category.Name;
+
+            // Get follow state for entity
+            var state = entity.GetOrCreate<FollowState>();
+
+            // Have notifications already been sent for the entity?
+            var follow = state.FollowsSent.FirstOrDefault(f =>
+                f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (follow != null)
             {
-                return Task.FromResult(entity);
+                return notifiedUsers;
             }
-            
-            // Defer notifications to first available thread pool thread
-            _deferredTaskManager.AddTask(async context =>
+
+            // Get all follows for the category
+            var follows = await _followStore.QueryAsync()
+                .Select<FollowQueryParams>(q =>
+                {
+                    q.Name.Equals(name);
+                    q.ThingId.Equals(entity.CategoryId);
+                    if (usersToExclude.Count > 0)
+                    {
+                        q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
+                    }
+                })
+                .ToList();
+
+            // Get all users for the follow
+            var users = await GetUsersAsync(follows?.Data, entity);
+
+            // No users simply return
+            if (users == null)
+            {
+                return notifiedUsers;
+            }
+
+            // Send notifications
+            foreach (var user in users)
             {
 
-                // Follow type name
-                var name = FollowTypes.Category.Name;
-
-                // Get follow state for entity
-                var state = entity.GetOrCreate<FollowState>();
-
-                // Have notifications already been sent for the entity?
-                var follow = state.FollowsSent.FirstOrDefault(f =>
-                    f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                if (follow != null)
+                // Email notifications
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
                 {
-                    return;
-                }
-                
-                // Get all follows for the category
-                var follows = await _followStore.QueryAsync()
-                    .Select<FollowQueryParams>(async q =>
+
+                    // Indicate user was notified
+                    if (!notifiedUsers.Contains(user.Id))
                     {
-
-                        // Get by name and categoryId
-                        q.Name.Equals(name);
-                        q.ThingId.Equals(entity.CategoryId);
-
-                        // We may want to exclude users from the notifications
-                        var usersToExclude = new List<int>();
-
-                        // The user performing the action that generates the follow notification
-                        // does not need to be informed of there own actions so exclude them
-                        var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
-                        if (currentUser != null)
-                        {
-                            usersToExclude.Add(currentUser.Id);
-                        }
-
-                        // Exclude the entity author
-                        if (!usersToExclude.Contains(entity.CreatedUserId))
-                        {
-                            usersToExclude.Add(entity.CreatedUserId);
-                        }
-
-                        if (usersToExclude.Count > 0)
-                        {
-                            q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
-                        }
-                        
-                    })
-                    .ToList();
-
-                // Get all users for the follow
-                var users = await GetUsersAsync(follows?.Data, entity);
-
-                // No users simply return
-                if (users == null)
-                {
-                    return;
-                }
-
-                // Send notifications
-                foreach (var user in users)
-                {
-
-                    // Email notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
-                    {
-                        await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
-                        {
-                            To = user,
-                        }, entity);
+                        notifiedUsers.Add(user.Id);
                     }
 
-                    // Web notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
+                    // Notify
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
                     {
-                        await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
-                        {
-                            To = user,
-                            From = new User
-                            {
-                                Id = entity.CreatedBy.Id,
-                                UserName = entity.CreatedBy.UserName,
-                                DisplayName = entity.CreatedBy.DisplayName,
-                                Alias = entity.CreatedBy.Alias,
-                                PhotoUrl = entity.CreatedBy.PhotoUrl,
-                                PhotoColor = entity.CreatedBy.PhotoColor
-                            }
-                        }, entity);
-                    }
+                        To = user,
+                    }, entity);
 
                 }
 
-                // Update state
-                state.AddSent(name);
-                entity.AddOrUpdate(state);
+                // Web notifications
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
+                {
 
-                // Persist state
-                await _entityStore.UpdateAsync(entity);
-                
-            });
+                    // Indicate user was notified
+                    if (!notifiedUsers.Contains(user.Id))
+                    {
+                        notifiedUsers.Add(user.Id);
+                    }
 
-            return Task.FromResult(entity);
+                    // Notify
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
+                    {
+                        To = user,
+                        From = new User
+                        {
+                            Id = entity.CreatedBy.Id,
+                            UserName = entity.CreatedBy.UserName,
+                            DisplayName = entity.CreatedBy.DisplayName,
+                            Alias = entity.CreatedBy.Alias,
+                            PhotoUrl = entity.CreatedBy.PhotoUrl,
+                            PhotoColor = entity.CreatedBy.PhotoColor
+                        }
+                    }, entity);
+                }
+
+            }
+
+            // Update state
+            state.AddSent(name);
+            entity.AddOrUpdate(state);
+
+            // Persist state
+            await _entityStore.UpdateAsync(entity);
+
+            // Return a list of all notified users
+            return notifiedUsers;
 
         }
 
-        Task<TEntity> SendNotificationsForAllCategories(TEntity entity)
+        async Task<IList<int>> SendNotificationsForAllCategoriesAsync(TEntity entity, IList<int> usersToExclude)
         {
-            
+
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            // We don't need to trigger notifications for hidden entities
-            if (entity.IsHidden())
+            // Compile a list of notified users
+            var notifiedUsers = new List<int>();
+
+            // Follow type name
+            var name = FollowTypes.AllCategories.Name;
+
+            // Get follow state for entity
+            var state = entity.GetOrCreate<FollowState>();
+
+            // Have notifications already been sent for the entity?
+            var follow = state.FollowsSent.FirstOrDefault(f =>
+                f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (follow != null)
             {
-                return Task.FromResult(entity);
+                return notifiedUsers;
             }
-            
-            // Defer notifications to first available thread pool thread
-            _deferredTaskManager.AddTask(async context =>
+
+            // Get all follows
+            var follows = await _followStore.QueryAsync()
+                .Select<FollowQueryParams>(q =>
+                {
+                    q.Name.Equals(name);
+                    if (usersToExclude.Count > 0)
+                    {
+                        q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
+                    }
+                })
+                .ToList();
+
+            // Get all users for the follow
+            var users = await GetUsersAsync(follows?.Data, entity);
+
+            // No users simply return
+            if (users == null)
             {
-                
-                // Follow type name
-                var name = FollowTypes.AllCategories.Name;
+                return notifiedUsers;
+            }
 
-                // Get follow state for entity
-                var state = entity.GetOrCreate<FollowState>();
+            // Send notifications
+            foreach (var user in users)
+            {
 
-                // Have notifications already been sent for the entity?
-                var follow = state.FollowsSent.FirstOrDefault(f =>
-                    f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                if (follow != null)
+                // Email notifications
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
                 {
-                    return;
-                }
-                
-                // Get all follows
-                var follows = await _followStore.QueryAsync()
-                    .Select<FollowQueryParams>(q =>
+
+                    // Indicate user was notified
+                    if (!notifiedUsers.Contains(user.Id))
                     {
-                        q.Name.Equals(name);
-                    })
-                    .ToList();
-
-                // Get all users for the follow
-                var users = await GetUsersAsync(follows?.Data, entity);
-
-                // No users simply return
-                if (users == null)
-                {
-                    return;
-                }
-
-                // Send notifications
-                foreach (var user in users)
-                {
-
-                    // Email notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTopic))
-                    {
-                        await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
-                        {
-                            To = user,
-                        }, entity);
+                        notifiedUsers.Add(user.Id);
                     }
 
-                    // Web notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
+                    // Notify
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTopic)
                     {
-                        await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
-                        {
-                            To = user,
-                            From = new User
-                            {
-                                Id = entity.CreatedBy.Id,
-                                UserName = entity.CreatedBy.UserName,
-                                DisplayName = entity.CreatedBy.DisplayName,
-                                Alias = entity.CreatedBy.Alias,
-                                PhotoUrl = entity.CreatedBy.PhotoUrl,
-                                PhotoColor = entity.CreatedBy.PhotoColor
-                            }
-                        }, entity);
-                    }
+                        To = user,
+                    }, entity);
 
                 }
 
-                // Update state
-                state.AddSent(name);
-                entity.AddOrUpdate(state);
+                // Web notifications
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTopic))
+                {
 
-                // Persist state
-                await _entityStore.UpdateAsync(entity);
+                    // Indicate user was notified
+                    if (!notifiedUsers.Contains(user.Id))
+                    {
+                        notifiedUsers.Add(user.Id);
+                    }
 
-            });
+                    // Notify
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewTopic)
+                    {
+                        To = user,
+                        From = new User
+                        {
+                            Id = entity.CreatedBy.Id,
+                            UserName = entity.CreatedBy.UserName,
+                            DisplayName = entity.CreatedBy.DisplayName,
+                            Alias = entity.CreatedBy.Alias,
+                            PhotoUrl = entity.CreatedBy.PhotoUrl,
+                            PhotoColor = entity.CreatedBy.PhotoColor
+                        }
+                    }, entity);
 
-            return Task.FromResult(entity);
+                }
+
+            }
+
+            // Update state
+            state.AddSent(name);
+            entity.AddOrUpdate(state);
+
+            // Persist state
+            await _entityStore.UpdateAsync(entity);
+
+            // Return list of notified users
+            return notifiedUsers;
 
         }
 
-        // TODO: Look at centralizing within class
         async Task<IEnumerable<IUser>> GetUsersAsync(
             IEnumerable<Follows.Models.Follow> follows,
             TEntity entity)
@@ -347,7 +397,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             {
                 return null;
             }
-            
+
             // Get all users from the follows
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
@@ -363,7 +413,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             {
                 return null;
             }
-            
+
             // Build users reducing for permissions
             var result = new Dictionary<int, IUser>();
             foreach (var user in users.Data)
@@ -373,14 +423,14 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 {
                     result.Add(user.Id, user);
                 }
-                
+
                 // If the entity is hidden but the user does
                 // not have permission to view hidden entities
                 if (entity.IsHidden)
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Permissions.ViewHiddenTopics))
+                        entity.CategoryId, Discuss.Permissions.ViewHiddenTopics))
                     {
                         result.Remove(user.Id);
                     }
@@ -392,7 +442,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Permissions.ViewPrivateTopics))
+                        entity.CategoryId, Discuss.Permissions.ViewPrivateTopics))
                     {
                         result.Remove(user.Id);
                     }
@@ -404,7 +454,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Permissions.ViewSpamTopics))
+                        entity.CategoryId, Discuss.Permissions.ViewSpamTopics))
                     {
                         result.Remove(user.Id);
                     }
@@ -416,18 +466,18 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Permissions.ViewDeletedTopics))
+                        entity.CategoryId, Discuss.Permissions.ViewDeletedTopics))
                     {
                         result.Remove(user.Id);
                     }
                 }
-                
+
             }
 
             return result.Values;
 
         }
-        
+
         #endregion
 
     }

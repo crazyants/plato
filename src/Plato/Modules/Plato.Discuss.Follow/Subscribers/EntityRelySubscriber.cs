@@ -115,20 +115,31 @@ namespace Plato.Discuss.Follow.Subscribers
         {
 
             // For new entries we want to exclude the author from any notifications
+            var usersToExclude = new List<int>()
+            {
+                reply.CreatedUserId
+            };
 
-            return await SendNotificationsAsync(reply);
+            return await SendNotificationsAsync(reply, usersToExclude);
+
         }
 
         async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
         {
             // For updated entries we want to exclude the user updating the entry from any notifications
+            var usersToExclude = new List<int>()
+            {
+                reply.ModifiedUserId
+            };
 
-            return await SendNotificationsAsync(reply);
+            return await SendNotificationsAsync(reply, usersToExclude);
         }
 
         // -----------
 
-        Task<TEntityReply> SendNotificationsAsync(TEntityReply reply)
+        Task<TEntityReply> SendNotificationsAsync(
+            TEntityReply reply,
+            IList<int> usersToExclude)
         {
 
             if (reply == null)
@@ -177,34 +188,14 @@ namespace Plato.Discuss.Follow.Subscribers
 
                 // Get all follows for entity
                 var follows = await _followStore.QueryAsync()
-                    .Select<FollowQueryParams>(async q =>
+                    .Select<FollowQueryParams>(q =>
                     {
-
                         q.ThingId.Equals(reply.EntityId);
                         q.Name.Equals(name);
-
-                        // We may want to exclude users from the notifications
-                        var usersToExclude = new List<int>();
-
-                        // The user performing the action that generates the follow notification
-                        // does not need to be informed of there own actions so exclude them
-                        var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
-                        if (currentUser != null)
-                        {
-                            usersToExclude.Add(currentUser.Id);
-                        }
-
-                        // Exclude the reply author
-                        if (!usersToExclude.Contains(reply.CreatedUserId))
-                        {
-                            usersToExclude.Add(reply.CreatedUserId);
-                        }
-
                         if (usersToExclude.Count > 0)
                         {
                             q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
                         }
-
                     })
                     .ToList();
 

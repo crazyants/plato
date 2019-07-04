@@ -1,28 +1,23 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Follow
+namespace Plato.Discuss.Categories.Follow
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission FollowTopics =
-            new Permission("FollowTopics", "Can follow topics");
+        public static readonly Permission FollowDiscussCategories =
+            new Permission("FollowDiscussCategories", "Can follow all categories");
 
-        public static readonly Permission FollowNewTopics =
-            new Permission("FollowNewTopics", "Automatically follow new topics");
-
-        public static readonly Permission FollowParticipatedTopics =
-            new Permission("FollowParticipatedTopics", "Automatically follow topics when posting replies");
-
+        public static readonly Permission FollowDiscussCategory =
+            new Permission("FollowDiscussCategory", "Can follow any individual category");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                FollowTopics,
-                FollowNewTopics,
-                FollowParticipatedTopics
+                FollowDiscussCategories,
+                FollowDiscussCategory
             };
         }
 
@@ -35,9 +30,8 @@ namespace Plato.Discuss.Follow
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        FollowTopics,
-                        FollowNewTopics,
-                        FollowParticipatedTopics
+                        FollowDiscussCategories,
+                        FollowDiscussCategory
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -45,9 +39,8 @@ namespace Plato.Discuss.Follow
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        FollowTopics,
-                        FollowNewTopics,
-                        FollowParticipatedTopics
+                        FollowDiscussCategories,
+                        FollowDiscussCategory
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -55,9 +48,8 @@ namespace Plato.Discuss.Follow
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        FollowTopics,
-                        FollowNewTopics,
-                        FollowParticipatedTopics
+                        FollowDiscussCategories,
+                        FollowDiscussCategory
                     }
                 }
             };

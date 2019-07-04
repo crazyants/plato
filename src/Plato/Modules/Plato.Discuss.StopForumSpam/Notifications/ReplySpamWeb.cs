@@ -80,7 +80,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             if (entity == null)
             {
                 return result.Failed(
-                    $"No entity with id '{context.Model.EntityId}' exists. Failed to send reply spam email notification.");
+                    $"No entity with id '{context.Model.EntityId}' exists. Failed to send reply spam web notification.");
             }
             
             var baseUri = await _urlHelper.GetBaseUrlAsync();

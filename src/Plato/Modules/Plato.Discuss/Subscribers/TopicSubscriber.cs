@@ -138,7 +138,7 @@ namespace Plato.Discuss.Subscribers
             return entity;
 
         }
-
+        
         async Task<TEntity> EntityDeleted(TEntity entity)
         {
 

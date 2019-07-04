@@ -39,7 +39,9 @@ namespace Plato.Discuss.Follow
             // View providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
-
+            services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
+            services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
+            
             // Follow subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();

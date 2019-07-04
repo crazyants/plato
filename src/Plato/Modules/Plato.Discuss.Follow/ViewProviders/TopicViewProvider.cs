@@ -76,6 +76,9 @@ namespace Plato.Discuss.Follow.ViewProviders
                     model.FollowType = followType;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
+                    model.Permission = Follow.Permissions.FollowTopics;
+                    model.LoginMessage = "Login to follow topics";
+                    model.DenyMessage = "You don't have permission to follow topics";
                     return model;
                 }).Zone("tools").Order(-4)
             );
@@ -109,7 +112,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             if (entity.Id == 0)
             {
                 if (await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                    entity.CategoryId, Permissions.FollowTopicsByDefault))
+                    entity.CategoryId, Permissions.FollowNewTopics))
                 {
                     isFollowing = true;
                 }
@@ -122,6 +125,7 @@ namespace Plato.Discuss.Follow.ViewProviders
                     model.FollowHtmlName = FollowHtmlName;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
+                    model.Permission = Follow.Permissions.FollowTopics;
                     return model;
                 }).Zone("sidebar").Order(2)
             );

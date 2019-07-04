@@ -15,6 +15,7 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Discuss.Models;
 using Plato.Follows.Services;
 using Plato.Discuss.Categories.Models;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Categories.Follow
 {
@@ -51,6 +52,9 @@ namespace Plato.Discuss.Categories.Follow
             // Notification Providers
             services.AddScoped<INotificationProvider<Topic>, NewTopicEmail>();
             services.AddScoped<INotificationProvider<Topic>, NewTopicWeb>();
+
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

@@ -25,7 +25,7 @@ namespace Plato.Discuss.Categories.Controllers
     public class HomeController : Controller, IUpdateModel
     {
      
-        private readonly IViewProviderManager<Category> _channelViewProvider;
+        private readonly IViewProviderManager<Category> _categoryViewProvider;
         private readonly ICategoryStore<Category> _channelStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IPageTitleBuilder _pageTitleBuilder;
@@ -40,7 +40,7 @@ namespace Plato.Discuss.Categories.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
-            IViewProviderManager<Category> channelViewProvider,
+            IViewProviderManager<Category> categoryViewProvider,
             ICategoryStore<Category> channelStore,
             IBreadCrumbManager breadCrumbManager,
             IPageTitleBuilder pageTitleBuilder,
@@ -50,7 +50,7 @@ namespace Plato.Discuss.Categories.Controllers
             IAlerter alerter)
         {
       
-            _channelViewProvider = channelViewProvider;
+            _categoryViewProvider = categoryViewProvider;
             _breadCrumbManager = breadCrumbManager;
             _pageTitleBuilder = pageTitleBuilder;
             _contextFacade = contextFacade1;
@@ -190,7 +190,7 @@ namespace Plato.Discuss.Categories.Controllers
             });
             
             // Return view
-            return View((LayoutViewModel) await _channelViewProvider.ProvideIndexAsync(category, this));
+            return View((LayoutViewModel) await _categoryViewProvider.ProvideIndexAsync(category, this));
 
         }
 
