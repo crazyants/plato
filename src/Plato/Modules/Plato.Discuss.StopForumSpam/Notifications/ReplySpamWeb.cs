@@ -10,6 +10,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Discuss.StopForumSpam.NotificationTypes;
+using Plato.Entities.Stores;
 
 namespace Plato.Discuss.StopForumSpam.Notifications
 {
@@ -17,6 +18,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
     {
 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly ICapturedRouterUrlHelper _urlHelper;
 
         public IHtmlLocalizer T { get; }
@@ -26,11 +28,14 @@ namespace Plato.Discuss.StopForumSpam.Notifications
         public ReplySpamWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
+            IUserNotificationsManager<UserNotification> userNotificationManager,
             ICapturedRouterUrlHelper urlHelper,
-            IUserNotificationsManager<UserNotification> userNotificationManager)
+            IEntityStore<Topic> entityStore)
         {
-            _urlHelper = urlHelper;
+
             _userNotificationManager = userNotificationManager;
+            _entityStore = entityStore;
+            _urlHelper = urlHelper;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -64,18 +69,29 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             {
                 return null;
             }
-            
+
             // Create result
             var result = new CommandResult<Reply>();
+
+            // Get entity for reply
+            var entity = await _entityStore.GetByIdAsync(context.Model.EntityId);
+
+            // Ensure we found the entity
+            if (entity == null)
+            {
+                return result.Failed(
+                    $"No entity with id '{context.Model.EntityId}' exists. Failed to send reply spam email notification.");
+            }
             
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Jump",
-                ["Id"] = context.Model.EntityId,
-                ["ReplyId"] = context.Model.Id
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = context.Model.Id
             });
 
             //// Build notification

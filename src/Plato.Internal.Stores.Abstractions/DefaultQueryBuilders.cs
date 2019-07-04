@@ -230,6 +230,26 @@ namespace Plato.Internal.Stores.Abstractions
 
         }
 
+        public WhereInt IsNotIn(int[] value, char delimiter = ',')
+        {
+
+            if (value == null || value.Length == 0)
+            {
+                return this;
+            }
+
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" OR ");
+            Value = value[0];
+            _builder
+                .Append("{0} NOT IN (")
+                .Append(value.ToDelimitedString(delimiter))
+                .Append(")");
+
+            return this;
+
+        }
+
         public string ToSqlString(string columnName)
         {
             return _builder.ToString().Replace("{0}", columnName);

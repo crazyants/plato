@@ -61,11 +61,11 @@ namespace Plato.Discuss.StopForumSpam.Notifications
                     $"No email template with the Id '{templateId}' exists within the 'locales/{culture}/emails.json' file!");
             }
 
-            // Get topic for reply
-            var topic = await _topicStore.GetByIdAsync(context.Model.EntityId);
+            // Get entity for reply
+            var entity = await _topicStore.GetByIdAsync(context.Model.EntityId);
 
-            // We need an topic for the reply
-            if (topic == null)
+            // We need an entity for the reply
+            if (entity == null)
             {
                 return result.Failed(
                     $"No entity with id '{context.Model.EntityId}' exists. Failed to send reply spam email notification.");
@@ -78,8 +78,8 @@ namespace Plato.Discuss.StopForumSpam.Notifications
                 ["area"] = "Plato.Discuss",
                 ["controller"] = "Home",
                 ["action"] = "Reply",
-                ["opts.id"] = topic.Id,
-                ["opts.alias"] = topic.Alias,
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
                 ["opts.replyId"] = context.Model.Id
             });
 
@@ -88,7 +88,7 @@ namespace Plato.Discuss.StopForumSpam.Notifications
             message.Body = string.Format(
                 email.Message,
                 context.Notification.To.DisplayName,
-                topic.Title,
+                entity.Title,
                 baseUri + url);
             ;
             message.IsBodyHtml = true;

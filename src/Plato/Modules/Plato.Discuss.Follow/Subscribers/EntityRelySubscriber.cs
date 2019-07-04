@@ -17,6 +17,7 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Entities.Extensions;
 using Plato.Entities.Stores;
 using Plato.Follows.Models;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Follow.Subscribers
@@ -38,7 +39,7 @@ namespace Plato.Discuss.Follow.Subscribers
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<Entity> _entityStore;
-        
+        private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
         
         public EntityReplySubscriber(
@@ -51,6 +52,7 @@ namespace Plato.Discuss.Follow.Subscribers
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<Entity> entityStore,
+            IContextFacade contextFacade,
             IBroker broker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -62,6 +64,7 @@ namespace Plato.Discuss.Follow.Subscribers
             _platoUserStore = platoUserStore;
             _entityStore = entityStore;
             _followStore = followStore;
+            _contextFacade = contextFacade;
             _broker = broker;
         }
 
@@ -110,11 +113,16 @@ namespace Plato.Discuss.Follow.Subscribers
 
         async Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
         {
+
+            // For new entries we want to exclude the author from any notifications
+
             return await SendNotificationsAsync(reply);
         }
 
         async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
         {
+            // For updated entries we want to exclude the user updating the entry from any notifications
+
             return await SendNotificationsAsync(reply);
         }
 
@@ -169,10 +177,34 @@ namespace Plato.Discuss.Follow.Subscribers
 
                 // Get all follows for entity
                 var follows = await _followStore.QueryAsync()
-                    .Select<FollowQueryParams>(q =>
+                    .Select<FollowQueryParams>(async q =>
                     {
+
                         q.ThingId.Equals(reply.EntityId);
                         q.Name.Equals(name);
+
+                        // We may want to exclude users from the notifications
+                        var usersToExclude = new List<int>();
+
+                        // The user performing the action that generates the follow notification
+                        // does not need to be informed of there own actions so exclude them
+                        var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
+                        if (currentUser != null)
+                        {
+                            usersToExclude.Add(currentUser.Id);
+                        }
+
+                        // Exclude the reply author
+                        if (!usersToExclude.Contains(reply.CreatedUserId))
+                        {
+                            usersToExclude.Add(reply.CreatedUserId);
+                        }
+
+                        if (usersToExclude.Count > 0)
+                        {
+                            q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
+                        }
+
                     })
                     .ToList();
 
@@ -257,14 +289,12 @@ namespace Plato.Discuss.Follow.Subscribers
                 return null;
             }
             
-
-            // Get all users following the category
+            // Get all users following the entity
             // Exclude the author so they are not notified of there own posts
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {
                     q.Id.IsIn(follows
-                        .Where(f => f.CreatedUserId != reply.CreatedUserId)
                         .Select(f => f.CreatedUserId)
                         .ToArray());
                 })

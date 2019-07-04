@@ -62,7 +62,8 @@ namespace Plato.Follows.Stores
         private WhereInt _id;
         private WhereInt _thingId;
         private WhereString _name;
-      
+        private WhereInt _createdUserId;
+
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -80,7 +81,13 @@ namespace Plato.Follows.Stores
             get => _name ?? (_name = new WhereString());
             set => _name = value;
         }
-        
+
+        public WhereInt CreatedUserId
+        {
+            get => _createdUserId ?? (_createdUserId = new WhereInt());
+            set => _createdUserId = value;
+        }
+
     }
 
     #endregion
@@ -186,7 +193,7 @@ namespace Plato.Follows.Stores
             }
 
             // ThingId
-            if (_query.Params.ThingId.Value > 0)
+            if (_query.Params.ThingId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.ThingId.Operator);
@@ -200,10 +207,19 @@ namespace Plato.Follows.Stores
                     sb.Append(_query.Params.Name.Operator);
                 sb.Append(_query.Params.Name.ToSqlString("f.[Name]", "Name"));
             }
+        
+            // CreatedUserId
+            if (_query.Params.CreatedUserId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.CreatedUserId.Operator);
+                sb.Append(_query.Params.CreatedUserId.ToSqlString("f.CreatedUserId"));
+            }
+
             return sb.ToString();
 
         }
-        
+
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)

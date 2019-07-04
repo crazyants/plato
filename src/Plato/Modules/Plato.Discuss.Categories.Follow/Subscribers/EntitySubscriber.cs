@@ -17,6 +17,7 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Entities.Extensions;
 using Plato.Entities.Stores;
 using Plato.Follows.Models;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Categories.Follow.Subscribers
@@ -32,6 +33,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<TEntity> _entityStore;
+        private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
 
         public EntitySubscriber(
@@ -43,6 +45,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IEntityStore<TEntity> entityStore,
+            IContextFacade contextFacade,
             IBroker broker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -54,6 +57,7 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             _followStore = followStore;
             _entityStore = entityStore;
             _broker = broker;
+            _contextFacade = contextFacade;
         }
 
         #region "Implementation"
@@ -134,15 +138,6 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             _deferredTaskManager.AddTask(async context =>
             {
 
-                //// Get entity
-                //var entity = await _entityStore.GetByIdAsync(model.Id);
-
-                //// Ensure entity exists
-                //if (entity == null)
-                //{
-                //    return;
-                //}
-
                 // Follow type name
                 var name = FollowTypes.Category.Name;
 
@@ -159,10 +154,35 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
                 
                 // Get all follows for the category
                 var follows = await _followStore.QueryAsync()
-                    .Select<FollowQueryParams>(q =>
+                    .Select<FollowQueryParams>(async q =>
                     {
-                        q.ThingId.Equals(entity.CategoryId);
+
+                        // Get by name and categoryId
                         q.Name.Equals(name);
+                        q.ThingId.Equals(entity.CategoryId);
+
+                        // We may want to exclude users from the notifications
+                        var usersToExclude = new List<int>();
+
+                        // The user performing the action that generates the follow notification
+                        // does not need to be informed of there own actions so exclude them
+                        var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
+                        if (currentUser != null)
+                        {
+                            usersToExclude.Add(currentUser.Id);
+                        }
+
+                        // Exclude the entity author
+                        if (!usersToExclude.Contains(entity.CreatedUserId))
+                        {
+                            usersToExclude.Add(entity.CreatedUserId);
+                        }
+
+                        if (usersToExclude.Count > 0)
+                        {
+                            q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
+                        }
+                        
                     })
                     .ToList();
 
@@ -327,14 +347,12 @@ namespace Plato.Discuss.Categories.Follow.Subscribers
             {
                 return null;
             }
-
-            // Get all users following the category
-            // Exclude the author so they are not notified of there own posts
+            
+            // Get all users from the follows
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {
                     q.Id.IsIn(follows
-                        .Where(f => f.CreatedUserId != entity.CreatedUserId)
                         .Select(f => f.CreatedUserId)
                         .ToArray());
                 })
