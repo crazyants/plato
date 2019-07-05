@@ -191,9 +191,7 @@ namespace Plato.Internal.Repositories.Reputations
                 }
                 return output;
             });
-
-
-
+            
         }
 
         // ----------------

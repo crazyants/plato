@@ -33,10 +33,8 @@ namespace Plato.Internal.Cache
         public async Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, Task<TItem>> factory)
         {
 
-
-            var key = token.ToString();
-
             // Item does not exist in cache
+            var key = token.ToString();
             if (!_memoryCache.TryGetValue(key, out var obj))
             {
 
@@ -63,16 +61,15 @@ namespace Plato.Internal.Cache
                 
             }
 
-            return (TItem)obj;
+            return (TItem) obj;
 
         }
 
         public async Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, MemoryCacheEntryOptions, Task<TItem>> factory)
         {
 
-            var key = token.ToString();
-
             // Item does not exist in cache
+            var key = token.ToString();
             if (!_memoryCache.TryGetValue(key, out var obj))
             {
 
@@ -101,7 +98,8 @@ namespace Plato.Internal.Cache
 
             }
 
-            return (TItem)obj;
+            return (TItem) obj;
+
         }
 
         public CacheToken GetOrCreateToken(Type type, params object[] varyBy)
@@ -163,6 +161,8 @@ namespace Plato.Internal.Cache
 
         }
 
+        // ----------------
+
         IEnumerable<CacheToken> GetTokensForType(Type type)
         {
             return Tokens
@@ -172,6 +172,5 @@ namespace Plato.Internal.Cache
         }
 
     }
-
-
+    
 }
