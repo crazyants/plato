@@ -69,9 +69,9 @@ namespace Plato.Docs.Services
                 {
 
                     // Web notification
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.TopicReport))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.DocReport))
                     {
-                        await _notificationManager.SendAsync(new Notification(WebNotifications.TopicReport)
+                        await _notificationManager.SendAsync(new Notification(WebNotifications.DocReport)
                         {
                             To = user,
                             From = from
@@ -79,9 +79,9 @@ namespace Plato.Docs.Services
                     }
 
                     // Email notification
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.TopicReport))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.DocReport))
                     {
-                        await _notificationManager.SendAsync(new Notification(EmailNotifications.TopicReport)
+                        await _notificationManager.SendAsync(new Notification(EmailNotifications.DocReport)
                         {
                             To = user
                         }, submission);

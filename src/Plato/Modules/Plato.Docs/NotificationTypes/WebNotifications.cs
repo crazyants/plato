@@ -9,13 +9,13 @@ namespace Plato.Docs.NotificationTypes
     public class WebNotifications : INotificationTypeProvider
     {
 
-        public static readonly WebNotification TopicReport =
-            new WebNotification("TopicReportWeb", "Reported Topics",
-                "Show me a web notification each time a topic is reported.");
+        public static readonly WebNotification DocReport =
+            new WebNotification("DocReportWeb", "Reported Docs",
+                "Show me a web notification each time a doc is reported.");
 
-        public static readonly WebNotification ReplyReport =
-            new WebNotification("ReplyReportWeb", "Reported Replies",
-                "Show me a web notification each time a reply is reported.");
+        public static readonly WebNotification CommentReport =
+            new WebNotification("DocCommentReportWeb", "Reported Doc Comments",
+                "Show me a web notification each time a doc comment is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
@@ -26,8 +26,8 @@ namespace Plato.Docs.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        TopicReport,
-                        ReplyReport
+                        DocReport,
+                        CommentReport
                     }
                 },
                 new DefaultNotificationTypes
@@ -35,8 +35,8 @@ namespace Plato.Docs.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        TopicReport,
-                        ReplyReport
+                        DocReport,
+                        CommentReport
                     }
                 }
 
@@ -52,8 +52,8 @@ namespace Plato.Docs.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        TopicReport,
-                        ReplyReport
+                        DocReport,
+                        CommentReport
                     }
                 },
                 new DefaultNotificationTypes
@@ -61,8 +61,8 @@ namespace Plato.Docs.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        TopicReport,
-                        ReplyReport
+                        DocReport,
+                        CommentReport
                     }
                 }
             };

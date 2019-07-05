@@ -14,10 +14,9 @@ namespace Plato.Discuss.StopForumSpam.NotificationTypes
                 "Send me an email notification for each topic detected as SPAM.");
 
         public static readonly EmailNotification ReplySpam =
-            new EmailNotification("ReplySpamEmail", "Spam Replies",
-                "Send me an email notification for each reply detected as SPAM.");
-
-
+            new EmailNotification("ReplySpamEmail", "Spam Topic Replies",
+                "Send me an email notification for each topic reply detected as SPAM.");
+        
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
@@ -40,7 +39,6 @@ namespace Plato.Discuss.StopForumSpam.NotificationTypes
                         ReplySpam
                     }
                 }
-
             };
         }
 

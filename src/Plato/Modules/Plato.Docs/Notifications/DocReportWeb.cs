@@ -63,7 +63,7 @@ namespace Plato.Docs.Notifications
             }
 
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(WebNotifications.TopicReport.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(WebNotifications.DocReport.Name, StringComparison.Ordinal))
             {
                 return null;
             }

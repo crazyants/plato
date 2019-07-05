@@ -53,7 +53,7 @@ namespace Plato.Docs.Notifications
         public async Task<ICommandResult<ReportSubmission<Doc>>> SendAsync(INotificationContext<ReportSubmission<Doc>> context)
         {
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.TopicReport.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.DocReport.Name, StringComparison.Ordinal))
             {
                 return null;
             }

@@ -58,7 +58,7 @@ namespace Plato.Docs.Notifications
         {
 
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.ReplyReport.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.CommentReport.Name, StringComparison.Ordinal))
             {
                 return null;
             }
