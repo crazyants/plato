@@ -29,6 +29,35 @@
 
 }
 
+@if (Model.IsPrivate || Model.IsHidden || Model.IsSpam || Model.IsDeleted)
+{
+    <div class="float-right mr-1" style="white-space: nowrap;">
+        @if (Model.IsPrivate)
+        {
+            if (Model.CreatedUserId == base.CurrentUser?.Id)
+            {
+                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you are the doc author"]">@T["P"]</span>
+            }
+            else
+            {
+                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you have permission to view private docs"]">@T["P"]</span>
+            }
+        }
+        @if (Model.IsHidden)
+        {
+            <span  class="badge badge-primary" data-toggle="tooltip" title="@T["This doc is hidden and only visible as you have permission to view hidden docs"]">@T["H"]</span>
+        }
+        @if (Model.IsSpam)
+        {
+            <span class="badge badge-info" data-toggle="tooltip" title="@T["This doc has been flagged as SPAM and is only visible as you have permission to view docs flagged as SPAM"]">@T["S"]</span>
+        }
+        @if (Model.IsDeleted)
+        {
+            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This doc has been deleted and is only visible as you have permission to view deleted docs"]">@T["D"]</span>
+        }
+    </div>
+}
+
 <div class="tree-right">
     <div class="dropdown float-right">
         <a class="btn btn-sm dropdown-toggle dropdown-toggle-no-caret text-muted" href="#" id="@dropdownId" role="button" data-toggle="dropdown" data-provide="tooltip" title="@T["Edit"]" aria-haspopup="true" data-display="static" aria-expanded="false">
