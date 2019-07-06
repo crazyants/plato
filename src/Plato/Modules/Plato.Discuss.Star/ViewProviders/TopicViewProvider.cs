@@ -13,26 +13,15 @@ namespace Plato.Discuss.Star.ViewProviders
 {
     public class TopicViewProvider : BaseViewProvider<Topic>
     {
-
-        private const string StarHtmlName = "star";
-
-        private readonly IStarManager<Stars.Models.Star> _starManager;
+        
         private readonly IStarStore<Stars.Models.Star> _starStore;
-        private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly HttpRequest _request;
- 
+       
         public TopicViewProvider(
-            IStarManager<Stars.Models.Star> starManager,
-            IHttpContextAccessor httpContextAccessor,
             IStarStore<Stars.Models.Star> starStore,
-            IEntityStore<Topic> entityStore,
             IContextFacade contextFacade)
         {
-            _request = httpContextAccessor.HttpContext.Request;
             _contextFacade = contextFacade;
-            _entityStore = entityStore;
-            _starManager = starManager;
             _starStore = starStore;
         }
         

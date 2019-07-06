@@ -38,8 +38,9 @@ namespace Plato.Docs.Star.QueryAdapters
 
                 builder.Append("e.Id IN (")
                     .Append("SELECT ThingId FROM ")
-                    .Append("{prefix}_Stars s")
-                    .Append(" WHERE (")
+                    .Append("{prefix}_Stars s WHERE (s.[Name] = '")
+                    .Append(StarTypes.Doc.Name)
+                    .Append("' AND ")
                     .Append(q.Params.StarUserId.ToSqlString("s.CreatedUserId"))
                     .Append("))");
             }

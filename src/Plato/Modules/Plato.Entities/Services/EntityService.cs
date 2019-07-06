@@ -154,40 +154,26 @@ namespace Plato.Entities.Services
                             {
                                 q.CreatedUserId.Equals(user.Id);
                             }
-
                             break;
                         case FilterBy.Participated:
                             if (user != null)
                             {
                                 q.ParticipatedUserId.Equals(user.Id);
                             }
-
                             break;
                         case FilterBy.Following:
                             if (user != null)
                             {
-                                q.FollowUserId.Equals(user.Id, b =>
-                                {
-                                    // Restrict follows by topic
-                                    b.Append(" AND f.[Name] = 'Topic'");
-                                });
+                                q.FollowUserId.Equals(user.Id);
                             }
-
                             break;
                         case FilterBy.Starred:
                             if (user != null)
                             {
-                                q.StarUserId.Equals(user.Id, b =>
-                                {
-                                    // Restrict stars by topic
-                                    b.Append(" AND s.[Name] = 'Topic'");
-                                });
+                                q.StarUserId.Equals(user.Id);
                             }
-
                             break;
-
                         case FilterBy.NoReplies:
-
                             q.TotalReplies.Equals(0);
                             break;
                     }

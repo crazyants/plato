@@ -1,9 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Plato.Articles.Models;
-using Plato.Entities.Stores;
-using Plato.Stars.Services;
 using Plato.Stars.Stores;
 using Plato.Stars.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
@@ -13,26 +9,15 @@ namespace Plato.Articles.Star.ViewProviders
 {
     public class ArticleViewProvider : BaseViewProvider<Article>
     {
-
-        private const string StarHtmlName = "star";
-
-        private readonly IStarManager<Stars.Models.Star> _starManager;
+        
         private readonly IStarStore<Stars.Models.Star> _starStore;
-        private readonly IEntityStore<Article> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly HttpRequest _request;
- 
+        
         public ArticleViewProvider(
-            IStarManager<Stars.Models.Star> starManager,
-            IHttpContextAccessor httpContextAccessor,
             IStarStore<Stars.Models.Star> starStore,
-            IEntityStore<Article> entityStore,
             IContextFacade contextFacade)
         {
-            _request = httpContextAccessor.HttpContext.Request;
             _contextFacade = contextFacade;
-            _entityStore = entityStore;
-            _starManager = starManager;
             _starStore = starStore;
         }
         

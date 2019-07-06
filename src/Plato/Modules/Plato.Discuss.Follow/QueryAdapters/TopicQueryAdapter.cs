@@ -2,6 +2,7 @@
 using System.Text;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
+using Plato.Follows.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
@@ -36,7 +37,9 @@ namespace Plato.Discuss.Follow.QueryAdapters
                 }
 
                 builder.Append(" e.Id IN (")
-                    .Append("SELECT ThingId FROM {prefix}_Follows f WHERE (")
+                    .Append("SELECT ThingId FROM {prefix}_Follows f WHERE (f.[Name] = '")
+                    .Append(FollowTypes.Topic.Name)
+                    .Append("' AND ")
                     .Append(q.Params.FollowUserId.ToSqlString("f.CreatedUserId"))
                     .Append("))");
 
