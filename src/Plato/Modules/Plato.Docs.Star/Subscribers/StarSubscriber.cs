@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Articles.Models;
+using Plato.Docs.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Articles.Star.Subscribers
+namespace Plato.Docs.Star.Subscribers
 {
 
     /// <summary>
-    /// Awards reputation & updates star count for articles when users star or delete article stars.
+    /// Awards reputation & updates star count for docs when users star or delete doc stars.
     /// </summary>
     public class StarSubscriber : IBrokerSubscriber
     {
          
         private readonly IUserReputationAwarder _reputationAwarder;
-        private readonly IEntityStore<Article> _entityStore;
+        private readonly IEntityStore<Doc> _entityStore;
         private readonly IBroker _broker;
 
         public StarSubscriber(
             IUserReputationAwarder reputationAwarder,
-            IEntityStore<Article> entityStore,
+            IEntityStore<Doc> entityStore,
             IBroker broker)
         {           
             _reputationAwarder = reputationAwarder;
@@ -69,8 +69,8 @@ namespace Plato.Articles.Star.Subscribers
                 return null;
             }
 
-            // Is this a article star?
-            if (!star.Name.Equals(StarTypes.Article.Name, StringComparison.OrdinalIgnoreCase))
+            // Is this a doc star?
+            if (!star.Name.Equals(StarTypes.Doc.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return star;
             }
@@ -90,10 +90,10 @@ namespace Plato.Articles.Star.Subscribers
             if (updatedEntity != null)
             {
                 // Award reputation to user starring the entity
-                await _reputationAwarder.AwardAsync(Reputations.StarArticle, star.CreatedUserId, "Starred an article");
+                await _reputationAwarder.AwardAsync(Reputations.StarDoc, star.CreatedUserId, "Starred an article");
 
                 // Award reputation to entity author when there entity is starred
-                await _reputationAwarder.AwardAsync(Reputations.StarredArticle, entity.CreatedUserId, "Someone starred my article");
+                await _reputationAwarder.AwardAsync(Reputations.StarredDoc, entity.CreatedUserId, "Someone starred my article");
 
             }
 
@@ -109,8 +109,8 @@ namespace Plato.Articles.Star.Subscribers
                 return null;
             }
 
-            // Is this a article star?
-            if (!star.Name.Equals(StarTypes.Article.Name, StringComparison.OrdinalIgnoreCase))
+            // Is this a doc star?
+            if (!star.Name.Equals(StarTypes.Doc.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return star;
             }
@@ -136,10 +136,10 @@ namespace Plato.Articles.Star.Subscribers
             if (updatedEntity != null)
             {
                 // Revoke reputation from user removing the entity star
-                await _reputationAwarder.RevokeAsync(Reputations.StarArticle, star.CreatedUserId, "Unstarred an article");
+                await _reputationAwarder.RevokeAsync(Reputations.StarDoc, star.CreatedUserId, "Unstarred an article");
 
                 // Revoke reputation from entity author for user removing there entity star
-                await _reputationAwarder.RevokeAsync(Reputations.StarredArticle, entity.CreatedUserId, "A user unstarred my article");
+                await _reputationAwarder.RevokeAsync(Reputations.StarredDoc, entity.CreatedUserId, "A user unstarred my article");
 
             }
             

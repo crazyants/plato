@@ -2,24 +2,24 @@
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Articles.Star
+namespace Plato.Docs.Star
 {
 
     public class Reputations : IReputationsProvider<Reputation>
     {
 
-        public static readonly Reputation StarArticle =
-            new Reputation("Star Article", 1);
+        public static readonly Reputation StarDoc =
+            new Reputation("Star Doc", 1);
 
-        public static readonly Reputation StarredArticle =
-            new Reputation("Starred Article", 2);
+        public static readonly Reputation StarredDoc =
+            new Reputation("Starred Doc", 2);
         
         public IEnumerable<Reputation> GetReputations()
         {
             return new[]
             {
-                StarArticle,
-                StarredArticle
+                StarDoc,
+                StarredDoc
             };
         }
 

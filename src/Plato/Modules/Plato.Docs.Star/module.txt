@@ -1,0 +1,18 @@
+Name: Plato Docs Star
+Description: Adds the ability for users to star or favourite docs.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Docs
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Docs",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Stars",
+		Version: "1.0.0"
+	}
+]

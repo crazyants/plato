@@ -2,27 +2,27 @@
 using Plato.Stars.Models;
 using Plato.Stars.Services;
 
-namespace Plato.Articles.Star
+namespace Plato.Docs.Star
 {
 
     public class StarTypes : IStarTypeProvider
     {
         
-        public static readonly StarType Article =
+        public static readonly StarType Doc =
             new StarType(
-                "Article",
+                "Doc",
                 "Star",
-                "Star this article",
+                "Star this doc",
                 "Unstar",
                 "Delete star",
-                "Login to star this article",
-                "You don't have permission to star articles");
+                "Login to star this doc",
+                "You don't have permission to star docs");
 
         public IEnumerable<IStarType> GetFollowTypes()
         {
             return new[]
             {
-                Article
+                Doc
             };
         }
 
