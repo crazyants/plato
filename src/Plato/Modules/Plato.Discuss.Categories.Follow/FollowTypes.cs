@@ -14,7 +14,7 @@ namespace Plato.Discuss.Categories.Follow
                 "Follow Category",
                 "Follow this category to get notified when new topics are posted within this category",
                 "Unsubscribe",
-                "You are already following this category, click to unsubscribe");
+                "You are following this category and will be notified when new topics are posted, click to unsubscribe");
         
         public static readonly FollowType AllCategories =
             new FollowType(
@@ -22,7 +22,7 @@ namespace Plato.Discuss.Categories.Follow
                 "Follow All Categories",
                 "Follow all categories to get notified when new topics are posted within any category",
                 "Unsubscribe",
-                "You are already following all categories, click to unsubscribe");
+                "You are following all categories and will be notified when new topics are posted, click to unsubscribe");
         
         public IEnumerable<IFollowType> GetFollowTypes()
         {

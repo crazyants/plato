@@ -11,9 +11,9 @@ namespace Plato.Discuss.Tags.Follow
         public static readonly FollowType Tag =
             new FollowType("DiscussTag",
                 "Follow Tag",
-                "Follow this tag to get notified when new topics are posted with this tag",
+                "Follow this tag to get notified when new topics or replies are posted with this tag",
                 "Unsubscribe",
-                "You are already following this tag, click to unsubscribe");
+                "You are following this tag and will be notified when topics or replies are posted with this tag, click to unsubscribe");
 
         public IEnumerable<IFollowType> GetFollowTypes()
         {

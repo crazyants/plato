@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Tags.Follow.NotificationTypes;
 using Plato.Discuss.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -18,16 +19,18 @@ using Plato.Internal.Notifications.Abstractions;
 namespace Plato.Discuss.Tags.Follow.Notifications
 {
 
-    public class NewTagEmail : INotificationProvider<Topic>
+    public class NewTagReplyEmail : INotificationProvider<Reply>
     {
 
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
         private readonly ILocaleStore _localeStore;
 
-        public NewTagEmail(
+        public NewTagReplyEmail(
             ICapturedRouterUrlHelper capturedRouterUrlHelper,
+            IEntityStore<Topic> entityStore,
             IContextFacade contextFacade,
             IEmailManager emailManager,
             ILocaleStore localeStore)
@@ -36,22 +39,32 @@ namespace Plato.Discuss.Tags.Follow.Notifications
             _contextFacade = contextFacade;
             _emailManager = emailManager;
             _localeStore = localeStore;
+            _entityStore = entityStore;
         }
 
-        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
+        public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
         {
             
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewTag.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewReplyTag.Name, StringComparison.Ordinal))
             {
                 return null;
             }
             
+            // Get the entity for the reply
+            var entity = await _entityStore.GetByIdAsync(context.Model.EntityId);
+
+            // We always need an entity
+            if (entity == null)
+            {
+                return null;
+            }
+
             // Create result
-            var result = new CommandResult<Topic>();
+            var result = new CommandResult<Reply>();
 
             // Get email template
-            const string templateId = "NewTag";
+            const string templateId = "NewReplyTag";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
@@ -63,9 +76,10 @@ namespace Plato.Discuss.Tags.Follow.Notifications
                 {
                     ["area"] = "Plato.Discuss",
                     ["controller"] = "Home",
-                    ["action"] = "Display",
-                    ["opts.id"] = context.Model.Id,
-                    ["opts.alias"] = context.Model.Alias
+                    ["action"] = "Reply",
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias,
+                    ["opts.replyId"] = context.Model.Id
                 });
                 
                 // Build message from template
@@ -73,7 +87,7 @@ namespace Plato.Discuss.Tags.Follow.Notifications
                 message.Body = string.Format(
                     email.Message,
                     context.Notification.To.DisplayName,
-                    context.Model.Title,
+                    entity.Title,
                     baseUri + url);
                 message.IsBodyHtml = true;
                 message.To.Add(new MailAddress(context.Notification.To.Email));

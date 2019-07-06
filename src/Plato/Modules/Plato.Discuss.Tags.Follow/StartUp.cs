@@ -38,11 +38,14 @@ namespace Plato.Discuss.Tags.Follow
 
             // Notification managers
             services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+            services.AddScoped<INotificationManager<Reply>, NotificationManager<Reply>>();
 
             // Notification Providers
             services.AddScoped<INotificationProvider<Topic>, NewTagEmail>();
             services.AddScoped<INotificationProvider<Topic>, NewTagWeb>();
-            
+            services.AddScoped<INotificationProvider<Reply>, NewTagReplyEmail>();
+            services.AddScoped<INotificationProvider<Reply>, NewTagReplyWeb>();
+
             // View providers
             services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
@@ -50,6 +53,7 @@ namespace Plato.Discuss.Tags.Follow
             // Subscribers
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();

@@ -12,8 +12,13 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
         public static readonly WebNotification NewTag =
             new WebNotification("NewTopicTagWeb",
                 "New Topic Tags",
-                "Show me a web notification for each new post associated with a tag I'm following.");
-        
+                "Show me a web notification for each new topic associated with a tag I'm following.");
+
+        public static readonly WebNotification NewReplyTag =
+            new WebNotification("NewTopicReplyTagWeb",
+                "New Topic Reply Tags",
+                "Show me a web notification for each new reply associated with a tag I'm following.");
+
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]
@@ -23,7 +28,8 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        NewTag
+                        NewTag,
+                        NewReplyTag
                     }
                 },
                 new DefaultNotificationTypes
@@ -31,7 +37,8 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        NewTag
+                        NewTag,
+                        NewReplyTag
                     }
                 },
                 new DefaultNotificationTypes
@@ -39,7 +46,8 @@ namespace Plato.Discuss.Tags.Follow.NotificationTypes
                     RoleName = DefaultRoles.Member,
                     NotificationTypes = new[]
                     {
-                        NewTag
+                        NewTag,
+                        NewReplyTag
                     }
                 }
 

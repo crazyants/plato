@@ -8,6 +8,15 @@
       "From": "",
       "Subject": "[SiteName] - New Tag",
       "Message": "Hi {0},\n\nA topic has been posted with a tag you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    },
+    {
+      "Id": "NewReplyTag",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Tag",
+      "Message": "Hi {0},\n\nA reply has been posted with a tag you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }

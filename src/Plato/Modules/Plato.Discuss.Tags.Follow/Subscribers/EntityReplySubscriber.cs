@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Plato.Discuss.Models;
 using Plato.Discuss.Tags.Follow.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
@@ -17,37 +18,38 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Entities.Extensions;
 using Plato.Entities.Stores;
 using Plato.Follows.Models;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
 
 namespace Plato.Discuss.Tags.Follow.Subscribers
 {
-    public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
+    public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
-        private readonly INotificationManager<TEntity> _notificationManager;
+        private readonly INotificationManager<TEntityReply> _notificationManager;
+        private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IEntityStore<TEntity> _entityStore;
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IBroker _broker;
 
-        public EntitySubscriber(
+        public EntityReplySubscriber(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
-            INotificationManager<TEntity> notificationManager,
+            INotificationManager<TEntityReply> notificationManager,
+            IEntityReplyStore<TEntityReply> entityReplyStore,
             IFollowStore<Follows.Models.Follow> followStore,
             IEntityTagStore<EntityTag> entityTagStore,
             IAuthorizationService authorizationService,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
-            IEntityStore<TEntity> entityStore,
+            IEntityStore<Topic> entityStore,
             IBroker broker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -55,6 +57,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             _authorizationService = authorizationService;
             _deferredTaskManager = deferredTaskManager;
             _notificationManager = notificationManager;
+            _entityReplyStore = entityReplyStore;
             _entityTagStore = entityTagStore;
             _platoUserStore = platoUserStore;
             _followStore = followStore;
@@ -67,36 +70,36 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
         public void Subscribe()
         {
             // Created
-            _broker.Sub<TEntity>(new MessageOptions()
+            _broker.Sub<TEntityReply>(new MessageOptions()
             {
-                Key = "EntityCreated",
+                Key = "EntityReplyCreated",
                 Order = short.MaxValue
-            }, async message => await EntityCreated(message.What));
+            }, async message => await EntityReplyCreated(message.What));
 
             // Updated
-            _broker.Sub<TEntity>(new MessageOptions()
+            _broker.Sub<TEntityReply>(new MessageOptions()
             {
-                Key = "EntityUpdated",
+                Key = "EntityReplyUpdated",
                 Order = short.MaxValue
-            }, async message => await EntityUpdated(message.What));
+            }, async message => await EntityReplyUpdated(message.What));
 
         }
 
         public void Unsubscribe()
         {
             // Created
-            _broker.Unsub<TEntity>(new MessageOptions()
+            _broker.Unsub<TEntityReply>(new MessageOptions()
             {
-                Key = "EntityCreated",
+                Key = "EntityReplyCreated",
                 Order = short.MaxValue
-            }, async message => await EntityCreated(message.What));
+            }, async message => await EntityReplyCreated(message.What));
 
             // Updated
-            _broker.Unsub<TEntity>(new MessageOptions()
+            _broker.Unsub<TEntityReply>(new MessageOptions()
             {
-                Key = "EntityUpdated",
+                Key = "EntityReplyUpdated",
                 Order = short.MaxValue
-            }, async message => await EntityUpdated(message.What));
+            }, async message => await EntityReplyUpdated(message.What));
 
         }
 
@@ -104,61 +107,70 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
         #region "Private Methods"
 
-        async Task<TEntity> EntityCreated(TEntity entity)
+        async Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
         {
 
-            // For new entries we want to exclude the author from any notifications
+            // For new replies we want to exclude the author from any notifications
             var usersToExclude = new List<int>()
             {
-                entity.CreatedUserId
+                reply.CreatedUserId
             };
 
-            return await SendAsync(entity, usersToExclude);
+            return await SendAsync(reply, usersToExclude);
         }
 
-        async Task<TEntity> EntityUpdated(TEntity entity)
+        async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
         {
 
-            // For updated entries we want to exclude the user updating the entry from any notifications
+            // For updated replies we want to exclude the user updating the entry from any notifications
             var usersToExclude = new List<int>()
             {
-                entity.ModifiedUserId
+                reply.ModifiedUserId
             };
 
-            return await SendAsync(entity, usersToExclude);
+            return await SendAsync(reply, usersToExclude);
 
         }
 
-        Task<TEntity> SendAsync(TEntity entity, IList<int> usersToExclude)
+        async Task<TEntityReply> SendAsync(TEntityReply reply, IList<int> usersToExclude)
         {
 
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
+            // Get the entity for the reply
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // Ensure the entity exists
             if (entity == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                return reply;
             }
-                        
+
             // We don't need to trigger notifications for hidden entities
             if (entity.IsHidden())
             {
-                return Task.FromResult(entity);
+                return reply;
             }
 
             // Defer notifications 
             _deferredTaskManager.AddTask(async context =>
             {
-                await SendNotificationsAsync(entity, usersToExclude);
+                await SendNotificationsAsync(reply, usersToExclude);
             });
 
-            return Task.FromResult(entity);
+            return reply;
 
         }
 
-        async Task<IList<int>> SendNotificationsAsync(TEntity entity, IList<int> usersToExclude)
+        async Task<IList<int>> SendNotificationsAsync(TEntityReply reply, IList<int> usersToExclude)
         {
 
-            if (entity == null)
+            if (reply == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                throw new ArgumentNullException(nameof(reply));
             }
 
             // Compile a list of notified users
@@ -167,10 +179,10 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             // Follow type name
             var name = FollowTypes.Tag.Name;
 
-            // Get follow state for entity
-            var state = entity.GetOrCreate<FollowState>();
+            // Get follow state for reply
+            var state = reply.GetOrCreate<FollowState>();
 
-            // Have notifications already been sent for the entity?
+            // Have notifications already been sent for the reply?
             var follow = state.FollowsSent.FirstOrDefault(f =>
                 f.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (follow != null)
@@ -180,7 +192,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
             // Compile all entity tags ids for the entity
             var tags = new List<int>();
-            var entityTags = await _entityTagStore.GetByEntityIdAsync(entity.Id);
+            var entityTags = await _entityTagStore.GetByEntityReplyIdAsync(reply.Id);
             if (entityTags != null)
             {
                 foreach (var entityTag in entityTags)
@@ -192,7 +204,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
                 }
             }
 
-            // Get follows for all entity tags
+            // Get follows for all reply tags
             var follows = await _followStore.QueryAsync()
                 .Select<FollowQueryParams>(q =>
                 {
@@ -206,7 +218,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
                 .ToList();
 
             // Reduce the users for all found follows
-            var users = await ReduceUsersAsync(follows?.Data, entity);
+            var users = await ReduceUsersAsync(follows?.Data, reply);
 
             // No users simply return
             if (users == null)
@@ -219,7 +231,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
             {
 
                 // Email notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewTag))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewReplyTag))
                 {
 
                     // Track notified
@@ -229,14 +241,14 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewTag)
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewReplyTag)
                     {
                         To = user,
-                    }, entity);
+                    }, reply);
                 }
 
                 // Web notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewTag))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewReplyTag))
                 {
 
                     // Track notified
@@ -246,19 +258,19 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewTag)
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewReplyTag)
                     {
                         To = user,
                         From = new User
                         {
-                            Id = entity.CreatedBy.Id,
-                            UserName = entity.CreatedBy.UserName,
-                            DisplayName = entity.CreatedBy.DisplayName,
-                            Alias = entity.CreatedBy.Alias,
-                            PhotoUrl = entity.CreatedBy.PhotoUrl,
-                            PhotoColor = entity.CreatedBy.PhotoColor
+                            Id = reply.CreatedBy.Id,
+                            UserName = reply.CreatedBy.UserName,
+                            DisplayName = reply.CreatedBy.DisplayName,
+                            Alias = reply.CreatedBy.Alias,
+                            PhotoUrl = reply.CreatedBy.PhotoUrl,
+                            PhotoColor = reply.CreatedBy.PhotoColor
                         }
-                    }, entity);
+                    }, reply);
 
                 }
 
@@ -266,10 +278,10 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
             // Update state
             state.AddSent(name);
-            entity.AddOrUpdate(state);
+            reply.AddOrUpdate(state);
 
             // Persist state
-            await _entityStore.UpdateAsync(entity);
+            await _entityReplyStore.UpdateAsync(reply);
 
             // Return a list of all notified users
             return notifiedUsers;
@@ -278,11 +290,20 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
         async Task<IEnumerable<IUser>> ReduceUsersAsync(
             IEnumerable<Follows.Models.Follow> follows,
-            TEntity entity)
+            TEntityReply reply)
         {
 
             // We always need follows to process
             if (follows == null)
+            {
+                return null;
+            }
+            
+            // Get the entity for the reply
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+
+            // We always need an entity
+            if (entity == null)
             {
                 return null;
             }
@@ -314,49 +335,37 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
                     result.Add(user.Id, user);
                 }
 
-                // If the entity is hidden but the user does
-                // not have permission to view hidden entities
-                if (entity.IsHidden)
+                // If the reply is hidden but the user does
+                // not have permission to view hidden replies
+                if (reply.IsHidden)
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Discuss.Permissions.ViewHiddenTopics))
+                        entity.CategoryId, Discuss.Permissions.ViewHiddenReplies))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+                
+                // The reply has been flagged as SPAM but the user does
+                // not have permission to view replies flagged as SPAM
+                if (reply.IsSpam)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Discuss.Permissions.ViewSpamReplies))
                     {
                         result.Remove(user.Id);
                     }
                 }
 
-                // If we are not the entity author and the entity is private
-                // ensure we have permission to view private entities
-                if (user.Id != entity.CreatedUserId && entity.IsPrivate)
+                // The reply is soft deleted but the user does 
+                // not have permission to view soft deleted replies
+                if (reply.IsDeleted)
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Discuss.Permissions.ViewPrivateTopics))
-                    {
-                        result.Remove(user.Id);
-                    }
-                }
-
-                // The entity has been flagged as SPAM but the user does
-                // not have permission to view entities flagged as SPAM
-                if (entity.IsSpam)
-                {
-                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
-                    if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Discuss.Permissions.ViewSpamTopics))
-                    {
-                        result.Remove(user.Id);
-                    }
-                }
-
-                // The entity is soft deleted but the user does 
-                // not have permission to view soft deleted entities
-                if (entity.IsDeleted)
-                {
-                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
-                    if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Discuss.Permissions.ViewDeletedTopics))
+                        entity.CategoryId, Discuss.Permissions.ViewDeletedReplies))
                     {
                         result.Remove(user.Id);
                     }
