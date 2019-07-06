@@ -14,6 +14,11 @@
 
         public string UnsubscribeDescription { get; } = "You are subscribed to updates. Unsubscribe below...";
 
+        public string LoginDescription { get; } = "Login to follow";
+
+        public string DenyDescription { get; } = "You don't have permission to follow";
+        
+
         public FollowType()
         {
 
@@ -56,6 +61,30 @@
             string unsubscribeDescription) : this(name, subscribeText, subscribeDescription, unsubscribeText)
         {
             this.UnsubscribeDescription = unsubscribeDescription;
+        }
+
+
+        public FollowType(
+            string name,
+            string subscribeText,
+            string subscribeDescription,
+            string unsubscribeText,
+            string unsubscribeDescription,
+            string loginDescription) : this(name, subscribeText, subscribeDescription, unsubscribeText, unsubscribeDescription)
+        {
+            this.LoginDescription = loginDescription;
+        }
+
+        public FollowType(
+            string name,
+            string subscribeText,
+            string subscribeDescription,
+            string unsubscribeText,
+            string unsubscribeDescription,
+            string loginDescription,
+            string denyDescription) : this(name, subscribeText, subscribeDescription, unsubscribeText, unsubscribeDescription, loginDescription)
+        {
+            this.DenyDescription = denyDescription;
         }
 
 

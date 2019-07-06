@@ -1,4 +1,5 @@
-﻿using Plato.Stars.Models;
+﻿using Plato.Internal.Security.Abstractions;
+using Plato.Stars.Models;
 
 namespace Plato.Stars.ViewModels
 {
@@ -12,6 +13,8 @@ namespace Plato.Stars.ViewModels
         public int TotalStars { get; set; }
 
         public IStarType StarType { get; set; }
+
+        public IPermission Permission { get; set; }
 
     }
 }

@@ -12,6 +12,9 @@
 
         string UnsubscribeDescription { get; }
 
+        string LoginDescription { get; }
+
+        string DenyDescription { get; }
     }
 
 }

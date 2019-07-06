@@ -18,13 +18,13 @@
     <authorize-fail>
         @if (base.CurrentUser == null)
         {
-            <a title="@T[Model.LoginMessage]" data-toggle="tooltip" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn bg-transparent text-muted">
+            <a title="@T[Model.FollowType.LoginDescription]" data-toggle="tooltip" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn bg-transparent text-muted">
                 <i class="fal fa-bell"></i>
             </a>
         }
         else
         {
-            <span title="@T[Model.DenyMessage]" data-toggle="tooltip" class="btn bg-transparent text-muted cursor-default">
+            <span title="@T[Model.FollowType.DenyDescription]" data-toggle="tooltip" class="btn bg-transparent text-muted cursor-default">
                 <i class="fal fa-bell"></i>
             </span>
         }

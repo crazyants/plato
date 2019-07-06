@@ -1,14 +1,14 @@
-Name: Plato Discuss Star
-Description: Adds the ability for users to star or favourite topics.
+Name: Plato Articles Star
+Description: Adds the ability for users to star or favourite articles.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Discuss
+Category: Articles
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Discuss",
+		Id: "Plato.Articles",
 		Version: "1.0.0"
 	},
 	{

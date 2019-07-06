@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Discuss.Categories.Models;
-using Plato.Follows.Models;
 using Plato.Follows.Stores;
 using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
@@ -85,8 +84,6 @@ namespace Plato.Discuss.Categories.Follow.ViewProviders
                     model.ThingId = thingId;
                     model.IsFollowing = isFollowing;
                     model.Permission = permission;
-                    model.LoginMessage = "Login to follow categories";
-                    model.DenyMessage = "You don't have permission to follow categories";
                     return model;
                 }).Zone("tools").Order(-4)
             );

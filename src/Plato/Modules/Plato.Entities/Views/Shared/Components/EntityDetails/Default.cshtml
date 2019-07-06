@@ -30,9 +30,6 @@
             <li class="list-group-item">
                 @T["Latest Reply"]: <date utc="@Model.Entity.LastReplyDate"></date>
             </li>
-            <li class="list-group-item">
-                @Model.Entity.TotalViews @T[viewText]
-            </li>
             @if (urls.AnchorUrls.Count > 0 || urls.ImageUrls.Count > 0)
             {
                 <li class="list-group-item">
@@ -53,6 +50,9 @@
                     
                 </li>
             }
+            <li class="list-group-item">
+                @Model.Entity.TotalViews @T[viewText]
+            </li>
         </ul>
     </card-body>
 </card>

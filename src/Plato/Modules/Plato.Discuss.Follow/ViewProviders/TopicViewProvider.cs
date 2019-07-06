@@ -76,9 +76,7 @@ namespace Plato.Discuss.Follow.ViewProviders
                     model.FollowType = followType;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
-                    model.Permission = Follow.Permissions.FollowTopics;
-                    model.LoginMessage = "Login to follow topics";
-                    model.DenyMessage = "You don't have permission to follow topics";
+                    model.Permission = Permissions.FollowTopics;
                     return model;
                 }).Zone("tools").Order(-4)
             );

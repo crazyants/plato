@@ -347,6 +347,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Twitter", "src\Plato\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.Categories.Moderators", "src\Plato\Modules\Plato.Discuss.Categories.Moderators\Plato.Discuss.Categories.Moderators.csproj", "{498EBAA2-D878-4FF5-A458-919B76E8CFF0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Articles.Star", "src\Plato\Modules\Plato.Articles.Star\Plato.Articles.Star.csproj", "{AC544516-19CC-43FB-804E-765572F2334E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1025,6 +1027,10 @@ Global
 		{498EBAA2-D878-4FF5-A458-919B76E8CFF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{498EBAA2-D878-4FF5-A458-919B76E8CFF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{498EBAA2-D878-4FF5-A458-919B76E8CFF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC544516-19CC-43FB-804E-765572F2334E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC544516-19CC-43FB-804E-765572F2334E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC544516-19CC-43FB-804E-765572F2334E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC544516-19CC-43FB-804E-765572F2334E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1199,6 +1205,7 @@ Global
 		{EDFD9888-F1CC-43B7-BCD0-B2F996EDF722} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{A35B74F7-2EB5-4C35-9741-F634A0FF4520} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{498EBAA2-D878-4FF5-A458-919B76E8CFF0} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{AC544516-19CC-43FB-804E-765572F2334E} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

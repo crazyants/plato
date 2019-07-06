@@ -14,6 +14,10 @@
 
         public string UnsubscribeDescription { get; } = "You are subscribed to updates. Unsubscribe below...";
 
+        public string LoginDescription { get; } = "Login to star";
+
+        public string DenyDescription { get; } = "Your don't have permission to star";
+
         public StarType()
         {
 
@@ -58,6 +62,28 @@
             this.UnsubscribeDescription = unsubscribeDescription;
         }
 
+        public StarType(
+            string name,
+            string subscribeText,
+            string subscribeDescription,
+            string unsubscribeText,
+            string unsubscribeDescription,
+            string loginDescription) : this(name, subscribeText, subscribeDescription, unsubscribeText, unsubscribeDescription)
+        {
+            this.LoginDescription = loginDescription;
+        }
+        
+        public StarType(
+            string name,
+            string subscribeText,
+            string subscribeDescription,
+            string unsubscribeText,
+            string unsubscribeDescription,
+            string loginDescription,
+            string denyDescription) : this(name, subscribeText, subscribeDescription, unsubscribeText, unsubscribeDescription, loginDescription)
+        {
+            this.DenyDescription = denyDescription;
+        }
 
     }
 

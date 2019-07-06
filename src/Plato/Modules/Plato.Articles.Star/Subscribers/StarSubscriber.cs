@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Discuss.Models;
+using Plato.Articles.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Discuss.Star.Subscribers
+namespace Plato.Articles.Star.Subscribers
 {
 
     /// <summary>
@@ -15,12 +15,12 @@ namespace Plato.Discuss.Star.Subscribers
     {
          
         private readonly IUserReputationAwarder _reputationAwarder;
-        private readonly IEntityStore<Topic> _entityStore;
+        private readonly IEntityStore<Article> _entityStore;
         private readonly IBroker _broker;
 
         public StarSubscriber(
             IUserReputationAwarder reputationAwarder,
-            IEntityStore<Topic> entityStore,
+            IEntityStore<Article> entityStore,
             IBroker broker)
         {           
             _reputationAwarder = reputationAwarder;
@@ -90,10 +90,10 @@ namespace Plato.Discuss.Star.Subscribers
             if (updatedEntity != null)
             {
                 // Award reputation to user starring the entity
-                await _reputationAwarder.AwardAsync(Reputations.StarTopic, star.CreatedUserId, "Starred a topic");
+                await _reputationAwarder.AwardAsync(Reputations.StarTopic, star.CreatedUserId, "Starred an article");
 
                 // Award reputation to entity author when there entity is starred
-                await _reputationAwarder.AwardAsync(Reputations.StarredTopic, entity.CreatedUserId, "Someone starred my topic");
+                await _reputationAwarder.AwardAsync(Reputations.StarredTopic, entity.CreatedUserId, "Someone starred my article");
 
             }
 
@@ -136,10 +136,10 @@ namespace Plato.Discuss.Star.Subscribers
             if (updatedEntity != null)
             {
                 // Revoke reputation from user removing the entity star
-                await _reputationAwarder.RevokeAsync(Reputations.StarTopic, star.CreatedUserId, "Unstarred a topic");
+                await _reputationAwarder.RevokeAsync(Reputations.StarTopic, star.CreatedUserId, "Unstarred an article");
 
                 // Revoke reputation from entity author for user removing there entity star
-                await _reputationAwarder.RevokeAsync(Reputations.StarredTopic, entity.CreatedUserId, "A user unstarred my topic");
+                await _reputationAwarder.RevokeAsync(Reputations.StarredTopic, entity.CreatedUserId, "A user unstarred my article");
 
             }
             

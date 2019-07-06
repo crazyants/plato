@@ -2,7 +2,7 @@
 using Plato.Stars.Models;
 using Plato.Stars.Services;
 
-namespace Plato.Discuss.Star
+namespace Plato.Articles.Star
 {
 
     public class StarTypes : IStarTypeProvider
@@ -12,11 +12,11 @@ namespace Plato.Discuss.Star
             new StarType(
                 "Topic",
                 "Star",
-                "Star this topic",
+                "Star this article",
                 "Unstar",
                 "Delete star",
-                "Login to star this topic",
-                "You don't have permission to star topics");
+                "Login to star this article",
+                "You don't have permission to star articles");
 
         public IEnumerable<IStarType> GetFollowTypes()
         {
