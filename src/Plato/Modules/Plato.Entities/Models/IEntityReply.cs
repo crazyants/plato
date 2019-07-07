@@ -49,6 +49,8 @@ namespace Plato.Entities.Models
         int TotalLinks { get; set; }
 
         int TotalImages { get; set; }
+
+        int TotalWords { get; set; }
         
         string IpV4Address { get; set; }
 

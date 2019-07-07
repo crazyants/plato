@@ -19,16 +19,16 @@
     <card-body>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
-                @T["Posted"]: <date utc="@Model.Entity.CreatedDate"></date>
+                @T["Posted"] <date utc="@Model.Entity.CreatedDate"></date>
             </li>
             @if (Model.Entity.EditedDate != null)
             {
                 <li class="list-group-item">
-                    @T["Updated"]: <date utc="@Model.Entity.EditedDate"></date>
+                    @T["Updated"] <date utc="@Model.Entity.EditedDate"></date>
                 </li>
             }
             <li class="list-group-item">
-                @T["Latest Reply"]: <date utc="@Model.Entity.LastReplyDate"></date>
+                @T["Latest Reply"] <date utc="@Model.Entity.LastReplyDate"></date>
             </li>
             @if (urls.AnchorUrls.Count > 0 || urls.ImageUrls.Count > 0)
             {

@@ -555,6 +555,44 @@ namespace Plato.Internal.Abstractions.Extensions
             return output.ToArray();
         }
 
+        public static int TotalWords(this string input)
+        {
+
+            var count = 0;
+            var wasInWord = false;
+            var inWord = false;
+
+            foreach (var c in input)
+            {
+                if (inWord)
+                {
+                    wasInWord = true;
+                }
+
+                if (char.IsWhiteSpace(c))
+                {
+                    if (wasInWord)
+                    {
+                        count++;
+                        wasInWord = false;
+                    }
+                    inWord = false;
+                }
+                else
+                {
+                    inWord = true;
+                }
+            }
+            
+            if (wasInWord)
+            {
+                count++;
+            }
+
+            return count;
+
+        }
+
     }
-    
+
 }

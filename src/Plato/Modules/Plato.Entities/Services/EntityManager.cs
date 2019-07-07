@@ -79,7 +79,10 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseEntityAbstract(model.Message);
             model.Urls = await ParseEntityUrls(model.Html);
             model.Alias = await ParseEntityAlias(model.Title);
-            
+
+            // Parse totals
+            model.TotalWords = model.Message.TotalWords();
+
             // Raise creating event
             Creating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
@@ -146,6 +149,9 @@ namespace Plato.Entities.Services
             model.Urls = await ParseEntityUrls(model.Html);
             model.Alias = await ParseEntityAlias(model.Title);
 
+            // Parse totals
+            model.TotalWords = model.Message.TotalWords();
+            
             // Raise Updating event
             Updating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 

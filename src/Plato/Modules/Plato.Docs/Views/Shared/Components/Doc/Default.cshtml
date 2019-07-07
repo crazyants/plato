@@ -1,4 +1,19 @@
 ﻿@model EntityViewModel<Doc, DocComment>
+@{
+ 
+    var details = Model.Entity.GetOrCreate<DocDetails>();
+   
+    var viewText = Model.Entity.TotalViews == 1
+        ? "view"
+        : "views";
+    var wordsPerMinute = 200;
+    var totalWords = Model.Entity.TotalWords;
+    var readingTime = totalWords / wordsPerMinute;
+    var minuteText = readingTime == 1
+        ? "minute"
+        : "minutes";
+    var readText = T["{0} to read"].Value;
+}
 
 <div class="list-row">
     <navigation name="doc-details"
@@ -7,32 +22,72 @@
     <div class="list-body reply-body">
         <card>
             <card-title>
-                <h6 class="card-title d-inline-block">
-                    @Model.Entity.Title
-                </h6>
-                @if (Model.Entity.IsPrivate && base.CurrentUser != null)
-                {
-                    if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                <ul class="list-inline float-left">
+                    <li class="list-inline-item">
+                        @if (readingTime >= 1)
+                        {
+                            @readText.Replace("{0}", $"{readingTime} {minuteText}")
+                            ;
+                        }
+                        else
+                        {
+                            @T["Less then 1 minute to read"]
+                        }
+                    </li>
+                 
+                    @if (details?.LatestUsers != null)
                     {
-                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you are the doc author"]">@T["Private"]</span>
+                        <li class="list-inline-item">
+                            <div class="avatar-group">
+                                @foreach (var user in details.LatestUsers)
+                                {
+                                    var replies = user.TotalReplies == 1
+                                        ? "comment"
+                                        : "comments";
+                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
+                                }
+                            </div>
+                        </li>
                     }
-                    else
+            
+                    @if (Model.Entity.IsPrivate && base.CurrentUser != null)
                     {
-                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you have permission to view private docs"]">@T["Private"]</span>
+                        if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                        {
+                            <li class="list-inline-item">
+                                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you are the doc author"]">@T["Private"]</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="list-inline-item">
+                                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This doc is private and only visible as you have permission to view private docs"]">@T["Private"]</span>
+                            </li>
+                        }
                     }
-                }
-                @if (Model.Entity.IsHidden)
-                {
-                    <span data-toggle="tooltip" title="@T["This doc is hidden and only visible as you have permission to view hidden docs"]" class="badge badge-primary">@T["Hidden"]</span>
-                }
-                @if (Model.Entity.IsSpam)
-                {
-                    <span class="badge badge-info" data-toggle="tooltip" title="@T["This doc has been flagged as SPAM and is only visible as you have permission to view docs flagged as SPAM"]">@T["SPAM"]</span>
-                }
-                @if (Model.Entity.IsDeleted)
-                {
-                    <span class="badge badge-danger" data-toggle="tooltip" title="@T["This doc has been deleted and is only visible as you have permission to view deleted docs"]">@T["Deleted"]</span>
-                }
+
+                    @if (Model.Entity.IsHidden)
+                    {
+                        <li class="list-inline-item">
+                            <span data-toggle="tooltip" title="@T["This doc is hidden and only visible as you have permission to view hidden docs"]" class="badge badge-primary">@T["Hidden"]</span>
+                        </li>
+                    }
+
+                    @if (Model.Entity.IsSpam)
+                    {
+                        <li class="list-inline-item">
+                            <span class="badge badge-info" data-toggle="tooltip" title="@T["This doc has been flagged as SPAM and is only visible as you have permission to view docs flagged as SPAM"]">@T["SPAM"]</span>
+                        </li>
+                    }
+                    @if (Model.Entity.IsDeleted)
+                    {
+                        <li class="list-inline-item">
+                            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This doc has been deleted and is only visible as you have permission to view deleted docs"]">@T["Deleted"]</span>
+                        </li>
+                    }
+                </ul>
+                
+
                 <navigation name="doc"
                             model="Model.Entity"
                             class="nav navbar p-0 float-right"

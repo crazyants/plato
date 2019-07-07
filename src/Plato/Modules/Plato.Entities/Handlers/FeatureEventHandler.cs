@@ -178,6 +178,11 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "TotalWords",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "DailyViews",
                         DbType = DbType.Double
                     },
@@ -444,6 +449,11 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "TotalImages",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalWords",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()

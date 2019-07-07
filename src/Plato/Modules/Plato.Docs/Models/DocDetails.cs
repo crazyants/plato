@@ -7,7 +7,11 @@ namespace Plato.Docs.Models
 
     public class DocDetails : Serializable
     {
+
         public IEnumerable<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
+
+        public IEnumerable<EntityUser> Contributors { get; set; } = new List<EntityUser>();
+
     }
     
 }

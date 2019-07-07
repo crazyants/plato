@@ -78,6 +78,8 @@ namespace Plato.Entities.Models
 
         public int TotalImages { get; set; }
 
+        public int TotalWords { get; set; }
+        
         public double DailyViews { get; set; }
 
         public double DailyReplies { get; set; }
@@ -91,6 +93,7 @@ namespace Plato.Entities.Models
         public double DailyReports { get; set; }
 
         public double DailyStars { get; set; }
+
         public double DailyRatings { get; set; }
 
         public string IpV4Address { get; set; }
@@ -290,6 +293,9 @@ namespace Plato.Entities.Models
             
             if (dr.ColumnIsNotNull("TotalImages"))
                 TotalImages = Convert.ToInt32(dr["TotalImages"]);
+            
+            if (dr.ColumnIsNotNull("TotalWords"))
+                TotalWords = Convert.ToInt32(dr["TotalWords"]);
             
             if (dr.ColumnIsNotNull("DailyViews"))
                 DailyViews = Convert.ToDouble(dr["DailyViews"]);

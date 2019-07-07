@@ -94,6 +94,8 @@ namespace Plato.Entities.Models
 
         int TotalImages { get; set; }
 
+        int TotalWords { get; set; }
+
         double DailyViews { get; set; }
 
         double DailyReplies { get; set; }
