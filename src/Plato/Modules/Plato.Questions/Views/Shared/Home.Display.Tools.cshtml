@@ -1,11 +1,14 @@
 ﻿@using Plato.Entities.Extensions
 @model Question
+@{
+    var permission = Plato.Questions.Permissions.PostAnswers;
+}
 
 @if (Model.IsLocked)
 {
-    <authorize asp-permission="PostAnswers">
+    <authorize asp-permission="@permission.Name">
         <authorize-success>
-            <div class="btn btn-danger ml-2" style="cursor: default;" title="@T["This question is locked and is not accepting new answers"]" data-toggle="tooltip">
+            <div class="btn btn-danger ml-2 cursor-default" title="@T["This question is locked and is not accepting new answers"]" data-toggle="tooltip">
                 <i class="fal fa-fw fa-lock"></i>
                 @T["Locked"]
             </div>
@@ -16,9 +19,9 @@ else
 {
     @if (!Model.IsHidden())
      {
-         <div asp-permission="PostAnswers">
+         <div asp-permission="@permission.Name">
              <authorize-success>
-                 <a asp-route-action="Create" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Add Reply"]">
+                 <a asp-route-action="Create" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Add Answer"]">
                      <i class="fal fa-fw fa-plus"></i>
                      @T["Add Answer"]
                  </a>
@@ -26,7 +29,7 @@ else
              <authorize-fail>
                  @if (base.CurrentUser == null)
                  {
-                     <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary ml-2" title="@T["New Topic"]">
+                     <a class="btn btn-primary ml-2" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" title="@T["Login to Answer"]">
                          <i class="fal fa-fw fa-lock"></i>
                          @T["Login to Answer"]
                      </a>

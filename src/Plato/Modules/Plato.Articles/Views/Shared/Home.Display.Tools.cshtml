@@ -32,11 +32,20 @@ else
     {
         <authorize asp-permission="@postPermission.Name">
             <authorize-success>
-                <a asp-route-action="Create" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Add Reply"]">
+                <a asp-route-action="Create" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Add Comment"]">
                     <i class="fal fa-fw fa-plus"></i>
                     @T["Add Comment"]
                 </a>
             </authorize-success>
+            <authorize-fail>
+                @if (base.CurrentUser == null)
+                {
+                    <a class="btn btn-primary ml-2" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" title="@T["Login to Comment"]">
+                        <i class="fal fa-fw fa-lock"></i>
+                        @T["Login to Comment"]
+                    </a>
+                }
+            </authorize-fail>
         </authorize>
     }
 }

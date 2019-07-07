@@ -1,23 +1,19 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Share
+namespace Plato.Issues.Star
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ShareTopics =
-            new Permission("ShareTopics", "Share topics");
-
-        public static readonly Permission ShareReplies =
-            new Permission("ShareReplies", "Share topic replies");
+        public static readonly Permission StarIssues =
+            new Permission("StarIssues", "Star issues");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ShareTopics,
-                ShareReplies
+                StarIssues
             };
         }
 
@@ -30,8 +26,7 @@ namespace Plato.Discuss.Share
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ShareTopics,
-                        ShareReplies
+                        StarIssues
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -39,8 +34,7 @@ namespace Plato.Discuss.Share
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        ShareTopics,
-                        ShareReplies
+                        StarIssues
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -48,8 +42,7 @@ namespace Plato.Discuss.Share
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ShareTopics,
-                        ShareReplies
+                        StarIssues
                     }
                 }
             };

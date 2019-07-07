@@ -9,7 +9,7 @@
 
 <authorize asp-permission="@editPermission.Name">
     <authorize-success>
-        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Edit" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" data-toggle="tooltip" title="@T["Edit Doc"]" class="btn bg-transparent text-muted" role="button">
+        <a  class="btn bg-transparent text-muted" asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Edit" asp-route-opts.id="@Model.Id" asp-route-opts.alias="@Model.Alias" data-toggle="tooltip" title="@T["Edit Doc"]" role="button">
             <i class="fal fa-pencil"></i>
         </a>
     </authorize-success>
@@ -19,7 +19,7 @@
 {
     <authorize asp-permission="@postPermission.Name">
         <authorize-success>
-            <div class="btn btn-danger ml-2"style="cursor: default;" title="@T["This doc is locked and is not accepting new comments"]" data-toggle="tooltip">
+            <div class="btn btn-danger ml-2 cursor-default" title="@T["This doc is locked and is not accepting new comments"]" data-toggle="tooltip">
                 <i class="fal fa-fw fa-lock"></i>
                 @T["Locked"]
             </div>
@@ -30,13 +30,22 @@ else
 {
     @if (!Model.IsHidden())
     {
-        <authorize asp-permission="@postPermission.Name">
+        <div asp-permission="@postPermission.Name">
             <authorize-success>
-                <a href="#" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Add Comment"]">
+                <a asp-route-action="Create" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Add Comment"]">
                     <i class="fal fa-fw fa-plus"></i>
                     @T["Add Comment"]
                 </a>
             </authorize-success>
-        </authorize>
+            <authorize-fail>
+                @if (base.CurrentUser == null)
+                {
+                    <a class="btn btn-primary ml-2" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" title="@T["Login to Comment"]">
+                        <i class="fal fa-fw fa-lock"></i>
+                        @T["Login to Comment"]
+                    </a>
+                }
+            </authorize-fail>
+        </div>
     }
 }
