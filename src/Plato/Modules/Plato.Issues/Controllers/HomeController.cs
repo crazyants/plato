@@ -928,7 +928,33 @@ namespace Plato.Issues.Controllers
             if (opts.ReplyId > 0)
             {
                 // We need to iterate all replies to calculate the offset
-                var replies = await _replyService.GetResultsAsync(opts, new PagerOptions
+                var replies = await _replyService
+                    .ConfigureQuery(async q =>
+                    {
+
+                        // Hide private?
+                        if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                            Permissions.ViewHiddenIssueComments))
+                        {
+                            q.HideHidden.True();
+                        }
+
+                        // Hide spam?
+                        if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                            Permissions.ViewSpamIssueComments))
+                        {
+                            q.HideSpam.True();
+                        }
+
+                        // Hide deleted?
+                        if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                            Permissions.ViewDeletedIssueComments))
+                        {
+                            q.HideDeleted.True();
+                        }
+
+                    })
+                    .GetResultsAsync(opts, new PagerOptions
                 {
                     Size = int.MaxValue
                 });
@@ -964,9 +990,9 @@ namespace Plato.Issues.Controllers
                 ["area"] = "Plato.Issues",
                 ["controller"] = "Home",
                 ["action"] = "Display",
-                ["pager.offset"] = offset,
                 ["opts.id"] = entity.Id,
-                ["opts.alias"] = entity.Alias
+                ["opts.alias"] = entity.Alias,
+                ["pager.offset"] = offset
             }));
 
         }
