@@ -2,23 +2,23 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Plato.Discuss.Models;
-using Plato.Discuss.Share.ViewModels;
+using Plato.Articles.Models;
+using Plato.Articles.Share.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 
-namespace Plato.Discuss.Share.Controllers
+namespace Plato.Articles.Share.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {
 
-        private readonly IEntityStore<Topic> _entityStore;
+        private readonly IEntityStore<Article> _entityStore;
         private readonly IContextFacade _contextFacade;
       
         public HomeController(
-            IEntityStore<Topic> entityStore,
+            IEntityStore<Article> entityStore,
             IContextFacade contextFacade)
         {
             _entityStore = entityStore;
@@ -51,7 +51,7 @@ namespace Plato.Discuss.Share.Controllers
             {
                 routeValues = new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Discuss",
+                    ["area"] = "Plato.Articles",
                     ["controller"] = "Home",
                     ["action"] = "Reply",
                     ["opts.id"] = entity.Id,
@@ -63,7 +63,7 @@ namespace Plato.Discuss.Share.Controllers
             {
                 routeValues = new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Discuss",
+                    ["area"] = "Plato.Articles",
                     ["controller"] = "Home",
                     ["action"] = "Display",
                     ["opts.id"] = entity.Id,

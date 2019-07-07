@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Share
+namespace Plato.Articles.Share
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ShareTopics =
-            new Permission("ShareTopics", "Share topics");
+        public static readonly Permission ShareArticles =
+            new Permission("ShareArticles", "Share topics");
 
-        public static readonly Permission ShareReplies =
-            new Permission("ShareReplies", "Share topic replies");
+        public static readonly Permission ShareComments =
+            new Permission("ShareArticleComments", "Share topic replies");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ShareTopics,
-                ShareReplies
+                ShareArticles,
+                ShareComments
             };
         }
 
@@ -30,8 +30,8 @@ namespace Plato.Discuss.Share
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ShareTopics,
-                        ShareReplies
+                        ShareArticles,
+                        ShareComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -39,8 +39,8 @@ namespace Plato.Discuss.Share
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        ShareTopics,
-                        ShareReplies
+                        ShareArticles,
+                        ShareComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -48,8 +48,8 @@ namespace Plato.Discuss.Share
                     RoleName = DefaultRoles.Anonymous,
                     Permissions = new[]
                     {
-                        ShareTopics,
-                        ShareReplies
+                        ShareArticles,
+                        ShareComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -57,8 +57,8 @@ namespace Plato.Discuss.Share
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ShareTopics,
-                        ShareReplies
+                        ShareArticles,
+                        ShareComments
                     }
                 }
             };

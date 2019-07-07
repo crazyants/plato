@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Articles.Models;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Share.Navigation
+namespace Plato.Articles.Share.Navigation
 {
-    public class TopicMenu : INavigationProvider
+    public class ArticleCommentMenu : INavigationProvider
     {
-        
+
+
         public IStringLocalizer T { get; set; }
 
-        public TopicMenu(IStringLocalizer localizer)
+        public ArticleCommentMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -20,19 +21,26 @@ namespace Plato.Discuss.Share.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "article-comment", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
-            
+        
             // Get model from navigation builder
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            if (topic == null)
+            var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
+            if (reply == null)
             {
                 return;
             }
-            
-            // Share 
+
+            // Get model from navigation builder
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
+            if (entity == null)
+            {
+                return;
+            }
+
+            // Options
             builder
                 .Add(T["Options"], int.MaxValue, options => options
                         .IconCss("fa fa-ellipsis-h")
@@ -42,11 +50,11 @@ namespace Plato.Discuss.Share.Navigation
                             {"title", T["Options"]}
                         })
                         .Add(T["Share"], int.MaxValue - 3, share => share
-                            .Action("Index", "Home", "Plato.Discuss.Share", new RouteValueDictionary()
+                            .Action("Index", "Home", "Plato.Articles.Share", new RouteValueDictionary()
                             {
-                                ["opts.id"] = topic.Id.ToString(),
-                                ["opts.alias"] = topic.Alias,
-                                ["opts.replyId"] = "0"
+                                ["opts.id"] = entity.Id.ToString(),
+                                ["opts.alias"] = entity.Alias,
+                                ["opts.replyId"] = reply.Id.ToString()
                             })
                             .Attributes(new Dictionary<string, object>()
                             {
@@ -54,9 +62,9 @@ namespace Plato.Discuss.Share.Navigation
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })
-                            .Permission(Permissions.ShareTopics)
+                            .Permission(Permissions.ShareComments)
                             .LocalNav()
-                        ), new List<string>() {"topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
+                        ), new List<string>() {"article-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden"}
                 );
 
         }

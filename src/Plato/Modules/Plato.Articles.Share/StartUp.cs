@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Discuss.Share.Navigation;
+using Plato.Articles.Share.Navigation;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
-using Plato.Discuss.Share.Handlers;
+using Plato.Articles.Share.Handlers;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Share
+namespace Plato.Articles.Share
 {
     public class Startup : StartupBase
     {
@@ -28,8 +28,8 @@ namespace Plato.Discuss.Share
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Navigation providers
-            services.AddScoped<INavigationProvider, TopicMenu>();
-            services.AddScoped<INavigationProvider, TopicReplyMenu>();
+            services.AddScoped<INavigationProvider, ArticleMenu>();
+            services.AddScoped<INavigationProvider, ArticleCommentMenu>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
@@ -43,9 +43,9 @@ namespace Plato.Discuss.Share
         {
 
             routes.MapAreaRoute(
-                name: "DiscussShare",
-                areaName: "Plato.Discuss.Share",
-                template: "discuss/t/share/{opts.id}/{opts.alias}/{opts.replyId?}",
+                name: "ArticlesShare",
+                areaName: "Plato.Articles.Share",
+                template: "articles/a/share/{opts.id}/{opts.alias}/{opts.replyId?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
             

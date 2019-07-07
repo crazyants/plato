@@ -1,4 +1,4 @@
-﻿namespace Plato.Discuss.Share.ViewModels
+﻿namespace Plato.Articles.Share.ViewModels
 {
     public class ShareViewModel
     {
