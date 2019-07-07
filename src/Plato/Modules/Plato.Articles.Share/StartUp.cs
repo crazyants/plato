@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Articles.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Articles.Share.Navigation;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Articles.Share.Handlers;
+using Plato.Articles.Share.ViewProviders;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Share
@@ -30,6 +33,10 @@ namespace Plato.Articles.Share
             // Navigation providers
             services.AddScoped<INavigationProvider, ArticleMenu>();
             services.AddScoped<INavigationProvider, ArticleCommentMenu>();
+            
+            // View providers
+            services.AddScoped<IViewProviderManager<Article>, ViewProviderManager<Article>>();
+            services.AddScoped<IViewProvider<Article>, ArticleViewProvider>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

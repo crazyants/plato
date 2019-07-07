@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Articles.Models
+@using Plato.Facebook.Models
+@model ShareViewModel
+@{
+    var facebookOptions = GetOptions<FacebookOptions>();
+    RouteValueDictionary dialogRouteValues = null;
+    var entity = Context.Items[typeof(Article)] as Article;
+    if (entity != null)
+    {
+        dialogRouteValues = new RouteValueDictionary
+        {
+            ["area"] = "Plato.Articles.Share",
+            ["controller"] = "Home",
+            ["action"] = "Index",
+            ["opts.id"] = entity.Id.ToString(),
+            ["opts.alias"] = entity.Alias,
+            ["opts.replyId"] = "0"
+        };
+    }
+}
+
+<card id="sharePanel">
+    <card-title>
+        <h6 class="card-title float-left">@T["Share"]</h6>
+
+        @if (dialogRouteValues != null)
+        {
+            <a href="@base.GetRouteUrl(dialogRouteValues)" data-provide="dialog" data-dialog-modal-css="modal fade" data-dialog-css="modal-dialog modal-lg" data-toggle="tooltip" class="float-right text-muted" title="@T["Copy URL"]">
+                <i class="fal fa-ellipsis-h fa-2x"></i>
+            </a>
+        }
+     
+    </card-title>
+    <card-body>
+
+        <ul class="social-buttons">
+            @if (!string.IsNullOrEmpty(facebookOptions.AppId))
+            {
+                <li>
+                    <a href="@Model.Url" class="btn btn-facebook" data-provide="tooltip" title="@T["Share on Facebook"]">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </li>
+            }
+            <li>
+                <a href="@Model.Url" class="btn btn-twitter" data-provide="tooltip" title="@T["Share on twitter"]">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </li>
+        </ul>
+
+    </card-body>
+</card>
+
+
+<div id="fb-root"></div>
+
+<script section="Footer">
+    $(function (win, doc, $) {
+
+        "use strict";
+    
+        // --------
+
+        var app = win.$.Plato;
+
+        app.ready(function() {
+
+            // Plato global
+            var app = win.$.Plato;
+            if (app == null) {
+                throw Error("$.Plato has not been registered!");
+            }
+
+            // Ensure social scripts are injected
+            app.social.init();
+
+            // Init facebook application Id
+            app.social.facebook.init("@facebookOptions.AppId");
+            
+            // Facebook click event
+            $("#sharePanel").find(".btn-facebook").on("click",
+                function(e) {
+                    e.preventDefault();
+                    app.social.facebook.share($(this).attr("href"));
+                });
+
+            // Twitter click event
+            $("#sharePanel").find(".btn-twitter").on("click",
+                function(e) {
+                    e.preventDefault();
+                    app.social.twitter.share($(this).attr("href"));
+                });
+
+        });
+
+    }(window, document, jQuery));
+</script>
