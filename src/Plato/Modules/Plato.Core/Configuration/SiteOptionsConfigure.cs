@@ -38,6 +38,7 @@ namespace Plato.Core.Configuration
                     options.Culture = settings.Culture;
                     options.DateTimeFormat = settings.DateTimeFormat;
                     options.Theme = settings.Theme;
+                    options.TimeZone = settings.TimeZone;
                 }
             
             }

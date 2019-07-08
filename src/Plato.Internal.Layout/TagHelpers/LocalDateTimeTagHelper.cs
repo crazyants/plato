@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
@@ -25,19 +26,20 @@ namespace Plato.Internal.Layout.TagHelpers
 
         [HtmlAttributeName("pretty")]
         public bool Pretty { get; set; } = true;
-
-        private readonly IContextFacade _contextFacade;
+        
         private readonly ILocalDateTimeProvider _localDateTimeProvider;
-        private readonly ILogger<LocalDateTimeTagHelper> _logger;
+        private readonly IContextFacade _contextFacade;
+
+        private readonly SiteOptions _settings;
 
         public LocalDateTimeTagHelper(
-            IContextFacade contextFacade, 
-            ILogger<LocalDateTimeTagHelper> logger,
-            ILocalDateTimeProvider localDateTimeProvider)
+            ILocalDateTimeProvider localDateTimeProvider,
+            IOptions<SiteOptions> siteSettings,
+            IContextFacade contextFacade)
         {
-            _contextFacade = contextFacade;
-            _logger = logger;
             _localDateTimeProvider = localDateTimeProvider;
+            _contextFacade = contextFacade;
+            _settings = siteSettings.Value;
         }
         
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -46,19 +48,21 @@ namespace Plato.Internal.Layout.TagHelpers
             // Client & server
             var utcDateTime = Utc ?? DateTimeOffset.UtcNow;
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            var settings = await _contextFacade.GetSiteSettingsAsync();
-
+         
             // Get local date time, only apply client offset if user is authenticated
             var localDateTime = await _localDateTimeProvider.GetLocalDateTimeAsync(new LocalDateTimeOptions()
             {
                 UtcDateTime = utcDateTime,
-                ServerTimeZone = settings?.TimeZone,
+                ServerTimeZone = _settings?.TimeZone,
                 ClientTimeZone = user?.TimeZone,
                 ApplyClientTimeZoneOffset = user != null
             });
 
+            // Date format
+            var dateTimeFormat = GetDefaultDateTimeFormat();
+
             // We always need the full regular date for the title attribute (not the pretty date)
-            var formattedDateTime = localDateTime.DateTime.ToString(GetDefaultDateTimeFormat(settings));
+            var formattedDateTime = localDateTime.DateTime.ToString(dateTimeFormat);
             
             // Build output
 
@@ -70,18 +74,18 @@ namespace Plato.Internal.Layout.TagHelpers
             output.Attributes.Add("data-toggle", "tooltip");
 
             output.Content.SetHtmlContent(this.Pretty
-                ? builder.AppendHtml(utcDateTime.DateTime.ToPrettyDate())
+                ? builder.AppendHtml(utcDateTime.DateTime.ToPrettyDate(dateTimeFormat))
                 : builder.AppendHtml(formattedDateTime));
 
         }
         
-        string GetDefaultDateTimeFormat(ISiteSettings settings)
+        string GetDefaultDateTimeFormat()
         {
-            if (settings != null)
+            if (_settings != null)
             {
-                if (!String.IsNullOrEmpty(settings.DateTimeFormat))
+                if (!String.IsNullOrEmpty(_settings.DateTimeFormat))
                 {
-                    return settings.DateTimeFormat;
+                    return _settings.DateTimeFormat;
                 }
             }
             return DefaultDateTimeFormat;

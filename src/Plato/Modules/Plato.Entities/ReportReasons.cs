@@ -9,7 +9,8 @@ namespace Plato.Entities
         {
             [Reason.Spam] = "Spam / Advertising",
             [Reason.Inaccurate] = "Inaccurate / Out Of Date",
-            [Reason.Inappropriate] = "Inappropriate Content",
+            [Reason.InappropriateContent] = "Inappropriate Content",
+            [Reason.InappropriateLink] = "Inappropriate Link",
             [Reason.Profanity] = "Profanity",
             [Reason.OffTopic] = "Off Topic / Irrelevant",
             [Reason.TermsOfService] = "Terms Of Use Violation",
@@ -21,12 +22,13 @@ namespace Plato.Entities
         {
             Spam = 1,
             Inaccurate = 2,
-            Inappropriate = 3,
-            Profanity = 4,
-            OffTopic = 5,
-            TermsOfService = 6,
-            PrivacyPolicy = 7,
-            Signature = 8
+            InappropriateContent = 3,
+            InappropriateLink = 4,
+            Profanity = 5,
+            OffTopic = 6,
+            TermsOfService = 7,
+            PrivacyPolicy = 8,
+            Signature = 9
         }
 
     }

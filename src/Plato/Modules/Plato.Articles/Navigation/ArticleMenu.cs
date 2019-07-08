@@ -184,30 +184,30 @@ namespace Plato.Articles.Navigation
                     );
             }
 
-            // If entity is not hidden or locked allow replies
-            if (!entity.IsHidden() && !entity.IsLocked)
-            {
+            //// If entity is not hidden or locked allow replies
+            //if (!entity.IsHidden() && !entity.IsLocked)
+            //{
 
-                builder
-                    .Add(T["Comment"], int.MaxValue, options => options
-                            .IconCss("fa fa-reply")
-                            .Attributes(new Dictionary<string, object>()
-                                {
-                                    {"data-provide", "postReply"},
-                                    {"data-toggle", "tooltip"},
-                                    {"title", T["Comment"]}
-                                })
-                            .Action("Login", "Account", "Plato.Users",
-                                new RouteValueDictionary()
-                                {
-                                    ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
-                                })
-                            .Permission(Permissions.PostArticleComments)
-                            .LocalNav()
-                        , new List<string>() {"article-reply", "text-muted", "text-hidden"}
-                    );
+            //    builder
+            //        .Add(T["Comment"], int.MaxValue, options => options
+            //                .IconCss("fa fa-reply")
+            //                .Attributes(new Dictionary<string, object>()
+            //                    {
+            //                        {"data-provide", "postReply"},
+            //                        {"data-toggle", "tooltip"},
+            //                        {"title", T["Comment"]}
+            //                    })
+            //                .Action("Login", "Account", "Plato.Users",
+            //                    new RouteValueDictionary()
+            //                    {
+            //                        ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
+            //                    })
+            //                .Permission(Permissions.PostArticleComments)
+            //                .LocalNav()
+            //            , new List<string>() {"article-reply", "text-muted", "text-hidden"}
+            //        );
 
-            }
+            //}
 
         }
 

@@ -15,64 +15,79 @@ namespace Plato.Internal.Abstractions.Extensions
             return d == null ? string.Empty : ToPrettyDate((DateTime) d);
         }
 
-        public static string ToPrettyDate(this DateTime d)
+        public static string ToPrettyDate(
+            this DateTime d, 
+            string fallbackFormat = "G")
         {
-            
+
             var s = DateTime.UtcNow.Subtract(d);
-
-            var dayDiff = (int)s.TotalDays;
-            var secDiff = (int)s.TotalSeconds;
-
-            if (dayDiff < 0 || dayDiff >= 31)
+            
+            var dayDiff = (int) s.TotalDays;
+            var weekDiff = (int) Math.Floor((double) dayDiff / 7);
+            var monthDiff = (int) Math.Floor((double) weekDiff / 4);
+  
+            if (dayDiff < 0 || monthDiff > 3)
             {
-                return null;
+                return d.ToString(fallbackFormat);
             }
 
-            if (dayDiff == 0)
+            // Months / Weeks / Days
+
+            if (monthDiff > 0)
             {
-         
-                if (secDiff < 60)
-                {
-                    return "just now";
-                }
-         
-                if (secDiff < 120)
-                {
-                    return "1 minute ago";
-                }
-         
-                if (secDiff < 3600)
-                {
-                    return $"{Math.Floor((double) secDiff / 60)} minutes ago";
-                }
-           
-                if (secDiff < 7200)
-                {
-                    return "1 hour ago";
-                }
-        
-                if (secDiff < 86400)
-                {
-                    return $"{Math.Floor((double) secDiff / 3600)} hours ago";
-                }
+                return monthDiff == 1
+                    ? $"{monthDiff} month ago"
+                    : $"{monthDiff} months ago";
             }
-   
+
+            if (weekDiff > 0)
+            {
+                return weekDiff == 1
+                    ? $"{weekDiff} week ago"
+                    : $"{weekDiff} weeks ago";
+            }
+            
             if (dayDiff == 1)
             {
                 return "yesterday";
             }
-            if (dayDiff < 7)
+
+            if (dayDiff > 0 && dayDiff < 7)
             {
                 return $"{dayDiff} days ago";
             }
-            if (dayDiff < 31)
+
+            // Seconds / Minutes / Hours
+
+            var secDiff = (int)s.TotalSeconds;
+
+            if (secDiff < 60)
             {
-                var weekDiff = (int)Math.Ceiling((double) dayDiff / 7);
-                return weekDiff == 1 
-                    ? $"{weekDiff} week ago" 
-                    : $"{weekDiff} weeks ago";
+                return "just now";
             }
+
+            if (secDiff < 120)
+            {
+                return "1 minute ago";
+            }
+
+            if (secDiff < 3600)
+            {
+                return $"{Math.Floor((double) secDiff / 60)} minutes ago";
+            }
+
+            if (secDiff < 7200)
+            {
+                return "1 hour ago";
+            }
+
+            if (secDiff < 86400)
+            {
+                return $"{Math.Floor((double) secDiff / 3600)} hours ago";
+            }
+            
             return null;
+
         }
 
         public static int DayDifference(this DateTime input, DateTime date)
