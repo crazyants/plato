@@ -13,22 +13,22 @@ namespace Plato.Entities.History.Subscribers
 
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-
-        private readonly IEntityStore<TEntity> _entityStore;
-        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
+        
         private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
+        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
+        private readonly IEntityStore<TEntity> _entityStore;
         private readonly IBroker _broker;
       
         public EntitySubscriber(
-            IBroker broker,
-            IEntityStore<TEntity> entityStore,
             IEntityHistoryManager<EntityHistory> entityHistoryManager, 
-            IEntityHistoryStore<EntityHistory> entityHistoryStore)
+            IEntityHistoryStore<EntityHistory> entityHistoryStore,
+            IEntityStore<TEntity> entityStore,
+            IBroker broker)
         {
-            _broker = broker;
-            _entityStore = entityStore;
             _entityHistoryManager = entityHistoryManager;
             _entityHistoryStore = entityHistoryStore;
+            _entityStore = entityStore;
+            _broker = broker;
         }
 
         #region "Implementation"

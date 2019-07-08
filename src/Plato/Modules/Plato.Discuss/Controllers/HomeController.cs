@@ -266,12 +266,10 @@ namespace Plato.Discuss.Controllers
             if (await _entityViewProvider.IsModelStateValidAsync(entity, this))
             {
 
-                // Get composed type from all involved view providers
+                // Get composed model from all involved view providers
                 entity = await _entityViewProvider.ComposeModelAsync(entity, this);
 
-                // We need to first add the fully composed type
-                // so we have a unique entity Id for all ProvideUpdateAsync
-                // methods within any involved view provider
+                // Create entity
                 var result = await _topicManager.CreateAsync(entity);
 
                 // Ensure the insert was successful
@@ -321,16 +319,6 @@ namespace Plato.Discuss.Controllers
                     }
                 }
 
-            }
-
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    //_alerter.Danger(T[error.ErrorMessage]);
-                }
             }
 
             return await Create(0);
@@ -653,6 +641,13 @@ namespace Plato.Discuss.Controllers
                 return Unauthorized();
             }
 
+            // Only update edited information if the message changes
+            if (viewModel.Message != entity.Message)
+            {
+                entity.EditedUserId = user?.Id ?? 0;
+                entity.EditedDate = DateTimeOffset.UtcNow;
+            }
+
             //// Update title & message
             entity.Title = viewModel.Title;
             entity.Message = viewModel.Message;
@@ -660,14 +655,7 @@ namespace Plato.Discuss.Controllers
             // Validate model state within all view providers
             if (await _entityViewProvider.IsModelStateValidAsync(entity, this))
             {
-
-                // Only update edited information if the message changes
-                if (viewModel.Message != entity.Message)
-                {
-                    entity.EditedUserId = user?.Id ?? 0;
-                    entity.EditedDate = DateTimeOffset.UtcNow;
-                }
-
+                
                 // Always update modified information
                 entity.ModifiedUserId = user?.Id ?? 0;
                 entity.ModifiedDate = DateTimeOffset.UtcNow;

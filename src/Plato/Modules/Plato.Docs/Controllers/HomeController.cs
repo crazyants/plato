@@ -706,6 +706,13 @@ namespace Plato.Docs.Controllers
                 return Unauthorized();
             }
 
+            // Only update edited information if the message changes
+            if (viewModel.Message != entity.Message)
+            {
+                entity.EditedUserId = user?.Id ?? 0;
+                entity.EditedDate = DateTimeOffset.UtcNow;
+            }
+
             //// Update title & message
             entity.Title = viewModel.Title;
             entity.Message = viewModel.Message;
@@ -713,14 +720,7 @@ namespace Plato.Docs.Controllers
             // Validate model state within all view providers
             if (await _docViewProvider.IsModelStateValidAsync(entity, this))
             {
-                
-                // Only update edited information if the message changes
-                if (viewModel.Message != entity.Message)
-                {
-                    entity.EditedUserId = user?.Id ?? 0;
-                    entity.EditedDate = DateTimeOffset.UtcNow;
-                }
-
+              
                 // Always update modified information
                 entity.ModifiedUserId = user?.Id ?? 0;
                 entity.ModifiedDate = DateTimeOffset.UtcNow;
