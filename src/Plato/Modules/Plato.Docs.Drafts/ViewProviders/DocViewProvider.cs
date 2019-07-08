@@ -18,17 +18,17 @@ namespace Plato.Docs.Drafts.ViewProviders
         public static string HtmlName = "published";
 
         private readonly IAuthorizationService _authorizationService;
-        private readonly HttpRequest _request;
         private readonly IEntityStore<Doc> _entityStore;
-
+        private readonly HttpRequest _request;
+       
         public DocViewProvider(
+            IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Doc> entityStore,
-            IAuthorizationService authorizationService)
+            IEntityStore<Doc> entityStore)
         {
             _request = httpContextAccessor.HttpContext.Request;
-            _entityStore = entityStore;
             _authorizationService = authorizationService;
+            _entityStore = entityStore;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(Doc article, IViewProviderContext updater)
@@ -170,24 +170,24 @@ namespace Plato.Docs.Drafts.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(Doc model, IViewProviderContext context)
         {
 
-            // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(model.Id);
-            if (entity == null)
-            {
-                return await BuildEditAsync(model, context);
-            }
+            //// Ensure entity exists before attempting to update
+            //var entity = await _entityStore.GetByIdAsync(model.Id);
+            //if (entity == null)
+            //{
+            //    return await BuildEditAsync(model, context);
+            //}
 
-            // Validate model
-            if (await ValidateModelAsync(model, context.Updater))
-            {
-                if (!model.IsNew)
-                {
-                    model.IsPrivate = GetIsPrivate();
-                    model.IsHidden = GetIsHidden();
-                    await _entityStore.UpdateAsync(model);
-                }
+            //// Validate model
+            //if (await ValidateModelAsync(model, context.Updater))
+            //{
+            //    if (!model.IsNew)
+            //    {
+            //        model.IsPrivate = GetIsPrivate();
+            //        model.IsHidden = GetIsHidden();
+            //        //await _entityStore.UpdateAsync(model);
+            //    }
 
-            }
+            //}
 
             return await BuildEditAsync(model, context);
 

@@ -25,22 +25,22 @@
         <div class="max-h-300 overflow-auto">
             <div class="list-group list-group-flush list-group-hover">
                 
-            @if (parentCategory != null)
-            {
-                <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@parentCategory.Id" asp-route-opts.alias="@parentCategory.Alias" title="@parentCategory.Description" class="list-group-item list-group-item-action">
-                    <i class="fal fa-level-up mr-2"></i> @parentCategory.Name
-                </a>
-            }
-            else
-            {
-                if (selectedCategory != null)
+                @if (parentCategory != null)
                 {
-                    <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="" asp-route-opts.alias="" title="@T["All Categories"]" class="list-group-item list-group-item-action">
-                        <i class="fal fa-level-up mr-2"></i> @T[allText]
+                    <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@parentCategory.Id" asp-route-opts.alias="@parentCategory.Alias" title="@parentCategory.Description" class="list-group-item list-group-item-action">
+                        <i class="fal fa-level-up mr-2"></i> @parentCategory.Name
                     </a>
                 }
+                else
+                {
+                    if (selectedCategory != null)
+                    {
+                        <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="" asp-route-opts.alias="" title="@T["All Categories"]" class="list-group-item list-group-item-action">
+                            <i class="fal fa-level-up mr-2"></i> @T[allText]
+                        </a>
+                    }
            
-            }
+                }
 
                 @{
                     var childCategories = Model.Categories
@@ -52,32 +52,32 @@
                 {
 
                     @foreach (var category in childCategories)
-                    {
-                        var css = category.Id == Model.Options.CategoryId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
-                        var categoryDetails = category.GetOrCreate<CategoryDetails>();
-                        <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@category.Id" asp-route-opts.alias="@category.Alias" title="@category.Description" class="@css">
-                            <span data-toggle="tooltip" title="@T["Public Docs"]" class="badge badge-info float-right">
-                                @categoryDetails.TotalEntities.ToPrettyInt()
-                            </span>
-                            @if (!String.IsNullOrWhiteSpace(category.IconCss))
-                            {
-                                <div class="float-left mr-3">
-                                    <span class="category-icon category-icon-sm" style="background-color: @category.BackColor; color: @category.ForeColor">
-                                        <i class="@category.IconCss"></i>
-                                    </span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="float-left mr-3">
-                                    <span class="category-icon category-icon-sm">
-                                        <i class="fal fa-folder"></i>
-                                    </span>
-                                </div>
-                            }
-                            @category.Name
-                        </a>
-                    }
+                     {
+                         var css = category.Id == Model.Options.CategoryId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                         var categoryDetails = category.GetOrCreate<CategoryDetails>();
+                         <a asp-route-area="Plato.Docs.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@category.Id" asp-route-opts.alias="@category.Alias" title="@category.Description" class="@css">
+                             <span data-toggle="tooltip" title="@T["Public Docs"]" class="badge badge-info float-right">
+                                 @categoryDetails.TotalEntities.ToPrettyInt()
+                             </span>
+                             @if (!String.IsNullOrWhiteSpace(category.IconCss))
+                             {
+                                 <div class="float-left mr-3">
+                                     <span class="category-icon category-icon-sm" style="background-color: @category.BackColor; color: @category.ForeColor">
+                                         <i class="@category.IconCss"></i>
+                                     </span>
+                                 </div>
+                             }
+                             else
+                             {
+                                 <div class="float-left mr-3">
+                                     <span class="category-icon category-icon-sm">
+                                         <i class="fal fa-folder"></i>
+                                     </span>
+                                 </div>
+                             }
+                             @category.Name
+                         </a>
+                     }
 
                 }
              

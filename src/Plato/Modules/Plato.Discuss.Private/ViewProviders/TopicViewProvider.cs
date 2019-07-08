@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +10,6 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Discuss.Models;
 using Plato.Discuss.Private.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
-using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Discuss.Private.ViewProviders
 {
@@ -22,17 +19,15 @@ namespace Plato.Discuss.Private.ViewProviders
         public static string HtmlName = "visibility";
 
         private readonly IAuthorizationService _authorizationService;
-        private readonly IContextFacade _contextFacade;     
         private readonly IEntityStore<Topic> _entityStore;
         private readonly HttpRequest _request;
  
         public TopicViewProvider(
-            IContextFacade contextFacade,
             IHttpContextAccessor httpContextAccessor,
             IEntityStore<Topic> entityStore,
             IAuthorizationService authorizationService)
         {
-            _contextFacade = contextFacade;       
+         
             _entityStore = entityStore;
             _authorizationService = authorizationService;
             _request = httpContextAccessor.HttpContext.Request;
@@ -156,23 +151,23 @@ namespace Plato.Discuss.Private.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic model, IViewProviderContext context)
         {
 
-            // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(model.Id);
-            if (entity == null)
-            {
-                return await BuildEditAsync(model, context);
-            }
+            //// Ensure entity exists before attempting to update
+            //var entity = await _entityStore.GetByIdAsync(model.Id);
+            //if (entity == null)
+            //{
+            //    return await BuildEditAsync(model, context);
+            //}
             
-            // Validate model
-            if (await ValidateModelAsync(model, context.Updater))
-            {
-                if (!model.IsNew)
-                {
-                    model.IsPrivate = GetIsPrivate();
-                    await _entityStore.UpdateAsync(model);
-                }
+            //// Validate model
+            //if (await ValidateModelAsync(model, context.Updater))
+            //{
+            //    if (!model.IsNew)
+            //    {
+            //        model.IsPrivate = GetIsPrivate();
+            //        await _entityStore.UpdateAsync(model);
+            //    }
           
-            }
+            //}
 
             return await BuildEditAsync(model, context);
 

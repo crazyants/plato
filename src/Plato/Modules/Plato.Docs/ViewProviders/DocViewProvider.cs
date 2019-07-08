@@ -165,7 +165,6 @@ namespace Plato.Docs.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-
                 doc.Title = model.Title;
                 doc.Message = model.Message;
                 doc.ParentId = GetParentSelection();;
@@ -175,40 +174,7 @@ namespace Plato.Docs.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Doc doc, IViewProviderContext context)
         {
-            
-            if (doc.IsNew)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var entity = await _entityStore.GetByIdAsync(doc.Id);
-            if (entity == null)
-            {
-                return await BuildIndexAsync(doc, context);
-            }
-
-            // Validate 
-            if (await ValidateModelAsync(doc, context.Updater))
-            {
-
-                doc.ParentId = GetParentSelection();
-
-                // Update
-                var result = await _docManager.UpdateAsync(doc);
-
-                // Was there a problem updating the entity?
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-
-            }
-
             return await BuildEditAsync(doc, context);
-
         }
         
         int GetParentSelection()

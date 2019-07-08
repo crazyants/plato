@@ -12,24 +12,24 @@ namespace Plato.Discuss.Labels.Follow.ViewProviders
     public class LabelViewProvider : BaseViewProvider<Label>
     {
 
-        private readonly ILabelStore<Label> _tagStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
-
+        private readonly ILabelStore<Label> _labelStore;
+        private readonly IContextFacade _contextFacade;
+        
         public LabelViewProvider(
-            ILabelStore<Label> tagStore, 
-            IContextFacade contextFacade,
-            IFollowStore<Follows.Models.Follow> followStore)
+            IFollowStore<Follows.Models.Follow> followStore,
+            ILabelStore<Label> labelStore, 
+            IContextFacade contextFacade)
         {
-            _tagStore = tagStore;
             _contextFacade = contextFacade;
             _followStore = followStore;
+            _labelStore = labelStore;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Label label, IViewProviderContext context)
         {
 
-            var existingTag = await _tagStore.GetByIdAsync(label.Id);
+            var existingTag = await _labelStore.GetByIdAsync(label.Id);
             if (existingTag == null)
             {
                 return await BuildIndexAsync(label, context);

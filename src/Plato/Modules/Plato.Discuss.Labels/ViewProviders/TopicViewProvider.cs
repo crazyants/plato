@@ -26,37 +26,38 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         private const string LabelHtmlName = "label";
 
-        private readonly ILabelStore<Label> _labelStore;
+     
         private readonly IEntityLabelManager<EntityLabel> _entityLabelManager;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
+        private readonly ILabelStore<Label> _labelStore;
+        private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly ICacheManager _cacheManager;
-        private readonly IContextFacade _contextFacade;
 
         private readonly HttpRequest _request;
 
         private readonly IStringLocalizer T;
 
         public TopicViewProvider(
-            ILabelStore<Label> labelStore, 
-            IEntityStore<Topic> entityStore,
-            IHttpContextAccessor httpContextAccessor,
-            IEntityLabelStore<EntityLabel> entityLabelStore,
-            IStringLocalizer stringLocalize,
-            IFeatureFacade featureFacade, 
             IEntityLabelManager<EntityLabel> entityLabelManager,
-            ICacheManager cacheManager,
-            IContextFacade contextFacade)
+            IEntityLabelStore<EntityLabel> entityLabelStore,
+            IHttpContextAccessor httpContextAccessor,
+            IStringLocalizer stringLocalize,
+            IEntityStore<Topic> entityStore,
+            ILabelStore<Label> labelStore,
+            IFeatureFacade featureFacade,
+            IContextFacade contextFacade,
+            ICacheManager cacheManager)
         {
-            _labelStore = labelStore;
-            _entityStore = entityStore;
-            _entityLabelStore = entityLabelStore;
             _request = httpContextAccessor.HttpContext.Request;
-            _featureFacade = featureFacade;
             _entityLabelManager = entityLabelManager;
-            _cacheManager = cacheManager;
+            _entityLabelStore = entityLabelStore;
+            _featureFacade = featureFacade;
             _contextFacade = contextFacade;
+            _cacheManager = cacheManager;
+            _entityStore = entityStore;
+            _labelStore = labelStore;
 
             T = stringLocalize;
 
@@ -104,7 +105,6 @@ namespace Plato.Discuss.Labels.ViewProviders
                     return model;
                 }).Zone("sidebar").Order(3)
             );
-
 
         }
         

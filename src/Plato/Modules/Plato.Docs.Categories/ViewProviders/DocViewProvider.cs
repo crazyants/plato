@@ -356,13 +356,13 @@ namespace Plato.Docs.Categories.ViewProviders
                         }
                     }
                     
-                    // Update entity with first found category 
-                    foreach (var id in categoriesToAdd)
-                    {
-                        doc.CategoryId = id;
-                        await _entityStore.UpdateAsync(doc);
-                        break;
-                    }
+                    //// Update entity with first found category 
+                    //foreach (var id in categoriesToAdd)
+                    //{
+                    //    doc.CategoryId = id;
+                    //    await _entityStore.UpdateAsync(doc);
+                    //    break;
+                    //}
                     
                     // Update added category meta data
                     foreach (var id in categoriesToAdd)

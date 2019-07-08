@@ -336,13 +336,13 @@ namespace Plato.Discuss.Categories.ViewProviders
                         }
                     }
                     
-                    // Update entity with first found category 
-                    foreach (var id in categoriesToAdd)
-                    {
-                        topic.CategoryId = id;
-                        await _entityStore.UpdateAsync(topic);
-                        break;
-                    }
+                    //// Update entity with first found category 
+                    //foreach (var id in categoriesToAdd)
+                    //{
+                    //    topic.CategoryId = id;
+                    //    await _entityStore.UpdateAsync(topic);
+                    //    break;
+                    //}
                     
                     // Update added category meta data
                     foreach (var id in categoriesToAdd)

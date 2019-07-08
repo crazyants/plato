@@ -19,7 +19,7 @@ namespace Plato.Docs.Models
                 var i = 0;
                 foreach (var contributor in Contributors)
                 {
-                    i += contributor.Contributions.Count;
+                    i += contributor.ContributionCount;
                 }
 
                 return i;

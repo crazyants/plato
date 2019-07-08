@@ -32,9 +32,8 @@ else
     {
         <div asp-permission="@postPermission.Name">
             <authorize-success>
-                <a asp-route-action="Create" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Add Comment"]">
-                    <i class="fal fa-fw fa-plus"></i>
-                    @T["Add Comment"]
+                <a asp-route-action="Create" class="btn btn-primary ml-2" data-provide="postReply" title="@T["Leave Feedback"]">
+                    @T["Leave Feedback"]
                 </a>
             </authorize-success>
             <authorize-fail>

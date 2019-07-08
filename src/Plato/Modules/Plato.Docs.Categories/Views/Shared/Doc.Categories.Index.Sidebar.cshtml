@@ -7,7 +7,7 @@
     
     <authorize asp-permission="@postPermission.Name">
         <authorize-success>
-            <div class="position-absolute" style="right: 0; z-index: 999;">
+            <div class="position-absolute" style="right: 0; z-index: 1;">
                 <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Create" asp-route-categoryId="@Model.Options.CategoryId" class="btn btn-sm text-muted" data-toggle="tooltip" title="@T["New Doc"]">
                     <i class="fal fa-fw fa-plus"></i>
                 </a>

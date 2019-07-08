@@ -3,6 +3,9 @@
     var replies = @Model.TotalReplies == 1
         ? "comment"
         : "comments";
+    var viewText = Model.TotalViews == 1
+        ? "view"
+        : "views";
 }
 
 <h4>
@@ -26,15 +29,18 @@
     @if (Model.EditedDate != null)
     {
         <li class="list-inline-item">
-            @T["Updated"] <date utc="@Model.EditedDate"/>
+            <date utc="@Model.EditedDate"/>
         </li>
     }
     else
     {
         <li class="list-inline-item">
-            @T["Updated"] <date utc="@Model.CreatedDate"/>
+            <date utc="@Model.CreatedDate"/>
         </li>
     }
+    <li class="list-inline-item">
+        @Model.TotalViews @T[viewText]
+    </li>
     <li class="list-inline-item">
         @Model.TotalReplies.ToPrettyInt() @T[replies]
     </li>
