@@ -249,7 +249,7 @@ namespace Plato.Discuss.Categories.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Topic topic, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Topic topic, IUpdateModel updater)
         {
 
             var model = new CategoryInputViewModel

@@ -107,7 +107,7 @@ namespace Plato.Internal.Layout.ViewProviders
 
         }
 
-        public async Task<bool> IsModelStateValid(TModel model, IUpdateModel updater)
+        public async Task<bool> IsModelStateValidAsync(TModel model, IUpdateModel updater)
         {
             var valid = true;
             foreach (var provider in _providers)
@@ -130,13 +130,13 @@ namespace Plato.Internal.Layout.ViewProviders
 
         }
 
-        public async Task<TModel> GetComposedType(TModel model, IUpdateModel context)
+        public async Task<TModel> ComposeModelAsync(TModel model, IUpdateModel context)
         {
             foreach (var provider in _providers)
             {
                 try
                 {
-                    await provider.ComposeTypeAsync(model, context);
+                    await provider.ComposeModelAsync(model, context);
 
                 }
                 catch (Exception e)

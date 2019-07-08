@@ -131,7 +131,7 @@ namespace Plato.Discuss.Private.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Topic question, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Topic question, IUpdateModel updater)
         {
 
             var model = new SelectDropDownViewModel()

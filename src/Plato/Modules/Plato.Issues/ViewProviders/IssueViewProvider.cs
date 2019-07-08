@@ -16,23 +16,18 @@ namespace Plato.Issues.ViewProviders
     {
 
         private const string EditorHtmlName = "message";
-        
-        private readonly IEntityStore<Issue> _entityStore;
-        private readonly IPostManager<Issue> _articleManager;
-        private readonly IEntityViewIncrementer<Issue> _viewIncrementer;
 
+        private readonly IEntityViewIncrementer<Issue> _viewIncrementer;
+        
         private readonly HttpRequest _request;
         
         public IssueViewProvider(
-            IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Issue> entityStore,
-            IPostManager<Issue> articleManager,
-            IEntityViewIncrementer<Issue> viewIncrementer)
+
+            IEntityViewIncrementer<Issue> viewIncrementer,
+            IHttpContextAccessor httpContextAccessor)
         {
-            _entityStore = entityStore;
-            _articleManager = articleManager;
-            _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
+            _viewIncrementer = viewIncrementer;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Issue issue, IViewProviderContext context)
@@ -125,7 +120,7 @@ namespace Plato.Issues.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(Issue issue, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Issue issue, IUpdateModel updater)
         {
 
             var model = new EditEntityViewModel
@@ -147,37 +142,7 @@ namespace Plato.Issues.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Issue issue, IViewProviderContext context)
         {
-            
-            if (issue.IsNew)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var entity = await _entityStore.GetByIdAsync(issue.Id);
-            if (entity == null)
-            {
-                return await BuildIndexAsync(issue, context);
-            }
-            
-            // Validate 
-            if (await ValidateModelAsync(issue, context.Updater))
-            {
-                // Update
-                var result = await _articleManager.UpdateAsync(issue);
-
-                // Was there a problem updating the entity?
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-
-            }
-
             return await BuildEditAsync(issue, context);
-
         }
 
     }

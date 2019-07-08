@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Ideas.Models;
-using Plato.Ideas.Services;
-using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.ViewModels;
@@ -12,27 +10,22 @@ using Plato.Entities.Services;
 
 namespace Plato.Ideas.ViewProviders
 {
+
     public class IdeaViewProvider : BaseViewProvider<Idea>
     {
 
         private const string EditorHtmlName = "message";
-        
-        private readonly IEntityStore<Idea> _entityStore;
-        private readonly IPostManager<Idea> _articleManager;
+ 
         private readonly IEntityViewIncrementer<Idea> _viewIncrementer;
 
         private readonly HttpRequest _request;
         
         public IdeaViewProvider(
-            IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Idea> entityStore,
-            IPostManager<Idea> articleManager,
-            IEntityViewIncrementer<Idea> viewIncrementer)
+            IEntityViewIncrementer<Idea> viewIncrementer,
+            IHttpContextAccessor httpContextAccessor)
         {
-            _entityStore = entityStore;
-            _articleManager = articleManager;
-            _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
+            _viewIncrementer = viewIncrementer;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Idea idea, IViewProviderContext context)
@@ -126,7 +119,7 @@ namespace Plato.Ideas.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(Idea idea, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Idea idea, IUpdateModel updater)
         {
 
             var model = new EditEntityViewModel
@@ -148,37 +141,7 @@ namespace Plato.Ideas.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Idea idea, IViewProviderContext context)
         {
-            
-            if (idea.IsNew)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var entity = await _entityStore.GetByIdAsync(idea.Id);
-            if (entity == null)
-            {
-                return await BuildIndexAsync(idea, context);
-            }
-            
-            // Validate 
-            if (await ValidateModelAsync(idea, context.Updater))
-            {
-                // Update
-                var result = await _articleManager.UpdateAsync(idea);
-
-                // Was there a problem updating the entity?
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-
-            }
-
             return await BuildEditAsync(idea, context);
-
         }
 
     }

@@ -19,8 +19,6 @@ namespace Plato.Docs.ViewProviders
         public const string ParentHtmlName = "parent";
 
         private readonly IEntityViewIncrementer<Doc> _viewIncrementer;
-        private readonly IEntityStore<Doc> _entityStore;
-        private readonly IPostManager<Doc> _docManager;
         private readonly IFeatureFacade _featureFacade;
 
         private readonly HttpRequest _request;
@@ -28,15 +26,11 @@ namespace Plato.Docs.ViewProviders
         public DocViewProvider(
             IEntityViewIncrementer<Doc> viewIncrementer,
             IHttpContextAccessor httpContextAccessor,
-            IPostManager<Doc> docManager,
-            IEntityStore<Doc> entityStore,
             IFeatureFacade featureFacade)
         {
             _request = httpContextAccessor.HttpContext.Request;
             _viewIncrementer = viewIncrementer;
             _featureFacade = featureFacade;
-            _docManager = docManager;
-            _entityStore = entityStore;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Doc doc, IViewProviderContext context)
@@ -152,7 +146,7 @@ namespace Plato.Docs.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(Doc doc, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Doc doc, IUpdateModel updater)
         {
 
             var model = new EditEntityViewModel
@@ -199,7 +193,6 @@ namespace Plato.Docs.ViewProviders
             return 0;
         }
         
-     
     }
 
 }

@@ -27,8 +27,11 @@ namespace Plato.Internal.Layout.ViewProviders
             return Task.FromResult(true);
         }
 
-        public virtual Task ComposeTypeAsync(TModel model, IUpdateModel updater)
+        public virtual Task ComposeModelAsync(TModel model, IUpdateModel updater)
         {
+            // We don't always need to implement ComposeModelAsync for certain views
+            // For example views that don't perform any updates. We'll leave this method
+            // virtual to allow us to override if needed within view provider implementations
             return Task.CompletedTask;
         }
 

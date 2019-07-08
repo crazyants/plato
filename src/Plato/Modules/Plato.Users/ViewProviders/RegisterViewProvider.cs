@@ -79,7 +79,7 @@ namespace Plato.Users.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(UserRegistration registration, IUpdateModel updater)
+        public override async Task ComposeModelAsync(UserRegistration registration, IUpdateModel updater)
         {
 
             var model = new RegisterViewModel()

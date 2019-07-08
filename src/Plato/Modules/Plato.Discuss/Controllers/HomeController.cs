@@ -263,11 +263,11 @@ namespace Plato.Discuss.Controllers
             };
 
             // Validate model state within all view providers
-            if (await _entityViewProvider.IsModelStateValid(entity, this))
+            if (await _entityViewProvider.IsModelStateValidAsync(entity, this))
             {
 
                 // Get composed type from all involved view providers
-                entity = await _entityViewProvider.GetComposedType(entity, this);
+                entity = await _entityViewProvider.ComposeModelAsync(entity, this);
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
@@ -487,11 +487,11 @@ namespace Plato.Discuss.Controllers
             };
 
             // Validate model state within all involved view providers
-            if (await _replyViewProvider.IsModelStateValid(reply, this))
+            if (await _replyViewProvider.IsModelStateValidAsync(reply, this))
             {
 
                 // Get composed type from all involved view providers
-                reply = await _replyViewProvider.GetComposedType(reply, this);
+                reply = await _replyViewProvider.ComposeModelAsync(reply, this);
                 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
@@ -631,75 +631,6 @@ namespace Plato.Discuss.Controllers
 
         }
 
-        //[HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
-        //public async Task<IActionResult> EditPost(EditEntityViewModel model)
-        //{
-
-        //    // Get entity we are editing 
-        //    var entity = await _entityStore.GetByIdAsync(model.Id);
-
-        //    // Ensure entity exists
-        //    if (entity == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Validate model state within all view providers
-        //    if (await _topicViewProvider.IsModelStateValid(new Topic()
-        //    {
-        //        Title = model.Title,
-        //        Message = model.Message
-        //    }, this))
-        //    {
-
-        //        // Get current user
-        //        var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-        //        // Only update edited information if the message changes
-        //        if (model.Message != entity.Message)
-        //        {
-        //            entity.EditedUserId = user?.Id ?? 0;
-        //            entity.EditedDate = DateTimeOffset.UtcNow;
-        //        }
-
-        //        // Always update modified information
-        //        entity.ModifiedUserId = user?.Id ?? 0;
-        //        entity.ModifiedDate = DateTimeOffset.UtcNow;
-
-        //        // Update title & message
-        //        entity.Title = model.Title;
-        //        entity.Message = model.Message;
-
-        //        // Execute view providers ProvideUpdateAsync method
-        //        await _topicViewProvider.ProvideUpdateAsync(entity, this);
-
-        //        // Everything was OK
-        //        _alerter.Success(T["Topic Updated Successfully!"]);
-
-        //        // Redirect to entity
-        //        return RedirectToAction(nameof(Display), new RouteValueDictionary()
-        //        {
-        //            ["opts.id"] = entity.Id,
-        //            ["opts.alias"] = entity.Alias
-        //        });
-
-
-        //    }
-
-        //    // if we reach this point some view model validation
-        //    // failed within a view provider, display model state errors
-        //    foreach (var modelState in ViewData.ModelState.Values)
-        //    {
-        //        foreach (var error in modelState.Errors)
-        //        {
-        //            //_alerter.Danger(T[error.ErrorMessage]);
-        //        }
-        //    }
-
-        //    return await Create(0);
-
-        //}
-
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditEntityViewModel viewModel)
         {
@@ -727,7 +658,7 @@ namespace Plato.Discuss.Controllers
             entity.Message = viewModel.Message;
 
             // Validate model state within all view providers
-            if (await _entityViewProvider.IsModelStateValid(entity, this))
+            if (await _entityViewProvider.IsModelStateValidAsync(entity, this))
             {
 
                 // Only update edited information if the message changes
@@ -742,7 +673,7 @@ namespace Plato.Discuss.Controllers
                 entity.ModifiedDate = DateTimeOffset.UtcNow;
 
                 // Get composed model from view providers
-                entity = await _entityViewProvider.GetComposedType(entity, this);
+                entity = await _entityViewProvider.ComposeModelAsync(entity, this);
 
                 // Update the entity
                 var result = await _topicManager.UpdateAsync(entity);
@@ -789,23 +720,7 @@ namespace Plato.Discuss.Controllers
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-
-                return await Edit(new EntityOptions()
-                {
-                    Id = entity.Id,
-                    Alias = entity.Alias
-                });
-
-            }
-
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    //_alerter.Danger(T[error.ErrorMessage]);
-                }
+                
             }
 
             return await Edit(new EntityOptions()
@@ -911,7 +826,7 @@ namespace Plato.Discuss.Controllers
             reply.Message = model.Message;
 
             // Validate model state within all view providers
-            if (await _replyViewProvider.IsModelStateValid(reply, this))
+            if (await _replyViewProvider.IsModelStateValidAsync(reply, this))
             {
 
                 // Execute view providers ProvideUpdateAsync method

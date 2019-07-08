@@ -126,7 +126,7 @@ namespace Plato.Questions.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(Question question, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Question question, IUpdateModel updater)
         {
 
             var model = new EditEntityViewModel
@@ -148,37 +148,7 @@ namespace Plato.Questions.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Question question, IViewProviderContext context)
         {
-            
-            if (question.IsNew)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var entity = await _entityStore.GetByIdAsync(question.Id);
-            if (entity == null)
-            {
-                return await BuildIndexAsync(question, context);
-            }
-            
-            // Validate 
-            if (await ValidateModelAsync(question, context.Updater))
-            {
-                // Update
-                var result = await _articleManager.UpdateAsync(question);
-
-                // Was there a problem updating the entity?
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-
-            }
-
             return await BuildEditAsync(question, context);
-
         }
 
     }

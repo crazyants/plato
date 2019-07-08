@@ -209,7 +209,7 @@ namespace Plato.Users.Controllers
         {
 
             // Validate model state within view providers
-            var valid = await _viewProvider.IsModelStateValid(new User()
+            var valid = await _viewProvider.IsModelStateValidAsync(new User()
             {
                 DisplayName = model.DisplayName,
                 UserName = model.UserName,

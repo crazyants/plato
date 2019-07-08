@@ -149,7 +149,7 @@ namespace Plato.Articles.Drafts.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Article question, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Article question, IUpdateModel updater)
         {
 
             var model = new SelectDropDownViewModel()

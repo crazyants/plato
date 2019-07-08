@@ -287,7 +287,7 @@ namespace Plato.Users.Controllers
             }
 
             // Validate model state within all view providers
-            if (await _editProfileViewProvider.IsModelStateValid(model, this))
+            if (await _editProfileViewProvider.IsModelStateValidAsync(model, this))
             {
                 var result = await _editProfileViewProvider.ProvideUpdateAsync(model, this);
 
@@ -364,7 +364,7 @@ namespace Plato.Users.Controllers
             }
 
             // Validate model state within all view providers
-            if (await _editAccountViewProvider.IsModelStateValid(model, this))
+            if (await _editAccountViewProvider.IsModelStateValidAsync(model, this))
             {
                 var result = await _editAccountViewProvider.ProvideUpdateAsync(model, this);
 
@@ -492,7 +492,7 @@ namespace Plato.Users.Controllers
             }
 
             // Validate model state within all view providers
-            if (await _editSignatureViewProvider.IsModelStateValid(model, this))
+            if (await _editSignatureViewProvider.IsModelStateValidAsync(model, this))
             {
 
                 await _editSignatureViewProvider.ProvideUpdateAsync(model, this);
@@ -571,7 +571,7 @@ namespace Plato.Users.Controllers
             }
 
             // Validate model state within all view providers
-            if (await _editSettingsViewProvider.IsModelStateValid(model, this))
+            if (await _editSettingsViewProvider.IsModelStateValidAsync(model, this))
             {
                 await _editSettingsViewProvider.ProvideUpdateAsync(model, this);
 

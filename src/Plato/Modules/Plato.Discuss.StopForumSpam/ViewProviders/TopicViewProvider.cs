@@ -62,7 +62,7 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Topic entity, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Topic entity, IUpdateModel updater)
         {
             
             if (!updater.ModelState.IsValid)

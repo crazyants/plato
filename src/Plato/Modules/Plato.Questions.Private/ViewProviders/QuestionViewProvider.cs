@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
@@ -19,17 +18,14 @@ namespace Plato.Questions.Private.ViewProviders
         public static string HtmlName = "visibility";
 
         private readonly IAuthorizationService _authorizationService;
-        private readonly IEntityStore<Question> _entityStore;
         private readonly HttpRequest _request;
  
         public QuestionViewProvider(
-            IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Question> entityStore,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IHttpContextAccessor httpContextAccessor)
         {
-            _entityStore = entityStore;
-            _authorizationService = authorizationService;
             _request = httpContextAccessor.HttpContext.Request;
+            _authorizationService = authorizationService;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(Question entity, IViewProviderContext updater)
@@ -130,7 +126,7 @@ namespace Plato.Questions.Private.ViewProviders
             
         }
 
-        public override async Task ComposeTypeAsync(Question question, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Question question, IUpdateModel updater)
         {
 
             var model = new SelectDropDownViewModel()
@@ -149,27 +145,7 @@ namespace Plato.Questions.Private.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Question question, IViewProviderContext context)
         {
-
-            // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(question.Id);
-            if (entity == null)
-            {
-                return await BuildEditAsync(question, context);
-            }
-            
-            // Validate model
-            if (await ValidateModelAsync(question, context.Updater))
-            {
-                if (!question.IsNew)
-                {
-                    question.IsPrivate = GetIsPrivate();
-                    await _entityStore.UpdateAsync(question);
-                }
-          
-            }
-
             return await BuildEditAsync(question, context);
-
         }
 
         bool GetIsPrivate()

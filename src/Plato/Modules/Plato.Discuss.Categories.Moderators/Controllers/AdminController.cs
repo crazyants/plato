@@ -150,11 +150,11 @@ namespace Plato.Discuss.Categories.Moderators.Controllers
             };
 
             // Validate model state within all involved view providers
-            if (await _viewProvider.IsModelStateValid(moderator, this))
+            if (await _viewProvider.IsModelStateValidAsync(moderator, this))
             {
 
                 // Get composed type from all involved view providers
-                var model = await _viewProvider.GetComposedType(moderator, this);
+                var model = await _viewProvider.ComposeModelAsync(moderator, this);
 
                 // Create moderator
                 var result = await _moderatorStore.CreateAsync(model);

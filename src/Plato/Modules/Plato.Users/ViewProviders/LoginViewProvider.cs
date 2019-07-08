@@ -83,7 +83,7 @@ namespace Plato.Users.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(UserLogin userLogin, IUpdateModel updater)
+        public override async Task ComposeModelAsync(UserLogin userLogin, IUpdateModel updater)
         {
 
             var model = new LoginViewModel()

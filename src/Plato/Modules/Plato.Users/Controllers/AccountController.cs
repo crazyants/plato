@@ -150,11 +150,11 @@ namespace Plato.Users.Controllers
             };
 
             // Validate model state within all involved view providers
-            if (await _loginViewProvider.IsModelStateValid(userLogin, this))
+            if (await _loginViewProvider.IsModelStateValidAsync(userLogin, this))
             {
 
                 // Get composed type from all involved view providers
-                userLogin = await _loginViewProvider.GetComposedType(userLogin, this);
+                userLogin = await _loginViewProvider.ComposeModelAsync(userLogin, this);
 
                 // Get sign in result
                 var result = await _signInManager.PasswordSignInAsync(
@@ -301,29 +301,28 @@ namespace Plato.Users.Controllers
             };
 
             // Validate model state within all involved view providers
-            if (await _registerViewProvider.IsModelStateValid(registration, this))
+            if (await _registerViewProvider.IsModelStateValidAsync(registration, this))
             {
 
                 // Get composed type from all involved view providers
-                var model = await _registerViewProvider.GetComposedType(registration, this);
+                registration = await _registerViewProvider.ComposeModelAsync(registration, this);
 
                 // Create the user from composed type
                 var result = await _platoUserManager.CreateAsync(
-                    model.UserName,
-                    model.Email,
-                    model.Password);
+                    registration.UserName,
+                    registration.Email,
+                    registration.Password);
         
                 //var result = await _userManager.CreateAsync(registerViewModel, registerViewModel.Password);
                 if (result.Succeeded)
                 {
-                    
+
                     // Indicate new flag to allow optional update
                     // on first creation within any involved view provider
-                    model.IsNewUser = true;
+                    registration.IsNewUser = true;
 
-                    // Execute view providers update method
-                    // var viewResult = await _registerViewProvider.ProvideUpdateAsync(registerViewModel, this);
-                    await _registerViewProvider.ProvideUpdateAsync(model, this);
+                    // Execute ProvideUpdateAsync
+                    await _registerViewProvider.ProvideUpdateAsync(registration, this);
                     
                     // Success - Redirect to confirmation page
                     return RedirectToAction(nameof(RegisterConfirmation));

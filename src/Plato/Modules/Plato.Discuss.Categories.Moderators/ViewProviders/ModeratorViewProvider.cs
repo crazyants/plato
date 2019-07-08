@@ -80,7 +80,7 @@ namespace Plato.Discuss.Categories.Moderators.ViewProviders
             return valid;
         }
 
-        public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Moderator moderator, IUpdateModel updater)
         {
 
             var model = new CategoryInputViewModel

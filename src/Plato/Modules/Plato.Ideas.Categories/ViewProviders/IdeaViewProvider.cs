@@ -95,8 +95,7 @@ namespace Plato.Ideas.Categories.ViewProviders
                 View<CategoryIndexViewModel>("Ideas.Categories.Sidebar", model => categoryIndexViewModel).Zone("sidebar")
                     .Order(1)
             );
-
-
+            
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Idea idea, IViewProviderContext updater)
@@ -246,7 +245,7 @@ namespace Plato.Ideas.Categories.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Idea idea, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Idea idea, IUpdateModel updater)
         {
 
             var model = new CategoryInputViewModel
@@ -331,14 +330,6 @@ namespace Plato.Ideas.Categories.ViewProviders
                                 ModifiedUserId = user?.Id ?? 0,
                             });
                         }
-                    }
-                    
-                    // Update entity with first found category 
-                    foreach (var id in categoriesToAdd)
-                    {
-                        idea.CategoryId = id;
-                        await _entityStore.UpdateAsync(idea);
-                        break;
                     }
                     
                     // Update added category meta data

@@ -293,11 +293,11 @@ namespace Plato.Docs.Controllers
             };
 
             // Validate model state within all view providers
-            if (await _docViewProvider.IsModelStateValid(entity, this))
+            if (await _docViewProvider.IsModelStateValidAsync(entity, this))
             {
 
                 // Get composed model from view providers
-                entity = await _docViewProvider.GetComposedType(entity, this);
+                entity = await _docViewProvider.ComposeModelAsync(entity, this);
                 
                 // Create the entity
                 var result = await _docManager.CreateAsync(entity);
@@ -529,11 +529,11 @@ namespace Plato.Docs.Controllers
             };
 
             // Validate model state within all view providers
-            if (await _docCommentViewProvider.IsModelStateValid(reply, this))
+            if (await _docCommentViewProvider.IsModelStateValidAsync(reply, this))
             {
 
                 // Get composed type from all involved view providers
-                reply = await _docCommentViewProvider.GetComposedType(reply, this);
+                reply = await _docCommentViewProvider.ComposeModelAsync(reply, this);
                 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
@@ -711,7 +711,7 @@ namespace Plato.Docs.Controllers
             entity.Message = viewModel.Message;
 
             // Validate model state within all view providers
-            if (await _docViewProvider.IsModelStateValid(entity, this))
+            if (await _docViewProvider.IsModelStateValidAsync(entity, this))
             {
                 
                 // Only update edited information if the message changes
@@ -726,7 +726,7 @@ namespace Plato.Docs.Controllers
                 entity.ModifiedDate = DateTimeOffset.UtcNow;
                 
                 // Get composed model from view providers
-                entity = await _docViewProvider.GetComposedType(entity, this);
+                entity = await _docViewProvider.ComposeModelAsync(entity, this);
 
                 // Update the entity
                 var result = await _docManager.UpdateAsync(entity);
@@ -774,22 +774,6 @@ namespace Plato.Docs.Controllers
                     }
                 }
                 
-                return await Edit(new EntityOptions()
-                {
-                    Id = entity.Id,
-                    Alias = entity.Alias
-                });
-
-            }
-
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    //_alerter.Danger(T[error.ErrorMessage]);
-                }
             }
 
             return await Edit(new EntityOptions()
@@ -913,7 +897,7 @@ namespace Plato.Docs.Controllers
             reply.Message = model.Message;
 
             // Validate model state within all view providers
-            if (await _docCommentViewProvider.IsModelStateValid(reply, this))
+            if (await _docCommentViewProvider.IsModelStateValidAsync(reply, this))
             {
 
                 // Execute view providers ProvideUpdateAsync method

@@ -14,9 +14,9 @@ namespace Plato.Internal.Layout.ViewProviders
 
         Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel updater);
 
-        Task<bool> IsModelStateValid(TModel model, IUpdateModel updater);
+        Task<bool> IsModelStateValidAsync(TModel model, IUpdateModel updater);
         
-        Task<TModel> GetComposedType(TModel model, IUpdateModel updater);
+        Task<TModel> ComposeModelAsync(TModel model, IUpdateModel updater);
      
     }
 

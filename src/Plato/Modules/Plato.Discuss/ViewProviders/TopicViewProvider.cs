@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
 using Plato.Entities.Services;
-using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -15,23 +13,17 @@ namespace Plato.Discuss.ViewProviders
     {
 
         public const string EditorHtmlName = "message";
-        
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IPostManager<Topic> _topicManager;
-        private readonly IEntityViewIncrementer<Topic> _viewIncrementer;
 
+        private readonly IEntityViewIncrementer<Topic> _viewIncrementer;
+    
         private readonly HttpRequest _request;
         
         public TopicViewProvider(
-            IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Topic> entityStore,
-            IPostManager<Topic> topicManager,
-            IEntityViewIncrementer<Topic> viewIncrementer)
+            IEntityViewIncrementer<Topic> viewIncrementer,
+            IHttpContextAccessor httpContextAccessor)
         {
-            _entityStore = entityStore;
-            _topicManager = topicManager;
-            _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
+            _viewIncrementer = viewIncrementer;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
@@ -124,7 +116,7 @@ namespace Plato.Discuss.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(Topic topic, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Topic topic, IUpdateModel updater)
         {
 
             var model = new EditEntityViewModel
@@ -146,37 +138,7 @@ namespace Plato.Discuss.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
         {
-            
-            if (topic.IsNew)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
-            if (entity == null)
-            {
-                return await BuildIndexAsync(topic, context);
-            }
-            
-            // Validate 
-            if (await ValidateModelAsync(topic, context.Updater))
-            {
-                // Update
-                var result = await _topicManager.UpdateAsync(topic);
-
-                // Was there a problem updating the entity?
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-
-            }
-
             return await BuildEditAsync(topic, context);
-
         }
         
     }

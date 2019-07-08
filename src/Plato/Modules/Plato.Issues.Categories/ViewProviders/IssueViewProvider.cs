@@ -246,7 +246,7 @@ namespace Plato.Issues.Categories.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Issue issue, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Issue issue, IUpdateModel updater)
         {
 
             var model = new CategoryInputViewModel
@@ -331,14 +331,6 @@ namespace Plato.Issues.Categories.ViewProviders
                                 ModifiedUserId = user?.Id ?? 0,
                             });
                         }
-                    }
-                    
-                    // Update entity with first found category 
-                    foreach (var id in categoriesToAdd)
-                    {
-                        issue.CategoryId = id;
-                        await _entityStore.UpdateAsync(issue);
-                        break;
                     }
                     
                     // Update added category meta data

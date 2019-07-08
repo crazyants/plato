@@ -269,7 +269,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Doc doc, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Doc doc, IUpdateModel updater)
         {
 
             var model = new CategoryInputViewModel

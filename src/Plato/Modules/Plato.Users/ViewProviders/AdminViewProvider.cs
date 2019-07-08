@@ -165,7 +165,7 @@ namespace Plato.Users.ViewProviders
 
         }
         
-        public override async Task ComposeTypeAsync(User user, IUpdateModel updater)
+        public override async Task ComposeModelAsync(User user, IUpdateModel updater)
         {
 
             var model = new EditUserViewModel

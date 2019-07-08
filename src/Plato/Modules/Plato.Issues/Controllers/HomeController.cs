@@ -265,11 +265,11 @@ namespace Plato.Issues.Controllers
             };
 
             // Validate model state within all view providers
-            if (await _entityViewProvider.IsModelStateValid(entity, this))
+            if (await _entityViewProvider.IsModelStateValidAsync(entity, this))
             {
 
                 // Get composed type from all involved view providers
-                entity = await _entityViewProvider.GetComposedType(entity, this);
+                entity = await _entityViewProvider.ComposeModelAsync(entity, this);
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
@@ -497,11 +497,11 @@ namespace Plato.Issues.Controllers
             };
 
             // Validate model state within all view providers
-            if (await _replyViewProvider.IsModelStateValid(reply, this))
+            if (await _replyViewProvider.IsModelStateValidAsync(reply, this))
             {
 
                 // Get composed type from all involved view providers
-                reply = await _replyViewProvider.GetComposedType(reply, this);
+                reply = await _replyViewProvider.ComposeModelAsync(reply, this);
 
                 // We need to first add the reply so we have a unique Id
                 // for all ProvideUpdateAsync methods within any involved view providers
@@ -618,31 +618,39 @@ namespace Plato.Issues.Controllers
             return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(entity, this));
 
         }
-
+        
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
-        public async Task<IActionResult> EditPost(EditEntityViewModel model)
+        public async Task<IActionResult> EditPost(EditEntityViewModel viewModel)
         {
 
             // Get entity we are editing 
-            var entity = await _entityStore.GetByIdAsync(model.Id);
+            var entity = await _entityStore.GetByIdAsync(viewModel.Id);
+
+            // Ensure entity exists
             if (entity == null)
             {
                 return NotFound();
             }
 
-            // Validate model state within all view providers
-            if (await _entityViewProvider.IsModelStateValid(new Issue()
-            {
-                Title = model.Title,
-                Message = model.Message
-            }, this))
-            {
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-                // Get current user
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
+            // We always need to be authenticated to edit entities
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            //// Update title & message
+            entity.Title = viewModel.Title;
+            entity.Message = viewModel.Message;
+
+            // Validate model state within all view providers
+            if (await _entityViewProvider.IsModelStateValidAsync(entity, this))
+            {
 
                 // Only update edited information if the message changes
-                if (model.Message != entity.Message)
+                if (viewModel.Message != entity.Message)
                 {
                     entity.EditedUserId = user?.Id ?? 0;
                     entity.EditedDate = DateTimeOffset.UtcNow;
@@ -651,40 +659,66 @@ namespace Plato.Issues.Controllers
                 // Always update modified information
                 entity.ModifiedUserId = user?.Id ?? 0;
                 entity.ModifiedDate = DateTimeOffset.UtcNow;
-                
-                // Update title & message
-                entity.Title = model.Title;
-                entity.Message = model.Message;
 
-                // Execute view providers ProvideUpdateAsync method
-                await _entityViewProvider.ProvideUpdateAsync(entity, this);
+                // Get composed model from view providers
+                entity = await _entityViewProvider.ComposeModelAsync(entity, this);
 
-                // Everything was OK
-                _alerter.Success(T["Issue Updated Successfully!"]);
+                // Update the entity
+                var result = await _issueManager.UpdateAsync(entity);
 
-                // Redirect to entity
-                return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                // Ensure success
+                if (result.Succeeded)
                 {
-                    ["opts.id"] = entity.Id,
-                    ["opts.alias"] = entity.Alias
-                });
-                
-            }
 
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    //_alerter.Danger(T[error.ErrorMessage]);
+                    // Execute view providers ProvideUpdateAsync method
+                    await _entityViewProvider.ProvideUpdateAsync(result.Response, this);
+
+                    // Get authorize result
+                    var authorizeResult = await AuthorizeAsync(result.Response);
+                    if (authorizeResult.Succeeded)
+                    {
+
+                        // Everything was OK
+                        _alerter.Success(T["Issue Updated Successfully!"]);
+
+                        // Redirect to entity
+                        return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                        {
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias
+                        });
+
+                    }
+
+                    // Add any authorization errors
+                    foreach (var error in authorizeResult.Errors)
+                    {
+                        _alerter.Success(T[error.Description]);
+                    }
+
+                    // Redirect to index
+                    return RedirectToAction(nameof(Index));
+
                 }
-            }
+                else
+                {
+                    // Errors that may have occurred whilst updating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
 
-            return await Create(0);
+            }
+            
+            return await Edit(new EntityOptions()
+            {
+                Id = entity.Id,
+                Alias = entity.Alias
+            });
 
         }
-
+        
         // -----------------
         // Edit Reply
         // -----------------
@@ -780,7 +814,7 @@ namespace Plato.Issues.Controllers
             reply.Message = model.Message;
             
             // Validate model state within all view providers
-            if (await _replyViewProvider.IsModelStateValid(reply, this))
+            if (await _replyViewProvider.IsModelStateValidAsync(reply, this))
             {
 
                 // Execute view providers ProvideUpdateAsync method

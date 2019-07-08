@@ -46,8 +46,8 @@ namespace Plato.Questions.Categories.ViewProviders
         public QuestionViewProvider(
             IStringLocalizer stringLocalizer,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
-            IEntityCategoryManager entityCategoryManager,
             ICategoryDetailsUpdater categoryDetailsUpdater,
+            IEntityCategoryManager entityCategoryManager,
             IHttpContextAccessor httpContextAccessor,
             ICategoryStore<Category> categoryStore, 
             IBreadCrumbManager breadCrumbManager,
@@ -57,8 +57,8 @@ namespace Plato.Questions.Categories.ViewProviders
             IContextFacade contextFacade)
         {
             _request = httpContextAccessor.HttpContext.Request;
-            _entityCategoryManager = entityCategoryManager;
             _categoryDetailsUpdater = categoryDetailsUpdater;
+            _entityCategoryManager = entityCategoryManager;
             _entityCategoryStore = entityCategoryStore;
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
@@ -244,7 +244,7 @@ namespace Plato.Questions.Categories.ViewProviders
 
         }
 
-        public override async Task ComposeTypeAsync(Question question, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Question question, IUpdateModel updater)
         {
 
             var model = new CategoryInputViewModel
@@ -331,14 +331,6 @@ namespace Plato.Questions.Categories.ViewProviders
                         }
                     }
                     
-                    // Update entity with first found category 
-                    foreach (var id in categoriesToAdd)
-                    {
-                        question.CategoryId = id;
-                        await _entityStore.UpdateAsync(question);
-                        break;
-                    }
-                    
                     // Update added category meta data
                     foreach (var id in categoriesToAdd)
                     {
@@ -358,8 +350,7 @@ namespace Plato.Questions.Categories.ViewProviders
             return await BuildEditAsync(question, context);
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"

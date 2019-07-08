@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Articles.Models;
-using Plato.Articles.Services;
-using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.ViewModels;
@@ -16,23 +14,18 @@ namespace Plato.Articles.ViewProviders
     {
 
         private const string EditorHtmlName = "message";
-        
-        private readonly IEntityStore<Article> _entityStore;
-        private readonly IPostManager<Article> _articleManager;
-        private readonly IEntityViewIncrementer<Article> _viewIncrementer;
 
+        private readonly IEntityViewIncrementer<Article> _viewIncrementer;
+        
         private readonly HttpRequest _request;
         
         public ArticleViewProvider(
-            IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Article> entityStore,
-            IPostManager<Article> articleManager,
-            IEntityViewIncrementer<Article> viewIncrementer)
+
+            IEntityViewIncrementer<Article> viewIncrementer,
+            IHttpContextAccessor httpContextAccessor)
         {
-            _entityStore = entityStore;
-            _articleManager = articleManager;
-            _viewIncrementer = viewIncrementer;
             _request = httpContextAccessor.HttpContext.Request;
+            _viewIncrementer = viewIncrementer;
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Article article, IViewProviderContext context)
@@ -125,7 +118,7 @@ namespace Plato.Articles.ViewProviders
             });
         }
 
-        public override async Task ComposeTypeAsync(Article article, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Article article, IUpdateModel updater)
         {
 
             var model = new EditEntityViewModel
@@ -147,37 +140,7 @@ namespace Plato.Articles.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Article article, IViewProviderContext context)
         {
-            
-            if (article.IsNew)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var entity = await _entityStore.GetByIdAsync(article.Id);
-            if (entity == null)
-            {
-                return await BuildIndexAsync(article, context);
-            }
-            
-            // Validate 
-            if (await ValidateModelAsync(article, context.Updater))
-            {
-                // Update
-                var result = await _articleManager.UpdateAsync(article);
-
-                // Was there a problem updating the entity?
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-
-            }
-
             return await BuildEditAsync(article, context);
-
         }
 
     }
