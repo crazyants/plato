@@ -513,14 +513,13 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     white-space: normal;
 }
 
-
 /* ------------------------- */
 /* avatar */
 /* ------------------------- */
 
 .avatar-link { display: inline-block; }
 
-.avatar-group { display: inline-block; margin-left: 9px; }
+.avatar-group { display: inline-block; }
 .avatar-group .avatar { width: 24px; height: 24px; display: inline-block;}
 
 .avatar {

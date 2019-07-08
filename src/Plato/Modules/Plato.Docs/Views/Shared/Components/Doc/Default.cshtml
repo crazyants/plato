@@ -2,7 +2,6 @@
 @{
  
     var details = Model.Entity.GetOrCreate<DocDetails>();
-   
     var viewText = Model.Entity.TotalViews == 1
         ? "view"
         : "views";
@@ -23,6 +22,22 @@
         <card>
             <card-title>
                 <ul class="list-inline float-left">
+                    
+                    @if (details?.TotalContributions > 0)
+                    {
+                        <li class="list-inline-item">
+                            <div class="avatar-group">
+                                @foreach (var user in details.Contributors)
+                                {
+                                    var contributionText = user.Contributions.Count == 1
+                                        ? "contribution"
+                                        : "contributions";
+                                    var contributionTitle = $"{user.Contributions.Count} {contributionText}";
+                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @contributionTitle" class="avatar avatar-sm" url="@user.Avatar.Url" /></a>
+                                }
+                            </div>
+                        </li>
+                    }
                     <li class="list-inline-item">
                         @if (readingTime >= 1)
                         {
@@ -34,22 +49,23 @@
                             @T["Less then 1 minute to read"]
                         }
                     </li>
-                 
-                    @if (details?.LatestUsers != null)
+
+
+                    @*@if (details?.LatestUsers != null)
+        {
+            <li class="list-inline-item">
+                <div class="avatar-group">
+                    @foreach (var user in details.LatestUsers)
                     {
-                        <li class="list-inline-item">
-                            <div class="avatar-group">
-                                @foreach (var user in details.LatestUsers)
-                                {
-                                    var replies = user.TotalReplies == 1
-                                        ? "comment"
-                                        : "comments";
-                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
-                                }
-                            </div>
-                        </li>
+                        var replies = user.TotalReplies == 1
+                            ? "comment"
+                            : "comments";
+                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
                     }
-            
+                </div>
+            </li>
+        }*@
+
                     @if (Model.Entity.IsPrivate && base.CurrentUser != null)
                     {
                         if (Model.Entity.CreatedUserId == base.CurrentUser.Id)

@@ -15,6 +15,14 @@ namespace Plato.Entities.Models
 
         public int TotalReplies { get; set; }
 
+        public EntityUser() 
+        {
+        }
+
+        public EntityUser(IUser user) : base(user)
+        {
+        }
+
         public void PopulateModel(IDataReader dr)
         {
 

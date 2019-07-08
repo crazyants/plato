@@ -1,10 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Plato.Docs.Models;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Docs.Subscribers
 {
@@ -14,15 +21,21 @@ namespace Plato.Docs.Subscribers
 
         private readonly IEntityRepository<TEntity> _entityRepository;
         private readonly IUserReputationAwarder _reputationAwarder;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IEntityStore<TEntity> _entityStore;
         private readonly IBroker _broker;
 
         public DocSubscriber(
             IUserReputationAwarder reputationAwarder,
             IEntityRepository<TEntity> entityRepository,
+            IPlatoUserStore<User> platoUserStore,
+            IEntityStore<TEntity> entityStore,
             IBroker broker)
         {
             _reputationAwarder = reputationAwarder;
             _entityRepository = entityRepository;
+            _platoUserStore = platoUserStore;
+            _entityStore = entityStore;
             _broker = broker;
         }
 
@@ -48,7 +61,13 @@ namespace Plato.Docs.Subscribers
             {
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
-
+            
+            // Updated
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdated(message.What));
+            
         }
 
         public void Unsubscribe()
@@ -72,12 +91,18 @@ namespace Plato.Docs.Subscribers
                 Key = "EntityUpdating"
             }, async message => await EntityUpdating(message.What));
 
+            // Updated
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdated(message.What));
+
         }
 
         #endregion
 
         #region "Private Methods"
-        
+
         async Task<TEntity> EntityCreating(TEntity entity)
         {
             // Get the next available sort order for new entries
@@ -155,7 +180,61 @@ namespace Plato.Docs.Subscribers
             return entity;
 
         }
+
+        async Task<TEntity> EntityUpdated(TEntity entity)
+        {
+            
+            // We always need a contributor to add
+            if (entity.ModifiedUserId <= 0)
+            {
+                return entity;
+            }
+
+            // Get entity details to update
+            var details = entity.GetOrCreate<DocDetails>();
+       
+            // Get user modifying entity
+            var user = await _platoUserStore.GetByIdAsync(entity.ModifiedUserId);
+
+            // We always need a contributor to add
+            if (user == null)
+            {
+                return entity;
+            }
+
+            // No need to add the contributor more than once
+            var exists = false;
+            for (var i = 0; i < details.Contributors.Count; i++)
+            {
+                if (details.Contributors[i].Id == user.Id)
+                {
+                    exists = true;
+                    details.Contributors[i].Contributions.Add(new EntityContribution(DateTimeOffset.UtcNow));
+                }
+            }
+
+            if (!exists)
+            {
+                // Add our contributor
+                details.Contributors.Add(new EntityContributor(user)
+                {
+                    Contributions = new List<EntityContribution>()
+                    {
+                        new EntityContribution(DateTimeOffset.UtcNow)
+                    }
+                });
+            }
+          
+            // Add updated data to entity
+            entity.AddOrUpdate<DocDetails>(details);
+
+            // Persist the updates
+            return await _entityStore.UpdateAsync(entity);
+
+        }
         
+        // ------------
+
         async Task<int> GetNextAvailableSortOrder(TEntity model)
         {
 
@@ -178,6 +257,7 @@ namespace Plato.Docs.Subscribers
 
         }
         
+
         #endregion
 
     }

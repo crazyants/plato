@@ -8,9 +8,23 @@ namespace Plato.Docs.Models
     public class DocDetails : Serializable
     {
 
-        public IEnumerable<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
+        public IList<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
 
-        public IEnumerable<EntityUser> Contributors { get; set; } = new List<EntityUser>();
+        public IList<EntityContributor> Contributors { get; set; } = new List<EntityContributor>();
+        
+        public int TotalContributions
+        {
+            get
+            {
+                var i = 0;
+                foreach (var contributor in Contributors)
+                {
+                    i += contributor.Contributions.Count;
+                }
+
+                return i;
+            }
+        }
 
     }
     
