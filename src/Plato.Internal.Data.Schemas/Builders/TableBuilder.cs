@@ -40,7 +40,7 @@ namespace Plato.Internal.Data.Schemas.Builders
                 {
                     if (column.PrimaryKey)
                         primaryKey = column.Name;
-                    sb.Append(DescribeTableColumn(column));
+                    sb.Append(BuildCreateColumn(column));
                     if (!string.IsNullOrEmpty(primaryKey))
                     {
                         sb.Append(",");
@@ -98,7 +98,7 @@ namespace Plato.Internal.Data.Schemas.Builders
             return this;
         }
         
-        public virtual ITableBuilder AlterTableColumns(SchemaTable table)
+        public virtual ITableBuilder CreateTableColumns(SchemaTable table)
         {
 
             var tableName = GetTableName(table.Name);
@@ -129,7 +129,7 @@ namespace Plato.Internal.Data.Schemas.Builders
                     sb.Append("ALTER TABLE ")
                         .Append(tableName)
                         .Append(" ADD ")
-                        .Append(DescribeTableColumn(column))
+                        .Append(BuildCreateColumn(column))
                         .Append(";")
                         .Append(NewLine);
 
@@ -149,7 +149,60 @@ namespace Plato.Internal.Data.Schemas.Builders
             return this;
 
         }
-        
+
+        public virtual ITableBuilder AlterTableColumns(SchemaTable table)
+        {
+
+            var tableName = GetTableName(table.Name);
+            if (table.Columns.Count > 0)
+            {
+                foreach (var column in table.Columns)
+                {
+                    var sb = new StringBuilder();
+                    if (Options.CheckColumnExistsBeforeAlter)
+                    {
+
+                        var normalizedColumnName = column.Name
+                            .Replace("[", "")
+                            .Replace("]", "");
+
+                        sb.Append("IF EXISTS(SELECT * FROM sys.columns ")
+                            .Append("WHERE [Name] = N'")
+                            .Append(normalizedColumnName)
+                            .Append("' AND Object_ID = Object_ID(N'")
+                            .Append(tableName)
+                            .Append("'))")
+                            .Append(NewLine)
+                            .Append("BEGIN")
+                            .Append(NewLine);
+
+                    }
+
+                    sb.Append("ALTER TABLE ")
+                        .Append(tableName)
+                        .Append(" ALTER COLUMN ")
+                        .Append(BuildUpdateColumn(column))
+                        .Append(";")
+                        .Append(NewLine);
+
+                    if (Options.CheckColumnExistsBeforeAlter)
+                    {
+                        sb.Append("END")
+                            .Append(NewLine);
+                    }
+
+                    sb.Append(NewLine);
+                    AddStatement(sb.ToString());
+
+                }
+
+            }
+
+            return this;
+
+        }
+
+
         public virtual ITableBuilder DropTableColumns(SchemaTable table)
         {
             var tableName = GetTableName(table.Name);
@@ -173,7 +226,7 @@ namespace Plato.Internal.Data.Schemas.Builders
         
         // ---------------
 
-        private string DescribeTableColumn(SchemaColumn column)
+        private string BuildCreateColumn(SchemaColumn column)
         {
             var sb = new StringBuilder();
             sb.Append(column.Name)
@@ -195,6 +248,15 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         }
 
+        private string BuildUpdateColumn(SchemaColumn column)
+        {
+            var sb = new StringBuilder();
+            sb.Append(column.Name).Append(" ").Append(column.DbTypeNormalized)
+                .Append(column.Nullable ? " NULL" : " NOT NULL");
+            return sb.ToString();
+
+        }
+
     }
-    
+
 }

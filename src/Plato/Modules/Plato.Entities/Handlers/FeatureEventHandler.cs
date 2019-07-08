@@ -283,7 +283,8 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "LastReplyDate",
-                        DbType = DbType.DateTimeOffset
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     }
                 }
         };

@@ -1,17 +1,12 @@
 ﻿@model EntityViewModel<Doc, DocComment>
 @{
- 
-    var details = Model.Entity.GetOrCreate<DocDetails>();
-    var viewText = Model.Entity.TotalViews == 1
-        ? "view"
-        : "views";
     var wordsPerMinute = 200;
     var totalWords = Model.Entity.TotalWords;
     var readingTime = totalWords / wordsPerMinute;
     var minuteText = readingTime == 1
         ? "minute"
         : "minutes";
-    var readText = T["{0} to read"].Value;
+    var readText = T["About {0} to read"].Value;
 }
 
 <div class="list-row">
@@ -21,51 +16,19 @@
     <div class="list-body reply-body">
         <card>
             <card-title>
-                <ul class="list-inline float-left">
-                    
-                    @if (details?.TotalContributions > 0)
-                    {
-                        <li class="list-inline-item">
-                            <div class="avatar-group">
-                                @foreach (var user in details.Contributors)
-                                {
-                                    var text = user.ContributionCount == 1
-                                        ? T["contribution"].Value
-                                        : T["contributions"].Value;
-                                    var contributionTitle = $"{user.ContributionCount} {text}";
-                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @contributionTitle" class="avatar avatar-sm" url="@user.Avatar.Url" /></a>
-                                }
-                            </div>
-                        </li>
-                    }
+                <ul class="list-inline float-left p-0 m-0">
                     <li class="list-inline-item">
-                        @if (readingTime >= 1)
-                        {
-                            @readText.Replace("{0}", $"{readingTime} {minuteText}")
-                            ;
-                        }
-                        else
-                        {
-                            @T["Less then 1 minute to read"]
-                        }
+                        <span class="d-inline-block text-muted">
+                            @if (readingTime >= 1)
+                            {
+                                @readText.Replace("{0}", $"{readingTime} {minuteText}")
+                            }
+                            else
+                            {
+                                @T["Less then 1 minute to read"]
+                            }
+                        </span>
                     </li>
-
-
-                    @*@if (details?.LatestUsers != null)
-        {
-            <li class="list-inline-item">
-                <div class="avatar-group">
-                    @foreach (var user in details.LatestUsers)
-                    {
-                        var replies = user.TotalReplies == 1
-                            ? "comment"
-                            : "comments";
-                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
-                    }
-                </div>
-            </li>
-        }*@
-
                     @if (Model.Entity.IsPrivate && base.CurrentUser != null)
                     {
                         if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
@@ -81,14 +44,12 @@
                             </li>
                         }
                     }
-
                     @if (Model.Entity.IsHidden)
                     {
                         <li class="list-inline-item">
                             <span data-toggle="tooltip" title="@T["This doc is hidden and only visible as you have permission to view hidden docs"]" class="badge badge-primary">@T["Hidden"]</span>
                         </li>
                     }
-
                     @if (Model.Entity.IsSpam)
                     {
                         <li class="list-inline-item">
@@ -102,8 +63,6 @@
                         </li>
                     }
                 </ul>
-                
-
                 <navigation name="doc"
                             model="Model.Entity"
                             class="nav navbar p-0 float-right"

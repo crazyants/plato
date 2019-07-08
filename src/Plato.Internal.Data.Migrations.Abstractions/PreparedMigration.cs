@@ -10,8 +10,8 @@ namespace Plato.Internal.Data.Migrations.Abstractions
 
         public string Version { get; set; }
 
-        public Version TypedVersion { get; set; }
-        
+        public Version TypedVersion => new Version(this.Version);
+
         public ICollection<string> Statements { get; set; }
         
     }

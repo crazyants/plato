@@ -401,7 +401,7 @@ namespace Plato.Users
                 // ---------------
 
                 // Add new columns to users table
-                builder.TableBuilder.AlterTableColumns(new SchemaTable()
+                builder.TableBuilder.CreateTableColumns(new SchemaTable()
                 {
                     Name = "Users",
                     Columns = new List<SchemaColumn>()

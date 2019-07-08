@@ -1,5 +1,6 @@
 ﻿@model Doc
 @{
+    var details = Model.GetOrCreate<DocDetails>();
     var replies = @Model.TotalReplies == 1
         ? "comment"
         : "comments";
@@ -26,16 +27,33 @@
     }
 </h4>
 <ul class="list-inline text-muted p-0 m-0">
-    @if (Model.EditedDate != null)
+
+    @if (Model.ModifiedDate != null)
     {
         <li class="list-inline-item">
-            <date utc="@Model.EditedDate"/>
+            <date utc="@Model.ModifiedDate"/>
         </li>
     }
     else
     {
         <li class="list-inline-item">
             <date utc="@Model.CreatedDate"/>
+        </li>
+    }
+
+    @if (details?.TotalContributions > 0)
+    {
+        <li class="list-inline-item">
+            <div class="avatar-group">
+                @foreach (var user in details.Contributors)
+                {
+                    var text = user.ContributionCount == 1
+                        ? T["contribution"].Value
+                        : T["contributions"].Value;
+                    var contributionTitle = $"{user.ContributionCount} {text}";
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @contributionTitle" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
+                }
+            </div>
         </li>
     }
     <li class="list-inline-item">

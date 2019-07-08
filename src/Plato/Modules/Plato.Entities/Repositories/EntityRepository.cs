@@ -344,7 +344,7 @@ namespace Plato.Entities.Repositories
                         new DbParam("ModifiedDate", DbType.DateTimeOffset, modifiedDate),
                         new DbParam("LastReplyId", DbType.Int32, lastReplyId),
                         new DbParam("LastReplyUserId", DbType.Int32, lastReplyUserId),
-                        new DbParam("LastReplyDate", DbType.DateTimeOffset, lastReplyDate.ToDateIfNull()),
+                        new DbParam("LastReplyDate", DbType.DateTimeOffset, lastReplyDate),
                         new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
                     });
             }

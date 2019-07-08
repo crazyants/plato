@@ -17,5 +17,7 @@
         
         public bool CheckColumnExistsBeforeCreate { get; set; } = true;
 
+        public bool CheckColumnExistsBeforeAlter { get; set; } = true;
+
     }
 }

@@ -27,9 +27,12 @@
                     @T["Updated"] <date utc="@Model.Entity.EditedDate"></date>
                 </li>
             }
-            <li class="list-group-item">
-                @T["Latest Reply"] <date utc="@Model.Entity.LastReplyDate"></date>
-            </li>
+            @if (Model.Entity.LastReplyDate != null)
+            {
+                <li class="list-group-item">
+                    @T["Latest Reply"] <date utc="@Model.Entity.LastReplyDate"></date>
+                </li>
+            }
             @if (urls.AnchorUrls.Count > 0 || urls.ImageUrls.Count > 0)
             {
                 <li class="list-group-item">

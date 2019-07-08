@@ -187,28 +187,28 @@ namespace Plato.Docs.Navigation
 
 
             // If entity is not hidden or locked allow replies
-            if (!entity.IsHidden() && !entity.IsLocked)
-            {
-                builder
-                    .Add(T["Reply"], int.MaxValue, options => options
-                            .IconCss("fa fa-reply")
-                            .Attributes(new Dictionary<string, object>()
-                            {
-                                {"data-provide", "postReply"},
-                                {"data-toggle", "tooltip"},
-                                {"title", T["Comment"]}
-                            })
-                            .Action("Login", "Account", "Plato.Users",
-                                new RouteValueDictionary()
-                                {
-                                    ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
-                                })
-                            .Permission(Permissions.PostDocComments)
-                            .LocalNav()
-                        , new List<string>() {"doc-reply", "text-muted", "text-hidden"}
-                    );
+            //if (!entity.IsHidden() && !entity.IsLocked)
+            //{
+            //    builder
+            //        .Add(T["Reply"], int.MaxValue, options => options
+            //                .IconCss("fa fa-reply")
+            //                .Attributes(new Dictionary<string, object>()
+            //                {
+            //                    {"data-provide", "postReply"},
+            //                    {"data-toggle", "tooltip"},
+            //                    {"title", T["Comment"]}
+            //                })
+            //                .Action("Login", "Account", "Plato.Users",
+            //                    new RouteValueDictionary()
+            //                    {
+            //                        ["returnUrl"] = builder.ActionContext.HttpContext.Request.Path
+            //                    })
+            //                .Permission(Permissions.PostDocComments)
+            //                .LocalNav()
+            //            , new List<string>() {"doc-reply", "text-muted", "text-hidden"}
+            //        );
 
-            }
+            //}
 
         }
 
