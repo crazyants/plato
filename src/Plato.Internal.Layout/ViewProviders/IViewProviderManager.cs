@@ -17,9 +17,7 @@ namespace Plato.Internal.Layout.ViewProviders
         Task<bool> IsModelStateValid(TModel model, IUpdateModel updater);
         
         Task<TModel> GetComposedType(TModel model, IUpdateModel updater);
-        
-        // TODO: To be removed
-        Task<TModel> GetComposedType(IUpdateModel updater);
+     
     }
 
 }

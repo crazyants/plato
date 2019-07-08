@@ -57,8 +57,7 @@ namespace Plato.Articles.Categories.ViewProviders
             IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
-            _contextFacade = contextFacade;
-            _categoryStore = categoryStore;
+       
             _request = httpContextAccessor.HttpContext.Request;
             _categoryDetailsUpdater = categoryDetailsUpdater;
             _entityCategoryManager = entityCategoryManager;
@@ -66,6 +65,8 @@ namespace Plato.Articles.Categories.ViewProviders
             _breadCrumbManager = breadCrumbManager;
             _featureFacade = featureFacade;
             _entityManager = entityManager;
+            _contextFacade = contextFacade;
+            _categoryStore = categoryStore;
             _entityStore = entityStore;
 
             T = stringLocalizer;
@@ -339,13 +340,13 @@ namespace Plato.Articles.Categories.ViewProviders
                         }
                     }
 
-                    // Update entity with first found category 
-                    foreach (var id in categoriesToAdd)
-                    {
-                        article.CategoryId = id;
-                        await _entityStore.UpdateAsync(article);
-                        break;
-                    }
+                    ////// Update entity with first found category 
+                    ////foreach (var id in categoriesToAdd)
+                    ////{
+                    ////    article.CategoryId = id;
+                    ////    await _entityStore.UpdateAsync(article);
+                    ////    break;
+                    ////}
 
                     // Update added category meta data
                     foreach (var id in categoriesToAdd)

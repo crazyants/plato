@@ -154,13 +154,13 @@ namespace Plato.Users.Controllers
             {
 
                 // Get composed type from all involved view providers
-                var loginViewModel = await _loginViewProvider.GetComposedType(this);
+                userLogin = await _loginViewProvider.GetComposedType(userLogin, this);
 
                 // Get sign in result
                 var result = await _signInManager.PasswordSignInAsync(
-                    loginViewModel.UserName,
-                    loginViewModel.Password,
-                    loginViewModel.RememberMe,
+                    userLogin.UserName,
+                    userLogin.Password,
+                    userLogin.RememberMe,
                     lockoutOnFailure: false);
 
                 // Success
@@ -173,7 +173,7 @@ namespace Plato.Users.Controllers
                     }
                     
                     // Execute view providers update method
-                    var viewResult = await _loginViewProvider.ProvideUpdateAsync(loginViewModel, this);
+                    var viewResult = await _loginViewProvider.ProvideUpdateAsync(userLogin, this);
 
                     // No further errors have occurred perform final redirect
                     if (ModelState.ErrorCount == 0)
@@ -305,7 +305,7 @@ namespace Plato.Users.Controllers
             {
 
                 // Get composed type from all involved view providers
-                var model = await _registerViewProvider.GetComposedType(this);
+                var model = await _registerViewProvider.GetComposedType(registration, this);
 
                 // Create the user from composed type
                 var result = await _platoUserManager.CreateAsync(

@@ -21,8 +21,7 @@ namespace Plato.Discuss.Categories.Roles.ViewProviders
         private readonly ICategoryManager<CategoryBase> _categoryManager;
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IContextFacade _contextFacade;
-
-
+        
         private readonly HttpRequest _request;
 
         public CategoryRolesViewProvider(
@@ -31,14 +30,12 @@ namespace Plato.Discuss.Categories.Roles.ViewProviders
             ICategoryManager<CategoryBase> categoryManager,
             IContextFacade contextFacade)
         {
-          
-            _platoRoleStore = platoRoleStore;
-            _categoryManager = categoryManager;
-            _contextFacade = contextFacade;
             _request = httpContextAccessor.HttpContext.Request;
+            _categoryManager = categoryManager;
+            _platoRoleStore = platoRoleStore;
+            _contextFacade = contextFacade;
         }
-
-
+        
         public override Task<IViewProviderResult> BuildDisplayAsync(CategoryAdmin category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));

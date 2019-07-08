@@ -25,8 +25,7 @@ namespace Plato.Discuss.Labels.ViewProviders
     {
 
         private const string LabelHtmlName = "label";
-
-     
+        
         private readonly IEntityLabelManager<EntityLabel> _entityLabelManager;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
@@ -50,6 +49,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             IContextFacade contextFacade,
             ICacheManager cacheManager)
         {
+
             _request = httpContextAccessor.HttpContext.Request;
             _entityLabelManager = entityLabelManager;
             _entityLabelStore = entityLabelStore;

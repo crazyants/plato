@@ -633,29 +633,103 @@ namespace Plato.Ideas.Controllers
 
         }
 
+        //[HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
+        //public async Task<IActionResult> EditPost(EditEntityViewModel model)
+        //{
+        //    // Get entity we are editing 
+        //    var entity = await _entityStore.GetByIdAsync(model.Id);
+        //    if (entity == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // Validate model state within all view providers
+        //    if (await _entityViewProvider.IsModelStateValid(new Idea()
+        //    {
+        //        Title = model.Title,
+        //        Message = model.Message
+        //    }, this))
+        //    {
+
+        //        // Get current user
+        //        var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+        //        // Only update edited information if the message changes
+        //        if (model.Message != entity.Message)
+        //        {
+        //            entity.EditedUserId = user?.Id ?? 0;
+        //            entity.EditedDate = DateTimeOffset.UtcNow;
+        //        }
+
+        //        // Always update modified information
+        //        entity.ModifiedUserId = user?.Id ?? 0;
+        //        entity.ModifiedDate = DateTimeOffset.UtcNow;
+
+        //        // Update title & message
+        //        entity.Title = model.Title;
+        //        entity.Message = model.Message;
+
+        //        // Execute view providers ProvideUpdateAsync method
+        //        await _entityViewProvider.ProvideUpdateAsync(entity, this);
+
+        //        // Everything was OK
+        //        _alerter.Success(T["Idea Updated Successfully!"]);
+
+        //        // Redirect to entity
+        //        return RedirectToAction(nameof(Display), new RouteValueDictionary()
+        //        {
+        //            ["opts.id"] = entity.Id,
+        //            ["opts.alias"] = entity.Alias
+        //        });
+
+        //    }
+
+        //    // if we reach this point some view model validation
+        //    // failed within a view provider, display model state errors
+        //    foreach (var modelState in ViewData.ModelState.Values)
+        //    {
+        //        foreach (var error in modelState.Errors)
+        //        {
+        //            //_alerter.Danger(T[error.ErrorMessage]);
+        //        }
+        //    }
+
+        //    return await Create(0);
+
+        //}
+
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
-        public async Task<IActionResult> EditPost(EditEntityViewModel model)
+        public async Task<IActionResult> EditPost(EditEntityViewModel viewModel)
         {
+
             // Get entity we are editing 
-            var entity = await _entityStore.GetByIdAsync(model.Id);
+            var entity = await _entityStore.GetByIdAsync(viewModel.Id);
+
+            // Ensure entity exists
             if (entity == null)
             {
                 return NotFound();
             }
 
-            // Validate model state within all view providers
-            if (await _entityViewProvider.IsModelStateValid(new Idea()
-            {
-                Title = model.Title,
-                Message = model.Message
-            }, this))
-            {
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-                // Get current user
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
+            // We always need to be logged in to edit entities
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            //// Update title & message
+            entity.Title = viewModel.Title;
+            entity.Message = viewModel.Message;
+
+            // Validate model state within all view providers
+            if (await _entityViewProvider.IsModelStateValid(entity, this))
+            {
 
                 // Only update edited information if the message changes
-                if (model.Message != entity.Message)
+                if (viewModel.Message != entity.Message)
                 {
                     entity.EditedUserId = user?.Id ?? 0;
                     entity.EditedDate = DateTimeOffset.UtcNow;
@@ -664,22 +738,60 @@ namespace Plato.Ideas.Controllers
                 // Always update modified information
                 entity.ModifiedUserId = user?.Id ?? 0;
                 entity.ModifiedDate = DateTimeOffset.UtcNow;
-                
-                // Update title & message
-                entity.Title = model.Title;
-                entity.Message = model.Message;
 
-                // Execute view providers ProvideUpdateAsync method
-                await _entityViewProvider.ProvideUpdateAsync(entity, this);
+                // Get composed model from view providers
+                entity = await _entityViewProvider.GetComposedType(entity, this);
 
-                // Everything was OK
-                _alerter.Success(T["Idea Updated Successfully!"]);
+                // Update the entity
+                var result = await _ideaManager.UpdateAsync(entity);
 
-                // Redirect to entity
-                return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                // Ensure success
+                if (result.Succeeded)
                 {
-                    ["opts.id"] = entity.Id,
-                    ["opts.alias"] = entity.Alias
+
+                    // Execute view providers ProvideUpdateAsync method
+                    await _entityViewProvider.ProvideUpdateAsync(result.Response, this);
+
+                    // Get authorize result
+                    var authorizeResult = await AuthorizeAsync(result.Response);
+                    if (authorizeResult.Succeeded)
+                    {
+
+                        // Everything was OK
+                        _alerter.Success(T["Idea Updated Successfully!"]);
+
+                        // Redirect to entity
+                        return RedirectToAction(nameof(Display), new RouteValueDictionary()
+                        {
+                            ["opts.id"] = entity.Id,
+                            ["opts.alias"] = entity.Alias
+                        });
+
+                    }
+
+                    // Add any authorization errors
+                    foreach (var error in authorizeResult.Errors)
+                    {
+                        _alerter.Success(T[error.Description]);
+                    }
+
+                    // Redirect to index
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                {
+                    // Errors that may have occurred whilst updating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+
+                return await Edit(new EntityOptions()
+                {
+                    Id = entity.Id,
+                    Alias = entity.Alias
                 });
 
             }
@@ -694,7 +806,11 @@ namespace Plato.Ideas.Controllers
                 }
             }
 
-            return await Create(0);
+            return await Edit(new EntityOptions()
+            {
+                Id = entity.Id,
+                Alias = entity.Alias
+            });
 
         }
 

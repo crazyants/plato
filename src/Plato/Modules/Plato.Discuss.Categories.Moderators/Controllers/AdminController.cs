@@ -56,7 +56,6 @@ namespace Plato.Discuss.Categories.Moderators.Controllers
         public async Task<IActionResult> Index()
         {
 
-
             //var moderators = await _moderatorStore.GetCategorizedModeratorsAsync();
             
             //var claims = "";
@@ -79,7 +78,6 @@ namespace Plato.Discuss.Categories.Moderators.Controllers
             
             //ViewData["claims"] = claims;
             
-
             _breadCrumbManager.Configure(builder =>
             {
                 builder
@@ -119,14 +117,14 @@ namespace Plato.Discuss.Categories.Moderators.Controllers
         }
 
         [HttpPost, ActionName(nameof(Create))]
-        public async Task<IActionResult> CreatePost(EditModeratorViewModel model)
+        public async Task<IActionResult> CreatePost(EditModeratorViewModel viewModel)
         {
 
             // Build users to effect
             var users = new List<User>();
-            if (!String.IsNullOrEmpty(model.Users))
+            if (!String.IsNullOrEmpty(viewModel.Users))
             {
-                var items = JsonConvert.DeserializeObject<IEnumerable<UserApiResult>>(model.Users);
+                var items = JsonConvert.DeserializeObject<IEnumerable<UserApiResult>>(viewModel.Users);
                 foreach (var item in items)
                 {
                     if (item.Id > 0)
@@ -139,58 +137,41 @@ namespace Plato.Discuss.Categories.Moderators.Controllers
                     }
                 }
             }
-            
-            if (users.Count > 0)
+
+            var userId = 0;
+            foreach (var user in users)
             {
-                
-                // Compose moderator from all involved view providers
-                // This ensures the claims are always populated
-                var composedModerator = await _viewProvider.GetComposedType(this);
-                var isValid = false;
+                userId = user.Id;
+            }
 
-                // Update each user
-                foreach (var user in users)
+            var moderator = new Moderator()
+            {
+                UserId = userId
+            };
+
+            // Validate model state within all involved view providers
+            if (await _viewProvider.IsModelStateValid(moderator, this))
+            {
+
+                // Get composed type from all involved view providers
+                var model = await _viewProvider.GetComposedType(moderator, this);
+
+                // Create moderator
+                var result = await _moderatorStore.CreateAsync(model);
+                if (result != null)
                 {
-                    
-                    composedModerator.UserId = user.Id;
 
-                    // Validate model state within all view providers
-                    if (await _viewProvider.IsModelStateValid(composedModerator, this))
-                    {
-                        // Create moderator
-                        var moderator = await _moderatorStore.CreateAsync(composedModerator);
-                        if (moderator != null)
-                        {
-                            // Update moderator within various view providers
-                            await _viewProvider.ProvideUpdateAsync(moderator, this);
-                            isValid = true;
-                        }
-                    }
-                }
-
-                if (isValid)
-                {
+                    // Update moderator within various view providers
+                    await _viewProvider.ProvideUpdateAsync(result, this);
 
                     // Everything was OK
                     _alerter.Success(T["Moderator Created Successfully!"]);
 
                     // Redirect to topic
-                    return RedirectToAction(nameof(Index), new {Id = 0});
+                    return RedirectToAction(nameof(Index), new { Id = 0 });
 
                 }
 
-                // if we reach this point some view model validation
-                // failed within a view provider, display model state errors
-                foreach (var modelState in ViewData.ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        _alerter.Danger(T[error.ErrorMessage]);
-                    }
-                }
-
-                return await Create();
-                
             }
             else
             {
@@ -198,6 +179,66 @@ namespace Plato.Discuss.Categories.Moderators.Controllers
             }
 
             return await Create();
+
+
+            //if (users.Count > 0)
+            //{
+                
+            //    // Compose moderator from all involved view providers
+            //    // This ensures the claims are always populated
+            //    var composedModerator = await _viewProvider.GetComposedType(this);
+            //    var isValid = false;
+
+            //    //// Update each user
+            //    //foreach (var user in users)
+            //    //{
+                    
+            //    //    composedModerator.UserId = user.Id;
+
+            //    //    // Validate model state within all view providers
+            //    //    if (await _viewProvider.IsModelStateValid(composedModerator, this))
+            //    //    {
+            //    //        // Create moderator
+            //    //        var result = await _moderatorStore.CreateAsync(composedModerator);
+            //    //        if (result != null)
+            //    //        {
+            //    //            // Update moderator within various view providers
+            //    //            await _viewProvider.ProvideUpdateAsync(result, this);
+            //    //            isValid = true;
+            //    //        }
+            //    //    }
+            //    //}
+
+            //    //if (isValid)
+            //    //{
+
+            //    //    // Everything was OK
+            //    //    _alerter.Success(T["Moderator Created Successfully!"]);
+
+            //    //    // Redirect to topic
+            //    //    return RedirectToAction(nameof(Index), new {Id = 0});
+
+            //    //}
+
+            //    // if we reach this point some view model validation
+            //    // failed within a view provider, display model state errors
+            //    foreach (var modelState in ViewData.ModelState.Values)
+            //    {
+            //        foreach (var error in modelState.Errors)
+            //        {
+            //            _alerter.Danger(T[error.ErrorMessage]);
+            //        }
+            //    }
+
+            //    return await Create();
+                
+            //}
+            //else
+            //{
+            //    _alerter.Danger(T["You must specify at least 1 user!"]);
+            //}
+
+            //return await Create();
 
         }
         

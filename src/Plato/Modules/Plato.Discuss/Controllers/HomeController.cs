@@ -40,7 +40,7 @@ namespace Plato.Discuss.Controllers
 
         private readonly IReportEntityManager<Topic> _reportEntityManager;
         private readonly IReportEntityManager<Reply> _reportReplyManager;
-        private readonly IViewProviderManager<Topic> _topicViewProvider;
+        private readonly IViewProviderManager<Topic> _entityViewProvider;
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
@@ -65,7 +65,7 @@ namespace Plato.Discuss.Controllers
             IHtmlLocalizer localizer,
             IReportEntityManager<Topic> reportEntityManager,
             IReportEntityManager<Reply> reportReplyManager,
-            IViewProviderManager<Topic> topicViewProvider,
+            IViewProviderManager<Topic> entityViewProvider,
             IViewProviderManager<Reply> replyViewProvider,
             IAuthorizationService authorizationService,
             IEntityReplyStore<Reply> entityReplyStore,
@@ -84,7 +84,7 @@ namespace Plato.Discuss.Controllers
             _authorizationService = authorizationService;
             _reportEntityManager = reportEntityManager;
             _reportReplyManager = reportReplyManager;
-            _topicViewProvider = topicViewProvider;
+            _entityViewProvider = entityViewProvider;
             _breadCrumbManager = breadCrumbManager;
             _replyViewProvider = replyViewProvider;
             _entityReplyStore = entityReplyStore;
@@ -178,7 +178,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideIndexAsync(new Topic(), this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideIndexAsync(new Topic(), this));
 
         }
 
@@ -240,7 +240,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideEditAsync(entity, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -263,11 +263,11 @@ namespace Plato.Discuss.Controllers
             };
 
             // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(entity, this))
+            if (await _entityViewProvider.IsModelStateValid(entity, this))
             {
 
                 // Get composed type from all involved view providers
-                entity = await _topicViewProvider.GetComposedType(entity, this);
+                entity = await _entityViewProvider.GetComposedType(entity, this);
 
                 // We need to first add the fully composed type
                 // so we have a unique entity Id for all ProvideUpdateAsync
@@ -283,7 +283,7 @@ namespace Plato.Discuss.Controllers
                     result.Response.IsNew = true;
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(result.Response, this);
+                    await _entityViewProvider.ProvideUpdateAsync(result.Response, this);
                     
                     // Get authorize result
                     var authorizeResult = await AuthorizeAsync(result.Response);
@@ -451,7 +451,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideDisplayAsync(entity, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideDisplayAsync(entity, this));
 
         }
 
@@ -627,7 +627,7 @@ namespace Plato.Discuss.Controllers
             });
 
             // Return view
-            return View((LayoutViewModel) await _topicViewProvider.ProvideEditAsync(entity, this));
+            return View((LayoutViewModel) await _entityViewProvider.ProvideEditAsync(entity, this));
 
         }
 
@@ -727,7 +727,7 @@ namespace Plato.Discuss.Controllers
             entity.Message = viewModel.Message;
 
             // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(entity, this))
+            if (await _entityViewProvider.IsModelStateValid(entity, this))
             {
 
                 // Only update edited information if the message changes
@@ -742,7 +742,7 @@ namespace Plato.Discuss.Controllers
                 entity.ModifiedDate = DateTimeOffset.UtcNow;
 
                 // Get composed model from view providers
-                entity = await _topicViewProvider.GetComposedType(entity, this);
+                entity = await _entityViewProvider.GetComposedType(entity, this);
 
                 // Update the entity
                 var result = await _topicManager.UpdateAsync(entity);
@@ -752,7 +752,7 @@ namespace Plato.Discuss.Controllers
                 {
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(result.Response, this);
+                    await _entityViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Get authorize result
                     var authorizeResult = await AuthorizeAsync(result.Response);
@@ -815,7 +815,6 @@ namespace Plato.Discuss.Controllers
             });
 
         }
-
 
         // -----------------
         // Edit Entity Reply

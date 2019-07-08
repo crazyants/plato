@@ -171,24 +171,24 @@ namespace Plato.Articles.Drafts.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(Article model, IViewProviderContext context)
         {
 
-            // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(model.Id);
-            if (entity == null)
-            {
-                return await BuildEditAsync(model, context);
-            }
+            //// Ensure entity exists before attempting to update
+            //var entity = await _entityStore.GetByIdAsync(model.Id);
+            //if (entity == null)
+            //{
+            //    return await BuildEditAsync(model, context);
+            //}
 
-            // Validate model
-            if (await ValidateModelAsync(model, context.Updater))
-            {
-                if (!model.IsNew)
-                {
-                    model.IsPrivate = GetIsPrivate();
-                    model.IsHidden = GetIsHidden();
-                    await _entityStore.UpdateAsync(model);
-                }
+            //// Validate model
+            //if (await ValidateModelAsync(model, context.Updater))
+            //{
+            //    if (!model.IsNew)
+            //    {
+            //        model.IsPrivate = GetIsPrivate();
+            //        model.IsHidden = GetIsHidden();
+            //        await _entityStore.UpdateAsync(model);
+            //    }
 
-            }
+            //}
 
             return await BuildEditAsync(model, context);
 
