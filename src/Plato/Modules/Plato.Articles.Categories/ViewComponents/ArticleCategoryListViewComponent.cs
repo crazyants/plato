@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Categories.Stores;
 using Plato.Articles.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.ViewModels;
@@ -12,6 +11,7 @@ namespace Plato.Articles.Categories.ViewComponents
 
     public class ArticleCategoryListViewComponent : ViewComponent
     {
+
         private readonly ICategoryService<Category> _categoryService;
 
         public ArticleCategoryListViewComponent(ICategoryService<Category> categoryService)
@@ -47,9 +47,9 @@ namespace Plato.Articles.Categories.ViewComponents
                 Options = options,
                 Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId)
             };
+
         }
 
     }
-
-
+    
 }

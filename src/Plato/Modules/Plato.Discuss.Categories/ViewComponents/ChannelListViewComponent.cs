@@ -47,9 +47,9 @@ namespace Plato.Discuss.Categories.ViewComponents
                 Options = options,
                 Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId)
             };
+
         }
         
     }
-
 
 }

@@ -51,10 +51,9 @@ namespace Plato.Articles.Categories.ViewComponents
                 Options = options,
                 Categories = categories?.Data?.Where(c => c.ParentId == 0)
             };
+
         }
-
-
+        
     }
-
-
+    
 }

@@ -41,7 +41,7 @@ namespace Plato.Categories.Stores
             var countSql = builder.BuildSqlCount();
             var keywords = Params.Keywords.Value ?? string.Empty;
 
-            return await _store.SelectAsync(new[]
+            return await _store.SelectAsync(new IDbDataParameter[]
             {
                 new DbParam("PageIndex", DbType.Int32, PageIndex),
                 new DbParam("PageSize", DbType.Int32, PageSize),
@@ -99,15 +99,14 @@ namespace Plato.Categories.Stores
     {
         #region "Constructor"
 
-        private readonly string _categorysTableName;
+        private readonly string _categoriesTableName;
 
         private readonly CategoryQuery<TModel> _query;
 
         public CategoryQueryBuilder(CategoryQuery<TModel> query)
         {
             _query = query;
-            _categorysTableName = GetTableNameWithPrefix("Categories");
-
+            _categoriesTableName = GetTableNameWithPrefix("Categories");
         }
 
         #endregion
@@ -162,7 +161,7 @@ namespace Plato.Categories.Stores
         string BuildTables()
         {
             var sb = new StringBuilder();
-            sb.Append(_categorysTableName)
+            sb.Append(_categoriesTableName)
                 .Append(" c ");
 
             // -----------------
@@ -195,8 +194,7 @@ namespace Plato.Categories.Stores
                     sb.Append(_query.Params.Id.Operator);
                 sb.Append(_query.Params.Id.ToSqlString("c.Id"));
             }
-
-
+            
             // -----------------
             // FeatureId
             // -----------------
@@ -208,12 +206,10 @@ namespace Plato.Categories.Stores
                 sb.Append(_query.Params.FeatureId.ToSqlString("c.FeatureId"));
             }
 
-
             return sb.ToString();
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"

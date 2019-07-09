@@ -1,14 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Services;
-using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
 using Plato.Docs.Categories.Models;
-using Plato.Docs.Categories.ViewModels;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Models.Features;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Docs.Categories.ViewComponents
@@ -52,6 +47,7 @@ namespace Plato.Docs.Categories.ViewComponents
                 Options = options,
                 Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId)
             };
+
         }
         
     }

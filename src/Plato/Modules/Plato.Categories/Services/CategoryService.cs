@@ -83,14 +83,7 @@ namespace Plato.Categories.Services
                     // ----------------
                     // Basic parameters
                     // ----------------
-
-
-                    // CategoryId
-                    if (options.CategoryId > 0)
-                    {
-                        q.FeatureId.Equals(options.CategoryId);
-                    }
-
+                    
                     // FeatureId
                     if (options.FeatureId > 0)
                     {
@@ -100,7 +93,7 @@ namespace Plato.Categories.Services
                     // ----------------
                     // Additional parameter configuration
                     // ----------------
-
+                    
                     _configureParams?.Invoke(q);
 
                 })
