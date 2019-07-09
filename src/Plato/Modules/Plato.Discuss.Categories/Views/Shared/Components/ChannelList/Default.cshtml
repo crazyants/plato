@@ -2,7 +2,7 @@
 
 @if (Model.Options.CategoryId == 0)
 {
-    if (Model.Categories != null)
+    if (Model.Categories.Any())
     {
         @foreach (var category in Model.Categories)
          {

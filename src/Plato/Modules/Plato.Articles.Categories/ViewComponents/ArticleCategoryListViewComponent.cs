@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Articles.Categories.Models;
@@ -45,7 +46,7 @@ namespace Plato.Articles.Categories.ViewComponents
             return new CategoryListViewModel<Category>()
             {
                 Options = options,
-                Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId)
+                Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId) ?? new List<Category>()
             };
 
         }

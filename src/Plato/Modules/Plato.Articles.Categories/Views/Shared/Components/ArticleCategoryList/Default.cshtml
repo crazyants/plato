@@ -2,7 +2,7 @@
 
 @if (Model.Options.CategoryId == 0)
 {
-    if (Model.Categories != null)
+    if (Model.Categories.Any())
     {
         <card class="card card-body-flush">
             <card-title>
@@ -23,6 +23,21 @@
                         }
                     </div>
                 </div>
+            </card-body>
+        </card>
+    }
+    else
+    {
+        <card class="card card-body-flush">
+            <card-title>
+                <h6 class="card-title">@T["Categories"]</h6>
+            </card-title>
+            <card-body>
+                <ul class="list-group list-group-flush list-group-hover">
+                    <li class="list-group-item">
+                        @T["No categories found"]
+                    </li>
+                </ul>
             </card-body>
         </card>
     }
