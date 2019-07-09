@@ -361,6 +361,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Articles.Share", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Docs.Share", "src\Plato\Modules\Plato.Docs.Share\Plato.Docs.Share.csproj", "{A4D226BC-CF3E-4EE0-B517-57CBBDFAB7EC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Questions.Share", "src\Plato\Modules\Plato.Questions.Share\Plato.Questions.Share.csproj", "{CAA62E43-B23E-479E-8592-27A5EE94E657}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Ideas.Share", "src\Plato\Modules\Plato.Ideas.Share\Plato.Ideas.Share.csproj", "{E4B2513A-673E-406F-A1CD-FD033EA15395}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1067,6 +1071,14 @@ Global
 		{A4D226BC-CF3E-4EE0-B517-57CBBDFAB7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4D226BC-CF3E-4EE0-B517-57CBBDFAB7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4D226BC-CF3E-4EE0-B517-57CBBDFAB7EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAA62E43-B23E-479E-8592-27A5EE94E657}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAA62E43-B23E-479E-8592-27A5EE94E657}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAA62E43-B23E-479E-8592-27A5EE94E657}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAA62E43-B23E-479E-8592-27A5EE94E657}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4B2513A-673E-406F-A1CD-FD033EA15395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4B2513A-673E-406F-A1CD-FD033EA15395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4B2513A-673E-406F-A1CD-FD033EA15395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4B2513A-673E-406F-A1CD-FD033EA15395}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1248,6 +1260,8 @@ Global
 		{D2ED2B13-E75B-4222-8740-B1E965343B70} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{AD2F53C4-B06B-42B6-B1BC-54B7C5E67F13} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{A4D226BC-CF3E-4EE0-B517-57CBBDFAB7EC} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{CAA62E43-B23E-479E-8592-27A5EE94E657} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{E4B2513A-673E-406F-A1CD-FD033EA15395} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

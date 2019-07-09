@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Docs.Share
+namespace Plato.Ideas.Share
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ShareDocs =
-            new Permission("ShareDocs", "Share docs");
+        public static readonly Permission ShareIdeas =
+            new Permission("ShareIdeas", "Share ideas");
 
         public static readonly Permission ShareComments =
-            new Permission("ShareDocComments", "Share doc comments");
+            new Permission("ShareIdeaComments", "Share idea comments");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ShareDocs,
+                ShareIdeas,
                 ShareComments
             };
         }
@@ -30,7 +30,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareIdeas,
                         ShareComments
                     }
                 },
@@ -39,7 +39,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareIdeas,
                         ShareComments
                     }
                 },
@@ -48,7 +48,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Anonymous,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareIdeas,
                         ShareComments
                     }
                 },
@@ -57,7 +57,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareIdeas,
                         ShareComments
                     }
                 }

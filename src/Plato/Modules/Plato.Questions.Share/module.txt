@@ -1,0 +1,22 @@
+Name: Plato Questions Share
+Description: Adds the ability to share questions and question answers.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Questions
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.WebAPI",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Questions",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Facebook",
+		Version: "1.0.0"
+	}
+]

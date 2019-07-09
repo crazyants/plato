@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Docs.Share
+namespace Plato.Questions.Share
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ShareDocs =
-            new Permission("ShareDocs", "Share docs");
+        public static readonly Permission ShareQuestions =
+            new Permission("ShareQuestions", "Share questions");
 
         public static readonly Permission ShareComments =
-            new Permission("ShareDocComments", "Share doc comments");
+            new Permission("ShareAnswers", "Share question answers");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ShareDocs,
+                ShareQuestions,
                 ShareComments
             };
         }
@@ -30,7 +30,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareQuestions,
                         ShareComments
                     }
                 },
@@ -39,7 +39,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareQuestions,
                         ShareComments
                     }
                 },
@@ -48,7 +48,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Anonymous,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareQuestions,
                         ShareComments
                     }
                 },
@@ -57,7 +57,7 @@ namespace Plato.Docs.Share
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ShareDocs,
+                        ShareQuestions,
                         ShareComments
                     }
                 }
