@@ -36,11 +36,7 @@ namespace Plato.Issues.Categories.ViewComponents
 
             // Get categories
             var categories = await _categoryService
-                .GetResultsAsync(new CategoryIndexOptions()
-                {
-                    FeatureId = options.FeatureId,
-                    CategoryId = 0
-                }, new PagerOptions()
+                .GetResultsAsync(options, new PagerOptions()
                 {
                     Page = 1,
                     Size = int.MaxValue

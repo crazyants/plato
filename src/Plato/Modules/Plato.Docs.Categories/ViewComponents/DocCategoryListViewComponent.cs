@@ -18,13 +18,9 @@ namespace Plato.Docs.Categories.ViewComponents
     {
 
         private readonly ICategoryService<Category> _categoryService;
-        private readonly IFeatureFacade _featureFacade;
-
-        public DocCategoryListViewComponent(
-            IFeatureFacade featureFacade, 
-            ICategoryService<Category> categoryService)
+     
+        public DocCategoryListViewComponent(ICategoryService<Category> categoryService)
         {
-            _featureFacade = featureFacade;
             _categoryService = categoryService;
         }
 
@@ -42,9 +38,7 @@ namespace Plato.Docs.Categories.ViewComponents
         
         async Task<CategoryListViewModel<Category>> GetIndexModel(CategoryIndexOptions options)
         {
-            //var feature = await GetCurrentFeature();
-            //var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
-
+      
             // Get categories
             var categories = await _categoryService
                 .GetResultsAsync(options, new PagerOptions()
@@ -59,19 +53,7 @@ namespace Plato.Docs.Categories.ViewComponents
                 Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId)
             };
         }
-
-        async Task<IShellFeature> GetCurrentFeature()
-        {
-            var featureId = "Plato.Docs.Categories";
-            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
-            if (feature == null)
-            {
-                throw new Exception($"No feature could be found for the Id '{featureId}'");
-            }
-            return feature;
-        }
-
+        
     }
-
-
+    
 }
