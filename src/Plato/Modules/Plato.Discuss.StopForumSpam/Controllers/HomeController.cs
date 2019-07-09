@@ -28,9 +28,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
 {
     public class HomeController : Controller
     {
-
-
-
+        
         private readonly ISpamSettingsStore<SpamSettings> _spamSettingsStore;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
@@ -61,14 +59,15 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             ISpamClient spamClient,
             IAlerter alerter)
         {
-            _entityStore = entityStore;
-            _contextFacade = contextFacade;
+  
             _authorizationService = authorizationService;
             _spamSettingsStore = spamSettingsStore;
             _entityReplyStore = entityReplyStore;
             _platoUserStore = platoUserStore;
+            _contextFacade = contextFacade;
             _platoOpts = platoOpts.Value;
             _spamChecker = spamChecker;
+            _entityStore = entityStore;
             _spamClient = spamClient;
             _alerter = alerter;
 
@@ -303,7 +302,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
                 return null;
             }
 
-            // Use IP information from entity
+            // Use IP information from reply
 
             if (!string.IsNullOrEmpty(reply.IpV4Address))
             {
@@ -328,10 +327,10 @@ namespace Plato.Discuss.StopForumSpam.Controllers
         void ConfigureSpamClient()
         {
             // Configure spam client
-            _spamClient.Configure(async o => { o.ApiKey = await GetStopForumSpamApiKey(); });
+            _spamClient.Configure(async o => { o.ApiKey = await GetStopForumSpamApiKeyAsync(); });
         }
         
-        async Task<string> GetStopForumSpamApiKey()
+        async Task<string> GetStopForumSpamApiKeyAsync()
         {
             // Get spam settings
             var settings = await _spamSettingsStore.GetAsync();
