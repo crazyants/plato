@@ -7,7 +7,24 @@ namespace Plato.Articles.Models
 
     public class ArticleDetails : Serializable
     {
-        public IEnumerable<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
+        public IList<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
+
+        public IList<EntityContributor> Contributors { get; set; } = new List<EntityContributor>();
+
+        public int TotalContributions
+        {
+            get
+            {
+                var i = 0;
+                foreach (var contributor in Contributors)
+                {
+                    i += contributor.ContributionCount;
+                }
+
+                return i;
+            }
+        }
+
     }
     
 }

@@ -1,7 +1,7 @@
 ﻿@model Doc
 @{
     var details = Model.GetOrCreate<DocDetails>();
-    var replies = @Model.TotalReplies == 1
+    var replies = Model.TotalReplies == 1
         ? "comment"
         : "comments";
     var viewText = Model.TotalViews == 1
@@ -27,7 +27,6 @@
     }
 </h4>
 <ul class="list-inline text-muted p-0 m-0">
-
     @if (Model.ModifiedDate != null)
     {
         <li class="list-inline-item">
@@ -40,7 +39,6 @@
             <date utc="@Model.CreatedDate"/>
         </li>
     }
-
     @if (details?.TotalContributions > 0)
     {
         <li class="list-inline-item">

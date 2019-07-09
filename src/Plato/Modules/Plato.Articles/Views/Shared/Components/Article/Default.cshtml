@@ -1,4 +1,13 @@
 ﻿@model EntityViewModel<Article, Comment>
+@{
+    var wordsPerMinute = 200;
+    var totalWords = Model.Entity.TotalWords;
+    var readingTime = totalWords / wordsPerMinute;
+    var minuteText = readingTime == 1
+        ? "minute"
+        : "minutes";
+    var readText = T["About {0} to read"].Value;
+}
 
 <div class="list-row">
     <navigation name="article-details"
@@ -7,30 +16,56 @@
     <div class="list-body reply-body">
         <card>
             <card-title>
-                <h6 class="card-title d-inline-block">@T["Article"]</h6>
-                @if (Model.Entity.IsPrivate)
-                {
-                    if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                
+                <ul class="list-inline float-left p-0 m-0">
+                    <li class="list-inline-item">
+                        <span class="d-inline-block text-muted">
+                            @if (readingTime >= 1)
+                            {
+                                @readText.Replace("{0}", $"{readingTime} {minuteText}")
+                            }
+                            else
+                            {
+                                @T["Less then 1 minute to read"]
+                            }
+                        </span>
+                    </li>
+                    @if (Model.Entity.IsPrivate)
                     {
-                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you are the article author"]">@T["Private"]</span>
+                        if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                        {
+                            <li class="list-inline-item">
+                                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you are the article author"]">@T["Private"]</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="list-inline-item">
+                                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you have permission to view private articles"]">@T["Private"]</span>
+                            </li>
+                        }
                     }
-                    else
+                    @if (Model.Entity.IsHidden)
                     {
-                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you have permission to view private articles"]">@T["Private"]</span>
+                        <li class="list-inline-item">
+                            <span data-toggle="tooltip" title="@T["This article is hidden and only visible as you have permission to view hidden articles"]" class="badge badge-primary">@T["Hidden"]</span>
+                        </li>
                     }
-                }
-                @if (Model.Entity.IsHidden)
-                {
-                    <span data-toggle="tooltip" title="@T["This article is hidden and only visible as you have permission to view hidden articles"]" class="badge badge-primary">@T["Hidden"]</span>
-                }
-                @if (Model.Entity.IsSpam)
-                {
-                    <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
-                }
-                @if (Model.Entity.IsDeleted)
-                {
-                    <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible as you have permission to view deleted articles"]">@T["Deleted"]</span>
-                }
+                    @if (Model.Entity.IsSpam)
+                    {
+                        <li class="list-inline-item">
+                            <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
+                        </li>
+                    }
+                    @if (Model.Entity.IsDeleted)
+                    {
+                        <li class="list-inline-item">
+                            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible as you have permission to view deleted articles"]">@T["Deleted"]</span>
+                        </li>
+                    }
+                </ul>
+
+              
                 <navigation name="article"
                             model="Model.Entity"
                             class="nav navbar p-0 float-right"

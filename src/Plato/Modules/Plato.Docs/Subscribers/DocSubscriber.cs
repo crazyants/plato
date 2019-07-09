@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Docs.Models;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
-using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Reputations.Abstractions;

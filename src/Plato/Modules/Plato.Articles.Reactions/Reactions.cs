@@ -12,7 +12,7 @@ namespace Plato.Articles.Reactions
             new Reaction("Useful", "Useful +1", "👍", 1, Sentiment.Positive);
        
         public static readonly Reaction Solved =
-            new Reaction("Solved", "Solved +5", "✅", 5, Sentiment.Positive);
+            new Reaction("Solved", "Solved +5", "✔️", 5, Sentiment.Positive);
 
         public static readonly Reaction Ok =
             new Reaction("Ok", "Ok", "👌", 0, Sentiment.Neutral);

@@ -1,8 +1,8 @@
 ﻿@model Issue
 @{
     var replies = @Model.TotalReplies == 1
-        ? "reply"
-        : "replies";
+        ? "comment"
+        : "comments";
 }
 
 <div class="list-left">
@@ -28,29 +28,30 @@
             </span>
         }
     </h4>
-    <div class="text-muted">
-        
-        @if (Model.IsClosed)
-        {
-            <div class="btn btn-sm btn-success cursor-default mr-2" data-toggle="tooltip" title="@T["This issue has been closed"]">
-                <i class="fal fa-check"></i> 
-                @T["CLOSED"]
-            </div>
-        }
-        else
-        {
-            <div class="btn btn-sm btn-danger cursor-default mr-2" data-toggle="tooltip" title="@T["This issue is open and awaiting a resolution"]">
-                <i class="fal fa-exclamation-circle"></i> 
-                @T["OPEN"]
-            </div>
-        }
-        
-        @T["Posted"]
-        <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
-        @T["by"]
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias" data-provide="popper" data-popper-url="@Model.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom">@Model.CreatedBy.DisplayName</a>
-        - @Model.TotalReplies.ToPrettyInt() @T[replies]
-    </div>
+    <ul class="list-inline p-0 m-0">
+        <li class="list-inline-item">
+            @if (Model.IsClosed)
+            {
+                <div class="btn btn-sm btn-success cursor-default" data-toggle="tooltip" title="@T["This issue has been closed"]">
+                    <i class="fal fa-check"></i> @T["CLOSED"]
+                </div>
+            }
+            else
+            {
+                <div class="btn btn-sm btn-danger cursor-default" data-toggle="tooltip" title="@T["This issue is open and awaiting a resolution"]">
+                    <i class="fal fa-exclamation-circle"></i> @T["OPEN"]
+                </div>
+            }
+        </li>
+        <li class="list-inline-item">
+            <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+            @T["by"]
+            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias" data-provide="popper" data-popper-url="@Model.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom">@Model.CreatedBy.DisplayName</a>
+        </li>
+        <li class="list-inline-item">
+            @Model.TotalReplies.ToPrettyInt() @T[replies]
+        </li>
+    </ul>
 </div>
 <hr />
 
