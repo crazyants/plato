@@ -1,6 +1,13 @@
-﻿@model Badge
+﻿@model BadgeEntry
+@{
+    var times = Model.Details.AwardedCount == 1
+        ? T["time"].Value
+        : T["times"].Value;
+    var text = $"{Model.Details.AwardedCount} {times}";
+    var awardedText = T["Awarded {0}"].Value.Replace("{0}", text);
+}
 
-<div class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
+<div class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0 m-0">
     <div class="p-3">
         <div class="d-block">
             <div class="d-inline-block">
@@ -17,11 +24,27 @@
             </div>
         </div>
         <div class="d-block my-2">
-            <h6>@Model.Name</h6>
-            <span class="text-muted">
-                @Model.Description
-            </span>
+            <div class="badge-description">
+                <h6>@Model.Name</h6>
+                <span class="text-muted">
+                    @Model.Description
+                </span>
+            </div>
+            <div class="badge-details" style="display: none;">
+                <h6>@awardedText</h6>
+                <div class="text-muted">
+                    @if (Model.Details?.LastAwardedDate != null){
+             
+                        @T["Last Awarded"] <date utc="@Model.Details.LastAwardedDate" />
+                    }
+                    else
+                    {
+                        @T["This badge has not been awarded yet"]
+                    }
+                </div>
+            </div>
         </div>
+  
     </div>
 
 </div>

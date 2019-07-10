@@ -65,7 +65,7 @@ namespace Plato.Entities.ViewProviders
             return Views(
                 View<UserDisplayViewModel<Entity>>("Profile.Entities.Display.Content", model => viewModel)
                     .Zone("content")
-                    .Order(1)
+                    .Order(int.MaxValue - 100)
             );
 
         }

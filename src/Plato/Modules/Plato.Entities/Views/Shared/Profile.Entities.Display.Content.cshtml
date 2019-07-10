@@ -1,4 +1,12 @@
 ﻿@model UserDisplayViewModel<Entity>
+@{
+    var total = Model.Metrics.Metrics.Total();
+    var text = total == 1
+        ? T["contribution"].Value
+        : T["contributions"].Value;
+    var title = $"{total} {text}";
+    var tooltip = T["Show all {0}"].Value.Replace("{0}", $"{total} {text}");
+}
 
 @if (Model.Metrics.Metrics.Total() > 0)
 {
@@ -6,15 +14,16 @@
         <card-title>
             <div class="float-left">
                 <h6 class="card-title d-inline-block">
-                    @T["Contributions"]
+                    @title
                 </h6>
-                <div class="badge badge-info ml-2" data-toggle="tooltip" title="@T["Contributions"]">
-                    @Model.Metrics.Metrics.Total().ToPrettyInt()
+            </div>
+            <div class="nav navbar p-0 float-right">
+                <div class="nav-item">
+                    <a asp-route-area="Plato.Entities" asp-route-controller="User" asp-route-action="Index" asp-route-opts.createdByUserId="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias" class="nav-link text-muted" data-toggle="tooltip" title="@tooltip">
+                          <i class="fa fa-ellipsis-h"></i>
+                    </a>
                 </div>
             </div>
-            <a class="btn btn-primary float-right" asp-route-area="Plato.Entities" asp-route-controller="User" asp-route-action="Index" asp-route-opts.createdByUserId="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias">
-                @T["All Contributions"]
-            </a>
         </card-title>
         <card-body>
             <ul class="list-group list-group-flush list-group-hover">

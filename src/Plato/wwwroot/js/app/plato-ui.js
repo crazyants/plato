@@ -6872,12 +6872,104 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    /* badgeList */
+    var badgeList = function () {
+
+        var dataKey = "badgeList",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {};
+
+        var methods = {
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                
+                $caller.find(".list-group-item").on("mouseenter",
+                    function() {
+                        var $desc = $(this).find(".badge-description"),
+                            $details = $(this).find(".badge-details");
+                        $desc.hide();
+                        $details.show();
+                    });
+
+                $caller.find(".list-group-item").on("mouseleave",
+                    function () {
+                        var $desc = $(this).find(".badge-description"),
+                            $details = $(this).find(".badge-details");
+                        $details.hide();
+                        $desc.show();
+                    });
+
+            },
+            unbind: function ($caller) {
+                $caller.find(".list-group-item").off("mouseenter");
+                $caller.find(".list-group-item").off("mouseleave");
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).badgeList()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().badgeList()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+        };
+
+    }();
+
+
     /* Register Plugins */
     $.fn.extend({
         replySpy: replySpy.init,
         navSite: navSite.init,
-        layout: layout.init
+        layout: layout.init,
+        badgeList: badgeList.init
     });
 
     // ---------------------------
@@ -6898,6 +6990,9 @@ $(function (win, doc, $) {
         /* replySpy */
         this.replySpy();
         
+        /* badgeList */
+        this.find('[data-provide="badge-list"]').badgeList();
+
         // Scroll to validation errors?
         if (opts.validation.scrollToErrors) {
             // Raised when the form is submitted but invalid

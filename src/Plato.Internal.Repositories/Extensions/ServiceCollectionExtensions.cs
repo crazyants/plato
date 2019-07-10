@@ -49,13 +49,13 @@ namespace Plato.Internal.Repositories.Extensions
 
             // User badges
             services.AddScoped<IUserBadgeRepository<UserBadge>, UserBadgeRepository>();
-
+            
             // Schema 
             services.AddScoped<IConstraintRepository, ConstraintRepository>();
 
             // Metrics 
             services.AddScoped<IAggregatedUserRepository, AggregatedUserRepository>();
-
+            services.AddScoped<IBadgeDetailsRepository, BadgeDetailsRepository>();
 
             return services;
 

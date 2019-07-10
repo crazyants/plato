@@ -1,0 +1,48 @@
+﻿@model ProfileDisplayViewModel
+@{
+    var badgesList = Model.Badges.ToList();
+    var text = badgesList.Count == 1
+        ? T["badge"].Value
+        : T["badges"].Value;
+    var title = $"{badgesList.Count} {text}";
+    var tooltip = T["Show all {0}"].Value.Replace("{0}", $"{badgesList.Count} {text}");
+}
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title float-left">
+            @title
+        </h6>
+        <div class="nav navbar p-0 float-right">
+            <div class="nav-item">
+                <a asp-route-area="Plato.Users.Badges" asp-route-controller="Profile" asp-route-action="Index" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias" class="nav-link text-muted" data-toggle="tooltip" title="@tooltip">
+                    <i class="fa fa-ellipsis-h"></i>
+                </a>
+            </div>
+        </div>
+    </card-title>
+    <card-body>
+        
+        @if (badgesList.Count > 0)
+        {     <div class="list-group list-group-flush list-group-hover">
+                  <div class="row no-gutters text-center">
+                      @foreach (var badge in badgesList.OrderByDescending(b => b.AwardedDate).Take(3))
+                      {
+                          @await DisplayAsync(new View("BadgeListItem", new
+                          {
+                              badge = badge
+                          }))
+                      }
+                  </div>
+              </div>
+        }
+        else
+        {
+            <div class="text-muted">
+                @T["No badges awarded"]
+            </div>
+        }
+
+    </card-body>
+</card>
+

@@ -68,7 +68,7 @@ namespace Plato.Internal.Stores.Extensions
 
             // User badges
             services.AddScoped<IUserBadgeStore<UserBadge>, UserBadgeStore>();
-        
+            
             // Schema
             services.AddScoped<IConstraintStore, ConstraintStore>();
             

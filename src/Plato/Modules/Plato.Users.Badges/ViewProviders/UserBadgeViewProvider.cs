@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Badges.ViewModels;
 
@@ -11,22 +9,16 @@ namespace Plato.Users.Badges.ViewProviders
 {
     public class UserBadgeViewProvider : BaseViewProvider<UserBadge>
     {
-
-        private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
+        
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IBadgesManager<Badge> _badgesManager;
-
-        public UserBadgeViewProvider(
-            IPlatoUserStore<User> platoUserStore, 
-            IUserBadgeStore<UserBadge> userBadgeStore, IBadgesManager<Badge> badgesManager)
+        
+        public UserBadgeViewProvider(IPlatoUserStore<User> platoUserStore)
         {
             _platoUserStore = platoUserStore;
-            _userBadgeStore = userBadgeStore;
-            _badgesManager = badgesManager;
+      
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(UserBadge userProfile,
-            IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(UserBadge model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
@@ -39,9 +31,7 @@ namespace Plato.Users.Badges.ViewProviders
             {
                 return await BuildIndexAsync(badge, context);
             }
-
-            var availableBadges = _badgesManager.GetBadges();
-            var badges = await _userBadgeStore.GetUserBadgesAsync(user.Id, availableBadges);
+            
             var viewModel = new UserBadgesIndexViewModel()
             {
                 User = user,
@@ -62,12 +52,12 @@ namespace Plato.Users.Badges.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(UserBadge model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(UserBadge badge, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(UserBadge model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(UserBadge badge, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

@@ -3,14 +3,17 @@
 namespace Plato.Internal.Models.Badges
 {
 
-    public interface IBadgeEntry
+    public interface IBadgeEntry : IBadge
     {
-        DateTimeOffset? AwardedDate { get; set; }
+        IBadgeDetails Details { get; set; }
 
     }
 
     public class BadgeEntry : Badge, IBadgeEntry
     {
+
+        public IBadgeDetails Details { get; set; } = new BadgeDetails();
+
         public BadgeEntry(IBadge badge) :
             base(badge.Name,
                 badge.Description,
@@ -22,7 +25,10 @@ namespace Plato.Internal.Models.Badges
         {
         }
 
-        public DateTimeOffset? AwardedDate { get; set; }
+        public BadgeEntry(IBadge badge, IBadgeDetails details) : this(badge)
+        {
+            Details = details;
+        }
 
     }
 }

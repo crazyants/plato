@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Internal.Badges.Abstractions;
-using Plato.Internal.Models.Badges;
-using Plato.Internal.Stores.Abstractions.Badges;
+using Plato.Users.Badges.Services;
 using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewComponents
@@ -10,16 +9,11 @@ namespace Plato.Users.Badges.ViewComponents
     public class BadgeListViewComponent : ViewComponent
     {
 
-        private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
-        private readonly IBadgesManager<Badge> _badgesManager;
-   
-
-        public BadgeListViewComponent(
-            IBadgesManager<Badge> badgesManager,
-            IUserBadgeStore<UserBadge> userBadgeStore)
+        private readonly IBadgeEntriesStore _badgeEntriesStore;
+       
+        public BadgeListViewComponent(IBadgeEntriesStore badgeEntriesStore)
         {
-            _badgesManager = badgesManager;
-            _userBadgeStore = userBadgeStore;
+            _badgeEntriesStore = badgeEntriesStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -30,24 +24,23 @@ namespace Plato.Users.Badges.ViewComponents
             {
                 options = new BadgesIndexOptions();
             }
-
-            var model = await GetViewModel(options);
-
-            return View(model);
+            
+            return View(await GetViewModel(options));
 
         }
 
-        async Task<BadgesIndexViewModel> GetViewModel(
-            BadgesIndexOptions options)
+        async Task<BadgesIndexViewModel> GetViewModel(BadgesIndexOptions options)
         {
-            var availableBadges = _badgesManager.GetBadges();
-            var badges = options.UserId > 0
-                ? await _userBadgeStore.GetUserBadgesAsync(options.UserId, availableBadges)
-                : _badgesManager.GetBadges();
+
+            var entries = options.UserId > 0
+                ? await _badgeEntriesStore.SelectByUserIdAsync(options.UserId)
+                : await _badgeEntriesStore.SelectAsync();
 
             return new BadgesIndexViewModel()
             {
-                Badges = badges
+                Badges = options.UserId > 0
+                    ? entries.OrderByDescending(b => b.Details.LastAwardedDate)
+                    : entries.OrderBy(b => b.Level)
             };
 
         }

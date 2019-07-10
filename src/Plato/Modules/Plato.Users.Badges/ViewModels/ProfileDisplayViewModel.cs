@@ -8,7 +8,7 @@ namespace Plato.Users.Badges.ViewModels
     {
         public User User { get; set; }
 
-        public IEnumerable<BadgeEntry> Badges { get; set; }
+        public IEnumerable<IBadgeEntry> Badges { get; set; }
 
     }
 }

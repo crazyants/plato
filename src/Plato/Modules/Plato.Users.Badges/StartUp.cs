@@ -17,6 +17,7 @@ using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Users.Badges.Handlers;
+using Plato.Users.Badges.Services;
 using Plato.Users.Badges.Tasks;
 using Plato.Users.Badges.ViewProviders;
 
@@ -51,6 +52,9 @@ namespace Plato.Users.Badges
             // User profile view providers
             services.AddScoped<IViewProviderManager<Profile>, ViewProviderManager<Profile>>();
             services.AddScoped<IViewProvider<Profile>, ProfileViewProvider>();
+
+            // Services
+            services.AddScoped<IBadgeEntriesStore, BadgeEntriesStore>();
 
             // Badge view providers
             services.AddScoped<IViewProviderManager<Badge>, ViewProviderManager<Badge>>();

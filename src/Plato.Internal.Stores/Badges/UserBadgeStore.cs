@@ -16,11 +16,13 @@ namespace Plato.Internal.Stores.Badges
     public class UserBadgeStore : IUserBadgeStore<UserBadge>
     {
 
+
         private readonly IUserBadgeRepository<UserBadge> _userBadgeRepository;
+
+        private readonly ILogger<UserBadgeStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
-        private readonly ILogger<UserBadgeStore> _logger;
-        
+ 
         public UserBadgeStore(
             IUserBadgeRepository<UserBadge> userBadgeRepository,
             IDbQueryConfiguration dbQuery,
@@ -28,8 +30,8 @@ namespace Plato.Internal.Stores.Badges
             ILogger<UserBadgeStore> logger)
         {
             _userBadgeRepository = userBadgeRepository;
-            _dbQuery = dbQuery;
             _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
             _logger = logger;
         }
 
@@ -121,42 +123,42 @@ namespace Plato.Internal.Stores.Badges
             });
         }
 
-        public async Task<IEnumerable<BadgeEntry>> GetUserBadgesAsync(int userId, IEnumerable<IBadge> badges)
-        {
+        //public async Task<IEnumerable<BadgeEntry>> GetUserBadgesAsync(int userId, IEnumerable<IBadge> badges)
+        //{
        
-            var badgesList = badges.ToList();
-            if (badgesList.Count == 0)
-            {
-                return null;
-            }
+        //    var badgesList = badges.ToList();
+        //    if (badgesList.Count == 0)
+        //    {
+        //        return null;
+        //    }
 
-            var userBadges = await QueryAsync()
-                .Select<UserBadgeQueryParams>(q =>
-                {
-                    q.UserId.Equals(userId);
-                })
-                .OrderBy("Id", OrderBy.Asc)
-                .ToList();
+        //    var userBadges = await QueryAsync()
+        //        .Select<UserBadgeQueryParams>(q =>
+        //        {
+        //            q.UserId.Equals(userId);
+        //        })
+        //        .OrderBy("Id", OrderBy.Asc)
+        //        .ToList();
           
-            var output = new List<BadgeEntry>();
-            if (userBadges != null)
-            {
-                foreach (var userBadge in userBadges.Data)
-                {
-                    var badge = badgesList.FirstOrDefault(b => b.Name.Equals(userBadge.BadgeName, StringComparison.OrdinalIgnoreCase));
-                    if (badge != null)
-                    {
-                        output.Add(new BadgeEntry(badge)
-                        {
-                            AwardedDate = userBadge.CreatedDate
-                        });
-                    }
-                }
-            }
+        //    var output = new List<BadgeEntry>();
+        //    if (userBadges != null)
+        //    {
+        //        foreach (var userBadge in userBadges.Data)
+        //        {
+        //            var badge = badgesList.FirstOrDefault(b => b.Name.Equals(userBadge.BadgeName, StringComparison.OrdinalIgnoreCase));
+        //            if (badge != null)
+        //            {
+        //                output.Add(new BadgeEntry(badge)
+        //                {
+        //                    AwardedDate = userBadge.CreatedDate
+        //                });
+        //            }
+        //        }
+        //    }
           
-            return output;
+        //    return output;
 
-        }
+        //}
 
     }
 

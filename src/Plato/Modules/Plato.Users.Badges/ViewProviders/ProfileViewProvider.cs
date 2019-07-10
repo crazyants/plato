@@ -5,6 +5,7 @@ using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Badges.Services;
 using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewProviders
@@ -12,19 +13,17 @@ namespace Plato.Users.Badges.ViewProviders
 
     public class ProfileViewProvider : BaseViewProvider<Profile>
     {
-
-        private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
+        
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IBadgesManager<Badge> _badgesManager;
+        private readonly IBadgeEntriesStore _badgeEntriesStore;
 
         public ProfileViewProvider(
             IPlatoUserStore<User> platoUserStore,
             IUserBadgeStore<UserBadge> userBadgeStore,
-            IBadgesManager<Badge> badgesManager)
+            IBadgesManager<Badge> badgesManager, IBadgeEntriesStore badgeEntriesStore)
         {
             _platoUserStore = platoUserStore;
-            _userBadgeStore = userBadgeStore;
-            _badgesManager = badgesManager;
+            _badgeEntriesStore = badgeEntriesStore;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile,
@@ -36,9 +35,8 @@ namespace Plato.Users.Badges.ViewProviders
             {
                 return await BuildIndexAsync(profile, context);
             }
-
-            var availableBadges = _badgesManager.GetBadges();
-            var badges = await _userBadgeStore.GetUserBadgesAsync(user.Id, availableBadges);
+            
+            var badges = await _badgeEntriesStore.SelectByUserIdAsync(user.Id);
             var viewModel = new ProfileDisplayViewModel()
             {
                 User = user,
@@ -46,7 +44,8 @@ namespace Plato.Users.Badges.ViewProviders
             };
 
             return Views(
-                View<ProfileDisplayViewModel>("Profile.Display.Sidebar", model => viewModel).Zone("sidebar").Order(2)
+                View<ProfileDisplayViewModel>("Profile.Display.Content", model => viewModel).Zone("content").Order(0)
+                //View<ProfileDisplayViewModel>("Profile.Display.Sidebar", model => viewModel).Zone("sidebar").Order(2)
             );
 
         }

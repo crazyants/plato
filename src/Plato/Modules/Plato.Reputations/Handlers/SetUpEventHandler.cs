@@ -7,6 +7,7 @@ using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Reputations.Handlers
 {
+
     public class SetUpEventHandler : BaseSetUpEventHandler
     {
 

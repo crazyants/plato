@@ -2,6 +2,7 @@
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Badges;
+using Plato.Users.Badges.Services;
 using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewProviders
@@ -9,28 +10,28 @@ namespace Plato.Users.Badges.ViewProviders
 
     public class BadgeViewProvider : BaseViewProvider<Badge>
     {
+        
+        private readonly IBadgeEntriesStore _badgeEntriesStore;
 
-        private readonly IBadgesManager<Badge> _badgeManager;
-   
-        public BadgeViewProvider(
-            IBadgesManager<Badge> badgeManager)
+        public BadgeViewProvider(IBadgeEntriesStore badgeEntriesStore)
         {
-            _badgeManager = badgeManager;
+      
+            _badgeEntriesStore = badgeEntriesStore;
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Badge badge, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Badge badge, IViewProviderContext context)
         {
 
+            var badges = await _badgeEntriesStore.SelectAsync();
             var viewModel = new BadgesIndexViewModel()
             {
-                Badges = _badgeManager.GetBadges()
+                Badges = badges
             };
 
-            return Task.FromResult(
-                Views(View<BadgesIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
+            return Views(View<BadgesIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<BadgesIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
                 View<BadgesIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
-            ));
+            );
             
         }
         

@@ -10,13 +10,13 @@ namespace Plato.Internal.Repositories.Reputations
 {
     public class UserReputationsRepository : IUserReputationsRepository<UserReputation>
     {
-
-        private readonly IDbContext _dbContext;
+        
         private readonly ILogger<UserReputationsRepository> _logger;
+        private readonly IDbContext _dbContext;
 
         public UserReputationsRepository(
-            IDbContext dbContext,
-            ILogger<UserReputationsRepository> logger)
+            ILogger<UserReputationsRepository> logger,
+            IDbContext dbContext)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -67,7 +67,7 @@ namespace Plato.Internal.Repositories.Reputations
                         }
 
                         return userReputation;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -132,7 +132,7 @@ namespace Plato.Internal.Repositories.Reputations
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserReputationById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -161,7 +161,7 @@ namespace Plato.Internal.Repositories.Reputations
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserReputation",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("FeatureId", DbType.Int32, featureId),

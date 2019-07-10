@@ -299,7 +299,7 @@ a.label.active {
 
 /* arrow background */
 .dropdown-menu:after {
-    border-bottom-color: #1a1a1a;
+    border-bottom-color: #0a0a0a;
 }
 
 /* ------------------- */
