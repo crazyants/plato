@@ -68,10 +68,10 @@ namespace Plato.Articles.Reactions.Tasks
 
         public IEnumerable<Badge> Badges => new[]
         {
-            ReactionBadges.FirstReactor,
-            ReactionBadges.BronzeReactor,
-            ReactionBadges.SilverReactor,
-            ReactionBadges.GoldReactor
+            ReactionBadges.First,
+            ReactionBadges.Bronze,
+            ReactionBadges.Silver,
+            ReactionBadges.Gold
         };
 
 

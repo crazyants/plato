@@ -16,6 +16,7 @@ namespace Plato.Internal.Models.Badges
 
         public BadgeEntry(IBadge badge) :
             base(badge.Name,
+                badge.Title,
                 badge.Description,
                 badge.BackgroundIconCss,
                 badge.IconCss,

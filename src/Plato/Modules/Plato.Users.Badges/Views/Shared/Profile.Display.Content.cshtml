@@ -24,9 +24,9 @@
     <card-body>
         
         @if (badgesList.Count > 0)
-        {     <div class="list-group list-group-flush list-group-hover">
+        {     <div class="list-group list-group-flush list-group-hover" data-provide="badge-list">
                   <div class="row no-gutters text-center">
-                      @foreach (var badge in badgesList.OrderByDescending(b => b.AwardedDate).Take(3))
+                      @foreach (var badge in badgesList.OrderByDescending(b => b.Details.LastAwardedDate).Take(3))
                       {
                           @await DisplayAsync(new View("BadgeListItem", new
                           {

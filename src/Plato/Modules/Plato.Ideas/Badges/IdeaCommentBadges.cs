@@ -2,43 +2,43 @@
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
 
-namespace Plato.Discuss.Badges
+namespace Plato.Ideas.Badges
 {
-    public class ReplyBadges : IBadgesProvider<Badge>
+    public class IdeaCommentBadges : IBadgesProvider<Badge>
     {
 
         public static readonly Badge First =
-            new Badge("TopicReplyBadgesFirst", 
-                "First Reply", 
-                "Posted a new reply",
-                "fal fa-reply",
+            new Badge("IdeaCommentBadgesFirst",
+                "First Idea Comment",
+                "Posted an idea comment",
+                "fal fa-comment",
                 BadgeLevel.Bronze,
                 1,
                 0);
 
         public static readonly Badge Bronze =
-            new Badge("TopicReplyBadgesBronze",
-                "Responsive",
-                "Contributed several replies",
-                "fal fa-reply-all",
+            new Badge("IdeaCommentBadgesBronze",
+                "Idea Commenter",
+                "Posted several idea comments",
+                "fal fa-comment", 
                 BadgeLevel.Bronze,
                 25,
                 5);
 
         public static readonly Badge Silver =
-            new Badge("TopicReplyBadgesSilver",
-                "Staying Engaged",
-                "Contributed many replies",
-                "fal fa-coffee",
+            new Badge("IdeaCommentBadgesSilver",
+                "Idea Contributor",
+                "Contributed to several ideas",
+                "fal fa-comment",
                 BadgeLevel.Silver,
                 50,
                 10);
         
         public static readonly Badge Gold =
-            new Badge("TopicReplyBadgesGold",
-                "Philosopher",
-                "Made significant contributions",
-                "far fa-chess-king",
+            new Badge("IdeaCommentBadgesGold",
+                "Idea Patron",
+                "Contributed to dozens of ideas",
+                "far fa-comment",
                 BadgeLevel.Gold,
                 100,
                 20);

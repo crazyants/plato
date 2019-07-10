@@ -10,6 +10,8 @@ namespace Plato.Internal.Models.Badges
 
         string Name { get; set; }
 
+        string Title { get; set; }
+
         string Description { get; set; }
 
         string BackgroundIconCss { get; set; }

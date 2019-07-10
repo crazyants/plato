@@ -2,42 +2,42 @@
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
 
-namespace Plato.Discuss.Badges
+namespace Plato.Docs.Badges
 {
-    public class ReplyBadges : IBadgesProvider<Badge>
+    public class DocCommentBadges : IBadgesProvider<Badge>
     {
 
         public static readonly Badge First =
-            new Badge("TopicReplyBadgesFirst", 
-                "First Reply", 
-                "Posted a new reply",
+            new Badge("DocCommentBadgesFirst", 
+                "Assistant",
+                "Commented on a doc",
                 "fal fa-reply",
                 BadgeLevel.Bronze,
                 1,
                 0);
 
         public static readonly Badge Bronze =
-            new Badge("TopicReplyBadgesBronze",
-                "Responsive",
-                "Contributed several replies",
+            new Badge("DocCommentBadgesBronze", 
+                "Helper", 
+                "Commented within docs",
                 "fal fa-reply-all",
                 BadgeLevel.Bronze,
                 25,
                 5);
 
         public static readonly Badge Silver =
-            new Badge("TopicReplyBadgesSilver",
-                "Staying Engaged",
-                "Contributed many replies",
+            new Badge("DocCommentBadgesSilver", 
+                "Contributor",
+                "Commented on several docs",
                 "fal fa-coffee",
                 BadgeLevel.Silver,
                 50,
                 10);
         
         public static readonly Badge Gold =
-            new Badge("TopicReplyBadgesGold",
-                "Philosopher",
-                "Made significant contributions",
+            new Badge("DocCommentBadgesGold",
+                "Advocate",
+                "Helped improve many docs",
                 "far fa-chess-king",
                 BadgeLevel.Gold,
                 100,

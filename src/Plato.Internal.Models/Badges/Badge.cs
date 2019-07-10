@@ -6,8 +6,7 @@ namespace Plato.Internal.Models.Badges
 
     public class Badge : IBadge
     {
-
-        private string _name;
+        private string _title;
 
         private string _description;
 
@@ -18,15 +17,17 @@ namespace Plato.Internal.Models.Badges
 
         public string Category { get; set; }
 
-        public string Name
+        public string Name { get; set; }
+
+        public string Title
         {
-            get => _name.Replace("{threshold}", this.Threshold.ToString());
-            set => _name = value;
+            get => _title?.Replace("{threshold}", this.Threshold.ToString());
+            set => _title = value;
         }
 
         public string Description
         {
-            get => _description.Replace("{threshold}", this.Threshold.ToString());
+            get => _description?.Replace("{threshold}", this.Threshold.ToString());
             set => _description = value;
         }
 
@@ -53,128 +54,144 @@ namespace Plato.Internal.Models.Badges
 
         public Badge(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name)); ;
+            Name = name ?? throw new ArgumentNullException(nameof(name)); 
         }
 
-        public Badge(string name,string description) : this(name)
+        public Badge(string name, string title) : this(name)
         {
-            this.Description = description ?? throw new ArgumentNullException(nameof(description)); ;
+            Title = title ?? throw new ArgumentNullException(nameof(title)); 
+        }
+        
+        public Badge(string name, string title, string description) : this(name, title)
+        {
+            Description = description ?? throw new ArgumentNullException(nameof(description)); ;
         }
         
         public Badge(
             string name,
+            string title,
             string description,
-            string backgroundIconCss) : this(name, description)
+            string backgroundIconCss) : this(name, title, description)
         {
-            this.BackgroundIconCss = backgroundIconCss;
+            BackgroundIconCss = backgroundIconCss;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
             string backgroundIconCss,
-            string iconCss) : this(name, description, backgroundIconCss)
+            string iconCss) : this(name, title, description, backgroundIconCss)
         {
-            this.IconCss = iconCss;
+            IconCss = iconCss;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
             string iconCss,
-            BadgeLevel level) : this(name, description, "fas fa-badge", iconCss)
+            BadgeLevel level) : this(name, title, description, "fas fa-badge", iconCss)
         {
-            this.Level = level;
+            Level = level;
         }
         public Badge(
             string name,
+            string title,
             string description,
             string backgroundIconCss,
             string iconCss,
-            BadgeLevel level) : this(name, description, backgroundIconCss, iconCss)
+            BadgeLevel level) : this(name, title, description, backgroundIconCss, iconCss)
         {
-            this.Level = level;
+            Level = level;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
-            BadgeLevel level) : this(name, description)
+            BadgeLevel level) : this(name, title, description)
         {
-            this.Level = level;
+            Level = level;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
             string backgroundIconCss,
             string iconCss,
             BadgeLevel level,
-            int threshold) : this(name, description, backgroundIconCss, iconCss, level)
+            int threshold) : this(name, title, description, backgroundIconCss, iconCss, level)
         {
-            this.Threshold = ThresholdMultiplier > 0
+            Threshold = ThresholdMultiplier > 0
                 ? threshold * ThresholdMultiplier
                 : threshold;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
             string iconCss,
             BadgeLevel level,
-            int threshold) : this(name, description, "fas fa-badge", iconCss, level)
+            int threshold) : this(name, title, description, "fas fa-badge", iconCss, level)
         {
-            this.Threshold = Badge.ThresholdMultiplier > 0
+            Threshold = Badge.ThresholdMultiplier > 0
                 ? threshold * ThresholdMultiplier
                 : threshold;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
             string iconCss,
             BadgeLevel level,
             int threshold,
-            int bonusPoints) : this(name, description, "fas fa-badge", iconCss, level, threshold)
+            int bonusPoints) : this(name, title, description, "fas fa-badge", iconCss, level, threshold)
         {
-            this.BonusPoints = PointsMultiplier > 0 
+            BonusPoints = PointsMultiplier > 0 
                 ? bonusPoints * PointsMultiplier
                 : bonusPoints;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
             BadgeLevel level,
-            int threshold) : this(name, description, level)
+            int threshold) : this(name, title, description, level)
         {
-            this.Threshold = ThresholdMultiplier > 0 
+            Threshold = ThresholdMultiplier > 0 
                 ? threshold * ThresholdMultiplier
                 : threshold;
         }
 
         public Badge(
             string name,
+            string title,
             string description,
             string backgroundIconCss,
             string iconCss,
             BadgeLevel level,
             int threshold,
-            int bonusPoints) : this(name, description, backgroundIconCss, iconCss, level, threshold)
+            int bonusPoints) : this(name, title, description, backgroundIconCss, iconCss, level, threshold)
         {
-            this.BonusPoints = Badge.PointsMultiplier > 0
+            BonusPoints = Badge.PointsMultiplier > 0
                 ? bonusPoints * PointsMultiplier
                 : bonusPoints;
         }
         
         public Badge(
             string name,
+            string title,
             string description,
             BadgeLevel level,
             int threshold,
-            int bonusPoints) : this(name, description, level, threshold)
+            int bonusPoints) : this(name, title, description, level, threshold)
         {
-            this.BonusPoints = PointsMultiplier > 0
+            BonusPoints = PointsMultiplier > 0
                 ? bonusPoints * PointsMultiplier
                 : bonusPoints;
         }

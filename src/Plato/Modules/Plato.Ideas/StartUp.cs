@@ -118,8 +118,8 @@ namespace Plato.Ideas
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<IdeaComment>>();
 
             // Badge providers
-            services.AddScoped<IBadgesProvider<Badge>, ArticleBadges>();
-            services.AddScoped<IBadgesProvider<Badge>, CommentBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, IdeaBadges>();
+            services.AddScoped<IBadgesProvider<Badge>, IdeaCommentBadges>();
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, ArticleBadgesAwarder>();

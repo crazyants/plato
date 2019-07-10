@@ -2,45 +2,45 @@
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
 
-namespace Plato.Discuss.Badges
+namespace Plato.Ideas.Badges
 {
-    public class ReplyBadges : IBadgesProvider<Badge>
+    public class IdeaBadges : IBadgesProvider<Badge>
     {
 
         public static readonly Badge First =
-            new Badge("TopicReplyBadgesFirst", 
-                "First Reply", 
-                "Posted a new reply",
-                "fal fa-reply",
+            new Badge("IdeaBadgesFirst",
+                "First Idea",
+                "Posted an idea",
+                "fal fa-light-bulb",
                 BadgeLevel.Bronze,
                 1,
                 0);
 
         public static readonly Badge Bronze =
-            new Badge("TopicReplyBadgesBronze",
-                "Responsive",
-                "Contributed several replies",
-                "fal fa-reply-all",
+            new Badge("IdeaBadgesBronze",
+                "Inventive",
+                "Posted several ideas",
+                "fal fa-pencil",
                 BadgeLevel.Bronze,
-                25,
+                10,
                 5);
 
         public static readonly Badge Silver =
-            new Badge("TopicReplyBadgesSilver",
-                "Staying Engaged",
-                "Contributed many replies",
-                "fal fa-coffee",
+            new Badge("IdeaBadgesSilver",
+                "Full of Em",
+                "Contributed many ideas",
+                "fal fa-pencil", 
                 BadgeLevel.Silver,
-                50,
+                25,
                 10);
         
         public static readonly Badge Gold =
-            new Badge("TopicReplyBadgesGold",
-                "Philosopher",
-                "Made significant contributions",
-                "far fa-chess-king",
+            new Badge("IdeaBadgesGold",
+                "Ideator",
+                "Contributed dozens of ideas",
+                "fal fa-pencil-ruler",
                 BadgeLevel.Gold,
-                100,
+                50,
                 20);
 
         public IEnumerable<Badge> GetBadges()

@@ -7,26 +7,49 @@ namespace Plato.Discuss.Reactions.Badges
     public class ReactionBadges : IBadgesProvider<Badge>
     {
 
-        public static readonly Badge FirstReactor =
-            new Badge("First Reaction", "Added a reaction", "fal fa-thumbs-up", BadgeLevel.Bronze, 1);
+        public static readonly Badge First =
+            new Badge("DiscussReactionBadgesFirst", 
+                "First Topic Reaction",
+                "Added a topic reaction",
+                "fal fa-thumbs-up",
+                BadgeLevel.Bronze,
+                1);
         
-        public static readonly Badge BronzeReactor =
-            new Badge("New Reactor", "Added {threshold} reactions", "fal fa-smile", BadgeLevel.Bronze, 5, 2);
+        public static readonly Badge Bronze =
+            new Badge("DiscussReactionBadgesBronze",
+                "New Topic Reactor",
+                "Added {threshold} topic reactions",
+                "fal fa-smile",
+                BadgeLevel.Bronze,
+                5,
+                2);
 
-        public static readonly Badge SilverReactor =
-            new Badge("Reactor", "Added {threshold} reactions", "fal fa-bullhorn", BadgeLevel.Silver, 25, 10);
+        public static readonly Badge Silver =
+            new Badge("DiscussReactionBadgesSilver",
+                "Topic Reactor",
+                "Added {threshold} topic reactions",
+                "fal fa-bullhorn",
+                BadgeLevel.Silver,
+                25,
+                10);
 
-        public static readonly Badge GoldReactor =
-            new Badge("Chain Reactor", "Added {threshold} reactions", "fal fa-hands-heart", BadgeLevel.Gold, 50, 25);
+        public static readonly Badge Gold =
+            new Badge("DiscussReactionBadgesGold",
+                "Chain Topic Reactor",
+                "Added {threshold} topic reactions",
+                "fal fa-hands-heart", 
+                BadgeLevel.Gold,
+                50, 
+                25);
         
         public IEnumerable<Badge> GetBadges()
         {
             return new[]
             {
-                FirstReactor,
-                BronzeReactor,
-                SilverReactor,
-                GoldReactor
+                First,
+                Bronze,
+                Silver,
+                Gold
             };
 
         }
