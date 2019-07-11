@@ -13,8 +13,7 @@
         @if (Model.IsVerifiedUpdatedUser != null)
         {
             <span class="is-verified">
-                @T["Added to Verified by"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsVerifiedUpdatedUser.Id">@Model.IsVerifiedUpdatedUser.DisplayName</a>, <date utc="Model.IsVerifiedUpdatedDate"></date>
+                @T["Verified by"] <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsVerifiedUpdatedUser.Id">@Model.IsVerifiedUpdatedUser.DisplayName</a>, <date utc="Model.IsVerifiedUpdatedDate"></date>
             </span>
         }
         else
@@ -38,8 +37,7 @@
         @if (Model.IsStaffUpdatedUser != null)
         {
             <span class="is-staff">
-                @T["Added to Staff by"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsStaffUpdatedUser.Id">@Model.IsStaffUpdatedUser.DisplayName</a>, <date utc="Model.IsStaffUpdatedDate"></date>
+                @T["Added to Staff by"] <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsStaffUpdatedUser.Id">@Model.IsStaffUpdatedUser.DisplayName</a>, <date utc="Model.IsStaffUpdatedDate"></date>
             </span>
         }
         else
@@ -58,13 +56,12 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveSpam" asp-route-id="@Model.Id">
                 @T["Remove SPAM"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["Contributions from this user will be automatically flagged as SPAM and will only be visible to those with permission to view SPAM content."]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from other users and contributions will be automatically flagged as SPAM and will only be visible to those with permission to view SPAM content. You will still see this user via the administrator dashboard until deleted"]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsSpamUpdatedUser != null)
         {
             <span class="is-spam">
-                @T["Added to SPAM by"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsSpamUpdatedUser.Id">@Model.IsSpamUpdatedUser.DisplayName</a>, <date utc="Model.IsSpamUpdatedDate"></date>
+                @T["Added to SPAM by"] <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsSpamUpdatedUser.Id">@Model.IsSpamUpdatedUser.DisplayName</a>, <date utc="Model.IsSpamUpdatedDate"></date>
             </span>
         }
         else
@@ -83,13 +80,12 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveBan" asp-route-id="@Model.Id">
                 @T["Remove Ban"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["A banned user cannot login or post any new contributions."]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from other users and cannot login or post any new contributions. You will still see this user via the administrator dashboard until deleted"]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsBannedUpdatedUser != null)
         {
             <span class="is-banned">
-                @T["Banned by"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsBannedUpdatedUser.Id">@Model.IsBannedUpdatedUser.DisplayName</a>, <date utc="Model.IsBannedUpdatedDate"></date>
+                @T["Banned by"] <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsBannedUpdatedUser.Id">@Model.IsBannedUpdatedUser.DisplayName</a>, <date utc="Model.IsBannedUpdatedDate"></date>
             </span>
         }
         else

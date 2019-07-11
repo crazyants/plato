@@ -11,15 +11,32 @@
             </a>
         </div>
         <div class="list-body">
+            
+            <div class="float-right">
+                
+                @if (Model.IsVerified)
+                {
+                    <i title="@T["Verified Member"]" class="is-verified d-inline-block" data-provide="tooltip"></i>
+                }
 
-            @if (Model.IsVerified)
-            {
-                <div data-provide="tooltip" title="@T["Verified Member"]" class="badge badge-md badge-primary rounded-circle float-right">
-                    <i class="fal fa-check"></i>
-                </div>
-            }
+                @if (Model.IsStaff)
+                {
+                    <i title="@T["Staff Member"]" class="is-staff d-inline-block" data-provide="tooltip"></i>
+                }
 
-            <h6 class="d-inline-block m-0 p-0 text-truncate @Model.Css.DisplayName">@Model.DisplayName</h6>
+                @if (Model.IsSpam)
+                {
+                    <i title="@T["Flagged As SPAM"]" class="is-spam d-inline-block" data-provide="tooltip"></i>
+                }
+
+                @if (Model.IsBanned)
+                {
+                    <i title="@T["Banned"]" class="is-banned d-inline-block" data-provide="tooltip"></i>
+                }
+                
+            </div>
+
+            <h6 class="d-inline-block text-truncate">@Model.DisplayName</h6>
 
             @if (!String.IsNullOrEmpty(Model.Biography))
             {

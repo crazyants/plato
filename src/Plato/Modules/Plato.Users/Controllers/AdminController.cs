@@ -817,6 +817,11 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
 
+            // Reset staff status
+            currentUser.IsStaff = false;
+            currentUser.IsStaffUpdatedUserId = 0;
+            currentUser.IsStaffUpdatedDate = null;
+            
             // Reset verified status
             currentUser.IsVerified = false;
             currentUser.IsVerifiedUpdatedUserId = 0;
@@ -925,7 +930,17 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-            
+
+            // Reset staff status
+            currentUser.IsStaff = false;
+            currentUser.IsStaffUpdatedUserId = 0;
+            currentUser.IsStaffUpdatedDate = null;
+
+            // Reset verified status
+            currentUser.IsVerified = false;
+            currentUser.IsVerifiedUpdatedUserId = 0;
+            currentUser.IsVerifiedUpdatedDate = null;
+
             // Update spam status
             currentUser.IsSpam = true;
             currentUser.IsSpamUpdatedUserId = user.Id;

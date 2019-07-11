@@ -1,12 +1,33 @@
 ﻿@model User
 
+
+
+
 <h4 class="d-inline-block">@Model.DisplayName</h4>
+
+
 @if (Model.IsVerified)
 {
-    <div data-provide="tooltip" title="@T["Verified Member"]" class="badge badge-sm badge-primary rounded-circle align-top mt-1">
-        <i class="fal fa-check"></i>
-    </div>
+    <i title="@T["Verified Member"]" class="is-verified d-inline-block" data-provide="tooltip"></i>
 }
+
+@if (Model.IsStaff)
+{
+    <i title="@T["Staff Member"]" class="is-staff d-inline-block" data-provide="tooltip"></i>
+}
+
+@if (Model.IsSpam)
+{
+    <i title="@T["Flagged As SPAM"]" class="is-spam d-inline-block" data-provide="tooltip"></i>
+}
+
+@if (Model.IsBanned)
+{
+    <i title="@T["Banned"]" class="is-banned d-inline-block" data-provide="tooltip"></i>
+}
+
+
+
 <div class="text-muted">
     @T["Joined "] <date utc="@Model.CreatedDate"></date>,
     @T["Seen:"] <date utc="@Model.LastLoginDate"></date>
