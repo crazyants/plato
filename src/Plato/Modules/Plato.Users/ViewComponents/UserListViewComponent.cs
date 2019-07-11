@@ -30,11 +30,6 @@ namespace Plato.Users.ViewComponents
             },
             new Filter()
             {
-                Text = "Unconfirmed",
-                Value = FilterBy.NotConfirmed
-            },
-            new Filter()
-            {
                 Text = "Verified",
                 Value = FilterBy.Verified
             },
@@ -42,6 +37,15 @@ namespace Plato.Users.ViewComponents
             {
                 Text = "Staff",
                 Value = FilterBy.Staff
+            },
+            new Filter()
+            {
+                Text = "-" // represents menu divider
+            },
+            new Filter()
+            {
+                Text = "Unconfirmed",
+                Value = FilterBy.Unconfirmed
             },
             new Filter()
             {

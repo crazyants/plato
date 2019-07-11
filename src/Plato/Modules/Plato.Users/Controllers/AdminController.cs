@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,13 +26,14 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IUserEmails _userEmails;
+        private readonly IUserSecurityStampStore<User> _securityStampStore;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IViewProviderManager<User> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
-        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IContextFacade _contextFacade;
+        private readonly IUserEmails _userEmails;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -41,23 +43,26 @@ namespace Plato.Users.Controllers
         public AdminController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
+            IUserSecurityStampStore<User> securityStampStore,
+            IAuthorizationService authorizationService,
+            IPlatoUserManager<User> platoUserManager,
             IViewProviderManager<User> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager,
-            IAlerter alerter,
-            IPlatoUserManager<User> platoUserManager,
             IContextFacade contextFacade,
-            IAuthorizationService authorizationService,
-            IUserEmails userEmails)
+            IUserEmails userEmails,
+            IAlerter alerter)
         {
-            _viewProvider = viewProvider;
-            _userManager = userManager;
+
+            _authorizationService = authorizationService;
+            _securityStampStore = securityStampStore;
             _breadCrumbManager = breadCrumbManager;
-            _alerter = alerter;
             _platoUserManager = platoUserManager;
             _contextFacade = contextFacade;
-            _authorizationService = authorizationService;
+            _viewProvider = viewProvider;
+            _userManager = userManager;
             _userEmails = userEmails;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -712,7 +717,17 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-            
+
+            // Reset spam status
+            currentUser.IsSpam = false;
+            currentUser.IsSpamUpdatedUserId = 0;
+            currentUser.IsSpamUpdatedDate = null;
+
+            // Reset banned status
+            currentUser.IsBanned = false;
+            currentUser.IsBannedUpdatedUserId = 0;
+            currentUser.IsBannedUpdatedDate = null;
+
             // Update staff status
             currentUser.IsStaff = true;
             currentUser.IsStaffUpdatedUserId = user.Id;
@@ -790,7 +805,6 @@ namespace Plato.Users.Controllers
 
         }
         
-       
         // ------------
         // Flag As Spam
         // ------------
@@ -831,12 +845,16 @@ namespace Plato.Users.Controllers
             // Update spam status
             currentUser.IsSpam = true;
             currentUser.IsSpamUpdatedUserId = user.Id;
-            currentUser.IsSpamUpdatedDate = DateTimeOffset.UtcNow; 
-            
+            currentUser.IsSpamUpdatedDate = DateTimeOffset.UtcNow;
+
+            // Invalidate security stamp to force a re-login
+            await _securityStampStore.SetSecurityStampAsync(currentUser, System.Guid.NewGuid().ToString(), new CancellationToken());
+
             // Update user
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
+                // Add confirmation
                 _alerter.Success(T["User added to SPAM successfully!"]);
             }
             else
@@ -947,10 +965,14 @@ namespace Plato.Users.Controllers
             currentUser.IsBannedUpdatedUserId = user.Id;
             currentUser.IsBannedUpdatedDate = DateTimeOffset.UtcNow;
 
+            // Invalidate security stamp to force a re-login
+            await _securityStampStore.SetSecurityStampAsync(currentUser, System.Guid.NewGuid().ToString(), new CancellationToken());
+
             // Update user
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
             {
+                // Add confirmation
                 _alerter.Success(T["User Banned Successfully!"]);
             }
             else

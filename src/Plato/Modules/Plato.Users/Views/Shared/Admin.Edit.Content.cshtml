@@ -7,7 +7,7 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="InvalidateUser" asp-route-id="@Model.Id">
                 @T["Remove Verified"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["A verified user is someone who has been manually identified as a genuine human by a site administrator or staff member. Verified users may skip some automated SPAM protection."]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["A verified user is someone who has been manually identified as a genuine human by a site administrator or staff member. Verified users will receive a special icon and can skip some SPAM protections."]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsVerifiedUpdatedUser != null)
         {
@@ -31,7 +31,7 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="FromStaff" asp-route-id="@Model.Id">
                 @T["Remove Staff"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["A staff user is someone who represents a trusted user within your organization. Staff users will receive a special icon and will skip all automated SPAM protections."]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["A staff user is someone who represents a trusted user within your organization. Staff users will receive a special icon and will skip all SPAM protections."]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsStaffUpdatedUser != null)
         {
@@ -55,7 +55,7 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveSpam" asp-route-id="@Model.Id">
                 @T["Remove SPAM"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from other users and contributions will be automatically flagged as SPAM and will only be visible to those with permission to view SPAM content. You will still see this user via the administrator dashboard until deleted"]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from regular users and and only visible via the admin dashboard. Contributions from this user will be automatically flagged as SPAM and will only be visible to those with permission to view contributions flagged as SPAM."]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsSpamUpdatedUser != null)
         {
@@ -79,7 +79,7 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveBan" asp-route-id="@Model.Id">
                 @T["Remove Ban"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from other users and cannot login or post any new contributions. You will still see this user via the administrator dashboard until deleted"]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from regular users and and only visible via the admin dashboard. Banned users cannot login or post new contributions."]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsBannedUpdatedUser != null)
         {

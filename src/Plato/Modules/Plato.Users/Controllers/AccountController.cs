@@ -167,11 +167,39 @@ namespace Plato.Users.Controllers
                 if (result.Succeeded)
                 {
                     
-                    if (_logger.IsEnabled(LogLevel.Information))
+                    // Post-authentication checks
+                    var user = await _userManager.FindByNameAsync(model.UserName);
+                    if (user != null)
                     {
-                        _logger.LogInformation(1, "User logged in.");
+
+                        var signOut = false;
+                        if (user.IsSpam)
+                        {
+                            signOut = true;
+                            ModelState.AddModelError(string.Empty, "You cannot login as your account has been flagged as SPAM");
+                            if (_logger.IsEnabled(LogLevel.Information))
+                            {
+                                _logger.LogInformation(1, $"A user flagged as SPAM \"{user.UserName}\" attempted to login but was automatically denied.");
+                            }
+                        }
+                        
+                        if (user.IsBanned)
+                        {
+                            signOut = true;
+                            ModelState.AddModelError(string.Empty, "You cannot login as your account has been banned");
+                            if (_logger.IsEnabled(LogLevel.Information))
+                            {
+                                _logger.LogInformation(1, $"A banned user \"{user.UserName}\" attempted to login but was automatically denied.");
+                            }
+                        }
+                        
+                        if (signOut)
+                        {
+                            await _signInManager.SignOutAsync();
+                        }
+                        
                     }
-                    
+
                     // Execute view providers update method
                     var viewResult = await _loginViewProvider.ProvideUpdateAsync(userLogin, this);
 
@@ -183,8 +211,8 @@ namespace Plato.Users.Controllers
                     }
 
                     // Display errors from Update method
-                    return View(viewResult);
-                    
+                    return View((LayoutViewModel) viewResult);
+
                 }
 
                 if (result.RequiresTwoFactor)
@@ -224,7 +252,7 @@ namespace Plato.Users.Controllers
                         }
                     }
                 }
-
+                
                 // Invalid login credentials
                 if (ModelState.ErrorCount == 0)
                 {

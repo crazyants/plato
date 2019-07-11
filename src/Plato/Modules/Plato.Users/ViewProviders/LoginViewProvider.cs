@@ -13,29 +13,16 @@ namespace Plato.Users.ViewProviders
 {
     public class LoginViewProvider : BaseViewProvider<UserLogin>
     {
-
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<LoginViewProvider> _logger;
-        private readonly IOptions<IdentityOptions> _identityOptions;
-
+        
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
 
         public LoginViewProvider(
             IHtmlLocalizer htmlLocalizer,
-            IStringLocalizer stringLocalizer,
-            SignInManager<User> signInManager,
-            ILogger<LoginViewProvider> logger,
-            IOptions<IdentityOptions> identityOptions,
-            UserManager<User> userManager)
+            IStringLocalizer stringLocalizer)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _identityOptions = identityOptions;
-            _logger = logger;
-
+     
             T = htmlLocalizer;
             S = stringLocalizer;
 
