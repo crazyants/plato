@@ -27,7 +27,7 @@ namespace Plato.Docs.Badges
 
         public static readonly Badge Silver =
             new Badge("DocCommentBadgesSilver", 
-                "Contributor",
+                "Doc Contributor",
                 "Commented on several docs",
                 "fal fa-coffee",
                 BadgeLevel.Silver,
@@ -36,7 +36,7 @@ namespace Plato.Docs.Badges
         
         public static readonly Badge Gold =
             new Badge("DocCommentBadgesGold",
-                "Advocate",
+                "Doc Advocate",
                 "Helped improve many docs",
                 "far fa-chess-king",
                 BadgeLevel.Gold,

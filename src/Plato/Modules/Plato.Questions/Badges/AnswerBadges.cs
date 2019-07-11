@@ -10,8 +10,8 @@ namespace Plato.Questions.Badges
         public static readonly Badge First =
             new Badge(
                 "QuestionAnswerBadgesFirst",
-                "First Comment",
-                "Posted an answer",
+                "First Answer",
+                "Posted a question answer",
                 "fal fa-check-circle",
                 BadgeLevel.Bronze,
                 1,
@@ -19,8 +19,8 @@ namespace Plato.Questions.Badges
 
         public static readonly Badge Bronze =
             new Badge("QuestionAnswerBadgesBronze",
-                "Commenter",
-                "Posted several answers",
+                "Answerer",
+                "Posted several question answers",
                 "fal fa-check-circle",
                 BadgeLevel.Bronze,
                 25,
@@ -28,7 +28,7 @@ namespace Plato.Questions.Badges
 
         public static readonly Badge Silver =
             new Badge("QuestionAnswerBadgesSilver",
-                "Contributor",
+                "Prophet",
                 "Contributed to many questions",
                 "fal fa-check-circle",
                 BadgeLevel.Silver,
@@ -37,7 +37,7 @@ namespace Plato.Questions.Badges
         
         public static readonly Badge Gold =
             new Badge("QuestionAnswerBadgesGold",
-                "Patron",
+                "Quiz Master",
                 "Contributed to dozens of questions",
                 "far fa-check-circle",
                 BadgeLevel.Gold,

@@ -9,8 +9,8 @@ namespace Plato.Discuss.Badges
 
         public static readonly Badge First =
             new Badge("TopicReplyBadgesFirst", 
-                "First Reply", 
-                "Posted a new reply",
+                "First Topic Reply",
+                "Contributed within a topic",
                 "fal fa-reply",
                 BadgeLevel.Bronze,
                 1,
@@ -19,7 +19,7 @@ namespace Plato.Discuss.Badges
         public static readonly Badge Bronze =
             new Badge("TopicReplyBadgesBronze",
                 "Responsive",
-                "Contributed several replies",
+                "Contributed to several topics",
                 "fal fa-reply-all",
                 BadgeLevel.Bronze,
                 25,
@@ -28,7 +28,7 @@ namespace Plato.Discuss.Badges
         public static readonly Badge Silver =
             new Badge("TopicReplyBadgesSilver",
                 "Staying Engaged",
-                "Contributed many replies",
+                "Contributed to dozens of topics",
                 "fal fa-coffee",
                 BadgeLevel.Silver,
                 50,
@@ -37,7 +37,7 @@ namespace Plato.Discuss.Badges
         public static readonly Badge Gold =
             new Badge("TopicReplyBadgesGold",
                 "Philosopher",
-                "Made significant contributions",
+                "Contributed to many topics",
                 "far fa-chess-king",
                 BadgeLevel.Gold,
                 100,

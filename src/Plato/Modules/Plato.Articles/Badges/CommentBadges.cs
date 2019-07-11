@@ -9,7 +9,7 @@ namespace Plato.Articles.Badges
 
         public static readonly Badge First =
             new Badge("ArticleCommentBadgesFirst",
-                "First Comment",
+                "First Article Comment",
                 "Posted a comment",
                 "fal fa-comment",
                 BadgeLevel.Bronze,
@@ -18,6 +18,7 @@ namespace Plato.Articles.Badges
 
         public static readonly Badge Bronze =
             new Badge("ArticleCommentBadgesBronze",
+                "Article Commenter",
                 "Posted several comments",
                 "fal fa-comment",
                 BadgeLevel.Bronze,
@@ -26,7 +27,7 @@ namespace Plato.Articles.Badges
 
         public static readonly Badge Silver =
             new Badge("ArticleCommentBadgesSilver",
-                "Contributor",
+                "Article Contributor",
                 "Contributed to several articles",
                 "fal fa-comment",
                 BadgeLevel.Silver,
@@ -35,7 +36,7 @@ namespace Plato.Articles.Badges
 
         public static readonly Badge Gold =
             new Badge("ArticleCommentBadgesGold",
-                "Patron",
+                "Article Patron",
                 "Contributed to dozens of articles",
                 "far fa-comment",
                 BadgeLevel.Gold,

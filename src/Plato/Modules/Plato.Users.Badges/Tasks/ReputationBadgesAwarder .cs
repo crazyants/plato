@@ -61,17 +61,17 @@ namespace Plato.Users.Badges.Tasks
         
         public IEnumerable<Badge> Badges => new[]
         {
-            ReputationBadges.Reputation100,
-            ReputationBadges.Reputation500,
-            ReputationBadges.Reputation1000
+            ReputationBadges.Bronze,
+            ReputationBadges.Silver,
+            ReputationBadges.Gold
         };
         
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbHelper _dbHelper;
-        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDbHelper _dbHelper;
 
         public ReputationBadgesAwarder(
             ICacheManager cacheManager,

@@ -17,7 +17,7 @@ namespace Plato.Questions.Tags.Badges
         
         public static readonly Badge Bronze =
             new Badge("QuestionsTagBadgesBronze",
-                "Tagger",
+                "Question Tagger",
                 "Added {threshold} question tags",
                 "fal fa-tag",
                 BadgeLevel.Bronze,
@@ -26,7 +26,7 @@ namespace Plato.Questions.Tags.Badges
 
         public static readonly Badge Silver =
             new Badge("QuestionsTagBadgesSilver",
-                "Tag Artist",
+                "Question Tag Artist",
                 "Added {threshold} question tags",
                 "fal fa-tag",
                 BadgeLevel.Silver,
@@ -35,7 +35,7 @@ namespace Plato.Questions.Tags.Badges
 
         public static readonly Badge Gold =
             new Badge("QuestionsTagBadgesGold",
-                "Taxonomist",
+                "Question Taxonomist",
                 "Added {threshold} question tags",
                 "fal fa-tag",
                 BadgeLevel.Gold,

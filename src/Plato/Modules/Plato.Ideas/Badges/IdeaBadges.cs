@@ -11,7 +11,7 @@ namespace Plato.Ideas.Badges
             new Badge("IdeaBadgesFirst",
                 "First Idea",
                 "Posted an idea",
-                "fal fa-light-bulb",
+                "fal fa-lightbulb",
                 BadgeLevel.Bronze,
                 1,
                 0);
@@ -20,7 +20,7 @@ namespace Plato.Ideas.Badges
             new Badge("IdeaBadgesBronze",
                 "Inventive",
                 "Posted several ideas",
-                "fal fa-pencil",
+                "fal fa-lightbulb",
                 BadgeLevel.Bronze,
                 10,
                 5);
@@ -29,7 +29,7 @@ namespace Plato.Ideas.Badges
             new Badge("IdeaBadgesSilver",
                 "Full of Em",
                 "Contributed many ideas",
-                "fal fa-pencil", 
+                "fal fa-lightbulb", 
                 BadgeLevel.Silver,
                 25,
                 10);
@@ -38,7 +38,7 @@ namespace Plato.Ideas.Badges
             new Badge("IdeaBadgesGold",
                 "Ideator",
                 "Contributed dozens of ideas",
-                "fal fa-pencil-ruler",
+                "fal fa-lightbulb",
                 BadgeLevel.Gold,
                 50,
                 20);

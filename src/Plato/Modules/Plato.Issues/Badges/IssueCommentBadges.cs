@@ -9,7 +9,7 @@ namespace Plato.Issues.Badges
 
         public static readonly Badge First =
             new Badge("IssueCommentBadgesFirst",
-                "First Comment",
+                "First Issue Comment",
                 "Posted an issue comment",
                 "fal fa-comment",
                 BadgeLevel.Bronze,
@@ -18,7 +18,7 @@ namespace Plato.Issues.Badges
 
         public static readonly Badge Bronze =
             new Badge("IssueCommentBadgesBronze",
-                "Assistant",
+                "Issue Assistant",
                 "Posted several issue comments",
                 "fal fa-comment",
                 BadgeLevel.Bronze,
@@ -27,7 +27,7 @@ namespace Plato.Issues.Badges
 
         public static readonly Badge Silver =
             new Badge("IssueCommentBadgesSilver",
-                "Resolver",
+                "Issue Resolver",
                 "Contributed to several issues",
                 "fal fa-comment",
                 BadgeLevel.Silver,
@@ -36,7 +36,7 @@ namespace Plato.Issues.Badges
         
         public static readonly Badge Gold =
             new Badge("IssueCommentBadgesGold",
-                "Diligent Resolver",
+                "Diligent Issue Resolver",
                 "Contributed to dozens of issues",
                 "far fa-comment",
                 BadgeLevel.Gold,
