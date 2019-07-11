@@ -66,18 +66,18 @@ namespace Plato.Questions.Tags.Tasks
 
         public IEnumerable<Badge> Badges => new[]
         {
-            TagBadges.FirstTag,
-            TagBadges.BronzeTag,
-            TagBadges.SilverTag,
-            TagBadges.GoldTAg
+            TagBadges.First,
+            TagBadges.Bronze,
+            TagBadges.Silver,
+            TagBadges.Gold
         };
         
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbHelper _dbHelper;
-        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDbHelper _dbHelper;
 
         public TagBadgesAwarder(
             ICacheManager cacheManager,

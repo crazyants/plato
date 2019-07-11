@@ -66,10 +66,10 @@ namespace Plato.Ideas.Tags.Tasks
 
         public IEnumerable<Badge> Badges => new[]
         {
-            TagBadges.FirstTag,
-            TagBadges.BronzeTag,
-            TagBadges.SilverTag,
-            TagBadges.GoldTAg
+            TagBadges.First,
+            TagBadges.Bronze,
+            TagBadges.Silver,
+            TagBadges.Gold
         };
         
         private readonly ICacheManager _cacheManager;
