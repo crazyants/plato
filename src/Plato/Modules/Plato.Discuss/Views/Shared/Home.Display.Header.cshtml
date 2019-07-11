@@ -31,8 +31,9 @@
     <ul class="list-inline p-0 m-0">
         <li class="list-inline-item">
             <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-            @T["by"]
-            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias" data-provide="popper" data-popper-url="@Model.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom">@Model.CreatedBy.DisplayName</a>
+        </li>
+        <li class="list-inline-item">
+            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.CreatedUserId" asp-route-opts.alias="@Model.CreatedBy.Alias" data-provide="popper" data-popper-url="@Model.CreatedBy.Urls.GetProfileUrl" data-popper-position="bottom" class="@Model.CreatedBy.Css.DisplayName">@Model.CreatedBy.DisplayName</a>
         </li>
         <li class="list-inline-item">
             @Model.TotalReplies.ToPrettyInt() @T[replies]

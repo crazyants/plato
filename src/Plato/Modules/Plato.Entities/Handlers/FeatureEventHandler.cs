@@ -727,18 +727,30 @@ namespace Plato.Entities.Handlers
                                     c.PhotoUrl AS CreatedPhotoUrl,
                                     c.PhotoColor AS CreatedPhotoColor,
                                     c.SignatureHtml AS CreatedSignatureHtml,
+                                    c.IsVerified AS CreatedIsVerified,
+                                    c.IsStaff AS CreatedIsStaff,
+                                    c.IsSpam AS CreatedIsSpam,
+                                    c.IsBanned AS CreatedIsBanned,
                                     m.UserName AS ModifiedUserName,                                 
                                     m.DisplayName AS ModifiedDisplayName,                                
                                     m.Alias AS ModifiedAlias,
                                     m.PhotoUrl AS ModifiedPhotoUrl,
                                     m.PhotoColor AS ModifiedPhotoColor,
                                     m.SignatureHtml AS ModifiedSignatureHtml,
+                                    m.IsVerified AS ModifiedIsVerified,
+                                    m.IsStaff AS ModifiedIsStaff,
+                                    m.IsSpam AS ModifiedIsSpam,
+                                    m.IsBanned AS ModifiedIsBanned,
                                     l.UserName AS LastReplyUserName,                                
                                     l.DisplayName AS LastReplyDisplayName,                                  
                                     l.Alias AS LastReplyAlias,
                                     l.PhotoUrl AS LastReplyPhotoUrl,
                                     l.PhotoColor AS LastReplyPhotoColor,
-                                    l.SignatureHtml AS LastReplySignatureHtml
+                                    l.SignatureHtml AS LastReplySignatureHtml,
+                                    l.IsVerified AS LastReplyIsVerified,
+                                    l.IsStaff AS LastReplyIsStaff,
+                                    l.IsSpam AS LastReplyIsSpam,
+                                    l.IsBanned AS LastReplyIsBanned
                                 FROM {prefix}_Entities e WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
@@ -763,18 +775,30 @@ namespace Plato.Entities.Handlers
                                     c.PhotoUrl AS CreatedPhotoUrl,
                                     c.PhotoColor AS CreatedPhotoColor,
                                     c.SignatureHtml AS CreatedSignatureHtml,
+                                    c.IsVerified AS CreatedIsVerified,
+                                    c.IsStaff AS CreatedIsStaff,
+                                    c.IsSpam AS CreatedIsSpam,
+                                    c.IsBanned AS CreatedIsBanned,
                                     m.UserName AS ModifiedUserName,                                 
                                     m.DisplayName AS ModifiedDisplayName,                                
                                     m.Alias AS ModifiedAlias,
                                     m.PhotoUrl AS ModifiedPhotoUrl,
                                     m.PhotoColor AS ModifiedPhotoColor,
                                     m.SignatureHtml AS ModifiedSignatureHtml,
+                                    m.IsVerified AS ModifiedIsVerified,
+                                    m.IsStaff AS ModifiedIsStaff,
+                                    m.IsSpam AS ModifiedIsSpam,
+                                    m.IsBanned AS ModifiedIsBanned,
                                     l.UserName AS LastReplyUserName,                                
                                     l.DisplayName AS LastReplyDisplayName,                                  
                                     l.Alias AS LastReplyAlias,
                                     l.PhotoUrl AS LastReplyPhotoUrl,
                                     l.PhotoColor AS LastReplyPhotoColor,
-                                    l.SignatureHtml AS LastReplySignatureHtml
+                                    l.SignatureHtml AS LastReplySignatureHtml,
+                                    l.IsVerified AS LastReplyIsVerified,
+                                    l.IsStaff AS LastReplyIsStaff,
+                                    l.IsSpam AS LastReplyIsSpam,
+                                    l.IsBanned AS LastReplyIsBanned
                                 FROM {prefix}_Entities e WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
@@ -858,12 +882,20 @@ namespace Plato.Entities.Handlers
                                     c.PhotoUrl AS CreatedPhotoUrl,
                                     c.PhotoColor AS CreatedPhotoColor,
                                     c.SignatureHtml AS CreatedSignatureHtml,
+                                    c.IsVerified AS CreatedIsVerified,
+                                    c.IsStaff AS CreatedIsStaff,
+                                    c.IsSpam AS CreatedIsSpam,
+                                    c.IsBanned AS CreatedIsBanned,
                                     m.UserName AS ModifiedUserName,                                    
                                     m.DisplayName AS ModifiedDisplayName,                                
                                     m.Alias AS ModifiedAlias,
                                     m.PhotoUrl AS ModifiedPhotoUrl,
                                     m.PhotoColor AS ModifiedPhotoColor,
-                                    m.SignatureHtml AS ModifiedSignatureHtml
+                                    m.SignatureHtml AS ModifiedSignatureHtml,
+                                    m.IsVerified AS ModifiedIsVerified,
+                                    m.IsStaff AS ModifiedIsStaff,
+                                    m.IsSpam AS ModifiedIsSpam,
+                                    m.IsBanned AS ModifiedIsBanned
                                 FROM {prefix}_EntityReplies r WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON r.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON r.ModifiedUserId = m.Id

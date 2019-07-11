@@ -132,6 +132,7 @@ namespace Plato.Users.ViewProviders
                 UserName = user.UserName,
                 Email = user.Email,
                 Avatar = user.Avatar,
+                Css = user.Css,
                 Location = user.Location,
                 Url = user.Url,
                 Biography = user.Biography,

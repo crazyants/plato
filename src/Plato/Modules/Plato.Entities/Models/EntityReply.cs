@@ -187,6 +187,14 @@ namespace Plato.Entities.Models
                     CreatedBy.PhotoColor = Convert.ToString(dr["CreatedPhotoColor"]);
                 if (dr.ColumnIsNotNull("CreatedSignatureHtml"))
                     CreatedBy.SignatureHtml = Convert.ToString(dr["CreatedSignatureHtml"]);
+                if (dr.ColumnIsNotNull("CreatedIsVerified"))
+                    CreatedBy.IsVerified = Convert.ToBoolean(dr["CreatedIsVerified"]);
+                if (dr.ColumnIsNotNull("CreatedIsStaff"))
+                    CreatedBy.IsStaff = Convert.ToBoolean(dr["CreatedIsStaff"]);
+                if (dr.ColumnIsNotNull("CreatedIsSpam"))
+                    CreatedBy.IsSpam = Convert.ToBoolean(dr["CreatedIsSpam"]);
+                if (dr.ColumnIsNotNull("CreatedIsBanned"))
+                    CreatedBy.IsBanned = Convert.ToBoolean(dr["CreatedIsBanned"]);
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
@@ -216,6 +224,14 @@ namespace Plato.Entities.Models
                     ModifiedBy.PhotoColor = Convert.ToString(dr["ModifiedPhotoColor"]);
                 if (dr.ColumnIsNotNull("ModifiedSignatureHtml"))
                     ModifiedBy.SignatureHtml = Convert.ToString(dr["ModifiedSignatureHtml"]);
+                if (dr.ColumnIsNotNull("ModifiedIsVerified"))
+                    ModifiedBy.IsVerified = Convert.ToBoolean(dr["ModifiedIsVerified"]);
+                if (dr.ColumnIsNotNull("ModifiedIsStaff"))
+                    ModifiedBy.IsStaff = Convert.ToBoolean(dr["ModifiedIsStaff"]);
+                if (dr.ColumnIsNotNull("ModifiedIsSpam"))
+                    ModifiedBy.IsSpam = Convert.ToBoolean(dr["ModifiedIsSpam"]);
+                if (dr.ColumnIsNotNull("ModifiedIsBanned"))
+                    ModifiedBy.IsBanned = Convert.ToBoolean(dr["ModifiedIsBanned"]);
             }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))

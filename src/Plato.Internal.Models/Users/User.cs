@@ -10,7 +10,7 @@ using Plato.Internal.Abstractions;
 namespace Plato.Internal.Models.Users
 {
     
-    public class User : IdentityUser<int>, IUser, IDbModel<User>
+    public class User : IdentityUser<int>, IUser, IDbModel
     {
         
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
@@ -36,10 +36,12 @@ namespace Plato.Internal.Models.Users
         public string PhotoUrl { get; set; }
 
         public string PhotoColor { get; set; }
-
+        
         public UserAvatar Avatar => new UserAvatar(this);
 
         public UserUrls Urls => new UserUrls(this);
+
+        public UserCss Css => new UserCss(this);
 
         public string SamAccountName { get; set; }
 
@@ -104,6 +106,12 @@ namespace Plato.Internal.Models.Users
         public int IsVerifiedUpdatedUserId { get; set; }
 
         public DateTimeOffset? IsVerifiedUpdatedDate { get; set; }
+        
+        public bool IsStaff { get; set; }
+
+        public int IsStaffUpdatedUserId { get; set; }
+
+        public DateTimeOffset? IsStaffUpdatedDate { get; set; }
 
         public bool IsBanned { get; set; }
 
@@ -226,7 +234,7 @@ namespace Plato.Internal.Models.Users
             
             if (dr.ColumnIsNotNull("PhotoColor"))
                 PhotoColor = Convert.ToString(dr["PhotoColor"]);
-
+            
             if (dr.ColumnIsNotNull("SamAccountName"))
                 SamAccountName = Convert.ToString(dr["SamAccountName"]);
 
@@ -343,6 +351,15 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("IsVerifiedUpdatedDate"))
                 IsVerifiedUpdatedDate = (DateTimeOffset)dr["IsVerifiedUpdatedDate"];
+            
+            if (dr.ColumnIsNotNull("IsStaff"))
+                IsStaff = Convert.ToBoolean(dr["IsStaff"]);
+
+            if (dr.ColumnIsNotNull("IsStaffUpdatedUserId"))
+                IsStaffUpdatedUserId = Convert.ToInt32(dr["IsStaffUpdatedUserId"]);
+
+            if (dr.ColumnIsNotNull("IsStaffUpdatedDate"))
+                IsStaffUpdatedDate = (DateTimeOffset)dr["IsStaffUpdatedDate"];
             
             if (dr.ColumnIsNotNull("IsBanned"))
                 IsBanned = Convert.ToBoolean(dr["IsBanned"]);

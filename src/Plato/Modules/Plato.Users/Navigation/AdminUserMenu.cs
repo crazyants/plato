@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Users.Navigation
@@ -42,38 +40,44 @@ namespace Plato.Users.Navigation
                             {"data-provide", "tooltip"},
                             {"title", T["Options"]}
                         })
-                        .Add(user.IsVerified ? T["Remove Verified"] : T["Add to Verified"],  edit => edit
+                        .Add(user.IsVerified ? T["Remove Verified"] : T["Add to Verified"],  verified => verified
                             .Action(user.IsVerified ? "InvalidateUser" : "ValidateUser", "Admin", "Plato.Users", new RouteValueDictionary()
                             {
                                 ["Id"] = user.Id.ToString()
                             })
-                            .LocalNav()
+                            .LocalNav().LocalNav(), new List<string>() { "is-verified" }
                         )
+                        .Add(user.IsStaff ? T["Remove Staff"] : T["Add to Staff"], staff => staff
+                            .Action(user.IsStaff ? "FromStaff" : "ToStaff", "Admin", "Plato.Users", new RouteValueDictionary()
+                            {
+                                ["Id"] = user.Id.ToString()
+                            })
+                            .LocalNav(), new List<string>() { "is-staff"})
                         .Add(T["Divider"], divider => divider
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(user.IsSpam ? T["Remove from SPAM"] : T["Add to SPAM"], edit => edit
+                        .Add(user.IsSpam ? T["Remove from SPAM"] : T["Add to SPAM"], spam => spam
                             .Action(user.IsSpam ? "RemoveSpam" : "SpamUser", "Admin", "Plato.Users", new RouteValueDictionary()
                             {
                                 ["Id"] = user.Id.ToString()
                             })
                             .LocalNav(), user.IsSpam
-                                ? new List<string>() { "dropdown-item", "dropdown-item-danger" }
-                                : new List<string>() { "dropdown-item" }
+                                ? new List<string>() { "dropdown-item is-spam", "dropdown-item-danger is-spam" }
+                                : new List<string>() { "dropdown-item is-spam" }
                         )
-                        .Add(user.IsBanned ? T["Remove Ban"]  : T["Add to Banned"], edit => edit
+                        .Add(user.IsBanned ? T["Remove Ban"]  : T["Add to Banned"], banned => banned
                             .Action(user.IsBanned  ? "RemoveBan" : "BanUser", "Admin", "Plato.Users", new RouteValueDictionary()
                             {
                                 ["Id"] = user.Id.ToString()
                             })
                             .LocalNav(), user.IsBanned
-                                ? new List<string>() { "dropdown-item", "dropdown-item-danger" }
-                                : new List<string>() { "dropdown-item" }
+                                ? new List<string>() { "dropdown-item is-banned", "dropdown-item-danger" }
+                                : new List<string>() { "dropdown-item is-banned" }
                         )
                         .Add(T["Divider"], divider => divider
                             .DividerCss("dropdown-divider").LocalNav()
                         )
-                        .Add(T["Edit Password"], edit => edit
+                        .Add(T["Edit Password"], password => password
                             .Action("EditPassword", "Admin", "Plato.Users", new RouteValueDictionary()
                             {
                                 ["Id"] = user.Id.ToString()
@@ -83,10 +87,9 @@ namespace Plato.Users.Navigation
 
                     , new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
                 );
-
-
-
+            
         }
+
     }
 
 }

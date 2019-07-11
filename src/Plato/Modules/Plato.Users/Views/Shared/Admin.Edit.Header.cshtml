@@ -6,7 +6,8 @@
 else
 {
     <h4 class="d-inline-block">
-        @T["Edit User"] @Model.DisplayName
+        @T["Edit User"] 
+        <span class="@Model.Css.DisplayName">@Model.DisplayName</span>
     </h4>
     @if (Model.IsVerified)
      {

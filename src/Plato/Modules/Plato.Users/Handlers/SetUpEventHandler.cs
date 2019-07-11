@@ -379,6 +379,22 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "IsStaff",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsStaffUpdatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsStaffUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "IsBanned",
                         DbType = DbType.Boolean
                     },

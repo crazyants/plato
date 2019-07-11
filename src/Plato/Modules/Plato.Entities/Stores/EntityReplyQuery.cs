@@ -8,6 +8,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
 {
+
     #region "EntityReplyQuery"
 
     public class EntityReplyQuery<TModel> : DefaultQuery<TModel> where TModel : class
@@ -37,7 +38,7 @@ namespace Plato.Entities.Stores
             var countSql = builder.BuildSqlCount();
             var keywords = Params.Keywords.Value ?? string.Empty;
             
-            return await _store.SelectAsync(new[]
+            return await _store.SelectAsync(new IDbDataParameter[]
             {
                 new DbParam("PageIndex", DbType.Int32, PageIndex),
                 new DbParam("PageSize", DbType.Int32, PageSize),
@@ -241,13 +242,22 @@ namespace Plato.Entities.Stores
                 .Append("c.PhotoUrl AS CreatedPhotoUrl,")
                 .Append("c.PhotoColor AS CreatedPhotoColor,")
                 .Append("c.SignatureHtml AS CreatedSignatureHtml,")
+                .Append("c.IsVerified AS CreatedIsVerified,")
+                .Append("c.IsStaff AS CreatedIsStaff,")
+                .Append("c.IsSpam AS CreatedIsSpam,")
+                .Append("c.IsBanned AS CreatedIsBanned,")
                 .Append("m.UserName AS ModifiedUserName,")
                 .Append("m.NormalizedUserName AS ModifiedNormalizedUserName,")
                 .Append("m.DisplayName AS ModifiedDisplayName,")
                 .Append("m.Alias AS ModifiedAlias,")
                 .Append("m.PhotoUrl AS ModifiedPhotoUrl,")
                 .Append("m.PhotoColor AS ModifiedPhotoColor, ")
-                .Append("m.SignatureHtml AS ModifiedSignatureHtml");
+                .Append("m.SignatureHtml AS ModifiedSignatureHtml,")
+                .Append("m.IsVerified AS ModifiedIsVerified,")
+                .Append("m.IsStaff AS ModifiedIsStaff,")
+                .Append("m.IsSpam AS ModifiedIsSpam,")
+                .Append("m.IsBanned AS ModifiedIsBanned");
+
             return sb.ToString();
 
         }

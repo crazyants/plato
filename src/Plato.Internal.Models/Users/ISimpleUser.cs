@@ -18,10 +18,21 @@
         string Signature { get; set; }
 
         string SignatureHtml { get; set; }
-        
+
+        bool IsStaff { get; set; } 
+
+        bool IsVerified { get; set; }
+
+        bool IsSpam { get; set; }
+
+        bool IsBanned { get; set; }
+
         UserAvatar Avatar { get; }
 
         UserUrls Urls { get; }
+
+        UserCss Css { get; }
+
     }
 
 }

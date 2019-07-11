@@ -687,6 +687,110 @@ namespace Plato.Users.Controllers
         }
 
         // ------------
+        // Staff User
+        // ------------
+
+        public async Task<IActionResult> ToStaff(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            
+            // Update staff status
+            currentUser.IsStaff = true;
+            currentUser.IsStaffUpdatedUserId = user.Id;
+            currentUser.IsStaffUpdatedDate = DateTimeOffset.UtcNow;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["User Added To Staff Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+
+        }
+
+        public async Task<IActionResult> FromStaff(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Reset staff status
+            currentUser.IsStaff = false;
+            currentUser.IsStaffUpdatedUserId = 0;
+            currentUser.IsStaffUpdatedDate = null;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Staff Status Removed Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+
+        }
+        
+        // ------------
         // Ban User
         // ------------
 

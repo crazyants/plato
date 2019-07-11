@@ -53,20 +53,18 @@ namespace Plato.Internal.Models.Users
 
         DateTimeOffset? RankUpdatedDate { get; set; }
         
-        bool IsSpam { get; set; }
-
         int IsSpamUpdatedUserId { get; set; }
 
         DateTimeOffset? IsSpamUpdatedDate { get; set; }
         
-        bool IsVerified { get; set; }
-
         int IsVerifiedUpdatedUserId { get; set; }
 
         DateTimeOffset? IsVerifiedUpdatedDate { get; set; }
-        
-        bool IsBanned { get; set; }
 
+        int IsStaffUpdatedUserId { get; set; }
+
+        DateTimeOffset? IsStaffUpdatedDate { get; set; }
+        
         int IsBannedUpdatedUserId { get; set; }
 
         DateTimeOffset? IsBannedUpdatedDate { get; set; }

@@ -55,7 +55,9 @@ namespace Plato.Users.ViewModels
         // -------
 
         public UserAvatar Avatar { get; set; }
-        
+
+        public UserCss Css { get; set; }
+
         public bool IsNewUser { get; set; }
         
         public bool DisplayPasswordFields { get; set; }
