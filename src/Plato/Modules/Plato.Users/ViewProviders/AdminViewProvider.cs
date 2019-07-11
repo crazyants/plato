@@ -109,6 +109,7 @@ namespace Plato.Users.ViewProviders
             User isVerifiedBy = null;
             User isSpamBy = null;
             User isBannedBy = null;
+            User isStaffBy = null;
 
             if (user.IsVerified && user.IsVerifiedUpdatedUserId > 0)
             {
@@ -124,7 +125,14 @@ namespace Plato.Users.ViewProviders
             {
                 isBannedBy = await _userStore.GetByIdAsync(user.IsBannedUpdatedUserId);
             }
-            
+
+
+            if (user.IsStaff && user.IsStaffUpdatedUserId > 0)
+            {
+                isStaffBy = await _userStore.GetByIdAsync(user.IsStaffUpdatedUserId);
+            }
+
+
             var viewModel = new EditUserViewModel()
             {
                 Id = user.Id,
@@ -150,6 +158,9 @@ namespace Plato.Users.ViewProviders
                 IsVerified = user.IsVerified,
                 IsVerifiedUpdatedUser = isVerifiedBy != null ? new SimpleUser(isVerifiedBy) : null,
                 IsVerifiedUpdatedDate = user.IsVerifiedUpdatedDate,
+                IsStaff = user.IsStaff,
+                IsStaffUpdatedUser = isStaffBy != null ? new SimpleUser(isStaffBy) : null,
+                IsStaffUpdatedDate = user.IsStaffUpdatedDate,
                 IsBanned = user.IsBanned,
                 IsBannedUpdatedUser = isBannedBy != null ? new SimpleUser(isBannedBy) : null,
                 IsBannedUpdatedDate = user.IsBannedUpdatedDate

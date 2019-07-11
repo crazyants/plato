@@ -3,7 +3,7 @@
     var i = 0;
 }
 
-@if (!Model.IsNewUser && !Model.IsSpam && !Model.IsVerified && !Model.IsBanned)
+@if (!Model.IsNewUser && !Model.IsSpam && !Model.IsVerified && !Model.IsStaff && !Model.IsBanned)
 {
     // The checker succeeded (i.e. the user won't be flagged as SPAM)
     @if (Model.Checker.Succeeded)

@@ -82,8 +82,8 @@ namespace Plato.StopForumSpam.Services
                 return result.Success();
             }
             
-            // Skip SPAM checks for verified users
-            if (user.IsVerified)
+            // Skip SPAM checks for verified and staff users
+            if (user.IsVerified || user.IsStaff)
             {
                 return result.Success();
             }

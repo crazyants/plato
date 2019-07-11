@@ -9,45 +9,5 @@ else
         @T["Edit User"] 
         <span class="@Model.Css.DisplayName">@Model.DisplayName</span>
     </h4>
-    @if (Model.IsVerified)
-     {
-         <a href="#" data-toggle="modal" data-provide="tooltip" title="@T["Verified Genuine"]" data-target="#verifiedUserModal" class="badge badge-sm badge-primary rounded-circle align-top mt-1">
-             <i class="fal fa-check"></i>
-         </a>
-         <div class="modal fade" id="verifiedUserModal" tabindex="-1" role="dialog" aria-labelledby="verifiedUserModalHeader" aria-hidden="true">
-             <div class="modal-dialog" role="document">
-                 <div class="modal-content">
-                     <div class="modal-header">
-                         <h5 class="modal-title" id="verifiedUserModalHeader">
-                             @T["Verified Genuine"]
-                         </h5>
-                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                             <span aria-hidden="true">
-                                 <i class="fal fa-times"></i>
-                             </span>
-                         </button>
-                     </div>
-                     <div class="modal-body">
-                         @if (Model.IsVerifiedUpdatedUser != null)
-                         {
-                         <p>
-                             @T["This user was verified by"] <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.IsVerifiedUpdatedUser.Id">@Model.IsVerifiedUpdatedUser.DisplayName</a>, <date utc="Model.IsVerifiedUpdatedDate"></date>
-                         </p>
-                         }
-                         <p>
-                             <i class="fal fa-info-circle mr-1"></i> @T["A verified user is someone who has been manually identified as a genuine human by a site administrator or staff member. Verified users may skip some automated SPAM protection."]
-                         </p>
-                     </div>
-                     <div class="modal-footer">
-                         <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="InvalidateUser" asp-route-id="@Model.Id" class="btn btn-danger mr-auto">
-                             @T["Remove verified status"]
-                         </a>
-                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                             @T["Close"]
-                         </button>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     }
+  
 }
