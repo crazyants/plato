@@ -20,21 +20,22 @@ namespace Plato.Users.Badges.Notifications
     public class NewBadgeEmail : INotificationProvider<Badge>
     {
 
-        private readonly IContextFacade _contextFacade;
-        private readonly ILocaleStore _localeStore;
-        private readonly IEmailManager _emailManager;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
+        private readonly IContextFacade _contextFacade;
+        private readonly IEmailManager _emailManager;
+        private readonly ILocaleStore _localeStore;
 
         public NewBadgeEmail(
+
+            ICapturedRouterUrlHelper capturedRouterUrlHelper,
             IContextFacade contextFacade,
-            ILocaleStore localeStore,
             IEmailManager emailManager,
-            ICapturedRouterUrlHelper capturedRouterUrlHelper)
+            ILocaleStore localeStore)
         {
-            _contextFacade = contextFacade;
-            _localeStore = localeStore;
-            _emailManager = emailManager;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
+            _contextFacade = contextFacade;
+            _emailManager = emailManager;
+            _localeStore = localeStore;
         }
 
         public async Task<ICommandResult<Badge>> SendAsync(INotificationContext<Badge> context)
@@ -72,7 +73,7 @@ namespace Plato.Users.Badges.Notifications
                 message.Body = string.Format(
                     email.Message,
                     context.Notification.To.DisplayName,
-                    context.Model.Name,
+                    context.Model.Title,
                     baseUri + url); ;
                 message.IsBodyHtml = true;
                 message.To.Add(new MailAddress(context.Notification.To.Email));
