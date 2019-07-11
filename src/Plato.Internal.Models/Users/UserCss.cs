@@ -1,57 +1,69 @@
-﻿using System.Text;
-
-namespace Plato.Internal.Models.Users
+﻿namespace Plato.Internal.Models.Users
 {
 
     public class UserCss
     {
 
-        public string DisplayName { get; set; } 
+        public string VerifiedCss { get; }
+
+        public string StaffCss { get; }
+
+        public string SpamCss { get; }
+
+        public string BannedCss { get; }
 
         public UserCss(ISimpleUser user)
         {
-            PopulateDisplayNameCss(user);
-        }
-
-        public void PopulateDisplayNameCss(ISimpleUser user)
-        {
-
-            var sb = new StringBuilder();
-
-            if (user.IsStaff)
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(" ");
-                sb.Append("is-staff");
-            }
 
             if (user.IsVerified)
             {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(" ");
-                sb.Append("is-verified");
+                VerifiedCss = "is-verified";
             }
-            
-            if (user.IsBanned)
+
+            if (user.IsStaff)
             {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(" ");
-                sb.Append("is-banned");
+                StaffCss = "is-staff";
             }
-            
+
             if (user.IsSpam)
             {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(" ");
-                sb.Append("is-spam");
+                SpamCss = "is-spam";
             }
 
-            if (!string.IsNullOrEmpty(sb.ToString()))
+            if (user.IsBanned)
             {
-                DisplayName = sb.ToString();
+                BannedCss = "is-banned";
             }
-                
+            
         }
 
+        public override string  ToString()
+        {
+            
+            if (!string.IsNullOrEmpty(StaffCss))
+            {
+                return StaffCss;
+            }
+
+            if (!string.IsNullOrEmpty(VerifiedCss))
+            {
+                return VerifiedCss;
+            }
+
+            if (!string.IsNullOrEmpty(SpamCss))
+            {
+                return SpamCss;
+            }
+            
+            if (!string.IsNullOrEmpty(BannedCss))
+            {
+                return BannedCss;
+            }
+            
+            return string.Empty;
+
+        }
+        
     }
+
 }

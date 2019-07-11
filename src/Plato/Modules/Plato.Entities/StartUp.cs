@@ -17,7 +17,6 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Entities.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Migrations.Abstractions;
 using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Layout.ViewProviders;
@@ -26,7 +25,6 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Search.Abstractions;
 using Plato.Internal.Stores;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
 

@@ -164,7 +164,7 @@ namespace Plato.Users
             services.AddScoped<IReputationsProvider<Reputation>, Reputations>();
 
             // Register user service
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService<User>, UserService<User>>();
 
             // Register action filters
             services.AddScoped<IModularActionFilter, SignOutIfUserNotFoundFilter>();

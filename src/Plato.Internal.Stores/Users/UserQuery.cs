@@ -68,6 +68,10 @@ namespace Plato.Internal.Stores.Users
         private WhereString _roleName;
         private WhereBool _showSpam;
         private WhereBool _hideSpam;
+        private WhereBool _showStaff;
+        private WhereBool _hideStaff;
+        private WhereBool _showVerified;
+        private WhereBool _hideVerified;
         private WhereBool _showBanned;
         private WhereBool _hideBanned;
         private WhereBool _showConfirmed;
@@ -112,6 +116,31 @@ namespace Plato.Internal.Stores.Users
             set => _showSpam = value;
         }
 
+
+        public WhereBool HideStaff
+        {
+            get => _hideStaff ?? (_hideStaff = new WhereBool());
+            set => _hideStaff = value;
+        }
+
+        public WhereBool ShowStaff
+        {
+            get => _showStaff ?? (_showStaff = new WhereBool());
+            set => _showStaff = value;
+        }
+        
+        public WhereBool HideVerified
+        {
+            get => _hideVerified ?? (_hideVerified = new WhereBool());
+            set => _hideVerified = value;
+        }
+
+        public WhereBool ShowVerified
+        {
+            get => _showVerified ?? (_showVerified = new WhereBool());
+            set => _showVerified = value;
+        }
+        
         public WhereBool HideBanned
         {
             get => _hideBanned ?? (_hideBanned = new WhereBool());
@@ -301,7 +330,47 @@ namespace Plato.Internal.Stores.Users
                     sb.Append(_query.Params.ShowSpam.Operator);
                 sb.Append("IsSpam = 1");
             }
+
+            // -----------------
+            // IsStaff
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideStaff.Value && !_query.Params.ShowStaff.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideStaff.Operator);
+                sb.Append("IsStaff = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowStaff.Value && !_query.Params.HideStaff.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowStaff.Operator);
+                sb.Append("IsStaff = 1");
+            }
             
+            // -----------------
+            // IsVerified
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideVerified.Value && !_query.Params.ShowVerified.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideVerified.Operator);
+                sb.Append("IsVerified = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowVerified.Value && !_query.Params.HideVerified.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowVerified.Operator);
+                sb.Append("IsVerified = 1");
+            }
+
             // -----------------
             // IsBanned 
             // -----------------

@@ -790,120 +790,7 @@ namespace Plato.Users.Controllers
 
         }
         
-        // ------------
-        // Ban User
-        // ------------
-
-        public async Task<IActionResult> BanUser(string id)
-        {
-
-            // We need to be authenticated
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
-            // Get user
-            var currentUser = await _userManager.FindByIdAsync(id);
-            if (currentUser == null)
-            {
-                return NotFound();
-            }
-
-            // Reset staff status
-            currentUser.IsStaff = false;
-            currentUser.IsStaffUpdatedUserId = 0;
-            currentUser.IsStaffUpdatedDate = null;
-            
-            // Reset verified status
-            currentUser.IsVerified = false;
-            currentUser.IsVerifiedUpdatedUserId = 0;
-            currentUser.IsVerifiedUpdatedDate = null;
-
-            // Update banned status
-            currentUser.IsBanned = true;
-            currentUser.IsBannedUpdatedUserId = user.Id;
-            currentUser.IsBannedUpdatedDate = DateTimeOffset.UtcNow;
-            
-            // Update user
-            var result = await _userManager.UpdateAsync(currentUser);
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["User Banned Successfully!"]);
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    _alerter.Danger(T[error.Description]);
-                }
-            }
-
-            // Redirect back to edit user
-            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
-            {
-                ["id"] = id
-            });
-
-        }
-
-        public async Task<IActionResult> RemoveBan(string id)
-        {
-
-            // We need to be authenticated
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
-            // Get user
-            var currentUser = await _userManager.FindByIdAsync(id);
-            if (currentUser == null)
-            {
-                return NotFound();
-            }
-            
-            // Reset banned status
-            currentUser.IsBanned = false;
-            currentUser.IsBannedUpdatedUserId = 0;
-            currentUser.IsBannedUpdatedDate = null;
-
-            // Update user
-            var result = await _userManager.UpdateAsync(currentUser);
-            if (result.Succeeded)
-            {
-                _alerter.Success(T["User Ban Removed Successfully!"]);
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    _alerter.Danger(T[error.Description]);
-                }
-            }
-
-            // Redirect back to edit user
-            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
-            {
-                ["id"] = id
-            });
-
-        }
-
+       
         // ------------
         // Flag As Spam
         // ------------
@@ -1017,9 +904,124 @@ namespace Plato.Users.Controllers
             });
 
         }
-        
+
+        // ------------
+        // Ban User
+        // ------------
+
+        public async Task<IActionResult> BanUser(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Reset staff status
+            currentUser.IsStaff = false;
+            currentUser.IsStaffUpdatedUserId = 0;
+            currentUser.IsStaffUpdatedDate = null;
+
+            // Reset verified status
+            currentUser.IsVerified = false;
+            currentUser.IsVerifiedUpdatedUserId = 0;
+            currentUser.IsVerifiedUpdatedDate = null;
+
+            // Update banned status
+            currentUser.IsBanned = true;
+            currentUser.IsBannedUpdatedUserId = user.Id;
+            currentUser.IsBannedUpdatedDate = DateTimeOffset.UtcNow;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["User Banned Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+
+        }
+
+        public async Task<IActionResult> RemoveBan(string id)
+        {
+
+            // We need to be authenticated
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // We need to be an administrator 
+            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
+            {
+                return NotFound();
+            }
+
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Reset banned status
+            currentUser.IsBanned = false;
+            currentUser.IsBannedUpdatedUserId = 0;
+            currentUser.IsBannedUpdatedDate = null;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["User Ban Removed Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+
+        }
+
+
         #endregion
-        
+
     }
 
 }

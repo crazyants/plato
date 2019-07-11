@@ -7,7 +7,9 @@
     <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" class="list-group-item-action d-block p-3 text-center">
         <div class="p-3">
             <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar avatar-md" url="@Model.User.Avatar.Url" />
-            <h6 class="d-block mt-2">@Model.User.DisplayName</h6>
+            <h6 class="d-block mt-2 @Model.User.Css.ToString()">
+                @Model.User.DisplayName
+            </h6>
             <span class="d-block text-muted">
                 <span class="mx-1" title="@T["Rank"]" data-toggle="tooltip">
                     <i class="fal fa-hashtag"></i>
@@ -32,7 +34,9 @@ else
 {
     <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias" class="list-group-item-action d-block p-3 text-center">
         <avatar data-toggle="tooltip" title="@Model.User.DisplayName" class="avatar avatar-md" url="@Model.User.Avatar.Url" />
-        <h6 class="d-block mt-2">@Model.User.DisplayName</h6>
+        <h6 class="d-block mt-2 @Model.User.Css.ToString()">
+            @Model.User.DisplayName
+        </h6>
         <span class="d-block text-muted">
             <span class="mx-1" title="@T["Rank"]" data-toggle="tooltip">
                 <i class="fal fa-hashtag"></i>

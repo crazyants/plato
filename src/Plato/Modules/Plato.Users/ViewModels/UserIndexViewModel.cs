@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
@@ -40,9 +41,11 @@ namespace Plato.Users.ViewModels
         [DataMember(Name = "filter")]
         public FilterBy Filter { get; set; } = FilterBy.All;
         
+        // ---------
+
+        [JsonIgnore]
         public bool EnableEdit { get; set; }
-
-
+        
     }
 
     public class DisplayUserOptions
@@ -79,13 +82,14 @@ namespace Plato.Users.ViewModels
     {
         All = 0,
         Confirmed = 1,
-        Banned = 2,
-        Locked = 3,
-        Spam = 4,
-        PossibleSpam = 5
+        Unconfirmed = 2,
+        Verified = 4,
+        Staff = 5,
+        Spam = 6,
+        Banned = 7,
+        Locked = 8
     }
-
-
+    
     public enum SortBy
     {
         Id,

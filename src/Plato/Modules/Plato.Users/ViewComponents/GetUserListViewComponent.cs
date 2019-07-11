@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;
@@ -10,9 +11,9 @@ namespace Plato.Users.ViewComponents
     public class GetUserListViewComponent : ViewComponent
     {
         
-        private readonly IUserService _userService;
+        private readonly IUserService<User> _userService;
 
-        public GetUserListViewComponent(IUserService userService)
+        public GetUserListViewComponent(IUserService<User> userService)
         {
             _userService = userService;
         }
@@ -39,6 +40,16 @@ namespace Plato.Users.ViewComponents
 
             // Get results
             var results = await _userService
+                .ConfigureQuery(q =>
+                {
+                    // We are not within edit mode
+                    // Hide spam and banned users
+                    if (!options.EnableEdit)
+                    {
+                        q.HideSpam.True();
+                        q.HideBanned.True();
+                    }
+                })
                 .GetResultsAsync(options, pager);
 
             // Set total on pager

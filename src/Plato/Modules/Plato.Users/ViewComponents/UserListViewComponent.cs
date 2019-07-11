@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;
@@ -29,13 +30,18 @@ namespace Plato.Users.ViewComponents
             },
             new Filter()
             {
-                Text = "Banned",
-                Value = FilterBy.Banned
+                Text = "Unconfirmed",
+                Value = FilterBy.NotConfirmed
             },
             new Filter()
             {
-                Text = "Locked",
-                Value = FilterBy.Locked
+                Text = "Verified",
+                Value = FilterBy.Verified
+            },
+            new Filter()
+            {
+                Text = "Staff",
+                Value = FilterBy.Staff
             },
             new Filter()
             {
@@ -44,8 +50,13 @@ namespace Plato.Users.ViewComponents
             },
             new Filter()
             {
-                Text = "Possible Spam",
-                Value = FilterBy.PossibleSpam
+                Text = "Banned",
+                Value = FilterBy.Banned
+            },
+            new Filter()
+            {
+                Text = "Locked",
+                Value = FilterBy.Locked
             }
         };
         
@@ -102,9 +113,9 @@ namespace Plato.Users.ViewComponents
             },
         };
       
-        private readonly IUserService _userService;
+        private readonly IUserService<User> _userService;
 
-        public UserListViewComponent(IUserService userService)
+        public UserListViewComponent(IUserService<User> userService)
         {
             _userService = userService;
         }
@@ -129,6 +140,16 @@ namespace Plato.Users.ViewComponents
         {
 
             var results = await _userService
+                .ConfigureQuery(q =>
+                {
+                    // We are not within edit mode
+                    // Hide spam and banned users
+                    if (!options.EnableEdit)
+                    {
+                        q.HideSpam.True();
+                        q.HideBanned.True();
+                    }
+                })
                 .GetResultsAsync(options, pager);
 
             // Set total on pager

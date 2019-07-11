@@ -12,7 +12,7 @@
     
     <ol class="list-inline text-muted float-right text-right">
         <li class="list-inline-item">
-            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy.Css.DisplayName">
+            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy.Css.StaffCss">
                 <date utc="@Model.Entity.LastReplyDate"></date>
             </a>
         </li>
@@ -56,7 +56,7 @@
         }
     </ol>
    
-    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold @Model.Entity.CreatedBy.Css.DisplayName">@Model.Entity.Title</a>
+    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold @Model.Entity.CreatedBy.Css.StaffCss">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
     {
         <span title="@T["This topic is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">

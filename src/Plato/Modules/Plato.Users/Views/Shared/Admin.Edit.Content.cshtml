@@ -3,7 +3,6 @@
 @if (Model.IsVerified && !Model.IsNewUser)
 {
     <div class="alert alert-info">
-
         <div class=" float-right">
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="InvalidateUser" asp-route-id="@Model.Id">
                 @T["Remove Verified"]

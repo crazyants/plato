@@ -1572,6 +1572,7 @@ a.accepted-answer i { font-size: 18pt; }
     background-size: 100%;
     vertical-align: middle;
     margin-right: 6px;
+    border-radius: 50%;
 }
 
 /* Remove margin for icon versions */
