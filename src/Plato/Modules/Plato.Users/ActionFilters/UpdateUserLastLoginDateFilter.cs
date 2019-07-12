@@ -19,20 +19,21 @@ namespace Plato.Users.ActionFilters
         internal const string CookieName = "plato_active";
         private bool _active = false;
         readonly string _tenantPath;
-
-        private readonly IContextFacade _contextFacade;
-        private readonly IPlatoUserStore<User> _userStore;
+        
         private readonly IUserReputationAwarder _userReputationAwarder;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IContextFacade _contextFacade;
 
-        public UpdateUserLastLoginDateFilter(IShellSettings shellSettings,
+        public UpdateUserLastLoginDateFilter(
+            IUserReputationAwarder userReputationAwarder,
+            IShellSettings shellSettings,
             IContextFacade contextFacade,
-            IPlatoUserStore<User> userStore,
-            IUserReputationAwarder userReputationAwarder)
+            IPlatoUserStore<User> userStore)
         {
+            _tenantPath = "/" + shellSettings.RequestedUrlPrefix;
+            _userReputationAwarder = userReputationAwarder;
             _contextFacade = contextFacade;
             _userStore = userStore;
-            _userReputationAwarder = userReputationAwarder;
-            _tenantPath = "/" + shellSettings.RequestedUrlPrefix;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)

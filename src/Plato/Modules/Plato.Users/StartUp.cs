@@ -167,7 +167,7 @@ namespace Plato.Users
             services.AddScoped<IUserService<User>, UserService<User>>();
 
             // Register action filters
-            services.AddScoped<IModularActionFilter, SignOutIfUserNotFoundFilter>();
+            services.AddScoped<IModularActionFilter, InvalidateUserFilter>();
             services.AddScoped<IModularActionFilter, UpdateUserLastLoginDateFilter>();
 
             // Migrations

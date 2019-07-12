@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 
@@ -22,8 +26,8 @@ namespace Plato.Users.Middleware
         {
             
             // Hydrate HttpContext.Features with our user
-            await HydrateHttpContextFeature(context);
-
+            await HydrateHttpContextFeatureAsync(context);
+            
             // Return next delegate
             await _next.Invoke(context);
             
@@ -31,9 +35,10 @@ namespace Plato.Users.Middleware
 
         #region "Private Methods"
 
-        async Task HydrateHttpContextFeature(HttpContext context)
+        async Task HydrateHttpContextFeatureAsync(HttpContext context)
         {
 
+            // We are not authenticated
             if (!context.User.Identity.IsAuthenticated)
             {
                 return;
@@ -59,7 +64,7 @@ namespace Plato.Users.Middleware
             context.Features[typeof(User)] = user;
             
         }
-
+        
         #endregion
 
     }
