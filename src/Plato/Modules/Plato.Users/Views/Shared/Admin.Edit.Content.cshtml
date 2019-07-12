@@ -31,7 +31,7 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="FromStaff" asp-route-id="@Model.Id">
                 @T["Remove Staff"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["A staff user is someone who represents a trusted user within your organization. Staff users will receive a special icon and will skip all SPAM protections."]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["A staff member is someone who represents a trusted user within your organization. Staff will receive a special icon and will skip all SPAM protections."]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsStaffUpdatedUser != null)
         {
@@ -79,7 +79,7 @@
             <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveBan" asp-route-id="@Model.Id">
                 @T["Remove Ban"]
             </a>
-            <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from regular users and and only visible via the admin dashboard. Banned users cannot login or post new contributions."]" data-toggle="tooltip"></i>
+            <i class="fal fa-info-circle ml-2 align-middle" title="@T["Banned users will be logged out and cannot login again or post new contributions. Banned users will also be hidden from regular users and and only visible via the admin dashboard."]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsBannedUpdatedUser != null)
         {
@@ -112,6 +112,11 @@
         <div class="form-group" asp-validation-class-for="UserName">
             <label asp-for="UserName"><strong>@T["Username"]</strong></label>
             <span asp-validation-for="UserName" class="text-danger"></span>
+            @if (!Model.IsNewUser)
+            {
+                <i class="fal fa-info-circle ml-2 align-middle" title="@T["If the username changes this user will be automatically logged out and will be required to login again."]" data-toggle="tooltip"></i>
+            }
+
             <input asp-for="UserName" class="form-control" />
         </div>
         <div class="form-group" asp-validation-class-for="Email">

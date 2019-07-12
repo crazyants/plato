@@ -252,9 +252,14 @@ namespace Plato.Users.ViewProviders
                     user.PhotoUrl = await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
-                // Update username and email
-                await _userManager.SetUserNameAsync(user, model.UserName);
-
+                // Has the username changed?
+                if (model.UserName != null && !model.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase))
+                {
+                    // SetUserNameAsync internally sets a new SecurityStamp
+                    // This will force the user to be logged out
+                    await _userManager.SetUserNameAsync(user, model.UserName);
+                }
+                
                 // Has the email address changed?
                 if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
                 {

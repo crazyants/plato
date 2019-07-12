@@ -37,9 +37,7 @@
             </div>
 
             <h6 class="d-inline-block m-0 p-0 text-truncate">@Model.DisplayName</h6>
-          
-            <hr class="my-2"/>
-
+        
             @if (!String.IsNullOrEmpty(Model.Biography))
             {
                 <div>@Model.Biography.TrimToAround(150)</div>

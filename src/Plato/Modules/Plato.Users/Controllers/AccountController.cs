@@ -173,16 +173,6 @@ namespace Plato.Users.Controllers
                     {
 
                         var signOut = false;
-                        if (user.IsSpam)
-                        {
-                            signOut = true;
-                            ModelState.AddModelError(string.Empty, "You cannot login as your account has been flagged as SPAM");
-                            if (_logger.IsEnabled(LogLevel.Information))
-                            {
-                                _logger.LogInformation(1, $"A user flagged as SPAM \"{user.UserName}\" attempted to login but was automatically denied.");
-                            }
-                        }
-                        
                         if (user.IsBanned)
                         {
                             signOut = true;

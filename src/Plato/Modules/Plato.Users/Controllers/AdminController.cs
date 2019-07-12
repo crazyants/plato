@@ -613,6 +613,11 @@ namespace Plato.Users.Controllers
             currentUser.IsBanned = false;
             currentUser.IsBannedUpdatedUserId = 0;
             currentUser.IsBannedUpdatedDate = null;
+
+            // Reset staff status
+            currentUser.IsStaff = false;
+            currentUser.IsStaffUpdatedUserId = 0;
+            currentUser.IsStaffUpdatedDate = null;
             
             // Update verified status
             currentUser.IsVerified = true;
@@ -728,6 +733,11 @@ namespace Plato.Users.Controllers
             currentUser.IsBannedUpdatedUserId = 0;
             currentUser.IsBannedUpdatedDate = null;
 
+            // Reset verified status
+            currentUser.IsVerified = false;
+            currentUser.IsVerifiedUpdatedUserId = 0;
+            currentUser.IsVerifiedUpdatedDate = null;
+
             // Update staff status
             currentUser.IsStaff = true;
             currentUser.IsStaffUpdatedUserId = user.Id;
@@ -842,14 +852,16 @@ namespace Plato.Users.Controllers
             currentUser.IsVerifiedUpdatedUserId = 0;
             currentUser.IsVerifiedUpdatedDate = null;
 
+            // Reset banned status
+            currentUser.IsBanned = false;
+            currentUser.IsBannedUpdatedUserId = 0;
+            currentUser.IsBannedUpdatedDate = null;
+
             // Update spam status
             currentUser.IsSpam = true;
             currentUser.IsSpamUpdatedUserId = user.Id;
             currentUser.IsSpamUpdatedDate = DateTimeOffset.UtcNow;
-
-            // Invalidate security stamp to force a re-login
-            await _securityStampStore.SetSecurityStampAsync(currentUser, System.Guid.NewGuid().ToString(), new CancellationToken());
-
+            
             // Update user
             var result = await _userManager.UpdateAsync(currentUser);
             if (result.Succeeded)
@@ -959,13 +971,18 @@ namespace Plato.Users.Controllers
             currentUser.IsVerified = false;
             currentUser.IsVerifiedUpdatedUserId = 0;
             currentUser.IsVerifiedUpdatedDate = null;
-
+            
+            // Reset spam status
+            currentUser.IsSpam = false;
+            currentUser.IsSpamUpdatedUserId = 0;
+            currentUser.IsSpamUpdatedDate = null;
+            
             // Update banned status
             currentUser.IsBanned = true;
             currentUser.IsBannedUpdatedUserId = user.Id;
             currentUser.IsBannedUpdatedDate = DateTimeOffset.UtcNow;
 
-            // Invalidate security stamp to force a re-login
+            // Invalidate security stamp to force sign-out banned users
             await _securityStampStore.SetSecurityStampAsync(currentUser, System.Guid.NewGuid().ToString(), new CancellationToken());
 
             // Update user
@@ -1040,8 +1057,7 @@ namespace Plato.Users.Controllers
             });
 
         }
-
-
+        
         #endregion
 
     }

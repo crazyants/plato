@@ -43,7 +43,7 @@ namespace Plato.Internal.Security
             claims.Add(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
             claims.Add(new Claim(Options.ClaimsIdentity.UserNameClaimType, userNameAsync));
 
-            // If the security stamp changes the authentication cookie will be invalidated
+            // Store the security stamp so we can invalidate the user login
             if (this.UserManager.SupportsUserSecurityStamp)
             {
                 claims.Add(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, await this.UserManager.GetSecurityStampAsync(user)));

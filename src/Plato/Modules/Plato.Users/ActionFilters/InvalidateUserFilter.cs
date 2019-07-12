@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,7 @@ using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Users.ActionFilters
 {
+
     public class InvalidateUserFilter : IModularActionFilter
     {
         
@@ -26,9 +28,9 @@ namespace Plato.Users.ActionFilters
             IOptions<IdentityOptions> options,
             SignInManager<User> signInManager)
         {
+            _identityOptions = options.Value;
             _platoUserStore = platoUserStore;
             _signInManager = signInManager;
-            _identityOptions = options.Value;
         }
         
         public void OnActionExecuting(ActionExecutingContext context)
@@ -57,14 +59,26 @@ namespace Plato.Users.ActionFilters
                 return;
             }
 
+            // Not authenticated
+            if (!identity.IsAuthenticated)
+            {
+                return;
+            }
+
+            // No identity value
+            if (string.IsNullOrEmpty(identity.Name))
+            {
+                return;
+            }
+
             // Invalidate authentication if username no longer exists
-            var check1 = await InvalidateUsernameAsync(identity);
+            var invalidIdentityName = await InvalidateIdentityNameAsync(identity);
 
             // Invalidate authentication if security stamp has changed
-            var check2 = await InvalidateSecurityStampAsync(context.HttpContext);
+            var invalidSecurityStamp = await InvalidateSecurityStampAsync(context.HttpContext);
 
             // If the user was invalidated redirect to root
-            if (check1 || check2)
+            if (invalidIdentityName || invalidSecurityStamp)
             {
                 context.Result = new RedirectResult("/");
             }
@@ -77,29 +91,19 @@ namespace Plato.Users.ActionFilters
         }
 
         // ----------------------
-
-        async Task<bool> InvalidateUsernameAsync(IIdentity identity)
+        
+        async Task<bool> InvalidateIdentityNameAsync(IIdentity identity)
         {
             
-            // Not authenticated
-            if (!identity.IsAuthenticated)
-            {
-                return false;
-            }
-
-            // No identity value
-            if (string.IsNullOrEmpty(identity.Name))
-            {
-                return false;
-            }
-
-            // Attempt to find the user
+            // Attempt to find the user by the identity.Name value
             var user = await _platoUserStore.GetByUserNameAsync(identity.Name);
+
+            // User no longer exists or name has changed
             if (user == null)
             {
-                // User no longer exists or name has changed
+                // Sign out
                 await _signInManager.SignOutAsync();
-                // Indicate sign out
+                // Indicate user was invalidated
                 return true;
             }
 
@@ -109,21 +113,21 @@ namespace Plato.Users.ActionFilters
 
         async Task<bool> InvalidateSecurityStampAsync(HttpContext context)
         {
-
-            // Get user from context
-            var user = context.Features[typeof(User)] as User;
-
-            // We are not authenticated
-            if (user == null)
-            {
-                return false;
-            }
             
-            // Get security stamp claim
-            var claim =
-                context.User?.Claims?.FirstOrDefault(c =>
-                    c.Type == _identityOptions.ClaimsIdentity.SecurityStampClaimType);
-
+            // Get security stamp claim, avoiding LINQ for perf reasons
+            Claim claim = null;
+            if (context.User?.Claims != null)
+            {
+                foreach (var c in context.User?.Claims)
+                {
+                    if (c.Type == _identityOptions.ClaimsIdentity.SecurityStampClaimType)
+                    {
+                        claim = c;
+                        break;
+                    }
+                }
+            }
+             
             // Ensure we found the claim
             if (claim == null)
             {
@@ -135,13 +139,19 @@ namespace Plato.Users.ActionFilters
             {
                 return false;
             }
+            
+            // Get authenticated user from context
+            if (!(context.Features[typeof(User)] is User user))
+            {
+                return false;
+            }
 
-            // Sign out if the security stamps don't match
+            // Compare stamps
             if (!user.SecurityStamp.Equals(claim.Value, StringComparison.Ordinal))
             {
                 // Security stamps no longer match, sign out the user
                 await _signInManager.SignOutAsync();
-                // Indicate sign out
+                // Indicate user was invalidated
                 return true;
             }
 

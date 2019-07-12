@@ -30,6 +30,15 @@ namespace Plato.Users.ViewComponents
             },
             new Filter()
             {
+                Text = "Unconfirmed",
+                Value = FilterBy.Unconfirmed
+            },
+            new Filter()
+            {
+                Text = "-" // represents menu divider
+            },
+            new Filter()
+            {
                 Text = "Verified",
                 Value = FilterBy.Verified
             },
@@ -44,11 +53,6 @@ namespace Plato.Users.ViewComponents
             },
             new Filter()
             {
-                Text = "Unconfirmed",
-                Value = FilterBy.Unconfirmed
-            },
-            new Filter()
-            {
                 Text = "Spam",
                 Value = FilterBy.Spam
             },
@@ -56,6 +60,10 @@ namespace Plato.Users.ViewComponents
             {
                 Text = "Banned",
                 Value = FilterBy.Banned
+            },
+            new Filter()
+            {
+                Text = "-" // represents menu divider
             },
             new Filter()
             {
