@@ -20,6 +20,7 @@ namespace Plato.Users.Navigation
         
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
+
             if (!String.Equals(name, "admin-user", StringComparison.OrdinalIgnoreCase))
             {
                 return;
@@ -47,6 +48,7 @@ namespace Plato.Users.Navigation
                                     {
                                         ["Id"] = user.Id.ToString()
                                     })
+                                .Permission(Permissions.UserToVerify)
                                 .LocalNav().LocalNav(), new List<string>() {"is-verified"}
                         )
                         .Add(user.IsStaff ? T["Remove Staff"] : T["Add to Staff"], staff => staff
@@ -55,8 +57,10 @@ namespace Plato.Users.Navigation
                                 {
                                     ["Id"] = user.Id.ToString()
                                 })
+                            .Permission(Permissions.UserToStaff)
                             .LocalNav(), new List<string>() {"is-staff"})
                         .Add(T["Divider"], divider => divider
+                            .Permission(Permissions.UserToSpam)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(user.IsSpam ? T["Remove from SPAM"] : T["Add to SPAM"], spam => spam
@@ -76,6 +80,7 @@ namespace Plato.Users.Navigation
                                     {
                                         ["Id"] = user.Id.ToString()
                                     })
+                                .Permission(Permissions.UserToSpam)
                                 .LocalNav(), user.IsSpam
                                 ? new List<string>() {"dropdown-item is-spam", "dropdown-item-danger is-spam"}
                                 : new List<string>() {"dropdown-item is-spam"}
@@ -97,11 +102,13 @@ namespace Plato.Users.Navigation
                                     {
                                         ["Id"] = user.Id.ToString()
                                     })
+                                .Permission(Permissions.UserToBanned)
                                 .LocalNav(), user.IsBanned
                                 ? new List<string>() {"dropdown-item is-banned", "dropdown-item-danger"}
                                 : new List<string>() {"dropdown-item is-banned"}
                         )
                         .Add(T["Divider"], divider => divider
+                            .Permission(Permissions.ResetUserPasswords)
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(T["Edit Password"], password => password
@@ -109,6 +116,7 @@ namespace Plato.Users.Navigation
                             {
                                 ["Id"] = user.Id.ToString()
                             })
+                            .Permission(Permissions.ResetUserPasswords)
                             .LocalNav()
                         )
 

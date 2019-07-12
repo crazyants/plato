@@ -21,9 +21,13 @@ else
 {
     if (!Model.IsNewUser)
      {
-         <button type="submit" asp-route-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id" data-provide="confirm" class="btn btn-danger" >
-             @T["Delete User"]
-         </button>
+         <authorize asp-permission="@Plato.Users.Permissions.DeleteUsers.Name">
+             <authorize-success>
+                 <button type="submit" asp-route-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id" data-provide="confirm" class="btn btn-danger" >
+                     @T["Delete User"]
+                 </button>
+             </authorize-success>
+         </authorize>
      }
 }
 

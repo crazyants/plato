@@ -91,11 +91,28 @@ namespace Plato.WebApi
                 return next(ctx);
             });
             
+            // WebApi Settings
             routes.MapAreaRoute(
-                name: "PlatoWebApiAdmin",
+                name: "WebApiAdmin",
                 areaName: "Plato.WebApi",
                 template: "admin/settings/api",
                 defaults: new { controller = "Admin", action = "Index" }
+            );
+
+            // Reset API Key
+            routes.MapAreaRoute(
+                name: "ResetApiKey",
+                areaName: "Plato.WebApi",
+                template: "admin/settings/api/reset",
+                defaults: new { controller = "Admin", action = "ResetApiKey" }
+            );
+            
+            // Reset user API Key
+            routes.MapAreaRoute(
+                name: "ResetUserApiKey",
+                areaName: "Plato.WebApi",
+                template: "admin/users/{id}/api/reset",
+                defaults: new { controller = "Admin", action = "ResetUserApiKey" }
             );
 
             // Api routes

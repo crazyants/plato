@@ -1,16 +1,22 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Text.Abstractions;
+using Plato.Internal.Text.Abstractions.Diff.Models;
 using Plato.WebApi.Models;
 using Plato.WebApi.ViewModels;
 
@@ -21,13 +27,15 @@ namespace Plato.WebApi.Controllers
     {
 
         #region "Constructor"
-        
+
+        private readonly IViewProviderManager<WebApiSettings> _viewProvider;
         private readonly IAuthorizationService _authorizationService;
         private readonly ISiteSettingsStore _siteSettingsStore;
-        private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IViewProviderManager<WebApiSettings> _viewProvider;
+        private readonly UserManager<User> _userManager;
+        private readonly IContextFacade _contextFacade;
         private readonly IKeyGenerator _keyGenerator;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -36,18 +44,24 @@ namespace Plato.WebApi.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
+            IViewProviderManager<WebApiSettings> viewProvider,
             IAuthorizationService authorizationService,
-            IAlerter alerter, ISiteSettingsStore siteSettingsStore,
+            ISiteSettingsStore siteSettingsStore,
             IBreadCrumbManager breadCrumbManager,
-            IViewProviderManager<WebApiSettings> viewProvider, 
-            IKeyGenerator keyGenerator)
+            UserManager<User> userManager,
+            IContextFacade contextFacade,
+            IKeyGenerator keyGenerator,
+            IAlerter alerter)
         {
-            _alerter = alerter;
+        
+            _authorizationService = authorizationService;
             _siteSettingsStore = siteSettingsStore;
             _breadCrumbManager = breadCrumbManager;
+            _contextFacade = contextFacade;
             _viewProvider = viewProvider;
             _keyGenerator = keyGenerator;
-            _authorizationService = authorizationService;
+            _userManager = userManager;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -57,7 +71,11 @@ namespace Plato.WebApi.Controllers
         #endregion
 
         #region "Actions"
-
+        
+        // ------------
+        // Settings
+        // ------------
+        
         public async Task<IActionResult> Index()
         {
 
@@ -77,12 +95,9 @@ namespace Plato.WebApi.Controllers
                 ).Add(S["Web Api"]);
             });
 
-            // Build view
-            var result = await _viewProvider.ProvideEditAsync(new WebApiSettings(), this);
-
             // Return view
-            return View(result);
-            
+            return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(new WebApiSettings(), this));
+
         }
  
         [HttpPost]
@@ -99,8 +114,12 @@ namespace Plato.WebApi.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-        public async Task<IActionResult> CreateApiKey()
+        
+        // ------------
+        // Reset App Api Key
+        // ------------
+        
+        public async Task<IActionResult> ResetApiKey()
         {
 
             var settings = await _siteSettingsStore.GetAsync();
@@ -124,7 +143,58 @@ namespace Plato.WebApi.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // ------------
+        // Reset User Api Key
+        // ------------
 
+        public async Task<IActionResult> ResetUserApiKey(string id)
+        {
+
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.ResetWebApiKeys))
+            {
+                return Unauthorized();
+            }
+
+            // Get user we are editing
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Generate new API Key
+            currentUser.ApiKey = _keyGenerator.GenerateKey(o =>
+            {
+                o.UniqueIdentifier = currentUser.Id.ToString();
+            });
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Key Reset Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Could not locate offset, fallback by redirecting to entity
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Users",
+                ["controller"] = "Admin",
+                ["action"] = "Edit",
+                ["id"] = currentUser.Id.ToString()
+            }));
+
+        }
+        
         #endregion
 
         #region "Private Methods"
@@ -150,10 +220,9 @@ namespace Plato.WebApi.Controllers
             };
 
         }
-
-
+        
         #endregion
-
-
+        
     }
+
 }

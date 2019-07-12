@@ -19,11 +19,16 @@
                                 <br />
                                 <span class="text-muted">@T["An API Key is required to help secure remote API requests."]</span>
                             </label>
-                            <input asp-for="@Model.ApiKey" class="form-control" />
+                            
+                            <div class="search-input-group">
+                                <input asp-for="@Model.ApiKey" class="form-control" data-provide="password"  />
+                                <button type="button" class="btn btn-secondary" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                                    <i class="fal fa-eye"></i>
+                                </button>
+                            </div>
                             <br />
-                            <a asp-action="CreateApiKey">
-                                <i class="fal fa-key"></i>
-                                @T["Generate a new API Key"]
+                            <a asp-route-action="ResetApiKey">
+                                <i class="fal fa-key mr-2"></i>@T["Reset API Key"]
                             </a>
                         </div>
                     </fieldset>

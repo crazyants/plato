@@ -9,6 +9,9 @@ namespace Plato.Users
         public static readonly Permission ViewUsers =
             new Permission("ViewUsers", "Can view users");
 
+        public static readonly Permission ViewProfiles =
+            new Permission("ViewProfiles", "Can view user profiles");
+
         public static readonly Permission ManageUsers =
             new Permission("ManageUsers", "Can manage users");
         
@@ -18,6 +21,21 @@ namespace Plato.Users
         public static readonly Permission EditUsers =
             new Permission("EditUsers", "Can edit existing users");
 
+        public static readonly Permission UserToVerify =
+            new Permission("UserToVerify", "Can mark users as verified");
+
+        public static readonly Permission UserToStaff =
+            new Permission("UserToStaff", "Can mark users as staff");
+        
+        public static readonly Permission UserToSpam =
+            new Permission("UserToSpam", "Can mark users as SPAM");
+
+        public static readonly Permission UserToBanned =
+            new Permission("UserToBanned", "Can mark users as banned");
+
+        public static readonly Permission ResetUserPasswords =
+            new Permission("ResetUserPasswords", "Can reset user passwords");
+
         public static readonly Permission DeleteUsers =
             new Permission("DeleteUsers", "Can delete existing users");
         
@@ -26,9 +44,15 @@ namespace Plato.Users
             return new[]
             {
                 ViewUsers,
+                ViewProfiles,
                 ManageUsers,
                 AddUsers,
                 EditUsers,
+                UserToVerify,
+                UserToStaff,
+                UserToSpam,
+                UserToBanned,
+                ResetUserPasswords,
                 DeleteUsers
             };
         }
@@ -43,9 +67,15 @@ namespace Plato.Users
                     Permissions = new[]
                     {
                         ViewUsers,
+                        ViewProfiles,
                         ManageUsers,
                         AddUsers,
                         EditUsers,
+                        UserToVerify,
+                        UserToStaff,
+                        UserToSpam,
+                        UserToBanned,
+                        ResetUserPasswords,
                         DeleteUsers
                     }
                 },
@@ -54,7 +84,8 @@ namespace Plato.Users
                     RoleName = DefaultRoles.Anonymous,
                     Permissions = new[]
                     {
-                        ViewUsers
+                        ViewUsers,
+                        ViewProfiles
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -62,7 +93,8 @@ namespace Plato.Users
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        ViewUsers
+                        ViewUsers,
+                        ViewProfiles
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -70,7 +102,8 @@ namespace Plato.Users
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ViewUsers
+                        ViewUsers,
+                        ViewProfiles
                     }
                 }
             };

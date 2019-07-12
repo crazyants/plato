@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -17,9 +18,9 @@ using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Users.Models;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users.Controllers
 {
@@ -30,6 +31,7 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditAccountViewModel> _editAccountViewProvider;
         private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
         private readonly IViewProviderManager<EditSignatureViewModel> _editSignatureViewProvider;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IViewProviderManager<Profile> _viewProvider;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -52,6 +54,7 @@ namespace Plato.Users.Controllers
             IViewProviderManager<EditAccountViewModel> editAccountViewProvider,
             IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
             IViewProviderManager<EditSignatureViewModel> editSignatureViewProvider,
+            IAuthorizationService authorizationService,
             IViewProviderManager<Profile> viewProvider,
             IPlatoUserManager<User> platoUserManager,
             IPlatoUserStore<User> platoUserStore,
@@ -68,17 +71,18 @@ namespace Plato.Users.Controllers
             _editAccountViewProvider = editAccountViewProvider;
             _editSettingsViewProvider = editSettingsViewProvider;
             _editSignatureViewProvider = editSignatureViewProvider;
+            _authorizationService = authorizationService;
             _breadCrumbManager = breadCrumbManager;
+            _pageTitleBuilder = pageTitleBuilder;
             _timeZoneProvider = timeZoneProvider;
             _platoUserManager = platoUserManager;
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
             _viewProvider = viewProvider;
             _userManager = userManager;
-            _alerter = alerter;
-            _pageTitleBuilder = pageTitleBuilder;
-
             _userEmails = userEmails;
+            _alerter = alerter;
+
             T = htmlLocalizer;
             S = stringLocalizer;
         }
@@ -92,10 +96,12 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Index(UserIndexOptions opts, PagerOptions pager)
         {
 
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.ViewUsers))
+            {
+                return Unauthorized();
+            }
 
             // default options
             if (opts == null)
@@ -166,6 +172,14 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Display(DisplayUserOptions opts)
         {
 
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.ViewProfiles))
+            {
+                return Unauthorized();
+            }
+            
+            // Get user to display
             var user = opts.Id > 0
                 ? await _platoUserStore.GetByIdAsync(opts.Id)
                 : await _contextFacade.GetAuthenticatedUserAsync();
@@ -209,6 +223,8 @@ namespace Plato.Users.Controllers
         
         public async Task<IActionResult> GetUser(DisplayUserOptions opts)
         {
+            
+            // Ensure we have defaults
 
             if (opts == null)
             {
@@ -233,7 +249,9 @@ namespace Plato.Users.Controllers
             return View(user);
 
         }
-        
+
+        // -----------------
+        // Edit Profile
         // -----------------
 
         public async Task<IActionResult> EditProfile()
@@ -272,9 +290,7 @@ namespace Plato.Users.Controllers
             return View((LayoutViewModel) await _editProfileViewProvider.ProvideEditAsync(editProfileViewModel, this));
 
         }
-        // Edit Profile
-        // -----------------
-
+    
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditProfile))]
         public async Task<IActionResult> EditProfilePost(EditProfileViewModel model)
         {
@@ -390,7 +406,7 @@ namespace Plato.Users.Controllers
             return await EditAccount();
 
         }
-
+        
         public async Task<IActionResult> ResetPassword()
         {
 
@@ -420,14 +436,12 @@ namespace Plato.Users.Controllers
                         foreach (var error in emailResult.Errors)
                         {
                             _alerter.Danger(T[error.Description]);
-                            //ViewData.ModelState.AddModelError(string.Empty, error.Description);
                         }
                     }
                 }
                 else
                 {
                     _alerter.Danger(T["You must confirm your email before you can reset your password!"]);
-                    //ViewData.ModelState.AddModelError(string.Empty, "You must confirm your email before you can reset your password!");
                 }
 
             }

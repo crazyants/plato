@@ -44,9 +44,10 @@ namespace Plato.WebApi.ViewProviders
             return Task.FromResult(Views(
                 View<EditUserViewModel>("User.Edit.Content", model =>
                 {
+                    model.Id = user.Id;
                     model.ApiKey = user.ApiKey;
                     return model;
-                }).Order(10)
+                }).Order(int.MaxValue - 50)
             ));
 
         }

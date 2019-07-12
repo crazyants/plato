@@ -88,9 +88,9 @@ namespace Plato.Internal.Text
                            (charIndex >= 97 && charIndex <= 122)));
 
                 var character = System.Convert.ToChar(charIndex);
-                if (_options.SupressCharacters != null)
+                if (_options.SuppressCharacters != null)
                 {
-                    sb.Append(_options.SupressCharacters.Contains(character)
+                    sb.Append(_options.SuppressCharacters.Contains(character)
                         ? System.Convert.ToChar(charIndex + 3)
                         : character);
                 }

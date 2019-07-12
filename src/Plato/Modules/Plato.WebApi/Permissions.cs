@@ -8,12 +8,16 @@ namespace Plato.WebApi
 
         public static readonly Permission ManageWebApiSettings =
             new Permission("ManageWebApiSettings", "Manage web api settings");
-        
+
+        public static readonly Permission ResetWebApiKeys =
+            new Permission("ResetWebApiKeys", "Can reset API keys");
+
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ManageWebApiSettings
+                ManageWebApiSettings,
+                ResetWebApiKeys
             };
         }
 
@@ -26,7 +30,8 @@ namespace Plato.WebApi
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ManageWebApiSettings
+                        ManageWebApiSettings,
+                        ResetWebApiKeys
                     }
                 }
             };

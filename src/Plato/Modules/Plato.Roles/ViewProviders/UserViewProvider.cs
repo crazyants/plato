@@ -26,22 +26,24 @@ namespace Plato.Roles.ViewProviders
         private readonly IStringLocalizer T;
         
         public UserViewProvider(
-            UserManager<User> userManager,
+            IStringLocalizer<UserViewProvider> stringLocalizee,
+            IHttpContextAccessor httpContextAccessor,
             SignInManager<User> signInManager,
             IPlatoRoleStore platoRoleStore,
-            IHttpContextAccessor httpContextAccessor,
-            IStringLocalizer<UserViewProvider> stringLocalize, IContextFacade contextFacade)
+            UserManager<User> userManager,
+            IContextFacade contextFacade)
         {
-            _userManager = userManager;
-            _platoRoleStore = platoRoleStore;
+      
             _request = httpContextAccessor.HttpContext.Request;
-
-            T = stringLocalize;
+            _platoRoleStore = platoRoleStore;
             _contextFacade = contextFacade;
             _signInManager = signInManager;
+            _userManager = userManager;
+
+            T = stringLocalizee;
+    
         }
-
-
+        
         public override Task<IViewProviderResult> BuildDisplayAsync(User user, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
@@ -76,7 +78,7 @@ namespace Plato.Roles.ViewProviders
                     model.SelectedRoles = selectedRoles ?? defaultRoles;
                     model.HtmlName = HtmlName;
                     return model;
-                }).Order(2)
+                }).Order(int.MaxValue - 100)
             );
 
         }

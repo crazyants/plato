@@ -28,39 +28,35 @@ namespace Plato.Users.ViewProviders
         private static string _urlToImages;
 
         private const string BySignatureHtmlName = "Signature";
-
-        private readonly IPlatoUserStore<User> _userStore;
-        private readonly IPlatoUserManager<User> _platoUserManager;
-        private readonly UserManager<User> _userManager;
-        private readonly IHostingEnvironment _hostEnvironment;
+        
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
+        private readonly IPlatoUserManager<User> _platoUserManager;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly UserManager<User> _userManager;
         private readonly ISitesFolder _sitesFolder;
-
         private readonly IUrlHelper _urlHelper;
-
         private readonly IStringLocalizer T;
 
         public AdminViewProvider(
             IShellSettings shellSettings,
             UserManager<User> userManager,
-            IActionContextAccessor actionContextAccesor,
-            IUrlHelperFactory urlHelperFactory,
-            IUserPhotoStore<UserPhoto> userPhotoStore,
+            IActionContextAccessor actionContextAccessor,
             IStringLocalizer<AdminViewProvider> stringLocalizer,
+            IUserPhotoStore<UserPhoto> userPhotoStore,
             IPlatoUserManager<User> platoUserManager,
             IHostingEnvironment hostEnvironment,
-            IFileStore fileStore,
+            IUrlHelperFactory urlHelperFactory,
+            IPlatoUserStore<User> userStore,
             ISitesFolder sitesFolder,
-            IPlatoUserStore<User> userStore)
+            IFileStore fileStore)
         {
+            _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
+            _platoUserManager = platoUserManager;
+            _userPhotoStore = userPhotoStore;
             _userManager = userManager;
-            _hostEnvironment = hostEnvironment;
             _sitesFolder = sitesFolder;
             _userStore = userStore;
-            _userPhotoStore = userPhotoStore;
-            _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
-            _platoUserManager = platoUserManager;
-        
+            
             T = stringLocalizer;
 
             // paths

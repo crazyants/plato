@@ -78,44 +78,12 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Index(int offset, UserIndexOptions opts, PagerOptions pager)
         {
 
-            //var claims = "";
-            //var user = await _contextFacade.GetAuthenticatedUserAsync();
-            //if (user?.UserRoles != null)
-            //{
-            //    foreach (var role in user.UserRoles)
-            //    {
-
-            //        foreach (var claim in role.RoleClaims)
-            //        {
-            //            //if (claim.Type == ClaimTypes.Role)
-            //            //{
-            //            claims += claim.ClaimType + " - " + claim.ClaimValue + "<br>";
-            //            //}
-            //        }
-
-            //    }
-
-            //}
-            
-            //claims += "<br><br>----------<br><br>";
-
-            //foreach (var claim in HttpContext.User.Claims)
-            //{
-            //    //if (claim.Type == ClaimTypes.Role)
-            //    //{
-            //    claims += claim.Type + " - " + claim.Value + "<br>";
-            //    //}
-            //}
-
-            //ViewData["claims"] = claims;
-
-
-            // ----------------------------------
-
-            //if (!await _authorizationService.AuthorizeAsync(HttpContext.User, Permissions.ManageUsers))
-            //{
-            //    return Unauthorized();
-            //}
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(HttpContext.User, 
+                Permissions.ManageUsers))
+            {
+                return Unauthorized();
+            }
 
             // default options
             if (opts == null)
@@ -188,10 +156,12 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Create()
         {
 
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User, 
+                Permissions.AddUsers))
+            {
+                return Unauthorized();
+            }
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -212,6 +182,13 @@ namespace Plato.Users.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditUserViewModel model)
         {
+
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.AddUsers))
+            {
+                return Unauthorized();
+            }
 
             // Validate model state within view providers
             var valid = await _viewProvider.IsModelStateValidAsync(new User()
@@ -296,11 +273,12 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Edit(string id)
         {
 
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
-       
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.EditUsers))
+            {
+                return Unauthorized();
+            }
             // Ensure user exists
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
@@ -330,6 +308,13 @@ namespace Plato.Users.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(string id)
         {
+
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.EditUsers))
+            {
+                return Unauthorized();
+            }
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
@@ -373,6 +358,14 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Delete(string id)
         {
 
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.DeleteUsers))
+            {
+                return Unauthorized();
+            }
+            
+            // Ensure the user exists
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
@@ -404,6 +397,13 @@ namespace Plato.Users.Controllers
         [HttpGet]
         public async Task<IActionResult> EditPassword(string id)
         {
+
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.ResetUserPasswords))
+            {
+                return Unauthorized();
+            }
 
             // Get user
             var user = await _userManager.FindByIdAsync(id);
@@ -460,6 +460,13 @@ namespace Plato.Users.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditPassword))]
         public async Task<IActionResult> EditPasswordPost(EditPasswordViewModel model)
         {
+
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.ResetUserPasswords))
+            {
+                return Unauthorized();
+            }
 
             if (ModelState.IsValid)
             {
@@ -584,20 +591,21 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> ValidateUser(string id)
         {
 
-            // We need to be authenticated
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToVerify))
+            {
+                return Unauthorized();
+            }
+            
+            // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
-            // Get user
+            // Get user we are editing
             var currentUser = await _userManager.FindByIdAsync(id);
             if (currentUser == null)
             {
@@ -649,17 +657,11 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> InvalidateUser(string id)
         {
 
-            // We need to be authenticated
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user == null)
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToVerify))
             {
-                return NotFound();
-            }
-
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
+                return Unauthorized();
             }
 
             // Get user
@@ -703,20 +705,21 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> ToStaff(string id)
         {
 
-            // We need to be authenticated
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToStaff))
+            {
+                return Unauthorized();
+            }
+
+            // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
-            // Get user
+            // Get user we are editing
             var currentUser = await _userManager.FindByIdAsync(id);
             if (currentUser == null)
             {
@@ -768,20 +771,21 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> FromStaff(string id)
         {
 
-            // We need to be authenticated
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToStaff))
+            {
+                return Unauthorized();
+            }
+            
+            // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
-            // Get user
+            // Get user we are editing
             var currentUser = await _userManager.FindByIdAsync(id);
             if (currentUser == null)
             {
@@ -822,20 +826,22 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> SpamUser(string id)
         {
 
-            // We need to be authenticated
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToSpam))
+            {
+                return Unauthorized();
+            }
+
+
+            // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
-            // Get user
+            // Get user we are editing
             var currentUser = await _userManager.FindByIdAsync(id);
             if (currentUser == null)
             {
@@ -888,17 +894,18 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> RemoveSpam(string id)
         {
 
-            // We need to be authenticated
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToSpam))
+            {
+                return Unauthorized();
+            }
+
+            // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return NotFound();
-            }
-
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
+                return Unauthorized();
             }
 
             // Get user
@@ -942,20 +949,20 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> BanUser(string id)
         {
 
-            // We need to be authenticated
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToBanned))
+            {
+                return Unauthorized();
+            }
+            
+            // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
-
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
-            // Get user
+            // Get user we are editing
             var currentUser = await _userManager.FindByIdAsync(id);
             if (currentUser == null)
             {
@@ -1010,20 +1017,14 @@ namespace Plato.Users.Controllers
 
         public async Task<IActionResult> RemoveBan(string id)
         {
-
-            // We need to be authenticated
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user == null)
+            
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.UserToBanned))
             {
-                return NotFound();
+                return Unauthorized();
             }
-
-            // We need to be an administrator 
-            if (!user.RoleNames.Contains(DefaultRoles.Administrator))
-            {
-                return NotFound();
-            }
-
+            
             // Get user
             var currentUser = await _userManager.FindByIdAsync(id);
             if (currentUser == null)

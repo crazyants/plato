@@ -7,17 +7,25 @@
     <card-body>
         <div class="form-group">
             <label asp-for="ApiKey">
-         
                 <span class="text-muted">@T["Used to identify the user for any remote api requests"]</span>
             </label>
-            <input asp-for="ApiKey" class="form-control" autofocus />
-            <br />
-            <a class="float-right" asp-action="CreateApiKey">
-                <i class="fal fa-key"></i>
-                @T["Generate a new API Key"]
-            </a>
+            
+            <div class="search-input-group">
+                <input asp-for="ApiKey" class="form-control" data-provide="password" />
+                <button type="button" class="btn btn-secondary" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                    <i class="fal fa-eye"></i>
+                </button>
+            </div>
+            
+            <authorize asp-permission="@Plato.WebApi.Permissions.ResetWebApiKeys.Name">
+                <authorize-success>
+                    <br />
+                    <a asp-route-area="Plato.WebApi" asp-route-controller="Admin" asp-route-action="ResetUserApiKey" asp-route-id="@Model.Id" class="float-right">
+                        <i class="fal fa-key mr-2"></i>@T["Reset API Key"]
+                    </a>
+                </authorize-success>
+            </authorize>
         </div>
-    
     </card-body>
 </card>
 
